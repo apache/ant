@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -461,12 +462,7 @@ public class MSVSSTest implements MSVSSConstants {
         }
 
         // Count the number of empty strings
-        int cnt = 0;
-        for (String argument : sGeneratedCmdLine) {
-            if (argument.isEmpty()) {
-                cnt++;
-            }
-        }
+        int cnt = (int) Arrays.stream(sGeneratedCmdLine).filter(String::isEmpty).count();
         // We have extra elements
         assertFalse("extra args", genLength - cnt > sTestCmdLine.length);
     }

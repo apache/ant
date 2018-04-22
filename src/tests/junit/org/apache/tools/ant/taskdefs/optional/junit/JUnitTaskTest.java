@@ -588,8 +588,8 @@ public class JUnitTaskTest {
     public void testCheckDuplicateAntJar() throws Exception {
         setupCheckDuplicateTest();
         buildRule.executeTarget("testCheckForkedPath");
-        assertTrue("Expecting the warning about the duplicate ant jar",
-                buildRule.getLog().contains("WARNING: multiple versions of ant detected in path for junit"));
+        assertThat("Expecting the warning about the duplicate ant jar", buildRule.getLog(),
+                containsString("WARNING: multiple versions of ant detected in path for junit"));
     }
 
     @Test
@@ -597,8 +597,8 @@ public class JUnitTaskTest {
         setupCheckDuplicateTest();
         buildRule.getProject().setProperty("includeantruntime", "no");
         buildRule.executeTarget("testCheckForkedPath");
-        assertFalse("Unexpected warning about the duplicate ant jar",
-                buildRule.getLog().contains("WARNING: multiple versions of ant detected in path for junit"));
+        assertThat("Unexpected warning about the duplicate ant jar", buildRule.getLog(),
+                not(containsString("WARNING: multiple versions of ant detected in path for junit")));
     }
 
     private void delete(File f) {

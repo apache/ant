@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.tools.ant.BuildFileRule;
@@ -28,9 +29,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 /**
  */
@@ -61,16 +63,14 @@ public class ProtectedJarMethodsTest {
             "foo",
         };
         Jar.grabFilesAndDirs(archive, dirs, files);
+
         assertEquals(expectedDirs.length, dirs.size());
-        for (String expectedDir : expectedDirs) {
-            assertTrue("Found " + expectedDir,
-                       dirs.contains(expectedDir));
-        }
+        Arrays.stream(expectedDirs).forEach(expectedDir -> assertThat("Found " + expectedDir,
+                dirs, hasItem(expectedDir)));
+
         assertEquals(expectedFiles.length, files.size());
-        for (String expectedFile : expectedFiles) {
-            assertTrue("Found " + expectedFile,
-                       files.contains(expectedFile));
-        }
+        Arrays.stream(expectedFiles).forEach(expectedFile -> assertThat("Found " + expectedFile,
+                files, hasItem(expectedFile)));
     }
 
     @Test

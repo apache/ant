@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -262,7 +263,7 @@ public class ProjectTest {
 
     @Test
     public void testTaskDefinitionContains() {
-        assertTrue(p.getTaskDefinitions().contains(org.apache.tools.ant.taskdefs.Echo.class));
+        assertThat(p.getTaskDefinitions(), hasValue(org.apache.tools.ant.taskdefs.Echo.class));
     }
 
     /**

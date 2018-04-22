@@ -135,7 +135,7 @@ public class JUnitTestRunnerTest {
     public void testInvalidTestCase() {
         TestRunner runner = createRunner(InvalidTestCase.class);
         runner.run();
-        // On junit3 this is a FAILURE, on junit4 this is an ERROR
+        // For JUnit 3 this is a FAILURE, for JUnit 4 this is an ERROR
         int ret = runner.getRetCode();
         if (ret != JUnitTestRunner.FAILURES && ret != JUnitTestRunner.ERRORS) {
             fail("Unexpected result " + ret + " from junit runner");

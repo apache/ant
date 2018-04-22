@@ -18,8 +18,11 @@
 
 package org.apache.tools.ant;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
@@ -395,7 +398,7 @@ public class DirectoryScannerTest {
         Set<String> set = ds.getScannedDirs();
         assertFalse("empty set", set.isEmpty());
         String s = "alpha/beta/gamma/".replace('/', File.separatorChar);
-        assertFalse("scanned " + s, set.contains(s));
+        assertThat("scanned " + s, set, not(hasItem(s)));
     }
 
     @Test
@@ -515,16 +518,16 @@ public class DirectoryScannerTest {
         ds.scan();
         List<String> dirs = Arrays.asList(ds.getExcludedDirectories());
         assertEquals(2, dirs.size());
-        assertTrue("beta is excluded", dirs.contains("alpha/beta"
-                .replace('/', File.separatorChar)));
-        assertTrue("gamma is excluded", dirs.contains("alpha/beta/gamma"
-                .replace('/', File.separatorChar)));
+        assertThat("beta is excluded", dirs,
+                hasItem("alpha/beta".replace('/', File.separatorChar)));
+        assertThat("gamma is excluded", dirs,
+                hasItem("alpha/beta/gamma".replace('/', File.separatorChar)));
         List<String> files = Arrays.asList(ds.getExcludedFiles());
         assertEquals(2, files.size());
-        assertTrue("beta.xml is excluded", files.contains("alpha/beta/beta.xml"
-                .replace('/', File.separatorChar)));
-        assertTrue("gamma.xml is excluded", files.contains("alpha/beta/gamma/gamma.xml"
-                .replace('/', File.separatorChar)));
+        assertThat("beta.xml is excluded", files,
+                hasItem("alpha/beta/beta.xml".replace('/', File.separatorChar)));
+        assertThat("gamma.xml is excluded", files,
+                hasItem("alpha/beta/gamma/gamma.xml".replace('/', File.separatorChar)));
     }
 
     @Test

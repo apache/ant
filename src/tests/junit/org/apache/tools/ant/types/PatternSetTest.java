@@ -21,12 +21,13 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * JUnit 4 testcases for org.apache.tools.ant.types.PatternSet.
@@ -36,151 +37,160 @@ import static org.junit.Assert.fail;
 
 public class PatternSetTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private Project project;
+
+    private PatternSet p;
 
     @Before
     public void setUp() {
         project = new Project();
         project.setBasedir(".");
+        p = new PatternSet();
     }
 
     @Test
-    public void testEmptyElementIfIsReference() {
-        PatternSet p = new PatternSet();
+    public void testEmptyElementSetIncludesThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
         p.setIncludes("**/*.java");
-        try {
-            p.setRefid(new Reference(project, "dummyref"));
-            fail("Can add reference to PatternSet with elements from setIncludes");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
-
-        p = new PatternSet();
         p.setRefid(new Reference(project, "dummyref"));
-        try {
-            p.setIncludes("**/*.java");
-            fail("Can set includes in PatternSet that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
-
-        p = new PatternSet();
-        p.setRefid(new Reference(project, "dummyref"));
-        try {
-            p.setIncludesfile(new File("/a"));
-            fail("Can set includesfile in PatternSet that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
-        try {
-            p.setExcludes("**/*.java");
-            fail("Can set excludes in PatternSet that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
-        try {
-            p.setExcludesfile(new File("/a"));
-            fail("Can set excludesfile in PatternSet that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
-        try {
-            p.createInclude();
-            fail("Can add nested include in PatternSet that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
-        try {
-            p.createExclude();
-            fail("Can add nested exclude in PatternSet that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
-        try {
-            p.createIncludesFile();
-            fail("Can add nested includesfile in PatternSet that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
-        try {
-            p.createExcludesFile();
-            fail("Can add nested excludesfile in PatternSet that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
     }
 
     @Test
-    public void testCircularReferenceCheck() {
-        PatternSet p = new PatternSet();
+    public void testEmptyElementSetRefidThenIncludes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.setIncludes("**/*.java");
+    }
+
+    @Test
+    public void testEmptyElementSetRefidThenIncludesfile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+            p.setIncludesfile(new File("/a"));
+    }
+
+    @Test
+    public void testEmptyElementSetRefidThenExclude() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.setExcludes("**/*.java");
+    }
+
+    @Test
+    public void testEmptyElementSetRefidThenExcludesfile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.setExcludesfile(new File("/a"));
+    }
+
+    @Test
+    public void testEmptyElementSetRefidThenAddInclude() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.createInclude();
+    }
+
+    @Test
+    public void testEmptyElementSetRefidThenAddExclude() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.createExclude();
+    }
+
+    @Test
+    public void testEmptyElementSetRefidThenAddIncludesfile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.createIncludesFile();
+    }
+
+    @Test
+    public void testEmptyElementSetRefidThenAddExcludesfile() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.createExcludesFile();
+    }
+
+    @Test
+    public void testCircularReferenceCheckIncludePaterns() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
         project.addReference("dummy", p);
         p.setRefid(new Reference(project, "dummy"));
-        try {
-            p.getIncludePatterns(project);
-            fail("Can make PatternSet a Reference to itself.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
-        try {
-            p.getExcludePatterns(project);
-            fail("Can make PatternSet a Reference to itself.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
+        p.getIncludePatterns(project);
+    }
 
-        // dummy1 --> dummy2 --> dummy3 --> dummy1
-        PatternSet p1 = new PatternSet();
-        project.addReference("dummy1", p1);
-        p1.setRefid(new Reference(project, "dummy2"));
-        PatternSet p2 = new PatternSet();
-        project.addReference("dummy2", p2);
-        p2.setRefid(new Reference(project, "dummy3"));
-        PatternSet p3 = new PatternSet();
-        project.addReference("dummy3", p3);
-        p3.setRefid(new Reference(project, "dummy1"));
-        try {
-            p1.getIncludePatterns(project);
-            fail("Can make circular reference.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
-        try {
-            p1.getExcludePatterns(project);
-            fail("Can make circular reference.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
+    @Test
+    public void testCircularReferenceCheckExcludePatterns() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
+        project.addReference("dummy", p);
+        p.setRefid(new Reference(project, "dummy"));
+        p.getExcludePatterns(project);
+    }
 
-        // dummy1 --> dummy2 --> dummy3
+    @Test
+    public void testLoopReferenceCheckIncludePaterns() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
+        // dummy --> dummyA --> dummyB --> dummy
+        project.addReference("dummy", p);
+        p.setRefid(new Reference(project, "dummyA"));
+        PatternSet pa = new PatternSet();
+        project.addReference("dummyA", pa);
+        pa.setRefid(new Reference(project, "dummyB"));
+        PatternSet pb = new PatternSet();
+        project.addReference("dummyB", pb);
+        pb.setRefid(new Reference(project, "dummy"));
+        p.getIncludePatterns(project);
+    }
+
+    @Test
+    public void testLoopReferenceCheckExcludePaterns() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
+        // dummy --> dummyA --> dummyB --> dummy
+        project.addReference("dummy", p);
+        p.setRefid(new Reference(project, "dummyA"));
+        PatternSet pa = new PatternSet();
+        project.addReference("dummyA", pa);
+        pa.setRefid(new Reference(project, "dummyB"));
+        PatternSet pb = new PatternSet();
+        project.addReference("dummyB", pb);
+        pb.setRefid(new Reference(project, "dummy"));
+        p.getExcludePatterns(project);
+    }
+
+    @Test
+    public void testLoopReferenceCheck() {
+        // dummy --> dummyA --> dummyB
         // (which holds patterns "include" and "exclude")
-        p1 = new PatternSet();
-        project.addReference("dummy1", p1);
-        p1.setRefid(new Reference(project, "dummy2"));
-        p2 = new PatternSet();
-        project.addReference("dummy2", p2);
-        p2.setRefid(new Reference(project, "dummy3"));
-        p3 = new PatternSet();
-        project.addReference("dummy3", p3);
-        p3.setIncludes("include");
-        p3.createExclude().setName("exclude");
-        String[] i = p1.getIncludePatterns(project);
+        project.addReference("dummy", p);
+        p.setRefid(new Reference(project, "dummyA"));
+        PatternSet pa = new PatternSet();
+        project.addReference("dummyA", pa);
+        pa.setRefid(new Reference(project, "dummyB"));
+        PatternSet pb = new PatternSet();
+        project.addReference("dummyB", pb);
+        pb.setIncludes("include");
+        pb.createExclude().setName("exclude");
+        String[] i = p.getIncludePatterns(project);
         assertEquals("One include pattern buried deep inside a nested patternset structure",
                      1, i.length);
         assertEquals("include", i[0]);
-        i = p3.getExcludePatterns(project);
+        i = pb.getExcludePatterns(project);
         assertEquals("One exclude pattern buried deep inside a nested patternset structure",
                      1, i.length);
         assertEquals("exclude", i[0]);
@@ -188,7 +198,6 @@ public class PatternSetTest {
 
     @Test
     public void testNestedPatternset() {
-        PatternSet p = new PatternSet();
         p.setIncludes("**/*.java");
 
         PatternSet nested = new PatternSet();

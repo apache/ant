@@ -34,9 +34,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -169,12 +171,9 @@ public class MapperTest {
         assertNotNull("no filenames mapped", targets);
         assertEquals("wrong number of filenames mapped", 3, targets.length);
         List<String> list = Arrays.asList(targets);
-        assertTrue("cannot find expected target \"tofilename\"",
-                list.contains("tofilename"));
-        assertTrue("cannot find expected target \"fromfilename\"",
-                list.contains("fromfilename"));
-        assertTrue("cannot find expected target \"mergefile\"",
-                list.contains("mergefile"));
+        assertThat("cannot find expected target \"tofilename\"", list, hasItem("tofilename"));
+        assertThat("cannot find expected target \"fromfilename\"", list, hasItem("fromfilename"));
+        assertThat("cannot find expected target \"mergefile\"", list, hasItem("mergefile"));
     }
 
     /**
@@ -216,8 +215,8 @@ public class MapperTest {
         assertNotNull("no filenames mapped", targets);
         assertEquals("wrong number of filenames mapped", 2, targets.length);
         List<String> list = Arrays.asList(targets);
-        assertTrue("cannot find expected target \"def\"", list.contains("def"));
-        assertTrue("cannot find expected target \"ghi\"", list.contains("ghi"));
+        assertThat("cannot find expected target \"def\"", list, hasItem("def"));
+        assertThat("cannot find expected target \"ghi\"", list, hasItem("ghi"));
 
         targets = fileNameMapper.mapFileName("z");
         assertNull(targets);

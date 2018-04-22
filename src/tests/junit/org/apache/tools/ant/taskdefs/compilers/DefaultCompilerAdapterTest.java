@@ -35,8 +35,9 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -270,7 +271,7 @@ public class DefaultCompilerAdapterTest {
             assertNotNull(cmd[0]);
             final List<String> cmdLine = Arrays.asList(cmd[0].getCommandline());
             //No modulesourcepath
-            assertFalse(cmdLine.contains("--module-source-path"));
+            assertThat(cmdLine, not(hasItem("--module-source-path")));
             //The -sourcepath has to be followed by src
             int index = cmdLine.indexOf("-sourcepath");
             assertTrue(index != -1 && index < cmdLine.size() - 1);
@@ -328,7 +329,7 @@ public class DefaultCompilerAdapterTest {
             assertNotNull(cmd[0]);
             final List<String> cmdLine = Arrays.asList(cmd[0].getCommandline());
             //No sourcepath
-            assertFalse(cmdLine.contains("-sourcepath"));
+            assertThat(cmdLine, not(hasItem("-sourcepath")));
             //The --module-source-path has to be followed by the pattern
             int index = cmdLine.indexOf("--module-source-path");
             assertTrue(index != -1 && index < cmdLine.size() - 1);

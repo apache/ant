@@ -234,7 +234,8 @@ public class ManifestClassPathTest {
             String tmpCanonicalPath = tmpdir.getCanonicalPath();
             driveLetter = tmpCanonicalPath.substring(0, 1).toUpperCase();
         } catch (IOException ioe) {
-            System.out.println("exception happened getting canonical path of java.io.tmpdir : " + ioe.getMessage());
+            System.out.println("exception happened getting canonical path of java.io.tmpdir : "
+                    + ioe.getMessage());
         }
         String altDriveLetter = null;
         try {

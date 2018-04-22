@@ -25,18 +25,22 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 public class ResourceListTest {
 
     @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    private ResourceList rl;
 
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/types/resources/resourcelist.xml");
+        rl = new ResourceList();
     }
 
     @After
@@ -45,90 +49,69 @@ public class ResourceListTest {
     }
 
     @Test
-    public void testEmptyElementWithReference() {
-        ResourceList rl = new ResourceList();
+    public void testEmptyElementSetEncodingThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
         rl.setEncoding("foo");
-        try {
-            rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
-            fail("Can add reference to ResourceList with encoding attribute set.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
-
-        rl = new ResourceList();
         rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
-        try {
-            rl.setEncoding("foo");
-            fail("Can set encoding in ResourceList that is a reference");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
+    }
 
-        rl = new ResourceList();
+    @Test
+    public void testEmptyElementSetRefidThenEncoding() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
+        rl.setEncoding("foo");
+    }
+
+    @Test
+    public void testEmptyElementAddFileResourceThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
         rl.add(new FileResource(buildRule.getProject(), "."));
-        try {
-            rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
-            fail("Can add reference to ResourceList with nested resource collection.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
-
-        rl = new ResourceList();
         rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
-        try {
-            rl.add(new FileResource(buildRule.getProject(), "."));
-            fail("Can add reference to ResourceList with nested resource collection.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
+    }
 
-        rl = new ResourceList();
+    @Test
+    public void testEmptyElementAddRefidThenFileResource() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
+        rl.add(new FileResource(buildRule.getProject(), "."));
+    }
+
+    @Test
+    public void testEmptyElementAddFilterChainThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
         rl.addFilterChain(new FilterChain());
-        try {
-            rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
-            fail("Can add reference to ResourceList with nested filter chain.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
-
-        rl = new ResourceList();
         rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
-        try {
-            rl.addFilterChain(new FilterChain());
-            fail("Can add reference to ResourceList with nested filter chain.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
+    }
+
+    @Test
+    public void testEmptyElementAddRefidThenFilterChain() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
+        rl.addFilterChain(new FilterChain());
     }
 
     @Test
     public void testCircularReference() {
-        ResourceList rl1 = new ResourceList();
-        rl1.setProject(buildRule.getProject());
-        rl1.setRefid(new Reference(buildRule.getProject(), "foo"));
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
+        rl.setProject(buildRule.getProject());
+        rl.setRefid(new Reference(buildRule.getProject(), "foo"));
 
-        ResourceList rl2 = new ResourceList();
-        rl2.setProject(buildRule.getProject());
-        buildRule.getProject().addReference("foo", rl2);
+        ResourceList resourceList = new ResourceList();
+        resourceList.setProject(buildRule.getProject());
+        buildRule.getProject().addReference("foo", resourceList);
 
         Union u = new Union();
-        u.add(rl1);
+        u.add(rl);
         u.setProject(buildRule.getProject());
 
-        rl2.add(u);
-
-        try {
-            rl2.size();
-            fail("Can make ResourceList a Reference to itself.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
+        resourceList.add(u);
+        resourceList.size();
     }
 }

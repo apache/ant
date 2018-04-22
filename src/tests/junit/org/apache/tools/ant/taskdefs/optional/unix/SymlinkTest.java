@@ -42,8 +42,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
@@ -88,12 +88,10 @@ public class SymlinkTest {
     public void testDelete() {
         buildRule.executeTarget("test-delete");
         Project p = buildRule.getProject();
-        String linkDeleted = p.getProperty("test.delete.link.still.there");
         assertNotNull("Actual file deleted by symlink",
                       p.getProperty("test.delete.file.still.there"));
-        if (linkDeleted != null) {
-            fail(linkDeleted);
-        }
+        String linkDeleted = p.getProperty("test.delete.link.still.there");
+        assertNull(linkDeleted, linkDeleted);
     }
 
     @Test
@@ -144,11 +142,7 @@ public class SymlinkTest {
                       p.getProperty("test.record.dir2.recorded"));
 
         String dir3rec = p.getProperty("test.record.dir3.recorded");
-
-        if (dir3rec != null) {
-            fail(dir3rec);
-        }
-
+        assertNull(dir3rec, dir3rec);
     }
 
     @Test
@@ -159,18 +153,11 @@ public class SymlinkTest {
         String link2Rem = p.getProperty("test.recreate.link2.not.removed");
         String link3Rem = p.getProperty("test.recreate.link3.not.removed");
         String dirlinkRem = p.getProperty("test.recreate.dirlink.not.removed");
-        if (link1Rem != null) {
-            fail(link1Rem);
-        }
-        if (link2Rem != null) {
-            fail(link2Rem);
-        }
-        if (link3Rem != null) {
-            fail(link3Rem);
-        }
-        if (dirlinkRem != null) {
-            fail(dirlinkRem);
-        }
+
+        assertNull(link1Rem, link1Rem);
+        assertNull(link2Rem ,link2Rem);
+        assertNull(link3Rem ,link3Rem);
+        assertNull(dirlinkRem ,dirlinkRem);
 
         assertNotNull("Failed to recreate link1",
                       p.getProperty("test.recreate.link1.recreated"));
@@ -182,10 +169,7 @@ public class SymlinkTest {
                       p.getProperty("test.recreate.dirlink.recreated"));
 
         String doubleRecreate = p.getProperty("test.recreate.dirlink2.recreated.twice");
-
-        if (doubleRecreate != null) {
-            fail(doubleRecreate);
-        }
+        assertNull(doubleRecreate, doubleRecreate);
 
         assertNotNull("Failed to alter dirlink3",
                       p.getProperty("test.recreate.dirlink3.was.altered"));

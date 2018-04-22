@@ -78,9 +78,7 @@ public class ScpTest {
 
     @After
     public void tearDown() {
-        for (File file : cleanUpList) {
-            file.delete();
-        }
+        cleanUpList.forEach(File::delete);
     }
 
     @Test

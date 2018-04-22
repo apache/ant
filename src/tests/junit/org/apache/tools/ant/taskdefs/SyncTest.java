@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -139,12 +140,10 @@ public class SyncTest {
     }
 
     public void assertFileIsPresent(String f) {
-        assertTrue("Expected file " + f,
-                buildRule.getProject().resolveFile(f).exists());
+        assertTrue("Expected file " + f, buildRule.getProject().resolveFile(f).exists());
     }
 
     public void assertFileIsNotPresent(String f) {
-        assertTrue("Didn't expect file " + f,
-                   !buildRule.getProject().resolveFile(f).exists());
+        assertFalse("Didn't expect file " + f, buildRule.getProject().resolveFile(f).exists());
     }
 }
