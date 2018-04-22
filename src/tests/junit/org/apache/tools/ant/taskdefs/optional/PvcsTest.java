@@ -24,8 +24,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
-
 public class PvcsTest {
 
     @Rule
@@ -36,14 +34,12 @@ public class PvcsTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/pvcs.xml");
     }
 
-    @Test
+    /**
+     * Expected failure due to missing argument "repository"
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
             buildRule.executeTarget("test1");
-            fail("Required argument repository not specified");
-        } catch (BuildException ex) {
-            //TODO check exception message
-        }
     }
 
     @Test
@@ -66,14 +62,12 @@ public class PvcsTest {
         buildRule.executeTarget("test5");
     }
 
-    @Test
+    /**
+     * Expected failure due to nonexistent directory structure
+     */
+    @Test(expected = BuildException.class)
     public void test6() {
-        try {
-            buildRule.executeTarget("test6");
-            fail("Failed executing: /never/heard/of/a/directory/structure/like/this/pcli lvf -z " +
-                    "-aw -pr//ct4serv2/pvcs/monitor /. Exception: /never/heard/of/a/directory/structure/like/this/pcli: not found");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test6");
+        //TODO assert exception message
     }
 }

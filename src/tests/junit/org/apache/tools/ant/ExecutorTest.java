@@ -19,23 +19,29 @@
 package org.apache.tools.ant;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.Vector;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Executor tests
  */
 public class ExecutorTest implements BuildListener  {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private static final String SINGLE_CHECK
-        = "org.apache.tools.ant.helper.SingleCheckExecutor";
+            = "org.apache.tools.ant.helper.SingleCheckExecutor";
     private static final String IGNORE_DEPS
-        = "org.apache.tools.ant.helper.IgnoreDependenciesExecutor";
+            = "org.apache.tools.ant.helper.IgnoreDependenciesExecutor";
 
     private static final Vector<String> TARGET_NAMES;
     static {
@@ -43,9 +49,6 @@ public class ExecutorTest implements BuildListener  {
         TARGET_NAMES.add("a");
         TARGET_NAMES.add("b");
     }
-
-    @Rule
-    public BuildFileRule buildRule = new BuildFileRule();
 
     private int targetCount;
 
@@ -117,22 +120,22 @@ public class ExecutorTest implements BuildListener  {
 
     @Test
     public void testDefaultFailure() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("failfoo");
         try {
             getProject(null, true).executeTargets(TARGET_NAMES);
-            fail("should fail");
-        } catch (BuildException e) {
-            assertEquals("failfoo", e.getMessage());
+        } finally {
             assertEquals(1, targetCount);
         }
     }
 
     @Test
     public void testSingleCheckFailure() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("failfoo");
         try {
             getProject(SINGLE_CHECK, true).executeTargets(TARGET_NAMES);
-            fail("should fail");
-        } catch (BuildException e) {
-            assertEquals("failfoo", e.getMessage());
+        } finally {
             assertEquals(1, targetCount);
         }
     }
@@ -145,36 +148,36 @@ public class ExecutorTest implements BuildListener  {
 
     @Test
     public void testKeepGoingDefault() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("failfoo");
         try {
             getProject(null, true, true).executeTargets(TARGET_NAMES);
-            fail("should fail");
-        } catch (BuildException e) {
-            assertEquals("failfoo", e.getMessage());
+        } finally {
             assertEquals(2, targetCount);
         }
     }
 
     @Test
     public void testKeepGoingSingleCheck() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("failfoo");
         try {
             getProject(SINGLE_CHECK, true, true).executeTargets(TARGET_NAMES);
-            fail("should fail");
-        } catch (BuildException e) {
-            assertEquals("failfoo", e.getMessage());
+        } finally {
             assertEquals(1, targetCount);
         }
     }
 
     @Test
     public void testKeepGoingIgnoreDependencies() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("failfoo");
+        Vector<String> targetNames = new Vector<>(TARGET_NAMES);
+        // explicitly add foo for failure
+        targetNames.add(0, "foo");
         try {
-            //explicitly add foo for failure
-            Vector<String> targetNames = new Vector<>(TARGET_NAMES);
-            targetNames.add(0, "foo");
             getProject(IGNORE_DEPS, true, true).executeTargets(targetNames);
-            fail("should fail");
-        } catch (BuildException e) {
-            assertEquals("failfoo", e.getMessage());
+        } finally {
             assertEquals(3, targetCount);
         }
     }

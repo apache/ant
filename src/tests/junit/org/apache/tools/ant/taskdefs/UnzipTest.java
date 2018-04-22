@@ -31,7 +31,6 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class UnzipTest {
 
@@ -43,36 +42,32 @@ public class UnzipTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/unzip.xml");
     }
 
-    @Test
+    /**
+     * Expected failure due to required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
+        // TODO Assert exception message
     }
 
-    @Test
+    /**
+     * Expected failure due to required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test2");
+        // TODO Assert exception message
     }
 
-    @Test
+    /**
+     * Expected failure due to required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test3");
+        // TODO Assert exception message
     }
-
 
     @Test
     public void testRealTest() throws IOException {
@@ -173,7 +168,6 @@ public class UnzipTest {
         buildRule.executeTarget("selfExtractingArchive");
     }
 
-
     /*
      * PR 20969
      */
@@ -185,7 +179,6 @@ public class UnzipTest {
         assertFileExists("\"2/bar is included",
                 buildRule.getProject().getProperty("output") + "/unziptestout/2/bar");
     }
-
 
     /*
      * PR 10504
@@ -240,14 +233,13 @@ public class UnzipTest {
                 buildRule.getProject().getProperty("output") + "/unziptestout/1/foo.txt");
     }
 
-    @Test
+    /**
+     * Expected failure due to multiple mappers
+     */
+    @Test(expected = BuildException.class)
     public void testTwoMappers() {
-        try {
-            buildRule.executeTarget("testTwoMappers");
-            fail("BuildException expected: " + Expand.ERROR_MULTIPLE_MAPPERS);
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("testTwoMappers");
+        // TODO Assert exception message
     }
 
     @Test

@@ -20,8 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.net;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
@@ -613,17 +611,11 @@ public class FTPTest {
         performConfigTest("configuration.3", expectedCounts);
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testConfigurationLang() {
         int[] expectedCounts = {1, 1, 0, 0, 0, 0, 1};
         performConfigTest("configuration.lang.good", expectedCounts);
-
-        try {
-            performConfigTest("configuration.lang.bad", expectedCounts);
-            fail("BuildException Expected");
-        } catch (Exception bx) {
-            assertTrue(bx instanceof BuildException);
-        }
+        performConfigTest("configuration.lang.bad", expectedCounts);
     }
     /**
      * Tests the systemTypeKey attribute.
@@ -757,21 +749,13 @@ public class FTPTest {
 
     public void testGetWithSelectorRetryable1() {
         buildRule.getProject().addTaskDefinition("ftp", oneFailureFTP.class);
-        try {
-            buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");
-        } catch (BuildException bx) {
-            fail("Two retries expected, failed after one.");
-        }
+        buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");
     }
 
     @Test
     public void testGetWithSelectorRetryable2() {
         buildRule.getProject().addTaskDefinition("ftp", twoFailureFTP.class);
-        try {
-            buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");
-        } catch (BuildException bx) {
-            fail("Two retries expected, failed after two.");
-        }
+        buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");
     }
 
     /**
@@ -786,12 +770,8 @@ public class FTPTest {
     @Test
     public void testGetWithSelectorRetryableRandom() {
         buildRule.getProject().addTaskDefinition("ftp", randomFailureFTP.class);
-        try {
-            buildRule.getProject().setProperty("ftp.retries", "forever");
-            buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");
-        } catch (BuildException bx) {
-            fail("Retry forever specified, but failed.");
-        }
+        buildRule.getProject().setProperty("ftp.retries", "forever");
+        buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");
     }
 
     @Test

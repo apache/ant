@@ -18,8 +18,6 @@
 
 package org.apache.tools.ant;
 
-import static org.junit.Assert.fail;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,13 +32,8 @@ public class DispatchTaskTest {
         buildRule.configureProject("src/etc/testcases/core/dispatch/dispatch.xml");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testDisp() {
-        try {
             buildRule.executeTarget("disp");
-            fail("BuildException should have been thrown");
-        } catch (BuildException ex) {
-            //FIXME the previous method used here ignored the build exception - what are we trying to test
-        }
     }
 }

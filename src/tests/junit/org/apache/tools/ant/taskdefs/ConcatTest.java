@@ -34,7 +34,6 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * A test class for the 'concat' task, used to concatenate a series of
@@ -79,28 +78,19 @@ public class ConcatTest {
     /**
      * Expect an exception when insufficient information is provided.
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException should have been thrown - Insufficient information");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
-
+        buildRule.executeTarget("test1");
+        // TODO assert value
     }
 
     /**
      * Expect an exception when the destination file is invalid.
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException should have been thrown - Invalid destination file");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test2");
+        // TODO assert value
     }
 
     /**
@@ -108,14 +98,12 @@ public class ConcatTest {
      */
     @Test
     public void test3() {
-
         File file = new File(buildRule.getProject().getBaseDir(), tempFile);
         if (file.exists()) {
             file.delete();
         }
 
         buildRule.executeTarget("test3");
-
         assertTrue(file.exists());
     }
 
@@ -179,7 +167,6 @@ public class ConcatTest {
         final long newSize = file2.length();
 
         assertEquals(origSize, newSize);
-
     }
 
     @Test
@@ -195,7 +182,6 @@ public class ConcatTest {
         final long newSize = file2.length();
 
         assertEquals(origSize * 2, newSize);
-
     }
 
     @Test
@@ -237,14 +223,9 @@ public class ConcatTest {
     /**
      * Expect an exception when attempting to cat an file to itself
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void testsame() {
-        try {
-            buildRule.executeTarget("samefile");
-            fail("Build exception should have been thrown - output file same as input");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("samefile");
     }
 
     /**

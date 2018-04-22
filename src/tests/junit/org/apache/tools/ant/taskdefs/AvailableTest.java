@@ -21,12 +21,12 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * JUnit test for the Available task/condition.
@@ -43,95 +43,104 @@ public class AvailableTest {
         buildRule.executeTarget("setUp");
     }
 
-    // Nothing specified -> Fail
-    @Test
+    /**
+     *  Nothing specified -&gt; Fail
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("Required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test1");
     }
 
-    // Only property specified -> Fail
-    @Test
+    /**
+     * Only property specified -&gt; Fail
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("Required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test2");
     }
 
-    // Only file specified -> Fail
-    @Test
+    /**
+     * Only file specified -&gt; Fail
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("Required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test3");
     }
 
-    // file doesn't exist -> property 'test' == null
+    /**
+     * File doesn't exist -&gt; property 'test' == null
+     */
     @Test
     public void test4() {
         buildRule.executeTarget("test4");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // file does exist -> property 'test' == 'true'
+    /**
+     * File does exist -&gt; property 'test' == 'true'
+     */
     public void test5() {
         buildRule.executeTarget("test5");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // resource doesn't exist -> property 'test' == null
+    /**
+     * Resource doesn't exist -&gt; property 'test' == null
+     */
     @Test
     public void test6() {
         buildRule.executeTarget("test6");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // resource does exist -> property 'test' == 'true'
+    /**
+     * Resource does exist -&gt; property 'test' == 'true'
+     */
     @Test
     public void test7() {
         buildRule.executeTarget("test7");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // class doesn't exist -> property 'test' == null
+    /**
+     * Class doesn't exist -&gt; property 'test' == null
+     */
     @Test
     public void test8() {
         buildRule.executeTarget("test8");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // class does exist -> property 'test' == 'true'
+    /**
+     * class does exist -&gt; property 'test' == 'true'
+     */
     @Test
     public void test9() {
         buildRule.executeTarget("test9");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // All three specified and all three exist -> true
+    /**
+     * All three specified and all three exist -&gt; true
+     */
     @Test
     public void test10() {
         buildRule.executeTarget("test10");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // All three specified but class missing -> null
+    /**
+     * All three specified but class missing -&gt; null
+     */
     @Test
     public void test11() {
         buildRule.executeTarget("test11");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // Specified property-name is "" -> true
+    /**
+     * Specified property-name is "" -&gt; true
+     */
     @Test
     public void test12() {
         buildRule.executeTarget("test12");
@@ -139,131 +148,162 @@ public class AvailableTest {
         assertEquals("true", buildRule.getProject().getProperty(""));
     }
 
-    // Specified file is "" -> invalid files do not exist
+    /**
+     * Specified file is "" -&gt; invalid files do not exist
+     */
     @Test
     public void test13() {
         buildRule.executeTarget("test13");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // Specified file is "" actually a directory, so it should pass
+    /**
+     * Specified file is "" actually a directory, so it should pass
+     */
     @Test
     public void test13b() {
         buildRule.executeTarget("test13b");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // Specified resource is "" -> can such a thing exist?
-    /*
-     * returns non null IBM JDK 1.3 Linux
+    /**
+     * Specified resource is "" -gt; can such a thing exist?
      */
-//    public void test14() {
-//        buildRule.executeTarget("test14");
-//        assertEquals(buildRule.getProject().getProperty("test"), null);
-//    }
+    @Ignore("returns non null IBM JDK 1.3 Linux")
+    @Test
+    public void test14() {
+        buildRule.executeTarget("test14");
+        assertEquals(buildRule.getProject().getProperty("test"), null);
+    }
 
-    // Specified class is "" -> can not exist
+    /**
+     * Specified class is "" -&gt; can not exist
+     */
     @Test
     public void test15() {
         buildRule.executeTarget("test15");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // Specified dir is "" -> this is the current directory and should
-    // always exist
+    /**
+     * Specified dir is "" -&gt; this is the current directory and should always exist
+     */
     @Test
     public void test16() {
         buildRule.executeTarget("test16");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // Specified dir is "../taskdefs" -> should exist since it's the
-    // location of the buildfile used...
+    /**
+     * Specified dir is "../taskdefs" -&gt; should exist since it's the location
+     * of the buildfile used...
+     */
     @Test
     public void test17() {
         buildRule.executeTarget("test17");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // Specified dir is "../this_dir_should_never_exist" -> null
+    /**
+     * Specified dir is "../this_dir_should_never_exist" -&gt; null
+     */
     @Test
     public void test18() {
         buildRule.executeTarget("test18");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // Invalid type specified
-    @Test
+    /**
+     * Invalid type specified
+     */
+    @Test(expected = BuildException.class)
     public void test19() {
-        try {
-            buildRule.executeTarget("test19");
-            fail("Invalid value for type attribute");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test19");
     }
 
-    // Core class that exists in system classpath is ignored
+    /**
+     * Core class that exists in system classpath is ignored
+     */
     @Test
     public void test20() {
         buildRule.executeTarget("test20");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // Core class that exists in system classpath is ignored, but found in specified classpath
+    /**
+     * Core class that exists in system classpath is ignored, but found in specified classpath
+     */
     @Test
     public void test21() {
         buildRule.executeTarget("test21");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // Core class that exists in system classpath is not ignored with ignoresystemclass="false"
+    /**
+     * Core class that exists in system classpath is not ignored with ignoresystemclass="false"
+     */
     @Test
     public void test22() {
         buildRule.executeTarget("test22");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // Core class that exists in system classpath is not ignored with default ignoresystemclasses value
+    /**
+     * Core class that exists in system classpath is not ignored with default
+     * ignoresystemclasses value
+     */
     @Test
     public void test23() {
         buildRule.executeTarget("test23");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // Class is found in specified classpath
+    /**
+     * Class is found in specified classpath
+     */
     @Test
     public void test24() {
         buildRule.executeTarget("test24");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // File is not found in specified filepath
+    /**
+     * File is not found in specified filepath
+     */
     @Test
     public void testSearchInPathNotThere() {
         buildRule.executeTarget("searchInPathNotThere");
         assertNull(buildRule.getProject().getProperty("test"));
     }
 
-    // File is not found in specified filepath
+    /**
+     * File is not found in specified filepath
+     */
     @Test
     public void testSearchInPathIsThere() {
         buildRule.executeTarget("searchInPathIsThere");
         assertEquals("true", buildRule.getProject().getProperty("test"));
     }
 
-    // test when file begins with basedir twice
+    /**
+     * File begins with basedir twice
+     */
     @Test
     public void testDoubleBasedir() {
         buildRule.executeTarget("testDoubleBasedir");
     }
 
-    // test for searching parents
+    /**
+     * Search parents
+     */
     @Test
     public void testSearchParents() {
         buildRule.executeTarget("search-parents");
     }
-    // test for not searching parents
+
+    /**
+     * Do not search parents
+     */
     @Test
     public void testSearchParentsNot() {
         buildRule.executeTarget("search-parents-not");

@@ -27,7 +27,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class VectorSetTest {
 
@@ -108,18 +107,12 @@ public class VectorSetTest {
         assertEquals(1, v.size());
     }
 
-    @Test
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
     public void testRemoveIndex() {
         v.add(O);
         assertSame(O, v.remove(0));
         assertEquals(0, v.size());
-        try {
-            v.remove(0);
-            fail("expected an AIOBE");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //TODO assert exception values
-            // expected
-        }
+        v.remove(0);
     }
 
     @Test
@@ -204,18 +197,12 @@ public class VectorSetTest {
         assertFalse(v.removeElement(O));
     }
 
-    @Test
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
     public void testRemoveElementAt() {
         v.add(O);
         v.removeElementAt(0);
         assertEquals(0, v.size());
-        try {
-            v.removeElementAt(0);
-            fail("expected an AIOBE");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            //TODO assert exception values
-            // expected
-        }
+        v.removeElementAt(0);
     }
 
     @Test

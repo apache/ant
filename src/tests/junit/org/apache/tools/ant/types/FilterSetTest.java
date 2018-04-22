@@ -32,7 +32,6 @@ import java.util.Hashtable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * FilterSet testing
@@ -189,14 +188,10 @@ public class FilterSetTest {
         buildRule.executeTarget("testMultipleFiltersFiles");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testMissingFiltersFile() {
-        try {
-            buildRule.executeTarget("testMissingFiltersFile");
-            fail("should fail due to missing  filtersfile");
-        } catch (BuildException ex) {
-            //TODO assert exception text
-        }
+        buildRule.executeTarget("testMissingFiltersFile");
+        // TODO assert exception text
     }
 
     @Test

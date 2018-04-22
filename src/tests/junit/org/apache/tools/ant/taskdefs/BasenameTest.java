@@ -25,7 +25,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  */
@@ -39,34 +38,22 @@ public class BasenameTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/basename.xml");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("Required attribute missing");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test1");
+        // TODO assert exception message
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("Required attribute missing");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test2");
+        // TODO assert exception message
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("Required attribute missing");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test3");
+        // TODO assert exception message
     }
 
     @Test

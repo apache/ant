@@ -39,7 +39,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * This is a unit test for the Scp task in Ant.  It must be
@@ -170,22 +169,19 @@ public class ScpTest {
         scpTask.execute();
     }
 
+    /**
+     * Expected failure due to invalid remoteToDir
+     *
+     * @throws IOException
+     */
+    @Test(expected = BuildException.class)
+    public void testInvalidRemoteToDir() throws IOException {
+        scpTask.setRemoteTodir("host:/a/path/without/an/at");
+    }
+
     @Test
     public void testRemoteToDir() {
-
-        // first try an invalid URI
-        try {
-            scpTask.setRemoteTodir("host:/a/path/without/an/at");
-            fail("Expected a BuildException to be thrown due to invalid"
-                    + " remoteToDir");
-        } catch (BuildException e) {
-            // expected
-            //TODO we should be asserting a value in here
-        }
-
-        // And this one should work
         scpTask.setRemoteTodir("user:password@host:/a/path/with/an/at");
-        // no exception
     }
 
     private void addCleanup(File file) {

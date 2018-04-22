@@ -24,8 +24,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
-
 /**
  * TODO : develop these testcases - the email task needs to have attributes allowing
  * to simulate sending mail and to catch the output in text files or streams
@@ -40,24 +38,22 @@ public class EmailTaskTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/email/mail.xml");
     }
 
-    @Test
+    /**
+     * Expected failure attempting SMTP auth without MIME
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("Build exception expected: SMTP auth only possibly with MIME mail");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test1");
+        // TODO Assert exception message
     }
 
-    @Test
+    /**
+     * Expected failure attempting SSL without MIME
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("Build exception expected: SSL only possibly with MIME mail");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test2");
+        // TODO Assert exception message
     }
 
 }

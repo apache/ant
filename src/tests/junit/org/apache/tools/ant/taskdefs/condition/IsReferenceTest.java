@@ -22,9 +22,9 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertNull;
 
 /**
@@ -35,6 +35,9 @@ public class IsReferenceTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -49,14 +52,14 @@ public class IsReferenceTest {
         assertNull(buildRule.getProject().getProperty("undefined"));
     }
 
+    /**
+     * Expected failure due to omitted refid attribute
+     */
     @Test
     public void testNotEnoughArgs() {
-        try {
-            buildRule.executeTarget("isreference-incomplete");
-            fail("Build exception expected: refid attirbute has been omitted");
-        } catch (BuildException ex) {
-            assertEquals("No reference specified for isreference condition", ex.getMessage());
-        }
+        thrown.expect(BuildException .class) ;
+            thrown.expectMessage("No reference specified for isreference condition");
+        buildRule.executeTarget("isreference-incomplete");
     }
 
     @Test

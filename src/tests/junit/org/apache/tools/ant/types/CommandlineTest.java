@@ -19,16 +19,20 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertNotNull;
 
 /**
  * JUnit 4 testcases for org.apache.tools.ant.CommandLine
  */
 public class CommandlineTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testTokenizer() {
@@ -100,22 +104,26 @@ public class CommandlineTest {
         s = Commandline.translateCommandline("\'\'");
         assertEquals("Singlequoted null arg", 1, s.length);
         assertEquals("Singlequoted null arg", "", s[0]);
+    }
 
-        // now to the expected failures
+    /**
+     * Expected failure due to unbalanced single quote
+     */
+    @Test
+    public void testTokenizerUnbalancedSingleQuote() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("unbalanced quotes in a \'b c");
+        Commandline.translateCommandline("a \'b c");
+    }
 
-        try {
-            Commandline.translateCommandline("a \'b c");
-            fail("unbalanced single quotes undetected");
-        } catch (BuildException be) {
-            assertEquals("unbalanced quotes in a \'b c", be.getMessage());
-        }
-
-        try {
-            Commandline.translateCommandline("a \"b c");
-            fail("unbalanced double quotes undetected");
-        } catch (BuildException be) {
-            assertEquals("unbalanced quotes in a \"b c", be.getMessage());
-        }
+    /**
+     * Expected failure due to unbalanced double quote
+     */
+    @Test
+    public void testTokenizerUnbalancedDoubleQuote() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("unbalanced quotes in a \"b c");
+        Commandline.translateCommandline("a \"b c");
     }
 
     @Test

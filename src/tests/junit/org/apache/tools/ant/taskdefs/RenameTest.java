@@ -24,8 +24,6 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
-
 public class RenameTest {
 
     @Rule
@@ -36,43 +34,37 @@ public class RenameTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/rename.xml");
     }
 
-    @Test
+    /**
+     * Expected failure due to missing required argument
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException should have been thrown:  required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
-    }
-    @Test
-    public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException should have been thrown: required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
-    }
-    @Test
-    public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("BuildException should have been thrown: required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
     }
 
-    @Test
+    /**
+     * Expected failure due to missing required argument
+     */
+    @Test(expected = BuildException.class)
+    public void test2() {
+        buildRule.executeTarget("test2");
+    }
+
+    /**
+     * Expected failure due to missing required argument
+     */
+    @Test(expected = BuildException.class)
+    public void test3() {
+        buildRule.executeTarget("test3");
+    }
+
+    /**
+     * Expected failure due to source same as destination
+     */
     @Ignore("Previously commented out")
+    @Test
     public void test4() {
-        try {
-            buildRule.executeTarget("test4");
-            fail("BuildException should have been thrown: source and destination the same");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test4");
     }
 
     @Test

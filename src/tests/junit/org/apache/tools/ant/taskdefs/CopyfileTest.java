@@ -26,7 +26,7 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  */
@@ -40,34 +40,22 @@ public class CopyfileTest {
         buildRule.executeTarget("setUp");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("Required argument not specified");
-        } catch (BuildException ex) {
-            // TODO assert value
-        }
+        buildRule.executeTarget("test1");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("Required argument not specified");
-        } catch (BuildException ex) {
-            // TODO assert value
-        }
+        buildRule.executeTarget("test2");
+        // TODO assert value
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("Required argument not specified");
-        } catch (BuildException ex) {
-            // TODO assert value
-        }
+        buildRule.executeTarget("test3");
+        // TODO assert value
     }
 
     @Test
@@ -81,20 +69,13 @@ public class CopyfileTest {
     public void test5() {
         buildRule.executeTarget("test5");
         File f = new File(new File(buildRule.getProject().getProperty("output")), "copyfile.tmp");
-        if (f.exists()) {
-            f.delete();
-        } else {
-            fail("Copy failed");
-        }
+        assertTrue("Copy failed", f.exists());
+        f.delete();
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void test6() {
-        try {
-            buildRule.executeTarget("test6");
-            fail("Required argument not specified");
-        } catch (BuildException ex) {
-            // TODO assert value
-        }
+        buildRule.executeTarget("test6");
+        // TODO assert value
     }
 }

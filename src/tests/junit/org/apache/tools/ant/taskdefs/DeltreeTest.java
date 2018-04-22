@@ -24,8 +24,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
-
 public class DeltreeTest {
 
     @Rule
@@ -36,14 +34,13 @@ public class DeltreeTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/deltree.xml");
     }
 
-    @Test
+    /**
+     * Expected failure due to missing required argument
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
+        // TODO Assert exception message
     }
 
     @Test

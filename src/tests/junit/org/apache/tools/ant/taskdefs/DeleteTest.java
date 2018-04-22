@@ -24,8 +24,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
-
 /**
  */
 public class DeleteTest {
@@ -38,73 +36,86 @@ public class DeleteTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/delete.xml");
     }
 
-    @Test
+    /**
+     * Expected failure due to required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
+        // TODO Assert exception message
     }
 
     @Test
     public void test2() {
         buildRule.executeTarget("test2");
     }
+
     //where oh where has my test case 3 gone?
     @Test
     public void test4() {
         buildRule.executeTarget("test4");
     }
+
     @Test
     public void test5() {
         buildRule.executeTarget("test5");
     }
+
     @Test
     public void test6() {
         buildRule.executeTarget("test6");
     }
+
     @Test
     public void test7() {
         buildRule.executeTarget("test7");
     }
+
     @Test
     public void test8() {
         buildRule.executeTarget("test8");
     }
+
     @Test
     public void test9() {
         buildRule.executeTarget("test9");
     }
+
     @Test
     public void test10() {
         buildRule.executeTarget("test10");
     }
+
     @Test
     public void test11() {
         buildRule.executeTarget("test11");
     }
+
     @Test
     public void test12() {
         buildRule.executeTarget("test12");
     }
+
     @Test
     public void test13() {
         buildRule.executeTarget("test13");
     }
+
     @Test
     public void test14() {
         buildRule.executeTarget("test14");
     }
+
     @Test
     public void test15() {
         buildRule.executeTarget("test15");
     }
+
     @Test
     public void test16() {
         buildRule.executeTarget("test16");
     }
+
     @Test
     public void test17() {
         buildRule.executeTarget("test17");

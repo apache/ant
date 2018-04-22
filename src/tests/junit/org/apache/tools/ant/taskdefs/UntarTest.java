@@ -30,8 +30,6 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 
 public class UntarTest {
 
@@ -73,14 +71,10 @@ public class UntarTest {
         testLogoExtraction("testBzip2TarTask");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testSrcDirTest() {
-        try {
-            buildRule.executeTarget("srcDirTest");
-            fail("Src cannot be a directory.");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("srcDirTest");
+        // TODO assert value
     }
 
     @Test

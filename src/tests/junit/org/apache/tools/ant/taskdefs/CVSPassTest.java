@@ -27,10 +27,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Tests CVSLogin task.
@@ -46,8 +46,10 @@ public class CVSPassTest {
         ":pserver:guest@cvs.tigris.org:/cvs AIbdZ,";
 
     @Rule
-    public final BuildFileRule buildRule = new BuildFileRule();
+    public ExpectedException thrown = ExpectedException.none();
 
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
@@ -56,22 +58,16 @@ public class CVSPassTest {
 
     @Test
     public void testNoCVSRoot() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException not thrown");
-        } catch (BuildException e) {
-            assertEquals("cvsroot is required", e.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("cvsroot is required");
+        buildRule.executeTarget("test1");
     }
 
     @Test
     public void testNoPassword() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException not thrown");
-        } catch (BuildException e) {
-            assertEquals("password is required", e.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("password is required");
+        buildRule.executeTarget("test2");
     }
 
     @After

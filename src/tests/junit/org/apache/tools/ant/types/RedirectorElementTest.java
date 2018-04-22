@@ -27,7 +27,6 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class RedirectorElementTest {
 
@@ -46,24 +45,20 @@ public class RedirectorElementTest {
             instanceof RedirectorElement));
     }
 
-    @Test
+    /**
+     * Expected failure due to multiple attributes when using refid
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("You must not specify more than one attribute when using refid");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test2");
     }
 
-    @Test
+    /**
+     * Expected failure due to nested elements when using refid
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("You must not specify nested elements when using refid");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test3");
     }
 
     @Test

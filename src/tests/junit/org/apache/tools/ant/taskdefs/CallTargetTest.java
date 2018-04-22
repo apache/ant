@@ -29,7 +29,6 @@ import java.util.Vector;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  */
@@ -68,14 +67,12 @@ public class CallTargetTest {
         assertThat(buildRule.getLog(), containsString("multi is SETmulti is SET"));
     }
 
-    @Test
+    /**
+     * Expected failure due to empty target name
+     */
+    @Test(expected = BuildException.class)
     public void testBlankTarget() {
-        try {
-            buildRule.executeTarget("blank-target");
-            fail("target name must not be empty");
-        } catch (BuildException ex) {
-            //TODO assert exception contents
-        }
+        buildRule.executeTarget("blank-target");
     }
 
     @Test

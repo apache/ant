@@ -25,7 +25,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * Testcases for the &lt;http&gt; condition. All these tests require
@@ -63,14 +62,12 @@ public class HttpTest {
         assertNull(buildRule.getProject().getProperty("test-get-request-bad-url"));
     }
 
-    @Test
+    /**
+     * Expected failure due to invalid HTTP request method specified
+     */
+    @Test(expected = BuildException.class)
     public void testBadRequestMethod() {
-        try {
-            buildRule.executeTarget("bad-request-method");
-            fail("Exception should have been thrown as invalid HTTP request method specified");
-        } catch (BuildException ex) {
-            //TODO we should assert the correct build exception was thrown
-        }
+        buildRule.executeTarget("bad-request-method");
     }
 
 }

@@ -18,21 +18,24 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Task;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 
 public class XmlnsTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -59,12 +62,9 @@ public class XmlnsTest {
 
     @Test
     public void testExcluded() {
-        try {
-            buildRule.executeTarget("excluded");
-            fail("BuildException expected: excluded uri");
-        } catch (BuildException ex) {
-            assertEquals("Attempt to use a reserved URI ant:notallowed", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Attempt to use a reserved URI ant:notallowed");
+        buildRule.executeTarget("excluded");
     }
 
     @Test

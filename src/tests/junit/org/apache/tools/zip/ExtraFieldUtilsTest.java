@@ -18,12 +18,15 @@
 
 package org.apache.tools.zip;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.zip.ZipException;
 
 /**
  * JUnit 4 testcases for org.apache.tools.zip.ExtraFieldUtils.
@@ -42,6 +45,9 @@ public class ExtraFieldUtilsTest implements UnixStat {
     private UnrecognizedExtraField dummy;
     private byte[] data;
     private byte[] aLocal;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -73,6 +79,10 @@ public class ExtraFieldUtilsTest implements UnixStat {
      */
     @Test
     public void testParse() throws Exception {
+        thrown.expect(ZipException.class);
+        thrown.expectMessage("bad extra field starting at " + (4 + aLocal.length)
+                        + ".  Block length of 1 bytes exceeds remaining data of 0 bytes.");
+
         ZipExtraField[] ze = ExtraFieldUtils.parse(data);
         assertEquals("number of fields", 2, ze.length);
         assertTrue("type field 1", ze[0] instanceof AsiExtraField);
@@ -84,15 +94,7 @@ public class ExtraFieldUtilsTest implements UnixStat {
 
         byte[] data2 = new byte[data.length - 1];
         System.arraycopy(data, 0, data2, 0, data2.length);
-        try {
-            ExtraFieldUtils.parse(data2);
-            fail("data should be invalid");
-        } catch (Exception e) {
-            assertEquals("message",
-                         "bad extra field starting at " + (4 + aLocal.length)
-                         + ".  Block length of 1 bytes exceeds remaining data of 0 bytes.",
-                         e.getMessage());
-        }
+        ExtraFieldUtils.parse(data2);
     }
 
     @Test

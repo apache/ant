@@ -30,9 +30,8 @@ import java.io.FilenameFilter;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * If you want to run tests, it is highly recommended
@@ -57,25 +56,23 @@ public class ANTLRTest {
         buildRule.configureProject(TASKDEFS_DIR + "antlr.xml");
     }
 
-    @Test
+    /**
+     * Expected failure due to missing required argument, target
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("required argument, target, missing");
-        } catch (BuildException ex) {
-            //TODO should check exception message
-        }
+        buildRule.executeTarget("test1");
+        // TODO Check exception message
     }
 
-    @Test
+    /**
+     * Expected failure due to invalid output directory
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("Invalid output directory");
-        } catch (BuildException ex) {
-            //TODO should check exception message
-        }
-    }
+        buildRule.executeTarget("test2");
+        // TODO Check exception message
+     }
 
     @Test
     public void test3() {
@@ -87,16 +84,14 @@ public class ANTLRTest {
         buildRule.executeTarget("test4");
     }
 
-    @Test
+    /**
+     * should print "panic: Cannot find importVocab file 'JavaTokenTypes.txt'"
+     * since it needs to run java.g first before java.tree.g
+     */
+    @Test(expected = BuildException.class)
     public void test5() {
-        // should print "panic: Cannot find importVocab file 'JavaTokenTypes.txt'"
-        // since it needs to run java.g first before java.tree.g
-        try {
-            buildRule.executeTarget("test5");
-            fail("ANTLR returned: 1");
-        } catch (BuildException ex) {
-            //TODO should check exception message
-        }
+        buildRule.executeTarget("test5");
+        // TODO Check exception message
     }
 
     @Test
@@ -104,27 +99,22 @@ public class ANTLRTest {
         buildRule.executeTarget("test6");
     }
 
-    @Test
+    /**
+     * Expected failure due to inability to determine generated class
+     */
+    @Test(expected = BuildException.class)
     public void test7() {
-        try {
-            buildRule.executeTarget("test7");
-            fail("Unable to determine generated class");
-        } catch (BuildException ex) {
-            //TODO should check exception message
-        }
+        buildRule.executeTarget("test7");
+        // TODO Check exception message
     }
 
     /**
      * Expected failure due to invalid super grammar (glib) option.
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void test8() {
-        try {
-            buildRule.executeTarget("test8");
-            fail("Invalid super grammar file");
-        } catch (BuildException ex) {
-            //TODO should check exception message
-        }
+        buildRule.executeTarget("test8");
+        // TODO Check exception message
     }
 
     /**

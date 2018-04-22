@@ -24,9 +24,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
 
@@ -36,6 +34,9 @@ public class ParserSupportsTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/conditions/parsersupports.xml");
@@ -43,22 +44,16 @@ public class ParserSupportsTest {
 
     @Test
     public void testEmpty() {
-        try {
-            buildRule.executeTarget("testEmpty");
-            fail("Build exception expected: " + ParserSupports.ERROR_NO_ATTRIBUTES);
-        } catch (BuildException ex) {
-            assertEquals(ParserSupports.ERROR_NO_ATTRIBUTES, ex.getMessage());
-        }
+        thrown.expect(BuildException .class) ;
+            thrown.expectMessage(ParserSupports.ERROR_NO_ATTRIBUTES);
+        buildRule.executeTarget("testEmpty");
     }
 
     @Test
     public void testBoth() {
-        try {
-            buildRule.executeTarget("testBoth");
-            fail("Build exception expected: " + ParserSupports.ERROR_BOTH_ATTRIBUTES);
-        } catch (BuildException ex) {
-            assertEquals(ParserSupports.ERROR_BOTH_ATTRIBUTES, ex.getMessage());
-        }
+        thrown.expect(BuildException .class) ;
+            thrown.expectMessage(ParserSupports.ERROR_BOTH_ATTRIBUTES);
+        buildRule.executeTarget("testBoth");
     }
 
     @Test
@@ -68,12 +63,9 @@ public class ParserSupportsTest {
 
     @Test
     public void testPropertyNoValue() {
-        try {
-            buildRule.executeTarget("testPropertyNoValue");
-            fail("Build exception expected: " + ParserSupports.ERROR_NO_VALUE);
-        } catch (BuildException ex) {
-            assertEquals(ParserSupports.ERROR_NO_VALUE, ex.getMessage());
-        }
+        thrown.expect(BuildException .class) ;
+            thrown.expectMessage(ParserSupports.ERROR_NO_VALUE);
+        buildRule.executeTarget("testPropertyNoValue");
     }
 
     @Test

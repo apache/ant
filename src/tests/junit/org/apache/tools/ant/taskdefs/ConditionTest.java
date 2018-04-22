@@ -23,16 +23,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 public class ConditionTest {
 
     @Rule
-    public BuildFileRule buildRule = new BuildFileRule();
+    public ExpectedException thrown = ExpectedException.none();
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
 
     /**
      * The JUnit setup method
@@ -59,22 +61,16 @@ public class ConditionTest {
 
     @Test
     public void testConditionIncomplete() {
-        try {
-            buildRule.executeTarget("condition-incomplete");
-            fail("BuildException should have been thrown - property attribute has been omitted");
-        } catch (BuildException ex) {
-            assertEquals("The property attribute is required.", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("The property attribute is required.");
+        buildRule.executeTarget("condition-incomplete");
     }
 
     @Test
     public void testConditionEmpty() {
-        try {
-            buildRule.executeTarget("condition-empty");
-            fail("BuildException should have been thrown - no conditions");
-        } catch (BuildException ex) {
-            assertEquals("You must nest a condition into <condition>", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must nest a condition into <condition>");
+        buildRule.executeTarget("condition-empty");
     }
 
     @Test
@@ -109,12 +105,9 @@ public class ConditionTest {
 
     @Test
     public void testNegationIncomplete() {
-        try {
-            buildRule.executeTarget("negationincomplete");
-            fail("BuildException should have been thrown - no conditions in <not>");
-        } catch (BuildException ex) {
-            assertEquals("You must nest a condition into <not>", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must nest a condition into <not>");
+        buildRule.executeTarget("negationincomplete");
     }
 
     @Test
@@ -173,12 +166,9 @@ public class ConditionTest {
 
     @Test
     public void testFilesmatchIncomplete() {
-        try {
-            buildRule.executeTarget("filesmatch-incomplete");
-            fail("Build exception should have been thrown - Missing file2 attirbute");
-        } catch (BuildException ex) {
-            assertEquals("both file1 and file2 are required in filesmatch", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("both file1 and file2 are required in filesmatch");
+        buildRule.executeTarget("filesmatch-incomplete");
     }
 
     @Test
@@ -252,22 +242,16 @@ public class ConditionTest {
 
     @Test
     public void testContainsIncomplete1() {
-        try {
-            buildRule.executeTarget("contains-incomplete1");
-            fail("BuildException should have been thrown - Missing contains attribute");
-        } catch (BuildException ex) {
-            assertEquals("both string and substring are required in contains", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("both string and substring are required in contains");
+        buildRule.executeTarget("contains-incomplete1");
     }
 
     @Test
     public void testContainsIncomplete2() {
-        try {
-            buildRule.executeTarget("contains-incomplete2");
-            fail("BuildException should have been thrown - Missing contains attribute");
-        } catch (BuildException ex) {
-            assertEquals("both string and substring are required in contains", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("both string and substring are required in contains");
+        buildRule.executeTarget("contains-incomplete2");
     }
 
     @Test
@@ -290,12 +274,9 @@ public class ConditionTest {
 
     @Test
     public void testIstrueIncomplete1() {
-        try {
-            buildRule.executeTarget("istrue-incomplete");
-            fail("BuildException should have been thrown - Missing attribute");
-        } catch (BuildException ex) {
-            assertEquals("Nothing to test for truth", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Nothing to test for truth");
+        buildRule.executeTarget("istrue-incomplete");
     }
 
     @Test
@@ -319,12 +300,9 @@ public class ConditionTest {
 
     @Test
     public void testIsfalseIncomplete1() {
-        try {
-            buildRule.executeTarget("isfalse-incomplete");
-            fail("BuildException should have been thrown - Missing attribute");
-        } catch (BuildException ex) {
-            assertEquals("Nothing to test for falsehood", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Nothing to test for falsehood");
+        buildRule.executeTarget("isfalse-incomplete");
     }
 
     @Test
@@ -332,14 +310,10 @@ public class ConditionTest {
         buildRule.executeTarget("testElse");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testResourcesmatchError() {
-        try {
-            buildRule.executeTarget("resourcematch-error");
-            fail("BuildException should have been thrown - no resources specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("resourcematch-error");
+        // TODO assert value
     }
 
     @Test

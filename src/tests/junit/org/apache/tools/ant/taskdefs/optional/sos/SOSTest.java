@@ -28,9 +28,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  *  Testcase to ensure that command line generation and required attributes are
@@ -55,7 +55,11 @@ public class SOSTest {
     private static final String VERSION = "007";
 
     @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
     private Project project;
 
     @Before
@@ -317,12 +321,9 @@ public class SOSTest {
 
     private void expectSpecificBuildException(String target, String errorMessage,
                                               String exceptionMessage) {
-        try {
-            buildRule.executeTarget(target);
-            fail(errorMessage);
-        } catch (BuildException ex) {
-            assertEquals(exceptionMessage, ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(exceptionMessage);
+        buildRule.executeTarget(target);
     }
 
     /**

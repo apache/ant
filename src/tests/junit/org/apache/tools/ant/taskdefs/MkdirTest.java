@@ -19,13 +19,13 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 
+import static org.junit.Assert.assertTrue;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.fail;
 
 /**
  */
@@ -39,34 +39,27 @@ public class MkdirTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/mkdir.xml");
     }
 
-    @Test
+    /**
+     * Expected failure due to required argument missing
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException expected: required argument missing");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
     }
 
-    @Test
+    /**
+     * Expected failure due to directory already existing as a file
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException expected: directory already exists as a file");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test2");
     }
 
     @Test
     public void test3() {
         buildRule.executeTarget("test3");
         File f = new File(buildRule.getProject().getProperty("output"), "testdir.tmp");
-        if (!f.exists() || !f.isDirectory()) {
-            fail("mkdir failed");
-        } else {
-            f.delete();
-        }
+        assertTrue("mkdir failed", f.exists() && f.isDirectory());
+        f.delete();
     }
 }

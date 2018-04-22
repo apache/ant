@@ -29,7 +29,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
 
 public class TarTest {
@@ -43,44 +42,40 @@ public class TarTest {
         buildRule.executeTarget("setUp");
     }
 
-    @Test
+    /**
+     * Expected failure: required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test1");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Expected failure: required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test2");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Expected failure: required argument not specified
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("BuildException expected: required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test3");
+        // TODO assert value
     }
 
-    @Test
+    /**
+     * Expected failure: tar cannot include itself
+     */
+    @Test(expected = BuildException.class)
     public void test4() {
-        try {
-            buildRule.executeTarget("test4");
-            fail("BuildException expected: tar cannot include itself");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test4");
+        // TODO assert value
     }
 
     @Test
@@ -90,14 +85,13 @@ public class TarTest {
         assertTrue("Tarring a directory failed", f.exists());
     }
 
-    @Test
+    /**
+     * Expected failure due to invalid value specified for longfile attribute.
+     */
+    @Test(expected = BuildException.class)
     public void test6() {
-        try {
-            buildRule.executeTarget("test6");
-            fail("BuildException expected: Invalid value specified for longfile attribute.");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test6");
+        // TODO assert value
     }
 
     @Test
@@ -156,14 +150,13 @@ public class TarTest {
                 f1.exists());
     }
 
-    @Test
+    /**
+     * Expected failure due to invalid value specified for compression attribute.
+     */
+    @Test(expected = BuildException.class)
     public void test9() {
-        try {
-            buildRule.executeTarget("test9");
-            fail("BuildException expected: Invalid value specified for compression attribute.");
-        } catch (BuildException ex) {
-            //TODO assert value
-        }
+        buildRule.executeTarget("test9");
+        // TODO assert value
     }
 
     @Test

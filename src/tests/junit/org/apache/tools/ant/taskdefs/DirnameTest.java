@@ -19,7 +19,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeFalse;
 
 import org.apache.tools.ant.BuildException;
@@ -28,12 +27,16 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.File;
 
 /**
  */
 public class DirnameTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -45,49 +48,38 @@ public class DirnameTest {
 
     @Test
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("Build exception should have been thrown as property attribute is required");
-        } catch (BuildException ex) {
-            assertEquals("property attribute required", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("property attribute required");
+        buildRule.executeTarget("test1");
     }
 
     @Test
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("Build exception should have been thrown as file attribute is required");
-        } catch (BuildException ex) {
-            assertEquals("file attribute required", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("file attribute required");
+        buildRule.executeTarget("test2");
     }
 
     @Test
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("Build exception should have been thrown as property attribute is required");
-        } catch (BuildException ex) {
-            assertEquals("property attribute required", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("property attribute required");
+        buildRule.executeTarget("test3");
     }
 
     @Test
     public void test4() {
         assumeFalse("Test not possible on DOS or Netware family OS", Os.isFamily("netware") || Os.isFamily("dos"));
         buildRule.executeTarget("test4");
-        String expected = File.separator + "usr" + File.separator + "local";
-        String checkprop = buildRule.getProject().getProperty("local.dir");
-        assertEquals("dirname failed", expected, checkprop);
+        assertEquals("dirname failed", File.separator + "usr" + File.separator + "local",
+                buildRule.getProject().getProperty("local.dir"));
     }
 
     @Test
     public void test5() {
         buildRule.executeTarget("test5");
-        String expected = buildRule.getProject().getProperty("basedir");
-        String checkprop = buildRule.getProject().getProperty("base.dir");
-        assertEquals("dirname failed", expected, checkprop);
+        assertEquals("dirname failed", buildRule.getProject().getProperty("basedir"),
+                buildRule.getProject().getProperty("base.dir"));
     }
 
 }

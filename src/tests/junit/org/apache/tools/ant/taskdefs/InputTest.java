@@ -29,26 +29,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 
 public class InputTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
     private InputStream originalStdIn;
 
-
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/input.xml");
-        System.getProperties()
-            .put(PropertyFileInputHandler.FILE_NAME_KEY,
-                 buildRule.getProject().resolveFile("input.properties")
-                 .getAbsolutePath());
+        System.getProperties().put(PropertyFileInputHandler.FILE_NAME_KEY,
+                buildRule.getProject().resolveFile("input.properties").getAbsolutePath());
         buildRule.getProject().setInputHandler(new PropertyFileInputHandler());
         originalStdIn = System.in;
     }
@@ -70,13 +69,9 @@ public class InputTest {
 
     @Test
     public void test3() {
-        try {
-            buildRule.executeTarget("test3");
-            fail("BuildException expected: invalid input");
-        } catch (BuildException ex) {
-             assertEquals("Found invalid input test for 'All data is going to be deleted from DB continue?'",
-                     ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Found invalid input test for 'All data is going to be deleted from DB continue?'");
+        buildRule.executeTarget("test3");
     }
 
     @Test

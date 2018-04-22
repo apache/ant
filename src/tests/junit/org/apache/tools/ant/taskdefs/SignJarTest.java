@@ -25,12 +25,12 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeFalse;
 
 /**
@@ -41,6 +41,9 @@ public class SignJarTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -106,12 +109,9 @@ public class SignJarTest {
 
     @Test
     public void testTsaLocalhost() {
-        try {
-            buildRule.executeTarget("testTsaLocalhost");
-            fail("Should have thrown exception - no TSA at localhost:0");
-        } catch (BuildException ex) {
-            assertEquals("jarsigner returned: 1", ex.getMessage());
-        }
+         thrown.expect(BuildException.class);
+         thrown.expectMessage("jarsigner returned: 1");
+         buildRule.executeTarget("testTsaLocalhost");
     }
 
     /**

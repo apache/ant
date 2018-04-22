@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.UnknownServiceException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Zip;
 import org.apache.tools.ant.types.resources.ImmutableResourceException;
@@ -33,34 +34,40 @@ import org.apache.tools.ant.types.resources.ZipResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ResourceUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class ResourceOutputTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final File basedir = new File(System.getProperty("root"),
-        "src/etc/testcases/types/resources");
+    private static final String BASE_DIR = "src/etc/testcases/types/resources";
 
     private Project project;
 
     @Before
     public void setUp() {
-        project = new Project();
-        project.init();
-        project.setUserProperty("basedir", basedir.getAbsolutePath());
+        buildRule.configureProject(BASE_DIR + "/resourcelist.xml");
+        project = buildRule.getProject();
+        if (System.getProperty("root") != null) {
+            project.setBasedir(System.getProperty("root"));
+        }
     }
 
-    @Test
+    /**
+     * Expected failure
+     */
+    @Test(expected = UnsupportedOperationException.class)
     public void testresourceoutput() {
-        try {
-            testoutputbe(new Resource("foo"));
-            fail("should have caught UnsupportedOperationException");
-        } catch (UnsupportedOperationException e) {
-            //TODO assert exception message
-        }
+        testoutputbe(new Resource("foo"));
     }
 
     @Test
@@ -70,15 +77,20 @@ public class ResourceOutputTest {
         assertEquals("foo", r.getValue());
     }
 
-    @Test
+    /**
+     * Expected failure
+     *
+     * @throws IOException if something goes wrong
+     */
+    @Test(expected = ImmutableResourceException.class)
     public void teststringoutput2() throws IOException {
         StringResource r = new StringResource("bar");
-        try {
-            testoutput(r);
-            fail("should have caught ImmutableResourceException");
-        } catch (ImmutableResourceException e) {
-            //TODO assert exception message
-        }
+        testoutput(r);
+    }
+
+    @Test
+    public void teststringoutput3() throws IOException {
+        StringResource r = new StringResource("bar");
         assertEquals("bar", r.getValue());
     }
 
@@ -89,28 +101,32 @@ public class ResourceOutputTest {
         assertEquals("foo", project.getProperty("bar"));
     }
 
-    @Test
+    /**
+     * Expected failure
+     *
+     * @throws IOException if something goes wrong
+     */
+    @Test(expected = ImmutableResourceException.class)
     public void testpropertyoutput2() throws IOException {
         project.setNewProperty("bar", "bar");
         PropertyResource r = new PropertyResource(project, "bar");
-        try {
-            testoutput(r);
-            fail("should have caught ImmutableResourceException");
-        } catch (ImmutableResourceException e) {
-            //TODO assert exception message
-        }
+        testoutput(r);
+    }
+
+    @Test
+    public void testpropertyoutput3() throws IOException {
+        project.setNewProperty("bar", "bar");
         assertEquals("bar", project.getProperty("bar"));
     }
 
     @Test
     public void testurloutput() throws IOException {
+        thrown.expect(UnknownServiceException.class);
+        // TODO assert exception message
         File f = project.resolveFile("testurloutput");
         try {
             FILE_UTILS.createNewFile(f);
             testoutput(new URLResource(f));
-            fail("should have caught UnknownServiceException");
-        } catch (UnknownServiceException e) {
-            //TODO assert exception message
         } finally {
             if (!f.delete()) {
                 f.deleteOnExit();
@@ -120,12 +136,14 @@ public class ResourceOutputTest {
 
     @Test
     public void testzipentryoutput() {
+        thrown.expect(UnsupportedOperationException.class);
+        // TODO assert exception message
         Zip z = new Zip();
         z.setProject(project);
         Zip.WhenEmpty create = new Zip.WhenEmpty();
         create.setValue("create");
         z.setWhenempty(create);
-        z.setBasedir(basedir);
+        z.setBasedir(project.getBaseDir());
         z.setExcludes("**/*");
         File f = project.resolveFile("foo");
         z.setDestFile(f);
@@ -135,9 +153,6 @@ public class ResourceOutputTest {
         r.setName("foo");
         try {
             testoutputbe(r);
-            fail("should have caught UnsupportedOperationException");
-        } catch (UnsupportedOperationException e) {
-            //TODO assert exception message
         } finally {
             if (!f.delete()) {
                 f.deleteOnExit();

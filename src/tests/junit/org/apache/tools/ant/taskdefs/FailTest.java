@@ -23,15 +23,16 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  */
 public class FailTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
@@ -43,57 +44,42 @@ public class FailTest {
 
     @Test
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("it is required to fail :-)");
-        } catch (BuildException ex) {
-            assertEquals("No message", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("No message");
+        buildRule.executeTarget("test1");
     }
 
     @Test
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("it is required to fail :-)");
-        } catch (BuildException ex) {
-            assertEquals("test2", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("test2");
+        buildRule.executeTarget("test2");
     }
 
     @Test
     public void testText() {
-        try {
-            buildRule.executeTarget("testText");
-            fail("it is required to fail :-)");
-        } catch (BuildException ex) {
-            assertEquals("testText", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("testText");
+        buildRule.executeTarget("testText");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testIf() {
         buildRule.executeTarget("testIf");
         buildRule.getProject().setProperty("foo", "");
-        try {
-            buildRule.executeTarget("testIf");
-            fail("testIf must fail if foo has been set");
-        } catch (BuildException ex) {
-            //TODO assert result
-        }
+        buildRule.executeTarget("testIf");
+        // TODO assert result
     }
 
-    @Test
+    @Test(expected = BuildException.class)
     public void testUnless() {
         try {
             buildRule.executeTarget("testUnless");
-            fail("testUnless must fail unless foo has been set");
-        } catch (BuildException ex) {
             //TODO assert rules
+        } finally {
+            buildRule.getProject().setProperty("foo", "");
+            buildRule.executeTarget("testUnless");
         }
-        buildRule.getProject().setProperty("foo", "");
-        buildRule.executeTarget("testUnless");
-
     }
 
     /**
@@ -103,18 +89,18 @@ public class FailTest {
      */
     @Test
     public void testIfAndUnless() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("if=if and unless=unless");
         //neither
         buildRule.executeTarget("testIfAndUnless");
         buildRule.getProject().setProperty("if", "");
         try {
             buildRule.executeTarget("testIfAndUnless");
-            fail("expect fail on defined(if)");
-        } catch (BuildException ex) {
-            assertEquals("if=if and unless=unless", ex.getMessage());
+        } finally {
+            buildRule.getProject().setProperty("unless", "");
+            //this call should succeed as unless overrides if
+            buildRule.executeTarget("testIfAndUnless");
         }
-        buildRule.getProject().setProperty("unless", "");
-        //this call should succeed as unless overrides if
-        buildRule.executeTarget("testIfAndUnless");
     }
     /**
      * see that the different combinations work, and
@@ -129,12 +115,9 @@ public class FailTest {
 
     @Test
     public void testNested1() {
-        try {
-            buildRule.executeTarget("testNested1");
-            fail("it is required to fail :-)");
-        } catch (BuildException ex) {
-            assertEquals("condition satisfied", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("condition satisfied");
+        buildRule.executeTarget("testNested1");
     }
 
     @Test
@@ -144,64 +127,46 @@ public class FailTest {
 
     @Test
     public void testNested3() {
-        try {
-            buildRule.executeTarget("testNested3");
-            fail("it is required to fail :-)");
-        } catch (BuildException ex) {
-            assertEquals("testNested3", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("testNested3");
+        buildRule.executeTarget("testNested3");
     }
 
     @Test
     public void testNested4() {
-        String specificMessage = "Nested conditions "
-          + "not permitted in conjunction with if/unless attributes";
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Nested conditions not permitted in conjunction with if/unless attributes");
 
         StringBuilder target = new StringBuilder("testNested4x");
         for (char ch : Arrays.asList('a', 'b', 'c')) {
             target.setCharAt(target.length() - 1, ch);
-            try {
-                buildRule.executeTarget(target.toString());
-                fail("it is required to fail :-)");
-            } catch (BuildException ex) {
-                assertEquals(specificMessage, ex.getMessage());
-            }
+            buildRule.executeTarget(target.toString());
         }
     }
 
     @Test
     public void testNested5() {
-        try {
-            buildRule.executeTarget("testNested5");
-            fail("it is required to fail :-)");
-        } catch (BuildException ex) {
-            assertEquals("Only one nested condition is allowed.", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Only one nested condition is allowed.");
+        buildRule.executeTarget("testNested5");
     }
 
     @Test
     public void testNested6() {
-        try {
-            buildRule.executeTarget("testNested6");
-            fail("it is required to fail :-)");
-        } catch (BuildException ex) {
-            assertEquals("testNested6\ntestNested6\ntestNested6", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("testNested6\ntestNested6\ntestNested6");
+        buildRule.executeTarget("testNested6");
     }
 
     @Test
     public void testNested7() {
-        String specificMessage = "A single nested condition is required.";
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("A single nested condition is required.");
 
         StringBuilder target = new StringBuilder("testNested7x");
         for (char ch : Arrays.asList('a', 'b')) {
             target.setCharAt(target.length() - 1, ch);
-            try {
-                buildRule.executeTarget(target.toString());
-                fail("it is required to fail :-)");
-            } catch (BuildException ex) {
-                assertEquals(specificMessage, ex.getMessage());
-            }
+            buildRule.executeTarget(target.toString());
         }
     }
 

@@ -22,9 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * @since Ant 1.6
@@ -34,37 +32,28 @@ public class AntLikeTasksAtTopLevelTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void testAnt() {
-        try {
-            buildRule.configureProject("src/etc/testcases/taskdefs/toplevelant.xml");
-            fail("no exception thrown");
-        } catch (BuildException e) {
-            assertEquals("ant task at the top level must not invoke its own"
-                         + " build file.", e.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("ant task at the top level must not invoke its own build file.");
+        buildRule.configureProject("src/etc/testcases/taskdefs/toplevelant.xml");
     }
 
     @Test
     public void testSubant() {
-        try {
-            buildRule.configureProject("src/etc/testcases/taskdefs/toplevelsubant.xml");
-            fail("no exception thrown");
-        } catch (BuildException e) {
-            assertEquals("subant task at the top level must not invoke its own"
-                         + " build file.", e.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("subant task at the top level must not invoke its own build file.");
+        buildRule.configureProject("src/etc/testcases/taskdefs/toplevelsubant.xml");
     }
 
     @Test
     public void testAntcall() {
-        try {
-            buildRule.configureProject("src/etc/testcases/taskdefs/toplevelantcall.xml");
-            fail("no exception thrown");
-        } catch (BuildException e) {
-            assertEquals("antcall must not be used at the top level.",
-                         e.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("antcall must not be used at the top level.");
+        buildRule.configureProject("src/etc/testcases/taskdefs/toplevelantcall.xml");
     }
 
 }

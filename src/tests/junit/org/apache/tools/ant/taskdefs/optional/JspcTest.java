@@ -30,10 +30,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Tests the Jspc task.
@@ -45,6 +45,9 @@ import static org.junit.Assert.fail;
 public class JspcTest {
 
     private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -88,12 +91,9 @@ public class JspcTest {
 
     @Test
     public void testNoTld() {
-        try {
-            buildRule.executeTarget("testNoTld");
-            fail("Not found");
-        } catch (BuildException ex) {
-            assertEquals("Java returned: 9", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Java returned: 9");
+        buildRule.executeTarget("testNoTld");
     }
 
     @Test

@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.fail;
-
 /**
  * Tests the {@link JUnitLauncherTask}
  */
@@ -72,14 +70,9 @@ public class JUnitLauncherTaskTest {
      * Tests that when a test, that's configured with {@code haltOnFailure=true}, stops the build, when the
      * test fails
      */
-    @Test
+    @Test(expected = BuildException.class)
     public void testFailureStopsBuild() {
-        try {
-            project.executeTarget("test-failure-stops-build");
-            fail("Test execution failure was expected to stop the build but didn't");
-        } catch (BuildException be) {
-            // expected
-        }
+        project.executeTarget("test-failure-stops-build");
     }
 
     /**

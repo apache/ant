@@ -28,7 +28,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class LazyResourceCollectionTest {
 
@@ -76,7 +75,7 @@ public class LazyResourceCollectionTest {
         }
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void testLazyLoading() {
         StringResourceCollection collectionTest = new StringResourceCollection();
         LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
@@ -103,12 +102,7 @@ public class LazyResourceCollectionTest {
         assertEquals("Iterating 3 times load more than 3 resources", 3,
             stringResourceIterator.cursor);
 
-        try {
-            it.next();
-            fail("NoSuchElementException should have been raised");
-        } catch (NoSuchElementException e) {
-            // ok
-        }
+        it.next();
     }
 
     private void assertOneCreatedIterator(
@@ -117,7 +111,7 @@ public class LazyResourceCollectionTest {
                 testCollection.createdIterators.size());
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void testCaching() {
         StringResourceCollection collectionTest = new StringResourceCollection();
         LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
@@ -160,18 +154,14 @@ public class LazyResourceCollectionTest {
             "The first iterator did not lookup in the cache for a resource", 3,
             stringResourceIterator.cursor);
 
+        // next() must throw the expected NoSuchElementException;
+        // if that does not happen, assertions throw the unexpected Assertion error
         try {
             it1.next();
-            fail("NoSuchElementException should have been raised");
-        } catch (NoSuchElementException e) {
-            // ok
-        }
-
-        try {
+            assertTrue(it1.hasNext());
+        } finally {
             it2.next();
-            fail("NoSuchElementException should have been raised");
-        } catch (NoSuchElementException e) {
-            // ok
+            assertTrue(it2.hasNext());
         }
     }
 

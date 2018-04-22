@@ -27,13 +27,12 @@ import org.apache.tools.ant.FileUtilities;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -46,21 +45,23 @@ public class StyleTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/style/build.xml");
     }
 
+    /**
+     * Expected failure: no stylesheet specified
+     */
     @Test
     public void testStyleIsSet() {
-
-        try {
-            buildRule.executeTarget("testStyleIsSet");
-            fail("Must throws a BuildException: no stylesheet specified");
-        } catch (BuildException ex) {
-            assertEquals("specify the stylesheet either as a filename in style attribute or as a nested resource",
-                    ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("specify the stylesheet either as a filename in style attribute or "
+                + "as a nested resource");
+        buildRule.executeTarget("testStyleIsSet");
     }
 
     @Test
@@ -145,15 +146,15 @@ public class StyleTest {
                    .exists());
     }
 
+    /**
+     * Expected failure: stylesheet specified twice
+     */
     @Test
     public void testWithStyleAttrAndResource() {
-        try {
-            buildRule.executeTarget("testWithStyleAttrAndResource");
-            fail("Must throws a BuildException");
-        } catch (BuildException ex) {
-            assertEquals("specify the stylesheet either as a filename in style attribute or as a "
-                    + "nested resource but not as both", ex.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("specify the stylesheet either as a filename in style attribute or "
+                + "as a nested resource but not as both");
+        buildRule.executeTarget("testWithStyleAttrAndResource");
     }
 
     @Test
