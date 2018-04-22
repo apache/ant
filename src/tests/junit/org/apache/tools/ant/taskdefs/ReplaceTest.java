@@ -123,7 +123,6 @@ public class ReplaceTest {
 
     @Test
     public void test9() throws IOException {
-
         buildRule.executeTarget("test9");
         assertEqualContent(new File(buildRule.getOutputDir(), "result.txt"),
                     new File(buildRule.getOutputDir(), "output.txt"));
@@ -151,11 +150,8 @@ public class ReplaceTest {
         assertEquals(ts1, new File(buildRule.getOutputDir(), "test.txt").lastModified());
     }
 
-    public void assertEqualContent(File expect, File result)
-        throws AssertionFailedError, IOException {
-        if (!result.exists()) {
-            fail("Expected file " + result + " doesn\'t exist");
-        }
+    public void assertEqualContent(File expect, File result) throws IOException {
+        assertTrue("Expected file " + result + " doesn't exist", result.exists());
 
         try (InputStream inExpect = new BufferedInputStream(new FileInputStream(expect));
              InputStream inResult = new BufferedInputStream(new FileInputStream(result))) {

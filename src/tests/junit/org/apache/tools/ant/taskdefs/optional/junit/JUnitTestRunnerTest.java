@@ -21,18 +21,18 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.apache.tools.ant.BuildException;
+import org.junit.Test;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import org.apache.tools.ant.BuildException;
-import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Small testcase for the runner, tests are very very very basics.
@@ -93,10 +93,8 @@ public class JUnitTestRunnerTest {
         runner.run();
         // On junit3 this is a FAILURE, on junit4 this is an ERROR
         int ret = runner.getRetCode();
-
-        if (ret != JUnitTestRunner.FAILURES && ret != JUnitTestRunner.ERRORS) {
-            fail("Unexpected result " + ret + " from junit runner");
-        }
+        assertTrue("Unexpected result " + ret + " from junit runner",
+                ret == JUnitTestRunner.FAILURES || ret == JUnitTestRunner.ERRORS);
         // JUnit3 test
         //assertEquals(runner.getFormatter().getError(), JUnitTestRunner.FAILURES, runner.getRetCode());
     }
@@ -125,9 +123,8 @@ public class JUnitTestRunnerTest {
         runner.run();
         // For JUnit 3 this is a FAILURE, for JUnit 4 this is an ERROR
         int ret = runner.getRetCode();
-        if (ret != JUnitTestRunner.FAILURES && ret != JUnitTestRunner.ERRORS) {
-            fail("Unexpected result " + ret + " from junit runner");
-        }
+        assertTrue("Unexpected result " + ret + " from junit runner",
+                ret == JUnitTestRunner.FAILURES || ret == JUnitTestRunner.ERRORS);
     }
 
     // check that an exception in the constructor is noticed
@@ -137,9 +134,8 @@ public class JUnitTestRunnerTest {
         runner.run();
         // For JUnit 3 this is a FAILURE, for JUnit 4 this is an ERROR
         int ret = runner.getRetCode();
-        if (ret != JUnitTestRunner.FAILURES && ret != JUnitTestRunner.ERRORS) {
-            fail("Unexpected result " + ret + " from junit runner");
-        }
+        assertTrue("Unexpected result " + ret + " from junit runner",
+                ret == JUnitTestRunner.FAILURES || ret == JUnitTestRunner.ERRORS);
         // JUNIT3 test
         //assertEquals(error, JUnitTestRunner.FAILURES, runner.getRetCode());
         //@fixme as of now does not report the original stacktrace.

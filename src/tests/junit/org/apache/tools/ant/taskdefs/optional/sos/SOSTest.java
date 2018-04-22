@@ -335,17 +335,9 @@ public class SOSTest {
     private void checkCommandLines(String[] sTestCmdLine, String[] sGeneratedCmdLine) {
         int length = sTestCmdLine.length;
         for (int i = 0; i < length; i++) {
-            try {
-                assertEquals("arg # " + String.valueOf(i),
-                        sTestCmdLine[i],
-                        sGeneratedCmdLine[i]);
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("missing arg " + sTestCmdLine[i]);
-            }
+            assertEquals("arg # " + String.valueOf(i),
+                    sTestCmdLine[i], sGeneratedCmdLine[i]);
         }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("extra args");
-        }
+        assertEquals("extra args", sTestCmdLine.length, sGeneratedCmdLine.length);
     }
 }

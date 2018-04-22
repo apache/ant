@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class TarTest {
 
@@ -85,12 +86,8 @@ public class TarTest {
     @Test
     public void test5() {
         buildRule.executeTarget("test5");
-        File f
-            = new File(buildRule.getProject().getProperty("output"), "test5.tar");
-
-        if (!f.exists()) {
-            fail("Tarring a directory failed");
-        }
+        File f = new File(buildRule.getProject().getProperty("output"), "test5.tar");
+        assertTrue("Tarring a directory failed", f.exists());
     }
 
     @Test
@@ -120,19 +117,11 @@ public class TarTest {
 
     private void test7(String target) {
         buildRule.executeTarget(target);
-        File f1
-            = new File(buildRule.getProject().getProperty("output"), "untar/test7-prefix");
+        File f1 = new File(buildRule.getProject().getProperty("output"), "untar/test7-prefix");
+        assertTrue("The prefix attribute is not working properly.", f1.exists() && f1.isDirectory());
 
-        if (!f1.exists() || !f1.isDirectory()) {
-            fail("The prefix attribute is not working properly.");
-        }
-
-        File f2
-            = new File(buildRule.getProject().getProperty("output"), "untar/test7dir");
-
-        if (!f2.exists() || !f2.isDirectory()) {
-            fail("The prefix attribute is not working properly.");
-        }
+        File f2 = new File(buildRule.getProject().getProperty("output"), "untar/test7dir");
+        assertTrue("The prefix attribute is not working properly.", f2.exists() && f2.isDirectory());
     }
 
     @Test
@@ -162,11 +151,9 @@ public class TarTest {
 
     private void test8(String target) {
         buildRule.executeTarget(target);
-        File f1
-            = new File(buildRule.getProject().getProperty("output"), "untar/test8.xml");
-        if (! f1.exists()) {
-            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly");
-        }
+        File f1 = new File(buildRule.getProject().getProperty("output"), "untar/test8.xml");
+        assertTrue("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly",
+                f1.exists());
     }
 
     @Test
@@ -182,21 +169,17 @@ public class TarTest {
     @Test
     public void test10() {
         buildRule.executeTarget("test10");
-        File f1
-            = new File(buildRule.getProject().getProperty("output"), "untar/test10.xml");
-        if (! f1.exists()) {
-            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly");
-        }
+        File f1 = new File(buildRule.getProject().getProperty("output"), "untar/test10.xml");
+        assertTrue("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly",
+                f1.exists());
     }
 
     @Test
     public void test11() {
         buildRule.executeTarget("test11");
-        File f1
-            = new File(buildRule.getProject().getProperty("output"), "untar/test11.xml");
-        if (! f1.exists()) {
-            fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly");
-        }
+        File f1 = new File(buildRule.getProject().getProperty("output"), "untar/test11.xml");
+        assertTrue("The fullpath attribute or the preserveLeadingSlashes attribute does not work properly",
+                f1.exists());
     }
 
     @Test

@@ -39,7 +39,6 @@ import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 /**
  *  Testcase to ensure that command line generation and required attributes are correct.
@@ -446,19 +445,14 @@ public class MSVSSTest implements MSVSSConstants {
         int testIndex = 0;
 
         while (testIndex < testLength) {
-            try {
-                if (sGeneratedCmdLine[genIndex].isEmpty()) {
-                    genIndex++;
-                    continue;
-                }
-                assertEquals("arg # " + testIndex,
-                        sTestCmdLine[testIndex],
-                        sGeneratedCmdLine[genIndex]);
-                testIndex++;
+            if (sGeneratedCmdLine[genIndex].isEmpty()) {
                 genIndex++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("missing arg " + sTestCmdLine[testIndex]);
+                continue;
             }
+            assertEquals("arg # " + testIndex,
+                    sTestCmdLine[testIndex], sGeneratedCmdLine[genIndex]);
+            testIndex++;
+            genIndex++;
         }
 
         // Count the number of empty strings

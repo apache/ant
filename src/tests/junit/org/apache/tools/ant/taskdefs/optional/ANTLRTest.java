@@ -115,7 +115,7 @@ public class ANTLRTest {
     }
 
     /**
-     * This is a negative test for the super grammar (glib) option.
+     * Expected failure due to invalid super grammar (glib) option.
      */
     @Test
     public void test8() {
@@ -145,7 +145,7 @@ public class ANTLRTest {
         buildRule.executeTarget("test10");
         File outputDirectory = new File(buildRule.getProject().getProperty("output"));
         String[] calcFiles = outputDirectory.list(new HTMLFilter());
-        assertTrue(calcFiles.length > 0);
+        assertNotEquals(calcFiles.length, 0);
     }
 
     /**

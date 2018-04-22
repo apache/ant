@@ -27,6 +27,7 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 
 public class CopydirTest {
@@ -81,9 +82,7 @@ public class CopydirTest {
         buildRule.executeTarget("test5");
         File f = new File(new File(buildRule.getProject().getProperty("output")), "taskdefs.tmp");
 
-        if (!f.exists() || !f.isDirectory()) {
-            fail("Copy failed");
-        }
+        assertTrue("Copy failed", f.exists() && f.isDirectory());
         // We keep this, so we have something to delete in later tests :-)
     }
 

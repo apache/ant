@@ -26,7 +26,6 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Test for ReaderInputStream
@@ -131,15 +130,11 @@ public class ReaderInputStreamTest {
         for (int i = 0; i < expected.length; ++i) {
             int expect = expected[i] & 0xFF;
             int read = r.read();
-            if (expect != read) {
-                fail("Mismatch in ReaderInputStream at index " + i
-                     + " expecting " + expect + " got " + read + " for string "
-                     + s + " with encoding " + encoding);
-            }
+            assertEquals("Mismatch in ReaderInputStream at index " + i
+                    + " expecting " + expect + " got " + read + " for string "
+                    + s + " with encoding " + encoding, expect, read);
         }
-        if (r.read() != -1) {
-            fail("Mismatch in ReaderInputStream - EOF not seen for string "
-                 + s + " with encoding " + encoding);
-        }
+        assertEquals("Mismatch in ReaderInputStream - EOF not seen for string "
+                + s + " with encoding " + encoding, -1, r.read());
     }
 }
