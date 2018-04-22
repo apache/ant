@@ -23,7 +23,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +37,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test case for ant class loader
@@ -47,6 +47,9 @@ public class AntClassLoaderTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private AntClassLoader loader;
 
@@ -88,39 +91,33 @@ public class AntClassLoaderTest {
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
     }
 
+    /**
+     * The test should fail if NullPointException is thrown
+     *
+     * @throws ClassNotFoundException if a class is not found, ignored
+     */
     @Test
-    public void testCleanup() throws BuildException {
+    public void testCleanup() throws ClassNotFoundException {
+        thrown.expect(ClassNotFoundException.class);
         Path path = new Path(buildRule.getProject(), ".");
         loader = buildRule.getProject().createClassLoader(path);
         try {
             // we don't expect to find this
             loader.findClass("fubar");
-            fail("Did not expect to find fubar class");
-        } catch (ClassNotFoundException e) {
-            // ignore expected
-        }
-
-        loader.cleanup();
-        try {
-            // we don't expect to find this
-            loader.findClass("fubar");
-            fail("Did not expect to find fubar class");
-        } catch (ClassNotFoundException e) {
-            // ignore expected
-        } catch (NullPointerException e) {
-            fail("loader should not fail even if cleaned up");
-        }
-
-        // tell the build it is finished
-        buildRule.getProject().fireBuildFinished(null);
-        try {
-            // we don't expect to find this
-            loader.findClass("fubar");
-            fail("Did not expect to find fubar class");
-        } catch (ClassNotFoundException e) {
-            // ignore expected
-        } catch (NullPointerException e) {
-            fail("loader should not fail even if project finished");
+        } finally {
+            loader.cleanup();
+            try {
+                // we don't expect to find this
+                loader.findClass("fubar");
+            } finally {
+                // tell the build it is finished
+                buildRule.getProject().fireBuildFinished(null);
+                try {
+                    // we don't expect to find this
+                    loader.findClass("fubar");
+                } finally {
+                }
+            }
         }
     }
 

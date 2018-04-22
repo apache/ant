@@ -19,8 +19,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-
-import junit.framework.AssertionFailedError;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
@@ -42,7 +42,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  */
@@ -61,56 +60,49 @@ public class AntTest {
         buildRule.executeTarget("cleanup");
     }
 
-    @Test
+    /**
+     * Fail due to recursive call
+     */
+    @Test(expected = BuildException.class)
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("recursive call");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test1");
+        // TODO assert exception message
     }
 
-    // target must be specified
-    @Test
+    /**
+     * Fail due to unspecified target
+     */
+    @Test(expected = BuildException.class)
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-            fail("required argument not specified");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test2");
+        // TODO assert exception message
     }
 
-    // Should fail since a recursion will occur...
-    @Test
+    /**
+     * Fail due to recursive call
+     */
+    @Test(expected = BuildException.class)
     public void test3() {
-        try {
-            buildRule.executeTarget("test1");
-            fail("recursive call");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test3");
+        // TODO assert exception message
     }
 
-    @Test
+    /**
+     * Fail due to empty target name
+     */
+    @Test(expected = BuildException.class)
     public void test4() {
-        try {
-            buildRule.executeTarget("test4");
-            fail("target attribute must not be empty");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test4");
+        // TODO assert exception message
     }
 
-    @Test
+    /**
+     * Fail due to nonexistent target
+     */
+    @Test(expected = BuildException.class)
     public void test4b() {
-        try {
-            buildRule.executeTarget("test4b");
-            fail("target doesn't exist");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("test4b");
+        // TODO assert exception message
     }
 
     @Test
@@ -165,7 +157,7 @@ public class AntTest {
         BasedirChecker bc = new BasedirChecker(dirs);
         buildRule.getProject().addBuildListener(bc);
         buildRule.executeTarget(target);
-        AssertionFailedError ae = bc.getError();
+        AssertionError ae = bc.getError();
         if (ae != null) {
             throw ae;
         }
@@ -229,7 +221,7 @@ public class AntTest {
         ReferenceChecker rc = new ReferenceChecker(keys, expect, value);
         buildRule.getProject().addBuildListener(rc);
         buildRule.executeTarget(target);
-        AssertionFailedError ae = rc.getError();
+        AssertionError ae = rc.getError();
         if (ae != null) {
             throw ae;
         }
@@ -238,21 +230,17 @@ public class AntTest {
 
     @Test
     public void testLogfilePlacement() {
-        File[] logFiles = new File[] {
-            buildRule.getProject().resolveFile("test1.log"),
-            buildRule.getProject().resolveFile("test2.log"),
-            buildRule.getProject().resolveFile("ant/test3.log"),
-            buildRule.getProject().resolveFile("ant/test4.log")
-        };
-        for (File logFile : logFiles) {
-            assertFalse(logFile.getName() + " doesn\'t exist", logFile.exists());
-        }
+        List<File> logFiles = Arrays.asList(buildRule.getProject().resolveFile("test1.log"),
+                buildRule.getProject().resolveFile("test2.log"),
+                buildRule.getProject().resolveFile("ant/test3.log"),
+                buildRule.getProject().resolveFile("ant/test4.log"));
+
+        logFiles.forEach(logFile -> assertFalse(logFile.getName() + " doesn\'t exist",
+                logFile.exists()));
 
         buildRule.executeTarget("testLogfilePlacement");
 
-        for (File logFile : logFiles) {
-            assertTrue(logFile.getName() + " exists", logFile.exists());
-        }
+        logFiles.forEach(logFile -> assertTrue(logFile.getName() + " exists", logFile.exists()));
     }
 
     @Test
@@ -262,7 +250,7 @@ public class AntTest {
         InputHandlerChecker ic = new InputHandlerChecker(ih);
         buildRule.getProject().addBuildListener(ic);
         buildRule.executeTarget("tripleCall");
-        AssertionFailedError ae = ic.getError();
+        AssertionError ae = ic.getError();
         if (ae != null) {
             throw ae;
         }
@@ -273,13 +261,11 @@ public class AntTest {
     public void testRefId() {
         Path testPath = new Path(buildRule.getProject());
         testPath.createPath().setPath(System.getProperty("java.class.path"));
-        PropertyChecker pc =
-            new PropertyChecker("testprop",
-                                new String[] {null,
-                                              testPath.toString()});
+        PropertyChecker pc = new PropertyChecker("testprop",
+                new String[] {null, testPath.toString()});
         buildRule.getProject().addBuildListener(pc);
         buildRule.executeTarget("testRefid");
-        AssertionFailedError ae = pc.getError();
+        AssertionError ae = pc.getError();
         if (ae != null) {
             throw ae;
         }
@@ -290,7 +276,6 @@ public class AntTest {
     public void testUserPropertyWinsInheritAll() {
         buildRule.getProject().setUserProperty("test", "7");
         buildRule.executeTarget("test-property-override-inheritall-start");
-
         assertThat(buildRule.getLog(), containsString("The value of test is 7"));
     }
 
@@ -298,14 +283,12 @@ public class AntTest {
     public void testUserPropertyWinsNoInheritAll() {
         buildRule.getProject().setUserProperty("test", "7");
         buildRule.executeTarget("test-property-override-no-inheritall-start");
-
         assertThat(buildRule.getLog(), containsString("The value of test is 7"));
     }
 
     @Test
     public void testOverrideWinsInheritAll() {
         buildRule.executeTarget("test-property-override-inheritall-start");
-
         assertThat(buildRule.getLog(), containsString("The value of test is 4"));
     }
 
@@ -323,14 +306,13 @@ public class AntTest {
         assertThat(buildRule.getLog(), containsString("test1.x is 1"));
     }
 
-    @Test
+    /**
+     * Fail due to infinite recursion loop
+     */
+    @Test(expected = BuildException.class)
     public void testInfiniteLoopViaDepends() {
-        try {
-            buildRule.executeTarget("infinite-loop-via-depends");
-            fail("recursive call");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("infinite-loop-via-depends");
+        // TODO assert exception message
     }
 
     @Test
@@ -342,7 +324,6 @@ public class AntTest {
     @Test
     public void testTopLevelTarget() {
         buildRule.executeTarget("topleveltarget");
-
         assertEquals("Hello world", buildRule.getLog());
     }
 
@@ -355,11 +336,11 @@ public class AntTest {
         buildRule.getProject().addBuildListener(pcBar);
         buildRule.getProject().addBuildListener(pcFoo);
         buildRule.executeTarget("multiple-property-file-children");
-        AssertionFailedError aeBar = pcBar.getError();
+        AssertionError aeBar = pcBar.getError();
         if (aeBar != null) {
             throw aeBar;
         }
-        AssertionFailedError aeFoo = pcFoo.getError();
+        AssertionError aeFoo = pcFoo.getError();
         if (aeFoo != null) {
             throw aeFoo;
         }
@@ -367,14 +348,13 @@ public class AntTest {
         buildRule.getProject().removeBuildListener(pcFoo);
     }
 
-    @Test
+    /**
+     * Fail due to empty target name
+     */
+    @Test(expected = BuildException.class)
     public void testBlankTarget() {
-        try {
-            buildRule.executeTarget("blank-target");
-            fail("target name must not be empty");
-        } catch (BuildException ex) {
-            //TODO assert exception message
-        }
+        buildRule.executeTarget("blank-target");
+        // TODO assert exception message
     }
 
     @Test
@@ -400,7 +380,7 @@ public class AntTest {
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
-        private AssertionFailedError error;
+        private AssertionError error;
 
         BasedirChecker(String[] dirs) {
             expectedBasedirs = dirs;
@@ -432,16 +412,15 @@ public class AntTest {
                 try {
                     assertEquals(expectedBasedirs[calls++],
                                  event.getProject().getBaseDir().getAbsolutePath());
-                } catch (AssertionFailedError e) {
+                } catch (AssertionError e) {
                     error = e;
                 }
             }
         }
 
-        AssertionFailedError getError() {
+        AssertionError getError() {
             return error;
         }
-
     }
 
     private class ReferenceChecker implements BuildListener {
@@ -449,7 +428,7 @@ public class AntTest {
         private boolean[] expectSame;
         private Object value;
         private int calls = 0;
-        private AssertionFailedError error;
+        private AssertionError error;
 
         ReferenceChecker(String[] keys, boolean[] expectSame, Object value) {
             this.keys = keys;
@@ -481,8 +460,7 @@ public class AntTest {
             }
             if (error == null) {
                 try {
-                    String msg =
-                        "Call " + calls + " refid=\'" + keys[calls] + "\'";
+                    String msg = "Call " + calls + " refid=\'" + keys[calls] + "\'";
                     if (value == null) {
                         Object o = event.getProject().getReference(keys[calls]);
                         if (expectSame[calls++]) {
@@ -512,21 +490,20 @@ public class AntTest {
                             }
                         }
                     }
-                } catch (AssertionFailedError e) {
+                } catch (AssertionError e) {
                     error = e;
                 }
             }
         }
 
-        AssertionFailedError getError() {
+        AssertionError getError() {
             return error;
         }
-
     }
 
     private class InputHandlerChecker implements BuildListener {
         private InputHandler ih;
-        private AssertionFailedError error;
+        private AssertionError error;
 
         InputHandlerChecker(InputHandler value) {
             ih = value;
@@ -535,18 +512,23 @@ public class AntTest {
         public void buildStarted(BuildEvent event) {
             check(event);
         }
+
         public void buildFinished(BuildEvent event) {
             check(event);
         }
+
         public void targetFinished(BuildEvent event) {
             check(event);
         }
+
         public void taskStarted(BuildEvent event) {
             check(event);
         }
+
         public void taskFinished(BuildEvent event) {
             check(event);
         }
+
         public void messageLogged(BuildEvent event) {
             check(event);
         }
@@ -560,23 +542,22 @@ public class AntTest {
                 try {
                     assertNotNull(event.getProject().getInputHandler());
                     assertSame(ih, event.getProject().getInputHandler());
-                } catch (AssertionFailedError e) {
+                } catch (AssertionError e) {
                     error = e;
                 }
             }
         }
 
-        AssertionFailedError getError() {
+        AssertionError getError() {
             return error;
         }
-
     }
 
     private class PropertyChecker implements BuildListener {
         private String[] expectedValues;
         private String key;
         private int calls = 0;
-        private AssertionFailedError error;
+        private AssertionError error;
 
         PropertyChecker(String key, String[] values) {
             this.key = key;
@@ -606,25 +587,23 @@ public class AntTest {
                 return;
             }
             if (calls >= expectedValues.length) {
-                error = new AssertionFailedError("Unexpected invocation of"
-                                                 + " target "
-                                                 + event.getTarget().getName());
+                error = new AssertionError("Unexpected invocation of target "
+                        + event.getTarget().getName());
             }
 
             if (error == null) {
                 try {
                     assertEquals(expectedValues[calls++],
                                  event.getProject().getProperty(key));
-                } catch (AssertionFailedError e) {
+                } catch (AssertionError e) {
                     error = e;
                 }
             }
         }
 
-        AssertionFailedError getError() {
+        AssertionError getError() {
             return error;
         }
-
     }
 
 }

@@ -22,6 +22,7 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -35,6 +36,9 @@ public class RhinoScriptTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -68,22 +72,15 @@ public class RhinoScriptTest {
 
     @Test
     public void testUseSrcAndEncoding() {
-        final String readerEncoding = "UTF-8";
-        buildRule.getProject().setProperty("useSrcAndEncoding.reader.encoding", readerEncoding);
+        buildRule.getProject().setProperty("useSrcAndEncoding.reader.encoding", "UTF-8");
         buildRule.executeTarget("useSrcAndEncoding");
     }
 
     @Test
     public void testUseSrcAndEncodingFailure() {
-        final String readerEncoding = "ISO-8859-1";
-        buildRule.getProject().setProperty("useSrcAndEncoding.reader.encoding", readerEncoding);
-        try {
-            buildRule.executeTarget("useSrcAndEncoding");
-            fail("should have failed with reader's encoding [" + readerEncoding
-                    + "] different from the writer's encoding ["
-                    + buildRule.getProject().getProperty("useSrcAndEncoding.encoding") + "]");
-        } catch (BuildException e) {
-            assertTrue(e.getMessage().matches("expected <eacute \\[\u00e9]> but was <eacute \\[\u00c3\u00a9]>"));
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("expected <eacute [\u00e9]> but was <eacute [\u00c3\u00a9]>");
+        buildRule.getProject().setProperty("useSrcAndEncoding.reader.encoding", "ISO-8859-1");
+        buildRule.executeTarget("useSrcAndEncoding");
     }
 }

@@ -34,6 +34,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -64,6 +65,9 @@ public class MSVSSTest implements MSVSSConstants {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
     private Project project;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -115,7 +119,7 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testGetExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
-        expectSpecificBuildException("vssget.1", "some cause", "vsspath attribute must be set!");
+        expectSpecificBuildException("vssget.1", "vsspath attribute must be set!");
     }
 
     /**  Tests Label commandline generation.  */
@@ -168,8 +172,8 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testLabelExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
-        expectSpecificBuildException("vsslabel.1", "some cause", "vsspath attribute must be set!");
-        expectSpecificBuildException("vsslabel.2", "some cause", "label attribute must be set!");
+        expectSpecificBuildException("vsslabel.1", "vsspath attribute must be set!");
+        expectSpecificBuildException("vsslabel.2", "label attribute must be set!");
     }
 
     /**  Tests VSSHistory commandline generation with from label.  */
@@ -262,17 +266,13 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testHistoryExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
-        expectSpecificBuildException("vsshistory.1", "some cause", "vsspath attribute must be set!");
+        expectSpecificBuildException("vsshistory.1", "vsspath attribute must be set!");
     }
 
-    private void expectSpecificBuildException(String target, String failMessage,
-                                              String exceptionMessage) {
-        try {
-            buildRule.executeTarget(target);
-            fail(failMessage);
-        } catch (BuildException ex) {
-            assertEquals(exceptionMessage, ex.getMessage());
-        }
+    private void expectSpecificBuildException(String target, String exceptionMessage) {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(exceptionMessage);
+        buildRule.executeTarget(target);
     }
 
     /**  Tests CheckIn commandline generation.  */
@@ -302,7 +302,7 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testCheckinExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
-        expectSpecificBuildException("vsscheckin.1", "some cause", "vsspath attribute must be set!");
+        expectSpecificBuildException("vsscheckin.1", "vsspath attribute must be set!");
     }
 
     /**  Tests CheckOut commandline generation.  */
@@ -338,8 +338,8 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testCheckoutExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
-        expectSpecificBuildException("vsscheckout.1", "some cause", "vsspath attribute must be set!");
-        expectSpecificBuildException("vsscheckout.2", "some cause", "blah is not a legal value for this attribute");
+        expectSpecificBuildException("vsscheckout.1", "vsspath attribute must be set!");
+        expectSpecificBuildException("vsscheckout.2", "blah is not a legal value for this attribute");
     }
 
     /**  Tests Add commandline generation.  */
@@ -371,7 +371,7 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testAddExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
-        expectSpecificBuildException("vssadd.1", "some cause", "localPath attribute must be set!");
+        expectSpecificBuildException("vssadd.1", "localPath attribute must be set!");
     }
 
     /**  Tests CP commandline generation.  */
@@ -398,7 +398,7 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testCpExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
-        expectSpecificBuildException("vsscp.1", "some cause", "vsspath attribute must be set!");
+        expectSpecificBuildException("vsscp.1", "vsspath attribute must be set!");
     }
 
     /**  Tests Create commandline generation.  */
@@ -429,7 +429,7 @@ public class MSVSSTest implements MSVSSConstants {
     @Test
     public void testCreateExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/vss/vss.xml");
-        expectSpecificBuildException("vsscreate.1", "some cause", "vsspath attribute must be set!");
+        expectSpecificBuildException("vsscreate.1", "vsspath attribute must be set!");
     }
 
     /**

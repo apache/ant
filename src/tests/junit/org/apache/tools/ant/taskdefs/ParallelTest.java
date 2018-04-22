@@ -27,9 +27,12 @@ import org.apache.tools.ant.Project;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test of the parallel TaskContainer
@@ -38,6 +41,9 @@ public class ParallelTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     /** Standard property value for the basic test */
     public static final String DIRECT_MESSAGE = "direct";
@@ -108,6 +114,9 @@ public class ParallelTest {
         int current = 0;
         int pos = beginSlash + 1;
         while (pos < lastPipe) {
+            assertTrue("Only expect '+-' in result count, found " + s.charAt(pos)
+                            + " at position " + (pos + 1),
+                    s.charAt(pos) == '+' || s.charAt(pos) == '-');
             switch (s.charAt(pos++)) {
                 case '+':
                     current++;
@@ -116,13 +125,10 @@ public class ParallelTest {
                     current--;
                     break;
                 default:
-                    fail("Only expect '+-' in result count, found "
-                            + s.charAt(--pos) + " at position " + pos);
+                    break;
             }
-            if (current > max) {
-                fail("Number of executing threads exceeded number allowed: "
-                        + current + " > " + max);
-            }
+            assertTrue("Number of executing threads exceeded number allowed: "
+                    + current + " > " + max, current <= max);
         }
         return lastPipe;
     }
@@ -132,15 +138,12 @@ public class ParallelTest {
     @Test
     public void testFail() {
         // should get no output at all
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(FAILURE_MESSAGE);
         Project p = buildRule.getProject();
         p.setUserProperty("test.failure", FAILURE_MESSAGE);
         p.setUserProperty("test.delayed", DELAYED_MESSAGE);
-        try {
-            buildRule.executeTarget("testFail");
-            fail("fail task in one parallel branch");
-        } catch (BuildException ex) {
-            assertEquals(FAILURE_MESSAGE, ex.getMessage());
-        }
+        buildRule.executeTarget("testFail");
     }
 
     /** tests the demuxing of output streams in a multithreaded situation */
@@ -168,12 +171,9 @@ public class ParallelTest {
      */
     @Test
     public void testSingleExit() {
-        try {
-            buildRule.executeTarget("testSingleExit");
-            fail("ExitStatusException should have been thrown");
-        } catch (ExitStatusException ex) {
-            assertEquals(42, ex.getStatus());
-        }
+        thrown.expect(ExitStatusException.class);
+        thrown.expect(hasProperty("status", equalTo(42)));
+        buildRule.executeTarget("testSingleExit");
     }
 
     /**
@@ -181,12 +181,9 @@ public class ParallelTest {
      */
     @Test
     public void testExitAndOtherException() {
-        try {
-            buildRule.executeTarget("testExitAndOtherException");
-            fail("ExitStatusException should have been thrown");
-        } catch (ExitStatusException ex) {
-            assertEquals(42, ex.getStatus());
-        }
+        thrown.expect(ExitStatusException.class);
+        thrown.expect(hasProperty("status", equalTo(42)));
+        buildRule.executeTarget("testExitAndOtherException");
     }
 
 }

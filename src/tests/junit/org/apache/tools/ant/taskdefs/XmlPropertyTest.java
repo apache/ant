@@ -36,8 +36,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  */
@@ -228,18 +231,13 @@ public class XmlPropertyTest {
                 // *value* of the Path object, though...
                 Object obj = p.getReferences().get(currentKey);
 
-                if (obj == null) {
-                    fail(assertMsg + " Object ID does not exist.");
-                }
+                assertNotEquals(assertMsg + " Object ID does not exist.", null, obj);
 
                 // What is the property supposed to be?
-                propertyValue =
-                    propertyValue.substring(3, propertyValue.length());
+                propertyValue = propertyValue.substring(3, propertyValue.length());
                 if (propertyValue.equals("path")) {
-                    if (!(obj instanceof Path)) {
-                        fail(assertMsg + " Path ID is a "
-                             + obj.getClass().getName());
-                    }
+                    assertThat(assertMsg + " Path ID is a " + obj.getClass().getName(),
+                            obj, instanceOf(Path.class));
                 } else {
                     assertEquals(assertMsg, propertyValue, obj.toString());
                 }
@@ -279,12 +277,9 @@ public class XmlPropertyTest {
         for (Map.Entry<String, Object> entry : references.entrySet()) {
             String currentKey = entry.getKey();
             Object currentValue = entry.getValue();
-
-            if (!(currentValue instanceof Path) && !(currentValue instanceof String)
-                    && !currentKey.startsWith("ant.")) {
-                fail(msg + "-" + inputFile.getName() + " Key="
-                        + currentKey + " is not a recognized type.");
-            }
+            assertTrue(msg + "-" + inputFile.getName() + " Key=" + currentKey
+                    + " is not a recognized type.", currentValue instanceof Path
+                    || currentValue instanceof String || currentKey.startsWith("ant."));
         }
     }
 
