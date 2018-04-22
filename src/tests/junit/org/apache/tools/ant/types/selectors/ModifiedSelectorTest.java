@@ -21,6 +21,7 @@ package org.apache.tools.ant.types.selectors;
 import java.io.File;
 import java.io.FileWriter;
 import java.text.RuleBasedCollator;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -45,6 +46,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
@@ -54,8 +56,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeNotNull;
 
 /**
  * Unit tests for ModifiedSelector.
@@ -67,16 +67,18 @@ public class ModifiedSelectorTest {
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    //  =====================  attributes  =====================
+    //  =====================  fixtures  =====================
 
     /** Path where the testclasses are. */
-    private Path testclasses = null;
+    private Path testclasses;
 
     //  =====================  JUnit stuff  =====================
-
 
     @Before
     public void setUp() {
@@ -91,72 +93,48 @@ public class ModifiedSelectorTest {
     @Test
     public void testValidateWrongCache() {
         String name = "this-is-not-a-valid-cache-name";
-        try {
-            ModifiedSelector.CacheName cacheName = new ModifiedSelector.CacheName();
-            cacheName.setValue(name);
-            fail("CacheSelector.CacheName accepted invalid value.");
-        } catch (BuildException be) {
-            assertEquals(name + " is not a legal value for this attribute",
-                         be.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(name + " is not a legal value for this attribute");
+        ModifiedSelector.CacheName cacheName = new ModifiedSelector.CacheName();
+        cacheName.setValue(name);
     }
 
     /** Test correct use of cache names. */
     @Test
     public void testValidateWrongAlgorithm() {
         String name = "this-is-not-a-valid-algorithm-name";
-        try {
-            ModifiedSelector.AlgorithmName algoName
-                = new ModifiedSelector.AlgorithmName();
-            algoName.setValue(name);
-            fail("CacheSelector.AlgorithmName accepted invalid value.");
-        } catch (BuildException be) {
-            assertEquals(name + " is not a legal value for this attribute",
-                         be.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(name + " is not a legal value for this attribute");
+        ModifiedSelector.AlgorithmName algoName = new ModifiedSelector.AlgorithmName();
+        algoName.setValue(name);
     }
 
     /** Test correct use of comparator names. */
     @Test
     public void testValidateWrongComparator() {
         String name = "this-is-not-a-valid-comparator-name";
-        try {
-            ModifiedSelector.ComparatorName compName
-                = new ModifiedSelector.ComparatorName();
-            compName.setValue(name);
-            fail("ModifiedSelector.ComparatorName accepted invalid value.");
-        } catch (BuildException be) {
-            assertEquals(name + " is not a legal value for this attribute",
-                         be.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage(name + " is not a legal value for this attribute");
+        ModifiedSelector.ComparatorName compName = new ModifiedSelector.ComparatorName();
+        compName.setValue(name);
     }
 
     /** Test correct use of algorithm names. */
     @Test
     public void testIllegalCustomAlgorithm() {
-        try {
-            getAlgoName("java.lang.Object");
-            fail("Illegal classname used.");
-        } catch (BuildException e) {
-            assertEquals("Wrong exception message.",
-                         "Specified class (java.lang.Object) is not an Algorithm.",
-                         e.getMessage());
-
-        }
+        String className = "java.lang.Object";
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Specified class (" + className + ") is not an Algorithm.");
+        getAlgoName(className);
     }
 
     /** Test correct use of algorithm names. */
     @Test
     public void testNonExistentCustomAlgorithm() {
-         try {
-            getAlgoName("non.existent.custom.Algorithm");
-            fail("does 'non.existent.custom.Algorithm' really exist?");
-        } catch (BuildException e) {
-            assertEquals("Wrong exception message.",
-                         "Specified class (non.existent.custom.Algorithm) not found.",
-                         e.getMessage());
-
-        }
+        String className = "non.existent.custom.Algorithm";
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Specified class (" + className + ") not found.");
+        getAlgoName(className);
     }
 
     @Test
@@ -173,7 +151,7 @@ public class ModifiedSelectorTest {
 
     @Test
     public void testCustomClasses() {
-        assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        assertNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         BFT bft = new BFT();
         bft.setUp();
         // don't catch the JUnit exceptions
@@ -304,8 +282,7 @@ public class ModifiedSelectorTest {
     @Test
     public void testPropcacheInvalid() {
         Cache cache = new PropertiesfileCache();
-        if (cache.isValid())
-            fail("PropertyfilesCache does not check its configuration.");
+        assertFalse("PropertyfilesCache does not check its configuration.", cache.isValid());
     }
 
     @Test
@@ -422,7 +399,7 @@ public class ModifiedSelectorTest {
         // test the iterator
         Iterator<String> it2 = cache.iterator();
         String returned = it2.next();
-        boolean ok = (key1.equals(returned) || key2.equals(returned));
+        boolean ok = key1.equals(returned) || key2.equals(returned);
         String msg = "Iterator returned unexpected value."
                    + "  key1.equals(returned)=" + key1.equals(returned)
                    + "  key2.equals(returned)=" + key2.equals(returned)
@@ -487,30 +464,26 @@ public class ModifiedSelectorTest {
      * @param algo   configured test object
      */
     protected void doTest(Algorithm algo) {
-         assertTrue("Algorithm not proper configured.", algo.isValid());
-         for (int i=0; i<selectorRule.getFiles().length; i++) {
-            File file = selectorRule.getFiles()[i];  // must not be a directory
-            if (file.isFile()) {
-                // get the Hashvalues
-                String hash1 = algo.getValue(file);
-                String hash2 = algo.getValue(file);
-                String hash3 = algo.getValue(file);
-                String hash4 = algo.getValue(file);
-                String hash5 = algo.getValue(new File(file.getAbsolutePath()));
-
-                // Assert !=null and equality
-                assertNotNull("Hashvalue was null for "+file.getAbsolutePath(), hash1);
-                assertNotNull("Hashvalue was null for "+file.getAbsolutePath(), hash2);
-                assertNotNull("Hashvalue was null for "+file.getAbsolutePath(), hash3);
-                assertNotNull("Hashvalue was null for "+file.getAbsolutePath(), hash4);
-                assertNotNull("Hashvalue was null for "+file.getAbsolutePath(), hash5);
-                assertEquals("getHashvalue() returned different value for "+file.getAbsolutePath(), hash1, hash2);
-                assertEquals("getHashvalue() returned different value for "+file.getAbsolutePath(), hash1, hash3);
-                assertEquals("getHashvalue() returned different value for "+file.getAbsolutePath(), hash1, hash4);
-                assertEquals("getHashvalue() returned different value for "+file.getAbsolutePath(), hash1, hash5);
-            }//if-isFile
-        }//for
-
+        assertTrue("Algorithm not proper configured.", algo.isValid());
+        // must not be a directory
+        Arrays.stream(selectorRule.getFiles()).filter(File::isFile).forEach(file -> {
+            // get the Hashvalues
+            String hash1 = algo.getValue(file);
+            String hash2 = algo.getValue(file);
+            String hash3 = algo.getValue(file);
+            String hash4 = algo.getValue(file);
+            String hash5 = algo.getValue(new File(file.getAbsolutePath()));
+            // Assert !=null and equality
+            assertNotNull("Hashvalue was null for " + file.getAbsolutePath(), hash1);
+            assertNotNull("Hashvalue was null for " + file.getAbsolutePath(), hash2);
+            assertNotNull("Hashvalue was null for " + file.getAbsolutePath(), hash3);
+            assertNotNull("Hashvalue was null for " + file.getAbsolutePath(), hash4);
+            assertNotNull("Hashvalue was null for " + file.getAbsolutePath(), hash5);
+            assertEquals("getHashvalue() returned different value for " + file.getAbsolutePath(), hash1, hash2);
+            assertEquals("getHashvalue() returned different value for " + file.getAbsolutePath(), hash1, hash3);
+            assertEquals("getHashvalue() returned different value for " + file.getAbsolutePath(), hash1, hash4);
+            assertEquals("getHashvalue() returned different value for " + file.getAbsolutePath(), hash1, hash5);
+        });
     }
 
     // ==============  testcases for the comparator implementations  ==============
@@ -585,8 +558,7 @@ public class ModifiedSelectorTest {
 
     @Test
     public void testResourceSelectorScenarioSimple() {
-
-        assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        assertNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         BFT bft = new BFT();
         bft.doTarget("modifiedselectortest-scenario-resourceSimple");
         bft.doTarget("modifiedselectortest-scenario-clean");
@@ -806,19 +778,19 @@ public class ModifiedSelectorTest {
 
     @Test
     public void testScenarioCoreSelectorDefaults() {
-        assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        assertNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         doScenarioTest("modifiedselectortest-scenario-coreselector-defaults", "cache.properties");
     }
 
     @Test
     public void testScenarioCoreSelectorSettings() {
-        assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        assertNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         doScenarioTest("modifiedselectortest-scenario-coreselector-settings", "core.cache.properties");
     }
 
     @Test
     public void testScenarioCustomSelectorSettings() {
-        assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        assertNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
         doScenarioTest("modifiedselectortest-scenario-customselector-settings", "core.cache.properties");
     }
 

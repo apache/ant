@@ -27,12 +27,12 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * JUnit testcases for org.apache.tools.ant.CommandlineJava
@@ -47,7 +47,9 @@ public class CommandlineJavaTest {
     @Before
     public void setUp() {
         project = new Project();
-        project.setBasedir(System.getProperty("root"));
+        if (System.getProperty("root") != null) {
+            project.setBasedir(System.getProperty("root"));
+        }
         project.setProperty("build.sysclasspath", "ignore");
         cloneVm = System.getProperty("ant.build.clonevm");
         if (cloneVm != null) {
@@ -62,8 +64,14 @@ public class CommandlineJavaTest {
         }
     }
 
+    /**
+     * NullPointerException may break the build
+     *
+     * @throws CloneNotSupportedException if clone() fails
+     */
     @Test
-    public void testGetCommandline() throws Exception {
+    public void testGetCommandline() throws CloneNotSupportedException {
+        assertNotNull("Ant home not set", System.getProperty("ant.home"));
         CommandlineJava c = new CommandlineJava();
         c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
         c.setClassname("junit.textui.TestRunner");
@@ -82,22 +90,17 @@ public class CommandlineJavaTest {
         assertEquals("no classpath", "junit.textui.TestRunner", s[2]);
         assertEquals("no classpath",
                      "org.apache.tools.ant.CommandlineJavaTest", s[3]);
-        try {
-            c.clone();
-        } catch (NullPointerException ex) {
-            fail("cloning should work without classpath specified");
-        }
-
+        c.clone();
         c.createClasspath(project).setLocation(project.resolveFile("build.xml"));
         c.createClasspath(project).setLocation(project.resolveFile(
             System.getProperty(MagicNames.ANT_HOME) + "/lib/ant.jar"));
         s = c.getCommandline();
         assertEquals("with classpath", 6, s.length);
-        //        assertEquals("with classpath", "java", s[0]);
+        // assertEquals("with classpath", "java", s[0]);
         assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("with classpath", "-classpath", s[2]);
         assertThat("build.xml contained", s[3], containsString("build.xml" + File.pathSeparator));
-        assertTrue("ant.jar contained", s[3].endsWith("ant.jar"));
+        assertThat("ant.jar contained", s[3], endsWith("ant.jar"));
         assertEquals("with classpath", "junit.textui.TestRunner", s[4]);
         assertEquals("with classpath",
                      "org.apache.tools.ant.CommandlineJavaTest", s[5]);
