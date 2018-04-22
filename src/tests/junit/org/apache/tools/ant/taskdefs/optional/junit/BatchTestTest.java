@@ -19,102 +19,97 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.fail;
 
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  *
  * @author  Marian Petras
  */
+@RunWith(Enclosed.class)
 public class BatchTestTest {
 
-    @Test
-    public void testParseTestMethodNamesList() {
-        try {
-            JUnitTest.parseTestMethodNamesList(null);
-            fail("IllegalArgumentException expected when the param is <null>");
-        } catch (IllegalArgumentException ex) {
-            //this is an expected exception
+    @RunWith(Parameterized.class)
+    public static class IllegalArgumentTest {
+
+        // requires JUnit 4.12
+        @Parameters(name = "illegal argument: |{0}|")
+        public static Collection<String> data() {
+            return Arrays.asList(null, ",", " ,", ", ", " , ",
+                    ",a", " ,a", "  ,a", "  , a", "  ,a  ", "  ,a  ,",
+                    "ab,,cd", "ab, ,cd", "ab,  ,cd", "ab,  ,cd,", ",ab,  ,cd,",
+                    /* illegal Java identifiers: */
+                    "1", "1a", "1ab", "1abc", "1abc d", "1abc de", "1abc def", "1abc def,",
+                    ",1abc def");
         }
 
-        assertArrayEquals(new String[0], JUnitTest.parseTestMethodNamesList(""));
-        assertArrayEquals(new String[0], JUnitTest.parseTestMethodNamesList(" "));
-        assertArrayEquals(new String[0], JUnitTest.parseTestMethodNamesList("  "));
+        @Parameter
+        public String argument;
 
-        checkParseCausesIAE(",");
-        checkParseCausesIAE(" ,");
-        checkParseCausesIAE(", ");
-        checkParseCausesIAE(" , ");
-        checkParseCausesIAE(",a");
-        checkParseCausesIAE(" ,a");
-        checkParseCausesIAE("  ,a");
-        checkParseCausesIAE("  , a");
-        checkParseCausesIAE("  ,a  ");
-        checkParseCausesIAE("  ,a  ,");
-        checkParseCausesIAE("ab,,cd");
-        checkParseCausesIAE("ab, ,cd");
-        checkParseCausesIAE("ab,  ,cd");
-        checkParseCausesIAE("ab,  ,cd,");
-        checkParseCausesIAE(",ab,  ,cd,");
-
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList("abc"));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList("abc "));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList(" abc"));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList(" abc "));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList("abc  "));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList("abc,"));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList("abc, "));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList("abc ,"));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList("abc , "));
-        assertArrayEquals(new String[] {"abc"}, JUnitTest.parseTestMethodNamesList(" abc  ,"));
-
-        /* legal Java identifiers: */
-        assertArrayEquals(new String[] {"a"}, JUnitTest.parseTestMethodNamesList("a"));
-        assertArrayEquals(new String[] {"a1"}, JUnitTest.parseTestMethodNamesList("a1"));
-        assertArrayEquals(new String[] {"a$"}, JUnitTest.parseTestMethodNamesList("a$"));
-        assertArrayEquals(new String[] {"a$1"}, JUnitTest.parseTestMethodNamesList("a$1"));
-        assertArrayEquals(new String[] {"_bc"}, JUnitTest.parseTestMethodNamesList("_bc"));
-        assertArrayEquals(new String[] {"___"}, JUnitTest.parseTestMethodNamesList("___"));
-
-        /* illegal Java identifiers: */
-        checkParseCausesIAE("1");
-        checkParseCausesIAE("1a");
-        checkParseCausesIAE("1ab");
-        checkParseCausesIAE("1abc");
-        checkParseCausesIAE("1abc d");
-        checkParseCausesIAE("1abc de");
-        checkParseCausesIAE("1abc def");
-        checkParseCausesIAE("1abc def,");
-        checkParseCausesIAE(",1abc def");
-
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc,def"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc,def,"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc,def "));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc, def"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc, def "));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc ,def"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc ,def "));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc , def"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList("abc , def "));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc,def"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc,def "));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc, def"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc, def "));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc ,def"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc ,def "));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc , def"));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc , def "));
-        assertArrayEquals(new String[] {"abc", "def"}, JUnitTest.parseTestMethodNamesList(" abc , def ,"));
+        /**
+         * Expected failure when the parameter is illegal
+         */
+        @Test(expected = IllegalArgumentException.class)
+        public void testParseTestMethodNamesList() {
+            JUnitTest.parseTestMethodNamesList(argument);
+        }
     }
 
-    private static void checkParseCausesIAE(String param) {
-        try {
-            JUnitTest.parseTestMethodNamesList(param);
-            fail("IllegalArgumentException expected when the param is \"" + param + '"');
-        } catch (IllegalArgumentException ex) {
-            //this is an expected exception
+    @RunWith(Parameterized.class)
+    public static class LegalArgumentTest {
+
+        @Parameters(name = "legal argument: |{0}|")
+        public static Collection<Object[]> data() {
+            return Arrays.asList(new Object[][] {
+                    {"", new String[0]}, {" ", new String[0]}, {"  ", new String[0]},
+                    {"abc", new String[]{"abc"}}, {"abc ", new String[]{"abc"}},
+                    {" abc", new String[]{"abc"}}, {" abc ", new String[]{"abc"}},
+                    {"abc  ", new String[]{"abc"}}, {"abc,", new String[]{"abc"}},
+                    {"abc, ", new String[]{"abc"}}, {"abc ,", new String[]{"abc"}},
+                    {"abc , ", new String[]{"abc"}}, {" abc  ,", new String[]{"abc"}},
+                    /* legal Java identifiers: */
+                    {"a", new String[]{"a"}}, {"a1", new String[]{"a1"}},
+                    {"a$", new String[]{"a$"}}, {"a$1", new String[]{"a$1"}},
+                    {"_bc", new String[]{"_bc"}}, {"___", new String[]{"___"}},
+                    {"abc,def", new String[]{"abc", "def"}},
+                    {"abc,def,", new String[]{"abc", "def"}},
+                    {"abc,def ", new String[]{"abc", "def"}},
+                    {"abc, def", new String[]{"abc", "def"}},
+                    {"abc, def ", new String[]{"abc", "def"}},
+                    {"abc ,def", new String[]{"abc", "def"}},
+                    {"abc ,def ", new String[]{"abc", "def"}},
+                    {"abc , def", new String[]{"abc", "def"}},
+                    {"abc , def ", new String[]{"abc", "def"}},
+                    {" abc,def", new String[]{"abc", "def"}},
+                    {" abc,def ", new String[]{"abc", "def"}},
+                    {" abc, def", new String[]{"abc", "def"}},
+                    {" abc, def ", new String[]{"abc", "def"}},
+                    {" abc ,def", new String[]{"abc", "def"}},
+                    {" abc ,def ", new String[]{"abc", "def"}},
+                    {" abc , def", new String[]{"abc", "def"}},
+                    {" abc , def ", new String[]{"abc", "def"}},
+                    {" abc , def ,", new String[]{"abc", "def"}},
+            });
         }
+
+        @Parameter
+        public String argument;
+
+        @Parameter(1)
+        public String[] result;
+
+        @Test
+        public void testParseTestMethodNamesList() {
+            assertArrayEquals(result, JUnitTest.parseTestMethodNamesList(argument));
+       }
     }
 
 }
