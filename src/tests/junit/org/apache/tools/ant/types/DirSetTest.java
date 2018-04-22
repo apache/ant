@@ -23,7 +23,6 @@ import java.io.FileOutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -47,6 +47,9 @@ public class XsltTest {
         buildRule.configureProject(TASKDEFS_DIR + "xslt.xml");
     }
 
+    /**
+     * Expected failure due to lacking DTD
+     */
     @Test(expected = BuildException.class)
     public void testCatchNoDtd() {
         buildRule.executeTarget("testCatchNoDtd");

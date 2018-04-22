@@ -49,6 +49,9 @@ public class TypeFoundTest {
         assertEquals("true", buildRule.getProject().getProperty("testTask"));
     }
 
+    /**
+     * Expected failure due to missing name attribute
+     */
     @Test
     public void testUndefined() {
         thrown.expect(BuildException.class);

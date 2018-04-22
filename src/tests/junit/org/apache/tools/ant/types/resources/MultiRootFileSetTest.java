@@ -26,9 +26,7 @@ import org.apache.tools.ant.types.AbstractFileSet;
 import org.apache.tools.ant.types.AbstractFileSetTest;
 import org.apache.tools.ant.types.Reference;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.endsWith;
 

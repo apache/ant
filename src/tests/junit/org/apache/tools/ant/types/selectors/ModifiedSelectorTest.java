@@ -95,8 +95,7 @@ public class ModifiedSelectorTest {
         String name = "this-is-not-a-valid-cache-name";
         thrown.expect(BuildException.class);
         thrown.expectMessage(name + " is not a legal value for this attribute");
-        ModifiedSelector.CacheName cacheName = new ModifiedSelector.CacheName();
-        cacheName.setValue(name);
+        new ModifiedSelector.CacheName().setValue(name);
     }
 
     /** Test correct use of cache names. */
@@ -105,8 +104,7 @@ public class ModifiedSelectorTest {
         String name = "this-is-not-a-valid-algorithm-name";
         thrown.expect(BuildException.class);
         thrown.expectMessage(name + " is not a legal value for this attribute");
-        ModifiedSelector.AlgorithmName algoName = new ModifiedSelector.AlgorithmName();
-        algoName.setValue(name);
+        new ModifiedSelector.AlgorithmName().setValue(name);
     }
 
     /** Test correct use of comparator names. */
@@ -115,8 +113,7 @@ public class ModifiedSelectorTest {
         String name = "this-is-not-a-valid-comparator-name";
         thrown.expect(BuildException.class);
         thrown.expectMessage(name + " is not a legal value for this attribute");
-        ModifiedSelector.ComparatorName compName = new ModifiedSelector.ComparatorName();
-        compName.setValue(name);
+        new ModifiedSelector.ComparatorName().setValue(name);
     }
 
     /** Test correct use of algorithm names. */
@@ -906,7 +903,7 @@ public class ModifiedSelectorTest {
     }
 
     /**
-     * MockProject wrappes a very small ant project (one target, one task)
+     * MockProject wraps a very small ant project (one target, one task)
      * but provides public methods to fire the build events.
      */
     private class MockProject extends Project {

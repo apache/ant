@@ -134,9 +134,8 @@ public class LoadFileTest {
     @Test
     public final void testStripJavaComments() throws BuildException {
         buildRule.executeTarget("testStripJavaComments");
-        final String expected = buildRule.getProject().getProperty("expected");
-        final String generated = buildRule.getProject().getProperty("testStripJavaComments");
-        assertEquals(expected, generated);
+        assertEquals(buildRule.getProject().getProperty("expected"),
+                buildRule.getProject().getProperty("testStripJavaComments"));
     }
 
     @Test

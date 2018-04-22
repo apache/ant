@@ -50,28 +50,28 @@ public class MakeUrlTest {
     @Test
     public void testEmpty() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("property");
+        thrown.expectMessage("No property defined");
         buildRule.executeTarget("testEmpty");
     }
 
     @Test
     public void testNoProperty() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("property");
+        thrown.expectMessage("No property defined");
         buildRule.executeTarget("testNoProperty");
     }
 
     @Test
     public void testNoFile() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("file");
+        thrown.expectMessage("No files defined");
         buildRule.executeTarget("testNoFile");
     }
 
     @Test
     public void testValidation() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("file");
+        thrown.expectMessage("A source file is missing");
         buildRule.executeTarget("testValidation");
     }
 

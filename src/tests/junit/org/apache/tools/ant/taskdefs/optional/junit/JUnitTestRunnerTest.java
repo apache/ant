@@ -123,7 +123,7 @@ public class JUnitTestRunnerTest {
     public void testStaticInitializerErrorTestCase() {
         TestRunner runner = createRunner(StaticInitializerErrorTestCase.class);
         runner.run();
-        // On junit3 this is a FAILURE, on junit4 this is an ERROR
+        // For JUnit 3 this is a FAILURE, for JUnit 4 this is an ERROR
         int ret = runner.getRetCode();
         if (ret != JUnitTestRunner.FAILURES && ret != JUnitTestRunner.ERRORS) {
             fail("Unexpected result " + ret + " from junit runner");
@@ -143,7 +143,7 @@ public class JUnitTestRunnerTest {
         // JUNIT3 test
         //assertEquals(error, JUnitTestRunner.FAILURES, runner.getRetCode());
         //@fixme as of now does not report the original stacktrace.
-        //assertTrue(error, error.indexOf("thrown on purpose") != -1);
+        //assertThat(error, error, containsString("thrown on purpose"));
     }
 
     // check that JUnit 4 synthetic AssertionFailedError gets message and cause from AssertionError

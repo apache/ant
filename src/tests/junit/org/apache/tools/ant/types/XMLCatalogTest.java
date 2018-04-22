@@ -106,8 +106,7 @@ public class XMLCatalogTest {
         // has a different idea of how file URLs are created on windoze
         // ie file://c:/foo instead of file:///c:/foo
         //
-        String resultStr =
-            new URL(result.getInputSource().getSystemId()).getFile();
+        String resultStr = new URL(result.getInputSource().getSystemId()).getFile();
         // on Sun's Java6 this returns an unexpected number of four
         // leading slashes, at least on Linux - strip all of them
         while (resultStr.startsWith("/")) {
@@ -122,13 +121,12 @@ public class XMLCatalogTest {
         dtd.setPublicId("PUBLIC ID ONE");
         dtd.setLocation("i/dont/exist.dtd");
 
-        InputSource isResult = catalog.resolveEntity("PUBLIC ID ONE",
-                                                   "i/dont/exist.dtd");
+        InputSource isResult = catalog.resolveEntity("PUBLIC ID ONE", "i/dont/exist.dtd");
         assertNull("Nonexistent Catalog entry should not be returned", isResult);
 
         Source result = catalog.resolve("i/dont/exist.dtd", null);
-        String expected = toURLString(new File(project.getBaseDir().toURL() +
-                                               "/i/dont/exist.dtd"));
+        String expected = toURLString(new File(project.getBaseDir().toURL()
+                + "/i/dont/exist.dtd"));
         String resultStr = fileURLPartWithoutLeadingSlashes((SAXSource) result);
         assertThat("Nonexistent Catalog entry return input with a system ID like "
                    + expected + " but was " + resultStr,

@@ -263,12 +263,12 @@ public class ManifestTest {
         assertEquals("Class-Path attribute was not set correctly - ",
             LONG_LINE, classpath);
 
-        String value = mainSection.getAttributeValue(LONG_68_NAME);
-        assertEquals("LONG_68_NAME_VALUE_MISMATCH", VALUE, value);
-        value = mainSection.getAttributeValue(LONG_70_NAME);
-        assertEquals("LONG_70_NAME_VALUE_MISMATCH", VALUE, value);
-        value = mainSection.getAttributeValue(NOT_LONG_NAME);
-        assertEquals("NOT_LONG_NAME_VALUE_MISMATCH", VALUE, value);
+        assertEquals("LONG_68_NAME_VALUE_MISMATCH", VALUE,
+                mainSection.getAttributeValue(LONG_68_NAME));
+        assertEquals("LONG_70_NAME_VALUE_MISMATCH", VALUE,
+                mainSection.getAttributeValue(LONG_70_NAME));
+        assertEquals("NOT_LONG_NAME_VALUE_MISMATCH", VALUE,
+                mainSection.getAttributeValue(NOT_LONG_NAME));
 
         Set<String> set = new HashSet<>();
         try (FileReader fin = new FileReader(expandedManifest)) {
@@ -388,30 +388,45 @@ public class ManifestTest {
         assertThat(buildRule.getLog(), containsString(Manifest.ERROR_FROM_FORBIDDEN));
     }
 
+    /**
+     * Expected failure: manifest attribute names must not contain ' '
+     */
     @Test(expected = BuildException.class)
     public void testIllegalName() {
         buildRule.executeTarget("testIllegalName");
         // TODO assert value
     }
 
+    /**
+     * Expected failure: manifest section names must not contain ' '
+     */
     @Test(expected = BuildException.class)
     public void testIllegalNameInSection() {
         buildRule.executeTarget("testIllegalNameInSection");
         // TODO assert value
     }
 
+    /**
+     * Expected failure: manifest attribute names must not begin with '-'
+     */
     @Test(expected = BuildException.class)
     public void testIllegalNameBegin() {
         buildRule.executeTarget("testIllegalNameInSection");
         // TODO assert value
     }
 
+    /**
+     * Expected failure: manifest attribute names must not contain '.'
+     */
     @Test(expected = BuildException.class)
     public void testIllegalName2() {
         buildRule.executeTarget("testIllegalName");
         // TODO assert value
     }
 
+    /**
+     * Expected failure: manifest attribute names must not contain '*'
+     */
     @Test(expected = BuildException.class)
     public void testIllegalName3() {
         buildRule.executeTarget("testIllegalName");

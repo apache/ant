@@ -115,8 +115,8 @@ public class ExecuteJavaTest {
     }
 
     /**
-     * Dangerous method to obtain the classpath for the test. This is
-     * severely tighted to the build.xml properties.
+     * Dangerous method to obtain the classpath for the test.
+     * This is severely dependent on the build.xml properties.
      */
     private static String getTestClassPath() {
         String classpath = System.getProperty("build.tests");

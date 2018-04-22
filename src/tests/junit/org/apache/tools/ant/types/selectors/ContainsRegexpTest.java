@@ -41,15 +41,10 @@ public class ContainsRegexpTest {
     @Test
     public void testContainsRegexp() {
         buildRule.executeTarget("containsregexp");
-        File dir = new File(buildRule.getOutputDir(), "regexpseltestdest");
-        File[] files = dir.listFiles();
-        int filecount = files.length;
+        File[] files = new File(buildRule.getOutputDir(), "regexpseltestdest").listFiles();
 
-        if (filecount != 1)  {
-            assertEquals("ContainsRegexp test should have copied 1 file",
-                         1, files.length);
-
-        }
+        assertEquals("ContainsRegexp test should have copied 1 file",
+                1, files.length);
     }
 
 }

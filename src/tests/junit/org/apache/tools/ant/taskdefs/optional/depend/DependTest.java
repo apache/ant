@@ -115,7 +115,7 @@ public class DependTest {
     }
 
     /**
-     * Test that multi-leve inner class dependencies trigger deletion of
+     * Test that multi-level inner class dependencies trigger deletion of
      * the outer class
      */
     @Test

@@ -32,12 +32,12 @@ import org.apache.tools.ant.util.MergingMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * JUnit testcases for org.apache.tools.ant.types.Mapper.
@@ -49,103 +49,96 @@ public class MapperTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     private Project project;
+
+    private Mapper m;
 
     @Before
     public void setUp() {
         project = new Project();
         project.setBasedir(".");
+        m = new Mapper(project);
     }
 
     @Test
-    public void testEmptyElementIfIsReference() {
-        Mapper m = new Mapper(project);
+    public void testEmptyElementIfIsReference1() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
         m.setFrom("*.java");
-        try {
-            m.setRefid(new Reference(project, "dummyref"));
-            fail("Can add reference to Mapper with from attribute set");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                    be.getMessage());
-        }
-
-        m = new Mapper(project);
-        m.setRefid(new Reference(project, "dummyref"));
-        try {
-            m.setFrom("*.java");
-            fail("Can set from in Mapper that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                    be.getMessage());
-        }
-
-        m = new Mapper(project);
-        m.setRefid(new Reference(project, "dummyref"));
-        try {
-            m.setTo("*.java");
-            fail("Can set to in Mapper that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                    be.getMessage());
-        }
-        try {
-            Mapper.MapperType mt = new Mapper.MapperType();
-            mt.setValue("glob");
-            m.setType(mt);
-            fail("Can set type in Mapper that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                    be.getMessage());
-        }
+        m.setRefid(new Reference(project, "dummy"));
     }
 
     @Test
-    public void testCircularReferenceCheck() {
-        Mapper m = new Mapper(project);
+    public void testEmptyElementIfIsReference2() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        m.setRefid(new Reference(project, "dummy"));
+        m.setFrom("*.java");
+    }
+
+    @Test
+    public void testEmptyElementIfIsReference3() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        m.setRefid(new Reference(project, "dummy"));
+        m.setTo("*.java");
+    }
+
+    @Test
+    public void testEmptyElementIfIsReference4() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        m.setRefid(new Reference(project, "dummy"));
+        Mapper.MapperType mt = new Mapper.MapperType();
+        mt.setValue("glob");
+        m.setType(mt);
+    }
+
+    @Test
+    public void testCircularReferenceCheck1() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
         project.addReference("dummy", m);
         m.setRefid(new Reference(project, "dummy"));
-        try {
-            m.getImplementation();
-            fail("Can make Mapper a Reference to itself.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                    be.getMessage());
-        }
+        m.getImplementation();
+    }
 
-        // dummy1 --> dummy2 --> dummy3 --> dummy1
-        Mapper m1 = new Mapper(project);
-        project.addReference("dummy1", m1);
-        m1.setRefid(new Reference(project, "dummy2"));
+    @Test
+    public void testCircularReferenceCheck2() {
+        // dummy --> dummy2 --> dummy3 --> dummy
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
+        project.addReference("dummy", m);
+        m.setRefid(new Reference(project, "dummy2"));
         Mapper m2 = new Mapper(project);
         project.addReference("dummy2", m2);
         m2.setRefid(new Reference(project, "dummy3"));
         Mapper m3 = new Mapper(project);
         project.addReference("dummy3", m3);
-        m3.setRefid(new Reference(project, "dummy1"));
-        try {
-            m1.getImplementation();
-            fail("Can make circular reference.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                    be.getMessage());
-        }
+        m3.setRefid(new Reference(project, "dummy"));
+        m.getImplementation();
+    }
 
-        // dummy1 --> dummy2 --> dummy3
+    @Test
+    public void testCircularReferenceCheck3() {
+        // dummy --> dummy2 --> dummy3
         // (which holds a glob mapper from "*.java" to "*.class"
-        m1 = new Mapper(project);
-        project.addReference("dummy1", m1);
-        m1.setRefid(new Reference(project, "dummy2"));
-        m2 = new Mapper(project);
+        project.addReference("dummy", m);
+        m.setRefid(new Reference(project, "dummy2"));
+        Mapper m2 = new Mapper(project);
         project.addReference("dummy2", m2);
         m2.setRefid(new Reference(project, "dummy3"));
-        m3 = new Mapper(project);
+        Mapper m3 = new Mapper(project);
         project.addReference("dummy3", m3);
         Mapper.MapperType mt = new Mapper.MapperType();
         mt.setValue("glob");
         m3.setType(mt);
         m3.setFrom("*.java");
         m3.setTo("*.class");
-        FileNameMapper fmm = m1.getImplementation();
+        FileNameMapper fmm = m.getImplementation();
         assertTrue("should be glob", fmm instanceof GlobPatternMapper);
         String[] result = fmm.mapFileName("a.java");
         assertEquals("a.java should match", 1, result.length);
@@ -166,12 +159,12 @@ public class MapperTest {
         FileNameMapper mapper3 = new MergingMapper();
         mapper3.setTo("mergefile");
 
-        Mapper container = new Mapper(project);
-        container.addConfiguredMapper(mapper1);
-        container.add(mapper2);
-        container.add(mapper3);
+        // m is implicit composite
+        m.addConfiguredMapper(mapper1);
+        m.add(mapper2);
+        m.add(mapper3);
 
-        FileNameMapper fileNameMapper = container.getImplementation();
+        FileNameMapper fileNameMapper = m.getImplementation();
         String[] targets = fileNameMapper.mapFileName("fromfilename");
         assertNotNull("no filenames mapped", targets);
         assertEquals("wrong number of filenames mapped", 3, targets.length);
@@ -184,12 +177,14 @@ public class MapperTest {
                 list.contains("mergefile"));
     }
 
+    /**
+     * <pre>
+     * a --> b --> c --- def
+     *              \-- ghi
+     * </pre>
+     */
     @Test
     public void testChained() {
-
-        // a --> b --> c --- def
-        //               \-- ghi
-
         FileNameMapper mapperAB = new GlobPatternMapper();
         mapperAB.setFrom("a");
         mapperAB.setTo("b");
@@ -197,9 +192,6 @@ public class MapperTest {
         FileNameMapper mapperBC = new GlobPatternMapper();
         mapperBC.setFrom("b");
         mapperBC.setTo("c");
-
-        //implicit composite
-        Mapper mapperCX = new Mapper(project);
 
         FileNameMapper mapperDEF = new GlobPatternMapper();
         mapperDEF.setFrom("c");
@@ -209,14 +201,15 @@ public class MapperTest {
         mapperGHI.setFrom("c");
         mapperGHI.setTo("ghi");
 
-        mapperCX.add(mapperDEF);
-        mapperCX.add(mapperGHI);
+        // m is implicit composite
+        m.add(mapperDEF);
+        m.add(mapperGHI);
 
         Mapper chained = new Mapper(project);
         chained.setClassname(ChainedMapper.class.getName());
         chained.add(mapperAB);
         chained.add(mapperBC);
-        chained.addConfiguredMapper(mapperCX);
+        chained.addConfiguredMapper(m);
 
         FileNameMapper fileNameMapper = chained.getImplementation();
         String[] targets = fileNameMapper.mapFileName("a");

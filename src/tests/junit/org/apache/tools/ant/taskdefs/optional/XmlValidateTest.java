@@ -155,6 +155,9 @@ public class XmlValidateTest {
         buildRule.executeTarget("testProperty.validXML");
     }
 
+    /**
+     * Test should fail due to unsatisfied schema
+     */
     @Test(expected = BuildException.class)
     public void testPropertySchemaForInvalidXML() {
         buildRule.executeTarget("testProperty.invalidXML");

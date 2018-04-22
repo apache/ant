@@ -18,6 +18,9 @@
 
 package org.apache.tools.mail;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -28,16 +31,12 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.AssumptionViolatedException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 /**
  * JUnit testcases for org.apache.tools.mail.MailMessage.
@@ -603,26 +602,18 @@ public class MailMessageTest {
             try {
                 msg.from(from);
 
-                Enumeration<String> e;
+                replyToList.forEach(e -> msg.replyto(e));
 
-                e = replyToList.elements();
-                while (e.hasMoreElements()) {
-                    msg.replyto(e.nextElement());
+                for (String e : toList) {
+                    msg.to(e);
                 }
 
-                e = toList.elements();
-                while (e.hasMoreElements()) {
-                    msg.to(e.nextElement());
+                for (String e : ccList) {
+                    msg.cc(e);
                 }
 
-                e = ccList.elements();
-                while (e.hasMoreElements()) {
-                    msg.cc(e.nextElement());
-                }
-
-                e = bccList.elements();
-                while (e.hasMoreElements()) {
-                    msg.bcc(e.nextElement());
+                for (String e : bccList) {
+                    msg.bcc(e);
                 }
 
                 if (subject != null) {

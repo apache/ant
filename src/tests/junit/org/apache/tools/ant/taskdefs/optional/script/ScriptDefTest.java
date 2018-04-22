@@ -65,6 +65,9 @@ public class ScriptDefTest {
                 containsString("Fileset basedir = " + baseDir.getAbsolutePath()));
     }
 
+    /**
+     * Expected failure due to lacking language attribute
+     */
     @Test
     public void testNoLang() {
         thrown.expect(BuildException.class);
@@ -72,6 +75,9 @@ public class ScriptDefTest {
         buildRule.executeTarget("nolang");
     }
 
+    /**
+     * Expected failure due to lacking name attribute
+     */
     @Test
     public void testNoName() {
         thrown.expect(BuildException.class);
@@ -114,6 +120,9 @@ public class ScriptDefTest {
         assertThat("Task2 did not execute", log, containsString("Task2"));
     }
 
+    /**
+     * Expected failure due to duplicate attribute definition
+     */
     @Test
     public void testDoubleAttribute() {
         thrown.expect(BuildException.class);
