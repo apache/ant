@@ -25,13 +25,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * JUnit testcases for org.apache.tools.ant.types.Path
@@ -44,17 +45,24 @@ public class PathTest {
     public static boolean isNetWare = Os.isFamily("netware");
 
     private Project project;
+    private Path p;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
         project = new Project();
-        project.setBasedir(System.getProperty("root"));
+        if (System.getProperty("root") != null) {
+            project.setBasedir(System.getProperty("root"));
+        }
+        p = new Path(project);
     }
 
     // actually tests constructor as well as setPath
     @Test
     public void testConstructorUnixStyle() {
-        Path p = new Path(project, "/a:/b");
+        p = new Path(project, "/a:/b");
         String[] l = p.list();
         assertEquals("two items, Unix style", 2, l.length);
         if (isUnixStyle) {
@@ -72,31 +80,31 @@ public class PathTest {
 
     @Test
     public void testRelativePathUnixStyle() {
-        project.setBasedir(new File(System.getProperty("root"), "src/etc").getAbsolutePath());
-        Path p = new Path(project, "..:testcases");
+        project.setBasedir(new File(project.getBaseDir(), "src/etc").getAbsolutePath());
+        p = new Path(project, "..:testcases");
         String[] l = p.list();
         assertEquals("two items, Unix style", 2, l.length);
         if (isUnixStyle) {
-           assertTrue("test resolved relative to src/etc",
-                 l[0].endsWith("/src"));
-           assertTrue("test resolved relative to src/etc",
-                 l[1].endsWith("/src/etc/testcases"));
+           assertThat("test resolved relative to src/etc",
+                 l[0], endsWith("/src"));
+           assertThat("test resolved relative to src/etc",
+                 l[1], endsWith("/src/etc/testcases"));
         } else if (isNetWare) {
-           assertTrue("test resolved relative to src/etc",
-                 l[0].endsWith("\\src"));
-           assertTrue("test resolved relative to src/etc",
-                 l[1].endsWith("\\src\\etc\\testcases"));
+           assertThat("test resolved relative to src/etc",
+                 l[0], endsWith("\\src"));
+           assertThat("test resolved relative to src/etc",
+                 l[1], endsWith("\\src\\etc\\testcases"));
         } else {
-           assertTrue("test resolved relative to src/etc",
-                 l[0].endsWith("\\src"));
-           assertTrue("test resolved relative to src/etc",
-                 l[1].endsWith("\\src\\etc\\testcases"));
+           assertThat("test resolved relative to src/etc",
+                 l[0], endsWith("\\src"));
+           assertThat("test resolved relative to src/etc",
+                 l[1], endsWith("\\src\\etc\\testcases"));
         }
     }
 
     @Test
-    public void testConstructorWindowsStyle() {
-        Path p = new Path(project, "\\a;\\b");
+    public void testConstructorWindowsStyleTwoItemsNoDrive() {
+        p = new Path(project, "\\a;\\b");
         String[] l = p.list();
         assertEquals("two items, DOS style", 2, l.length);
         if (isUnixStyle) {
@@ -110,13 +118,16 @@ public class PathTest {
             assertEquals(base + "a", l[0]);
             assertEquals(base + "b", l[1]);
         }
+    }
 
+    @Test
+    public void testConstructorWindowsStyle() {
         p = new Path(project, "c:\\test");
-        l = p.list();
+        String[] l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertTrue("c resolved relative to project\'s basedir",
-                   l[0].endsWith("/c"));
+            assertThat("c resolved relative to project\'s basedir",
+                   l[0], endsWith("/c"));
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
             assertEquals("volumes on NetWare", 1, l.length);
@@ -125,51 +136,19 @@ public class PathTest {
             assertEquals("drives on DOS", 1, l.length);
             assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
         }
+    }
 
+    @Test
+    public void testConstructorWindowsStyleTwoItems() {
         p = new Path(project, "c:\\test;d:\\programs");
-        l = p.list();
+        String[] l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 4, l.length);
-            assertTrue("c resolved relative to project\'s basedir",
-                   l[0].endsWith("/c"));
+            assertThat("c resolved relative to project\'s basedir",
+                   l[0], endsWith("/c"));
             assertEquals("/test", l[1]);
-            assertTrue("d resolved relative to project\'s basedir",
-                   l[2].endsWith("/d"));
-            assertEquals("/programs", l[3]);
-        } else if (isNetWare) {
-            assertEquals("volumes on NetWare", 2, l.length);
-            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
-            assertEquals("d:\\programs", l[1].toLowerCase(Locale.US));
-        } else {
-            assertEquals("drives on DOS", 2, l.length);
-            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
-            assertEquals("d:\\programs", l[1].toLowerCase(Locale.US));
-        }
-
-        p = new Path(project, "c:/test");
-        l = p.list();
-        if (isUnixStyle) {
-            assertEquals("no drives on Unix", 2, l.length);
-            assertTrue("c resolved relative to project\'s basedir",
-                   l[0].endsWith("/c"));
-            assertEquals("/test", l[1]);
-        } else if (isNetWare) {
-            assertEquals("volumes on NetWare", 1, l.length);
-            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
-        } else {
-            assertEquals("drives on DOS", 1, l.length);
-            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
-        }
-
-        p = new Path(project, "c:/test;d:/programs");
-        l = p.list();
-        if (isUnixStyle) {
-            assertEquals("no drives on Unix", 4, l.length);
-            assertTrue("c resolved relative to project\'s basedir",
-                   l[0].endsWith("/c"));
-            assertEquals("/test", l[1]);
-            assertTrue("d resolved relative to project\'s basedir",
-                   l[2].endsWith("/d"));
+            assertThat("d resolved relative to project\'s basedir",
+                   l[2], endsWith("/d"));
             assertEquals("/programs", l[3]);
         } else if (isNetWare) {
             assertEquals("volumes on NetWare", 2, l.length);
@@ -183,82 +162,80 @@ public class PathTest {
     }
 
     @Test
-    public void testConstructorNetWareStyle() {
-        // try a netware-volume length path, see how it is handled
-        Path p = new Path(project, "sys:\\test");
+    public void testConstructorWindowsStyleUnixFS() {
+        p = new Path(project, "c:/test");
         String[] l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("/sys"));
+            assertThat("c resolved relative to project\'s basedir",
+                   l[0], endsWith("/c"));
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
-            assertEquals("sys:\\test", l[0].toLowerCase(Locale.US));
             assertEquals("volumes on NetWare", 1, l.length);
+            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
         } else {
-            assertEquals("no multiple character-length volumes on Windows", 2, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("\\sys"));
-            assertTrue("test resolved relative to project\'s basedir",
-                   l[1].endsWith("\\test"));
+            assertEquals("drives on DOS", 1, l.length);
+            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
         }
+    }
 
-        // try a multi-part netware-volume length path, see how it is handled
-        p = new Path(project, "sys:\\test;dev:\\temp");
-        l = p.list();
+    @Test
+    public void testConstructorWindowsStyleUnixFSTwoItems() {
+        p = new Path(project, "c:/test;d:/programs");
+        String[] l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 4, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("/sys"));
+            assertThat("c resolved relative to project\'s basedir",
+                   l[0], endsWith("/c"));
             assertEquals("/test", l[1]);
-            assertTrue("dev resolved relative to project\'s basedir",
-                   l[2].endsWith("/dev"));
-            assertEquals("/temp", l[3]);
+            assertThat("d resolved relative to project\'s basedir",
+                   l[2], endsWith("/d"));
+            assertEquals("/programs", l[3]);
         } else if (isNetWare) {
             assertEquals("volumes on NetWare", 2, l.length);
-            assertEquals("sys:\\test", l[0].toLowerCase(Locale.US));
-            assertEquals("dev:\\temp", l[1].toLowerCase(Locale.US));
+            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
+            assertEquals("d:\\programs", l[1].toLowerCase(Locale.US));
         } else {
-            assertEquals("no multiple character-length volumes on Windows", 4, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("\\sys"));
-            assertTrue("test resolved relative to project\'s basedir",
-                   l[1].endsWith("\\test"));
-            assertTrue("dev resolved relative to project\'s basedir",
-                   l[2].endsWith("\\dev"));
-            assertTrue("temp resolved relative to project\'s basedir",
-                   l[3].endsWith("\\temp"));
+            assertEquals("drives on DOS", 2, l.length);
+            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
+            assertEquals("d:\\programs", l[1].toLowerCase(Locale.US));
         }
+    }
 
-        // try a netware-volume length path w/forward slash, see how it is handled
-        p = new Path(project, "sys:/test");
-        l = p.list();
+    // try a netware-volume length path, see how it is handled
+    @Test
+    public void testConstructorNetWareStyle() {
+        p = new Path(project, "sys:\\test");
+        String[] l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("/sys"));
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("/sys"));
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
-            assertEquals("volumes on NetWare", 1, l.length);
             assertEquals("sys:\\test", l[0].toLowerCase(Locale.US));
+            assertEquals("volumes on NetWare", 1, l.length);
         } else {
             assertEquals("no multiple character-length volumes on Windows", 2, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("\\sys"));
-            assertTrue("test resolved relative to project\'s basedir",
-                   l[1].endsWith("\\test"));
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("\\sys"));
+            assertThat("test resolved relative to project\'s basedir",
+                   l[1], endsWith("\\test"));
         }
+    }
 
-        // try a multi-part netware-volume length path w/forward slash, see how it is handled
-        p = new Path(project, "sys:/test;dev:/temp");
-        l = p.list();
+    // try a multi-part netware-volume length path, see how it is handled
+    @Test
+    public void testConstructorNetWareStyleTwoItems() {
+        p = new Path(project, "sys:\\test;dev:\\temp");
+        String[] l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 4, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("/sys"));
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("/sys"));
             assertEquals("/test", l[1]);
-            assertTrue("dev resolved relative to project\'s basedir",
-                   l[2].endsWith("/dev"));
+            assertThat("dev resolved relative to project\'s basedir",
+                   l[2], endsWith("/dev"));
             assertEquals("/temp", l[3]);
         } else if (isNetWare) {
             assertEquals("volumes on NetWare", 2, l.length);
@@ -266,26 +243,80 @@ public class PathTest {
             assertEquals("dev:\\temp", l[1].toLowerCase(Locale.US));
         } else {
             assertEquals("no multiple character-length volumes on Windows", 4, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("\\sys"));
-            assertTrue("test resolved relative to project\'s basedir",
-                   l[1].endsWith("\\test"));
-            assertTrue("dev resolved relative to project\'s basedir",
-                   l[2].endsWith("\\dev"));
-            assertTrue("temp resolved relative to project\'s basedir",
-                   l[3].endsWith("\\temp"));
-         }
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("\\sys"));
+            assertThat("test resolved relative to project\'s basedir",
+                   l[1], endsWith("\\test"));
+            assertThat("dev resolved relative to project\'s basedir",
+                   l[2], endsWith("\\dev"));
+            assertThat("temp resolved relative to project\'s basedir",
+                   l[3], endsWith("\\temp"));
+        }
+    }
 
-        // try a multi-part netware-volume length path with UNIX
-        // separator (this testcase if from an actual bug that was
-        // found, in AvailableTest, which uses PathTokenizer)
-        p = new Path(project,
-                     "SYS:\\JAVA/lib/rt.jar:SYS:\\JAVA/lib/classes.zip");
-        l = p.list();
+    // try a netware-volume length path w/forward slash, see how it is handled
+    @Test
+    public void testConstructorNetWareStyleUnixFS() {
+        p = new Path(project, "sys:/test");
+        String[] l = p.list();
+        if (isUnixStyle) {
+            assertEquals("no drives on Unix", 2, l.length);
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("/sys"));
+            assertEquals("/test", l[1]);
+        } else if (isNetWare) {
+            assertEquals("volumes on NetWare", 1, l.length);
+            assertEquals("sys:\\test", l[0].toLowerCase(Locale.US));
+        } else {
+            assertEquals("no multiple character-length volumes on Windows", 2, l.length);
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("\\sys"));
+            assertThat("test resolved relative to project\'s basedir",
+                   l[1], endsWith("\\test"));
+        }
+    }
+
+    // try a multi-part netware-volume length path w/forward slash, see how it is handled
+    @Test
+    public void testConstructorNetWareStyleUnixFSTwoItems() {
+        p = new Path(project, "sys:/test;dev:/temp");
+        String[] l = p.list();
+        if (isUnixStyle) {
+            assertEquals("no drives on Unix", 4, l.length);
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("/sys"));
+            assertEquals("/test", l[1]);
+            assertThat("dev resolved relative to project\'s basedir",
+                   l[2], endsWith("/dev"));
+            assertEquals("/temp", l[3]);
+        } else if (isNetWare) {
+            assertEquals("volumes on NetWare", 2, l.length);
+            assertEquals("sys:\\test", l[0].toLowerCase(Locale.US));
+            assertEquals("dev:\\temp", l[1].toLowerCase(Locale.US));
+        } else {
+            assertEquals("no multiple character-length volumes on Windows", 4, l.length);
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("\\sys"));
+            assertThat("test resolved relative to project\'s basedir",
+                   l[1], endsWith("\\test"));
+            assertThat("dev resolved relative to project\'s basedir",
+                   l[2], endsWith("\\dev"));
+            assertThat("temp resolved relative to project\'s basedir",
+                   l[3], endsWith("\\temp"));
+         }
+    }
+
+    // try a multi-part netware-volume length path with UNIX
+    // separator (this testcase if from an actual bug that was
+    // found, in AvailableTest, which uses PathTokenizer)
+    @Test
+    public void testConstructorNetWareStyleUnixPS() {
+        p = new Path(project, "SYS:\\JAVA/lib/rt.jar:SYS:\\JAVA/lib/classes.zip");
+        String[] l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 3, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("/SYS"));
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("/SYS"));
             assertEquals("/JAVA/lib/rt.jar", l[1]);
             assertEquals("/JAVA/lib/classes.zip", l[2]);
         } else if (isNetWare) {
@@ -294,18 +325,18 @@ public class PathTest {
             assertEquals("sys:\\java\\lib\\classes.zip", l[1].toLowerCase(Locale.US));
         } else {
             assertEquals("no multiple character-length volumes on Windows", 3, l.length);
-            assertTrue("sys resolved relative to project\'s basedir",
-                   l[0].endsWith("\\SYS"));
-            assertTrue("java/lib/rt.jar resolved relative to project\'s basedir",
-                   l[1].endsWith("\\JAVA\\lib\\rt.jar"));
-            assertTrue("java/lib/classes.zip resolved relative to project\'s basedir",
-                   l[2].endsWith("\\JAVA\\lib\\classes.zip"));
+            assertThat("sys resolved relative to project\'s basedir",
+                   l[0], endsWith("\\SYS"));
+            assertThat("java/lib/rt.jar resolved relative to project\'s basedir",
+                   l[1], endsWith("\\JAVA\\lib\\rt.jar"));
+            assertThat("java/lib/classes.zip resolved relative to project\'s basedir",
+                   l[2], endsWith("\\JAVA\\lib\\classes.zip"));
         }
     }
 
     @Test
     public void testConstructorMixedStyle() {
-        Path p = new Path(project, "\\a;\\b:/c");
+        p = new Path(project, "\\a;\\b:/c");
         String[] l = p.list();
         assertEquals("three items, mixed style", 3, l.length);
         if (isUnixStyle) {
@@ -326,7 +357,6 @@ public class PathTest {
 
     @Test
     public void testSetLocation() {
-        Path p = new Path(project);
         p.setLocation(new File(File.separatorChar + "a"));
         String[] l = p.list();
         if (isUnixStyle) {
@@ -343,7 +373,7 @@ public class PathTest {
 
     @Test
     public void testAppending() {
-        Path p = new Path(project, "/a:/b");
+        p = new Path(project, "/a:/b");
         String[] l = p.list();
         assertEquals("2 after construction", 2, l.length);
         p.setLocation(new File("/c"));
@@ -362,7 +392,7 @@ public class PathTest {
 
     @Test
     public void testEmptyPath() {
-        Path p = new Path(project, "");
+        p = new Path(project, "");
         String[] l = p.list();
         assertEquals("0 after construction", 0, l.length);
         p.setPath("");
@@ -378,7 +408,7 @@ public class PathTest {
 
     @Test
     public void testUnique() {
-        Path p = new Path(project, "/a:/a");
+        p = new Path(project, "/a:/a");
         String[] l = p.list();
         assertEquals("1 after construction", 1, l.length);
         String base = new File(File.separator).getAbsolutePath();
@@ -397,125 +427,112 @@ public class PathTest {
     }
 
     @Test
-    public void testEmptyElementIfIsReference() {
-        Path p = new Path(project, "/a:/a");
-        try {
-            p.setRefid(new Reference(project, "dummyref"));
-            fail("Can add reference to Path with elements from constructor");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
+    public void testEmptyElementSetRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        p = new Path(project, "/a:/a");
+        p.setRefid(new Reference(project, "dummyref"));
+    }
 
-        p = new Path(project);
+    @Test
+    public void testEmptyElementSetLocationThenRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
         p.setLocation(new File("/a"));
-        try {
-            p.setRefid(new Reference(project, "dummyref"));
-            fail("Can add reference to Path with elements from setLocation");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
+        p.setRefid(new Reference(project, "dummyref"));
+    }
 
+    @Test
+    public void testUseExistingRefid() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
         Path another = new Path(project, "/a:/a");
         project.addReference("dummyref", another);
-        p = new Path(project);
         p.setRefid(new Reference(project, "dummyref"));
-        try {
-            p.setLocation(new File("/a"));
-            fail("Can set location in Path that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
+        p.setLocation(new File("/a"));
+    }
 
-        try {
-            p.setPath("/a;\\a");
-            fail("Can set path in Path that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify more than one attribute when using refid",
-                         be.getMessage());
-        }
+    @Test
+    public void testEmptyElementIfIsReferenceAttr() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify more than one attribute when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.setPath("/a;\\a");
+    }
 
-        try {
-            p.createPath();
-            fail("Can create nested Path in Path that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
+    @Test
+    public void testEmptyElementCreatePath() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.createPath();
+    }
 
-        try {
-            p.createPathElement();
-            fail("Can create nested PathElement in Path that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
+    @Test
+    public void testEmptyElementCreatePathElement() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.createPathElement();
+    }
 
-        try {
-            p.addFileset(new FileSet());
-            fail("Can add nested FileSet in Path that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
+    @Test
+    public void testEmptyElementAddFileset() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.addFileset(new FileSet());
+    }
 
-        try {
-            p.addFilelist(new FileList());
-            fail("Can add nested FileList in Path that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
+    @Test
+    public void testEmptyElementAddFilelist() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.addFilelist(new FileList());
+    }
 
-        try {
-            p.addDirset(new DirSet());
-            fail("Can add nested Dirset in Path that is a reference.");
-        } catch (BuildException be) {
-            assertEquals("You must not specify nested elements when using refid",
-                         be.getMessage());
-        }
+    @Test
+    public void testEmptyElementAddDirset() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must not specify nested elements when using refid");
+        p.setRefid(new Reference(project, "dummyref"));
+        p.addDirset(new DirSet());
     }
 
     @Test
     public void testCircularReferenceCheck() {
-        Path p = new Path(project);
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
         project.addReference("dummy", p);
         p.setRefid(new Reference(project, "dummy"));
-        try {
-            p.list();
-            fail("Can make Path a Reference to itself.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
+        p.list();
+    }
 
+    @Test
+    public void testLoopReferenceCheck() {
         // dummy1 --> dummy2 --> dummy3 --> dummy1
-        Path p1 = new Path(project);
-        project.addReference("dummy1", p1);
-        Path p2 = p1.createPath();
-        project.addReference("dummy2", p2);
-        Path p3 = p2.createPath();
-        project.addReference("dummy3", p3);
-        p3.setRefid(new Reference(project, "dummy1"));
-        try {
-            p1.list();
-            fail("Can make circular reference.");
-        } catch (BuildException be) {
-            assertEquals("This data type contains a circular reference.",
-                         be.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("This data type contains a circular reference.");
+        project.addReference("dummy1", p);
+        Path pa = p.createPath();
+        project.addReference("dummy2", pa);
+        Path pb = pa.createPath();
+        project.addReference("dummy3", pb);
+        pb.setRefid(new Reference(project, "dummy1"));
+        p.list();
+    }
 
+    @Test
+    public void testLoopReferenceCheckWithLocation() {
         // dummy1 --> dummy2 --> dummy3 (with Path "/a")
-        p1 = new Path(project);
-        project.addReference("dummy1", p1);
-        p2 = p1.createPath();
-        project.addReference("dummy2", p2);
-        p3 = p2.createPath();
-        project.addReference("dummy3", p3);
-        p3.setLocation(new File("/a"));
-        String[] l = p1.list();
+        project.addReference("dummy1", p);
+        Path pa = p.createPath();
+        project.addReference("dummy2", pa);
+        Path pb = pa.createPath();
+        project.addReference("dummy3", pb);
+        pb.setLocation(new File("/a"));
+        String[] l = p.list();
         assertEquals("One element buried deep inside a nested path structure",
                      1, l.length);
         if (isUnixStyle) {
@@ -529,7 +546,6 @@ public class PathTest {
 
     @Test
     public void testFileList() {
-        Path p = new Path(project);
         FileList f = new FileList();
         f.setProject(project);
         f.setDir(project.resolveFile("."));
@@ -542,7 +558,6 @@ public class PathTest {
 
     @Test
     public void testFileSet() {
-        Path p = new Path(project);
         FileSet f = new FileSet();
         f.setProject(project);
         f.setDir(project.resolveFile("."));
@@ -555,7 +570,6 @@ public class PathTest {
 
     @Test
     public void testDirSet() {
-        Path p = new Path(project);
         DirSet d = new DirSet();
         d.setProject(project);
         d.setDir(project.resolveFile("."));
@@ -568,13 +582,12 @@ public class PathTest {
 
     @Test
     public void testRecursion() {
-        Path p = new Path(project);
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("circular");
         try {
             p.append(p);
+        } finally {
             assertEquals(0, p.list().length);
-        } catch (BuildException x) {
-            String m = x.toString();
-            assertThat(m, m, containsString("circular"));
         }
     }
 
