@@ -18,16 +18,16 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Mapper;
-import org.junit.Rule;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Mapper;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests Present Selectors
@@ -35,34 +35,39 @@ import static org.junit.Assert.fail;
  */
 public class PresentSelectorTest {
 
+    private PresentSelector s;
+
+    private File beddir;
 
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Before
+    public void setUp() {
+        s = new PresentSelector();
+        beddir = selectorRule.getBeddir();
+    }
 
     /**
      * Test the code that validates the selector.
      */
     @Test
     public void testValidate() {
-        PresentSelector s = new PresentSelector();
-        try {
-            s.createMapper();
-            s.createMapper();
-            fail("PresentSelector allowed more than one nested mapper.");
-        } catch (BuildException be1) {
-            assertEquals("Cannot define more than one mapper",
-                    be1.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot define more than one mapper");
+        s.createMapper();
+        s.createMapper();
+    }
 
-        s = new PresentSelector();
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("PresentSelector did not check for required fields");
-        } catch (BuildException be2) {
-            assertEquals("The targetdir attribute is required.",
-                    be2.getMessage());
-        }
-
+    @Test
+    public void testValidateAttributes() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("The targetdir attribute is required.");
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
     }
 
     /**
@@ -70,65 +75,61 @@ public class PresentSelectorTest {
      */
     @Test
     public void testSelectionBehaviour() {
-        PresentSelector s;
-        String results;
-        Mapper m;
+        s.setTargetdir(beddir);
+        assertEquals("TTTTTTTTTTTT", selectorRule.selectionString(s));
+    }
+
+    @Test
+    public void testSelectionBehaviour1() {
+        s.setTargetdir(beddir);
+        Mapper m = s.createMapper();
         Mapper.MapperType identity = new Mapper.MapperType();
         identity.setValue("identity");
-        Mapper.MapperType glob = new Mapper.MapperType();
-        glob.setValue("glob");
-        Mapper.MapperType merge = new Mapper.MapperType();
-        merge.setValue("merge");
-        Mapper.MapperType flatten = new Mapper.MapperType();
-        flatten.setValue("flatten");
-
-        File beddir = selectorRule.getBeddir();
-
-        s = new PresentSelector();
-        s.setTargetdir(beddir);
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTTTTTTTTTT", results);
-
-        s = new PresentSelector();
-        s.setTargetdir(beddir);
-        m = s.createMapper();
         m.setType(identity);
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTTTTTTTTTT", results);
+        assertEquals("TTTTTTTTTTTT", selectorRule.selectionString(s));
+    }
 
-        s = new PresentSelector();
+    @Test
+    public void testSelectionBehaviour2() {
         File subdir = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/expected");
         s.setTargetdir(subdir);
-        m = s.createMapper();
+        Mapper m = s.createMapper();
+        Mapper.MapperType flatten = new Mapper.MapperType();
+        flatten.setValue("flatten");
         m.setType(flatten);
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTTTTTTTTTF", results);
+        assertEquals("TTTTTTTTTTTF", selectorRule.selectionString(s));
+    }
 
-        s = new PresentSelector();
+    @Test
+    public void testSelectionBehaviour3() {
         s.setTargetdir(beddir);
-        m = s.createMapper();
+        Mapper m = s.createMapper();
+        Mapper.MapperType merge = new Mapper.MapperType();
+        merge.setValue("merge");
         m.setType(merge);
         m.setTo("asf-logo.gif.gz");
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTTTTTTTTTT", results);
+        assertEquals("TTTTTTTTTTTT", selectorRule.selectionString(s));
+    }
 
-        s = new PresentSelector();
-        subdir = new File(beddir, "tar/bz2");
+    @Test
+    public void testSelectionBehaviour4() {
+        File subdir = new File(beddir, "tar/bz2");
         s.setTargetdir(subdir);
-        m = s.createMapper();
+        Mapper m = s.createMapper();
+        Mapper.MapperType glob = new Mapper.MapperType();
+        glob.setValue("glob");
         m.setType(glob);
         m.setFrom("*.bz2");
         m.setTo("*.tar.bz2");
-        results = selectorRule.selectionString(s);
-        assertEquals("FFTFFFFFFFFF", results);
+        assertEquals("FFTFFFFFFFFF", selectorRule.selectionString(s));
+    }
 
-        s = new PresentSelector();
-        subdir = new File(selectorRule.getOutputDir(), "selectortest2");
+    @Test
+    public void testSelectionBehaviour5() {
+        File subdir = new File(selectorRule.getOutputDir(), "selectortest2");
         s.setTargetdir(subdir);
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTFFTTTTTTT", results);
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTFFTTTTTTT", results);
+        assertEquals("TTTFFTTTTTTT", selectorRule.selectionString(s));
+        assertEquals("TTTFFTTTTTTT", selectorRule.selectionString(s));
     }
 
 }

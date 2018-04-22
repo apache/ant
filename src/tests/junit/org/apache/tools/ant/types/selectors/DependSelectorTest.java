@@ -18,15 +18,16 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Mapper;
-import org.junit.Rule;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Mapper;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 
 /**
@@ -35,48 +36,44 @@ import static org.junit.Assert.fail;
  */
 public class DependSelectorTest {
 
+    private DependSelector s;
+
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Before
+    public void setUp() {
+        s = new DependSelector();
+    }
+
     @Test
     public void testValidateSingleMapper() {
-        try {
-            DependSelector s = new DependSelector();
-            s.createMapper();
-            s.createMapper();
-            fail("DependSelector allowed more than one nested mapper.");
-        } catch (BuildException be1) {
-            assertEquals("Cannot define more than one mapper",
-                    be1.getMessage());
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot define more than one mapper");
+        s.createMapper();
+        s.createMapper();
     }
 
 
     @Test
      public void testValidateRequiredFields() {
-        try {
-            DependSelector s = new DependSelector();
-            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0], selectorRule.getFiles()[0]);
-            fail("DependSelector did not check for required fields");
-        } catch (BuildException be2) {
-            assertEquals("The targetdir attribute is required.",
-                    be2.getMessage());
-        }
-
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("The targetdir attribute is required.");
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
     }
 
     @Test
     public void testNoMapper() {
-        DependSelector s = new DependSelector();
         s.setTargetdir(selectorRule.getBeddir());
-
-        String results = selectorRule.selectionString(s);
-        assertEquals("FFFFFFFFFFFF", results);
+        assertEquals("FFFFFFFFFFFF", selectorRule.selectionString(s));
     }
 
     @Test
     public void testIdentityMapper() {
-        DependSelector s = new DependSelector();
         s.setTargetdir(selectorRule.getBeddir());
 
         Mapper.MapperType identity = new Mapper.MapperType();
@@ -85,13 +82,11 @@ public class DependSelectorTest {
         Mapper m = s.createMapper();
         m.setType(identity);
 
-        String results = selectorRule.selectionString(s);
-        assertEquals("FFFFFFFFFFFF", results);
+        assertEquals("FFFFFFFFFFFF", selectorRule.selectionString(s));
     }
 
     @Test
     public void testMergeMapper() {
-        DependSelector s = new DependSelector();
         s.setTargetdir(selectorRule.getBeddir());
 
         Mapper.MapperType merge = new Mapper.MapperType();
@@ -101,13 +96,11 @@ public class DependSelectorTest {
         m.setType(merge);
         m.setTo("asf-logo.gif.gz");
 
-        String results = selectorRule.selectionString(s);
-        assertEquals("TFFFFTTTFFF", results.substring(0,11));
+        assertEquals("TFFFFTTTFFF", selectorRule.selectionString(s).substring(0, 11));
     }
 
     @Test
     public void testMergeMapper2() {
-        DependSelector s = new DependSelector();
         s.setTargetdir(selectorRule.getBeddir());
 
         Mapper.MapperType merge = new Mapper.MapperType();
@@ -116,13 +109,12 @@ public class DependSelectorTest {
         Mapper m = s.createMapper();
         m.setType(merge);
         m.setTo("asf-logo.gif.bz2");
-        String results = selectorRule.selectionString(s);
-        assertEquals("TTFTTTTTTTTT", results);
+
+        assertEquals("TTFTTTTTTTTT", selectorRule.selectionString(s));
     }
 
     @Test
     public void testGlobMapperRelativePath() {
-        DependSelector s = new DependSelector();
         File subdir = new File("selectortest/tar/bz2");
         s.setTargetdir(subdir);
 
@@ -134,13 +126,11 @@ public class DependSelectorTest {
         m.setFrom("*.bz2");
         m.setTo("*.tar.bz2");
 
-        String results = selectorRule.selectionString(s);
-        assertEquals("FFTFFFFFFTTF", results);
+        assertEquals("FFTFFFFFFTTF", selectorRule.selectionString(s));
     }
 
     @Test
     public void testRestrictedGlobMapper() {
-        DependSelector s = new DependSelector();
         File subdir = new File(selectorRule.getBeddir(), "tar/bz2");
         s.setTargetdir(subdir);
 
@@ -151,22 +141,19 @@ public class DependSelectorTest {
         m.setType(glob);
         m.setFrom("*.bz2");
         m.setTo("*.tar.bz2");
-        String results = selectorRule.selectionString(s);
-        assertEquals("FFFFFFFFFTTF", results);
+
+        assertEquals("FFFFFFFFFTTF", selectorRule.selectionString(s));
     }
 
     @Test
     public void testSelectionNoMapper() {
-        DependSelector s = new DependSelector();
         s.setTargetdir(new File(selectorRule.getOutputDir(), "selectortest2"));
-        String results = selectorRule.selectionString(s);
-        assertEquals("FFFTTFFFFFFF", results);
+        assertEquals("FFFTTFFFFFFF", selectorRule.selectionString(s));
     }
 
 
     @Test
     public void testMirroredSelection() {
-        DependSelector s = new DependSelector();
         s.setTargetdir(new File(selectorRule.getOutputDir(), "selectortest2/tar/bz2"));
 
         Mapper.MapperType glob = new Mapper.MapperType();
@@ -176,10 +163,9 @@ public class DependSelectorTest {
         m.setType(glob);
         m.setFrom("*.bz2");
         m.setTo("*.tar.bz2");
-        String results = selectorRule.mirrorSelectionString(s);
-        assertEquals("FFFFFFFFFTTF", results);
-        results = selectorRule.selectionString(s);
-        assertEquals("FFFFFFFFFTTF", results);
+
+        assertEquals("FFFFFFFFFTTF", selectorRule.mirrorSelectionString(s));
+        assertEquals("FFFFFFFFFTTF", selectorRule.selectionString(s));
     }
 
 }

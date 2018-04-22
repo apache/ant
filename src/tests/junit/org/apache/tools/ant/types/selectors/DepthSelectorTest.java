@@ -18,13 +18,14 @@
 
 package org.apache.tools.ant.types.selectors;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests Depth Selectors
@@ -35,111 +36,112 @@ public class DepthSelectorTest {
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    private DepthSelector s;
+
+    @Before
+    public void setUp() {
+        s = new DepthSelector();
+    }
 
     /**
      * Test the code that validates the selector.
      */
     @Test
-    public void testValidate() {
-        DepthSelector s = new DepthSelector();
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("DepthSelector did not check for required fields");
-        } catch (BuildException be1) {
-            assertEquals("You must set at least one of the min or the " +
-                    "max levels.", be1.getMessage());
-        }
+    public void testValidateRequiredFields() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("You must set at least one of the min or the max levels.");
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
+    }
 
-        s = new DepthSelector();
+    @Test
+    public void testValidateDepth() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("The maximum depth is lower than the minimum.");
         s.setMin(5);
         s.setMax(2);
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("DepthSelector did not check for maximum being higher "
-                    + "than minimum");
-        } catch (BuildException be2) {
-            assertEquals("The maximum depth is lower than the minimum.",
-                    be2.getMessage());
-        }
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
+    }
 
-        s = new DepthSelector();
+    @Test
+    public void testValidateParameterName() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Invalid parameter garbage in");
         Parameter param = new Parameter();
         param.setName("garbage in");
         param.setValue("garbage out");
         Parameter[] params = new Parameter[1];
         params[0] = param;
         s.setParameters(params);
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("DepthSelector did not check for valid parameter element");
-        } catch (BuildException be3) {
-            assertEquals("Invalid parameter garbage in", be3.getMessage());
-        }
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
+    }
 
-        s = new DepthSelector();
-        param = new Parameter();
+    @Test
+    public void testValidateMinValue() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Invalid minimum value garbage out");
+        Parameter param = new Parameter();
         param.setName("min");
         param.setValue("garbage out");
+        Parameter[] params = new Parameter[1];
         params[0] = param;
         s.setParameters(params);
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("DepthSelector accepted bad minimum as parameter");
-        } catch (BuildException be4) {
-            assertEquals("Invalid minimum value garbage out",
-                    be4.getMessage());
-        }
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
+    }
 
-        s = new DepthSelector();
-        param = new Parameter();
+    @Test
+    public void testValidateMaxValue() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Invalid maximum value garbage out");
+        Parameter param = new Parameter();
         param.setName("max");
         param.setValue("garbage out");
+        Parameter[] params = new Parameter[1];
         params[0] = param;
         s.setParameters(params);
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(),selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("DepthSelector accepted bad maximum as parameter");
-        } catch (BuildException be5) {
-            assertEquals("Invalid maximum value garbage out",
-                    be5.getMessage());
-        }
-
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
     }
 
     /**
      * Tests to make sure that the selector is selecting files correctly.
      */
     @Test
-    public void testSelectionBehaviour() {
-        DepthSelector s;
-        String results;
-
-        s = new DepthSelector();
+    public void testSelectionBehaviourMinMax() {
         s.setMin(20);
         s.setMax(25);
-        results = selectorRule.selectionString(s);
-        assertEquals("FFFFFFFFFFFF", results);
+        assertEquals("FFFFFFFFFFFF", selectorRule.selectionString(s));
+    }
 
-        s = new DepthSelector();
+    @Test
+    public void testSelectionBehaviourMin0() {
         s.setMin(0);
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTTTTTTTTTT", results);
+        assertEquals("TTTTTTTTTTTT", selectorRule.selectionString(s));
+    }
 
-        s = new DepthSelector();
+    @Test
+    public void testSelectionBehaviourMin1() {
         s.setMin(1);
-        results = selectorRule.selectionString(s);
-        assertEquals("FFFFFTTTTTTT", results);
+        assertEquals("FFFFFTTTTTTT", selectorRule.selectionString(s));
+    }
 
-        s = new DepthSelector();
+    @Test
+    public void testSelectionBehaviourMax0() {
         s.setMax(0);
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTTTFFFFFFF", results);
+        assertEquals("TTTTTFFFFFFF", selectorRule.selectionString(s));
+    }
 
-        s = new DepthSelector();
+    @Test
+    public void testSelectionBehaviourMin1Max1() {
         s.setMin(1);
         s.setMax(1);
-        results = selectorRule.selectionString(s);
-        assertEquals("FFFFFTTTFFFT", results);
+        assertEquals("FFFFFTTTFFFT", selectorRule.selectionString(s));
     }
 
 }

@@ -19,15 +19,22 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.ExitException;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.fail;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 
 /**
  * JUnit 4 testcases for org.apache.tools.ant.types.Permissions.
  */
 public class PermissionsTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     Permissions perms;
 
@@ -67,90 +74,62 @@ public class PermissionsTest {
         perm.setName("os.*");
         perm.setClass("java.util.PropertyPermission");
         perms.addConfiguredRevoke(perm);
+
+        // Allow loading Hamcrest Matcher classes on demand
+        perm = new Permissions.Permission();
+        perm.setActions("read");
+        perm.setName("<<ALL FILES>>");
+        perm.setClass("java.io.FilePermission");
+        perms.addConfiguredGrant(perm);
+
+        perms.setSecurityManager();
+    }
+
+    @After
+    public void tearDown() {
+        perms.restoreSecurityManager();
     }
 
     /** Tests a permission that is granted per default. */
     @Test
     public void testDefaultGranted() {
-        perms.setSecurityManager();
-        try {
-            System.getProperty("line.separator");
-        } finally {
-            perms.restoreSecurityManager();
-        }
+        System.getProperty("line.separator");
     }
 
     /** Tests a permission that has been granted later via wildcard. */
     @Test
     public void testGranted() {
-        perms.setSecurityManager();
-        try {
-            String s = System.getProperty("user.name");
-            System.setProperty("user.name", s);
-        } finally {
-            perms.restoreSecurityManager();
-        }
+        System.setProperty("user.name", System.getProperty("user.name"));
     }
 
     /** Tests a permission that has been granted and revoked later. */
-    @Test
+    @Test(expected = SecurityException.class)
     public void testGrantedAndRevoked() {
-        perms.setSecurityManager();
-        try {
-            String s = System.getProperty("user.home");
-            System.setProperty("user.home", s);
-            fail("Could perform an action that should have been forbidden.");
-        } catch (SecurityException e) {
-            // Was expected, test passes
-        } finally {
-            perms.restoreSecurityManager();
-        }
+        System.setProperty("user.home", System.getProperty("user.home"));
     }
 
     /** Tests a permission that is granted as per default but revoked later via wildcard. */
-    @Test
+    @Test(expected = SecurityException.class)
     public void testDefaultRevoked() {
-        perms.setSecurityManager();
-        try {
-            System.getProperty("os.name");
-            fail("Could perform an action that should have been forbidden.");
-        } catch (SecurityException e) {
-            // Was expected, test passes
-        } finally {
-            perms.restoreSecurityManager();
-        }
+        System.getProperty("os.name");
     }
+
     /** Tests a permission that has not been granted or revoked. */
-    @Test
+    @Test(expected = SecurityException.class)
     public void testOther() {
-        String ls = System.getProperty("line.separator");
-        perms.setSecurityManager();
-        try {
-            System.setProperty("line.separator",ls);
-            fail("Could perform an action that should have been forbidden.");
-        } catch (SecurityException e) {
-            //TODO assert exception message
-            // Was expected, test passes
-        } finally {
-            perms.restoreSecurityManager();
-        }
+        System.setProperty("line.separator", System.lineSeparator());
     }
 
     /** Tests an exit condition. */
     @Test
     public void testExit() {
-        perms.setSecurityManager();
+        thrown.expect(ExitException.class);
+        thrown.expect(hasProperty("status", equalTo(3)));
         try {
             System.out.println("If this is the last line on standard out the testExit f.a.i.l.e.d");
             System.exit(3);
-            fail("Totally impossible that this fail is ever executed. Please let me know if it is!");
-        } catch (ExitException e) {
-            if (e.getStatus() != 3) {
-                fail("Received wrong exit status in Exit Exception.");
-            }
-            System.out.println("testExit successful.");
         } finally {
-            perms.restoreSecurityManager();
+            System.out.println("testExit successful.");
         }
     }
 

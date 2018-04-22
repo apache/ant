@@ -34,13 +34,17 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Before;
 import org.junit.ComparisonFailure;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * JUnit testcases for org.apache.tools.ant.IntrospectionHelper.
@@ -48,6 +52,9 @@ import static org.junit.Assert.fail;
  */
 
 public class IntrospectionHelperTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private Project p;
     private IntrospectionHelper ih;
@@ -71,42 +78,30 @@ public class IntrospectionHelperTest {
     }
 
     @Test
-    public void testAddText() throws BuildException {
+    public void testAddText() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(ComparisonFailure.class)));
         ih.addText(p, this, "test");
-        try {
-            ih.addText(p, this, "test2");
-            fail("test2 shouldn\'t be equal to test");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof ComparisonFailure);
-        }
-
-        ih = IntrospectionHelper.getHelper(String.class);
-        try {
-            ih.addText(p, "", "test");
-            fail("String doesn\'t support addText");
-        } catch (BuildException be) {
-            //TODO the value should be asserted
-        }
+        ih.addText(p, this, "test2");
     }
 
-    @Test
+    @Test(expected = BuildException.class)
+    public void testAddTextToString() throws BuildException {
+        ih = IntrospectionHelper.getHelper(String.class);
+        ih.addText(p, "", "test");
+    }
+
     @Ignore("This silently ignores a build exception")
+    @Test(expected = BuildException.class)
     public void testGetAddTextMethod() {
         Method m = ih.getAddTextMethod();
         assertMethod(m, "addText", String.class, "test", "bing!");
-
-        ih = IntrospectionHelper.getHelper(String.class);
-        try {
-            m = ih.getAddTextMethod();
-        } catch (BuildException e) {
-        }
+        IntrospectionHelper.getHelper(String.class).getAddTextMethod();
     }
 
     @Test
     public void testSupportsCharacters() {
-        assertTrue("IntrospectionHelperTest supports addText",
-                   ih.supportsCharacters());
-
+        assertTrue("IntrospectionHelperTest supports addText", ih.supportsCharacters());
         ih = IntrospectionHelper.getHelper(String.class);
         assertFalse("String doesn\'t support addText", ih.supportsCharacters());
     }
@@ -115,93 +110,135 @@ public class IntrospectionHelperTest {
         assertEquals("test", text);
     }
 
+    /**
+     * Fail: don't have element type one
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorOne() {
+        ih.getElementType("one");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: createTwo takes arguments
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorTwo() {
+        ih.getElementType("two");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: createThree returns void
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorThree() {
+        ih.getElementType("three");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: createFour returns array
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorFour() {
+        ih.getElementType("four");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: createFive returns primitive type
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorFive() {
+        ih.getElementType("five");
+        // TODO we should be asserting a value in here
+    }
+
     @Test
-    public void testElementCreators() throws BuildException {
-        try {
-            ih.getElementType("one");
-            fail("don't have element type one");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("two");
-            fail("createTwo takes arguments");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("three");
-            fail("createThree returns void");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("four");
-            fail("createFour returns array");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("five");
-            fail("createFive returns primitive type");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
+    public void testElementCreatorSix() throws BuildException {
         assertEquals(String.class, ih.getElementType("six"));
         assertEquals("test", ih.createElement(p, this, "six"));
+    }
 
-        try {
-            ih.getElementType("seven");
-            fail("addSeven takes two arguments");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("eight");
-            fail("addEight takes no arguments");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("nine");
-            fail("nine return non void");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("ten");
-            fail("addTen takes array argument");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("eleven");
-            fail("addEleven takes primitive argument");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.getElementType("twelve");
-            fail("no primitive constructor for java.lang.Class");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
+    /**
+     * Fail: addSeven takes two arguments
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorSeven() {
+        ih.getElementType("seven");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: addEight takes no arguments
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorEight() {
+        ih.getElementType("eight");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: addNine returns non void
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorNine() {
+        ih.getElementType("nine");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: addTen takes array argument
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorTen() {
+        ih.getElementType("ten");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * addEleven takes primitive argument
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorEleven() {
+        ih.getElementType("eleven");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: no primitive constructor for java.lang.Class
+     */
+    @Test(expected = BuildException.class)
+    public void testElementCreatorTwelve() throws BuildException {
+        ih.getElementType("twelve");
+        // TODO we should be asserting a value in here
+    }
+
+    @Test
+    public void testElementCreatorThirteen() throws BuildException {
         assertEquals(StringBuffer.class, ih.getElementType("thirteen"));
         assertEquals("test", ih.createElement(p, this, "thirteen").toString());
+    }
 
-        try {
-            ih.createElement(p, this, "fourteen");
-            fail("fourteen throws NullPointerException");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof NullPointerException);
-        }
+    /**
+     * Fail: fourteen throws NullPointerException
+     */
+    @Test
+    public void testElementCreatorFourteen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(NullPointerException.class)));
+        ih.createElement(p, this, "fourteen");
+    }
 
-        try {
-            ih.createElement(p, this, "fourteen");
-            fail("fifteen throws NullPointerException");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof NullPointerException);
-        }
+    /**
+     * Fail: fifteen throws NullPointerException
+     */
+    @Test
+    public void testElementCreatorFifteen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(NullPointerException.class)));
+        ih.createElement(p, this, "fifteen");
     }
 
     private Map<String, Class<?>> getExpectedNestedElements() {
@@ -216,11 +253,11 @@ public class IntrospectionHelperTest {
     @Test
     public void testGetNestedElements() {
         Map<String, Class<?>> elemMap = getExpectedNestedElements();
-        Enumeration e = ih.getNestedElements();
+        Enumeration<String> e = ih.getNestedElements();
         while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            Class expect = elemMap.get(name);
-            assertNotNull("Support for "+name+" in IntrospectioNHelperTest?",
+            String name = e.nextElement();
+            Class<?> expect = elemMap.get(name);
+            assertNotNull("Support for " + name + " in IntrospectioNHelperTest?",
                           expect);
             assertEquals("Return type of " + name, expect, ih.getElementType(name));
             elemMap.remove(name);
@@ -228,26 +265,22 @@ public class IntrospectionHelperTest {
         assertTrue("Found all", elemMap.isEmpty());
     }
 
-    @Test
+    @Test(expected = UnsupportedOperationException.class)
     public void testGetNestedElementMap() {
         Map<String, Class<?>> elemMap = getExpectedNestedElements();
         Map<String, Class<?>> actualMap = ih.getNestedElementMap();
         for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
             String elemName = entry.getKey();
             Class<?> elemClass = elemMap.get(elemName);
-            assertNotNull("Support for " + elemName +
-                          " in IntrospectionHelperTest?", elemClass);
+            assertNotNull("Support for " + elemName + " in IntrospectionHelperTest?", elemClass);
             assertEquals("Type of " + elemName, elemClass, entry.getValue());
             elemMap.remove(elemName);
         }
         assertTrue("Found all", elemMap.isEmpty());
 
         // Check it's a read-only map.
-        try {
-            actualMap.clear();
-            //TODO we should be asserting a value somewhere in here
-        } catch (UnsupportedOperationException e) {
-        }
+        actualMap.clear();
+        // TODO we should be asserting a value somewhere in here
     }
 
     @Test
@@ -262,7 +295,7 @@ public class IntrospectionHelperTest {
                                   Class<?> returnType, Class<?> methodArg) {
         Method m = ih.getElementMethod(elemName);
         assertEquals("Method name", methodName, m.getName());
-        Class<?> expectedReturnType = (returnType == null)? Void.TYPE: returnType;
+        Class<?> expectedReturnType = (returnType == null) ? Void.TYPE : returnType;
         assertEquals("Return type", expectedReturnType, m.getReturnType());
         Class<?>[] args = m.getParameterTypes();
         if (methodArg != null) {
@@ -312,7 +345,7 @@ public class IntrospectionHelperTest {
     public void addEleven(int i) {
     }
 
-    public void addTwelve(Class c) {
+    public void addTwelve(Class<?> c) {
     }
 
     public void addThirteen(StringBuffer sb) {
@@ -323,141 +356,211 @@ public class IntrospectionHelperTest {
         throw new NullPointerException();
     }
 
+    /**
+     * Fail: setOne doesn't exist
+     */
+    @Test(expected = BuildException.class)
+    public void testAttributeSetterOne() {
+        ih.setAttribute(p, this, "one", "test");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: setTwo returns non void
+     */
+    @Test(expected = BuildException.class)
+    public void testAttributeSetterTwo() {
+        ih.setAttribute(p, this, "two", "test");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: setThree takes no args
+     */
+    @Test(expected = BuildException.class)
+    public void testAttributeSetterThree() {
+        ih.setAttribute(p, this, "three", "test");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: setFour takes two args
+     */
+    @Test(expected = BuildException.class)
+    public void testAttributeSetterFour() {
+        ih.setAttribute(p, this, "four", "test");
+        //TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: setFive takes array arg
+     */
+    @Test(expected = BuildException.class)
+    public void testAttributeSetterFive() {
+        ih.setAttribute(p, this, "five", "test");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: Project doesn't have a String constructor
+     */
+    @Test(expected = BuildException.class)
+    public void testAttributeSetterSix() {
+        ih.setAttribute(p, this, "six", "test");
+        // TODO we should be asserting a value in here
+    }
+
+    /**
+     * Fail: 2 shouldn't be equal to three
+     */
     @Test
-    public void testAttributeSetters() throws BuildException {
-        try {
-            ih.setAttribute(p, this, "one", "test");
-            fail("setOne doesn't exist");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.setAttribute(p, this, "two", "test");
-            fail("setTwo returns non void");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.setAttribute(p, this, "three", "test");
-            fail("setThree takes no args");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.setAttribute(p, this, "four", "test");
-            fail("setFour takes two args");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.setAttribute(p, this, "five", "test");
-            fail("setFive takes array arg");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
-        try {
-            ih.setAttribute(p, this, "six", "test");
-            fail("Project doesn't have a String constructor");
-        } catch (BuildException be) {
-            //TODO we should be asserting a value in here
-        }
+    public void testAttributeSetterSeven() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(ComparisonFailure.class)));
         ih.setAttribute(p, this, "seven", "2");
-        try {
-            ih.setAttribute(p, this, "seven", "3");
-            fail("2 shouldn't be equals to three");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof ComparisonFailure);
-        }
+        ih.setAttribute(p, this, "seven", "3");
+    }
+
+    /**
+     * Fail: 2 shouldn't be equal to three as int
+     */
+    @Test
+    public void testAttributeSetterEight() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "eight", "2");
-        try {
-            ih.setAttribute(p, this, "eight", "3");
-            fail("2 shouldn't be equals to three - as int");
-        } catch (BuildException be) {
-            assertTrue("Cause of error: " + be.toString(), be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "eight", "3");
+    }
+
+    /**
+     * Fail: 2 shouldn't be equal to three as Integer
+     */
+    @Test
+    public void testAttributeSetterNine() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "nine", "2");
-        try {
-            ih.setAttribute(p, this, "nine", "3");
-            fail("2 shouldn't be equals to three - as Integer");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "nine", "3");
+    }
+
+    /**
+     * Fail: string + 2 shouldn't be equal to string + 3
+     */
+    @Test
+    public void testAttributeSetterTen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "ten", "2");
-        try {
-            ih.setAttribute(p, this, "ten", "3");
-            fail(projectBasedir + "2 shouldn't be equals to " + projectBasedir + "3");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "ten", "3");
+    }
+
+    /**
+     * Fail: on shouldn't be false
+     */
+    @Test
+    public void testAttributeSetterEleven() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "eleven", "2");
-        try {
-            ih.setAttribute(p, this, "eleven", "on");
-            fail("on shouldn't be false");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "eleven", "on");
+    }
+
+    /**
+     * Fail: on shouldn't be false
+     */
+    @Test
+    public void testAttributeSetterTwelve() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "twelve", "2");
-        try {
-            ih.setAttribute(p, this, "twelve", "on");
-            fail("on shouldn't be false");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "twelve", "on");
+    }
+
+    /**
+     * Fail: org.apache.tools.ant.Project shouldn't be equal to org.apache.tools.ant.ProjectHelper
+     */
+    @Test
+    public void testAttributeSetterThirteen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "thirteen", "org.apache.tools.ant.Project");
-        try {
-            ih.setAttribute(p, this, "thirteen", "org.apache.tools.ant.ProjectHelper");
-            fail("org.apache.tools.ant.Project shouldn't be equal to org.apache.tools.ant.ProjectHelper");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
-        try {
-            ih.setAttribute(p, this, "thirteen", "org.apache.tools.ant.Project2");
-            fail("org.apache.tools.ant.Project2 doesn't exist");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof ClassNotFoundException);
-        }
+        ih.setAttribute(p, this, "thirteen", "org.apache.tools.ant.ProjectHelper");
+    }
+
+    /**
+     * Fail: org.apache.tools.ant.Project2 doesn't exist
+     */
+    @Test
+    public void testAttributeSetterThirteenNonExistentClass() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(ClassNotFoundException.class)));
+        ih.setAttribute(p, this, "thirteen", "org.apache.tools.ant.Project2");
+    }
+
+    /**
+     * Fail: 2 shouldn't be equal to three as StringBuffer
+     */
+    @Test
+    public void testAttributeSetterFourteen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(ComparisonFailure.class)));
         ih.setAttribute(p, this, "fourteen", "2");
-        try {
             ih.setAttribute(p, this, "fourteen", "on");
-            fail("2 shouldn't be equals to three - as StringBuffer");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof ComparisonFailure);
-        }
+    }
+
+    /**
+     * Fail: o shouldn't be equal to a
+     */
+    @Test
+    public void testAttributeSetterFifteen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "fifteen", "abcd");
-        try {
-            ih.setAttribute(p, this, "fifteen", "on");
-            fail("o shouldn't be equal to a");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "fifteen", "on");
+    }
+
+    /**
+     * Fail: o shouldn't be equal to a
+     */
+    @Test
+    public void testAttributeSetterSixteen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "sixteen", "abcd");
-        try {
-            ih.setAttribute(p, this, "sixteen", "on");
-            fail("o shouldn't be equal to a");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "sixteen", "on");
+    }
+
+    /**
+     * Fail: 17 shouldn't be equals to three
+     */
+    @Test
+    public void testAttributeSetterSeventeen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "seventeen", "17");
-        try {
-            ih.setAttribute(p, this, "seventeen", "3");
-            fail("17 shouldn't be equals to three");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "seventeen", "3");
+    }
+
+    /**
+     * Fail: 18 shouldn't be equals to three
+     */
+    @Test
+    public void testAttributeSetterEighteen() {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "eightteen", "18");
-        try {
-            ih.setAttribute(p, this, "eightteen", "3");
-            fail("18 shouldn't be equals to three");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "eightteen", "3");
+    }
+
+    /**
+     * Fail: 19 shouldn't be equals to three
+     */
+    @Test
+    public void testAttributeSetterNineteen() throws BuildException {
+        thrown.expect(BuildException.class);
+        thrown.expect(hasProperty("cause", instanceOf(AssertionError.class)));
         ih.setAttribute(p, this, "nineteen", "19");
-        try {
-            ih.setAttribute(p, this, "nineteen", "3");
-            fail("19 shouldn't be equals to three");
-        } catch (BuildException be) {
-            assertTrue(be.getCause() instanceof AssertionError);
-        }
+        ih.setAttribute(p, this, "nineteen", "3");
     }
 
     private Map<String, Class<?>> getExpectedAttributes() {
@@ -479,8 +582,7 @@ public class IntrospectionHelperTest {
 
         /*
          * JUnit 3.7 adds a getName method to TestCase - so we now
-         * have a name attribute in IntrospectionHelperTest if we run
-         * under JUnit 3.7 but not in earlier versions.
+         * have a name attribute in IntrospectionHelperTest.
          *
          * Simply add it here and remove it after the tests.
          */
@@ -512,20 +614,17 @@ public class IntrospectionHelperTest {
         for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
             String attrName = entry.getKey();
             Class<?> attrClass = attrMap.get(attrName);
-            assertNotNull("Support for " + attrName +
-                          " in IntrospectionHelperTest?", attrClass);
+            assertNotNull("Support for " + attrName + " in IntrospectionHelperTest?", attrClass);
             assertEquals("Type of " + attrName, attrClass, entry.getValue());
             attrMap.remove(attrName);
         }
         attrMap.remove("name");
         assertTrue("Found all", attrMap.isEmpty());
 
+        thrown.expect(UnsupportedOperationException.class);
+        // TODO we should be asserting a value somewhere in here
         // Check it's a read-only map.
-        try {
-            actualMap.clear();
-            //TODO we should be asserting a value somewhere in here
-        } catch (UnsupportedOperationException e) {
-        }
+        actualMap.clear();
     }
 
     @Test
@@ -559,12 +658,9 @@ public class IntrospectionHelperTest {
         assertAttrMethod("twenty", "setTwenty", Path.class,
                 new File(projectBasedir + 20).toPath(), Paths.get("toto"));
 
-        try {
-            assertAttrMethod("onehundred", null, null, null, null);
-            fail("Should have raised a BuildException!");
-        } catch (BuildException e) {
-            //TODO we should be asserting a value in here
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("doesn't support the \"onehundred\" attribute.");
+        assertAttrMethod("onehundred", null, null, null, null);
     }
 
     private void assertAttrMethod(String attrName, String methodName,
@@ -675,8 +771,7 @@ public class IntrospectionHelperTest {
         // combinatorics are too hard to check.  We really only want
         // to ensure that the more derived Hashtable can be found
         // before Map.
-//        assertMethod(extensions.get(0), "add", Number.class,
-//                        new Integer(2), new Integer(3));
+        // assertMethod(extensions.get(0), "add", Number.class, new Integer(2), new Integer(3));
 
         // addConfigured(Hashtable) should come before addConfigured(Map)
         assertMethod(extensions.get(adders - 2),
@@ -703,12 +798,10 @@ public class IntrospectionHelperTest {
 
         try {
             m.invoke(this, badArg);
-            fail("Should have raised an assertion exception");
         } catch (IllegalAccessException e) {
             throw new BuildException(e);
         } catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            assertTrue(t.toString(), t instanceof AssertionError);
+            assertThat(e, hasProperty("cause", instanceOf(AssertionError.class)));
         }
     }
 

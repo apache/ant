@@ -18,15 +18,16 @@
 
 package org.apache.tools.ant.types.selectors;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests Size Selectors
@@ -37,140 +38,151 @@ public class SizeSelectorTest {
     @Rule
     public final BaseSelectorRule selectorRule = new BaseSelectorRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    private SizeSelector s;
+
+    private SizeSelector.SizeComparisons less;
+
+    private SizeSelector.SizeComparisons equal;
+
+    private SizeSelector.SizeComparisons more;
+
+    @Before
+    public void setUp() {
+        s = new SizeSelector();
+
+        less = new SizeSelector.SizeComparisons();
+        less.setValue("less");
+
+        equal = new SizeSelector.SizeComparisons();
+        equal.setValue("equal");
+
+        more = new SizeSelector.SizeComparisons();
+        more.setValue("more");
+    }
+
     /**
      * Test the code that validates the selector.
      */
     @Test
-    public void testValidate() {
-        SizeSelector s = new SizeSelector();
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("SizeSelector did not check for required fields");
-        } catch (BuildException be1) {
-            assertEquals("The value attribute is required, and must "
-                    + "be positive", be1.getMessage());
-        }
+    public void testValidateAttribute() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("The value attribute is required, and must be positive");
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testValidateValue() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("The value attribute is required, and must be positive");
         s.setValue(-10);
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("SizeSelector did not check for value being in the "
-                    + "allowable range");
-        } catch (BuildException be2) {
-            assertEquals("The value attribute is required, and must "
-                    + "be positive", be2.getMessage());
-        }
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testValidateAttributeName() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Invalid parameter garbage in");
         Parameter param = new Parameter();
         param.setName("garbage in");
         param.setValue("garbage out");
         Parameter[] params = {param};
         s.setParameters(params);
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("SizeSelector did not check for valid parameter element");
-        } catch (BuildException be3) {
-            assertEquals("Invalid parameter garbage in", be3.getMessage());
-        }
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
+    }
 
-        s = new SizeSelector();
-        param = new Parameter();
+    @Test
+    public void testValidateAttributeValue() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Invalid size setting garbage out");
+        Parameter param = new Parameter();
         param.setName("value");
         param.setValue("garbage out");
-        params[0] = param;
+        Parameter[] params = {param};
         s.setParameters(params);
-        try {
-            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("SizeSelector accepted bad value as parameter");
-        } catch (BuildException be4) {
-            assertEquals("Invalid size setting garbage out",
-                    be4.getMessage());
-        }
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testValidateAttributeUnits() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("garbage out is not a legal value for this attribute");
         Parameter param1 = new Parameter();
         Parameter param2 = new Parameter();
         param1.setName("value");
         param1.setValue("5");
         param2.setName("units");
         param2.setValue("garbage out");
-        params = new Parameter[2];
+        Parameter[] params = new Parameter[2];
         params[0] = param1;
         params[1] = param2;
-        try {
-            s.setParameters(params);
-            s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],selectorRule.getFiles()[0]);
-            fail("SizeSelector accepted bad units as parameter");
-        } catch (BuildException be5) {
-            assertEquals("garbage out is not a legal value for this attribute",
-                    be5.getMessage());
-        }
-
+        s.setParameters(params);
+        s.isSelected(selectorRule.getProject().getBaseDir(), selectorRule.getFilenames()[0],
+                selectorRule.getFiles()[0]);
     }
 
     /**
      * Tests to make sure that the selector is selecting files correctly.
      */
     @Test
-    public void testSelectionBehaviour() {
-        SizeSelector s;
-        String results;
-
-        SizeSelector.ByteUnits kilo = new SizeSelector.ByteUnits();
-        kilo.setValue("K");
-        SizeSelector.ByteUnits kibi = new SizeSelector.ByteUnits();
-        kibi.setValue("Ki");
-        SizeSelector.ByteUnits tibi = new SizeSelector.ByteUnits();
-        tibi.setValue("Ti");
-        SizeSelector.SizeComparisons less = new SizeSelector.SizeComparisons();
-        less.setValue("less");
-        SizeSelector.SizeComparisons equal = new SizeSelector.SizeComparisons();
-        equal.setValue("equal");
-        SizeSelector.SizeComparisons more = new SizeSelector.SizeComparisons();
-        more.setValue("more");
-
-        s = new SizeSelector();
+    public void testSelectionBehaviourLess() {
         s.setValue(10);
         s.setWhen(less);
-        results = selectorRule.selectionString(s);
-        assertEquals("TFFFFFFFFFFT", results);
+        assertEquals("TFFFFFFFFFFT", selectorRule.selectionString(s));
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testSelectionBehaviourMore() {
         s.setValue(10);
         s.setWhen(more);
-        results = selectorRule.selectionString(s);
-        assertEquals("TTTTTTTTTTTT", results);
+        assertEquals("TTTTTTTTTTTT", selectorRule.selectionString(s));
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testSelectionBehaviourEqual() {
         s.setValue(32);
         s.setWhen(equal);
-        results = selectorRule.selectionString(s);
-        assertEquals("TFFFTFFFFFFT", results);
+        assertEquals("TFFFTFFFFFFT", selectorRule.selectionString(s));
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testSelectionBehaviourKilo() {
+        SizeSelector.ByteUnits kilo = new SizeSelector.ByteUnits();
+        kilo.setValue("K");
         s.setValue(7);
         s.setWhen(more);
         s.setUnits(kilo);
-        results = selectorRule.selectionString(s);
-        assertEquals("TFTFFTTTTTTT", results);
+        assertEquals("TFTFFTTTTTTT", selectorRule.selectionString(s));
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testSelectionBehaviourKibi() {
+        SizeSelector.ByteUnits kibi = new SizeSelector.ByteUnits();
+        kibi.setValue("Ki");
         s.setValue(7);
         s.setWhen(more);
         s.setUnits(kibi);
-        results = selectorRule.selectionString(s);
-        assertEquals("TFTFFFTTFTTT", results);
+        assertEquals("TFTFFFTTFTTT", selectorRule.selectionString(s));
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testSelectionBehaviourTibi() {
+        SizeSelector.ByteUnits tibi = new SizeSelector.ByteUnits();
+        tibi.setValue("Ti");
         s.setValue(99999);
         s.setWhen(more);
         s.setUnits(tibi);
-        results = selectorRule.selectionString(s);
-        assertEquals("TFFFFFFFFFFT", results);
+        assertEquals("TFFFFFFFFFFT", selectorRule.selectionString(s));
+    }
 
-        s = new SizeSelector();
+    @Test
+    public void testSelectionBehaviour() {
         Parameter param1 = new Parameter();
         Parameter param2 = new Parameter();
         Parameter param3 = new Parameter();
@@ -182,8 +194,7 @@ public class SizeSelectorTest {
         param3.setValue("more");
         Parameter[] params = {param1, param2, param3};
         s.setParameters(params);
-        results = selectorRule.selectionString(s);
-        assertEquals("TFFFFFFTFFTT", results);
+        assertEquals("TFFFFFFTFFTT", selectorRule.selectionString(s));
     }
 
     @Test
@@ -219,16 +230,11 @@ public class SizeSelectorTest {
     }
 
     private void testCaseInsensitiveParameterParsing(String name) {
-        SizeSelector s = new SizeSelector();
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("foo is not a legal value for this attribute");
         Parameter p = new Parameter();
         p.setName(name);
         p.setValue("foo");
-        try {
-            s.setParameters(p);
-            fail("should have caused an exception");
-        } catch (BuildException be) {
-            assertEquals("foo is not a legal value for this attribute",
-                         be.getMessage());
-        }
+        s.setParameters(p);
     }
 }
