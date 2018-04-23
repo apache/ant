@@ -71,8 +71,12 @@ public abstract class BuildFileTest extends TestCase {
      * to clean up after each test. Note that no "setUp" target
      * is automatically called, since it's trivial to have a
      * test target depend on it.
+     *
+     * @throws Exception this implementation doesn't throw any
+     * exception but we've added it to the signature so that
+     * subclasses can throws whatever they need.
      */
-    protected void tearDown() {
+    protected void tearDown() throws Exception {
         if (project == null) {
             /*
              * Maybe the BuildFileTest was subclassed and there is
