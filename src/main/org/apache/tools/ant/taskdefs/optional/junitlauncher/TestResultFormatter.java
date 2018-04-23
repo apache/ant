@@ -6,8 +6,9 @@ import java.io.Closeable;
 import java.io.OutputStream;
 
 /**
- * A {@link TestExecutionListener} which lets implementing classes format and write out
- * the test execution results.
+ * A {@link org.junit.platform.launcher.TestExecutionListener} which
+ * lets implementing classes format and write out the test execution
+ * results.
  */
 public interface TestResultFormatter extends TestExecutionListener, Closeable {
 
