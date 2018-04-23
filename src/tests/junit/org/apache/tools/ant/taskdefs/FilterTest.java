@@ -34,6 +34,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class FilterTest {
 
@@ -117,8 +118,8 @@ public class FilterTest {
         try (BufferedReader in = new BufferedReader(new FileReader(f))) {
             line = in.readLine();
         } catch (IOException ioe) {
-            assertNotNull("filter test" + testNumber
-                    + " failed.  IOException while reading filtered file: " + ioe, line);
+            fail("filter test" + testNumber
+                 + " failed.  IOException while reading filtered file: " + ioe);
         }
         f.delete();
         return line;
