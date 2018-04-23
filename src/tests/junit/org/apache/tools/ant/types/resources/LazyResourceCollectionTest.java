@@ -75,7 +75,7 @@ public class LazyResourceCollectionTest {
         }
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testLazyLoading() {
         StringResourceCollection collectionTest = new StringResourceCollection();
         LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
@@ -101,7 +101,18 @@ public class LazyResourceCollectionTest {
         assertOneCreatedIterator(collectionTest);
         assertEquals("Iterating 3 times load more than 3 resources", 3,
             stringResourceIterator.cursor);
+    }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testLazyLoadingFailsOnceWrappedCollectionIsExhausted() {
+        StringResourceCollection collectionTest = new StringResourceCollection();
+        LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
+        lazyCollection.add(collectionTest);
+
+        Iterator<Resource> it = lazyCollection.iterator();
+        it.next();
+        it.next();
+        it.next();
         it.next();
     }
 
@@ -111,7 +122,7 @@ public class LazyResourceCollectionTest {
                 testCollection.createdIterators.size());
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testCaching() {
         StringResourceCollection collectionTest = new StringResourceCollection();
         LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
@@ -153,6 +164,23 @@ public class LazyResourceCollectionTest {
         assertEquals(
             "The first iterator did not lookup in the cache for a resource", 3,
             stringResourceIterator.cursor);
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testCachingFailsOnceWrappedCollectionIsExhausted() {
+        StringResourceCollection collectionTest = new StringResourceCollection();
+        LazyResourceCollectionWrapper lazyCollection = new LazyResourceCollectionWrapper();
+        lazyCollection.add(collectionTest);
+
+        Iterator<Resource> it1 = lazyCollection.iterator();
+        Iterator<Resource> it2 = lazyCollection.iterator();
+
+        it1.next();
+        it2.next();
+        it2.next();
+        it1.next();
+        it2.next();
+        it1.next();
 
         // next() must throw the expected NoSuchElementException;
         // if that does not happen, assertions throw the unexpected Assertion error

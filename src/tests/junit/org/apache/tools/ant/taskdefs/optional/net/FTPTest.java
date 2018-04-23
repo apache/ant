@@ -611,10 +611,15 @@ public class FTPTest {
         performConfigTest("configuration.3", expectedCounts);
     }
 
-    @Test(expected = BuildException.class)
-    public void testConfigurationLang() {
+    @Test
+    public void testConfigurationGoodLang() {
         int[] expectedCounts = {1, 1, 0, 0, 0, 0, 1};
         performConfigTest("configuration.lang.good", expectedCounts);
+    }
+
+    @Test(expected = BuildException.class)
+    public void testConfigurationBadLang() {
+        int[] expectedCounts = {1, 1, 0, 0, 0, 0, 1};
         performConfigTest("configuration.lang.bad", expectedCounts);
     }
     /**

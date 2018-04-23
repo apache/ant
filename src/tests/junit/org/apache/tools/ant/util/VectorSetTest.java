@@ -107,11 +107,15 @@ public class VectorSetTest {
         assertEquals(1, v.size());
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test
     public void testRemoveIndex() {
         v.add(O);
         assertSame(O, v.remove(0));
         assertEquals(0, v.size());
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void testCantRemoveByIndexFromEmptySet() {
         v.remove(0);
     }
 
@@ -197,11 +201,15 @@ public class VectorSetTest {
         assertFalse(v.removeElement(O));
     }
 
-    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Test
     public void testRemoveElementAt() {
         v.add(O);
         v.removeElementAt(0);
         assertEquals(0, v.size());
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void testCantRemoveAtFromEmptySet() {
         v.removeElementAt(0);
     }
 
