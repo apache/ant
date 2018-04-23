@@ -405,7 +405,7 @@ public abstract class BuildFileTest extends TestCase {
             assertTrue("Should throw BuildException because '" + cause
                     + "' with message '" + msg + "' (actual message '"
                             + ex.getMessage() + "' instead)",
-                    msg != null && !ex.getMessage().equals(msg));
+                    msg != null && ex.getMessage().equals(msg));
             return;
         }
         fail("Should throw BuildException because: " + cause);
@@ -427,7 +427,7 @@ public abstract class BuildFileTest extends TestCase {
             assertTrue("Should throw BuildException because '" + cause
                     + "' with message containing '" + contains + "' (actual message '"
                             + ex.getMessage() + "' instead)",
-                    null != contains && !ex.getMessage().contains(contains));
+                    null != contains && ex.getMessage().contains(contains));
             return;
         }
         fail("Should throw BuildException because: " + cause);
