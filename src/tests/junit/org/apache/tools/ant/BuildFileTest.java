@@ -74,7 +74,7 @@ public abstract class BuildFileTest extends TestCase {
      *
      * @throws Exception this implementation doesn't throw any
      * exception but we've added it to the signature so that
-     * subclasses can throws whatever they need.
+     * subclasses can throw whatever they need.
      */
     protected void tearDown() throws Exception {
         if (project == null) {
