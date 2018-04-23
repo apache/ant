@@ -234,7 +234,7 @@ public class FileUtilsTest {
     @Test
     public void testNormalizeDosOrNetwareFailures() {
         assumeTrue("Not DOS or Netware", Os.isFamily("dos") || Os.isFamily("netware"));
-        thrown.expect(IOException.class);
+        thrown.expect(BuildException.class);
         try {
             FILE_UTILS.normalize("/").getPath();
         } finally {
