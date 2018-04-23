@@ -335,10 +335,10 @@ public class SOSTest {
      */
     private void checkCommandLines(String[] sTestCmdLine, String[] sGeneratedCmdLine) {
         int length = sTestCmdLine.length;
+        assertEquals("number of arguments doesn't match", length, sGeneratedCmdLine.length);
         for (int i = 0; i < length; i++) {
             assertEquals("arg # " + String.valueOf(i),
                     sTestCmdLine[i], sGeneratedCmdLine[i]);
         }
-        assertEquals("extra args", sTestCmdLine.length, sGeneratedCmdLine.length);
     }
 }

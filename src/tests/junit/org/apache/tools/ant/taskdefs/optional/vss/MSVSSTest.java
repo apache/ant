@@ -39,6 +39,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *  Testcase to ensure that command line generation and required attributes are correct.
@@ -449,6 +450,7 @@ public class MSVSSTest implements MSVSSConstants {
                 genIndex++;
                 continue;
             }
+            assertTrue("missing arg " + sTestCmdLine[testIndex], genIndex < genLength);
             assertEquals("arg # " + testIndex,
                     sTestCmdLine[testIndex], sGeneratedCmdLine[genIndex]);
             testIndex++;
