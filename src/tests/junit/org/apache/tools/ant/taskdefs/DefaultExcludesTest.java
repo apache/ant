@@ -25,6 +25,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -158,16 +160,8 @@ public class DefaultExcludesTest {
         // check that both arrays have the same size
         assertEquals(message + " : string array length match", expected.length, actual.length);
         for (String element : expected) {
-            boolean found = false;
-            for (String member : actual) {
-                found |= element.equals(member);
-                if (found) {
-                    break;
-                }
-            }
-            assertTrue(message + " : didn't find element "
-                    + element + " in array match", found);
+            assertTrue(message + " : didn't find element " + element + " in array match",
+                    Arrays.stream(actual).anyMatch(member -> member.equals(element)));
         }
-
     }
 }

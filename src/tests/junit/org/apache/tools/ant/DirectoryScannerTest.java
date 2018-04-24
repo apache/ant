@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.selectors.TokenizedPath;
@@ -486,14 +487,13 @@ public class DirectoryScannerTest {
         assertEquals("directories present: ", expectedDirectories.length,
                      includedDirectories.length);
 
-        TreeSet<String> files = new TreeSet<>();
-        for (String includedFile : includedFiles) {
-            files.add(includedFile.replace(File.separatorChar, '/'));
-        }
-        TreeSet<String> directories = new TreeSet<>();
-        for (String includedDirectory : includedDirectories) {
-            directories.add(includedDirectory.replace(File.separatorChar, '/'));
-        }
+        TreeSet<String> files = Arrays.stream(includedFiles)
+                .map(includedFile -> includedFile.replace(File.separatorChar, '/'))
+                .collect(Collectors.toCollection(TreeSet::new));
+
+        TreeSet<String> directories = Arrays.stream(includedDirectories)
+                .map(includedDirectory -> includedDirectory.replace(File.separatorChar, '/'))
+                .collect(Collectors.toCollection(TreeSet::new));
 
         String currentfile;
         Iterator<String> i = files.iterator();

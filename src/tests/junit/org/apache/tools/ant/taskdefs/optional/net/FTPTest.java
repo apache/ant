@@ -63,20 +63,18 @@ public class FTPTest {
 
     private String loginFailureMessage;
 
-    private String tmpDir = null;
     private String remoteTmpDir = null;
-    private String ftpFileSep = null;
-    private myFTP myFTPTask = new myFTP();
 
+    private myFTP myFTPTask = new myFTP();
 
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/net/ftp.xml");
         Project project = buildRule.getProject();
         project.executeTarget("setup");
-        tmpDir = project.getProperty("tmp.dir");
+        String tmpDir = project.getProperty("tmp.dir");
         ftp = new FTPClient();
-        ftpFileSep = project.getProperty("ftp.filesep");
+        String ftpFileSep = project.getProperty("ftp.filesep");
         myFTPTask.setSeparator(ftpFileSep);
         myFTPTask.setProject(project);
         remoteTmpDir = myFTPTask.resolveFile(tmpDir);
@@ -643,9 +641,7 @@ public class FTPTest {
                 "custom config: server language code = de"
         };
         LogCounter counter = new LogCounter();
-        for (String message : messages) {
-            counter.addLogMessageToSearch(message);
-        }
+        Arrays.stream(messages).forEach(counter::addLogMessageToSearch);
 
         buildRule.getProject().addBuildListener(counter);
         buildRule.getProject().executeTarget(target);
@@ -795,9 +791,7 @@ public class FTPTest {
                 "Failed to issue Site Command: umask 222",
         };
         LogCounter counter = new LogCounter();
-        for (String message : messages) {
-            counter.addLogMessageToSearch(message);
-        }
+        Arrays.stream(messages).forEach(counter::addLogMessageToSearch);
 
         buildRule.getProject().addBuildListener(counter);
         buildRule.getProject().executeTarget(target);

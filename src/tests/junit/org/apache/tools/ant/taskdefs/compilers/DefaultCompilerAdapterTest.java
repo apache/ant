@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.types.Commandline;
@@ -397,11 +399,8 @@ public class DefaultCompilerAdapterTest {
             Collections.addAll(expectedFiles,
                     java1.getAbsolutePath(),
                     java2.getAbsolutePath());
-            final Set<String> actualFiles = new TreeSet<>();
-            for (File compileFile : compileList) {
-                actualFiles.add(compileFile.getAbsolutePath());
-            }
-            assertEquals(expectedFiles, actualFiles);
+            assertEquals(expectedFiles, Arrays.stream(compileList)
+                    .map(File::getAbsolutePath).collect(Collectors.toCollection(TreeSet::new)));
         } finally {
             delete(workDir);
         }
@@ -525,9 +524,7 @@ public class DefaultCompilerAdapterTest {
         if (f.isDirectory()) {
             final File[] clds = f.listFiles();
             if (clds != null) {
-                for (File cld : clds) {
-                    delete(cld);
-                }
+                Arrays.stream(clds).forEach(this::delete);
             }
         }
         f.delete();

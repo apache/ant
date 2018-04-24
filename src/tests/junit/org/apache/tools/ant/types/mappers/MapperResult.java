@@ -83,7 +83,7 @@ public class MapperResult extends Task {
         if (result == null) {
             flattened = NULL_MAPPER_RESULT;
         } else {
-            flattened = Arrays.asList(result).stream().collect(Collectors.joining("|"));
+            flattened = Arrays.stream(result).collect(Collectors.joining("|"));
         }
         if (!flattened.equals(output)) {
             throw new BuildException(failMessage + " got " + flattened + " expected " + output);

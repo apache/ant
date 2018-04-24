@@ -593,7 +593,7 @@ public class JUnitTaskTest {
     }
 
     @Test
-    public void testCheckNonDuplicateAntJar() throws Exception {
+    public void testCheckNonDuplicateAntJar() {
         setupCheckDuplicateTest();
         buildRule.getProject().setProperty("includeantruntime", "no");
         buildRule.executeTarget("testCheckForkedPath");
@@ -605,9 +605,7 @@ public class JUnitTaskTest {
         if (f.isDirectory()) {
             final File[] clds = f.listFiles();
             if (clds != null) {
-                for (File cld : clds) {
-                    delete(cld);
-                }
+                Arrays.stream(clds).forEach(this::delete);
             }
         }
         f.delete();

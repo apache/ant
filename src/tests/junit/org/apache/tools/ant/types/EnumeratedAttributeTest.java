@@ -21,6 +21,8 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -57,10 +59,7 @@ public class EnumeratedAttributeTest {
 
     @Test
     public void testExceptionsNormal() {
-        EnumeratedAttribute t1 = new TestNormal();
-        for (String value : expected) {
-            t1.setValue(value);
-        }
+        Arrays.stream(expected).forEach(new TestNormal()::setValue);
     }
 
     /**

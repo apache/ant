@@ -23,6 +23,7 @@ import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.junit.Assume.assumeTrue;
 
@@ -71,9 +72,7 @@ public class FileUtilities {
             if (children == null) {
                 return;
             }
-            for (File child : children) {
-                rollbackTimestamps(child, seconds);
-            }
+            Arrays.stream(children).forEach(child -> rollbackTimestamps(child, seconds));
         }
     }
 
