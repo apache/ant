@@ -19,18 +19,20 @@
 package org.apache.tools.ant.types.optional.depend;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.hasKey;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Testcase for the Classfileset optional type.
@@ -53,25 +55,14 @@ public class ClassFileSetTest {
      */
     @Test
     public void testBasicSet() {
-        Project p = buildRule.getProject();
         buildRule.executeTarget("testbasicset");
-        FileSet resultFileSet = p.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        String[] scannedFiles = scanner.getIncludedFiles();
-        Hashtable<String, String> files = new Hashtable<>();
-        for (String scannedFile : scannedFiles) {
-            files.put(scannedFile, scannedFile);
-        }
-        assertEquals("Classfileset did not pick up expected number of "
-            + "class files", 4, files.size());
-        assertTrue("Result did not contain A.class",
-            files.containsKey("A.class"));
-        assertTrue("Result did not contain B.class",
-            files.containsKey("B.class"));
-        assertTrue("Result did not contain C.class",
-            files.containsKey("C.class"));
-        assertTrue("Result did not contain D.class",
-            files.containsKey("D.class"));
+        Hashtable<String, String> files = getFiles();
+        assertEquals("Classfileset did not pick up expected number of class files",
+                4, files.size());
+        assertThat("Result did not contain A.class", files, hasKey("A.class"));
+        assertThat("Result did not contain B.class", files, hasKey("B.class"));
+        assertThat("Result did not contain C.class", files, hasKey("C.class"));
+        assertThat("Result did not contain D.class", files, hasKey("D.class"));
     }
 
     /**
@@ -79,20 +70,12 @@ public class ClassFileSetTest {
      */
     @Test
     public void testSmallSet() {
-        Project p = buildRule.getProject();
         buildRule.executeTarget("testsmallset");
-        FileSet resultFileSet = p.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        Hashtable<String, String> files = new Hashtable<>();
-        for (String scannedFile : scanner.getIncludedFiles()) {
-            files.put(scannedFile, scannedFile);
-        }
-        assertEquals("Classfileset did not pick up expected number of "
-            + "class files", 2, files.size());
-        assertTrue("Result did not contain B.class",
-            files.containsKey("B.class"));
-        assertTrue("Result did not contain C.class",
-            files.containsKey("C.class"));
+        Hashtable<String, String> files = getFiles();
+        assertEquals("Classfileset did not pick up expected number of class files",
+                2, files.size());
+        assertThat("Result did not contain B.class", files, hasKey("B.class"));
+        assertThat("Result did not contain C.class", files, hasKey("C.class"));
     }
 
     /**
@@ -100,18 +83,11 @@ public class ClassFileSetTest {
      */
     @Test
     public void testComboSet() {
-        Project p = buildRule.getProject();
         buildRule.executeTarget("testcomboset");
-        FileSet resultFileSet = p.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        Hashtable<String, String> files = new Hashtable<>();
-        for (String scannedFile : scanner.getIncludedFiles()) {
-            files.put(scannedFile, scannedFile);
-        }
-        assertEquals("Classfileset did not pick up expected number of "
-            + "class files", 1, files.size());
-        assertTrue("Result did not contain C.class",
-            files.containsKey("C.class"));
+        Hashtable<String, String> files = getFiles();
+        assertEquals("Classfileset did not pick up expected number of class files",
+                1, files.size());
+        assertThat("Result did not contain C.class", files, hasKey("C.class"));
     }
 
     /**
@@ -127,26 +103,15 @@ public class ClassFileSetTest {
      */
     @Test
     public void testMethodParam() {
-        Project p = buildRule.getProject();
         buildRule.executeTarget("testmethodparam");
-        FileSet resultFileSet = p.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        Hashtable<String, String> files = new Hashtable<>();
-        for (String scannedFile : scanner.getIncludedFiles()) {
-            files.put(scannedFile, scannedFile);
-        }
-        assertEquals("Classfileset did not pick up expected number of "
-            + "class files", 5, files.size());
-        assertTrue("Result did not contain A.class",
-            files.containsKey("A.class"));
-        assertTrue("Result did not contain B.class",
-            files.containsKey("B.class"));
-        assertTrue("Result did not contain C.class",
-            files.containsKey("C.class"));
-        assertTrue("Result did not contain D.class",
-            files.containsKey("D.class"));
-        assertTrue("Result did not contain E.class",
-            files.containsKey("E.class"));
+        Hashtable<String, String> files = getFiles();
+        assertEquals("Classfileset did not pick up expected number of class files",
+                5, files.size());
+        assertThat("Result did not contain A.class", files, hasKey("A.class"));
+        assertThat("Result did not contain B.class", files, hasKey("B.class"));
+        assertThat("Result did not contain C.class", files, hasKey("C.class"));
+        assertThat("Result did not contain D.class", files, hasKey("D.class"));
+        assertThat("Result did not contain E.class", files, hasKey("E.class"));
     }
 
     /**
@@ -154,24 +119,18 @@ public class ClassFileSetTest {
      */
     @Test
     public void testMethodParamInner() {
-        Project p = buildRule.getProject();
         buildRule.executeTarget("testmethodparaminner");
-        FileSet resultFileSet = p.getReference(RESULT_FILESET);
-        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(p);
-        Hashtable<String, String> files = new Hashtable<>();
-        for (String scannedFile : scanner.getIncludedFiles()) {
-            files.put(scannedFile, scannedFile);
-        }
-        assertEquals("Classfileset did not pick up expected number of "
-            + "class files", 4, files.size());
-        assertTrue("Result did not contain test" + File.separator + "Outer$Inner.class",
-            files.containsKey("test" + File.separator + "Outer$Inner.class"));
-        assertTrue("Result did not contain test" + File.separator + "Outer.class",
-            files.containsKey("test" + File.separator + "Outer.class"));
-        assertTrue("Result did not contain test" + File.separator + "ContainsOnlyInner.class",
-            files.containsKey("test" + File.separator + "ContainsOnlyInner.class"));
-        assertTrue("Result did not contain test" + File.separator + "ContainsOnlyInner.class",
-            files.containsKey("test" + File.separator + "MethodParam.class"));
+        Hashtable<String, String> files = getFiles();
+        assertEquals("Classfileset did not pick up expected number of class files",
+                4, files.size());
+        assertThat("Result did not contain test" + File.separator + "Outer$Inner.class",
+            files, hasKey("test" + File.separator + "Outer$Inner.class"));
+        assertThat("Result did not contain test" + File.separator + "Outer.class",
+            files, hasKey("test" + File.separator + "Outer.class"));
+        assertThat("Result did not contain test" + File.separator + "ContainsOnlyInner.class",
+            files, hasKey("test" + File.separator + "ContainsOnlyInner.class"));
+        assertThat("Result did not contain test" + File.separator + "ContainsOnlyInner.class",
+            files, hasKey("test" + File.separator + "MethodParam.class"));
     }
 
     @Test
@@ -179,4 +138,11 @@ public class ClassFileSetTest {
         buildRule.executeTarget("testresourcecollection");
     }
 
+    private Hashtable<String, String> getFiles() {
+        FileSet resultFileSet = buildRule.getProject().getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(buildRule.getProject());
+        String[] scannedFiles = scanner.getIncludedFiles();
+        return Arrays.stream(scannedFiles)
+                .collect(Collectors.toMap(file -> file, file -> file, (a, b) -> b, Hashtable::new));
+    }
 }

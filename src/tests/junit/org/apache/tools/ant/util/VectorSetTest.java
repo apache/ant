@@ -23,10 +23,12 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 public class VectorSetTest {
 
@@ -78,7 +80,7 @@ public class VectorSetTest {
     public void testClone() {
         v.add(O);
         Object o = v.clone();
-        assertTrue(o instanceof VectorSet);
+        assertThat(o, instanceOf(VectorSet.class));
         VectorSet<Object> vs = (VectorSet<Object>) o;
         assertEquals(1, vs.size());
         assertTrue(vs.contains(O));

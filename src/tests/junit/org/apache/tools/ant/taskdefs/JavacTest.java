@@ -32,6 +32,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Path;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -75,8 +76,7 @@ public class JavacTest {
         assertThat("name should contain \"javac\"", javac.getJavacExecutable(), containsString("javac"));
 
         project.setProperty("build.compiler", "whatever");
-        assertNull("no fork and not extJavac means no executable",
-                   javac.getJavacExecutable());
+        assertNull("no fork and not extJavac means no executable", javac.getJavacExecutable());
 
         String myJavac = "Slartibartfast";
         javac.setFork(true);
@@ -153,8 +153,7 @@ public class JavacTest {
         String compiler = javac.getCompiler();
         assertNotNull(compiler);
         if (System.getProperty("build.compiler") != null) {
-            assertEquals(System.getProperty("build.compiler"),
-                         compiler);
+            assertEquals(System.getProperty("build.compiler"), compiler);
         } else {
             assertTrue("default value",
                        "javac1.1".equals(compiler)
@@ -200,17 +199,13 @@ public class JavacTest {
     @Test
     public void testCompilerAdapter() {
         javac.setCompiler("javac1.4");
-
         javac.setDepend(true);
-        CompilerAdapter adapter =
-            CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
-
-        assertTrue(adapter instanceof Javac13);
+        CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
+        assertThat(adapter, instanceOf(Javac13.class));
 
         javac.setFork(true);
-        adapter =
-            CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
-        assertTrue(adapter instanceof JavacExternal);
+        adapter = CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
+        assertThat(adapter, instanceOf(JavacExternal.class));
     }
 
     @Test

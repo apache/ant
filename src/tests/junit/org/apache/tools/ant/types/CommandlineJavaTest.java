@@ -28,11 +28,11 @@ import java.io.File;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.hasKey;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * JUnit testcases for org.apache.tools.ant.CommandlineJava
@@ -145,7 +145,7 @@ public class CommandlineJavaTest {
             assertEquals(currentClasspath, newClasspath);
             assertNotNull(System.getProperty("key"));
             assertEquals("value", System.getProperty("key"));
-            assertTrue(System.getProperties().containsKey("java.class.path"));
+            assertThat(System.getProperties(), hasKey("java.class.path"));
             assertNotNull(System.getProperty("key2"));
             assertEquals("value2", System.getProperty("key2"));
         } finally {

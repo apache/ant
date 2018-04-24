@@ -35,9 +35,10 @@ import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipFile;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 public class ZipExtraFieldTest {
 
@@ -97,10 +98,10 @@ public class ZipExtraFieldTest {
             ZipEntry ze = zf.getEntry("x");
             assertNotNull(ze);
             assertEquals(expectZip64 ? 2 : 1, ze.getExtraFields().length);
-            assertTrue(ze.getExtraFields()[0] instanceof JarMarker);
+            assertThat(ze.getExtraFields()[0], instanceOf(JarMarker.class));
             if (expectZip64) {
-                assertTrue(ze.getExtraFields()[1]
-                           instanceof Zip64ExtendedInformationExtraField);
+                assertThat(ze.getExtraFields()[1],
+                        instanceOf(Zip64ExtendedInformationExtraField.class));
             }
         } finally {
             ZipFile.closeQuietly(zf);

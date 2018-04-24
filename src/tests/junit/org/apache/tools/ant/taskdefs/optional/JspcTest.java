@@ -32,7 +32,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -130,7 +133,7 @@ public class JspcTest {
     protected void assertJavaFileCreated(String filename) {
         File file = getOutputFile(filename);
         assertTrue("file " + filename + " not found", file.exists());
-        assertTrue("file " + filename + " is empty", file.length() > 0);
+        assertNotEquals("file " + filename + " is empty", 0, file.length());
     }
 
     /**
@@ -151,10 +154,10 @@ public class JspcTest {
         JspCompilerAdapter adapter =
                 JspCompilerAdapterFactory.getCompiler("jasper", null, null);
         JspMangler mangler = adapter.createMangler();
-        assertTrue(mangler instanceof JspNameMangler);
+        assertThat(mangler, instanceOf(JspNameMangler.class));
         adapter = JspCompilerAdapterFactory.getCompiler("jasper41", null, null);
         mangler = adapter.createMangler();
-        assertTrue(mangler instanceof Jasper41Mangler);
+        assertThat(mangler, instanceOf(Jasper41Mangler.class));
     }
 
     @Test

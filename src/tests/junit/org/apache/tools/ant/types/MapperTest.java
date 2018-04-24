@@ -35,11 +35,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * JUnit testcases for org.apache.tools.ant.types.Mapper.
@@ -141,7 +141,7 @@ public class MapperTest {
         m3.setFrom("*.java");
         m3.setTo("*.class");
         FileNameMapper fmm = m.getImplementation();
-        assertTrue("should be glob", fmm instanceof GlobPatternMapper);
+        assertThat("should be glob", fmm, instanceOf(GlobPatternMapper.class));
         String[] result = fmm.mapFileName("a.java");
         assertEquals("a.java should match", 1, result.length);
         assertEquals("a.class", result[0]);

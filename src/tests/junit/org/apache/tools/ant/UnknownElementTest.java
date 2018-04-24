@@ -26,9 +26,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class UnknownElementTest {
 
@@ -57,23 +58,30 @@ public class UnknownElementTest {
         buildRule.getProject().addBuildListener(new BuildListener() {
                 public void buildStarted(BuildEvent event) {
                 }
+
                 public void buildFinished(BuildEvent event) {
                 }
+
                 public void targetStarted(BuildEvent event) {
                 }
+
                 public void targetFinished(BuildEvent event) {
                 }
+
                 public void taskStarted(BuildEvent event) {
                     assertTaskProperties(event.getTask());
                 }
+
                 public void taskFinished(BuildEvent event) {
                     assertTaskProperties(event.getTask());
                 }
+
                 public void messageLogged(BuildEvent event) {
                 }
+
                 private void assertTaskProperties(Task ue) {
                     assertNotNull(ue);
-                    assertTrue(ue instanceof UnknownElement);
+                    assertThat(ue, instanceOf(UnknownElement.class));
                     Task t = ((UnknownElement) ue).getTask();
                     assertNotNull(t);
                     assertEquals("org.apache.tools.ant.taskdefs.Echo",
@@ -85,9 +93,11 @@ public class UnknownElementTest {
 
     public static class Child extends Task {
         Parent parent;
+
         public void injectParent(Parent parent) {
             this.parent = parent;
         }
+
         public void execute() {
             parent.fromChild();
         }
@@ -95,6 +105,7 @@ public class UnknownElementTest {
 
     public static class Parent extends Task implements TaskContainer {
         List<Task> children = new ArrayList<>();
+
         public void addTask(Task t) {
             children.add(t);
         }

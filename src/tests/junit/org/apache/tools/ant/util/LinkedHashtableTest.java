@@ -24,11 +24,16 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.hasValue;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class LinkedHashtableTest {
 
@@ -48,17 +53,17 @@ public class LinkedHashtableTest {
     public void testClone() {
         h.put(K1, V1);
         Hashtable<Object, Object> h2 = (Hashtable<Object, Object>) h.clone();
-        assertTrue(h2 instanceof LinkedHashtable);
-        assertTrue(h2.containsKey(K1));
+        assertThat(h2, instanceOf(LinkedHashtable.class));
+        assertThat(h2, hasKey(K1));
     }
 
     @Test
     public void testContainsAndPut() {
         h.put(K1, V1);
         assertTrue(h.contains(K1));
-        assertTrue(h.containsKey(K1));
-        assertTrue(h.containsValue(V1));
-        assertFalse(h.containsKey(K2));
+        assertThat(h, hasKey(K1));
+        assertThat(h, hasValue(V1));
+        assertThat(h, not(hasKey(K2)));
     }
 
     @Test
@@ -86,7 +91,7 @@ public class LinkedHashtableTest {
         LinkedHashtable<Object, Object> h2 = new LinkedHashtable<>();
         h.put(K1, V1);
         h2.putAll(h);
-        assertTrue(h2.containsKey(K1));
+        assertThat(h2, hasKey(K1));
     }
 
     @Test

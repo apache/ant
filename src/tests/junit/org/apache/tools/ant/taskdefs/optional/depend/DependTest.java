@@ -19,7 +19,9 @@
 package org.apache.tools.ant.taskdefs.optional.depend;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
@@ -33,6 +35,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasKey;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -71,12 +74,9 @@ public class DependTest {
 
         buildRule.executeTarget("testdirect");
         Hashtable<String, String> files = getResultFiles();
-        assertEquals("Depend did not leave correct number of files", 3,
-            files.size());
-        assertTrue("Result did not contain A.class",
-            files.containsKey("A.class"));
-        assertTrue("Result did not contain D.class",
-            files.containsKey("D.class"));
+        assertEquals("Depend did not leave correct number of files", 3, files.size());
+        assertThat("Result did not contain A.class", files, hasKey("A.class"));
+        assertThat("Result did not contain D.class", files, hasKey("D.class"));
     }
 
     /**
@@ -92,10 +92,8 @@ public class DependTest {
 
         buildRule.executeTarget("testclosure");
         Hashtable<String, String> files = getResultFiles();
-        assertTrue("Depend did not leave correct number of files",
-            files.size() <= 2);
-        assertTrue("Result did not contain D.class",
-            files.containsKey("D.class"));
+        assertTrue("Depend did not leave correct number of files", files.size() <= 2);
+        assertThat("Result did not contain D.class", files, hasKey("D.class"));
     }
 
     /**
@@ -110,8 +108,7 @@ public class DependTest {
         FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testinner");
-        assertEquals("Depend did not leave correct number of files", 0,
-            getResultFiles().size());
+        assertEquals("Depend did not leave correct number of files", 0, getResultFiles().size());
     }
 
     /**
@@ -127,8 +124,7 @@ public class DependTest {
         FileUtilities.rollbackTimestamps(new File(buildRule.getProject().getProperty("classes.dir")), 5);
 
         buildRule.executeTarget("testinnerinner");
-        assertEquals("Depend did not leave correct number of files", 0,
-            getResultFiles().size());
+        assertEquals("Depend did not leave correct number of files", 0, getResultFiles().size());
     }
 
     /**
@@ -160,11 +156,8 @@ public class DependTest {
     private Hashtable<String, String> getResultFiles() {
         FileSet resultFileSet = buildRule.getProject().getReference(RESULT_FILESET);
         DirectoryScanner scanner = resultFileSet.getDirectoryScanner(buildRule.getProject());
-        Hashtable<String, String> files = new Hashtable<>();
-        for (String scannedFile : scanner.getIncludedFiles()) {
-            files.put(scannedFile, scannedFile);
-        }
-        return files;
+        return Arrays.stream(scanner.getIncludedFiles())
+                .collect(Collectors.toMap(file -> file, file -> file, (a, b) -> b, Hashtable::new));
     }
 
 

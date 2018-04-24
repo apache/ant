@@ -173,7 +173,7 @@ public class AvailableTest {
     @Test
     public void test14() {
         buildRule.executeTarget("test14");
-        assertEquals(buildRule.getProject().getProperty("test"), null);
+        assertNull(buildRule.getProject().getProperty("test"));
     }
 
     /**

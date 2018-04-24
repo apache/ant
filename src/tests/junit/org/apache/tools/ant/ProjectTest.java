@@ -34,9 +34,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.hasValue;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -75,10 +77,10 @@ public class ProjectTest {
                    p.createDataType("dummy"));
         Object o = p.createDataType("fileset");
         assertNotNull("fileset is a known type", o);
-        assertTrue("fileset creates FileSet", o instanceof FileSet);
-        assertTrue("PatternSet",
-               p.createDataType("patternset") instanceof PatternSet);
-        assertTrue("Path", p.createDataType("path") instanceof Path);
+        assertThat("fileset creates FileSet", o, instanceOf(FileSet.class));
+        assertThat("PatternSet", p.createDataType("patternset"),
+                instanceOf(PatternSet.class));
+        assertThat("Path", p.createDataType("path"), instanceOf(Path.class));
     }
 
     /**
@@ -206,7 +208,7 @@ public class ProjectTest {
             p.addTaskDefinition(dummyName, taskClass);
         } finally {
             mbl.assertEmpty();
-            assertFalse(p.getTaskDefinitions().containsKey(dummyName));
+            assertThat(p.getTaskDefinitions(), not(hasKey(dummyName)));
         }
     }
 
@@ -250,7 +252,7 @@ public class ProjectTest {
     public void testInputHandler() {
         InputHandler ih = p.getInputHandler();
         assertNotNull(ih);
-        assertTrue(ih instanceof DefaultInputHandler);
+        assertThat(ih, instanceOf(DefaultInputHandler.class));
         InputHandler pfih = new PropertyFileInputHandler();
         p.setInputHandler(pfih);
         assertSame(pfih, p.getInputHandler());
@@ -258,11 +260,11 @@ public class ProjectTest {
 
     @Test
     public void testTaskDefinitionContainsKey() {
-        assertTrue(p.getTaskDefinitions().containsKey("echo"));
+        assertThat(p.getTaskDefinitions(), hasKey("echo"));
     }
 
     @Test
-    public void testTaskDefinitionContains() {
+    public void testTaskDefinitionContainsValue() {
         assertThat(p.getTaskDefinitions(), hasValue(org.apache.tools.ant.taskdefs.Echo.class));
     }
 
