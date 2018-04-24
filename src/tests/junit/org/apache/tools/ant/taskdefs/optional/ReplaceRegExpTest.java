@@ -52,15 +52,9 @@ public class ReplaceRegExpTest {
     @Test
     public void testReplace() throws IOException {
         Properties original = new Properties();
-        FileInputStream propsFile = null;
-        try {
-            propsFile = new FileInputStream(new File(buildRule.getProject().getBaseDir() + "/replaceregexp.properties"));
+        try (FileInputStream propsFile = new FileInputStream(new File(
+                buildRule.getProject().getBaseDir() + "/replaceregexp.properties"))) {
             original.load(propsFile);
-        } finally {
-            if (propsFile != null) {
-                propsFile.close();
-                propsFile = null;
-            }
         }
 
         assertEquals("Def", original.get("OldAbc"));
@@ -68,13 +62,9 @@ public class ReplaceRegExpTest {
         buildRule.executeTarget("testReplace");
 
         Properties after = new Properties();
-        try {
-            propsFile = new FileInputStream(new File(buildRule.getOutputDir(), "test.properties"));
+        try (FileInputStream propsFile = new FileInputStream(new File(buildRule.getOutputDir(),
+                "test.properties"))) {
             after.load(propsFile);
-        } finally {
-            if (propsFile != null) {
-                propsFile.close();
-            }
         }
 
         assertNull(after.get("OldAbc"));

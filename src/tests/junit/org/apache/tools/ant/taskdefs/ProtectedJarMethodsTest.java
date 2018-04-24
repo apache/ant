@@ -40,8 +40,6 @@ public class ProtectedJarMethodsTest {
 
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
-    private static String tempJar = "tmp.jar";
-
 
     @Before
     public void setUp() {
@@ -52,6 +50,7 @@ public class ProtectedJarMethodsTest {
     @Test
     public void testGrabFilesAndDirs() throws IOException {
         buildRule.executeTarget("testIndexTests");
+        String tempJar = "tmp.jar";
         String archive = buildRule.getProject().getProperty(tempJar);
         List<String> dirs = new ArrayList<>();
         List<String> files = new ArrayList<>();

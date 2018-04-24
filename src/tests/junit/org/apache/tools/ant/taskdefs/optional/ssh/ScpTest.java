@@ -171,11 +171,9 @@ public class ScpTest {
 
     /**
      * Expected failure due to invalid remoteToDir
-     *
-     * @throws IOException
      */
     @Test(expected = BuildException.class)
-    public void testInvalidRemoteToDir() throws IOException {
+    public void testInvalidRemoteToDir() {
         scpTask.setRemoteTodir("host:/a/path/without/an/at");
     }
 

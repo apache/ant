@@ -69,15 +69,14 @@ public class TranslateTest {
         byte[] buffer1 = new byte[BUF_SIZE];
         byte[] buffer2 = new byte[BUF_SIZE];
 
-        try (FileInputStream fis1 = new FileInputStream(file1)) {
-            try (FileInputStream fis2 = new FileInputStream(file2)) {
-                int read = 0;
-                while ((read = fis1.read(buffer1)) != -1) {
-                    fis2.read(buffer2);
-                    for (int i = 0; i < read; ++i) {
-                        if (buffer1[i] != buffer2[i]) {
-                            return false;
-                        }
+        try (FileInputStream fis1 = new FileInputStream(file1);
+             FileInputStream fis2 = new FileInputStream(file2)) {
+            int read = 0;
+            while ((read = fis1.read(buffer1)) != -1) {
+                fis2.read(buffer2);
+                for (int i = 0; i < read; ++i) {
+                    if (buffer1[i] != buffer2[i]) {
+                        return false;
                     }
                 }
             }
