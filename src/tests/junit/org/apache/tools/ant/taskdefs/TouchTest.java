@@ -39,8 +39,6 @@ public class TouchTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private static String TOUCH_FILE = "src/etc/testcases/taskdefs/touchtest";
-
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -55,8 +53,7 @@ public class TouchTest {
     }
 
     public long getTargetTime() {
-
-        File file = new File(System.getProperty("root"), TOUCH_FILE);
+        File file = new File(buildRule.getProject().getBaseDir(), "touchtest");
         if (!file.exists()) {
             throw new BuildException("failed to touch file " + file);
         }
@@ -100,6 +97,7 @@ public class TouchTest {
         long time = getTargetTime();
         assertTimesNearlyMatch(time, now, 5000);
     }
+
     /**
      * verify that the millis test sets things up
      */
@@ -181,8 +179,7 @@ public class TouchTest {
      */
     private void touchFile(String targetName, long timestamp) {
         buildRule.executeTarget(targetName);
-        long time = getTargetTime();
-        assertTimesNearlyMatch(timestamp, time);
+        assertTimesNearlyMatch(timestamp, getTargetTime());
     }
 
     /**
@@ -191,7 +188,7 @@ public class TouchTest {
      * @param time long
      */
     public void assertTimesNearlyMatch(long timestamp, long time) {
-        long granularity= FILE_UTILS.getFileTimestampGranularity();
+        long granularity = FILE_UTILS.getFileTimestampGranularity();
         assertTimesNearlyMatch(timestamp, time, granularity);
     }
 

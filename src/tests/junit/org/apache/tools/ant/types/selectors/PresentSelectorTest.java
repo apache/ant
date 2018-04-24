@@ -91,7 +91,7 @@ public class PresentSelectorTest {
 
     @Test
     public void testSelectionBehaviour2() {
-        File subdir = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/expected");
+        File subdir = selectorRule.getProject().resolveFile("../taskdefs/expected");
         s.setTargetdir(subdir);
         Mapper m = s.createMapper();
         Mapper.MapperType flatten = new Mapper.MapperType();

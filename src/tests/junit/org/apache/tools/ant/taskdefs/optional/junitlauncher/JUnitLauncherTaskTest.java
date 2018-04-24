@@ -2,59 +2,50 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
-import java.io.File;
 
 /**
  * Tests the {@link JUnitLauncherTask}
  */
 public class JUnitLauncherTaskTest {
 
-    private Project project;
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
     /**
      * The JUnit setup method.
      */
     @Before
     public void setUp() {
-        File antFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/optional/junitlauncher.xml");
-        this.project = new Project();
-        this.project.init();
-        ProjectHelper.configureProject(project, antFile);
-        project.addBuildListener(new BuildListener() {
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/junitlauncher.xml");
+        buildRule.getProject().addBuildListener(new BuildListener() {
             @Override
             public void buildStarted(final BuildEvent event) {
-
             }
 
             @Override
             public void buildFinished(final BuildEvent event) {
-
             }
 
             @Override
             public void targetStarted(final BuildEvent event) {
-
             }
 
             @Override
             public void targetFinished(final BuildEvent event) {
-
             }
 
             @Override
             public void taskStarted(final BuildEvent event) {
-
             }
 
             @Override
             public void taskFinished(final BuildEvent event) {
-
             }
 
             @Override
@@ -72,7 +63,7 @@ public class JUnitLauncherTaskTest {
      */
     @Test(expected = BuildException.class)
     public void testFailureStopsBuild() {
-        project.executeTarget("test-failure-stops-build");
+        buildRule.executeTarget("test-failure-stops-build");
     }
 
     /**
@@ -81,16 +72,15 @@ public class JUnitLauncherTaskTest {
      */
     @Test
     public void testFailureContinuesBuild() {
-        project.executeTarget("test-failure-continues-build");
+        buildRule.executeTarget("test-failure-continues-build");
     }
-
 
     /**
      * Tests the execution of test that's expected to succeed
      */
     @Test
     public void testSuccessfulTests() {
-        project.executeTarget("test-success");
+        buildRule.executeTarget("test-success");
     }
 
     /**
@@ -98,8 +88,8 @@ public class JUnitLauncherTaskTest {
      */
     @Test
     public void testSpecificMethodTest() {
-        project.executeTarget("test-one-specific-method");
-        project.executeTarget("test-multiple-specific-methods");
+        buildRule.executeTarget("test-one-specific-method");
+        buildRule.executeTarget("test-multiple-specific-methods");
     }
 
     /**
@@ -107,7 +97,7 @@ public class JUnitLauncherTaskTest {
      */
     @Test
     public void testMultipleIndividualTests() {
-        project.executeTarget("test-multiple-individual");
+        buildRule.executeTarget("test-multiple-individual");
     }
 
     /**
@@ -116,6 +106,6 @@ public class JUnitLauncherTaskTest {
      */
     @Test
     public void testTestClasses() {
-        project.executeTarget("test-batch");
+        buildRule.executeTarget("test-batch");
     }
 }

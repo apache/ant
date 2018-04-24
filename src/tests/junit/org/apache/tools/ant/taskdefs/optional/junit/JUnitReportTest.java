@@ -64,8 +64,8 @@ public class JUnitReportTest {
     @Test
     public void testNoFileJUnitNoFrames() {
         buildRule.executeTarget("reports1");
-        assertFalse("No file junit-noframes.html expected", new File(System.getProperty("root"),
-                "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html").exists());
+        assertFalse("No file junit-noframes.html expected", buildRule.getProject().resolveFile(
+                "junitreport/test/html/junit-noframes.html").exists());
     }
 
     public void assertIndexCreated() {
@@ -101,21 +101,24 @@ public class JUnitReportTest {
     public void testEmptyFile() {
         buildRule.executeTarget("testEmptyFile");
         assertIndexCreated();
-        assertThat("Required text not found in log", buildRule.getLog(), containsString(XMLResultAggregator.WARNING_EMPTY_FILE));
+        assertThat("Required text not found in log", buildRule.getLog(),
+                containsString(XMLResultAggregator.WARNING_EMPTY_FILE));
     }
 
     @Test
     public void testIncompleteFile() {
         buildRule.executeTarget("testIncompleteFile");
         assertIndexCreated();
-        assertThat("Required text not found in log", buildRule.getLog(), containsString(XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED));
+        assertThat("Required text not found in log", buildRule.getLog(),
+                containsString(XMLResultAggregator.WARNING_IS_POSSIBLY_CORRUPTED));
     }
 
     @Test
     public void testWrongElement() {
         buildRule.executeTarget("testWrongElement");
         assertIndexCreated();
-        assertThat("Required text not found in log", buildRule.getLog(), containsString(XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT));
+        assertThat("Required text not found in log", buildRule.getLog(),
+                containsString(XMLResultAggregator.WARNING_INVALID_ROOT_ELEMENT));
     }
 
     // Bugzilla Report 34963
@@ -127,8 +130,10 @@ public class JUnitReportTest {
         try {
             r = new FileReader(new File(buildRule.getOutputDir(), "html/sampleproject/coins/0_CoinTest.html"));
             String report = FileUtils.readFully(r);
-            assertThat("output must contain <br>:\n" + report, report, containsString("junit.framework.AssertionFailedError: DOEG<br>"));
-            assertThat("#51049: output must translate line breaks:\n" + report, report, containsString("cur['line.separator'] = '\\r\\n';"));
+            assertThat("output must contain <br>:\n" + report, report,
+                    containsString("junit.framework.AssertionFailedError: DOEG<br>"));
+            assertThat("#51049: output must translate line breaks:\n" + report, report,
+                    containsString("cur['line.separator'] = '\\r\\n';"));
         } finally {
             FileUtils.close(r);
         }

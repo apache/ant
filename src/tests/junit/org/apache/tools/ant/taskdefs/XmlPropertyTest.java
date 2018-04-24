@@ -150,7 +150,7 @@ public class XmlPropertyTest {
     private void doTest(String msg, boolean keepRoot, boolean collapse,
                         boolean semantic, boolean include, boolean localRoot) throws IOException {
         Enumeration<File> iter =
-            getFiles(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/xmlproperty/inputs"));
+            getFiles(buildRule.getProject().resolveFile("xmlproperty/inputs"));
         while (iter.hasMoreElements()) {
             File inputFile = iter.nextElement();
             // What's the working directory?  If local, then its the
@@ -264,9 +264,7 @@ public class XmlPropertyTest {
      * Debugging method to print the properties in the given hashtable
      */
     private static void printProperties(Hashtable<Object, Object> xmlproperties) {
-        for (Map.Entry<Object, Object> entry : xmlproperties.entrySet()) {
-            System.out.println(entry.getKey() + " = " + entry.getValue());
-        }
+        xmlproperties.forEach((key, value) -> System.out.println(key + " = " + value));
     }
 
     /**

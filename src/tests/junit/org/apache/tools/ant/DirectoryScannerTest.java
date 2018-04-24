@@ -238,16 +238,19 @@ public class DirectoryScannerTest {
     @Test
     public void testSetFollowLinks() throws IOException, InterruptedException {
         if (supportsSymlinks) {
-            File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
-            System.err.println("link exists pre-test? " + linkFile.exists());
+            File dir = new File(buildRule.getProject().getBaseDir(),
+                    "../../../main/org/apache/tools");
+
+            File linkFile = new File(dir, "ThisIsALink");
+            assertFalse("link exists pre-test", linkFile.exists());
+            File targetFile = new File(dir, "ant");
+            assertTrue("target does not exist pre-test", targetFile.exists());
 
             try {
                 // add conditions and more commands as soon as the need arises
-                String[] command = new String[] {"ln", "-s", "ant", linkFile.getAbsolutePath()};
+                String[] command = new String[] {"ln", "-s", targetFile.getAbsolutePath(), linkFile.getAbsolutePath()};
                 Process process = Runtime.getRuntime().exec(command);
                 assertEquals("0 return code expected for external process", 0, process.waitFor());
-
-                File dir = new File(System.getProperty("root"), "src/main/org/apache/tools");
 
                 DirectoryScanner ds = new DirectoryScanner();
 

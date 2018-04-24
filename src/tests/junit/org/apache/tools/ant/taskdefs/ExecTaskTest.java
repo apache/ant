@@ -56,10 +56,7 @@ public class ExecTaskTest {
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    private File logFile;
-    private MonitoredBuild myBuild = null;
     private volatile boolean buildFinished = false;
-
 
     @Before
     public void setUp() {
@@ -70,9 +67,10 @@ public class ExecTaskTest {
     public void testspawn() throws InterruptedException {
         buildRule.getProject().executeTarget("setUp");
         assumeNotNull(buildRule.getProject().getProperty("test.can.run"));
-        myBuild = new MonitoredBuild(new File(System.getProperty("root"), BUILD_FILE), "spawn");
-        logFile = FILE_UTILS.createTempFile("spawn", "log", new File(buildRule.getProject().getProperty("output")),
-                false, false);
+        MonitoredBuild myBuild = new MonitoredBuild(new File(
+                buildRule.getProject().getProperty("ant.file")), "spawn");
+        File logFile = FILE_UTILS.createTempFile("spawn", "log",
+                new File(buildRule.getProject().getProperty("output")), false, false);
         // this is guaranteed by FileUtils#createTempFile
         assertFalse("log file not existing", logFile.exists());
         // make the spawned process run 1 seconds

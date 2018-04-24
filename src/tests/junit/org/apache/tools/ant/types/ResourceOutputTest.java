@@ -49,17 +49,13 @@ public class ResourceOutputTest {
     public BuildFileRule buildRule = new BuildFileRule();
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final String BASE_DIR = "src/etc/testcases/types/resources";
 
     private Project project;
 
     @Before
     public void setUp() {
-        buildRule.configureProject(BASE_DIR + "/resourcelist.xml");
+        buildRule.configureProject("src/etc/testcases/types/resources/resourcelist.xml");
         project = buildRule.getProject();
-        if (System.getProperty("root") != null) {
-            project.setBasedir(System.getProperty("root"));
-        }
     }
 
     /**
@@ -89,7 +85,7 @@ public class ResourceOutputTest {
     }
 
     @Test
-    public void teststringoutput3() throws IOException {
+    public void teststringoutput3() {
         StringResource r = new StringResource("bar");
         assertEquals("bar", r.getValue());
     }

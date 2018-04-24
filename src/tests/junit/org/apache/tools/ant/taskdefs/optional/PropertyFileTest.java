@@ -142,7 +142,7 @@ public class PropertyFileTest {
     public void testDirect() throws Exception {
         PropertyFile pf = new PropertyFile();
         pf.setProject(buildRule.getProject());
-        pf.setFile(new File(System.getProperty("root"), testPropsFilePath));
+        pf.setFile(new File(buildRule.getOutputDir(), testPropsFilePath));
         PropertyFile.Entry entry = pf.createEntry();
 
         entry.setKey("date");

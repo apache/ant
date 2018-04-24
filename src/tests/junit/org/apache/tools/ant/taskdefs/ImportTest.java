@@ -124,16 +124,16 @@ public class ImportTest {
             ln = "/bin/ln";
         }
         assumeTrue("Current system does not support Symlinks", new File(ln).exists());
-        String symlink = "src/etc/testcases/taskdefs/import/symlinks/d3b";
-        File symlinkFile = new File(System.getProperty("root"), symlink);
-        assertEquals("'" + ln + " -s d3a " + symlink + "' failed",
+        buildRule.configureProject("src/etc/testcases/taskdefs/import/import.xml");
+        File symlinkFile = buildRule.getProject().resolveFile("symlinks/d3b");
+        assertEquals("'" + ln + " -s d3a " + symlinkFile.getAbsolutePath() + "' failed",
                 Runtime.getRuntime().exec(new String[] {ln, "-s", "d3a", symlinkFile.getAbsolutePath()}).waitFor(), 0);
         try {
             buildRule.configureProject("src/etc/testcases/taskdefs/import/symlinks/d1/p1.xml");
             assertEquals(buildRule.getProject().getProperty("ant.file.p2"),
-                new File(System.getProperty("root"), "src/etc/testcases/taskdefs/import/symlinks/d2/p2.xml").getAbsolutePath());
+                buildRule.getProject().resolveFile("../d2/p2.xml").getAbsolutePath());
             assertEquals(buildRule.getProject().getProperty("ant.file.p3"),
-                new File(System.getProperty("root"), "src/etc/testcases/taskdefs/import/symlinks/d3b/p3.xml").getAbsolutePath());
+                    buildRule.getProject().resolveFile("../d3b/p3.xml").getAbsolutePath());
         } finally {
             symlinkFile.delete();
         }

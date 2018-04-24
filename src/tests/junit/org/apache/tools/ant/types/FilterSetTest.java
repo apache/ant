@@ -57,22 +57,19 @@ public class FilterSetTest {
     @Test
     public void test1() throws IOException {
         buildRule.executeTarget("test1");
-        assertTrue("Filterset 1 failed", compareFiles("src/etc/testcases/types/gold/filterset1.txt",
-                                                      "src/etc/testcases/types/dest1.txt"));
+        assertTrue("Filterset 1 failed", compareFiles("gold/filterset1.txt", "dest1.txt"));
     }
 
     @Test
     public void test2() throws IOException {
         buildRule.executeTarget("test2");
-        assertTrue("Filterset 2 failed", compareFiles("src/etc/testcases/types/gold/filterset2.txt",
-                                                      "src/etc/testcases/types/dest2.txt"));
+        assertTrue("Filterset 2 failed", compareFiles("gold/filterset2.txt", "dest2.txt"));
     }
 
     @Test
     public void test3() throws IOException {
         buildRule.executeTarget("test3");
-        assertTrue("Filterset 3 failed", compareFiles("src/etc/testcases/types/gold/filterset3.txt",
-                                                      "src/etc/testcases/types/dest3.txt"));
+        assertTrue("Filterset 3 failed", compareFiles("gold/filterset3.txt", "dest3.txt"));
     }
 
     /**
@@ -200,8 +197,8 @@ public class FilterSetTest {
     }
 
     private boolean compareFiles(String name1, String name2) throws IOException {
-        File file1 = new File(System.getProperty("root"), name1);
-        File file2 = new File(System.getProperty("root"), name2);
+        File file1 = buildRule.getProject().resolveFile(name1);
+        File file2 = buildRule.getProject().resolveFile(name2);
 
         if (!file1.exists() || !file2.exists() || file1.length() != file2.length()) {
             return false;
