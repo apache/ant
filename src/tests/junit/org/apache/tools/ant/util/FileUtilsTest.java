@@ -50,6 +50,7 @@ public class FileUtilsTest {
     public ExpectedException thrown = ExpectedException.none();
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final String projectRoot = System.getProperty("root");
     private File removeThis;
     private String root;
 
@@ -232,14 +233,17 @@ public class FileUtilsTest {
     }
 
     @Test
-    public void testNormalizeDosOrNetwareFailures() {
+    public void testNormalizeSlashDosOrNetware() {
         assumeTrue("Not DOS or Netware", Os.isFamily("dos") || Os.isFamily("netware"));
         thrown.expect(BuildException.class);
-        try {
-            FILE_UTILS.normalize("/").getPath();
-        } finally {
-            FILE_UTILS.normalize("\\").getPath();
-        }
+        FILE_UTILS.normalize("/").getPath();
+    }
+
+    @Test
+    public void testNormalizeBackSlashDosOrNetware() {
+        assumeTrue("Not DOS or Netware", Os.isFamily("dos") || Os.isFamily("netware"));
+        thrown.expect(BuildException.class);
+        FILE_UTILS.normalize("\\").getPath();
     }
 
     @Test
@@ -401,20 +405,20 @@ public class FileUtilsTest {
     @Test
     public void testContentEquals() throws IOException {
         assertTrue("Non existing files",
-                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"),
-                        new File(System.getProperty("root"), "bar")));
+                FILE_UTILS.contentEquals(new File(projectRoot, "foo"),
+                        new File(projectRoot, "bar")));
         assertFalse("One exists, the other one doesn\'t",
-                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"),
-                        new File(System.getProperty("root"), "build.xml")));
+                FILE_UTILS.contentEquals(new File(projectRoot, "foo"),
+                        new File(projectRoot, "build.xml")));
         assertFalse("Don\'t compare directories",
-                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "src"),
-                        new File(System.getProperty("root"), "src")));
+                FILE_UTILS.contentEquals(new File(projectRoot, "src"),
+                        new File(projectRoot, "src")));
         assertTrue("File equals itself",
-                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "build.xml"),
-                        new File(System.getProperty("root"), "build.xml")));
+                FILE_UTILS.contentEquals(new File(projectRoot, "build.xml"),
+                        new File(projectRoot, "build.xml")));
         assertFalse("Files are different",
-                FILE_UTILS.contentEquals(new File(System.getProperty("root"), "build.xml"),
-                        new File(System.getProperty("root"), "docs.xml")));
+                FILE_UTILS.contentEquals(new File(projectRoot, "build.xml"),
+                        new File(projectRoot, "docs.xml")));
     }
 
     /**

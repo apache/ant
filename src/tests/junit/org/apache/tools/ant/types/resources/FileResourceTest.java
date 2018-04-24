@@ -18,6 +18,7 @@
 package org.apache.tools.ant.types.resources;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.tools.ant.Project;
 import org.junit.Before;
@@ -34,8 +35,9 @@ public class FileResourceTest {
     private File root;
 
     @Before
-    public void setUp() {
-        root = new File(System.getProperty("root"));
+    public void setUp() throws IOException {
+        root = (System.getProperty("root") == null) ? new File(".").getCanonicalFile()
+                : new File(System.getProperty("root"));
     }
 
     @Test
