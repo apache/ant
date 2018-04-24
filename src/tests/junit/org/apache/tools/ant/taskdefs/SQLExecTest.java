@@ -34,10 +34,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Simple testcase to test for driver caching.
@@ -77,23 +79,28 @@ public class SQLExecTest {
     public void testDriverCaching() {
         thrown.expect(BuildException.class);
         thrown.expectMessage("No suitable Driver");
+        boolean canary = false;
         SQLExec sql = createTask(getProperties(NULL));
-        assertFalse(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
+        assertThat(SQLExec.getLoaderMap(), not(hasKey(NULL_DRIVER)));
         try {
             sql.execute();
+            canary = true;
         } finally {
-            assertTrue(SQLExec.getLoaderMap().containsKey(NULL_DRIVER));
+            assertFalse("Found some Driver", canary);
+            assertThat(SQLExec.getLoaderMap(), hasKey(NULL_DRIVER));
             assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));
             ClassLoader loader1 = sql.getLoader();
 
             // 2nd run..
             sql = createTask(getProperties(NULL));
             // the driver must still be cached.
-            assertTrue(JDBCTask.getLoaderMap().containsKey(NULL_DRIVER));
+            assertThat(JDBCTask.getLoaderMap(), hasKey(NULL_DRIVER));
             try {
                 sql.execute();
+                canary = true;
             } finally {
-                assertTrue(JDBCTask.getLoaderMap().containsKey(NULL_DRIVER));
+                assertFalse("Found some Driver", canary);
+                assertThat(JDBCTask.getLoaderMap(), hasKey(NULL_DRIVER));
                 assertSame(sql.getLoader(), JDBCTask.getLoaderMap().get(NULL_DRIVER));
                 assertSame(loader1, sql.getLoader());
             }

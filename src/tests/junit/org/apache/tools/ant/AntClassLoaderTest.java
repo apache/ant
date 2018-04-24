@@ -101,21 +101,28 @@ public class AntClassLoaderTest {
         thrown.expect(ClassNotFoundException.class);
         Path path = new Path(buildRule.getProject(), ".");
         loader = buildRule.getProject().createClassLoader(path);
+        boolean canary = false;
         try {
             // we don't expect to find this
             loader.findClass("fubar");
+            canary = true;
         } finally {
+            assertFalse("Nonexistent class found", canary);
             loader.cleanup();
             try {
                 // we don't expect to find this
                 loader.findClass("fubar");
+                canary = true;
             } finally {
+                assertFalse("Nonexistent class found", canary);
                 // tell the build it is finished
                 buildRule.getProject().fireBuildFinished(null);
                 try {
                     // we don't expect to find this
                     loader.findClass("fubar");
+                    canary = true;
                 } finally {
+                    assertFalse("Nonexistent class found", canary);
                 }
             }
         }
