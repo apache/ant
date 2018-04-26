@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -134,6 +135,18 @@ public class PropertyTest {
         assertEquals("ONE", buildRule.getProject().getProperty("xml.one"));
         assertEquals("TWO", buildRule.getProject().getProperty("xml.two"));
 
+    }
+
+    @Test
+    public void testRuntime() {
+        // should get no output at all
+        buildRule.executeTarget("testRuntime");
+        assertEquals(Runtime.getRuntime().availableProcessors(),
+                     Integer.parseInt(buildRule.getProject().getProperty("testruntime.availableProcessors")));
+        assertEquals(Runtime.getRuntime().maxMemory(),
+                     Long.parseLong(buildRule.getProject().getProperty("testruntime.maxMemory")));
+        assertNotNull(buildRule.getProject().getProperty("testruntime.freeMemory"));
+        assertNotNull(buildRule.getProject().getProperty("testruntime.totalMemory"));
     }
 
 }

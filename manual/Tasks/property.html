@@ -49,6 +49,13 @@ resource) in the project.  Properties are case sensitive.</p>
   <li>By setting the <i>environment</i> attribute with a prefix to use.
     Properties will be defined for every environment variable by
     prefixing the supplied name and a period to the name of the variable.</li>
+  <li>By setting the <i>runtime</i> attribute with a prefix to use.
+    Properties <code>prefix.availableProcessors</code>,
+    <code>prefix.freeMemory</code>, <code>prefix.totalMemory</code>
+    and <code>prefix.maxMemory</code> will be defined with values that
+    correspond to the corresponding methods of
+    the <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/Runtime.html">Runtime</a>
+    class.</li>
 </ul>
 <p>Although combinations of these ways are possible, only one should be used
 at a time. Problems might occur with the order in which properties are set, for
@@ -125,6 +132,22 @@ to end with <tt>.xml</tt>.</p>
     environment variables on your operating system are not; e.g. Windows 2000's
     system path variable is set to an Ant property named "env.Path"
     rather than "env.PATH".</td>
+  </tr>
+  <tr>
+    <td valign="top">runtime</td>
+    <td valign="top">the prefix to use when retrieving Runtime properties. Thus
+    if you specify runtime=&quot;myrt&quot; you will be able to access
+    runtime values corresponding to methods in
+    the <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/Runtime.html">Runtime</a>
+    class via property names &quot;myrt.availableProcessors&quot;,
+    &quot;myrt.maxMemory&quot;, &quot;myrt.totalMemory&quot; or
+    &quot;myrt.freeMemory&quot;. Note that if you supply a property name with a final
+    &quot;.&quot; it will not be doubled; i.e. runtime=&quot;myrt.&quot; will still
+    allow access of prpperties through &quot;myrt.maxMemory&quot;.<br>
+    Note also that the property values are snapshots taken at the point in time
+    when the <code>property</code> has been executed.
+    <em>Since Ant 1.9.12</em>
+    </td>
   </tr>
   <tr>
     <td valign="top">classpath</td>

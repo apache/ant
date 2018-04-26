@@ -59,6 +59,12 @@ import org.apache.tools.ant.util.FileUtils;
  *   <li>By setting the <i>environment</i> attribute with a prefix to use.
  *     Properties will be defined for every environment variable by
  *     prefixing the supplied name and a period to the name of the variable.</li>
+ *   <li>By setting the <i>runtime</i> attribute with a prefix to use.
+ *     Properties <code>prefix.availableProcessors</code>,
+ *     <code>prefix.freeMemory</code>, <code>prefix.totalMemory</code>
+ *     and <code>prefix.maxMemory</code> will be defined with values
+ *     that correspond to the corresponding methods of the {@link
+ *     Runtime} class.</li>
  * </ul>
  * <p>Although combinations of these ways are possible, only one should be used
  * at a time. Problems might occur with the order in which properties are set, for
@@ -86,6 +92,7 @@ public class Property extends Task {
     protected String env;
     protected Reference ref;
     protected String prefix;
+    private String runtime;
     private Project fallback;
     private Object untypedValue;
     private boolean valueAttributeUsed = false;
@@ -388,6 +395,42 @@ public class Property extends Task {
     }
 
     /**
+     * Prefix to use when retrieving Runtime properties.
+     *
+     * <p>Properties <code>prefix.availableProcessors</code>,
+     * <code>prefix.freeMemory</code>, <code>prefix.totalMemory</code>
+     * and <code>prefix.maxMemory</code> will be defined with values
+     * that correspond to the corresponding methods of the {@link
+     * Runtime} class.</p>
+     *
+     * <p>Note that if you supply a prefix name with a final
+     * &quot;.&quot; it will not be doubled. ie
+     * runtime=&quot;myrt.&quot; will still allow access of property
+     * through &quot;myrt.availableProcessors&quot; and
+     * &quot;myrt.freeMemory&quot;.</p>
+     *
+     * <p>The property values are snapshots taken at the point in time
+     * when the <code>property</code> has been executed.</p>
+     *
+     * @param prefix prefix
+     *
+     * @ant.attribute group="noname"
+     * @since Ant 1.9.12
+     */
+    public void setRuntime(String prefix) {
+        this.runtime = prefix;
+    }
+
+    /**
+     * Get the runtime attribute.
+     * @return the runtime attribute
+     * @since Ant 1.9.12
+     */
+    public String getRuntime() {
+        return runtime;
+    }
+
+    /**
      * The classpath to use when looking up a resource.
      * @param classpath to add to any existing classpath
      */
@@ -452,7 +495,7 @@ public class Property extends Task {
 
     /**
      * set the property in the project to the value.
-     * if the task was give a file, resource or env attribute
+     * if the task was give a file, resource, env or runtime attribute
      * here is where it is loaded
      * @throws BuildException on error
      */
@@ -469,9 +512,9 @@ public class Property extends Task {
                                          getLocation());
             }
         } else {
-            if (url == null && file == null && resource == null && env == null) {
-                throw new BuildException("You must specify url, file, resource or "
-                                         + "environment when not using the "
+            if (url == null && file == null && resource == null && env == null && runtime == null) {
+                throw new BuildException("You must specify url, file, resource, "
+                                         + "environment or runtime when not using the "
                                          + "name attribute", getLocation());
             }
         }
@@ -511,6 +554,10 @@ public class Property extends Task {
 
         if (env != null) {
             loadEnvironment(env);
+        }
+
+        if (runtime != null) {
+            loadRuntime(runtime);
         }
 
         if ((name != null) && (ref != null)) {
@@ -656,6 +703,25 @@ public class Property extends Task {
             Map.Entry entry = (Map.Entry) e.next();
             props.put(prefix + entry.getKey(), entry.getValue());
         }
+        addProperties(props);
+    }
+
+    /**
+     * load the runtime values
+     * @param prefix prefix to place before them
+     * @since 1.9.12
+     */
+    protected void loadRuntime(String prefix) {
+        Properties props = new Properties();
+        if (!prefix.endsWith(".")) {
+            prefix += ".";
+        }
+        log("Loading Runtime properties " + prefix, Project.MSG_VERBOSE);
+        Runtime r = Runtime.getRuntime();
+        props.put(prefix + "availableProcessors", String.valueOf(r.availableProcessors()));
+        props.put(prefix + "freeMemory", String.valueOf(r.freeMemory()));
+        props.put(prefix + "maxMemory", String.valueOf(r.maxMemory()));
+        props.put(prefix + "totalMemory", String.valueOf(r.totalMemory()));
         addProperties(props);
     }
 
