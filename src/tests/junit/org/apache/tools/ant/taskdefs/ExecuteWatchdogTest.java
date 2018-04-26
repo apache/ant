@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.Before;
@@ -75,12 +76,7 @@ public class ExecuteWatchdogTest {
 
     private String getErrorOutput(Process p) throws Exception {
         BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-        StringBuilder buf = new StringBuilder();
-        String line;
-        while ((line = err.readLine()) != null) {
-            buf.append(line);
-        }
-        return buf.toString();
+        return err.lines().collect(Collectors.joining());
     }
 
     private int waitForEnd(Process p) throws Exception {

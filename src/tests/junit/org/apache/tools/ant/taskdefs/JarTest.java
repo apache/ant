@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -239,15 +240,8 @@ public class JarTest {
     public void testNoDuplicateIndex() throws IOException {
         buildRule.executeTarget("testIndexTests");
         try (ZipFile archive = new ZipFile(new File(getOutputDir(), tempJar))) {
-            Enumeration<? extends ZipEntry> e = archive.entries();
-            int numberOfIndexLists = 0;
-            while (e.hasMoreElements()) {
-                ZipEntry ze = e.nextElement();
-                if (ze.getName().equals("META-INF/INDEX.LIST")) {
-                    numberOfIndexLists++;
-                }
-            }
-            assertEquals(1, numberOfIndexLists);
+            assertEquals(1, (int) Collections.list(archive.entries()).stream()
+                    .filter(ze -> ze.getName().equals("META-INF/INDEX.LIST")).count());
         }
     }
 

@@ -267,13 +267,12 @@ public class IntrospectionHelperTest {
     public void testGetNestedElementMap() {
         Map<String, Class<?>> elemMap = getExpectedNestedElements();
         Map<String, Class<?>> actualMap = ih.getNestedElementMap();
-        for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
-            String elemName = entry.getKey();
+        actualMap.forEach((elemName, value) -> {
             Class<?> elemClass = elemMap.get(elemName);
             assertNotNull("Support for " + elemName + " in IntrospectionHelperTest?", elemClass);
-            assertEquals("Type of " + elemName, elemClass, entry.getValue());
+            assertEquals("Type of " + elemName, elemClass, value);
             elemMap.remove(elemName);
-        }
+        });
         assertTrue("Found all", elemMap.isEmpty());
 
         // Check it's a read-only map.
@@ -607,13 +606,12 @@ public class IntrospectionHelperTest {
     public void testGetAttributeMap() {
         Map<String, Class<?>> attrMap = getExpectedAttributes();
         Map<String, Class<?>> actualMap = ih.getAttributeMap();
-        for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
-            String attrName = entry.getKey();
+        actualMap.forEach((attrName, value) -> {
             Class<?> attrClass = attrMap.get(attrName);
             assertNotNull("Support for " + attrName + " in IntrospectionHelperTest?", attrClass);
-            assertEquals("Type of " + attrName, attrClass, entry.getValue());
+            assertEquals("Type of " + attrName, attrClass, value);
             attrMap.remove(attrName);
-        }
+        });
         attrMap.remove("name");
         assertTrue("Found all", attrMap.isEmpty());
 

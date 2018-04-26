@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.List;
 import java.util.Properties;
 
@@ -159,7 +158,6 @@ public class XmlPropertyTest {
                 workingDir = FILE_UTILS.resolveFile(new File("."), ".");
             }
 
-
             File propertyFile = getGoldfile(inputFile, keepRoot, collapse,
                                             semantic, include, localRoot);
             if (!propertyFile.exists()) {
@@ -269,13 +267,9 @@ public class XmlPropertyTest {
      */
     private static void ensureReferences(String msg, File inputFile,
                                          Hashtable<String, Object> references) {
-        for (Map.Entry<String, Object> entry : references.entrySet()) {
-            String currentKey = entry.getKey();
-            Object currentValue = entry.getValue();
-            assertTrue(msg + "-" + inputFile.getName() + " Key=" + currentKey
-                    + " is not a recognized type.", currentValue instanceof Path
-                    || currentValue instanceof String || currentKey.startsWith("ant."));
-        }
+        references.forEach((key, value) -> assertTrue(msg + "-" + inputFile.getName()
+                + " Key=" + key + " is not a recognized type.",
+                value instanceof Path || value instanceof String || key.startsWith("ant.")));
     }
 
     /**
