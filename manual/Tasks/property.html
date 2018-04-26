@@ -49,6 +49,13 @@ they are most definitely not variables.</p>
   <li>By setting the <var>environment</var> attribute with a prefix to use.  Properties will be
     defined for every environment variable by prefixing the supplied name and a period to the name
     of the variable.</li>
+  <li>By setting the <i>runtime</i> attribute with a prefix to use.
+    Properties <code>prefix.availableProcessors</code>,
+    <code>prefix.freeMemory</code>, <code>prefix.totalMemory</code>
+    and <code>prefix.maxMemory</code> will be defined with values that
+    correspond to the corresponding methods of
+    the <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/Runtime.html">Runtime</a>
+    class.</li>
 </ul>
 <p>Although combinations of these ways are possible, only one should be used at a time. Problems
 might occur with the order in which properties are set, for instance.</p>
@@ -118,6 +125,22 @@ to <a href="http://java.sun.com/dtd/properties.dtd" target="_top">Sun DTD</a>, w
       that properties are case-sensitive, even if the environment variables on your operating system
       are not; e.g. Windows 2000 or later system path variable is set to an Ant property
       named <code>env.Path</code> rather than <code>env.PATH</code>.</td>
+  </tr>
+  <tr>
+    <td>runtime</td>
+    <td>the prefix to use when retrieving Runtime properties. Thus if
+    you specify <var>runtime</var>=<q>myrt</q> you will be able to
+    access runtime values corresponding to methods in
+    the <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/Runtime.html">Runtime</a>
+    class via property names <code>myrt.availableProcessors</code>,
+    <code>myrt.maxMemory</code>, <code>myrt.totalMemory</code> or
+    <code>myrt.freeMemory</code>. Note that if you supply a property name with a final
+    <code>.</code> it will not be doubled; i.e. runtime=<code>myrt.</code> will still
+    allow access of prpperties through <code>myrt.maxMemory</code>.<br>
+    Note also that the property values are snapshots taken at the point in time
+    when the <code>property</code> has been executed.
+    <em>Since Ant 1.10.4</em>
+    </td>
   </tr>
   <tr>
     <td>classpath</td>

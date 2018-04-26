@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assume.assumeNoException;
 
@@ -132,6 +133,18 @@ public class PropertyTest {
         buildRule.executeTarget("testXmlProperty");
         assertEquals("ONE", buildRule.getProject().getProperty("xml.one"));
         assertEquals("TWO", buildRule.getProject().getProperty("xml.two"));
+    }
+
+    @Test
+    public void testRuntime() {
+        // should get no output at all
+        buildRule.executeTarget("testRuntime");
+        assertEquals(Runtime.getRuntime().availableProcessors(),
+                     Integer.parseInt(buildRule.getProject().getProperty("testruntime.availableProcessors")));
+        assertEquals(Runtime.getRuntime().maxMemory(),
+                     Long.parseLong(buildRule.getProject().getProperty("testruntime.maxMemory")));
+        assertNotNull(buildRule.getProject().getProperty("testruntime.freeMemory"));
+        assertNotNull(buildRule.getProject().getProperty("testruntime.totalMemory"));
     }
 
 }

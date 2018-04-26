@@ -89,4 +89,8 @@
   </target>    
   <target name="testXmlProperty" depends="testXmlProperty.internal"/>  
 
+  <target name="testRuntime">
+    <property runtime="testruntime"/>
+  </target>
+
 </project>

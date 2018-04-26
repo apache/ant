@@ -39,6 +39,11 @@ Other changes:
    finishing threads might fail.
    Bugzilla Report 62148
 
+ * <property> has a new attribute runtime which can be used to set
+   properties with values taken as snapshots from the
+   availableProcessors, freeMemory, maxMemory and totalMemory methods
+   of the Java Runtime class.
+
 Changes from Ant 1.10.2 TO Ant 1.10.3
 =====================================
 
