@@ -585,7 +585,7 @@ public class JUnitTaskTest {
     }
 
     @Test
-    public void testCheckDuplicateAntJar() throws Exception {
+    public void testCheckDuplicateAntJar() {
         setupCheckDuplicateTest();
         buildRule.executeTarget("testCheckForkedPath");
         assertThat("Expecting the warning about the duplicate ant jar", buildRule.getLog(),

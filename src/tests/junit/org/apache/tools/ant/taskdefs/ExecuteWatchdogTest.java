@@ -74,7 +74,7 @@ public class ExecuteWatchdogTest {
         return Runtime.getRuntime().exec(cmdArray);
     }
 
-    private String getErrorOutput(Process p) throws Exception {
+    private String getErrorOutput(Process p) {
         BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
         return err.lines().collect(Collectors.joining());
     }

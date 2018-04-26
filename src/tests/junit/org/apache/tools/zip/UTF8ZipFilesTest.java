@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.zip.CRC32;
 import org.junit.Test;
 

@@ -110,7 +110,7 @@ public class ResourceOutputTest {
     }
 
     @Test
-    public void testpropertyoutput3() throws IOException {
+    public void testpropertyoutput3() {
         project.setNewProperty("bar", "bar");
         assertEquals("bar", project.getProperty("bar"));
     }
