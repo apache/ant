@@ -52,8 +52,8 @@ resource) in the project.  Properties are case sensitive.</p>
   <li>By setting the <i>runtime</i> attribute with a prefix to use.
     Properties <code>prefix.availableProcessors</code>,
     <code>prefix.freeMemory</code>, <code>prefix.totalMemory</code>
-    and <code>prefix.maxMemory</code> will be defined with values that
-    correspond to the corresponding methods of
+    and <code>prefix.maxMemory</code> will be defined with values
+    returned by the corresponding methods of
     the <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/Runtime.html">Runtime</a>
     class.</li>
 </ul>
@@ -106,7 +106,7 @@ to end with <tt>.xml</tt>.</p>
     <td valign="top">resource</td>
     <td valign="top"> the name of the classpath resource containing
       properties settings in properties file format.</td>
-    <td valign="middle" align="center" rowspan="4">One of these, when
+    <td valign="middle" align="center" rowspan="5">One of these, when
       <b>not</b> using the name attribute</td>
   </tr>
   <tr>
@@ -135,7 +135,7 @@ to end with <tt>.xml</tt>.</p>
   </tr>
   <tr>
     <td valign="top">runtime</td>
-    <td valign="top">the prefix to use when retrieving Runtime properties. Thus
+    <td valign="top">the prefix to use when retrieving runtime properties. Thus
     if you specify runtime=&quot;myrt&quot; you will be able to access
     runtime values corresponding to methods in
     the <a href="https://docs.oracle.com/javase/10/docs/api/java/lang/Runtime.html">Runtime</a>
@@ -143,7 +143,7 @@ to end with <tt>.xml</tt>.</p>
     &quot;myrt.maxMemory&quot;, &quot;myrt.totalMemory&quot; or
     &quot;myrt.freeMemory&quot;. Note that if you supply a property name with a final
     &quot;.&quot; it will not be doubled; i.e. runtime=&quot;myrt.&quot; will still
-    allow access of prpperties through &quot;myrt.maxMemory&quot;.<br>
+    allow access of runtime properties as e.g. &quot;myrt.maxMemory&quot;.<br>
     Note also that the property values are snapshots taken at the point in time
     when the <code>property</code> has been executed.
     <em>Since Ant 1.9.12</em>
