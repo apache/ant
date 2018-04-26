@@ -22,11 +22,11 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
@@ -149,10 +149,7 @@ public class XmlPropertyTest {
      */
     private void doTest(String msg, boolean keepRoot, boolean collapse,
                         boolean semantic, boolean include, boolean localRoot) throws IOException {
-        Enumeration<File> iter =
-            getFiles(buildRule.getProject().resolveFile("xmlproperty/inputs"));
-        while (iter.hasMoreElements()) {
-            File inputFile = iter.nextElement();
+        for (File inputFile : getFiles(buildRule.getProject().resolveFile("xmlproperty/inputs"))) {
             // What's the working directory?  If local, then its the
             // folder of the input file.  Otherwise, its the "current" dir..
             File workingDir;
@@ -325,30 +322,30 @@ public class XmlPropertyTest {
      * Retrieve a list of xml files in the specified folder
      * and below.
      */
-    private static Enumeration<File> getFiles(final File startingDir) {
-        Vector<File> result = new Vector<>();
+    private static List<File> getFiles(final File startingDir) {
+        List<File> result = new ArrayList<>();
         getFiles(startingDir, result);
-        return result.elements();
+        return result;
     }
 
     /**
      * Collect a list of xml files in the specified folder
      * and below.
      */
-    private static void getFiles(final File startingDir, Vector<File> collect) {
+    private static void getFiles(final File startingDir, List<File> collect) {
         FileFilter filter = file -> {
             if (file.isDirectory()) {
                 return true;
             } else {
-                return (file.getPath().indexOf("taskdefs") > 0 &&
-                        file.getPath().toLowerCase().endsWith(".xml"));
+                return file.getPath().contains("taskdefs")
+                        && file.getPath().toLowerCase().endsWith(".xml");
             }
         };
 
         File[] files = startingDir.listFiles(filter);
         for (File f : files) {
             if (!f.isDirectory()) {
-                collect.addElement(f);
+                collect.add(f);
             } else {
                 getFiles(f, collect);
             }

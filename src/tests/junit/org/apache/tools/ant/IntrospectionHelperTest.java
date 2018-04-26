@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -253,9 +253,7 @@ public class IntrospectionHelperTest {
     @Test
     public void testGetNestedElements() {
         Map<String, Class<?>> elemMap = getExpectedNestedElements();
-        Enumeration<String> e = ih.getNestedElements();
-        while (e.hasMoreElements()) {
-            String name = e.nextElement();
+        for (String name : Collections.list(ih.getNestedElements())) {
             Class<?> expect = elemMap.get(name);
             assertNotNull("Support for " + name + " in IntrospectioNHelperTest?",
                           expect);
@@ -594,9 +592,7 @@ public class IntrospectionHelperTest {
     @Test
     public void testGetAttributes() {
         Map<String, Class<?>> attrMap = getExpectedAttributes();
-        Enumeration<String> e = ih.getAttributes();
-        while (e.hasMoreElements()) {
-            String name = e.nextElement();
+        for (String name : Collections.list(ih.getAttributes())) {
             Class<?> expect = attrMap.get(name);
             assertNotNull("Support for " + name + " in IntrospectionHelperTest?",
                           expect);

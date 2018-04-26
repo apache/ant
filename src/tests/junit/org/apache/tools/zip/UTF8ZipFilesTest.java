@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.zip.CRC32;
 import org.junit.Test;
@@ -189,11 +190,7 @@ public class UTF8ZipFilesTest {
         ZipFile zf = null;
         try {
             zf = new ZipFile(file, encoding, false);
-
-            Enumeration<ZipEntry> e = zf.getEntries();
-            while (e.hasMoreElements()) {
-                ZipEntry ze = e.nextElement();
-
+            for (ZipEntry ze : Collections.list(zf.getEntries())) {
                 if (ze.getName().endsWith("sser.txt")) {
                     assertUnicodeName(ze, OIL_BARREL_TXT, encoding);
 
