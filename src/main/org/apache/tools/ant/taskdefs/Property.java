@@ -511,7 +511,7 @@ public class Property extends Task {
             }
         } else {
             if (url == null && file == null && resource == null
-                && env == null) {
+                && env == null && runtime == null) {
                 throw new BuildException(
                     "You must specify url, file, resource, environment or runtime when not using the name attribute",
                     getLocation());
