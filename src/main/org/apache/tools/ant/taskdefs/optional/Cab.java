@@ -52,16 +52,13 @@ public class Cab extends MatchingTask {
     private boolean doCompress = true;
     private boolean doVerbose = false;
     private String cmdOptions;
+    private boolean filesetAdded = false;
 
     // CheckStyle:VisibilityModifier OFF - bc
     protected String archiveType = "cab";
     // CheckStyle:VisibilityModifier ON
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
-    {
-        fileset = null;
-    }
 
     /**
      * The name/location of where to create the .cab file.
@@ -108,9 +105,10 @@ public class Cab extends MatchingTask {
      * @param fileset a set of files to archive.
      */
     public void addFileset(FileSet fileset) {
-        if (fileset != null) {
+        if (filesetAdded) {
             throw new BuildException("Only one nested fileset allowed");
         }
+        filesetAdded = true;
         this.fileset = fileset;
     }
 
@@ -124,7 +122,7 @@ public class Cab extends MatchingTask {
      * @throws BuildException on error.
      */
     protected void checkConfiguration() throws BuildException {
-        if (baseDir == null && fileset == null) {
+        if (baseDir == null && !filesetAdded) {
             throw new BuildException(
                 "basedir attribute or one nested fileset is required!",
                 getLocation());
@@ -132,7 +130,7 @@ public class Cab extends MatchingTask {
         if (baseDir != null && !baseDir.exists()) {
             throw new BuildException("basedir does not exist!", getLocation());
         }
-        if (baseDir != null && fileset != null) {
+        if (baseDir != null && filesetAdded) {
             throw new BuildException(
                 "Both basedir attribute and a nested fileset is not allowed");
         }
