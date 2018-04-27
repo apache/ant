@@ -268,8 +268,7 @@ public class SchemaValidate extends XMLValidateTask {
         if (!schemaLocations.isEmpty()) {
             String joinedValue = schemaLocations.values().stream()
                 .map(SchemaLocation::getURIandLocation)
-                .peek(
-                    tuple -> log("Adding schema " + tuple, Project.MSG_VERBOSE))
+                .peek(tuple -> log("Adding schema " + tuple, Project.MSG_VERBOSE))
                 .collect(Collectors.joining(" "));
 
             setProperty(XmlConstants.PROPERTY_SCHEMA_LOCATION, joinedValue);

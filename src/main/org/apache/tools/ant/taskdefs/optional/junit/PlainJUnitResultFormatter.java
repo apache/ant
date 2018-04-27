@@ -31,8 +31,6 @@ import junit.framework.Test;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
-
 
 /**
  * Prints plain text output of the test to a specified Writer.
@@ -105,8 +103,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
             return; // Quick return - no output do nothing.
         }
         try {
-            out.write(("Testsuite: " + suite.getName() +
-                    StringUtils.LINE_SEP).getBytes());
+            out.write(String.format("Testsuite: %s%n",suite.getName()).getBytes());
             out.flush();
         } catch (IOException ex) {
             throw new BuildException("Unable to write output", ex);
@@ -128,22 +125,18 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
 
             // write the err and output streams to the log
             if (systemOutput != null && !systemOutput.isEmpty()) {
-                write("------------- Standard Output ---------------");
-                write(StringUtils.LINE_SEP);
+                write(String.format("------------- Standard Output ---------------%n"));
                 write(systemOutput);
-                write("------------- ---------------- ---------------");
-                write(StringUtils.LINE_SEP);
+                write(String.format("------------- ---------------- ---------------%n"));
             }
 
             if (systemError != null && !systemError.isEmpty()) {
-                write("------------- Standard Error -----------------");
-                write(StringUtils.LINE_SEP);
+                write(String.format("------------- Standard Error -----------------%n"));
                 write(systemError);
-                write("------------- ---------------- ---------------");
-                write(StringUtils.LINE_SEP);
+                write(String.format("------------- ---------------- ---------------%n"));
             }
 
-            write(StringUtils.LINE_SEP);
+            write(System.lineSeparator());
             if (out != null) {
                 try {
                     wri.flush();

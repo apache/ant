@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.DefaultLogger;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This is a special logger that is designed to profile builds.
@@ -97,18 +96,17 @@ public class ProfileLogger extends DefaultLogger {
         String msg;
         if (start != null) {
             long diff = now.getTime() - start.getTime();
-            msg = StringUtils.LINE_SEP + name + ": finished " + now + " ("
-                    + diff + "ms)";
+            msg = String.format("%n%s: finished %s (%d)", name, now, diff);
         } else {
-            msg = StringUtils.LINE_SEP + name + ": finished " + now
-                    + " (unknown duration, start not detected)";
+            msg = String.format("%n%s: finished %s (unknown duration, start not detected)",
+                    name, now);
         }
         printMessage(msg, out, event.getPriority());
         log(msg);
     }
 
     private void logStart(BuildEvent event, Date start, String name) {
-        String msg = StringUtils.LINE_SEP + name + ": started " + start;
+        String msg = String.format("%n%s: started %s", name, start);
         printMessage(msg, out, event.getPriority());
         log(msg);
     }

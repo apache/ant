@@ -38,7 +38,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.taskdefs.launcher.CommandLauncher;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Runs an external program.
@@ -150,9 +149,9 @@ public class Execute {
                     // Chunk part of previous env var (UNIX env vars can
                     // contain embedded new lines).
                     if (var == null) {
-                        var = new StringBuilder(StringUtils.LINE_SEP + line);
+                        var = new StringBuilder(System.lineSeparator() + line);
                     } else {
-                        var.append(StringUtils.LINE_SEP).append(line);
+                        var.append(System.lineSeparator()).append(line);
                     }
                 }
             }

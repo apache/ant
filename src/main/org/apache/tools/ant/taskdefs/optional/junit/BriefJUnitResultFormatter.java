@@ -29,7 +29,6 @@ import junit.framework.Test;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Prints plain text output of the test to a specified Writer.
@@ -124,7 +123,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
             return; // Quick return - no output do nothing.
         }
         try {
-            output.write("Testsuite: " + suite.getName() + StringUtils.LINE_SEP);
+            output.write(String.format("Testsuite: %s%n", suite.getName()));
             output.flush();
         } catch (IOException ex) {
             throw new BuildException(ex);
@@ -147,25 +146,19 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
         sb.append(suite.skipCount());
         sb.append(", Time elapsed: ");
         sb.append(numberFormat.format(suite.getRunTime() / ONE_SECOND));
-        sb.append(" sec");
-        sb.append(StringUtils.LINE_SEP);
-        sb.append(StringUtils.LINE_SEP);
+        sb.append(String.format(" sec%n%n"));
 
         // append the err and output streams to the log
         if (systemOutput != null && !systemOutput.isEmpty()) {
-            sb.append("------------- Standard Output ---------------")
-                    .append(StringUtils.LINE_SEP)
-                    .append(systemOutput)
-                    .append("------------- ---------------- ---------------")
-                    .append(StringUtils.LINE_SEP);
+            sb.append(String.format("------------- Standard Output ---------------%n"));
+            sb.append(systemOutput);
+            sb.append(String.format("------------- ---------------- ---------------%n"));
         }
 
         if (systemError != null && !systemError.isEmpty()) {
-            sb.append("------------- Standard Error -----------------")
-                    .append(StringUtils.LINE_SEP)
-                    .append(systemError)
-                    .append("------------- ---------------- ---------------")
-                    .append(StringUtils.LINE_SEP);
+            sb.append(String.format("------------- Standard Error -----------------%n"));
+            sb.append(systemError);
+            sb.append(String.format("------------- ---------------- ---------------%n"));
         }
 
         if (output != null) {

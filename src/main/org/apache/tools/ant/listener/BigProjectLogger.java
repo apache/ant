@@ -17,12 +17,9 @@
  */
 package org.apache.tools.ant.listener;
 
-import java.io.File;
-
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.SubBuildListener;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This is a special logger that is designed to make it easier to work
@@ -120,18 +117,11 @@ public class BigProjectLogger extends SimpleBigProjectLogger
      * @param event An event with any relevant extra information. Must not be <code>null</code>.
      */
     public void subBuildStarted(BuildEvent event) {
-        String name = extractNameOrDefault(event);
         Project project = event.getProject();
-
-        File base = project == null ? null : project.getBaseDir();
-        String path =
-            (base == null)
-            ? "With no base directory"
-            : "In " + base.getAbsolutePath();
-        printMessage(StringUtils.LINE_SEP + getHeader()
-                + StringUtils.LINE_SEP + "Entering project " + name
-                        + StringUtils.LINE_SEP + path
-                        + StringUtils.LINE_SEP + getFooter(),
+        String path = (project == null) ? "With no base directory"
+                : "In " + project.getBaseDir().getAbsolutePath();
+        printMessage(String.format("%n%s%nEntering project %s%n%s%n%s", getHeader(),
+                extractNameOrDefault(event), path, getFooter()),
                 out,
                 event.getPriority());
     }
@@ -154,12 +144,9 @@ public class BigProjectLogger extends SimpleBigProjectLogger
 
     /** {@inheritDoc} */
     public void subBuildFinished(BuildEvent event) {
-        String name = extractNameOrDefault(event);
-        String failed = event.getException() != null ? "failing " : "";
-        printMessage(StringUtils.LINE_SEP + getHeader()
-                + StringUtils.LINE_SEP + "Exiting " + failed + "project "
-                + name
-                + StringUtils.LINE_SEP + getFooter(),
+        printMessage(String.format("%n%s%nExiting %sproject %s%n%s",
+                getHeader(), event.getException() != null ? "failing " : "",
+                extractNameOrDefault(event), getFooter()),
                 out,
                 event.getPriority());
     }

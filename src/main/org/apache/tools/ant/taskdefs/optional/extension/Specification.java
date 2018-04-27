@@ -29,7 +29,6 @@ import java.util.jar.Manifest;
 import java.util.stream.Stream;
 
 import org.apache.tools.ant.util.DeweyDecimal;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * <p>Utility class that represents either an available "Optional Package"
@@ -174,8 +173,7 @@ public final class Specification {
         }
         final List<Specification> results = new ArrayList<>();
 
-        for (Map.Entry<String, Attributes> e : manifest.getEntries()
-            .entrySet()) {
+        for (Map.Entry<String, Attributes> e : manifest.getEntries().entrySet()) {
             Optional.ofNullable(getSpecification(e.getKey(), e.getValue()))
                 .ifPresent(results::add);
         }
@@ -373,48 +371,31 @@ public final class Specification {
      */
     @Override
     public String toString() {
-        final String brace = ": ";
+        final String format = "%s: %s%n";
 
-        final StringBuilder sb
-            = new StringBuilder(SPECIFICATION_TITLE.toString());
-        sb.append(brace);
-        sb.append(specificationTitle);
-        sb.append(StringUtils.LINE_SEP);
+        final StringBuilder sb = new StringBuilder(String.format(format,
+                SPECIFICATION_TITLE, specificationTitle));
 
         if (null != specificationVersion) {
-            sb.append(SPECIFICATION_VERSION);
-            sb.append(brace);
-            sb.append(specificationVersion);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, SPECIFICATION_VERSION, specificationVersion));
         }
 
         if (null != specificationVendor) {
-            sb.append(SPECIFICATION_VENDOR);
-            sb.append(brace);
-            sb.append(specificationVendor);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, SPECIFICATION_VENDOR, specificationVendor));
         }
 
         if (null != implementationTitle) {
-            sb.append(IMPLEMENTATION_TITLE);
-            sb.append(brace);
-            sb.append(implementationTitle);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, IMPLEMENTATION_TITLE, implementationTitle));
         }
 
         if (null != implementationVersion) {
-            sb.append(IMPLEMENTATION_VERSION);
-            sb.append(brace);
-            sb.append(implementationVersion);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, IMPLEMENTATION_VERSION, implementationVersion));
         }
 
         if (null != implementationVendor) {
-            sb.append(IMPLEMENTATION_VENDOR);
-            sb.append(brace);
-            sb.append(implementationVendor);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, IMPLEMENTATION_VENDOR, implementationVendor));
         }
+
         return sb.toString();
     }
 
@@ -455,7 +436,7 @@ public final class Specification {
                 }
             }
             results.add(mergeInSections(specification, sections));
-            //Reset list of sections
+            // Reset list of sections
             sections.clear();
         }
         return results;
@@ -493,12 +474,8 @@ public final class Specification {
         if (sectionsToAdd.isEmpty()) {
             return specification;
         }
-        Stream<String> sections =
-            Stream
-                .concat(
-                    Optional.ofNullable(specification.getSections())
-                        .map(Stream::of).orElse(Stream.empty()),
-                    sectionsToAdd.stream());
+        Stream<String> sections = Stream.concat(Optional.ofNullable(specification.getSections())
+                        .map(Stream::of).orElse(Stream.empty()), sectionsToAdd.stream());
 
         return new Specification(specification.getSpecificationTitle(),
                 specification.getSpecificationVersion().toString(),
@@ -530,38 +507,32 @@ public final class Specification {
         //WARNING: We trim the values of all the attributes because
         //Some extension declarations are badly defined (ie have spaces
         //after version or vendor)
-        final String name
-            = getTrimmedString(attributes.getValue(SPECIFICATION_TITLE));
+        final String name = getTrimmedString(attributes.getValue(SPECIFICATION_TITLE));
         if (null == name) {
             return null;
         }
 
-        final String specVendor
-            = getTrimmedString(attributes.getValue(SPECIFICATION_VENDOR));
+        final String specVendor = getTrimmedString(attributes.getValue(SPECIFICATION_VENDOR));
         if (null == specVendor) {
             throw new ParseException(MISSING + SPECIFICATION_VENDOR, 0);
         }
 
-        final String specVersion
-            = getTrimmedString(attributes.getValue(SPECIFICATION_VERSION));
+        final String specVersion = getTrimmedString(attributes.getValue(SPECIFICATION_VERSION));
         if (null == specVersion) {
             throw new ParseException(MISSING + SPECIFICATION_VERSION, 0);
         }
 
-        final String impTitle
-            = getTrimmedString(attributes.getValue(IMPLEMENTATION_TITLE));
+        final String impTitle = getTrimmedString(attributes.getValue(IMPLEMENTATION_TITLE));
         if (null == impTitle) {
             throw new ParseException(MISSING + IMPLEMENTATION_TITLE, 0);
         }
 
-        final String impVersion
-            = getTrimmedString(attributes.getValue(IMPLEMENTATION_VERSION));
+        final String impVersion = getTrimmedString(attributes.getValue(IMPLEMENTATION_VERSION));
         if (null == impVersion) {
             throw new ParseException(MISSING + IMPLEMENTATION_VERSION, 0);
         }
 
-        final String impVendor
-            = getTrimmedString(attributes.getValue(IMPLEMENTATION_VENDOR));
+        final String impVendor = getTrimmedString(attributes.getValue(IMPLEMENTATION_VENDOR));
         if (null == impVendor) {
             throw new ParseException(MISSING + IMPLEMENTATION_VENDOR, 0);
         }

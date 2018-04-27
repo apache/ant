@@ -492,8 +492,8 @@ public abstract class DefaultCompilerAdapter
 
         attributes.log(Stream.of(compileList).map(File::getAbsolutePath)
                         .peek(arg -> cmd.createArgument().setValue(arg))
-                        .map(arg -> "    " + arg)
-                        .collect(Collectors.joining(StringUtils.LINE_SEP)), Project.MSG_VERBOSE);
+                        .map(arg -> String.format("    %s%n", arg))
+                        .collect(Collectors.joining("")), Project.MSG_VERBOSE);
     }
 
     /**

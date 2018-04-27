@@ -31,6 +31,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -46,7 +47,6 @@ import org.apache.tools.ant.util.LeadPipeInputStream;
 import org.apache.tools.ant.util.LineOrientedOutputStreamRedirector;
 import org.apache.tools.ant.util.OutputStreamFunneler;
 import org.apache.tools.ant.util.ReaderInputStream;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 
 /**
@@ -549,24 +549,12 @@ public class Redirector {
      *            contains the property value.
      * @param propertyName
      *            the property name.
-     *
-     * @exception IOException
-     *                if the value cannot be read form the stream.
      */
     private void setPropertyFromBAOS(final ByteArrayOutputStream baos,
-            final String propertyName) throws IOException {
-
-        final BufferedReader in = new BufferedReader(new StringReader(Execute
-                .toString(baos)));
-        String line = null;
-        final StringBuffer val = new StringBuffer();
-        while ((line = in.readLine()) != null) {
-            if (val.length() > 0) {
-                val.append(StringUtils.LINE_SEP);
-            }
-            val.append(line);
-        }
-        managingTask.getProject().setNewProperty(propertyName, val.toString());
+                                     final String propertyName) {
+        final BufferedReader in = new BufferedReader(new StringReader(Execute.toString(baos)));
+        managingTask.getProject().setNewProperty(propertyName,
+                in.lines().collect(Collectors.joining(System.lineSeparator())));
     }
 
     /**

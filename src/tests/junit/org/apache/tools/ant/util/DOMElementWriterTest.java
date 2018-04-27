@@ -100,8 +100,7 @@ public class DOMElementWriterTest {
         StringWriter sw = new StringWriter();
         DOMElementWriter w = new DOMElementWriter();
         w.write(root, sw, 0, "  ");
-        assertEquals("<root foo=\"bar&#xa;baz\" />" + StringUtils.LINE_SEP,
-                     sw.toString());
+        assertEquals(String.format("<root foo=\"bar&#xa;baz\" />%n"), sw.toString());
     }
 
     @Test
@@ -147,11 +146,8 @@ public class DOMElementWriterTest {
         StringWriter sw = new StringWriter();
         DOMElementWriter w = new DOMElementWriter();
         w.write(root, sw, 0, "  ");
-        assertEquals("<root>" + StringUtils.LINE_SEP
-                     + "  <textElement>content</textElement>"
-                     + StringUtils.LINE_SEP
-                     + "</root>" + StringUtils.LINE_SEP,
-                     sw.toString());
+        assertEquals(String.format("<root>%n  <textElement>content</textElement>%n</root>%n"),
+                sw.toString());
     }
 
     @Test
@@ -163,11 +159,8 @@ public class DOMElementWriterTest {
         StringWriter sw = new StringWriter();
         DOMElementWriter w = new DOMElementWriter();
         w.write(root, sw, 0, "  ");
-        assertEquals("<root>" + StringUtils.LINE_SEP
-                     + "  <cdataElement><![CDATA[content]]></cdataElement>"
-                     + StringUtils.LINE_SEP
-                     + "</root>" + StringUtils.LINE_SEP,
-                     sw.toString());
+        assertEquals(String.format("<root>%n  <cdataElement><![CDATA[content]]></cdataElement>%n"
+                        + "</root>%n"), sw.toString());
     }
 
     @Test
@@ -179,12 +172,7 @@ public class DOMElementWriterTest {
         StringWriter sw = new StringWriter();
         DOMElementWriter w = new DOMElementWriter();
         w.write(root, sw, 0, "  ");
-        assertEquals("<root>" + StringUtils.LINE_SEP
-                     //                     + "  <emptyElement></emptyElement>"
-                     + "  <emptyElement />"
-                     + StringUtils.LINE_SEP
-                     + "</root>" + StringUtils.LINE_SEP,
-                     sw.toString());
+        assertEquals(String.format("<root>%n  <emptyElement />%n</root>%n"), sw.toString());
     }
 
     @Test
@@ -196,8 +184,7 @@ public class DOMElementWriterTest {
         StringWriter sw = new StringWriter();
         DOMElementWriter w = new DOMElementWriter();
         w.write(root, sw, 0, "  ");
-        assertEquals("<root bar=\"baz\" />"
-                     + StringUtils.LINE_SEP, sw.toString());
+        assertEquals(String.format("<root bar=\"baz\" />%n"), sw.toString());
     }
 
     @Test
@@ -207,13 +194,10 @@ public class DOMElementWriterTest {
         root.setAttributeNS("urn:foo2", "bar", "baz");
 
         StringWriter sw = new StringWriter();
-        DOMElementWriter w =
-            new DOMElementWriter(false,
-                                 DOMElementWriter.XmlNamespacePolicy
-                                 .ONLY_QUALIFY_ELEMENTS);
+        DOMElementWriter w = new DOMElementWriter(false,
+                DOMElementWriter.XmlNamespacePolicy.ONLY_QUALIFY_ELEMENTS);
         w.write(root, sw, 0, "  ");
-        assertEquals("<root bar=\"baz\" xmlns=\"urn:foo\" />"
-                     + StringUtils.LINE_SEP, sw.toString());
+        assertEquals(String.format("<root bar=\"baz\" xmlns=\"urn:foo\" />%n"), sw.toString());
     }
 
     @Test
@@ -223,14 +207,11 @@ public class DOMElementWriterTest {
         root.setAttributeNS("urn:foo2", "bar", "baz");
 
         StringWriter sw = new StringWriter();
-        DOMElementWriter w =
-            new DOMElementWriter(false,
-                                 DOMElementWriter.XmlNamespacePolicy
-                                 .QUALIFY_ALL);
+        DOMElementWriter w = new DOMElementWriter(false,
+                DOMElementWriter.XmlNamespacePolicy.QUALIFY_ALL);
         w.write(root, sw, 0, "  ");
-        assertEquals("<root ns0:bar=\"baz\" xmlns=\"urn:foo\""
-                     + " xmlns:ns0=\"urn:foo2\" />"
-                     + StringUtils.LINE_SEP, sw.toString());
+        assertEquals(String.format("<root ns0:bar=\"baz\" xmlns=\"urn:foo\""
+                     + " xmlns:ns0=\"urn:foo2\" />%n"), sw.toString());
     }
 
     @Test
@@ -240,11 +221,11 @@ public class DOMElementWriterTest {
         root.setAttributeNS("urn:foo2", "bar", "baz");
 
         StringWriter sw = new StringWriter();
-        DOMElementWriter w =
-            new DOMElementWriter(false, new DOMElementWriter.XmlNamespacePolicy(false, true));
+        DOMElementWriter w = new DOMElementWriter(false,
+                new DOMElementWriter.XmlNamespacePolicy(false, true));
         w.write(root, sw, 0, "  ");
-        assertEquals("<root ns0:bar=\"baz\" xmlns:ns0=\"urn:foo2\" />"
-                     + StringUtils.LINE_SEP, sw.toString());
+        assertEquals(String.format("<root ns0:bar=\"baz\" xmlns:ns0=\"urn:foo2\" />%n"),
+                sw.toString());
     }
 
     @Test
@@ -254,17 +235,11 @@ public class DOMElementWriterTest {
         Element child = d.createElementNS("urn:foo", "child");
         root.appendChild(child);
         StringWriter sw = new StringWriter();
-        DOMElementWriter w =
-            new DOMElementWriter(false,
-                                 DOMElementWriter.XmlNamespacePolicy
-                                 .ONLY_QUALIFY_ELEMENTS);
+        DOMElementWriter w = new DOMElementWriter(false,
+                DOMElementWriter.XmlNamespacePolicy.ONLY_QUALIFY_ELEMENTS);
         w.write(root, sw, 0, "  ");
-        assertEquals("<root xmlns=\"urn:foo\">"
-                     + StringUtils.LINE_SEP
-                     + "  <child />"
-                     + StringUtils.LINE_SEP
-                     + "</root>"
-                     + StringUtils.LINE_SEP, sw.toString());
+        assertEquals(String.format("<root xmlns=\"urn:foo\">%n  <child />%n</root>%n"),
+                sw.toString());
     }
 
     @Test
@@ -280,24 +255,15 @@ public class DOMElementWriterTest {
         Element child3 = d.createElementNS("urn:foo2", "child");
         root.appendChild(child3);
         StringWriter sw = new StringWriter();
-        DOMElementWriter w =
-            new DOMElementWriter(false,
-                                 DOMElementWriter.XmlNamespacePolicy
-                                 .ONLY_QUALIFY_ELEMENTS);
+        DOMElementWriter w = new DOMElementWriter(false,
+                DOMElementWriter.XmlNamespacePolicy.ONLY_QUALIFY_ELEMENTS);
         w.write(root, sw, 0, "  ");
-        assertEquals("<root xmlns=\"urn:foo\">"
-                     + StringUtils.LINE_SEP
-                     + "  <ns0:child xmlns:ns0=\"urn:foo2\" />"
-                     + StringUtils.LINE_SEP
-                     + "  <ns1:child xmlns:ns1=\"urn:foo2\">"
-                     + StringUtils.LINE_SEP
-                     + "    <ns1:grandchild />"
-                     + StringUtils.LINE_SEP
-                     + "  </ns1:child>"
-                     + StringUtils.LINE_SEP
-                     + "  <ns2:child xmlns:ns2=\"urn:foo2\" />"
-                     + StringUtils.LINE_SEP
-                      + "</root>"
-                     + StringUtils.LINE_SEP, sw.toString());
+        assertEquals(String.format("<root xmlns=\"urn:foo\">%n"
+                + "  <ns0:child xmlns:ns0=\"urn:foo2\" />%n"
+                + "  <ns1:child xmlns:ns1=\"urn:foo2\">%n"
+                + "    <ns1:grandchild />%n"
+                + "  </ns1:child>%n"
+                + "  <ns2:child xmlns:ns2=\"urn:foo2\" />%n"
+                + "</root>%n"), sw.toString());
     }
 }

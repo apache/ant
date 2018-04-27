@@ -27,7 +27,6 @@ import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.property.LocalProperties;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Executes the contained tasks in separate threads, continuing
@@ -243,7 +242,7 @@ public class Parallel extends Task
                     // location should match the exit status
                     firstLocation = ex.getLocation();
                 }
-                exceptionMessage.append(StringUtils.LINE_SEP);
+                exceptionMessage.append(System.lineSeparator());
                 exceptionMessage.append(t.getMessage());
             }
         }

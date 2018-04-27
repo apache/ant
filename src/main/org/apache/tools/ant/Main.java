@@ -1269,14 +1269,14 @@ public class Main implements AntMain {
                                      final String heading,
                                      final int maxlen) {
         // now, start printing the targets and their descriptions
-        final String lSep = System.lineSeparator();
+        final String eol = System.lineSeparator();
         // got a bit annoyed that I couldn't find a pad function
         StringBuilder spaces = new StringBuilder("    ");
         while (spaces.length() <= maxlen) {
             spaces.append(spaces);
         }
         final StringBuilder msg = new StringBuilder();
-        msg.append(heading).append(lSep).append(lSep);
+        msg.append(heading).append(eol).append(eol);
         final int size = names.size();
         for (int i = 0; i < size; i++) {
             msg.append(" ");
@@ -1286,7 +1286,7 @@ public class Main implements AntMain {
                     spaces.substring(0, maxlen - names.elementAt(i).length() + 2));
                 msg.append(descriptions.elementAt(i));
             }
-            msg.append(lSep);
+            msg.append(eol);
             if (!dependencies.isEmpty()) {
                 final Enumeration<String> deps = dependencies.elementAt(i);
                 if (deps.hasMoreElements()) {
@@ -1297,7 +1297,7 @@ public class Main implements AntMain {
                             msg.append(", ");
                         }
                     }
-                    msg.append(lSep);
+                    msg.append(eol);
                 }
             }
         }

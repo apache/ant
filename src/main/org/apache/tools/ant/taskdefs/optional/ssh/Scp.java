@@ -493,22 +493,22 @@ public class Scp extends SSHBase {
 
         List<Directory> ds = new ArrayList<>();
         for (Resource r : rc) {
-               if (!r.isExists()) {
+            if (!r.isExists()) {
                 throw new BuildException("Could not find resource %s to scp.",
-                    r.toLongString());
+                        r.toLongString());
             }
 
             FileProvider fp = r.as(FileProvider.class);
             if (fp == null) {
                 throw new BuildException("Resource %s is not a file.",
-                    r.toLongString());
+                        r.toLongString());
             }
 
             FileResource fr = ResourceUtils.asFileResource(fp);
             File baseDir = fr.getBaseDir();
             if (baseDir == null) {
-                throw new BuildException(
-                    "basedir for resource %s is undefined.", r.toLongString());
+                throw new BuildException("basedir for resource %s is undefined.",
+                        r.toLongString());
             }
 
             // if the basedir is set, the name will be relative to that

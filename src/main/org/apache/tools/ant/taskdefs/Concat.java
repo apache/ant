@@ -57,7 +57,6 @@ import org.apache.tools.ant.util.ConcatResourceInputStream;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ReaderInputStream;
 import org.apache.tools.ant.util.ResourceUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This class contains the 'concat' task, used to concatenate a series
@@ -525,7 +524,7 @@ public class Concat extends Task implements ResourceCollection {
         binary = false;
         outputWriter = null;
         textBuffer = null;
-        eolString = StringUtils.LINE_SEP;
+        eolString = System.lineSeparator();
         rc = null;
         ignoreEmpty = true;
         force = false;

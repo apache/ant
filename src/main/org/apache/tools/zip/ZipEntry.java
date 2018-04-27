@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.zip.ZipException;
 
 /**
@@ -455,7 +456,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     public void removeExtraField(final ZipShort type) {
         if (extraFields == null) {
-            throw new java.util.NoSuchElementException();
+            throw new NoSuchElementException();
         }
         List<ZipExtraField> newResult = new ArrayList<>();
         for (ZipExtraField extraField : extraFields) {
@@ -464,7 +465,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
             }
         }
         if (extraFields.length == newResult.size()) {
-            throw new java.util.NoSuchElementException();
+            throw new NoSuchElementException();
         }
         extraFields = newResult.toArray(new ZipExtraField[newResult.size()]);
         setExtra();
@@ -475,7 +476,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      */
     public void removeUnparseableExtraFieldData() {
         if (unparseableExtra == null) {
-            throw new java.util.NoSuchElementException();
+            throw new NoSuchElementException();
         }
         unparseableExtra = null;
         setExtra();
@@ -744,8 +745,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
                     addExtraField(element);
                 } else {
                     if (local
-                        || !(existing
-                             instanceof CentralDirectoryParsingZipExtraField)) {
+                        || !(existing instanceof CentralDirectoryParsingZipExtraField)) {
                         final byte[] b = element.getLocalFileDataData();
                         existing.parseFromLocalFileData(b, 0, b.length);
                     } else {

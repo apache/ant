@@ -28,7 +28,6 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.SubBuildListener;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * This is a class that represents a recorder. This is the listener to the
@@ -108,10 +107,9 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
             Throwable error = event.getException();
 
             if (error == null) {
-                out.println(StringUtils.LINE_SEP + "BUILD SUCCESSFUL");
+                out.println(String.format("%nBUILD SUCCESSFUL"));
             } else {
-                out.println(StringUtils.LINE_SEP + "BUILD FAILED"
-                            + StringUtils.LINE_SEP);
+                out.println(String.format("%nBUILD FAILED%n"));
                 error.printStackTrace(out); //NOSONAR
             }
         }
@@ -149,8 +147,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
      */
     public void targetStarted(BuildEvent event) {
         log(">> TARGET STARTED -- " + event.getTarget(), Project.MSG_DEBUG);
-        log(StringUtils.LINE_SEP + event.getTarget().getName() + ":",
-            Project.MSG_INFO);
+        log(String.format("%n%s:", event.getTarget().getName()), Project.MSG_INFO);
         targetStartTime = System.currentTimeMillis();
     }
 

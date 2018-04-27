@@ -60,7 +60,6 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Generates Javadoc documentation for a collection
@@ -2474,7 +2473,7 @@ public class Javadoc extends Task {
 
     private String fixLineFeeds(final String orig) {
         return orig.replace("\r\n", "\n")
-            .replace("\n", StringUtils.LINE_SEP);
+            .replace("\n", System.lineSeparator());
     }
 
     private String patchContent(final String fileContents, final String fixData) {

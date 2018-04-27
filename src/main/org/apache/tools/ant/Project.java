@@ -51,7 +51,6 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.VectorSet;
 
 /**
@@ -2222,8 +2221,8 @@ public class Project implements ResourceFactory {
         if (message == null) {
             message = String.valueOf(message);
         }
-        if (message.endsWith(StringUtils.LINE_SEP)) {
-            final int endIndex = message.length() - StringUtils.LINE_SEP.length();
+        if (message.endsWith(System.lineSeparator())) {
+            final int endIndex = message.length() - System.lineSeparator().length();
             event.setMessage(message.substring(0, endIndex), priority);
         } else {
             event.setMessage(message, priority);

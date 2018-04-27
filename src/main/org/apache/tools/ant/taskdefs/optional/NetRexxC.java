@@ -775,8 +775,8 @@ public class NetRexxC extends MatchingTask {
 
         log("Files to be compiled:", Project.MSG_VERBOSE);
 
-        log(compileList.stream().map(s -> "    " + s).collect(Collectors.joining(System.lineSeparator())),
-                Project.MSG_VERBOSE);
+        log(compileList.stream().map(s -> String.format("    %s%n", s))
+                        .collect(Collectors.joining("")), Project.MSG_VERBOSE);
 
         // create a single array of arguments for the compiler
         String[] compileArgs =

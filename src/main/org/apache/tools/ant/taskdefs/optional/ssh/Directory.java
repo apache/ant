@@ -172,7 +172,7 @@ public class Directory {
     public static String[] getPath(String thePath) {
         StringTokenizer tokenizer = new StringTokenizer(thePath,
                 File.separator);
-        String[] path = new String[ tokenizer.countTokens() ];
+        String[] path = new String[tokenizer.countTokens()];
 
         int i = 0;
         while (tokenizer.hasMoreTokens()) {

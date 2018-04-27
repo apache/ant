@@ -40,7 +40,6 @@ import org.apache.tools.ant.taskdefs.email.Message;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.mail.MailMessage;
 
 /**
@@ -313,7 +312,7 @@ public class MailLogger extends DefaultLogger {
      */
     @Override
     protected void log(String message) {
-        buffer.append(message).append(StringUtils.LINE_SEP);
+        buffer.append(message).append(System.lineSeparator());
     }
 
 

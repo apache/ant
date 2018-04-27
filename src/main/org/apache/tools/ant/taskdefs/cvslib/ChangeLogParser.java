@@ -31,7 +31,6 @@ import java.util.TimeZone;
 
 import org.apache.tools.ant.taskdefs.AbstractCvsTask;
 import org.apache.tools.ant.taskdefs.AbstractCvsTask.Module;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * A class used to parse the output of the CVS log command.
@@ -151,18 +150,16 @@ class ChangeLogParser {
             .equals(line)) {
             //We have ended changelog for that particular file
             //so we can save it
-            final int end
-                = comment.length() - StringUtils.LINE_SEP.length(); //was -1
+            final int end = comment.length() - System.lineSeparator().length(); //was -1
             comment = comment.substring(0, end);
             saveEntry();
             status = GET_FILE;
         } else if ("----------------------------".equals(line)) {
-            final int end
-                = comment.length() - StringUtils.LINE_SEP.length(); //was -1
+            final int end = comment.length() - System.lineSeparator().length(); //was -1
             comment = comment.substring(0, end);
             status = GET_PREVIOUS_REV;
         } else {
-            comment += line + StringUtils.LINE_SEP;
+            comment += line + System.lineSeparator();
         }
     }
 

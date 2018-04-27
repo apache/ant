@@ -45,7 +45,6 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Replaces all occurrences of one or more string tokens with given
@@ -501,10 +500,10 @@ public class Replace extends MatchingTask {
             // as needed
             StringBuilder val = new StringBuilder(value.getText());
             stringReplace(val, "\r\n", "\n");
-            stringReplace(val, "\n", StringUtils.LINE_SEP);
+            stringReplace(val, "\n", System.lineSeparator());
             StringBuilder tok = new StringBuilder(token.getText());
             stringReplace(tok, "\r\n", "\n");
-            stringReplace(tok, "\n", StringUtils.LINE_SEP);
+            stringReplace(tok, "\n", System.lineSeparator());
             Replacefilter firstFilter = createPrimaryfilter();
             firstFilter.setToken(tok.toString());
             firstFilter.setValue(val.toString());

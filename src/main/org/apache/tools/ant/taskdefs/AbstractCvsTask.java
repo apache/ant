@@ -25,8 +25,10 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -34,7 +36,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * original Cvs.java 1.20
@@ -352,12 +353,9 @@ public abstract class AbstractCvsTask extends Task {
             log("retCode=" + retCode, Project.MSG_DEBUG);
 
             if (failOnError && Execute.isFailure(retCode)) {
-                throw new BuildException("cvs exited with error code "
-                                         + retCode
-                                         + StringUtils.LINE_SEP
-                                         + "Command line was ["
-                                         + actualCommandLine + "]",
-                                         getLocation());
+                throw new BuildException(
+                        String.format("cvs exited with error code %s%nCommand line was [%s]",
+                                retCode, actualCommandLine), getLocation());
             }
         } catch (IOException e) {
             if (failOnError) {
@@ -422,19 +420,10 @@ public abstract class AbstractCvsTask extends Task {
                 .getCommandline());
         StringBuilder buf = removeCvsPassword(cmdLine);
 
-        String newLine = StringUtils.LINE_SEP;
         String[] variableArray = execute.getEnvironment();
-
         if (variableArray != null) {
-            buf.append(newLine);
-            buf.append(newLine);
-            buf.append("environment:");
-            buf.append(newLine);
-            for (String variable : variableArray) {
-                buf.append(newLine);
-                buf.append("\t");
-                buf.append(variable);
-            }
+            buf.append(Arrays.stream(variableArray).map(variable -> String.format("%n\t%s", variable))
+                    .collect(Collectors.joining("", String.format("%n%nenvironment:%n"), "")));
         }
 
         return buf.toString();

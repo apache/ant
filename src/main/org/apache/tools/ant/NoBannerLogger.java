@@ -18,8 +18,6 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.util.StringUtils;
-
 /**
  * Extends DefaultLogger to strip out empty targets.
  *
@@ -90,7 +88,7 @@ public class NoBannerLogger extends DefaultLogger {
 
         synchronized (this) {
             if (null != targetName) {
-                out.println(StringUtils.LINE_SEP + targetName + ":");
+                out.println(String.format("%n%s:", targetName));
                 targetName = null;
             }
         }

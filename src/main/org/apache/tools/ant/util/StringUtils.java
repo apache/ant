@@ -45,6 +45,7 @@ public final class StringUtils {
     }
 
     /** the line separator for this OS */
+    @Deprecated
     public static final String LINE_SEP = System.lineSeparator();
 
     /**

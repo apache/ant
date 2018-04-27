@@ -50,8 +50,8 @@ public abstract class DefaultJspCompilerAdapter
 
         String niceSourceList = compileList.stream()
                         .peek(arg -> cmd.createArgument().setValue(arg))
-                        .map(arg -> "    " + arg)
-                        .collect(Collectors.joining(System.lineSeparator()));
+                        .map(arg -> String.format("    %s%n", arg))
+                        .collect(Collectors.joining(""));
         jspc.log(String.format("File%s to be compiled:%n%s",
                 compileList.size() == 1 ? "" : "s", niceSourceList), Project.MSG_VERBOSE);
     }

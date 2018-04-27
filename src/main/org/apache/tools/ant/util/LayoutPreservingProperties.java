@@ -82,7 +82,7 @@ import java.util.Properties;
 public class LayoutPreservingProperties extends Properties {
     private static final long serialVersionUID = 1L;
 
-    private String LS = StringUtils.LINE_SEP;
+    private String eol = System.lineSeparator();
 
     /**
      * Logical lines have escaping and line continuation taken care
@@ -266,7 +266,7 @@ public class LayoutPreservingProperties extends Properties {
         final int totalLines = logicalLines.size();
 
         if (header != null) {
-            osw.write("#" + header + LS);
+            osw.write("#" + header + eol);
             if (totalLines > 0
                 && logicalLines.get(0) instanceof Comment
                 && header.equals(logicalLines.get(0).toString().substring(1))) {
@@ -288,20 +288,20 @@ public class LayoutPreservingProperties extends Properties {
                 // not an existing date comment
             }
         }
-        osw.write("#" + DateUtils.getDateForHeader() + LS);
+        osw.write("#" + DateUtils.getDateForHeader() + eol);
 
         boolean writtenSep = false;
         for (LogicalLine line : logicalLines.subList(skipLines, totalLines)) {
             if (line instanceof Pair) {
                 if (((Pair) line).isNew()) {
                     if (!writtenSep) {
-                        osw.write(LS);
+                        osw.write(eol);
                         writtenSep = true;
                     }
                 }
-                osw.write(line.toString() + LS);
+                osw.write(line.toString() + eol);
             } else if (line != null) {
-                osw.write(line.toString() + LS);
+                osw.write(line.toString() + eol);
             }
         }
         osw.close();
@@ -331,7 +331,7 @@ public class LayoutPreservingProperties extends Properties {
         final StringBuilder fileBuffer = new StringBuilder();
         final StringBuilder logicalLineBuffer = new StringBuilder();
         while (s != null) {
-            fileBuffer.append(s).append(LS);
+            fileBuffer.append(s).append(eol);
 
             if (continuation) {
                 // put in the line feed that was removed
@@ -390,7 +390,7 @@ public class LayoutPreservingProperties extends Properties {
         boolean hasCR = false;
         // when reaching EOF before the first EOL, assume native line
         // feeds
-        LS = StringUtils.LINE_SEP;
+        eol = System.lineSeparator();
 
         while (ch >= 0) {
             if (hasCR && ch != '\n') {
@@ -400,10 +400,10 @@ public class LayoutPreservingProperties extends Properties {
             }
 
             if (ch == '\r') {
-                LS = "\r";
+                eol = "\r";
                 hasCR = true;
             } else if (ch == '\n') {
-                LS = hasCR ? "\r\n" : "\n";
+                eol = hasCR ? "\r\n" : "\n";
                 break;
             } else {
                 sb.append((char) ch);

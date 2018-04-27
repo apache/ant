@@ -29,7 +29,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Adds an new entry to a CVS password file.
@@ -107,7 +106,7 @@ public class CVSPass extends Task {
 
                 while ((line = reader.readLine()) != null) {
                     if (!line.startsWith(cvsRoot)) {
-                        buf.append(line).append(StringUtils.LINE_SEP);
+                        buf.append(line).append(System.lineSeparator());
                     }
                 }
             }

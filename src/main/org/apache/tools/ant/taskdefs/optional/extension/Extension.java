@@ -27,7 +27,6 @@ import java.util.jar.Manifest;
 import java.util.stream.Stream;
 
 import org.apache.tools.ant.util.DeweyDecimal;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * <p>Utility class that represents either an available "Optional Package"
@@ -478,53 +477,33 @@ public final class Extension {
      */
     @Override
     public String toString() {
-        final String brace = ": ";
+        final String format = "%s: %s%n";
 
-        final StringBuilder sb = new StringBuilder(EXTENSION_NAME.toString());
-        sb.append(brace);
-        sb.append(extensionName);
-        sb.append(StringUtils.LINE_SEP);
+        final StringBuilder sb = new StringBuilder(String.format(format,
+                EXTENSION_NAME, extensionName));
 
         if (null != specificationVersion) {
-            sb.append(SPECIFICATION_VERSION);
-            sb.append(brace);
-            sb.append(specificationVersion);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, SPECIFICATION_VERSION, specificationVersion));
         }
 
         if (null != specificationVendor) {
-            sb.append(SPECIFICATION_VENDOR);
-            sb.append(brace);
-            sb.append(specificationVendor);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, SPECIFICATION_VENDOR, specificationVendor));
         }
 
         if (null != implementationVersion) {
-            sb.append(IMPLEMENTATION_VERSION);
-            sb.append(brace);
-            sb.append(implementationVersion);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, IMPLEMENTATION_VERSION, implementationVersion));
         }
 
         if (null != implementationVendorID) {
-            sb.append(IMPLEMENTATION_VENDOR_ID);
-            sb.append(brace);
-            sb.append(implementationVendorID);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, IMPLEMENTATION_VENDOR_ID, implementationVendorID));
         }
 
         if (null != implementationVendor) {
-            sb.append(IMPLEMENTATION_VENDOR);
-            sb.append(brace);
-            sb.append(implementationVendor);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, IMPLEMENTATION_VENDOR, implementationVendor));
         }
 
         if (null != implementationURL) {
-            sb.append(IMPLEMENTATION_URL);
-            sb.append(brace);
-            sb.append(implementationURL);
-            sb.append(StringUtils.LINE_SEP);
+            sb.append(String.format(format, IMPLEMENTATION_URL, implementationURL));
         }
 
         return sb.toString();

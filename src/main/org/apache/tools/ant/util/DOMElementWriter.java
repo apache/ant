@@ -217,7 +217,7 @@ public class DOMElementWriter {
                 case Node.ELEMENT_NODE:
                     hasChildElements = true;
                     if (i == 0) {
-                        out.write(StringUtils.LINE_SEP);
+                        out.write(System.lineSeparator());
                     }
                     write((Element) child, out, indent + 1, indentWith);
                     break;
@@ -364,8 +364,7 @@ public class DOMElementWriter {
             out.write(">");
         } else {
             removeNSDefinitions(element);
-            out.write(" />");
-            out.write(StringUtils.LINE_SEP);
+            out.write(String.format(" />%n"));
             out.flush();
         }
     }
@@ -405,8 +404,7 @@ public class DOMElementWriter {
             removeNSDefinitions(element);
         }
         out.write(element.getTagName());
-        out.write(">");
-        out.write(StringUtils.LINE_SEP);
+        out.write(String.format(">%n"));
         out.flush();
     }
 

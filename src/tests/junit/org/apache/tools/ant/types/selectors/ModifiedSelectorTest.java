@@ -41,7 +41,6 @@ import org.apache.tools.ant.types.selectors.modifiedselector.HashvalueAlgorithm;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.PropertiesfileCache;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -879,7 +878,7 @@ public class ModifiedSelectorTest {
             try {
                 FileWriter out = new FileWriter(file.getAbsolutePath(), true);
                 out.write(line);
-                out.write(StringUtils.LINE_SEP);
+                out.write(System.lineSeparator());
                 out.flush();
                 out.close();
             } catch (Exception e) {

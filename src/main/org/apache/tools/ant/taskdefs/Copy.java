@@ -1085,11 +1085,8 @@ public class Copy extends Task {
         if (ex.getClass().getName().contains("MalformedInput")) {
             message.append(String.format(
                     "%nThis is normally due to the input file containing invalid"
-                            + "%nbytes for the character encoding used : "));
-            message.append(
-                (inputEncoding == null
-                 ? fileUtils.getDefaultEncoding() : inputEncoding));
-            message.append(System.lineSeparator());
+                            + "%nbytes for the character encoding used : %s%n",
+                    inputEncoding == null ? fileUtils.getDefaultEncoding() : inputEncoding));
         }
         return message.toString();
     }

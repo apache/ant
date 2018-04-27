@@ -376,7 +376,7 @@ public class AntStructure extends Task {
                 }
                 sb.append("#IMPLIED");
             }
-            sb.append(">").append(System.lineSeparator());
+            sb.append(String.format(">%n"));
             out.println(sb);
 
             for (String nestedName : v) {

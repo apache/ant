@@ -48,7 +48,6 @@ import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.types.resources.selectors.Type;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Used to create or verify file checksums.
@@ -392,8 +391,7 @@ public class Checksum extends MatchingTask implements Condition {
         try {
             if (resources != null) {
                 for (Resource r : resources) {
-                    File src = r.as(FileProvider.class)
-                        .getFile();
+                    File src = r.as(FileProvider.class).getFile();
                     if (totalproperty != null || todir != null) {
                         // Use '/' to calculate digest based on file name.
                         // This is required in order to get the same result
@@ -537,7 +535,7 @@ public class Checksum extends MatchingTask implements Condition {
                                                                      src),
                                                     src.getAbsolutePath()
                                                 }).getBytes());
-                        fos.write(StringUtils.LINE_SEP.getBytes());
+                        fos.write(System.lineSeparator().getBytes());
                         fos.close();
                         fos = null;
                     }

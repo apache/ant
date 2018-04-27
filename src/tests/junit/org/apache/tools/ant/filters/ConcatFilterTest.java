@@ -23,7 +23,6 @@ import java.io.IOException;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
-import org.apache.tools.ant.util.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,35 +37,30 @@ import static org.junit.Assert.assertThat;
  */
 public class ConcatFilterTest {
 
-    private static final String lSep = StringUtils.LINE_SEP;
+    private static final String FILE_PREPEND_WITH = String.format("this-should-be-the-first-line%n"
+        + "Line  1%n"
+        + "Line  2%n"
+        + "Line  3%n"
+        + "Line  4%n");
 
-    private static final String FILE_PREPEND_WITH =
-          "this-should-be-the-first-line" + lSep
-        + "Line  1" + lSep
-        + "Line  2" + lSep
-        + "Line  3" + lSep
-        + "Line  4" + lSep;
+    private static final String FILE_PREPEND = String.format("Line  1%n"
+        + "Line  2%n"
+        + "Line  3%n"
+        + "Line  4%n"
+        + "Line  5%n");
 
-    private static final String FILE_PREPEND =
-          "Line  1" + lSep
-        + "Line  2" + lSep
-        + "Line  3" + lSep
-        + "Line  4" + lSep
-        + "Line  5" + lSep;
-
-    private static final String FILE_APPEND_WITH =
-          "Line 57" + lSep
-        + "Line 58" + lSep
-        + "Line 59" + lSep
-        + "Line 60" + lSep
-        + "this-should-be-the-last-line" + lSep;
+    private static final String FILE_APPEND_WITH = String.format("Line 57%n"
+        + "Line 58%n"
+        + "Line 59%n"
+        + "Line 60%n"
+        + "this-should-be-the-last-line%n");
 
     private static final String FILE_APPEND =
-          "Line 56" + lSep
-        + "Line 57" + lSep
-        + "Line 58" + lSep
-        + "Line 59" + lSep
-        + "Line 60" + lSep;
+          String.format("Line 56%n"
+        + "Line 57%n"
+        + "Line 58%n"
+        + "Line 59%n"
+        + "Line 60%n");
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();

@@ -987,7 +987,7 @@ public class JUnitTask extends Task {
 
                 try {
                     for (i = 0; i < numThreads; i++) {
-                         threads[i].join();
+                        threads[i].join();
                     }
                 } catch (final InterruptedException e) {
                     exceptionOccurred = true;

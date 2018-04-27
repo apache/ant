@@ -21,7 +21,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Retries the nested task a set number of times
@@ -102,7 +101,7 @@ public class Retry extends Task implements TaskContainer {
                     msg = "Attempt [" + i + "]: error occurred; retrying...";
                 }
                 log(msg, e, Project.MSG_INFO);
-                errorMessages.append(StringUtils.LINE_SEP);
+                errorMessages.append(System.lineSeparator());
                 if (retryDelay > 0) {
                     try {
                         Thread.sleep(retryDelay);

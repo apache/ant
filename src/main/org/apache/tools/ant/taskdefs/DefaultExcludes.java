@@ -22,7 +22,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Alters the default excludes for the <strong>entire</strong> build..
@@ -61,15 +63,10 @@ public class DefaultExcludes extends Task {
             DirectoryScanner.removeDefaultExclude(remove);
         }
         if (echo) {
-            StringBuilder message
-                = new StringBuilder("Current Default Excludes:");
-            message.append(StringUtils.LINE_SEP);
-            for (String exclude : DirectoryScanner.getDefaultExcludes()) {
-                message.append("  ");
-                message.append(exclude);
-                message.append(StringUtils.LINE_SEP);
-            }
-            log(message.toString(), logLevel);
+            String message = Arrays.stream(DirectoryScanner.getDefaultExcludes())
+                    .map(exclude -> String.format("  %s%n", exclude))
+                    .collect(Collectors.joining("", "Current Default Excludes:%n", ""));
+            log(message, logLevel);
         }
     }
 

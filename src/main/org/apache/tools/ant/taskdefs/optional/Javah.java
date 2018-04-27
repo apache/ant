@@ -432,7 +432,8 @@ public class Javah extends Task {
             settings.add(Settings.files);
         }
         if (settings.size() > 1) {
-            throw new BuildException("Exactly one of " + Settings.values() + " attributes is required", getLocation());
+            throw new BuildException("Exactly one of " + Settings.values()
+                    + " attributes is required", getLocation());
         }
 
         if (destDir != null) {

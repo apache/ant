@@ -56,7 +56,7 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
         final StringTokenizer tokenizer = new StringTokenizer(string, ".", true);
         final int size = tokenizer.countTokens();
 
-        components = new int[ (size + 1) / 2 ];
+        components = new int[(size + 1) / 2];
 
         for (int i = 0; i < components.length; i++) {
             final String component = tokenizer.nextToken();
@@ -64,7 +64,7 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
                 throw new NumberFormatException("Empty component in string");
             }
 
-            components[ i ] = Integer.parseInt(component);
+            components[i] = Integer.parseInt(component);
 
             //Strip '.' token
             if (tokenizer.hasMoreTokens()) {
@@ -94,7 +94,7 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
      * @return the value of component at index
      */
     public int get(final int index) {
-        return components[ index ];
+        return components[index];
     }
 
     /**
@@ -108,8 +108,8 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
         final int max = Math.max(other.components.length, components.length);
 
         for (int i = 0; i < max; i++) {
-            final int component1 = (i < components.length) ? components[ i ] : 0;
-            final int component2 = (i < other.components.length) ? other.components[ i ] : 0;
+            final int component1 = (i < components.length) ? components[i] : 0;
+            final int component2 = (i < other.components.length) ? other.components[i] : 0;
 
             if (component2 != component1) {
                 return false;
@@ -152,8 +152,8 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
         final int max = Math.max(other.components.length, components.length);
 
         for (int i = 0; i < max; i++) {
-            final int component1 = (i < components.length) ? components[ i ] : 0;
-            final int component2 = (i < other.components.length) ? other.components[ i ] : 0;
+            final int component1 = (i < components.length) ? components[i] : 0;
+            final int component2 = (i < other.components.length) ? other.components[i] : 0;
 
             if (component2 > component1) {
                 return false;
@@ -177,8 +177,8 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
         final int max = Math.max(other.components.length, components.length);
 
         for (int i = 0; i < max; i++) {
-            final int component1 = (i < components.length) ? components[ i ] : 0;
-            final int component2 = (i < other.components.length) ? other.components[ i ] : 0;
+            final int component1 = (i < components.length) ? components[i] : 0;
+            final int component2 = (i < other.components.length) ? other.components[i] : 0;
 
             if (component2 > component1) {
                 return false;
@@ -212,8 +212,8 @@ public class DeweyDecimal implements Comparable<DeweyDecimal> {
     public int compareTo(DeweyDecimal other) {
         final int max = Math.max(other.components.length, components.length);
         for (int i = 0; i < max; i++) {
-            final int component1 = (i < components.length) ? components[ i ] : 0;
-            final int component2 = (i < other.components.length) ? other.components[ i ] : 0;
+            final int component1 = (i < components.length) ? components[i] : 0;
+            final int component2 = (i < other.components.length) ? other.components[i] : 0;
             if (component1 != component2) {
                 return component1 - component2;
             }
