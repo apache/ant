@@ -20,16 +20,37 @@ package org.apache.tools.ant.filters;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(Parameterized.class)
 public class ReplaceTokensTest {
+
+    @Parameterized.Parameters(name = "{0}")
+    public static Collection<Object[]> targets() {
+        return Arrays.asList(new Object [][] {
+                {"replaceTokens", "replacetokens"},
+                {"replaceTokensPropertyFile", "replacetokens"},
+                {"replaceTokensDoubleEncoded", "replacetokens.double"},
+                {"replaceTokensDoubleEncodedToSimple", "replacetokens"},
+                {"replaceTokensMustacheStyle", "replacetokens"}});
+    }
+
+    @Parameterized.Parameter
+    public String result;
+
+    @Parameterized.Parameter(1)
+    public String input;
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -40,42 +61,14 @@ public class ReplaceTokensTest {
     }
 
     @Test
-    public void testReplaceTokens() throws IOException {
-        buildRule.executeTarget("testReplaceTokens");
-        File expected = buildRule.getProject().resolveFile("expected/replacetokens.test");
-        File result = new File(buildRule.getProject().getProperty("output"), "replacetokens.test");
-        assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
-    }
-
-    @Test
-    public void testReplaceTokensPropertyFile() throws IOException {
-        buildRule.executeTarget("testReplaceTokensPropertyFile");
-        File expected = buildRule.getProject().resolveFile("expected/replacetokens.test");
-        File result = new File(buildRule.getProject().getProperty("output"), "replacetokensPropertyFile.test");
-        assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
-    }
-
-    @Test
-    public void testReplaceTokensDoubleEncoded() throws IOException {
-        buildRule.executeTarget("testReplaceTokensDoubleEncoded");
-        File expected = buildRule.getProject().resolveFile("expected/replacetokens.double.test");
-        File result = new File(buildRule.getProject().getProperty("output"), "replacetokens.double.test");
-        assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
-    }
-
-    @Test
-    public void testReplaceTokensDoubleEncodedToSimple() throws IOException {
-        buildRule.executeTarget("testReplaceTokensDoubleEncodedToSimple");
-        File expected = buildRule.getProject().resolveFile("expected/replacetokens.test");
-        File result = new File(buildRule.getProject().getProperty("output"), "replacetokens.double.test");
-        assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
-    }
-
-    @Test
-    public void testReplaceTokensMustacheStyle() throws IOException {
-        buildRule.executeTarget("testReplaceTokensMustacheStyle");
-        File expected = buildRule.getProject().resolveFile("expected/replacetokens.test");
-        File result = new File(buildRule.getProject().getProperty("output"), "replacetokens.mustache.test");
-        assertEquals(FileUtilities.getFileContents(expected), FileUtilities.getFileContents(result));
+    public void test() throws  IOException {
+        buildRule.executeTarget("test" + result.substring(0, 1).toUpperCase()
+                + result.substring(1));
+        File expected = buildRule.getProject().resolveFile("expected/"
+                + input + ".test");
+        File actual = new File(buildRule.getProject().getProperty("output")
+                + "/" +  result + ".test");
+        assertEquals(result + ": Result not like expected",
+                FileUtilities.getFileContents(expected), FileUtilities.getFileContents(actual));
     }
 }
