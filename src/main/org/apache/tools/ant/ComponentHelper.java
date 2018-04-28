@@ -60,7 +60,7 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class ComponentHelper  {
     /** Map of component name to lists of restricted definitions */
-    private Map<String, List<AntTypeDefinition>> restrictedDefinitions = new HashMap<>();
+    private final Map<String, List<AntTypeDefinition>> restrictedDefinitions = new HashMap<>();
 
     /** Map from component name to anttypedefinition */
     private final Hashtable<String, AntTypeDefinition> antTypeTable = new Hashtable<>();

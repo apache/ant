@@ -31,7 +31,7 @@ import java.util.Set;
 class ProcessDestroyer implements Runnable {
     private static final int THREAD_DIE_TIMEOUT = 20000;
 
-    private Set<Process> processes = new HashSet<>();
+    private final Set<Process> processes = new HashSet<>();
     // methods to register and unregister shutdown hooks
     private Method addShutdownHookMethod;
     private Method removeShutdownHookMethod;

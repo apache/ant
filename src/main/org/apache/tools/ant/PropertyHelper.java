@@ -238,21 +238,21 @@ public class PropertyHelper implements GetProperty {
     private final Hashtable<Class<? extends Delegate>, List<Delegate>> delegates = new Hashtable<>();
 
     /** Project properties map (usually String to String). */
-    private Hashtable<String, Object> properties = new Hashtable<>();
+    private final Hashtable<String, Object> properties = new Hashtable<>();
 
     /**
      * Map of "user" properties (as created in the Ant task, for example).
      * Note that these key/value pairs are also always put into the
      * project properties, so only the project properties need to be queried.
      */
-    private Hashtable<String, Object> userProperties = new Hashtable<>();
+    private final Hashtable<String, Object> userProperties = new Hashtable<>();
 
     /**
      * Map of inherited "user" properties - that are those "user"
      * properties that have been created by tasks and not been set
      * from the command line or a GUI tool.
      */
-    private Hashtable<String, Object> inheritedProperties = new Hashtable<>();
+    private final Hashtable<String, Object> inheritedProperties = new Hashtable<>();
 
     /**
      * Default constructor.

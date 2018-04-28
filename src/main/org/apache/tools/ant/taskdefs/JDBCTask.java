@@ -97,7 +97,7 @@ public abstract class JDBCTask extends Task {
      * getting an OutOfMemoryError when calling this task
      * multiple times in a row.
      */
-    private static Hashtable<String, AntClassLoader> LOADER_MAP = new Hashtable<>(HASH_TABLE_SIZE);
+    private static final Hashtable<String, AntClassLoader> LOADER_MAP = new Hashtable<>(HASH_TABLE_SIZE);
 
     private boolean caching = true;
 
