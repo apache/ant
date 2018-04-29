@@ -46,6 +46,7 @@ public class ZipExtraFieldTest {
         testExtraField(new Zip(), true);
     }
 
+    @Test
     public void testDoesntCreateZip64ExtraFieldForJar() throws IOException {
         testExtraField(new Jar(), false);
     }
