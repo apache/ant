@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.util;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,17 +28,22 @@ import static org.junit.Assert.assertEquals;
  */
 public class Base64ConverterTest {
 
+    private Base64Converter base64Converter;
+
+    @Before
+    public void setUp() {
+        base64Converter = new Base64Converter();
+    }
+
     @Test
     public void testOneValue() {
-        byte[] mybytes = {0, 0, (byte) 0xFF};
-        Base64Converter base64Converter = new Base64Converter();
-        assertEquals("AAD/", base64Converter.encode(mybytes));
+        assertEquals("AAD/",
+                base64Converter.encode(new byte[]{0, 0, (byte) 0xFF}));
     }
 
     @Test
     public void testHelloWorld() {
-        byte[] mybytes = "Hello World".getBytes();
-        Base64Converter base64Converter = new Base64Converter();
-        assertEquals("SGVsbG8gV29ybGQ=", base64Converter.encode(mybytes));
+        assertEquals("SGVsbG8gV29ybGQ=",
+                base64Converter.encode("Hello World".getBytes()));
     }
 }

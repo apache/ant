@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.util;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -30,9 +31,15 @@ import static org.junit.Assert.assertNull;
  */
 public class GlobPatternMapperTest {
 
+    private GlobPatternMapper m;
+
+    @Before
+    public void setUp() {
+        m = new GlobPatternMapper();
+    }
+
     @Test
     public void testNoPatternAtAll() {
-        GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("foobar");
         m.setTo("baz");
         assertNull("Shouldn\'t match foobar", m.mapFileName("plonk"));
@@ -44,7 +51,6 @@ public class GlobPatternMapperTest {
 
     @Test
     public void testPostfixOnly() {
-        GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("*foo");
         m.setTo("*plonk");
         assertNull("Shouldn\'t match *foo", m.mapFileName("bar.baz"));
@@ -61,7 +67,6 @@ public class GlobPatternMapperTest {
 
     @Test
     public void testPrefixOnly() {
-        GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("foo*");
         m.setTo("plonk*");
         assertNull("Shouldn\'t match foo*", m.mapFileName("bar.baz"));
@@ -78,7 +83,6 @@ public class GlobPatternMapperTest {
 
     @Test
     public void testPreAndPostfix() {
-        GlobPatternMapper m = new GlobPatternMapper();
         m.setFrom("foo*bar");
         m.setTo("plonk*pling");
         assertNull("Shouldn\'t match foo*bar", m.mapFileName("bar.baz"));
