@@ -23,6 +23,11 @@ package org.apache.tools.ant;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 
@@ -31,29 +36,31 @@ import static org.junit.Assert.assertEquals;
  *
  * @since Ant 1.6
  */
+@RunWith(Parameterized.class)
 public class TopLevelTaskTest {
+
+    @Parameterized.Parameters(name = "{0}")
+    public static Collection<Object[]> targets() {
+        return Arrays.asList(new Object[][]{
+                {"notarget", ""},
+                {"toplevelant", ""},
+                {"targetlevelant", "foo"}
+        });
+    }
+
+    @Parameterized.Parameter
+    public String fileName;
+
+    @Parameterized.Parameter(1)
+    public String targetName;
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Test
-    public void testNoTarget() {
-        buildRule.configureProject("src/etc/testcases/core/topleveltasks/notarget.xml");
-        buildRule.executeTarget("");
-        assertEquals("Called", buildRule.getLog());
-    }
-
-    @Test
-    public void testCalledFromTopLevelAnt() {
-        buildRule.configureProject("src/etc/testcases/core/topleveltasks/toplevelant.xml");
-        buildRule.executeTarget("");
-        assertEquals("Called", buildRule.getLog());
-    }
-
-    @Test
-    public void testCalledFromTargetLevelAnt() {
-        buildRule.configureProject("src/etc/testcases/core/topleveltasks/targetlevelant.xml");
-        buildRule.executeTarget("foo");
+    public void test() {
+        buildRule.configureProject("src/etc/testcases/core/topleveltasks/" + fileName + ".xml");
+        buildRule.executeTarget(targetName);
         assertEquals("Called", buildRule.getLog());
     }
 }
