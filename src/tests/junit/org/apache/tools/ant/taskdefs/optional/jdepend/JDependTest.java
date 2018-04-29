@@ -84,7 +84,7 @@ public class JDependTest {
      */
     @Test
     public void testTimeout() {
-        buildRule.executeTarget("fork-xml");
+        buildRule.executeTarget("fork-timeout");
         assertThat(buildRule.getLog(), containsString("JDepend FAILED - Timed out"));
     }
 
