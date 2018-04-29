@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -35,7 +36,10 @@ public class XMLCatalogBuildFileTest {
      @Rule
      public BuildFileRule buildRule = new BuildFileRule();
 
-
+     @Before
+     public void setUp() {
+         buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
+     }
 
     //
     // Ensure that an external entity resolves as expected with NO
@@ -46,7 +50,6 @@ public class XMLCatalogBuildFileTest {
     //
     @Test
     public void testEntityNoCatalog() {
-        buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
         buildRule.executeTarget("testentitynocatalog");
         assertEquals("A stitch in time saves nine", buildRule.getProject().getProperty("val1"));
     }
@@ -61,7 +64,6 @@ public class XMLCatalogBuildFileTest {
     //
     @Test
     public void testEntityWithCatalog() {
-        buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
         buildRule.executeTarget("testentitywithcatalog");
         assertEquals("No news is good news", buildRule.getProject().getProperty("val2"));
     }
@@ -76,7 +78,6 @@ public class XMLCatalogBuildFileTest {
     //
     @Test
     public void testDocumentNoCatalog() {
-        buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
         buildRule.executeTarget("testdocumentnocatalog");
         assertEquals("A stitch in time saves nine", buildRule.getProject().getProperty("val3"));
     }
@@ -91,7 +92,6 @@ public class XMLCatalogBuildFileTest {
     // Stuff result into the property: val4
     @Test
     public void testDocumentWithCatalog() {
-        buildRule.configureProject("src/etc/testcases/types/xmlcatalog.xml");
         buildRule.executeTarget("testdocumentwithcatalog");
         assertEquals("No news is good news", buildRule.getProject().getProperty("val4"));
     }

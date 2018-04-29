@@ -29,6 +29,7 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -38,16 +39,33 @@ import static org.junit.Assert.assertEquals;
  */
 public class EchoTest {
 
+    private Project p;
+
+    private EchoTestLogger logger;
+
+    private Echo echo;
+
     private File removeThis;
+
+    @Before
+    public void setUp() {
+        p = new Project();
+        p.init();
+        logger = new EchoTestLogger();
+        p.addBuildListener(logger);
+        echo = new Echo();
+        echo.setProject(p);
+    }
+
+    @After
+    public void tearDown() {
+        if (removeThis != null && removeThis.exists() && !removeThis.delete()) {
+            removeThis.deleteOnExit();
+        }
+    }
 
     @Test
     public void testLogBlankEcho() {
-        Project p = new Project();
-        p.init();
-        EchoTestLogger logger = new EchoTestLogger();
-        p.addBuildListener(logger);
-        Echo echo = new Echo();
-        echo.setProject(p);
         echo.setTaskName("testLogBlankEcho");
         echo.execute();
         assertEquals("[testLogBlankEcho] ", logger.lastLoggedMessage);
@@ -55,12 +73,6 @@ public class EchoTest {
 
     @Test
     public void testLogUTF8Echo() throws IOException {
-        Project p = new Project();
-        p.init();
-        EchoTestLogger logger = new EchoTestLogger();
-        p.addBuildListener(logger);
-        Echo echo = new Echo();
-        echo.setProject(p);
         echo.setTaskName("testLogUTF8Echo");
         echo.setMessage("\u00e4\u00a9");
         removeThis = new File("abc.txt");
@@ -69,15 +81,6 @@ public class EchoTest {
         echo.execute();
         String x = FileUtils.readFully(new InputStreamReader(new FileInputStream(removeThis), "UTF-8"));
         assertEquals(x, "\u00e4\u00a9");
-    }
-
-    @After
-    public void tearDown() {
-        if (removeThis != null && removeThis.exists()) {
-            if (!removeThis.delete()) {
-                removeThis.deleteOnExit();
-            }
-        }
     }
 
     private class EchoTestLogger extends DefaultLogger {

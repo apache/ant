@@ -55,17 +55,18 @@ public class ParallelTest {
     /** the build file associated with this test */
     public static final String TEST_BUILD_FILE = "src/etc/testcases/taskdefs/parallel.xml";
 
+    private Project p;
     /** The JUnit setup method */
     @Before
     public void setUp() {
         buildRule.configureProject(TEST_BUILD_FILE);
+        p = buildRule.getProject();
     }
 
     /** tests basic operation of the parallel task */
     @Test
     public void testBasic() {
         // should get no output at all
-        Project p = buildRule.getProject();
         p.setUserProperty("test.direct", DIRECT_MESSAGE);
         p.setUserProperty("test.delayed", DELAYED_MESSAGE);
         buildRule.executeTarget("testBasic");
@@ -81,7 +82,6 @@ public class ParallelTest {
     @Test
     public void testThreadCount() {
         // should get no output at all
-        Project p = buildRule.getProject();
         p.setUserProperty("test.direct", DIRECT_MESSAGE);
         p.setUserProperty("test.delayed", DELAYED_MESSAGE);
         buildRule.executeTarget("testThreadCount");
@@ -140,7 +140,6 @@ public class ParallelTest {
         // should get no output at all
         thrown.expect(BuildException.class);
         thrown.expectMessage(FAILURE_MESSAGE);
-        Project p = buildRule.getProject();
         p.setUserProperty("test.failure", FAILURE_MESSAGE);
         p.setUserProperty("test.delayed", DELAYED_MESSAGE);
         buildRule.executeTarget("testFail");
@@ -149,7 +148,6 @@ public class ParallelTest {
     /** tests the demuxing of output streams in a multithreaded situation */
     @Test
     public void testDemux() {
-        Project p = buildRule.getProject();
         p.addTaskDefinition("demuxtest", DemuxOutputTask.class);
         synchronized (System.out) {
             PrintStream out = System.out;

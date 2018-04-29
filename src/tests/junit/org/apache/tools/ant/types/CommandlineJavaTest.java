@@ -44,6 +44,8 @@ public class CommandlineJavaTest {
 
     private Project project;
 
+    private CommandlineJava c;
+
     @Before
     public void setUp() {
         project = new Project();
@@ -55,6 +57,7 @@ public class CommandlineJavaTest {
         if (cloneVm != null) {
             System.setProperty("ant.build.clonevm", "false");
         }
+        c = new CommandlineJava();
     }
 
     @After
@@ -72,7 +75,6 @@ public class CommandlineJavaTest {
     @Test
     public void testGetCommandline() throws CloneNotSupportedException {
         assertNotNull("Ant home not set", System.getProperty("ant.home"));
-        CommandlineJava c = new CommandlineJava();
         c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
         c.setClassname("junit.textui.TestRunner");
         c.createVmArgument().setValue("-Djava.compiler=NONE");
@@ -108,7 +110,6 @@ public class CommandlineJavaTest {
 
     @Test
     public void testJarOption() {
-        CommandlineJava c = new CommandlineJava();
         c.createArgument().setValue("arg1");
         c.setJar("myfile.jar");
         c.createVmArgument().setValue("-classic");
@@ -126,7 +127,6 @@ public class CommandlineJavaTest {
         String currentClasspath = System.getProperty("java.class.path");
         assertNotNull(currentClasspath);
         assertNull(System.getProperty("key"));
-        CommandlineJava c = new CommandlineJava();
         Environment.Variable v = new Environment.Variable();
         v.setKey("key");
         v.setValue("value");
@@ -157,7 +157,6 @@ public class CommandlineJavaTest {
 
     @Test
     public void testAssertions() throws Exception {
-        CommandlineJava c = new CommandlineJava();
         c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
         c.setClassname("junit.textui.TestRunner");
         c.createVmArgument().setValue("-Djava.compiler=NONE");
