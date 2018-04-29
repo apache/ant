@@ -65,8 +65,7 @@ public class SignJarTest {
         sj.setAlias("testonly");
         sj.setKeystore("testkeystore");
         sj.setStorepass("apacheant");
-        File jar = new File(buildRule.getProject().getProperty("test.jar"));
-        sj.setJar(jar);
+        sj.setJar(new File(buildRule.getProject().getProperty("test.jar")));
         assertFalse("mustn't find signature without sigfile attribute",
                     sj.isSigned());
         sj.setSigfile("TEST");
@@ -81,8 +80,7 @@ public class SignJarTest {
         sj.setAlias("test@nly");
         sj.setKeystore("testkeystore");
         sj.setStorepass("apacheant");
-        File jar = new File(buildRule.getProject().getProperty("test.jar"));
-        sj.setJar(jar);
+        sj.setJar(new File(buildRule.getProject().getProperty("test.jar")));
         assertTrue(sj.isSigned());
     }
 

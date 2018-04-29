@@ -69,7 +69,7 @@ public class DirnameTest {
 
     @Test
     public void test4() {
-        assumeFalse("Test not possible on DOS or Netware family OS", Os.isFamily("netware") || Os.isFamily("dos"));
+        assumeFalse("Skip on DOS or Netware", Os.isFamily("netware") || Os.isFamily("dos"));
         buildRule.executeTarget("test4");
         assertEquals("dirname failed", File.separator + "usr" + File.separator + "local",
                 buildRule.getProject().getProperty("local.dir"));

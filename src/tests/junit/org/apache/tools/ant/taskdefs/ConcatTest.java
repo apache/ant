@@ -275,16 +275,4 @@ public class ConcatTest {
                 FileUtilities.getFileContents(f1), FileUtilities.getFileContents(f2));
     }
 
-    // ------------------------------------------------------
-    //   Helper methods - should be in a utility class
-    // -----------------------------------------------------
-    @SuppressWarnings("unused")
-    private void expectFileContainsx(String target, String filename, String contains)
-        throws IOException {
-        buildRule.executeTarget(target);
-        String content = FileUtilities.getFileContents(buildRule.getProject(), filename);
-        assertThat("expecting file " + filename + " to contain " + contains + " but got " + content,
-                content, containsString(contains));
-    }
-
 }

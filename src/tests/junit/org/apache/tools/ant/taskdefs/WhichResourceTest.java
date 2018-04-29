@@ -26,16 +26,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 
 public class WhichResourceTest {
-    public static final String TEST_BUILD_FILE
-        = "src/etc/testcases/taskdefs/whichresource.xml";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
-
     @Before
     public void setUp() {
-        buildRule.configureProject(TEST_BUILD_FILE);
+        buildRule.configureProject("src/etc/testcases/taskdefs/whichresource.xml");
     }
 
     @Test

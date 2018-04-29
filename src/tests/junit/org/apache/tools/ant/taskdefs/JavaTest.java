@@ -67,7 +67,7 @@ public class JavaTest {
     /** Utilities used for file operations */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
-    private boolean runFatalTests=false;
+    private boolean runFatalTests = false;
 
 
     /**

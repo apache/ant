@@ -75,7 +75,7 @@ public class FailTest {
     public void testUnless() {
         try {
             buildRule.executeTarget("testUnless");
-            //TODO assert rules
+            // TODO assert rules
         } finally {
             buildRule.getProject().setProperty("foo", "");
             buildRule.executeTarget("testUnless");

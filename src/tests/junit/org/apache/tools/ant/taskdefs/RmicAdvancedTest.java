@@ -327,7 +327,8 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForked() {
-        assumeFalse("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeFalse("Current system is Java 9 or newer",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.executeTarget("testXnewForked");
     }
 
@@ -336,7 +337,8 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForkedJava9plus() {
-        assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeTrue("Current system is Java 8 or older",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         thrown.expect(BuildException.class);
         thrown.expectMessage("JDK9 has removed support for -Xnew");
         buildRule.executeTarget("testXnewForked");
@@ -347,7 +349,8 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForkedDest() {
-        assumeFalse("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeFalse("Current system is Java 9 or newer",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.executeTarget("testXnewForkedDest");
     }
 
@@ -356,7 +359,8 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewForkedDestJava9plus() {
-        assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeTrue("Current system is Java 8 or older",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         thrown.expect(BuildException.class);
         thrown.expectMessage("JDK9 has removed support for -Xnew");
         buildRule.executeTarget("testXnewForkedDest");
@@ -367,7 +371,8 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompiler() {
-        assumeFalse("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeFalse("Current system is Java 9 or newer",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.executeTarget("testXnewCompiler");
     }
 
@@ -376,7 +381,8 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompilerJava9plus() {
-        assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeTrue("Current system is Java 8 or older",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         thrown.expect(BuildException.class);
         thrown.expectMessage("JDK9 has removed support for -Xnew");
         buildRule.executeTarget("testXnewCompiler");
@@ -387,7 +393,8 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompilerDest() {
-        assumeFalse("Current system is Java 9 or newer", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeFalse("Current system is Java 9 or newer",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         buildRule.executeTarget("testXnewCompilerDest");
     }
 
@@ -396,7 +403,8 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testXnewCompilerDestJava9plus() {
-        assumeTrue("Current system is Java 8 or older", JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+        assumeTrue("Current system is Java 8 or older",
+                JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
         thrown.expect(BuildException.class);
         thrown.expectMessage("JDK9 has removed support for -Xnew");
         buildRule.executeTarget("testXnewCompilerDest");

@@ -111,10 +111,10 @@ public class TarTest {
 
     private void test7(String target) {
         buildRule.executeTarget(target);
-        File f1 = new File(buildRule.getProject().getProperty("output"), "untar/test7-prefix");
+        final String output = buildRule.getProject().getProperty("output");
+        File f1 = new File(output, "untar/test7-prefix");
         assertTrue("The prefix attribute is not working properly.", f1.exists() && f1.isDirectory());
-
-        File f2 = new File(buildRule.getProject().getProperty("output"), "untar/test7dir");
+        File f2 = new File(output, "untar/test7dir");
         assertTrue("The prefix attribute is not working properly.", f2.exists() && f2.isDirectory());
     }
 

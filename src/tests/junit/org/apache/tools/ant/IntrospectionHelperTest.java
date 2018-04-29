@@ -255,7 +255,7 @@ public class IntrospectionHelperTest {
         Map<String, Class<?>> elemMap = getExpectedNestedElements();
         for (String name : Collections.list(ih.getNestedElements())) {
             Class<?> expect = elemMap.get(name);
-            assertNotNull("Support for " + name + " in IntrospectioNHelperTest?",
+            assertNotNull("Support for " + name + " in IntrospectionHelperTest?",
                           expect);
             assertEquals("Return type of " + name, expect, ih.getElementType(name));
             elemMap.remove(name);
@@ -605,8 +605,7 @@ public class IntrospectionHelperTest {
     @Test
     public void testGetAttributeMap() {
         Map<String, Class<?>> attrMap = getExpectedAttributes();
-        Map<String, Class<?>> actualMap = ih.getAttributeMap();
-        actualMap.forEach((attrName, value) -> {
+        ih.getAttributeMap().forEach((attrName, value) -> {
             Class<?> attrClass = attrMap.get(attrName);
             assertNotNull("Support for " + attrName + " in IntrospectionHelperTest?", attrClass);
             assertEquals("Type of " + attrName, attrClass, value);
@@ -614,11 +613,14 @@ public class IntrospectionHelperTest {
         });
         attrMap.remove("name");
         assertTrue("Found all", attrMap.isEmpty());
+    }
 
+    @Test
+    public void testClearGetAttributeMap() {
         thrown.expect(UnsupportedOperationException.class);
         // TODO we should be asserting a value somewhere in here
         // Check it's a read-only map.
-        actualMap.clear();
+        ih.getAttributeMap().clear();
     }
 
     @Test
@@ -659,8 +661,7 @@ public class IntrospectionHelperTest {
 
     private void assertAttrMethod(String attrName, String methodName,
                                   Class<?> methodArg, Object arg, Object badArg) {
-        Method m = ih.getAttributeMethod(attrName);
-        assertMethod(m, methodName, methodArg, arg, badArg);
+        assertMethod(ih.getAttributeMethod(attrName), methodName, methodArg, arg, badArg);
     }
 
     public int setTwo(String s) {
@@ -830,5 +831,4 @@ public class IntrospectionHelperTest {
         return table;
     }
 
-} // IntrospectionHelperTest
-
+}

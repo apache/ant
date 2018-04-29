@@ -140,10 +140,10 @@ public class SOSTest {
     @Test
     public void testGetExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
-        expectSpecificBuildException("sosget.1", "some cause", "sosserverpath attribute must be set!");
-        expectSpecificBuildException("sosget.2", "some cause", "username attribute must be set!");
-        expectSpecificBuildException("sosget.3", "some cause", "vssserverpath attribute must be set!");
-        expectSpecificBuildException("sosget.4", "some cause", "projectpath attribute must be set!");
+        expectSpecificBuildException("sosget.1", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("sosget.2", "username attribute must be set!");
+        expectSpecificBuildException("sosget.3", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("sosget.4", "projectpath attribute must be set!");
     }
 
     /**  Test CheckInFile option flags  */
@@ -209,10 +209,10 @@ public class SOSTest {
     @Test
     public void testCheckinExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
-        expectSpecificBuildException("soscheckin.1", "some cause", "sosserverpath attribute must be set!");
-        expectSpecificBuildException("soscheckin.2", "some cause", "username attribute must be set!");
-        expectSpecificBuildException("soscheckin.3", "some cause", "vssserverpath attribute must be set!");
-        expectSpecificBuildException("soscheckin.4", "some cause", "projectpath attribute must be set!");
+        expectSpecificBuildException("soscheckin.1", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckin.2", "username attribute must be set!");
+        expectSpecificBuildException("soscheckin.3", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckin.4", "projectpath attribute must be set!");
     }
 
     /**  Test CheckOutFile option flags  */
@@ -276,10 +276,10 @@ public class SOSTest {
     @Test
     public void testCheckoutExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
-        expectSpecificBuildException("soscheckout.1", "some cause", "sosserverpath attribute must be set!");
-        expectSpecificBuildException("soscheckout.2", "some cause", "username attribute must be set!");
-        expectSpecificBuildException("soscheckout.3", "some cause", "vssserverpath attribute must be set!");
-        expectSpecificBuildException("soscheckout.4", "some cause", "projectpath attribute must be set!");
+        expectSpecificBuildException("soscheckout.1", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckout.2", "username attribute must be set!");
+        expectSpecificBuildException("soscheckout.3", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckout.4", "projectpath attribute must be set!");
     }
 
     /**  Test Label option flags  */
@@ -312,14 +312,14 @@ public class SOSTest {
     @Test
     public void testLabelExceptions() {
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
-        expectSpecificBuildException("soslabel.1", "some cause", "sosserverpath attribute must be set!");
-        expectSpecificBuildException("soslabel.2", "some cause", "username attribute must be set!");
-        expectSpecificBuildException("soslabel.3", "some cause", "vssserverpath attribute must be set!");
-        expectSpecificBuildException("soslabel.4", "some cause", "projectpath attribute must be set!");
-        expectSpecificBuildException("soslabel.5", "some cause", "label attribute must be set!");
+        expectSpecificBuildException("soslabel.1", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soslabel.2", "username attribute must be set!");
+        expectSpecificBuildException("soslabel.3", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soslabel.4", "projectpath attribute must be set!");
+        expectSpecificBuildException("soslabel.5", "label attribute must be set!");
     }
 
-    private void expectSpecificBuildException(String target, String errorMessage,
+    private void expectSpecificBuildException(String target,
                                               String exceptionMessage) {
         thrown.expect(BuildException.class);
         thrown.expectMessage(exceptionMessage);

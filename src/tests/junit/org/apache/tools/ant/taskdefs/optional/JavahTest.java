@@ -58,6 +58,7 @@ public class JavahTest {
     public void testCompileFileset() {
         assumeFalse(JavaEnvUtils.isAtLeastJavaVersion("10"));
         buildRule.executeTarget("test-fileset");
-        assertTrue(new File(buildRule.getProject().getProperty("output"), "org_example_Foo.h").exists());
+        assertTrue(new File(buildRule.getProject().getProperty("output"), "org_example_Foo.h")
+                .exists());
     }
 }

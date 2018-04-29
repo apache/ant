@@ -37,8 +37,7 @@ public class JDependTest {
 
     @Before
     public void setUp() {
-        buildRule.configureProject(
-                "src/etc/testcases/taskdefs/optional/jdepend/jdepend.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/jdepend/jdepend.xml");
     }
 
     /**
@@ -47,7 +46,8 @@ public class JDependTest {
     @Test
     public void testSimple() {
         buildRule.executeTarget("simple");
-        assertThat(buildRule.getOutput(), containsString("Package: org.apache.tools.ant.util.facade"));
+        assertThat(buildRule.getOutput(),
+                containsString("Package: org.apache.tools.ant.util.facade"));
     }
 
     /**
@@ -66,7 +66,8 @@ public class JDependTest {
     @Test
     public void testFork() {
         buildRule.executeTarget("fork");
-        assertThat(buildRule.getLog(), containsString("Package: org.apache.tools.ant.util.facade"));
+        assertThat(buildRule.getLog(),
+                containsString("Package: org.apache.tools.ant.util.facade"));
     }
 
     /**
@@ -94,7 +95,8 @@ public class JDependTest {
     @Test
     public void testTimeoutNot() {
         buildRule.executeTarget("fork-timeout-not");
-        assertThat(buildRule.getLog(), containsString("Package: org.apache.tools.ant.util.facade"));
+        assertThat(buildRule.getLog(),
+                containsString("Package: org.apache.tools.ant.util.facade"));
     }
 
 }

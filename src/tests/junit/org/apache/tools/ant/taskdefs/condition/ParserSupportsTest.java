@@ -44,15 +44,15 @@ public class ParserSupportsTest {
 
     @Test
     public void testEmpty() {
-        thrown.expect(BuildException .class) ;
-            thrown.expectMessage(ParserSupports.ERROR_NO_ATTRIBUTES);
+        thrown.expect(BuildException .class);
+        thrown.expectMessage(ParserSupports.ERROR_NO_ATTRIBUTES);
         buildRule.executeTarget("testEmpty");
     }
 
     @Test
     public void testBoth() {
-        thrown.expect(BuildException .class) ;
-            thrown.expectMessage(ParserSupports.ERROR_BOTH_ATTRIBUTES);
+        thrown.expect(BuildException .class);
+        thrown.expectMessage(ParserSupports.ERROR_BOTH_ATTRIBUTES);
         buildRule.executeTarget("testBoth");
     }
 
@@ -63,8 +63,8 @@ public class ParserSupportsTest {
 
     @Test
     public void testPropertyNoValue() {
-        thrown.expect(BuildException .class) ;
-            thrown.expectMessage(ParserSupports.ERROR_NO_VALUE);
+        thrown.expect(BuildException .class);
+        thrown.expectMessage(ParserSupports.ERROR_NO_VALUE);
         buildRule.executeTarget("testPropertyNoValue");
     }
 

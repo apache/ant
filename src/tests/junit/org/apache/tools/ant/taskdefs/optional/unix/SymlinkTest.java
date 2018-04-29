@@ -65,11 +65,9 @@ public class SymlinkTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
-    private boolean supportsSymlinks = Os.isFamily("unix");
-
     @Before
     public void setUp() {
-        assumeTrue("Symlinks not supported on current operating system", supportsSymlinks);
+        assumeTrue("Symlinks not supported on current operating system", Os.isFamily("unix"));
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/unix/symlink.xml");
         buildRule.executeTarget("setUp");
     }

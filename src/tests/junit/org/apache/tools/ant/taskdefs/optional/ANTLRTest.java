@@ -134,8 +134,7 @@ public class ANTLRTest {
     public void test10() {
         buildRule.executeTarget("test10");
         File outputDirectory = new File(buildRule.getProject().getProperty("output"));
-        String[] calcFiles = outputDirectory.list(new HTMLFilter());
-        assertNotEquals(calcFiles.length, 0);
+        assertNotEquals(outputDirectory.list(new HTMLFilter()).length, 0);
     }
 
     /**

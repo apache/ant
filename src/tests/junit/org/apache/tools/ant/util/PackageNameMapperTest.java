@@ -31,10 +31,9 @@ public class PackageNameMapperTest {
         mapper.setFrom("*.java");
         mapper.setTo("TEST-*.xml");
         String file = fixupPath("org/apache/tools/ant/util/PackageNameMapperTest.java");
-        String result = mapper.mapFileName(file)[0];
 
         assertEquals("TEST-org.apache.tools.ant.util.PackageNameMapperTest.xml",
-          result);
+                mapper.mapFileName(file)[0]);
     }
 
     private String fixupPath(String file) {

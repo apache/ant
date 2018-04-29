@@ -102,7 +102,7 @@ public class ReplaceRegExpTest {
         buildRule.executeTarget("lastModifiedSetup");
         File testFile = new File(buildRule.getOutputDir(), "test.txt");
         assumeTrue(testFile.setLastModified(testFile.lastModified()
-                - (FileUtils.getFileUtils().getFileTimestampGranularity() * 3)));
+                - FileUtils.getFileUtils().getFileTimestampGranularity() * 3));
         long ts1 = testFile.lastModified();
         buildRule.executeTarget("testNoPreserve");
         assertTrue(ts1 < testFile.lastModified());
@@ -113,7 +113,7 @@ public class ReplaceRegExpTest {
         buildRule.executeTarget("lastModifiedSetup");
         File testFile = new File(buildRule.getOutputDir(), "test.txt");
         assumeTrue(testFile.setLastModified(testFile.lastModified()
-                - (FileUtils.getFileUtils().getFileTimestampGranularity() * 3)));
+                - FileUtils.getFileUtils().getFileTimestampGranularity() * 3));
         long ts1 = testFile.lastModified();
         buildRule.executeTarget("testPreserve");
         assertEquals(ts1, testFile.lastModified());

@@ -103,10 +103,9 @@ public class UnzipTest {
     @Test
     public void testPatternSetExcludeOnly() {
         buildRule.executeTarget("testPatternSetExcludeOnly");
-        assertFileMissing("1/foo is excluded",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileExists("2/bar is not excluded",
-                buildRule.getProject().getProperty("output") + "/unziptestout/2/bar");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is excluded", output + "/unziptestout/1/foo");
+        assertFileExists("2/bar is not excluded", output + "/unziptestout/2/bar");
     }
 
     /*
@@ -115,10 +114,9 @@ public class UnzipTest {
     @Test
     public void testPatternSetIncludeOnly() {
         buildRule.executeTarget("testPatternSetIncludeOnly");
-        assertFileMissing("1/foo is not included",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileExists("2/bar is included",
-                buildRule.getProject().getProperty("output") + "/unziptestout/2/bar");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is not included", output + "/unziptestout/1/foo");
+        assertFileExists("2/bar is included", output + "/unziptestout/2/bar");
     }
 
     /*
@@ -127,10 +125,9 @@ public class UnzipTest {
     @Test
     public void testPatternSetIncludeAndExclude() {
         buildRule.executeTarget("testPatternSetIncludeAndExclude");
-        assertFileMissing("1/foo is not included",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileMissing("2/bar is excluded",
-                buildRule.getProject().getProperty("output") + "/unziptestout/2/bar");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is not included", output + "/unziptestout/1/foo");
+        assertFileMissing("2/bar is excluded", output + "/unziptestout/2/bar");
     }
 
     /*
@@ -139,10 +136,9 @@ public class UnzipTest {
     @Test
     public void testTwoPatternSets() {
         buildRule.executeTarget("testTwoPatternSets");
-        assertFileMissing("1/foo is not included",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileExists("2/bar is included",
-                buildRule.getProject().getProperty("output") + "/unziptestout/2/bar");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is not included", output + "/unziptestout/1/foo");
+        assertFileExists("2/bar is included", output + "/unziptestout/2/bar");
     }
 
     /*
@@ -151,10 +147,9 @@ public class UnzipTest {
     @Test
     public void testTwoPatternSetsWithExcludes() {
         buildRule.executeTarget("testTwoPatternSetsWithExcludes");
-        assertFileMissing("1/foo is not included",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileMissing("2/bar is excluded",
-                buildRule.getProject().getProperty("output") + "/unziptestout/2/bar");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is not included", output + "/unziptestout/1/foo");
+        assertFileMissing("2/bar is excluded", output + "/unziptestout/2/bar");
     }
 
     /*
@@ -174,10 +169,9 @@ public class UnzipTest {
     @Test
     public void testPatternSetSlashOnly() {
         buildRule.executeTarget("testPatternSetSlashOnly");
-        assertFileMissing("1/foo is not included",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileExists("\"2/bar is included",
-                buildRule.getProject().getProperty("output") + "/unziptestout/2/bar");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is not included", output + "/unziptestout/1/foo");
+        assertFileExists("\"2/bar is included", output + "/unziptestout/2/bar");
     }
 
     /*
@@ -196,10 +190,9 @@ public class UnzipTest {
     @Test
     public void testFlattenMapper() {
         buildRule.executeTarget("testFlattenMapper");
-        assertFileMissing("1/foo is not flattened",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileExists("foo is flattened",
-                buildRule.getProject().getProperty("output") + "/unziptestout/foo");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is not flattened", output + "/unziptestout/1/foo");
+        assertFileExists("foo is flattened", output + "/unziptestout/foo");
     }
 
     /**
@@ -227,10 +220,9 @@ public class UnzipTest {
     @Test
     public void testGlobMapper() {
         buildRule.executeTarget("testGlobMapper");
-        assertFileMissing("1/foo is not mapped",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileExists("1/foo is mapped",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo.txt");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is not mapped", output + "/unziptestout/1/foo");
+        assertFileExists("1/foo is mapped", output + "/unziptestout/1/foo.txt");
     }
 
     /**
@@ -252,9 +244,8 @@ public class UnzipTest {
     @Test
     public void testDocumentationClaimsOnCopy() {
         buildRule.executeTarget("testDocumentationClaimsOnCopy");
-        assertFileMissing("1/foo is excluded",
-                buildRule.getProject().getProperty("output") + "/unziptestout/1/foo");
-        assertFileExists("2/bar is not excluded",
-                buildRule.getProject().getProperty("output") + "/unziptestout/2/bar");
+        final String output = buildRule.getProject().getProperty("output");
+        assertFileMissing("1/foo is excluded", output + "/unziptestout/1/foo");
+        assertFileExists("2/bar is not excluded", output + "/unziptestout/2/bar");
     }
 }

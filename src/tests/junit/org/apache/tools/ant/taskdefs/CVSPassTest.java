@@ -56,6 +56,11 @@ public class CVSPassTest {
         buildRule.configureProject("src/etc/testcases/taskdefs/cvspass.xml");
     }
 
+    @After
+    public void tearDown() {
+        buildRule.executeTarget("cleanup");
+    }
+
     @Test
     public void testNoCVSRoot() {
         thrown.expect(BuildException.class);
@@ -68,11 +73,6 @@ public class CVSPassTest {
         thrown.expect(BuildException.class);
         thrown.expectMessage("password is required");
         buildRule.executeTarget("test2");
-    }
-
-    @After
-    public void tearDown() {
-        buildRule.executeTarget("cleanup");
     }
 
     @Test

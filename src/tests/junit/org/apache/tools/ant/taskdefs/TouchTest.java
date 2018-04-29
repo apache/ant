@@ -94,8 +94,7 @@ public class TouchTest {
     public void testNow() {
         long now = System.currentTimeMillis();
         buildRule.executeTarget("testNow");
-        long time = getTargetTime();
-        assertTimesNearlyMatch(time, now, 5000);
+        assertTimesNearlyMatch(getTargetTime(), now, 5000);
     }
 
     /**

@@ -81,7 +81,7 @@ public class IncludeTest {
         thrown.expect(BuildException.class);
         thrown.expect(hasProperty("location", hasProperty("fileName",
                 containsString("build.xml"))));
-            buildRule.configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
+        buildRule.configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
     }
 
     @Test
