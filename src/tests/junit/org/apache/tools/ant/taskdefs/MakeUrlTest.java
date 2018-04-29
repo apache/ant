@@ -28,11 +28,10 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertThat;
-
 
 public class MakeUrlTest {
 
@@ -78,15 +77,15 @@ public class MakeUrlTest {
     @Test
     public void testWorks() {
         buildRule.executeTarget("testWorks");
-        assertPropertyContains("testWorks", "file:");
-        assertPropertyContains("testWorks", "/foo");
+        assertThat(buildRule.getProject().getProperty("testWorks"),
+                both(containsString("file:")).and(containsString("/foo")));
     }
 
     @Test
     public void testIllegalChars() {
         buildRule.executeTarget("testIllegalChars");
-        assertPropertyContains("testIllegalChars", "file:");
-        assertPropertyContains("testIllegalChars", "fo%20o%25");
+        assertThat(buildRule.getProject().getProperty("testIllegalChars"),
+                both(containsString("file:")).and(containsString("fo%20o%25")));
     }
 
     /**
@@ -97,8 +96,8 @@ public class MakeUrlTest {
     @Test
     public void testRoundTrip() throws IOException {
         buildRule.executeTarget("testRoundTrip");
-        assertPropertyContains("testRoundTrip", "file:");
-        String property = getProperty("testRoundTrip");
+        String property = buildRule.getProject().getProperty("testRoundTrip");
+        assertThat(property, containsString("file:"));
         URL url = new URL(property);
         InputStream instream = url.openStream();
         instream.close();
@@ -107,62 +106,28 @@ public class MakeUrlTest {
     @Test
     public void testIllegalCombinations() {
         buildRule.executeTarget("testIllegalCombinations");
-        assertPropertyContains("testIllegalCombinations", "/foo");
-        assertPropertyContains("testIllegalCombinations", ".xml");
+        assertThat(buildRule.getProject().getProperty("testIllegalCombinations"),
+                both(containsString("/foo")).and(containsString(".xml")));
     }
 
     @Test
     public void testFileset() {
         buildRule.executeTarget("testFileset");
-        assertPropertyContains("testFileset", ".xml ");
-        assertPropertyEndsWith("testFileset", ".xml");
+        assertThat(buildRule.getProject().getProperty("testFileset"),
+                both(containsString(".xml ")).and(endsWith(".xml")));
     }
 
     @Test
     public void testFilesetSeparator() {
         buildRule.executeTarget("testFilesetSeparator");
-        assertPropertyContains("testFilesetSeparator", ".xml\",\"");
-        assertPropertyEndsWith("testFilesetSeparator", ".xml");
+        assertThat(buildRule.getProject().getProperty("testFilesetSeparator"),
+                both(containsString(".xml\",\"")).and(endsWith(".xml")));
     }
 
     @Test
     public void testPath() {
         buildRule.executeTarget("testPath");
-        assertPropertyContains("testPath", "makeurl.xml");
+        assertThat(buildRule.getProject().getProperty("testPath"), containsString("makeurl.xml"));
     }
 
-    /**
-     * assert that a property ends with
-     *
-     * @param property String
-     * @param ending String
-     */
-    private void assertPropertyEndsWith(String property, String ending) {
-        String result = getProperty(property);
-        String substring = result.substring(result.length() - ending.length());
-        assertEquals(ending, substring);
-    }
-
-    /**
-     * assert that a property contains a string
-     *
-     * @param property name of property to look for
-     * @param contains what to search for in the string
-     */
-    protected void assertPropertyContains(String property, String contains) {
-        String result = getProperty(property);
-
-        assertNotNull("expected non-null property value", result);
-        assertThat("expected " + contains + " in " + result, result, containsString(contains));
-    }
-
-    /**
-     * get a property from the project
-     *
-     * @param property String
-     * @return String
-     */
-    protected String getProperty(String property) {
-        return buildRule.getProject().getProperty(property);
-    }
 }
