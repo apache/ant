@@ -32,6 +32,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class ReaderInputStreamTest {
 
+    private static final String ROOT = System.getProperty("root");
+
     @Test
     public void testSimple() throws Exception {
         compareBytes("abc", "utf-8");
@@ -89,9 +91,8 @@ public class ReaderInputStreamTest {
         ReaderInputStream r = null;
         FileInputStream utf8 = null;
         try {
-            fin = new InputStreamReader(new FileInputStream(new File(System.getProperty("root"),
-                    "src/tests/antunit/taskdefs/exec/input/iso8859-1")),
-                                        "ISO8859_1");
+            fin = new InputStreamReader(new FileInputStream(new File(ROOT,
+                    "src/tests/antunit/taskdefs/exec/input/iso8859-1")), "ISO8859_1");
             r = new ReaderInputStream(fin, "UTF8");
 
             ByteArrayOutputStream actualOS = new ByteArrayOutputStream();
@@ -101,7 +102,7 @@ public class ReaderInputStreamTest {
                 b = r.read();
             }
 
-            utf8 = new FileInputStream(new File(System.getProperty("root"),
+            utf8 = new FileInputStream(new File(ROOT,
                     "src/tests/antunit/taskdefs/exec/expected/utf-8"));
             ByteArrayOutputStream expectedOS = new ByteArrayOutputStream();
             b = utf8.read();

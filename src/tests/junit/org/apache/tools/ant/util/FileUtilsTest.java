@@ -50,7 +50,7 @@ public class FileUtilsTest {
     public ExpectedException thrown = ExpectedException.none();
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final String projectRoot = System.getProperty("root");
+    private static final String ROOT = System.getProperty("root");
     private File removeThis;
     private String root;
 
@@ -405,20 +405,20 @@ public class FileUtilsTest {
     @Test
     public void testContentEquals() throws IOException {
         assertTrue("Non existing files",
-                FILE_UTILS.contentEquals(new File(projectRoot, "foo"),
-                        new File(projectRoot, "bar")));
+                FILE_UTILS.contentEquals(new File(ROOT, "foo"),
+                        new File(ROOT, "bar")));
         assertFalse("One exists, the other one doesn\'t",
-                FILE_UTILS.contentEquals(new File(projectRoot, "foo"),
-                        new File(projectRoot, "build.xml")));
+                FILE_UTILS.contentEquals(new File(ROOT, "foo"),
+                        new File(ROOT, "build.xml")));
         assertFalse("Don\'t compare directories",
-                FILE_UTILS.contentEquals(new File(projectRoot, "src"),
-                        new File(projectRoot, "src")));
+                FILE_UTILS.contentEquals(new File(ROOT, "src"),
+                        new File(ROOT, "src")));
         assertTrue("File equals itself",
-                FILE_UTILS.contentEquals(new File(projectRoot, "build.xml"),
-                        new File(projectRoot, "build.xml")));
+                FILE_UTILS.contentEquals(new File(ROOT, "build.xml"),
+                        new File(ROOT, "build.xml")));
         assertFalse("Files are different",
-                FILE_UTILS.contentEquals(new File(projectRoot, "build.xml"),
-                        new File(projectRoot, "docs.xml")));
+                FILE_UTILS.contentEquals(new File(ROOT, "build.xml"),
+                        new File(ROOT, "docs.xml")));
     }
 
     /**
