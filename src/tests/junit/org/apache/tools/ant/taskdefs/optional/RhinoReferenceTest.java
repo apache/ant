@@ -34,8 +34,7 @@ public class RhinoReferenceTest {
 
     @Before
     public void setUp() {
-        buildRule.configureProject(
-                "src/etc/testcases/taskdefs/optional/script_reference.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/script_reference.xml");
     }
 
     @Test

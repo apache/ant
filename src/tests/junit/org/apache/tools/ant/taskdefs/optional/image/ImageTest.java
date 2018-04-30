@@ -44,7 +44,6 @@ import static org.junit.Assume.assumeTrue;
 public class ImageTest {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/image/";
     private static final String LARGEIMAGE = "largeimage.jpg";
 
     @Rule
@@ -57,7 +56,7 @@ public class ImageTest {
     public void setUp() {
         /* JAI depends on internal API removed in Java 9 */
         assumeFalse(JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
-        buildRule.configureProject(TASKDEFS_DIR + "image.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/image/image.xml");
     }
 
 

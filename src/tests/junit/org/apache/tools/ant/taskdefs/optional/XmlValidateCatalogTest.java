@@ -30,17 +30,12 @@ import org.junit.Test;
  */
 public class XmlValidateCatalogTest {
 
-    /**
-     * where tasks run
-     */
-    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
-
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
-        buildRule.configureProject(TASKDEFS_DIR + "xmlvalidate.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/xmlvalidate.xml");
     }
 
 

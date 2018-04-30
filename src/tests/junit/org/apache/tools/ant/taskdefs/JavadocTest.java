@@ -28,13 +28,9 @@ public class JavadocTest {
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
-    private static final String BUILD_PATH = "src/etc/testcases/taskdefs/javadoc/";
-    private static final String BUILD_FILENAME = "javadoc.xml";
-    private static final String BUILD_FILE = BUILD_PATH + BUILD_FILENAME;
-
     @Before
     public void setUp() {
-        buildRule.configureProject(BUILD_FILE);
+        buildRule.configureProject("src/etc/testcases/taskdefs/javadoc/javadoc.xml");
     }
 
     // PR 38370

@@ -31,14 +31,12 @@ import static org.junit.Assume.assumeFalse;
 
 public class JavahTest {
 
-    private static final String BUILD_XML = "src/etc/testcases/taskdefs/optional/javah/build.xml";
-
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
-        buildRule.configureProject(BUILD_XML);
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/javah/build.xml");
     }
 
     @After

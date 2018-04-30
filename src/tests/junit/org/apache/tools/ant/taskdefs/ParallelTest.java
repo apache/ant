@@ -52,14 +52,11 @@ public class ParallelTest {
     /** Standard property value for the fail test */
     public static final String FAILURE_MESSAGE = "failure";
 
-    /** the build file associated with this test */
-    public static final String TEST_BUILD_FILE = "src/etc/testcases/taskdefs/parallel.xml";
-
     private Project p;
     /** The JUnit setup method */
     @Before
     public void setUp() {
-        buildRule.configureProject(TEST_BUILD_FILE);
+        buildRule.configureProject("src/etc/testcases/taskdefs/parallel.xml");
         p = buildRule.getProject();
     }
 

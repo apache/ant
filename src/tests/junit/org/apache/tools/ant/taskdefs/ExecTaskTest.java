@@ -44,8 +44,6 @@ public class ExecTaskTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
-    private static final String BUILD_PATH = "src/etc/testcases/taskdefs/exec/";
-    private static final String BUILD_FILE = BUILD_PATH + "exec.xml";
     private static final int TIME_TO_WAIT = 1;
     /** maximum time allowed for the build in milliseconds */
     private static final int MAX_BUILD_TIME = 6000;
@@ -60,7 +58,7 @@ public class ExecTaskTest {
 
     @Before
     public void setUp() {
-        buildRule.configureProject(BUILD_FILE);
+        buildRule.configureProject("src/etc/testcases/taskdefs/exec/exec.xml");
     }
 
     @Test

@@ -32,15 +32,13 @@ import static org.junit.Assert.assertTrue;
  *
  */
 public class WarTest {
-    public static final String TEST_BUILD_FILE
-        = "src/etc/testcases/taskdefs/war.xml";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
-        buildRule.configureProject(TEST_BUILD_FILE);
+        buildRule.configureProject("src/etc/testcases/taskdefs/war.xml");
     }
 
     /**

@@ -46,14 +46,12 @@ import static org.junit.Assert.assertThat;
  */
 public class ANTLRTest {
 
-    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/antlr/";
-
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
-        buildRule.configureProject(TASKDEFS_DIR + "antlr.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/antlr/antlr.xml");
     }
 
     /**

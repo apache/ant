@@ -31,7 +31,6 @@ import static org.junit.Assert.assertThat;
 
 public class XMLFormatterWithCDATAOnSystemOut {
 
-    private static final String DIR = "src/etc/testcases/taskdefs/optional/junit";
     private static final String REPORT =
         "TEST-" + XMLFormatterWithCDATAOnSystemOut.class.getName() + ".xml";
 
@@ -61,7 +60,7 @@ public class XMLFormatterWithCDATAOnSystemOut {
 
     @Test
     public void testBuildfile() throws IOException {
-        buildRule.configureProject(DIR + "/cdataoutput.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/junit/cdataoutput.xml");
         if (buildRule.getProject().getProperty("cdata.inner") == null) {
             // avoid endless loop
             buildRule.executeTarget("run-junit");

@@ -30,11 +30,6 @@ import org.junit.rules.ExpectedException;
 
 public class SchemaValidateTest {
 
-    /**
-     * where tasks run
-     */
-    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
-
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
@@ -43,7 +38,7 @@ public class SchemaValidateTest {
 
     @Before
     public void setUp() {
-        buildRule.configureProject(TASKDEFS_DIR + "schemavalidate.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/schemavalidate.xml");
     }
 
     /**

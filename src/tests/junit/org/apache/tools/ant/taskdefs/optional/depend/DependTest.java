@@ -47,9 +47,6 @@ import static org.junit.Assert.assertTrue;
 public class DependTest {
     public static final String RESULT_FILESET = "result";
 
-    public static final String TEST_BUILD_FILE
-        = "src/etc/testcases/taskdefs/optional/depend/depend.xml";
-
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
@@ -58,7 +55,7 @@ public class DependTest {
 
     @Before
     public void setUp() {
-        buildRule.configureProject(TEST_BUILD_FILE);
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/depend/depend.xml");
     }
 
     /**

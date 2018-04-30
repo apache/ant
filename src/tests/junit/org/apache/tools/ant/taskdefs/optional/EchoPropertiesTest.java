@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -51,7 +52,6 @@ import org.junit.rules.ExpectedException;
  */
 public class EchoPropertiesTest {
 
-    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
     private static final String GOOD_OUTFILE = "test.properties";
     private static final String GOOD_OUTFILE_XML = "test.xml";
     private static final String PREFIX_OUTFILE = "test-prefix.properties";
@@ -65,7 +65,7 @@ public class EchoPropertiesTest {
 
     @Before
     public void setUp() {
-        buildRule.configureProject(TASKDEFS_DIR + "echoproperties.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/echoproperties.xml");
         buildRule.getProject().setProperty("test.property", TEST_VALUE);
     }
 
@@ -123,7 +123,7 @@ public class EchoPropertiesTest {
         buildRule.executeTarget("testEchoToGoodFileXml");
 
         // read in the file
-        File f = createRelativeFile(GOOD_OUTFILE_XML);
+        File f = new File(buildRule.getProject().getBaseDir(), GOOD_OUTFILE_XML);
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             assertTrue("did not encounter set property in generated file.", br.lines().anyMatch(line
                     -> line.contains("<property name=\"test.property\" value=\"" + TEST_VALUE + "\" />")));
@@ -196,7 +196,9 @@ public class EchoPropertiesTest {
 
     protected Properties loadPropFile(String relativeFilename)
             throws IOException {
-        File f = createRelativeFile(relativeFilename);
+        assertNotNull("Null property file name", relativeFilename);
+        File f = new File(buildRule.getProject().getBaseDir(), relativeFilename);
+        assertTrue("Did not create " + f.getAbsolutePath(), f.exists());
         Properties props = new Properties();
         try (InputStream in = new BufferedInputStream(new FileInputStream(f))) {
             props.load(in);
@@ -205,21 +207,10 @@ public class EchoPropertiesTest {
     }
 
     protected void assertGoodFile() throws Exception {
-        File f = createRelativeFile(GOOD_OUTFILE);
-        assertTrue("Did not create " + f.getAbsolutePath(),
-            f.exists());
         Properties props = loadPropFile(GOOD_OUTFILE);
         props.list(System.out);
         assertEquals("test property not found ",
                      TEST_VALUE, props.getProperty("test.property"));
     }
 
-    protected String toAbsolute(String filename) {
-        return createRelativeFile(filename).getAbsolutePath();
-    }
-
-    protected File createRelativeFile(String filename) {
-        return filename.equals(".") ? buildRule.getProject().getBaseDir()
-                : new File(buildRule.getProject().getBaseDir(), filename);
-    }
 }

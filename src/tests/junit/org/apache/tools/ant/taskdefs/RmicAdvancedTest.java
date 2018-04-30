@@ -41,8 +41,6 @@ import static org.junit.Assume.assumeTrue;
  */
 public class RmicAdvancedTest {
 
-    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/rmic/";
-
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
@@ -54,7 +52,7 @@ public class RmicAdvancedTest {
      */
     @Before
     public void setUp() {
-        buildRule.configureProject(TASKDEFS_DIR + "rmic.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/rmic/rmic.xml");
     }
 
     /**

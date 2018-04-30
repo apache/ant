@@ -47,8 +47,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class JspcTest {
 
-    private static final String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -57,7 +55,7 @@ public class JspcTest {
 
     @Before
     public void setUp() {
-        buildRule.configureProject(TASKDEFS_DIR + "jspc.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/jspc.xml");
      }
 
     @Test

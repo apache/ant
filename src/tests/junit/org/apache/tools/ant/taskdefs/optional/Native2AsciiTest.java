@@ -32,15 +32,12 @@ import static org.junit.Assert.assertTrue;
 
 public class Native2AsciiTest {
 
-    private static final String BUILD_XML =
-        "src/etc/testcases/taskdefs/optional/native2ascii/build.xml";
-
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
-        buildRule.configureProject(BUILD_XML);
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/native2ascii/build.xml");
     }
 
     @After

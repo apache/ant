@@ -39,14 +39,13 @@ import static org.junit.Assume.assumeTrue;
  *
  */
 public class ReplaceRegExpTest {
-    private static final String PROJECT_PATH = "src/etc/testcases/taskdefs/optional";
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
     @Before
     public void setUp() {
-        buildRule.configureProject(PROJECT_PATH + "/replaceregexp.xml");
+        buildRule.configureProject("src/etc/testcases/taskdefs/optional/replaceregexp.xml");
     }
 
     @Test
