@@ -95,14 +95,14 @@ public class JavaEnvUtilsTest {
         String extension = Os.isFamily("dos") ? ".exe" : "";
 
         String j = JavaEnvUtils.getJreExecutable("java");
-        if (extension.isEmpty()) {
+        if (!extension.isEmpty()) {
             assertThat(j, endsWith(extension));
         }
         assertTrue(j + " is absolute", (new File(j)).isAbsolute());
         assertThat(j + " is normalized and in the JRE dir", j, startsWith(javaHome));
 
         j = JavaEnvUtils.getJdkExecutable("javac");
-        if (extension.isEmpty()) {
+        if (!extension.isEmpty()) {
             assertThat(j, endsWith(extension));
         }
         assertTrue(j + " is absolute", (new File(j)).isAbsolute());
