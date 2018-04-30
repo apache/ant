@@ -124,6 +124,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
     }
 
     private final class Stats {
+        @SuppressWarnings("unused")
         private final TestIdentifier testIdentifier;
         private final long startedAt;
         private long endedAt;

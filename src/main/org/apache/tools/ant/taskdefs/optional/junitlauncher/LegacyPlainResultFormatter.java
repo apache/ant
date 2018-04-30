@@ -174,6 +174,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
         }
     }
 
+    @SuppressWarnings("incomplete-switch")
     @Override
     public void executionFinished(final TestIdentifier testIdentifier, final TestExecutionResult testExecutionResult) {
         final long currentTime = System.currentTimeMillis();
@@ -272,6 +273,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
     }
 
     private final class Stats {
+        @SuppressWarnings("unused")
         private final TestIdentifier testIdentifier;
         private final AtomicLong numTestsRun = new AtomicLong(0);
         private final AtomicLong numTestsFailed = new AtomicLong(0);

@@ -117,6 +117,7 @@ class BlockSort {
 
     private static final int FALLBACK_QSORT_STACK_SIZE = 100;
 
+    @SuppressWarnings("unused")
     private static final int STACK_SIZE =
         QSORT_STACK_SIZE < FALLBACK_QSORT_STACK_SIZE
         ? FALLBACK_QSORT_STACK_SIZE : QSORT_STACK_SIZE;

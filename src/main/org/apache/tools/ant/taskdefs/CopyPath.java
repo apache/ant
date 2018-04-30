@@ -63,6 +63,7 @@ public class CopyPath extends Task {
     private File destDir;
 
     // TODO not read, yet in a public setter
+    @SuppressWarnings("unused")
     private long granularity = FILE_UTILS.getFileTimestampGranularity();
 
     private boolean preserveLastModified = false;

@@ -375,7 +375,6 @@ public class XMLValidateTask extends Task {
      * we have created and wrapped a SAX1 parser.
      * @return the new XMLReader.
      */
-    @SuppressWarnings("deprecated")
     protected XMLReader createXmlReader() {
         Object reader = null;
         if (readerClassName == null) {

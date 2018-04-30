@@ -800,7 +800,7 @@ public class IntrospectionHelperTest {
         }
     }
 
-    public List<Object> add(List l) {
+    public List<Object> add(List<Object> l) {
         // INVALID extension point
         return null;
     }

@@ -1265,6 +1265,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             public void addFailure(final Test test, final AssertionFailedError t) {
                 testListener.addFailure(test, t);
             }
+            @SuppressWarnings("unused")
             public void addFailure(final Test test, final Throwable t) { // pre-3.4
                 if (t instanceof AssertionFailedError) {
                     testListener.addFailure(test, (AssertionFailedError) t);

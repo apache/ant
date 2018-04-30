@@ -44,6 +44,7 @@ public class Log4jListener implements BuildListener {
      */
     public Log4jListener() {
         // trigger the log4j initialization (if at all it's not yet initialized)
+        @SuppressWarnings("unused")
         final Logger log = Logger.getLogger(LOG_ANT);
     }
 

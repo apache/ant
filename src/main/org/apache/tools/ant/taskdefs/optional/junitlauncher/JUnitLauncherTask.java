@@ -295,6 +295,7 @@ public class JUnitLauncherTask extends Task {
         return new AntClassLoader(this.getClass().getClassLoader(), getProject(), this.classPath, true);
     }
 
+    @SuppressWarnings("resource")
     private Optional<SwitchedStreamHandle> trySwitchSysOutErr(final TestRequest testRequest, final StreamType streamType) {
         switch (streamType) {
             case SYS_OUT: {

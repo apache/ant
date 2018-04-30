@@ -258,6 +258,7 @@ public class XmlPropertyTest {
     /**
      * Debugging method to print the properties in the given hashtable
      */
+    @SuppressWarnings("unused")
     private static void printProperties(Hashtable<Object, Object> xmlproperties) {
         xmlproperties.forEach((key, value) -> System.out.println(key + " = " + value));
     }

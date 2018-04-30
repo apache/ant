@@ -109,6 +109,7 @@ public class Message extends ProjectComponent {
      * @param ps The print stream to write to
      * @throws IOException if an error occurs
      */
+    @SuppressWarnings("resource")
     public void print(PrintStream ps) throws IOException {
         // We need character encoding aware printing here.
         // So, using BufferedWriter over OutputStreamWriter instead of PrintStream

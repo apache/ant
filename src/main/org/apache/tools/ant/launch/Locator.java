@@ -470,7 +470,6 @@ public final class Locator {
      * @exception MalformedURLException if the URLs for the files cannot be
      *            formed.
      */
-    @SuppressWarnings("deprecated")
     public static URL[] getLocationURLs(File location,
                                         final String... extensions)
             throws MalformedURLException {

@@ -119,6 +119,7 @@ public class RuntimeConfigurable implements Serializable {
     }
 
     private static class EnableAttributeConsumer {
+        @SuppressWarnings("unused")
         public void add(EnableAttribute b) {
             // Ignore
         }
@@ -176,7 +177,7 @@ public class RuntimeConfigurable implements Serializable {
      *              false.
      * @since 1.9.1
      */
-    @SuppressWarnings("deprecated")
+    @SuppressWarnings("deprecation")
     public boolean isEnabled(UnknownElement owner) {
         if (!namespacedAttribute) {
             return true;

@@ -706,7 +706,6 @@ public abstract class DefaultCompilerAdapter
      * @return true if JDK 9
      * @since Ant 1.9.8
      */
-    @SuppressWarnings("deprecated")
     protected boolean assumeJava9() {
         return assumeJava19();
     }

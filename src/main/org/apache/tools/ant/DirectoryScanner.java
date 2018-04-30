@@ -613,7 +613,6 @@ public class DirectoryScanner
      *
      * @since Ant 1.6
      */
-    @SuppressWarnings("deprecated")
     public static void resetDefaultExcludes() {
         synchronized (defaultExcludes) {
             defaultExcludes.clear();

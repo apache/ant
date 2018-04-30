@@ -279,7 +279,6 @@ public final class JavaEnvUtils {
      * @return true if the version of Java is the same as the given version.
      * @since Ant 1.5
      */
-    @SuppressWarnings("deprecated")
     public static boolean isJavaVersion(String version) {
         return javaVersion.equals(version)
             || (javaVersion.equals(JAVA_9) && JAVA_1_9.equals(version));

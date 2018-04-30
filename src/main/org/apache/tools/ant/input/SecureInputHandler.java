@@ -38,6 +38,7 @@ public class SecureInputHandler extends DefaultInputHandler {
      * @param request the request to handle
      * @throws BuildException if not possible to read from console
      */
+    @SuppressWarnings("unused")
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
         do {

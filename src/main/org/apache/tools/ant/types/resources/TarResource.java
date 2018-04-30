@@ -198,7 +198,6 @@ public class TarResource extends ArchiveResource {
         return (TarResource) super.getCheckedRef();
     }
 
-    @SuppressWarnings("deprecated")
     private void setEntry(TarEntry e) {
         if (e == null) {
             setExists(false);
