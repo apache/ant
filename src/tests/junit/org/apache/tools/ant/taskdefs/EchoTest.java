@@ -39,8 +39,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class EchoTest {
 
-    private Project p;
-
     private EchoTestLogger logger;
 
     private Echo echo;
@@ -49,7 +47,7 @@ public class EchoTest {
 
     @Before
     public void setUp() {
-        p = new Project();
+        Project p = new Project();
         p.init();
         logger = new EchoTestLogger();
         p.addBuildListener(logger);
