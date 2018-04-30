@@ -133,7 +133,6 @@ public class ExecTaskTest {
             myBuildFile = buildFile;
             this.target = target;
             project = new Project();
-            project = new Project();
             project.init();
             project.setUserProperty("ant.file", myBuildFile.getAbsolutePath());
             ProjectHelper.configureProject(project, myBuildFile);
