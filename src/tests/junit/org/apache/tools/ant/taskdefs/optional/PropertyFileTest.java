@@ -21,11 +21,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -58,15 +58,14 @@ public class PropertyFileTest {
                 valueDoesNotGetOverwrittenPropertyFile);
     }
 
-
     @Test
     public void testNonExistingFile() {
-        PropertyFile props = new PropertyFile();
-        props.setProject(buildRule.getProject());
+        PropertyFile pf = new PropertyFile();
+        pf.setProject(buildRule.getProject());
         File file = new File("this-file-does-not-exist.properties");
-        props.setFile(file);
+        pf.setFile(file);
         assertFalse("Properties file exists before test.", file.exists());
-        props.execute();
+        pf.execute();
         assertTrue("Properties file does not exist after test.", file.exists());
         file.delete();
     }
@@ -136,29 +135,31 @@ public class PropertyFileTest {
         assertEquals("5", buildRule.getProject().getProperty("foo"));
     }
 
-
     @Test
-    @Ignore("Previously commented out")
     public void testDirect() throws Exception {
         PropertyFile pf = new PropertyFile();
         pf.setProject(buildRule.getProject());
         pf.setFile(new File(buildRule.getOutputDir(), testPropsFilePath));
-        PropertyFile.Entry entry = pf.createEntry();
 
+        long delta = 123L;
+        PropertyFile.Entry entry = pf.createEntry();
         entry.setKey("date");
-        entry.setValue("123");
+        entry.setValue(String.valueOf(delta));
+
         PropertyFile.Entry.Type type = new PropertyFile.Entry.Type();
         type.setValue("date");
         entry.setType(type);
-
         entry.setPattern("yyyy/MM/dd");
 
         PropertyFile.Entry.Operation operation = new PropertyFile.Entry.Operation();
         operation.setValue("+");
+        entry.setOperation(operation);
         pf.execute();
 
         Properties props = getTestProperties();
-        assertEquals("yeehaw", props.getProperty("date"));
+        LocalDate currentDate = LocalDate.now().plusDays(delta);
+        assertEquals(String.format("%d/%02d/%d", currentDate.getYear(), currentDate.getMonthValue(),
+                currentDate.getDayOfMonth()), props.getProperty("date"));
     }
 
 
