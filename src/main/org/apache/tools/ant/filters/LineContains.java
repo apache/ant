@@ -25,7 +25,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Parameter;
 
 /**
- * Filter which includes only those lines that contain all the user-specified
+ * Filter which includes only those lines that contain the user-specified
  * strings.
  *
  * Example:
@@ -44,6 +44,19 @@ import org.apache.tools.ant.types.Parameter;
  *
  * This will include only those lines that contain <code>foo</code> and
  * <code>bar</code>.
+ *
+ * Starting Ant 1.10.4, the {@code matchAny} attribute can be used to control whether any one
+ * of the user-specified strings is expected to be contained in the line or all
+ * of them are expected to be contained.
+ *
+ * For example:
+ *
+ * <pre>&lt;linecontains matchAny=&quot;true&quot;&gt;
+ *  *   &lt;contains value=&quot;foo&quot;&gt;
+ *  *   &lt;contains value=&quot;bar&quot;&gt;
+ *  * &lt;/linecontains&gt;</pre>
+ *
+ * This will include only those lines that contain either <code>foo</code> or <code>bar</code>.
  *
  */
 public final class LineContains
@@ -66,6 +79,8 @@ public final class LineContains
     private String line = null;
 
     private boolean negate = false;
+
+    private boolean matchAny = false;
 
     /**
      * Constructor for "dummy" instances.
@@ -116,9 +131,24 @@ public final class LineContains
 
             for (line = readLine(); line != null; line = readLine()) {
                 boolean matches = true;
-                for (int i = 0; matches && i < containsSize; i++) {
-                    String containsStr = contains.elementAt(i);
+                for (int i = 0; i < containsSize; i++) {
+                    final String containsStr = contains.elementAt(i);
                     matches = line.contains(containsStr);
+                    if (!matches) {
+                        if (this.matchAny) {
+                            // this one didn't match, but we are expected to have
+                            // any one of them match. so try next
+                            continue;
+                        } else {
+                            // all were expected to match, but this one didn't.
+                            // so no point checking the rest
+                            break;
+                        }
+                    } else if (this.matchAny) {
+                        // we were expected to match any of the contains
+                        // and this one did. so no more checks needed
+                        break;
+                    }
                 }
                 if (matches ^ isNegated()) {
                     break;
@@ -155,6 +185,31 @@ public final class LineContains
      */
     public boolean isNegated() {
         return negate;
+    }
+
+    /**
+     *
+     * @param matchAny True if this {@link LineContains} is considered a match,
+     *                 if {@code any} of the {@code contains} value match. False
+     *                 if {@code all} of the {@code contains} value are expected
+     *                 to match
+     * @since Ant 1.10.4
+     *
+     */
+    public void setMatchAny(final boolean matchAny) {
+        this.matchAny = matchAny;
+    }
+
+    /**
+     * @return Returns true if this {@link LineContains} is considered a match,
+     * if {@code any} of the {@code contains} value match. False
+     * if {@code all} of the {@code contains} value are expected
+     * to match
+     *
+     * @since Ant 1.10.4
+     */
+    public boolean isMatchAny() {
+        return this.matchAny;
     }
 
     /**
@@ -195,6 +250,7 @@ public final class LineContains
         LineContains newFilter = new LineContains(rdr);
         newFilter.setContains(getContains());
         newFilter.setNegate(isNegated());
+        newFilter.setMatchAny(isMatchAny());
         return newFilter;
     }
 

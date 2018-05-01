@@ -46,6 +46,11 @@ Other changes:
    properties with values taken as snapshots from the
    availableProcessors, freeMemory, maxMemory and totalMemory methods
    of the Java Runtime class.
+ 
+ * linecontains filter now has a new "matchAny" attribute which when
+   set to "true" allows any (instead of all) of the user-specified 
+   strings to be present in the line. 
+   Bugzilla Report 62313
 
 Changes from Ant 1.10.2 TO Ant 1.10.3
 =====================================

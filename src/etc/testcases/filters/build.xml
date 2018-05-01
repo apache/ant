@@ -145,4 +145,31 @@
     <fail unless="filterchain.files.are.same">File was modified</fail>
   </target>
 
+  <target name="testMatchAny" depends="setUp">
+    <copy todir="${output}">
+      <fileset dir="input">
+        <include name="linecontains.test"/>
+      </fileset>
+      <filterchain>
+        <linecontains matchAny="true">
+          <contains value="beta"/>
+          <contains value="alpha"/>
+        </linecontains>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testMatchAnyNegate" depends="setUp">
+    <copy todir="${output}">
+      <fileset dir="input">
+        <include name="linecontains.test"/>
+      </fileset>
+      <filterchain>
+        <linecontains matchAny="true" negate="true">
+          <contains value="beta"/>
+          <contains value="alpha"/>
+        </linecontains>
+      </filterchain>
+    </copy>
+  </target>
 </project>
