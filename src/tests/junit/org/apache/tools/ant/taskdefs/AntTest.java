@@ -84,7 +84,7 @@ public class AntTest {
     @Test
     public void test3() {
         try {
-            buildRule.executeTarget("test1");
+            buildRule.executeTarget("test3");
             fail("recursive call");
         } catch(BuildException ex) {
             //TODO assert exception message
