@@ -9,10 +9,12 @@ Changes that could break older environments:
    destination directory anymore by default. A new attribute
    allowFilesToEscapeDest can be used to override the behavior.
    Another special case is when stripAbsolutePathSpec is false (which
-   still is the default) and the entry's name starts with a
+   no longer is the default) and the entry's name starts with a
    (back)slash and allowFilesToEscapeDest hasn't been specified
    explicitly, in this case the file may be created outside of the
    dest directory as well.
+   In addition stripAbsolutePathSpec is now true by default.
+   Based on a recommendation by the Snyk Security Research Team.
 
 Fixed bugs:
 -----------

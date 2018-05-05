@@ -101,16 +101,16 @@ public class A {
     <available property="can-write-to-tmp!" file="/tmp/testdir/"/>
   </target>
 
-  <target name="testEntriesCanEscapeDestViaAbsolutePathByDefault"
+  <target name="testEntriesCanEscapeDestViaAbsolutePathIfPermitted"
           depends="-can-write-to-tmp?" if="can-write-to-tmp!">
-    <unzip src="zip/direscape-absolute.zip" dest="${output}"/>
+    <unzip src="zip/direscape-absolute.zip" dest="${output}"
+           stripAbsolutePathSpec="false"/>
     <au:assertFileExists file="/tmp/testdir/a"/>
   </target>
 
-  <target name="testEntriesDontEscapeDestViaAbsolutePathIfProhibited"
+  <target name="testEntriesDontEscapeDestViaAbsolutePathByDefault"
           depends="-can-write-to-tmp?" if="can-write-to-tmp!">
-    <unzip src="zip/direscape-absolute.zip" dest="${output}"
-           allowFilesToEscapeDest="false"/>
+    <unzip src="zip/direscape-absolute.zip" dest="${output}"/>
     <au:assertFileDoesntExist file="/tmp/testdir/a"/>
   </target>
 </project>

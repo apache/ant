@@ -75,7 +75,7 @@ public class Expand extends Task {
     private Union resources = new Union();
     private boolean resourcesSpecified = false;
     private boolean failOnEmptyArchive = false;
-    private boolean stripAbsolutePathSpec = false;
+    private boolean stripAbsolutePathSpec = true;
     private boolean scanForUnicodeExtraFields = true;
     private Boolean allowFilesToEscapeDest = null;
 
