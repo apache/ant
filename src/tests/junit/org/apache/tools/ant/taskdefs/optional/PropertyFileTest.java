@@ -158,7 +158,7 @@ public class PropertyFileTest {
 
         Properties props = getTestProperties();
         LocalDate currentDate = LocalDate.now().plusDays(delta);
-        assertEquals(String.format("%d/%02d/%d", currentDate.getYear(), currentDate.getMonthValue(),
+        assertEquals(String.format("%d/%02d/%02d", currentDate.getYear(), currentDate.getMonthValue(),
                 currentDate.getDayOfMonth()), props.getProperty("date"));
     }
 
