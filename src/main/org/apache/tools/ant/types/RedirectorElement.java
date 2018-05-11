@@ -27,6 +27,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Redirector;
+import org.apache.tools.ant.util.MergingMapper;
 
 /**
  * Element representation of a <code>Redirector</code>.
@@ -556,8 +557,7 @@ public class RedirectorElement extends DataType {
      */
     protected Mapper createMergeMapper(File destfile) {
         Mapper result = new Mapper(getProject());
-        result.setClassname(
-            org.apache.tools.ant.util.MergingMapper.class.getName());
+        result.setClassname(MergingMapper.class.getName());
         result.setTo(destfile.getAbsolutePath());
         return result;
     }

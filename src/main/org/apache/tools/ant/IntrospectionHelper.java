@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -187,30 +188,30 @@ public final class IntrospectionHelper {
             final Class<?>[] args = m.getParameterTypes();
 
             // check of add[Configured](Class) pattern
-            if (args.length == 1 && java.lang.Void.TYPE.equals(returnType)
+            if (args.length == 1 && Void.TYPE.equals(returnType)
                     && ("add".equals(name) || "addConfigured".equals(name))) {
                 insertAddTypeMethod(m);
                 continue;
             }
             // not really user settable properties on tasks/project components
-            if (org.apache.tools.ant.ProjectComponent.class.isAssignableFrom(bean)
+            if (ProjectComponent.class.isAssignableFrom(bean)
                     && args.length == 1 && isHiddenSetMethod(name, args[0])) {
                 continue;
             }
             // hide addTask for TaskContainers
             if (isContainer() && args.length == 1 && "addTask".equals(name)
-                    && org.apache.tools.ant.Task.class.equals(args[0])) {
+                    && Task.class.equals(args[0])) {
                 continue;
             }
-            if ("addText".equals(name) && java.lang.Void.TYPE.equals(returnType)
-                    && args.length == 1 && java.lang.String.class.equals(args[0])) {
+            if ("addText".equals(name) && Void.TYPE.equals(returnType)
+                    && args.length == 1 && String.class.equals(args[0])) {
                 addTextMethod = methods[i];
-            } else if (name.startsWith("set") && java.lang.Void.TYPE.equals(returnType)
+            } else if (name.startsWith("set") && Void.TYPE.equals(returnType)
                     && args.length == 1 && !args[0].isArray()) {
                 final String propName = getPropertyName(name, "set");
                 AttributeSetter as = attributeSetters.get(propName);
                 if (as != null) {
-                    if (java.lang.String.class.equals(args[0])) {
+                    if (String.class.equals(args[0])) {
                         /*
                             Ignore method m, as there is an overloaded
                             form of this method that takes in a
@@ -219,7 +220,7 @@ public final class IntrospectionHelper {
                         */
                         continue;
                     }
-                    if (java.io.File.class.equals(args[0])) {
+                    if (File.class.equals(args[0])) {
                         // Ant Resources/FileProviders override java.io.File
                         if (Resource.class.equals(as.type) || FileProvider.class.equals(as.type)) {
                             continue;
@@ -251,8 +252,8 @@ public final class IntrospectionHelper {
                     nestedCreators.put(propName, new CreateNestedCreator(m));
                 }
             } else if (name.startsWith("addConfigured")
-                    && java.lang.Void.TYPE.equals(returnType) && args.length == 1
-                    && !java.lang.String.class.equals(args[0])
+                    && Void.TYPE.equals(returnType) && args.length == 1
+                    && !String.class.equals(args[0])
                     && !args[0].isArray() && !args[0].isPrimitive()) {
                 try {
                     Constructor<?> constructor = null;
@@ -269,8 +270,8 @@ public final class IntrospectionHelper {
                     // ignore
                 }
             } else if (name.startsWith("add")
-                    && java.lang.Void.TYPE.equals(returnType) && args.length == 1
-                    && !java.lang.String.class.equals(args[0])
+                    && Void.TYPE.equals(returnType) && args.length == 1
+                    && !String.class.equals(args[0])
                     && !args[0].isArray() && !args[0].isPrimitive()) {
                 try {
                     Constructor<?> constructor = null;
@@ -308,10 +309,10 @@ public final class IntrospectionHelper {
      * @return true if the given set method is to be hidden.
      */
     private boolean isHiddenSetMethod(final String name, final Class<?> type) {
-        if ("setLocation".equals(name) && org.apache.tools.ant.Location.class.equals(type)) {
+        if ("setLocation".equals(name) && Location.class.equals(type)) {
             return true;
         }
-        if ("setTaskType".equals(name) && java.lang.String.class.equals(type)) {
+        if ("setTaskType".equals(name) && String.class.equals(type)) {
             return true;
         }
         return false;
@@ -1060,7 +1061,7 @@ public final class IntrospectionHelper {
             };
         }
         // simplest case - setAttribute expects String
-        if (java.lang.String.class.equals(reflectedArg)) {
+        if (String.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
                 public void set(final Project p, final Object parent, final String value)
@@ -1685,7 +1686,7 @@ public final class IntrospectionHelper {
                 if (exposedClass == null) {
                     continue;
                 }
-                final Method method  = findMatchingMethod(exposedClass, methods);
+                final Method method = findMatchingMethod(exposedClass, methods);
                 if (method == null) {
                     continue;
                 }

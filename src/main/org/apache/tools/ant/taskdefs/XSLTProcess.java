@@ -41,6 +41,7 @@ import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.PropertyHelper;
+import org.apache.tools.ant.taskdefs.optional.TraXLiaison;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Mapper;
@@ -713,7 +714,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     private void resolveProcessor(final String proc) throws Exception {
         if (proc.equals(PROCESSOR_TRAX)) {
-            liaison = new org.apache.tools.ant.taskdefs.optional.TraXLiaison();
+            liaison = new TraXLiaison();
         } else {
             //anything else is a classname
             final Class clazz = loadClass(proc);

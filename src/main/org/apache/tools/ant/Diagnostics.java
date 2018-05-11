@@ -457,6 +457,7 @@ public final class Diagnostics {
 
     /**
      * Call org.apache.env.Which if available
+     *
      * @param out the stream to print the content to.
      */
     private static void doReportWhich(PrintStream out) {

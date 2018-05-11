@@ -43,13 +43,13 @@ public interface HotDeploymentTool {
 
     /**
      *  Validates the passed in attributes.
-     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
+     *  @exception BuildException if the attributes are invalid or incomplete.
      */
     void validateAttributes() throws BuildException;
 
     /**
      *  Perform the actual deployment.
-     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
+     *  @throws BuildException if the attributes are invalid or incomplete.
      */
     void deploy() throws BuildException;
 

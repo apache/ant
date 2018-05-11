@@ -78,7 +78,8 @@ public class TokenizedPath {
         tokenizedPath[parent.tokenizedPath.length] = child;
     }
 
-    /* package */ TokenizedPath(String path, String[] tokens) {
+    /* package */
+    TokenizedPath(String path, String[] tokens) {
         this.path = path;
         this.tokenizedPath = tokens;
     }

@@ -38,6 +38,7 @@ import java.util.Stack;
 
 import org.apache.tools.ant.launch.Launcher;
 import org.apache.tools.ant.taskdefs.Definer;
+import org.apache.tools.ant.taskdefs.Property;
 import org.apache.tools.ant.taskdefs.Typedef;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -523,7 +524,7 @@ public class ComponentHelper  {
         if (task == null && taskType.equals(ANT_PROPERTY_TASK)) {
             // quick fix for Ant.java use of property before
             // initializing the project
-            addTaskDefinition(ANT_PROPERTY_TASK, org.apache.tools.ant.taskdefs.Property.class);
+            addTaskDefinition(ANT_PROPERTY_TASK, Property.class);
             task = createNewTask(taskType);
         }
         return task;

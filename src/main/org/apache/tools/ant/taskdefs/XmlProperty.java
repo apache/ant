@@ -27,6 +27,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -174,7 +175,7 @@ import org.xml.sax.SAXException;
  *
  * @ant.task name="xmlproperty" category="xml"
  */
-public class XmlProperty extends org.apache.tools.ant.Task {
+public class XmlProperty extends Task {
 
     private Resource src;
     private String prefix = "";

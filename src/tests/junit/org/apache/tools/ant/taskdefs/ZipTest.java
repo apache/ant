@@ -244,7 +244,7 @@ public class ZipTest {
 
     @Test
     public void testTarFileSet() throws IOException {
-       buildRule.executeTarget("testTarFileSet");
+        buildRule.executeTarget("testTarFileSet");
         org.apache.tools.zip.ZipFile zf = null;
         try {
             zf = new org.apache.tools.zip.ZipFile(new File(buildRule.getProject().getProperty("output"), "test3.zip"));

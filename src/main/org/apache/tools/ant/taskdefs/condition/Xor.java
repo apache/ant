@@ -31,7 +31,7 @@ public class Xor extends ConditionBase implements Condition {
     /**
      * Evaluate the contained conditions.
      * @return the result of xoring the conditions together.
-     * @throws org.apache.tools.ant.BuildException
+     * @throws BuildException
      *          if an error occurs.
      */
     public boolean eval() throws BuildException {

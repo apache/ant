@@ -397,6 +397,7 @@ public class ModifiedSelector extends BaseExtendSelector
      * @param type the type to check against
      * @return a castable object
      */
+    @SuppressWarnings("unchecked")
     protected <T> T loadClass(String classname, String msg, Class<? extends T> type) {
         try {
             // load the specified class

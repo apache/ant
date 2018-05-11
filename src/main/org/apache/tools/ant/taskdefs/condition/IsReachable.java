@@ -136,7 +136,7 @@ public class IsReachable extends ProjectComponent implements Condition {
      *
      * @return true if the condition is true.
      *
-     * @throws org.apache.tools.ant.BuildException
+     * @throws BuildException
      *          if an error occurs
      */
     public boolean eval() throws BuildException {

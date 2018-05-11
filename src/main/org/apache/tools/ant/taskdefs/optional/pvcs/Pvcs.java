@@ -33,6 +33,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
@@ -71,7 +72,7 @@ import org.apache.tools.ant.util.FileUtils;
  * discussion.
  *
  */
-public class Pvcs extends org.apache.tools.ant.Task {
+public class Pvcs extends Task {
     // CheckStyle - magic numbers
     // checking for "X:\ 0=dquote,1=letter,2=:,3=\
     private static final int POS_1 = 1;
@@ -143,7 +144,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * @exception org.apache.tools.ant.BuildException Something is stopping the build...
+     * @throws BuildException Something is stopping the build...
      */
     public void execute() throws org.apache.tools.ant.BuildException {
         int result = 0;

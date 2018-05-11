@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.input;
 
+import org.apache.tools.ant.BuildException;
+
 /**
  * Plugin to Ant to handle requests for user input.
  *
@@ -34,8 +36,8 @@ public interface InputHandler {
      * <p>Postcondition: request.getInput will return a non-null
      * value, request.isInputValid will return true.</p>
      * @param request the request to be processed
-     * @throws org.apache.tools.ant.BuildException if the input cannot be read from the console
+     * @throws BuildException if the input cannot be read from the console
      */
     void handleInput(InputRequest request)
-        throws org.apache.tools.ant.BuildException;
+        throws BuildException;
 }
