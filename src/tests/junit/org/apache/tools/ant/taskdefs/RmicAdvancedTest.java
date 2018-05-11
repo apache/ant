@@ -21,8 +21,8 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.taskdefs.rmic.DefaultRmicAdapter;
+import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.Before;
 import org.junit.Ignore;

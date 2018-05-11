@@ -18,8 +18,8 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.After;
 import org.junit.Before;

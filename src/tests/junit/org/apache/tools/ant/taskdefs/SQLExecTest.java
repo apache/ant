@@ -17,13 +17,13 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.sql.Driver;
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.Driver;
 import java.sql.DriverPropertyInfo;
-import java.util.Properties;
+import java.sql.SQLException;
 import java.io.File;
 import java.net.URL;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.apache.tools.ant.BuildException;

@@ -23,9 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.time.Instant;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,11 +41,11 @@ import java.util.stream.Stream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.tools.ant.util.StringUtils;
 import org.xml.sax.AttributeList;
 import org.xml.sax.HandlerBase;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Compiles EJB stubs and skeletons for the iPlanet Application

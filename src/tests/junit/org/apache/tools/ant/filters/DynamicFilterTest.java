@@ -19,8 +19,8 @@
 package org.apache.tools.ant.filters;
 
 import java.io.File;
-import java.io.Reader;
 import java.io.IOException;
+import java.io.Reader;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
