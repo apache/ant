@@ -170,7 +170,7 @@ public class BuildFileRule extends ExternalResource {
      *
      * @param targetName the target in the currently configured build file to run.
      */
-    public  void executeTarget(String targetName) {
+    public void executeTarget(String targetName) {
         outputBuffer = new StringBuffer();
         PrintStream out = new PrintStream(new AntOutputStream(outputBuffer));
         errorBuffer = new StringBuffer();
