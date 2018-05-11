@@ -663,7 +663,7 @@ public class MacroDef extends AntlibDefinition  {
         @Override
         public boolean equals(Object obj) {
             if (obj == this) {
-              return true;
+                return true;
             }
             if (obj == null || !obj.getClass().equals(getClass())) {
                 return false;

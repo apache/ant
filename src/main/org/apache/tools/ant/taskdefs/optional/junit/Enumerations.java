@@ -89,7 +89,7 @@ public final class Enumerations {
  * }
  * </pre>
  */
- class CompoundEnumeration<T> implements Enumeration<T> {
+class CompoundEnumeration<T> implements Enumeration<T> {
 
     /** enumeration array */
     private Enumeration<? extends T>[] enumArray;
@@ -113,7 +113,7 @@ public final class Enumerations {
     public boolean hasMoreElements() {
         while (index < enumArray.length) {
             if (enumArray[index] != null && enumArray[index].hasMoreElements()) {
-                    return true;
+                return true;
             }
             index++;
         }
