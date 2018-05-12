@@ -31,6 +31,11 @@ Fixed bugs:
  * <cab> died with a NullPointerException since Ant 1.10.2.
    Bugzilla Report 62335
 
+ * The <depend> task would fail with 
+   "java.lang.ClassFormatError: Invalid Constant Pool entry Type 19" while
+   parsing a module-info.class. This is now fixed.
+   Bug reported by Simon IJskes https://issues.apache.org/jira/browse/NETBEANS-781
+
 Other changes:
 --------------
 

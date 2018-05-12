@@ -27,7 +27,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileUtilities;
+import org.apache.tools.ant.taskdefs.condition.JavaVersion;
 import org.apache.tools.ant.types.FileSet;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -192,6 +194,18 @@ public class DependTest {
         assertThat("Expected warning about APrivate",
                 buildRule.getLog(), both(containsString("The class APrivate in file"))
                         .and(containsString("but has not been deleted because its source file could not be determined")));
+    }
+
+    /**
+     * Tests that the depend task when run against a path containing a module-info.class (Java 9+ construct)
+     * doesn't run into error
+     */
+    @Test
+    public void testModuleInfo() {
+        final JavaVersion atLeastJava9 = new JavaVersion();
+        atLeastJava9.setAtLeast("9");
+        Assume.assumeTrue("Skipping test execution since Java version is lesser than 9", atLeastJava9.eval());
+        buildRule.executeTarget("testmoduleinfo");
     }
 
 }

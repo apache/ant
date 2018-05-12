@@ -33,6 +33,11 @@
   <property name="src3.dir" value="src3"/>
   <property name="src4.dir" value="src4"/>
   <property name="src5.dir" value="src5"/>
+  <property name="src6.dir" value="src6"/>
+
+  <condition property="atleast.java9">
+    <javaversion atleast="9"/>
+  </condition>
 
   <target name="help">
     <echo>This buildfile is used as part of Ant's test suite.</echo>
@@ -192,5 +197,11 @@
     <copy file="${src2.dir}/B.java" tofile="${tempsrc.dir}/B.java"/>
     <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
     <fileset id="result" dir="${classes.dir}"/>
+  </target>
+
+  <target name="testmoduleinfo" if="${atleast.java9}">
+    <mkdir dir="${output}/java9"/>
+    <javac srcdir="${src6.dir}" destdir="${output}/java9" source="9" target="9"/>
+    <depend srcdir="${src6.dir}" destdir="${output}/java9"/>
   </target>
 </project>

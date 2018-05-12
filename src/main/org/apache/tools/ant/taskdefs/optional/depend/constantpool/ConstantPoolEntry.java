@@ -71,6 +71,9 @@ public abstract class ConstantPoolEntry {
     /** Tag value for InvokeDynamic entries*/
     public static final int CONSTANT_INVOKEDYNAMIC = 18;
 
+    /** Tag value for CONSTANT_Module_info entry */
+    public static final int CONSTANT_MODULEINFO = 19;
+
     /**
      * This entry's tag which identifies the type of this constant pool
      * entry.
@@ -161,6 +164,9 @@ public abstract class ConstantPoolEntry {
                 break;
             case CONSTANT_INVOKEDYNAMIC:
                 cpInfo = new InvokeDynamicCPInfo();
+                break;
+            case CONSTANT_MODULEINFO:
+                cpInfo = new ModuleCPInfo();
                 break;
             default:
                 throw new ClassFormatError("Invalid Constant Pool entry Type "
