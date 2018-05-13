@@ -74,6 +74,10 @@ public abstract class ConstantPoolEntry {
     /** Tag value for CONSTANT_Module_info entry */
     public static final int CONSTANT_MODULEINFO = 19;
 
+    /** Tag value for CONSTANT_Package_info entry (within a module) */
+    public static final int CONSTANT_PACKAGEINFO = 20;
+
+
     /**
      * This entry's tag which identifies the type of this constant pool
      * entry.
@@ -167,6 +171,9 @@ public abstract class ConstantPoolEntry {
                 break;
             case CONSTANT_MODULEINFO:
                 cpInfo = new ModuleCPInfo();
+                break;
+            case CONSTANT_PACKAGEINFO:
+                cpInfo = new PackageCPInfo();
                 break;
             default:
                 throw new ClassFormatError("Invalid Constant Pool entry Type "
