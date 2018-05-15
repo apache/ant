@@ -75,12 +75,12 @@ applications and definitely not new EJB 2.x servers.</p>
 <hr/>
 <h2 id="ejbtasks">EJB Tasks</h2>
 <table>
-  <tr><th>Task</th><th colspan="2">Application Servers</th></tr>
+  <tr><th scope="col">Task</th><th scope="col" colspan="2">Application Servers</th></tr>
   <tr><td><a href="BorlandGenerateClient.html">blgenclient</a></td><td colspan="2">Borland
     Application Server 4.5 and 5.x</td></tr>
   <tr><td><a href="#iplanet-ejbc">iplanet-ejbc</a></td><td colspan="2">iPlanet Application Server
     6.0</td></tr>
-  <tr><td rowspan="8"><a href="#ejbjar">ejbjar</a></td><th colspan="2">Nested Elements</th></tr>
+  <tr><td rowspan="8"><a href="#ejbjar">ejbjar</a></td><th scope="col" colspan="2">Nested Elements</th></tr>
   <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5 and
     5.x</td></tr>
   <tr><td><a href="#ejbjar_iplanet">iPlanet</a></td><td>iPlanet Application Server 6.0</td></tr>
@@ -104,9 +104,9 @@ mechanisms.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>descriptors</td>
@@ -154,9 +154,9 @@ present or are out of date, the <kbd>ejbc</kbd> tool is run to generate new vers
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>descriptors</td>
@@ -222,9 +222,9 @@ utility be called to generate new stubs and skeletons.</p>
 
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
 
   <tr>
@@ -311,10 +311,10 @@ stopped.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required for 4.5.1 and 5.1</th>
-    <th>Required for 6.0</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required for 4.5.1 and 5.1</th>
+    <th scope="col">Required for 6.0</th>
   </tr>
   <tr>
     <td>BEAhome</td>
@@ -442,9 +442,9 @@ the <var>BEAHome</var> to have this task work correctly under 6.0</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>BEAHome</td>
@@ -624,9 +624,9 @@ the behaviour corresponding to the value <q>none</q>.</p>
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>descriptordir</td>
@@ -741,9 +741,9 @@ classes in the classpath, you would need to use a <code>&lt;dtd&gt;</code> eleme
 
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>publicId</td>
@@ -782,7 +782,7 @@ them to the final EJB jar file. JBoss has two deployment descriptors:</p>
   <li><samp>jboss.xml</samp></li>
   <li>for container manager persistence:
     <table>
-      <tr><th>CMP version</th><th>File name</th></tr>
+      <tr><th scope="col">CMP version</th><th scope="col">File name</th></tr>
       <tr><td>CMP 1.0</td><td><samp>jaws.xml</samp></td></tr>
       <tr><td>CMP 2.0</td><td><samp>jbosscmp-jdbc.xml</samp></td></tr>
     </table>
@@ -793,9 +793,9 @@ skeletons.</p>
 
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>destdir</td>
@@ -850,9 +850,9 @@ as <samp>META-INF/Customer-weblogic-cmp-rdbms-jar.xml</samp>.</p>
 
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>destdir</td>
@@ -1017,9 +1017,9 @@ set of attributes plus these additional attributes</p>
 
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>toplinkdescriptor</td>
@@ -1158,9 +1158,9 @@ the <code>websphere.home</code> property (look at the examples below).</p>
 
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>destdir</td>
@@ -1275,9 +1275,9 @@ example, <var>suffix</var>).  Refer to the appropriate documentation for more de
 
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
 
   <tr>
@@ -1431,9 +1431,9 @@ example, <var>suffix</var>). Refer to the appropriate documentation for more det
 <table class="attr">
   <tbody>
     <tr>
-      <th>Attribute</th>
-      <th>Description</th>
-      <th>Required</th>
+      <th scope="col">Attribute</th>
+      <th scope="col">Description</th>
+      <th scope="col">Required</th>
     </tr>
     <tr>
       <td>destdir</td>
@@ -1578,9 +1578,9 @@ descriptors and adds them to the final EJB jar file. Orion has one deployment de
 </ul>
 <table class="attr">
   <tr>
-    <th>Attribute</th>
-    <th>Description</th>
-    <th>Required</th>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
   </tr>
   <tr>
     <td>destdir</td>
