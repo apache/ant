@@ -56,10 +56,10 @@ relation to determine, for each class, which other classes are dependent upon it
 class. The class files of the invalidated classes are removed, triggering the compilation of the
 affected classes.</p>
 
-<p>The <code>depend</code> task supports an attribute, <var>closure</var> which controls
+<p>The <code>depend</code> task supports an attribute, <var>closure</var>, which controls
 whether <code>depend</code> will only consider direct class-class relationships or whether it will
 also consider transitive, indirect relationships. For example, say there are three classes, A, which
-depends on B, which in-turn depend on C. Now say that class C is out of
+depends on B, which in-turn depends on C. Now say that class C is out of
 date. Without <var>closure</var>, only class B would be removed
 by <code>depend</code>. With <var>closure</var> set, class A would also be removed. Normally direct
 relationships are sufficient&mdash;it is unusual for a class to depend on another without having a
@@ -71,7 +71,7 @@ present, <code>depend</code> will check class dependencies against classes and j
 classpath.  Any classes which depend on an element from this classpath and which are older than that
 element will be deleted. A typical example where you would use this facility would be where you are
 building a utility jar and want to make sure classes which are out of date with respect to this jar
-are rebuilt. You should <strong>not</strong> include jars in this classpath which you do not expect
+are rebuilt. In this classpath, you should <strong>not</strong> include jars that you do not expect
 to change, such as the JDK runtime jar or third party jars, since doing so will just slow down the
 dependency check. This means that if you do use a classpath for the <code>depend</code> task it may
 be different from the classpath necessary to actually compile your code.</p>
@@ -85,15 +85,15 @@ of your project and how interrelated your classes are.</p>
 
 <h3>Limitations</h3>
 
-<p>There are some source dependencies which <code>depend</code> will not detect.</p>
+<p>There are some source dependencies which <code>depend</code> will not detect:</p>
 
 <ul>
 <li>If the Java compiler optimizes away a class relationship, there can be a source dependency
 without a class dependency.</li>
 
-<li>Non public classes cause two problems. Firstly depend cannot relate the class file to a source
+<li>Non-public classes cause two problems. Firstly, depend cannot relate the class file to a source
 file. In the future this may be addressed using the source file attribute in the
-classfile. Secondly, neither <code>depend</code> nor the compiler tasks can detect when a non public
+classfile. Secondly, neither <code>depend</code> nor the compiler tasks can detect when a non-public
 class is missing. Inner classes are handled by the <code>depend</code> task.</li>
 </ul>
 
