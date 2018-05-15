@@ -200,21 +200,21 @@ directory <samp>common</samp> inside the jar file <samp>common.jar</samp>.</p>
 <p>The short version: Use <code>import</code> if you intend to override a target, otherwise
 use <code>include</code>.</p>
 
-<p>When using <code>import</code> the imported targets are available by up to two names.  Their
+<p>When <code>import</code> is used, the imported targets are available by up to two names: their
 "normal" name without any prefix and potentially with a prefixed name (the value of
 the <var>as</var> attribute or the imported project's <var>name</var> attribute, if any).</p>
 
-<p>When using <code>include</code> the included targets are only available in the prefixed form.</p>
+<p>When <code>include</code> is used, the included targets are only available in the prefixed form.</p>
 
-<p>When using <code>import</code>, the imported target's <var>depends</var> attribute remains
+<p>When <code>import</code> is used, the imported target's <var>depends</var> attribute remains
 unchanged, i.e. it uses "normal" names and allows you to override targets in the dependency
 list.</p>
 
-<p>When using <code>include</code>, the included targets cannot be overridden and
+<p>When <code>include</code> is used, the included targets cannot be overridden and
 their <var>depends</var> attributes are rewritten so that prefixed names are used.  This allows
 writers of the included file to control which target is invoked as part of the dependencies.</p>
 
-<p>It is possible to <code>include</code> the same file more than once by using different prefixes,
+<p>It is possible to <code>include</code> the same file more than once by using different prefixes;
 it is not possible to <code>import</code> the same file more than once.</p>
 
 <h4>Examples</h4>
