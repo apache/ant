@@ -52,14 +52,14 @@
   <p>If a target in the main file is also present in at least one of the imported files, the one
     from the main file takes precedence.</p>
 
-  <p>So if I import for example a <samp>docsbuild.xml</samp> file named <q>builddocs</q>, that
-    contains a <q>docs</q> target, I can redefine it in my main buildfile and that is the one that
-    will be called. This makes it easy to keep the same target name, so that the overriding target
-    is still called by any other targets&mdash;in either the main or imported buildfile(s)&mdash;for
-    which it is a dependency, with a different implementation. The target
-    from <samp>docsbuild.xml</samp> is made available by the name <q>builddocs.docs</q>.  This
-    enables the new implementation to call the old target, thus <em>enhancing</em> it with tasks
-    called before or after it.</p>
+  <p>So if I import for example a <samp>docsbuild.xml</samp> file containing a project
+    named <q>builddocs</q> that contains a <q>docs</q> target, I can define a <q>docs</q> target in
+    my main buildfile and that is the one that will be called. This makes it easy to keep the same
+    target name, so that the overriding target is still called by any other targets&mdash;in either
+    the main or imported buildfile(s)&mdash;for which it is a dependency, with a different
+    implementation. The target from <samp>docsbuild.xml</samp> is made available by the
+    name <q>builddocs.docs</q>. This enables the new implementation to call the old target,
+    thus <em>enhancing</em> it with tasks called before or after it.</p>
 
   <p>If you use the <var>as</var> attribute of the task, its value will be used to prefix the
     overridden target's name instead of the <var>name</var> attribute of the <code>project</code>
