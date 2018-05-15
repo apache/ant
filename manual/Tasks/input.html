@@ -137,16 +137,22 @@ different <code>Input</code> tasks.</p>
 elements.</p>
 
 <h3>Examples</h3>
-<pre>&lt;input/&gt;</pre>
-<p>Will pause the build run until return key is pressed when using
+<p>Pause the build run until return key is pressed when using
 the <a href="../inputhandler.html#defaulthandler">default InputHandler</a>, the concrete behavior is
 defined by the <code>InputHandler</code> implementation you use.</p>
+<pre>&lt;input/&gt;</pre>
+
+<p>Display the message <q>Press Return key to continue...</q> and pause the build run until return
+key is pressed (again, the concrete behavior is implementation dependent).</p>
 <pre>&lt;input&gt;Press Return key to continue...&lt;/input&gt;</pre>
-<p>Will display the message <q>Press Return key to continue...</q> and pause the build run until
-return key is pressed (again, the concrete behavior is implementation dependent).</p>
+
+<p>Display the message <q>Press Return key to continue...</q> and pause the build run until return
+key is pressed (see above).</p>
 <pre>&lt;input message=&quot;Press Return key to continue...&quot;/&gt;</pre>
-<p>Will display the message <q>Press Return key to continue...</q> and pause the build run until
-return key is pressed (see above).</p>
+
+<p>Display the message <q>All data is going to be deleted from DB continue (y/n)?</q> and
+require <q>y</q> to continue build or <q>n</q> to exit build with following message <q>Build aborted
+by user.</q>.</p>
 <pre>
 &lt;input message=&quot;All data is going to be deleted from DB continue (y/n)?&quot;
        validargs=&quot;y,n&quot;
@@ -156,21 +162,19 @@ return key is pressed (see above).</p>
 &lt;/condition&gt;
 &lt;fail if=&quot;do.abort&quot;&gt;Build aborted by user.&lt;/fail&gt;
 </pre>
-<p>Will display the message <q>All data is going to be deleted from DB continue (y/n)?</q>  and
-require <q>y</q> to continue build or <q>n</q> to exit build with following message <q>Build aborted
-by user.</q>.</p>
+
+<p>Display the message <q>Please enter db-username:</q> and set the property <code>db.user</code> to
+the value entered by the user.</p>
 <pre>
 &lt;input message=&quot;Please enter db-username:&quot;
        addproperty=&quot;db.user&quot;/&gt;</pre>
-<p>Will display the message <q>Please enter db-username:</q> and set the
-property <code>db.user</code> to the value entered by the user.</p>
 
+<p>Same as above, but set <code>db.user</code> to the value <q>Scott-Tiger</q> if the user enters no
+value (simply presses <q>return</q>).</p>
 <pre>
 &lt;input message=&quot;Please enter db-username:&quot;
        addproperty=&quot;db.user&quot;
        defaultvalue=&quot;Scott-Tiger&quot;/&gt;</pre>
-<p>Same as above, but will set <code>db.user</code> to the value <q>Scott-Tiger</q> if the user
-enters no value (simply presses <q>return</q>).</p>
 
 </body>
 </html>

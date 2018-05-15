@@ -350,6 +350,9 @@ files for each sourcefile.</p>
 (with <var>maxparallel</var> &gt; 0) and null will be used a source file just like it is in the case
 of <code>exec</code>.</p>
 <h3>Examples</h3>
+<p>Invoke <kbd>ls -l</kbd>, adding the absolute filenames of all files below <samp>/tmp</samp> not
+ending in <samp>.txt</samp> and all files of the FileSet with <var>id</var> <samp>other.files</samp>
+to the command line.</p>
 <pre>
 &lt;apply executable=&quot;ls&quot;&gt;
   &lt;arg value=&quot;-l&quot;/&gt;
@@ -360,9 +363,11 @@ of <code>exec</code>.</p>
   &lt;/fileset&gt;
   &lt;fileset refid=&quot;other.files&quot;/&gt;
 &lt;/apply&gt;</pre>
-<p>invokes <kbd>ls -l</kbd>, adding the absolute filenames of all files below <samp>/tmp</samp> not
-ending in <samp>.txt</samp> and all files of the FileSet with <var>id</var> <samp>other.files</samp>
-to the command line.</p>
+
+<p>Invoke <kbd>somecommand arg1 SOURCEFILENAME arg2</kbd> for each file in <samp>/tmp</samp>
+replacing <code>SOURCEFILENAME</code> with the absolute filename of each file in
+turn. If <var>parallel</var> had been set to <q>true</q>, <code>SOURCEFILENAME</code> would be
+replaced with the absolute filenames of all files separated by spaces.</p>
 <pre>
 &lt;apply executable=&quot;somecommand&quot; parallel=&quot;false&quot;&gt;
   &lt;arg value=&quot;arg1&quot;/&gt;
@@ -371,10 +376,11 @@ to the command line.</p>
   &lt;fileset dir=&quot;/tmp&quot;/&gt;
 &lt;/apply&gt;
 </pre>
-<p>invokes <code>somecommand arg1 SOURCEFILENAME arg2</code> for each file in <samp>/tmp</samp>
-replacing <code>SOURCEFILENAME</code> with the absolute filename of each file in
-turn. If <var>parallel</var> had been set to true, <code>SOURCEFILENAME</code> would be replaced
-with the absolute filenames of all files separated by spaces.</p>
+
+<p>Invoke <kbd>cc -c -o TARGETFILE SOURCEFILE</kbd> for each <samp>.c</samp> file that is newer than
+the corresponding <samp>.o</samp>, replacing <code>TARGETFILE</code> with the absolute filename of
+the <samp>.o</samp> and <code>SOURCEFILE</code> with the absolute name of the <samp>.c</samp>
+file.</p>
 <pre>
 &lt;apply executable=&quot;cc&quot; dest=&quot;src/C&quot; parallel=&quot;false&quot;&gt;
   &lt;arg value=&quot;-c&quot;/&gt;
@@ -384,10 +390,15 @@ with the absolute filenames of all files separated by spaces.</p>
   &lt;fileset dir=&quot;src/C&quot; includes=&quot;*.c&quot;/&gt;
   &lt;mapper type=&quot;glob&quot; from=&quot;*.c&quot; to=&quot;*.o&quot;/&gt;
 &lt;/apply&gt;</pre>
-<p>invokes <kbd>cc -c -o TARGETFILE SOURCEFILE</kbd> for each <samp>.c</samp> file that is newer
-than the corresponding <samp>.o</samp>, replacing <code>TARGETFILE</code> with the absolute filename
-of the <samp>.o</samp> and <code>SOURCEFILE</code> with the absolute name of the <samp>.c</samp>
-file.</p>
+
+<p>Apply the fictitious <kbd>processfile</kbd> executable to all files matching <samp>*.file</samp>
+in the <samp>src</samp> directory.  The <samp>out</samp> <code>&lt;mapper&gt;</code> has been set up
+to map <samp>*.file</samp> to <samp>*.out</samp>, then this <code>&lt;mapper&gt;</code> is used to
+specify <code>targetfile</code>s for this <code>&lt;apply&gt;</code> task.  A reference
+to <samp>out</samp> is then used as an <code>&lt;outputmapper&gt;</code> nested in
+a <code>&lt;redirector&gt;</code>, which in turn is nested beneath this <code>&lt;apply&gt;</code>
+instance.  This allows us to perform dependency checking against output files&mdash;the target files
+in this case.</p>
 <pre>
 &lt;mapper id=&quot;out&quot; type=&quot;glob&quot;
            from=&quot;src${file.separator}*.file&quot;
@@ -400,15 +411,9 @@ file.</p>
     &lt;outputmapper refid=&quot;out&quot;/&gt;
   &lt;/redirector&gt;
 &lt;/apply&gt;</pre>
-<p>Applies the fictitious <kbd>processfile</kbd> executable to all files
-matching <samp>*.file</samp> in the <samp>src</samp> directory.
-The <samp>out</samp> <code>&lt;mapper&gt;</code> has been set up to map <samp>*.file</samp>
-to <samp>*.out</samp>, then this <code>&lt;mapper&gt;</code> is used to
-specify <code>targetfile</code>s for this <code>&lt;apply&gt;</code> task.  A reference
-to <samp>out</samp> is then used as an <code>&lt;outputmapper&gt;</code> nested in
-a <code>&lt;redirector&gt;</code>, which in turn is nested beneath this <code>&lt;apply&gt;</code>
-instance.  This allows us to perform dependency checking against output files&mdash;the target files
-in this case.</p>
+
+<p>Apply the <kbd>ls</kbd> executable to all directories in the <code>PATH</code>, effectively
+listing all executables that are available on the <code>PATH</code>.</p>
 <pre>
 &lt;apply executable="ls" parallel="true"
        force="true" dest="${basedir}" append="true" type="both"&gt;
@@ -417,9 +422,10 @@ in this case.</p>
   &lt;/path&gt;
   &lt;identitymapper/&gt;
 &lt;/apply&gt;</pre>
-<p>Applies the <kbd>ls</kbd> executable to all directories in the <code>PATH</code>, effectively
-listing all executables that are available on the <code>PATH</code>.</p>
 
+<p>Convert all JavaScript files in the <samp>src</samp> directory using the command <kbd>jsmin &lt;
+src/a.js &gt; dest/a.js</kbd>. Because the filename itself should not be passed to
+the <code>jsmin</code> program, the <var>addsourcefile</var> is set to <q>false</q>.</p>
 <pre>
 &lt;apply executable="jsmin" addsourcefile="false"&gt;
     &lt;!-- Collect the JS-files --&gt;
@@ -432,9 +438,6 @@ listing all executables that are available on the <code>PATH</code>.</p>
         &lt;outputmapper id="out" type="glob" from="*.js" to="dest/*.js"/&gt;
     &lt;/redirector&gt;
 &lt;/apply&gt;</pre>
-<p>Conversion of the command <kbd>jsmin &lt; src/a.js &gt; dest/a.js</kbd> but for all files in
-the <samp>src</samp> directory. Because the filename itself should not be passed to
-the <code>jsmin</code> program, the <var>addsourcefile</var> is set to <q>false</q>.</p>
 
 </body>
 </html>

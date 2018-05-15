@@ -57,17 +57,19 @@ incorrect tokens are ignored.</p>
   </tr>
 </table>
 <h3>Examples</h3>
+
+<p>Copy recursively all the files from the <samp>src.dir</samp> directory into
+the <samp>dest.dir</samp> directory replacing all the occurrences of the string <code>@year@</code>
+with <q>2000</q>.</p>
 <pre>
 &lt;filter token=&quot;year&quot; value=&quot;2000&quot;/&gt;
 &lt;copy todir=&quot;${dest.dir}&quot; filtering=&quot;true&quot;&gt;
   &lt;fileset dir=&quot;${src.dir}&quot;/&gt;
 &lt;/copy&gt;</pre>
-<p>will copy recursively all the files from the <samp>src.dir</samp> directory into
-the <samp>dest.dir</samp> directory replacing all the occurrences of the string <code>@year@</code>
-with <q>2000</q>.</p>
-<pre>&lt;filter filtersfile=&quot;deploy_env.properties&quot;/&gt;</pre>
-<p>will read all property entries from the <samp>deploy_env.properties</samp> file and set these as
+
+<p>Read all property entries from the <samp>deploy_env.properties</samp> file and set these as
 filters.</p>
+<pre>&lt;filter filtersfile=&quot;deploy_env.properties&quot;/&gt;</pre>
 
 </body>
 </html>

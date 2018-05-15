@@ -68,17 +68,16 @@ build was performed on.  The best place for this task is probably in an initiali
 
 <h3>Examples</h3>
 
+<p>Set the <code>NAME</code>, <code>DOMAIN</code>, <code>ADDR4</code>, and <code>ADDR6</code> for
+the local host, using the most &quot;global&quot; address available.</p>
 <pre>&lt;hostinfo/&gt;</pre>
 
-<p>Sets the <code>NAME</code>, <code>DOMAIN</code>, <code>ADDR4</code>, and <code>ADDR6</code> for
-the local host, using the most &quot;global&quot; address available.</p>
-
-<pre>&lt;hostinfo prefix=&quot;remotehost&quot; host=&quot;www.apache.org&quot;/&gt;</pre>
-<p>Sets the properties <code>remotehost.NAME</code>
+<p>Set the properties <code>remotehost.NAME</code>
 to <samp>eos</samp>, <code>remotehost.DOMAIN</code>
 to <samp>apache.org</samp>, <code>remotehost.ADDR4</code> to <samp>140.211.11.130</samp>
 and <code>remotehost.ADDR6</code> to <samp>::</samp> for the host with the
 name <samp>www.apache.org</samp> (provided the canonical name and IP addresses do not change).</p>
+<pre>&lt;hostinfo prefix=&quot;remotehost&quot; host=&quot;www.apache.org&quot;/&gt;</pre>
 
 </body>
 </html>

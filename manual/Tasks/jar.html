@@ -388,45 +388,47 @@ nested <code>&lt;provider&gt;</code> elements may be used.</p>
 <h3>Examples</h3>
 
 <h4>Simple</h4>
-<pre>&lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
-<p>jars all files in the <samp>${build}/classes</samp> directory into a file
+<p>Jar all files in the <samp>${build}/classes</samp> directory into a file
 called <samp>app.jar</samp> in the <samp>${dist}/lib</samp> directory.</p>
+<pre>&lt;jar destfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot;/&gt;</pre>
 
 <h4>With filters</h4>
 
+<p>Jar all files in the <samp>${build}/classes</samp> directory into a file
+called <samp>app.jar</samp> in the <samp>${dist}/lib</samp> directory. Files with the
+name <samp>Test.class</samp> are excluded.</p>
 <pre>&lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
      basedir=&quot;${build}/classes&quot;
      excludes=&quot;**/Test.class&quot;/&gt;</pre>
-<p>jars all files in the <samp>${build}/classes</samp> directory into a file
-called <samp>app.jar</samp> in the <samp>${dist}/lib</samp> directory. Files with the
-name <samp>Test.class</samp> are excluded.</p>
 
+<p>Jar all files in the <samp>${build}/classes</samp> directory into a file
+called <samp>app.jar</samp> in the <samp>${dist}/lib</samp> directory. Only files under the
+directory <samp>mypackage/test</samp> are used, and files with the name <samp>Test.class</samp> are
+excluded.</p>
 <pre>
 &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;
      basedir=&quot;${build}/classes&quot;
      includes=&quot;mypackage/test/**&quot;
      excludes=&quot;**/Test.class&quot;/&gt;</pre>
-<p>jars all files in the <samp>${build}/classes</samp> directory into a file
-called <samp>app.jar</samp> in the <samp>${dist}/lib</samp> directory. Only files under the
-directory <samp>mypackage/test</samp> are used, and files with the name <samp>Test.class</samp> are
-excluded.</p>
 
 <h4>Multiple filesets</h4>
+<p>Jar all files in the <samp>${build}/classes</samp> directory and also in
+the <samp>${src}/resources</samp> directory together into a file called <samp>app.jar</samp> in
+the <samp>${dist}/lib</samp> directory. Files with the name <samp>Test.class</samp> are excluded. If
+there are files such as <samp>${build}/classes/mypackage/MyClass.class</samp>
+and <samp>${src}/resources/mypackage/image.gif</samp>, they will appear in the same directory in the
+jar (and thus be considered in the same package by Java).</p>
 <pre>
 &lt;jar destfile=&quot;${dist}/lib/app.jar&quot;&gt;
     &lt;fileset dir=&quot;${build}/classes&quot;
              excludes=&quot;**/Test.class&quot;/&gt;
     &lt;fileset dir=&quot;${src}/resources&quot;/&gt;
 &lt;/jar&gt;</pre>
-<p>jars all files in the <samp>${build}/classes</samp> directory and also in
-the <samp>${src}/resources</samp> directory together into a file called <samp>app.jar</samp> in
-the <samp>${dist}/lib</samp> directory.  Files with the name <samp>Test.class</samp> are excluded.
-If there are files such as <samp>${build}/classes/mypackage/MyClass.class</samp>
-and <samp>${src}/resources/mypackage/image.gif</samp>, they will appear in the same directory in the
-JAR (and thus be considered in the same package by Java).</p>
 
 <h4>Merging archives</h4>
 
+<p>Create an executable jar file with a main class <samp>com.acme.checksites.Main</samp>, and embed
+all the classes from the jar <samp>lib/main/some.jar</samp>.</p>
 <pre>
 &lt;jar destfile="build/main/checksites.jar"&gt;
     &lt;fileset dir="build/main/classes"/&gt;
@@ -436,9 +438,9 @@ JAR (and thus be considered in the same package by Java).</p>
                  value="com.acme.checksites.Main"/&gt;
     &lt;/manifest&gt;
 &lt;/jar&gt;</pre>
-<p>Creates an executable jar file with a main class <samp>com.acme.checksites.Main</samp>, and
-embeds all the classes from the jar <samp>lib/main/some.jar</samp>.</p>
 
+<p>Create an executable jar file with a main class <samp>com.acme.checksites.Main</samp>, and embed
+all the classes from all the jars in <samp>lib/main</samp>.</p>
 <pre>
 &lt;jar destfile="build/main/checksites.jar"&gt;
     &lt;fileset dir="build/main/classes"/&gt;
@@ -455,8 +457,6 @@ embeds all the classes from the jar <samp>lib/main/some.jar</samp>.</p>
               value="com.acme.checksites.Main"/&gt;
     &lt;/manifest&gt;
 &lt;/jar&gt;</pre>
-<p>Creates an executable jar file with a main class <samp>com.acme.checksites.Main</samp>, and
-embeds all the classes from all the jars in <samp>lib/main</samp>.</p>
 
 <h4>Inline manifest</h4>
 <pre>
@@ -521,9 +521,9 @@ JDK 6 scripting interface:</p>
 
 <h4 id="jep238-example">JEP 238 example: a Multi-Release JAR Files</h4>
 <p>Here we want to create a <em>Multi-Release JAR File</em> according the
-specification <a href="http://openjdk.java.net/jeps/238" target="_top">JEP 238</a>.  It defines on
+specification <a href="http://openjdk.java.net/jeps/238" target="_top">JEP 238</a>. It defines on
 top of a JAR the possibility to place additional or overwriting classes in a jar, which are
-available according to the Java version you run.<br/>  Basically it says, that you have to set the
+available according to the Java version you run.<br/>Basically it says, that you have to set the
 manifest entry <code>Multi-Release: true</code> and place all additional or overwriting classes
 in <samp>META-INF/versions/<i>number</i>/package-structure</samp>,
 e.g. <samp>META-INF/versions/9/org/apache/ant/MyClass.class</samp></p>

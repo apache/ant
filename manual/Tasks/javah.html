@@ -188,25 +188,31 @@ using one of the built-in compilers.</p>
 element of that type can be used as an alternative to the <var>implementation</var> attribute.</p>
 
 <h3>Examples</h3>
-<pre>&lt;javah destdir=&quot;c&quot; class=&quot;org.foo.bar.Wibble&quot;/&gt;</pre>
-<p>makes a JNI header of the named class, using the JDK 1.2 JNI model. Assuming the
+<p>Make a JNI header of the named class, using the JDK 1.2 JNI model. Assuming the
 directory <samp>c</samp> already exists, the file <samp>org_foo_bar_Wibble.h</samp> is created
 there. If this file already exists, it is left unchanged.</p>
+<pre>&lt;javah destdir=&quot;c&quot; class=&quot;org.foo.bar.Wibble&quot;/&gt;</pre>
+
+<p>This is similar to the previous example, except the output is written to a file
+called <samp>wibble.h</samp> in the current directory.</p>
 <pre>
 &lt;javah outputFile=&quot;wibble.h&quot;&gt;
   &lt;class name=&quot;org.foo.bar.Wibble,org.foo.bar.Bobble&quot;/&gt;
 &lt;/javah&gt;</pre>
-<p>is similar to the previous example, except the output is written to a file
-called <samp>wibble.h</samp> in the current directory.</p>
+
+<p>Write three header files, one for each of the classes named. Because the <var>force</var> option
+is set, these header files are always written when the <code>Javah</code> task is invoked, even if
+they already exist.</p>
 <pre>
 &lt;javah destdir=&quot;c&quot; force=&quot;yes&quot;&gt;
   &lt;class name=&quot;org.foo.bar.Wibble&quot;/&gt;
   &lt;class name=&quot;org.foo.bar.Bobble&quot;/&gt;
   &lt;class name=&quot;org.foo.bar.Tribble&quot;/&gt;
 &lt;/javah&gt;</pre>
-<p>writes three header files, one for each of the classes named. Because the force option is set,
-these header files are always written when the <code>Javah</code> task is invoked, even if they
-already exist.</p>
+
+<p>Write the headers for the three classes using the 'old' JNI format, then write the
+corresponding <samp>.c</samp> stubs. The <var>verbose</var> option will cause <code>Javah</code> to
+describe its progress.</p>
 <pre>
 &lt;javah destdir=&quot;c&quot; verbose=&quot;yes&quot; old=&quot;yes&quot; force=&quot;yes&quot;&gt;
   &lt;class name=&quot;org.foo.bar.Wibble&quot;/&gt;
@@ -218,9 +224,6 @@ already exist.</p>
   &lt;class name=&quot;org.foo.bar.Bobble&quot;/&gt;
   &lt;class name=&quot;org.foo.bar.Tribble&quot;/&gt;
 &lt;/javah&gt;</pre>
-<p>writes the headers for the three classes using the 'old' JNI format, then writes the
-corresponding <samp>.c</samp> stubs. The <var>verbose</var> option will cause <code>Javah</code> to
-describe its progress.</p>
 
 <p>If you want to use a
 custom <code class="code">JavahAdapter</code> <code>org.example.MyAdapter</code> you can either use

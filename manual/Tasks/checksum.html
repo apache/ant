@@ -173,50 +173,54 @@ target="_top">Cryptography Architecture Standard Algorithm Name Documentation</a
 for which checksums should be generated.</p>
 
 <h3>Examples</h3>
+
 <p><strong>Example 1</strong></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot;/&gt;</pre>
-<p>Generates a MD5 checksum for <samp>foo.bar</samp> and stores the checksum in the destination
+<p>Generate a MD5 checksum for <samp>foo.bar</samp> and store the checksum in the destination
 file <samp>foo.bar.MD5</samp>.  <samp>foo.bar.MD5</samp> is overwritten only if <samp>foo.bar</samp>
 is newer than itself.</p>
+<pre>&lt;checksum file=&quot;foo.bar&quot;/&gt;</pre>
 
 <p><strong>Example 2</strong></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot; forceOverwrite=&quot;yes&quot;/&gt;</pre>
-<p>Generates a MD5 checksum for <samp>foo.bar</samp> and stores the checksum
+<p>Generate a MD5 checksum for <samp>foo.bar</samp> and store the checksum
 in <samp>foo.bar.MD5</samp>.  If <samp>foo.bar.MD5</samp> already exists, it is overwritten.</p>
+<pre>&lt;checksum file=&quot;foo.bar&quot; forceOverwrite=&quot;yes&quot;/&gt;</pre>
 
 <p><strong>Example 3</strong></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot; property=&quot;foobarMD5&quot;/&gt;</pre>
-<p>Generates a MD5 checksum for <samp>foo.bar</samp> and stores it in the project
+<p>Generate a MD5 checksum for <samp>foo.bar</samp> and store it in the project
 property <code>foobarMD5</code>.</p>
+<pre>&lt;checksum file=&quot;foo.bar&quot; property=&quot;foobarMD5&quot;/&gt;</pre>
 
 <p><strong>Example 4</strong></p>
+<p>Generate a MD5 checksum for <samp>foo.bar</samp>, compare it against <samp>foo.bar.MD5</samp> and
+set <code>isMD5ok</code> to either <q>true</q> or <q>false</q>, depending upon the result.</p>
 <pre>&lt;checksum file=&quot;foo.bar&quot; verifyProperty=&quot;isMD5ok&quot;/&gt;</pre>
-<p>Generates a MD5 checksum for <samp>foo.bar</samp>, compares it against <samp>foo.bar.MD5</samp>
-and sets <code>isMD5ok</code> to either <q>true</q> or <q>false</q>, depending upon the result.</p>
 
 <p><strong>Example 5</strong></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot; algorithm=&quot;SHA-512&quot; fileext=&quot;asc&quot;/&gt;</pre>
-<p>Generates a SHA-512 checksum for <samp>foo.bar</samp> and stores the checksum in the destination
+<p>Generate a SHA-512 checksum for <samp>foo.bar</samp> and store the checksum in the destination
 file <samp>foo.bar.asc</samp>.  <samp>foo.bar.asc</samp> is overwritten only if <samp>foo.bar</samp>
 is newer than itself.</p>
+<pre>&lt;checksum file=&quot;foo.bar&quot; algorithm=&quot;SHA-512&quot; fileext=&quot;asc&quot;/&gt;</pre>
 
 <p><strong>Example 6</strong></p>
-<pre>&lt;checksum file=&quot;foo.bar&quot; property=&quot;${md5}&quot; verifyProperty=&quot;isEqual&quot;/&gt;</pre>
-<p>Generates a MD5 checksum for <samp>foo.bar</samp>, compares it against the value of the
-property <code>md5</code>, and sets <code>isEqual</code> to either <q>true</q> or <q>false</q>,
+<p>Generate a MD5 checksum for <samp>foo.bar</samp>, compare it against the value of the
+property <code>md5</code>, and set <code>isEqual</code> to either <q>true</q> or <q>false</q>,
 depending upon the result.</p>
+<pre>&lt;checksum file=&quot;foo.bar&quot; property=&quot;${md5}&quot; verifyProperty=&quot;isEqual&quot;/&gt;</pre>
 
 <p><strong>Example 7</strong></p>
+<p>Just like Example 1, but generates a <samp>.MD5</samp> file for every file that begins with the
+name <samp>foo</samp>.</p>
 <pre>
 &lt;checksum&gt;
   &lt;fileset dir=&quot;.&quot;&gt;
     &lt;include name=&quot;foo*&quot;/&gt;
   &lt;/fileset&gt;
 &lt;/checksum&gt;</pre>
-<p>Works just like Example 1, but generates a <samp>.MD5</samp> file for every file that begins with
-the name <samp>foo</samp>.</p>
 
 <p><strong>Example 8</strong></p>
+<p>Just like Example 4, but only sets <code>isChecksumEqual</code> to <q>true</q>, if the checksum
+matches&mdash;it will never be set to <q>false</q>.  This example demonstrates use with
+the <code>condition</code> task.</p>
 <pre>
 &lt;condition property=&quot;isChecksumEqual&quot;&gt;
   &lt;checksum&gt;
@@ -225,9 +229,6 @@ the name <samp>foo</samp>.</p>
     &lt;/fileset&gt;
   &lt;/checksum&gt;
 &lt;/condition&gt;</pre>
-<p>Works like Example 4, but only sets <code>isChecksumEqual</code> to <q>true</q>, if the checksum
-matches&mdash;it will never be set to <q>false</q>.  This example demonstrates use with
-the <code>condition</code> task.</p>
 
 <h3>Note</h3>
 <p>When working with more than one file, if condition and/or <var>verifyproperty</var> is used, the

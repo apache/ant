@@ -210,39 +210,41 @@ set.</p>
 <p>Prior to Ant 1.9.7 only <code>&lt;fileset&gt;</code> has been supported as a nested element.</p>
 
 <h3>Examples</h3>
-<p><strong>Copy a single local file to a remote machine</strong></p>
+<p>Copy a single local file to a remote machine:</p>
 <pre>&lt;scp file=&quot;myfile.txt&quot; todir=&quot;user:password@somehost:/home/chuck&quot;/&gt;</pre>
 
-<p><strong>Copy a single local file to a remote machine with separate <var>password</var>
-attribute</strong></p>
+<p>Copy a single local file to a remote machine with separate <var>password</var>
+attribute:</p>
 <pre>&lt;scp file=&quot;myfile.txt&quot; todir=&quot;user@somehost:/home/chuck&quot; password=&quot;password&quot;/&gt;</pre>
 
-<p><strong>Copy a single local file to a remote machine using key base authentication.</strong></p>
+<p>Copy a single local file to a remote machine using key base authentication:</p>
 <pre>
 &lt;scp file=&quot;myfile.txt&quot;
      todir=&quot;user@somehost:/home/chuck&quot;
      keyfile=&quot;${user.home}/.ssh/id_dsa&quot;
      passphrase=&quot;my extremely secret passphrase&quot;/&gt;</pre>
 
-<p><strong>Copy a single remote file to a local directory</strong></p>
+<p>Copy a single remote file to a local directory:</p>
 <pre>&lt;scp file=&quot;user:password@somehost:/home/chuck/myfile.txt&quot; todir=&quot;../some/other/dir&quot;/&gt;</pre>
 
-<p><strong>Copy a remote directory to a local directory</strong></p>
+<p>Copy a remote directory to a local directory:</p>
 <pre>&lt;scp file=&quot;user:password@somehost:/home/chuck/*&quot; todir=&quot;/home/sara&quot;/&gt;</pre>
 
-<p><strong>Copy a local directory to a remote directory</strong></p>
+<p>Copy a local directory to a remote directory:</p>
 <pre>
 &lt;scp todir=&quot;user:password@somehost:/home/chuck/&quot;&gt;
   &lt;fileset dir=&quot;src_dir&quot;/&gt;
 &lt;/scp&gt;</pre>
-<p><strong>Copy a set of files to a directory</strong></p>
+
+<p>Copy a set of files to a directory:</p>
 <pre>
 &lt;scp todir=&quot;user:password@somehost:/home/chuck&quot;&gt;
   &lt;fileset dir=&quot;src_dir&quot;&gt;
     &lt;include name=&quot;**/*.java&quot;/&gt;
   &lt;/fileset&gt;
 &lt;/scp&gt;</pre>
-<p><strong>Copy a set of files to a remote directory in reverse last-modified order</strong></p>
+
+<p>Copy a set of files to a remote directory in reverse last-modified order:</p>
 <pre>
 &lt;scp todir=&quot;user:password@somehost:/home/chuck&quot;&gt;
   &lt;sort&gt;
@@ -259,6 +261,7 @@ attribute</strong></p>
 can be a serious security hole.  Consider using variable substitution and include the password on
 the command line.  For example:</p>
 <pre>&lt;scp todir=&quot;${username}:${password}@host:/dir&quot; ...&gt;</pre>
+
 <p>Invoking Ant with the following command line:</p>
 <pre class="input">ant -Dusername=me -Dpassword=mypassword target1 target2</pre>
 <p>is slightly better, but the username/password is exposed to all users on an Unix system (via

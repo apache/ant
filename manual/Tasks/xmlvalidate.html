@@ -164,30 +164,33 @@ properties</a>. Properties can be used to set the schema used to validate the XM
 </table>
 
 <h3>Examples</h3>
-<pre>&lt;xmlvalidate file="toto.xml"/&gt;</pre>
 <p>Validate <samp>toto.xml</samp></p>
+<pre>&lt;xmlvalidate file="toto.xml"/&gt;</pre>
+
+<p>Validate all <samp>.xsl</samp> files in <samp>src/style</samp>, but only warn if there is an
+error, rather than halt the build.</p>
 <pre>
 &lt;xmlvalidate failonerror="no" lenient="yes" warn="yes"
              classname="org.apache.xerces.parsers.SAXParser"&gt;
              classpath="lib/xerces.jar"&gt;
   &lt;fileset dir="src" includes="style/*.xsl"/&gt;
 &lt;/xmlvalidate&gt;</pre>
-<p>Validate all <samp>.xsl</samp> files in <samp>src/style</samp>, but only warn if there is an
-error, rather than halt the build.</p>
+
+<p>Validate a struts configuration, using a local copy of the DTD.</p>
 <pre>
 &lt;xmlvalidate file="struts-config.xml" warn="false"&gt;
   &lt;dtd publicId="-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
        location="struts-config_1_0.dtd"/&gt;
 &lt;/xmlvalidate&gt;</pre>
 
-<p>Validate a struts configuration, using a local copy of the DTD.</p>
+<p>Scan all XML files in the project, using a predefined catalog to map URIs to local files.</p>
 <pre>
 &lt;xmlvalidate failonerror="no"&gt;
   &lt;fileset dir="${project.dir}" includes="**/*.xml"/&gt;
   &lt;xmlcatalog refid="mycatalog"/&gt;
 &lt;/xmlvalidate&gt;</pre>
 
-<p>Scan all XML files in the project, using a predefined catalog to map URIs to local files.</p>
+<p>Scan all XML files in the project, using the catalog defined inline.</p>
 <pre>
 &lt;xmlvalidate failonerror="no"&gt;
   &lt;fileset dir="${project.dir}" includes="**/*.xml"/&gt;
@@ -196,8 +199,12 @@ error, rather than halt the build.</p>
          location=&quot;com/arielpartners/knowledgebase/dtd/article.dtd&quot;/&gt;
   &lt;/xmlcatalog&gt;
 &lt;/xmlvalidate&gt;</pre>
-<p>Scan all XML files in the project, using the catalog defined inline.</p>
 
+<p>Validate all <samp>.xml</samp> files in <samp>xml</samp> directory with the parser configured to
+perform XSD validation. Note: The parser must support the
+feature <var>http://apache.org/xml/features/validation/schema</var>. The <a href="schemavalidate.html">schemavalidate</a>
+task is better for validating W3C XML Schemas, as it extends this task with the right options
+automatically enabled, and makes it easy to add a list of schema files/URLs to act as sources.</p>
 <pre>
 &lt;xmlvalidate failonerror="yes" lenient="no" warn="yes"&gt;
   &lt;fileset dir="xml" includes="**/*.xml"/&gt;
@@ -205,12 +212,9 @@ error, rather than halt the build.</p>
   &lt;attribute name="http://apache.org/xml/features/validation/schema"  value="true"/&gt;
   &lt;attribute name="http://xml.org/sax/features/namespaces" value="true"/&gt;
 &lt;/xmlvalidate&gt;</pre>
-<p>Validate all <samp>.xml</samp> files in <samp>xml</samp> directory with the parser configured to
-perform XSD validation.  Note: The parser must support the
-feature <var>http://apache.org/xml/features/validation/schema</var>. The <a href="schemavalidate.html">schemavalidate</a>
-task is better for validating W3C XML Schemas, as it extends this task with the right options
-automatically enabled, and makes it easy to add a list of schema files/URLs to act as sources.</p>
 
+<p>Validate the file <samp>xml/endpiece-noSchema.xml</samp> against the
+schema <samp>xml/doc.xsd</samp>.</p>
 <pre>
 &lt;!-- Convert path to URL format --&gt;
 &lt;pathconvert dirsep="/" property="xsd.file"&gt;
@@ -225,7 +229,5 @@ automatically enabled, and makes it easy to add a list of schema files/URLs to a
   &lt;property name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
             value="${xsd.file}"/&gt;
 &lt;/xmlvalidate&gt;</pre>
-<p>Validate the file <samp>xml/endpiece-noSchema.xml</samp> against the
-schema <samp>xml/doc.xsd</samp>.</p>
 </body>
 </html>

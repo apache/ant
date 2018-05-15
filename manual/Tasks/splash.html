@@ -99,16 +99,17 @@ that makes it clear to readers of the build exactly what is going on.</p>
     <td>No</td>
   </tr>
 </table>
+
 <h3>Examples</h3>
-<pre>&lt;splash/&gt;</pre>
+
 <p>Splash <samp>images/ant_logo_large.gif</samp> from the classpath.</p>
+<pre>&lt;splash/&gt;</pre>
+
+<p>Splash the Jakarta logo, for an initial period of 5 seconds.</p>
 <pre>
 &lt;splash imageurl=&quot;http://jakarta.apache.org/images/jakarta-logo.gif&quot;
         useproxy=&quot;true&quot;
-        showduration=&quot;5000&quot;/&gt;
-
-</pre>
-<p>Splashes the jakarta logo, for an initial period of 5 seconds.</p>
+        showduration=&quot;5000&quot;/&gt;</pre>
 
 <p>Splash with controlled progress and nondefault text</p>
 <pre>
@@ -126,8 +127,7 @@ that makes it clear to readers of the build exactly what is going on.</p>
     &lt;sleep seconds="1"/&gt;
     &lt;echo&gt;Progress: 100%&lt;/echo&gt;
     &lt;sleep seconds="3"/&gt;
-&lt;/target&gt;
-</pre>
+&lt;/target&gt;</pre>
 
 </body>
 </html>

@@ -315,6 +315,7 @@ to <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/java.h
 target="_top">Oracle's specification</a>.
 
 <h3>Examples</h3>
+<p>Run a class in this JVM with a new jar on the classpath</p>
 <pre>
 &lt;java classname=&quot;test.Main&quot;&gt;
   &lt;arg value=&quot;-h&quot;/&gt;
@@ -323,8 +324,10 @@ target="_top">Oracle's specification</a>.
     &lt;pathelement path=&quot;${java.class.path}&quot;/&gt;
   &lt;/classpath&gt;
 &lt;/java&gt;</pre>
-Run a class in this JVM with a new jar on the classpath
 
+<p>Run the JAR <samp>test.jar</samp> in this project's <samp>dist/lib</samp> directory, using the
+manifest supplied entry point, forking (as required), and with a maximum memory of 128 MB. Any non
+zero return code breaks the build.</p>
 <pre>
 &lt;java jar=&quot;dist/test.jar&quot;
       fork="true"
@@ -336,10 +339,9 @@ Run a class in this JVM with a new jar on the classpath
     &lt;pathelement path=&quot;${java.class.path}&quot;/&gt;
   &lt;/classpath&gt;
 &lt;/java&gt;</pre>
-<p>Run the JAR <samp>test.jar</samp> in this project's <samp>dist/lib</samp> directory.  using the
-manifest supplied entry point, forking (as required), and with a maximum memory of 128 MB. Any non
-zero return code breaks the build.</p>
 
+<p>Run the JAR <samp>dist/test.jar</samp> relative to the directory <code>${exec.dir}</code>, this
+being the same directory in which JVM is to start up.</p>
 <pre>
 &lt;java dir=&quot;${exec.dir}&quot;
       jar=&quot;${exec.dir}/dist/test.jar&quot;
@@ -352,12 +354,12 @@ zero return code breaks the build.</p>
     &lt;pathelement path=&quot;${java.class.path}&quot;/&gt;
   &lt;/classpath&gt;
 &lt;/java&gt;</pre>
-<p>Run the JAR <samp>dist/test.jar</samp> relative to the directory <code>${exec.dir}</code>, this
-being the same directory in which JVM is to start up.</p>
 
+<p>Run a given class with the current classpath.</p>
 <pre>&lt;java classname=&quot;test.Main&quot;/&gt;</pre>
-<p>Runs a given class with the current classpath.</p>
 
+<p>Add system properties and JVM properties to JVM as in <code>java
+-Xrunhprof:cpu=samples,file=log.txt,depth=3 -DDEBUG=true test.Main</code>
 <pre>
 &lt;java classname=&quot;test.Main&quot;
       fork=&quot;yes&quot; &gt;
@@ -365,31 +367,31 @@ being the same directory in which JVM is to start up.</p>
   &lt;arg value=&quot;-h&quot;/&gt;
   &lt;jvmarg value=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;/&gt;
 &lt;/java&gt;</pre>
-<p>Add system properties and JVM properties to JVM as in <code>java
--Xrunhprof:cpu=samples,file=log.txt,depth=3 -DDEBUG=true test.Main</code>
 
+<p>Use a given Java implementation (other than the one Ant is currently using) to run the class. For
+documentation in the log <var>taskname</var> is used to change the <q>[java]</q> log-prefix
+to <q>[java1.4]</q>.</p>
 <pre>
 &lt;java classname=&quot;ShowJavaVersion&quot; classpath=&quot;.&quot;
       jvm=&quot;path-to-java14-home/bin/java&quot; fork=&quot;true&quot;
       taskname=&quot;java1.4&quot;/&gt;</pre>
-<p>Use a given Java implementation (other than the one Ant is currently using) to run the class.
-For documentation in the log <var>taskname</var> is used to change the <q>[java]</q> log-prefix
-to <q>[java1.4]</q>.</p>
 
 <p><strong>Note</strong>: you can not specify the (highly deprecated) MS
 JVM, <samp>jview.exe</samp>, as <var>jvm</var>, since it takes different parameters than other JVMs.
 That JVM can be started from <code>&lt;exec&gt;</code> if required.</p>
 
+<p>Run the module <samp>TestModule</samp> resolved on the modulepath <samp>lib/:dist/test.jar</samp>
+with a maximum memory of 128 MB. Any non zero return code breaks the build.</p>
 <pre>
 &lt;java fork=&quot;true&quot;
       failonerror=&quot;true&quot;
       maxmemory=&quot;128m&quot;
       module=&quot;TestModule&quot;
       modulepath=&quot;lib:dist/test.jar&quot;/&gt;</pre>
-<p>Runs the module <samp>TestModule</samp> resolved on the
+
+<p>Run the class <samp>Main</samp> in module <samp>TestModule</samp> resolved on the
 modulepath <samp>lib/:dist/test.jar</samp> with a maximum memory of 128 MB. Any non zero return code
 breaks the build.</p>
-
 <pre>
 &lt;java fork=&quot;true&quot;
       failonerror=&quot;true&quot;
@@ -401,8 +403,5 @@ breaks the build.</p>
     &lt;pathelement location=&quot;dist/test.jar&quot;/&gt;
   &lt;/modulepath&gt;
 &lt;/java&gt;</pre>
-<p>Runs the class <samp>Main</samp> in module <samp>TestModule</samp> resolved on the
-modulepath <samp>lib/:dist/test.jar</samp> with a maximum memory of 128 MB. Any non zero return code
-breaks the build.</p>
 </body>
 </html>

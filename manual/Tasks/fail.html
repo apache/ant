@@ -73,34 +73,34 @@ see <a href="conditions.html">here</a>.<br/><em>Since Ant 1.6.2</em>
 
 <h3>Examples</h3>
 
+<p>Exit the current build with no further information given.</p>
 <pre>&lt;fail/&gt;</pre>
-<p>will exit the current build with no further information given.</p>
+
 <pre class="output">
 BUILD FAILED
 
 build.xml:4: No message</pre>
 
+<p>Exit the current build and print a message to wherever your output goes:</p>
 <pre>&lt;fail message=&quot;Something wrong here.&quot;/&gt;</pre>
-<p>will exit the current build and print something like the following to wherever your output
-goes:</p>
+
 <pre class="output">
 BUILD FAILED
 
 build.xml:4: Something wrong here.</pre>
 
+<p>A different way to achieve the same result as above.</p>
 <pre>&lt;fail&gt;Something wrong here.&lt;/fail&gt;</pre>
-<p>will give the same result as above.</p>
 
+<p>Exit the current build and print an explanation to wherever your output goes:</p>
 <pre>&lt;fail unless=&quot;thisdoesnotexist&quot;/&gt;</pre>
-<p>will exit the current build and print something like the following to wherever your output
-goes:</p>
+
 <pre class="output">
 BUILD FAILED
 
 build.xml:2: unless=thisdoesnotexist</pre>
 
-Using a condition to achieve the same effect:
-
+<p>Use a condition to achieve the same effect:</p>
 <pre>
 &lt;fail&gt;
     &lt;condition&gt;
@@ -110,12 +110,13 @@ Using a condition to achieve the same effect:
     &lt;/condition&gt;
 &lt;/fail&gt;</pre>
 
-<p>Output:</p>
 <pre class="output">
 BUILD FAILED
 
 build.xml:2: condition satisfied</pre>
 
+<p>Check that both files <samp>one.txt</samp> and <samp>two.txt</samp> are present otherwise the
+build will fail.</p>
 <pre>
 &lt;fail message=&quot;Files are missing.&quot;&gt;
     &lt;condition&gt;
@@ -126,8 +127,6 @@ build.xml:2: condition satisfied</pre>
         &lt;/not&gt;
     &lt;/condition&gt;
 &lt;/fail&gt;</pre>
-<p>Will check that both files <samp>one.txt</samp> and <samp>two.txt</samp> are present otherwise
-the build will fail.</p>
 
 </body>
 </html>

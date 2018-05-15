@@ -185,8 +185,10 @@ which are to be executed once the SSH connection is established and all local an
 established.</p>
 
 <h3>Examples</h3>
-<p><strong>Connect to a remote machine using password authentication, forward the local CVS port to
-the remote host, and execute a CVS command locally, which can use the tunnel.</strong></p>
+
+<p>Connect to a remote machine using password authentication, forward the local CVS port to the
+remote host, and execute a CVS command locally, which can use the tunnel.</p>
+
 <pre>
 &lt;sshsession host=&quot;somehost&quot;
             username=&quot;dude&quot;
@@ -200,7 +202,8 @@ the remote host, and execute a CVS command locally, which can use the tunnel.</s
   &lt;/sequential&gt;
 &lt;/sshsession&gt;</pre>
 
-<p><strong>Do the same thing using nested <code>localtunnel</code> element.</strong></p>
+<p>Do the same thing using nested <code>localtunnel</code> element.</p>
+
 <pre>
 &lt;sshsession host=&quot;somehost&quot;
             username=&quot;dude&quot;
@@ -214,9 +217,9 @@ the remote host, and execute a CVS command locally, which can use the tunnel.</s
   &lt;/sequential&gt;
 &lt;/sshsession&gt;</pre>
 
-<p><strong>Connect to a remote machine using key authentication, forward port 1080 to port 80 of an
-intranet server which is not directly accessible, then run a <code>get</code> task using that
-tunnel.</strong></p>
+<p>Connect to a remote machine using key authentication, forward port 1080 to port 80 of an intranet
+server which is not directly accessible, then run a <code>get</code> task using that tunnel.</p>
+
 <pre>
 &lt;sshsession host=&quot;somehost&quot;
             username=&quot;dude&quot;
@@ -231,6 +234,7 @@ tunnel.</strong></p>
 <p><strong>Security Note</strong>: Hardcoding passwords or passphrases and/or usernames
 in <code>sshsession</code> task can be a serious security hole. Consider using variable substitution
 and include the password on the command line. For example:</p>
+
 <pre>
 &lt;sshsession host=&quot;somehost&quot;
             username=&quot;${username}&quot;

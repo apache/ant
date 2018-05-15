@@ -135,8 +135,8 @@ library.</p>
 </table>
 
 <h3>Examples</h3>
-<p><strong>Resolve Extension to file.</strong> If file does not exist or file does not implement
-extension then throw an exception.</p>
+<p>Resolve Extension to file. If file does not exist or file does not implement extension then throw
+an exception.</p>
 <pre>
 &lt;extension id=&quot;dve.ext&quot;
            extensionName=&quot;org.realityforge.dve&quot;
@@ -148,8 +148,8 @@ extension then throw an exception.</p>
   &lt;location location="/opt/jars/dve.jar"/&gt;
 &lt;/jarlib-resolve&gt;</pre>
 
-<p><strong>Resolve Extension to URL.</strong> If URL does not exist or can not write
-to <var>destfile</var> or file does not implement extension then throw an exception.</p>
+<p>Resolve Extension to URL. If URL does not exist or can not write to <var>destfile</var> or file
+does not implement extension then throw an exception.</p>
 <pre>
 &lt;extension id=&quot;dve.ext&quot;
            extensionName=&quot;org.realityforge.dve&quot;
@@ -161,9 +161,9 @@ to <var>destfile</var> or file does not implement extension then throw an except
   &lt;url url="http://www.realityforge.net/jars/dve.jar" destfile="lib/dve.jar"/&gt;
 &lt;/jarlib-resolve&gt;</pre>
 
-<p><strong>Resolve Extension to file produce by Ant build.</strong> If file does not get produced or
-Ant file is missing or build fails then throw an exception. (<strong>Note</strong>: does not check
-that library implements extension.)</p>
+<p>Resolve Extension to file produce by Ant build. If file does not get produced or Ant file is
+missing or build fails then throw an exception. (<strong>Note</strong>: does not check that library
+implements extension.)</p>
 <pre>
 &lt;extension id=&quot;dve.ext&quot;
            extensionName=&quot;org.realityforge.dve&quot;
@@ -175,10 +175,9 @@ that library implements extension.)</p>
   &lt;ant antfile="../dve/build.xml" target="main" destfile="lib/dve.jar"/&gt;
 &lt;/jarlib-resolve&gt;</pre>
 
-<p><strong>Resolve Extension via multiple methods.</strong> First check local file to see if it
-implements extension. If it does not then try to build it from source in parallel directory. If that
-fails then finally try to download it from a website. If all steps fail then throw a build
-exception.</p>
+<p>Resolve Extension via multiple methods. First check local file to see if it implements
+extension. If it does not then try to build it from source in parallel directory. If that fails then
+finally try to download it from a website. If all steps fail then throw a build exception.</p>
 <pre>
 &lt;extension id=&quot;dve.ext&quot;
            extensionName=&quot;org.realityforge.dve&quot;

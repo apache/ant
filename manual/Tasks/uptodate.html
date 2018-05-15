@@ -98,13 +98,13 @@ attribute of the nested <code>srcfiles</code> element.</p>
 <p><em>Since Ant 1.6.3</em>, one can use a <code>filenamemapper</code> type in place of the mapper
 element.</p>
 <h3>Examples</h3>
+<p>Set the property <code>xmlBuild.notRequired</code> to <q>true</q> if
+the <samp>${deploy}/xmlClasses.jar</samp> file is more up-to-date than any of the DTD files in
+the <samp>${src}/xml</samp> directory.</p>
 <pre>
 &lt;uptodate property=&quot;xmlBuild.notRequired&quot; targetfile=&quot;${deploy}\xmlClasses.jar&quot;&gt;
   &lt;srcfiles dir=&quot;${src}/xml&quot; includes=&quot;**/*.dtd&quot;/&gt;
 &lt;/uptodate&gt;</pre>
-<p>sets the property <code>xmlBuild.notRequired</code> to <q>true</q> if
-the <samp>${deploy}/xmlClasses.jar</samp> file is more up-to-date than any of the DTD files in
-the <samp>${src}/xml</samp> directory.</p>
 <p>This can be written as:</p>
 <pre>
 &lt;uptodate property=&quot;xmlBuild.notRequired&quot;&gt;

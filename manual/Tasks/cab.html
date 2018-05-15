@@ -106,29 +106,32 @@ element to specify the files to be included in the archive.  If this is specifie
 the <var>basedir</var> attribute cannot be used.</p>
 
 <h3>Examples</h3>
+<p>Cab all files in the <samp>htdocs/manual</samp> directory into a file
+called <samp>manual.cab</samp> in the <samp>${dist}</samp> directory.</p>
 <pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      basedir=&quot;htdocs/manual&quot;/&gt;</pre>
-<p>cabs all files in the <samp>htdocs/manual</samp> directory into a file
-called <samp>manual.cab</samp> in the <samp>${dist}</samp> directory.</p>
+
+<p>Cab all files in the <samp>htdocs/manual</samp> directory into a file
+called <samp>manual.cab</samp> in the <samp>${dist}</samp> directory. Files in the
+directory <samp>mydocs</samp>, or files with the name <samp>todo.html</samp> are excluded.</p>
 <pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      basedir=&quot;htdocs/manual&quot;
      excludes=&quot;mydocs/**, **/todo.html&quot;/&gt;</pre>
-<p>cabs all files in the <samp>htdocs/manual</samp> directory into a file
-called <samp>manual.cab</samp> in the <samp>${dist}</samp> directory. Files in the
-directory <samp>mydocs</samp>, or files with the name <samp>todo.html</samp> are excluded.</p>
+
+<p>Cab all files in the <samp>htdocs/manual</samp> directory into a file
+called <samp>manual.cab</samp> in the <samp>${dist}</samp> directory. Only <samp>.html</samp> files
+under the directory <samp>api</samp> are archived, and files with the name <samp>todo.html</samp>
+are excluded. Output from the <kbd>cabarc</kbd> tool is displayed in the build output.</p>
 <pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      basedir=&quot;htdocs/manual&quot;
      includes=&quot;api/**/*.html&quot;
      excludes=&quot;**/todo.html&quot;
      verbose=&quot;yes&quot;/&gt;</pre>
-<p>Cab all files in the <samp>htdocs/manual</samp> directory into a file
-called <samp>manual.cab</samp> in the <samp>${dist}</samp> directory. Only <samp>.html</samp> files
-under the directory <samp>api</samp> are archived, and files with the name <samp>todo.html</samp>
-are excluded. Output from the <code>cabarc</code> tool is displayed in the build output.</p>
 
+<p>The following is equivalent to the example above.</p>
 <pre>
 &lt;cab cabfile=&quot;${dist}/manual.cab&quot;
      verbose=&quot;yes&quot;&gt;
@@ -137,7 +140,6 @@ are excluded. Output from the <code>cabarc</code> tool is displayed in the build
        includes=&quot;api/**/*.html&quot;
        excludes=&quot;**/todo.html&quot;/&gt;
 &lt;/cab&gt;</pre>
-<p>is equivalent to the example above.</p>
 
 </body>
 </html>

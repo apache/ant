@@ -96,14 +96,17 @@ resource collection</h4>
 <p>for use with the <var>resource</var> attribute.</p>
 
 <h3>Examples</h3>
+
+<p>Load contents of <samp>file.properties</samp> as Ant properties.</p>
 <pre>&lt;loadproperties srcFile="file.properties"/&gt;</pre>
 <p>or</p>
 <pre>
 &lt;loadproperties&gt;
     &lt;file file="file.properties"/&gt;
 &lt;/loadproperties&gt;</pre>
-<p>Load contents of file.properties as Ant properties.</p>
 
+<p>Read the lines that contain the string <q>import.</q> from the file <samp>file.properties</samp>
+and load them as Ant properties.</p>
 <pre>
 &lt;loadproperties srcFile="file.properties"&gt;
     &lt;filterchain&gt;
@@ -112,17 +115,15 @@ resource collection</h4>
         &lt;/linecontains&gt;
     &lt;/filterchain&gt;
 &lt;/loadproperties&gt;</pre>
-<p>Read the lines that contain the string <q>import.</q>  from the file <samp>file.properties</samp>
-and load them as Ant properties.</p>
 
+<p>Load contents of <samp>http://example.org/url.properties.gz</samp>, uncompress it on the fly and
+load the contents as Ant properties.</p>
 <pre>
 &lt;loadproperties&gt;
     &lt;<a href="../Types/resources.html#gzipresource">gzipresource</a>&gt;
         &lt;<a href="../Types/resources.html#url">url</a> url="http://example.org/url.properties.gz"/&gt;
     &lt;/gzipresource&gt;
 &lt;/loadproperties&gt;</pre>
-<p>Load contents of <samp>http://example.org/url.properties.gz</samp>, uncompress it on the fly and
-load the contents as Ant properties.</p>
 
 </body>
 </html>

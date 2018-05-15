@@ -74,13 +74,16 @@ a <code>condition</code>.</p>
 via a nested element or the <var>refid</var> attribute.</p>
 
 <h3>Examples</h3>
+<p>Store the number of resources in the specified filelist (two files) in the property
+named <samp>count.foo</samp>.</p>
 <pre>
 &lt;resourcecount property=&quot;count.foo&quot;&gt;
   &lt;filelist dir=&quot;.&quot; files=&quot;foo,bar&quot;/&gt;
 &lt;/resourcecount&gt;</pre>
-<p>Stores the number of resources in the specified filelist (two) in the property
-named <samp>count.foo</samp>.</p>
 
+<p>Store the number of lines of the current buildfile in the
+property <code>file.lines</code>. Requires Ant 1.7.1+ as <code>&lt;concat&gt;</code> has to be a
+resource.</p>
 <pre>
 &lt;project&gt;
   &lt;property name=&quot;file&quot; value=&quot;${ant.file}&quot;/&gt;
@@ -98,8 +101,6 @@ named <samp>count.foo</samp>.</p>
   &lt;/resourcecount&gt;
   &lt;echo&gt;The file '${file}' has ${file.lines} lines.&lt;/echo&gt;
 &lt;/project&gt;</pre>
-<p>Stores the number of lines of the current buildfile in the property <code>file.lines</code>.
-Requires Ant 1.7.1+ as <code>&lt;concat&gt;</code> has to be a resource.</p>
 
 </body>
 </html>

@@ -174,20 +174,18 @@ element of that type can be used as an alternative to the <var>implementation</v
 
 <h3>Examples</h3>
 
+<p>Convert all files in the directory <samp>srcdir</samp> ending in <samp>.eucjis</samp> from the
+EUCJIS encoding to ASCII and rename them to end in <samp>.java</samp>.</p>
 <pre>
 &lt;native2ascii encoding=&quot;EUCJIS&quot; src=&quot;srcdir&quot; dest=&quot;srcdir&quot;
               includes=&quot;**/*.eucjis&quot; ext=&quot;.java&quot;/&gt;</pre>
 
-<p>Converts all files in the directory <samp>srcdir</samp> ending in <samp>.eucjis</samp> from the
-EUCJIS encoding to ASCII and renames them to end in <samp>.java</samp>.</p>
-
+<p>Convert all the files ending in <samp>.java</samp> in the directory <samp>native/japanese</samp>
+to ASCII, placing the results in the directory <samp>src</samp>.  The names of the files remain the
+same.</p>
 <pre>
 &lt;native2ascii encoding=&quot;EUCJIS&quot; src=&quot;native/japanese&quot; dest=&quot;src&quot;
               includes=&quot;**/*.java&quot;/&gt;</pre>
-
-<p>Converts all the files ending in <samp>.java</samp> in the directory <samp>native/japanese</samp>
-to ASCII, placing the results in the directory <samp>src</samp>.  The names of the files remain the
-same.</p>
 
 <p>If you want to use a
 custom <code class="code">Native2AsciiAdapter</code> <code>org.example.MyAdapter</code> you can

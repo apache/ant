@@ -126,6 +126,7 @@ specified to perform any of various filename transformations (<em>since Ant 1.6.
 value <samp>d:\weblogic</samp>, and <samp>${wl.home.unix}</samp> has the
 value <samp>/weblogic</samp>.</p>
 <h4>Example 1</h4>
+<p>Here, the task</p>
 <pre>
 &lt;path id="wl.path"&gt;
   &lt;pathelement location=&quot;${wl.home}/lib/weblogicaux.jar&quot;/&gt;
@@ -157,23 +158,24 @@ named <code>wl.path.unix</code>.</p>
 <pre class="output">/usr/local/ant/lib/njavac.jar:/usr/local/ant/lib/xproperty.jar</pre>
 
 <h4>Example 3</h4>
+<p>Here, the names of files determined by the fileset (all files ending in <samp>.java</samp>) are
+joined separated by comma, and the resulting list is placed into the
+property <code>javafiles</code>. The directory separator is not specified, so it defaults to the
+appropriate character for the current platform. Such a list could then be used in another task,
+like <code>javadoc</code>, that requires a comma separated list of files.</p>
 <pre>
 &lt;fileset dir=&quot;${src.dir}&quot; id=&quot;src.files&quot;&gt;
   &lt;include name=&quot;**/*.java&quot;/&gt;
 &lt;/fileset&gt;
 
 &lt;pathconvert pathsep=&quot;,&quot; property=&quot;javafiles&quot; refid=&quot;src.files&quot;/&gt;</pre>
-<p>This example takes the set of files determined by the fileset (all files ending
-in <samp>.java</samp>), joins them together separated by commas, and places the resulting list into
-the property <code>javafiles</code>.  The directory separator is not specified, so it defaults to
-the appropriate character for the current platform.  Such a list could then be used in another task,
-like <code>javadoc</code>, that requires a comma separated list of files.</p>
+
 <h4>Example 4</h4>
+<p>This task sets the property <code>prop</code> to <q>def|ghi</q> on Windows and on Unix.</p>
 <pre>
 &lt;pathconvert property="prop" dirsep="|"&gt;
   &lt;map from="${basedir}/abc/" to=&quot;&quot;/&gt;
   &lt;path location="abc/def/ghi"/&gt;
 &lt;/pathconvert&gt;</pre>
-<p>This example sets the property <code>prop</code> to <q>def|ghi</q> on Windows and on Unix.</p>
 </body>
 </html>

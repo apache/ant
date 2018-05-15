@@ -86,27 +86,33 @@ more control on which properties will be picked up. The attributes <var>prefix</
 and <var>regex</var> are just shortcuts that use <code>propertyset</code>s internally.</p>
 
 <h3>Examples</h3>
-<pre>&lt;echoproperties/&gt;</pre>
 <p>Report the current properties to the log.</p>
+<pre>&lt;echoproperties/&gt;</pre>
+
+<p>Report the current properties to the file <samp>my.properties</samp>, and fail the build if the
+file could not be created or written to.</p>
 <pre>&lt;echoproperties destfile="my.properties"/&gt;</pre>
-<p>Report the current properties to the file <samp>my.properties</samp>, and will fail the build if
-the file could not be created or written to.</p>
+
+<p>Report the current properties to the file <samp>my.properties</samp>, and log a message if the
+file could not be created or written to, but still allow the build to continue.</p>
 <pre>&lt;echoproperties destfile="my.properties" failonerror="false"/&gt;</pre>
-<p>Report the current properties to the file <samp>my.properties</samp>, and will log a message if
-the file could not be created or written to, but will still allow the build to continue.</p>
-<pre>&lt;echoproperties prefix="java."/&gt;</pre>
+
 <p>List all properties beginning with <samp>java.</samp></p>
+<pre>&lt;echoproperties prefix="java."/&gt;</pre>
+
+<p>Lists all properties beginning with <samp>java.</samp> using a
+nested <code>&lt;propertyset/&gt;</code> which is an equivalent but longer way.</p>
 <pre>
 &lt;echoproperties&gt;
   &lt;propertyset&gt;
     &lt;propertyref prefix="java."/&gt;
   &lt;/propertyset&gt;
 &lt;/echoproperties&gt;</pre>
-<p>This again lists all properties beginning with <samp>java.</samp> using a
-nested <code>&lt;propertyset/&gt;</code> which is an equivalent but longer way.</p>
+
+<p>Lists all properties that contain <samp>ant</samp> in their names.</p>
 <pre>&lt;echoproperties regex=".*ant.*"/&gt;</pre>
-<p>Lists all properties that contain <samp>ant</samp> in their names.  The equivalent snippet
-with <code>&lt;propertyset/&gt;</code> is:</p>
+
+<p>The equivalent snippet with <code>&lt;propertyset/&gt;</code> is:</p>
 <pre>
 &lt;echoproperties&gt;
   &lt;propertyset&gt;

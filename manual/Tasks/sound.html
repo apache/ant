@@ -74,6 +74,10 @@ and <code>&lt;fail&gt;</code> elements:</p>
 
 <h3>Examples</h3>
 
+<p>Play the <samp>bell.wav</samp> sound file if the build succeeded, or the <samp>ohno.wav</samp>
+sound file if the build failed, three times, if the <code>fun</code> property is set to <q>true</q>.
+If the target is a dependency of an "initialization" target that other targets depend on,
+the <code>fun.done</code> property prevents the target from being executed more than once.</p>
 <pre>
 &lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
   &lt;sound&gt;
@@ -82,10 +86,8 @@ and <code>&lt;fail&gt;</code> elements:</p>
   &lt;/sound&gt;
   &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
 &lt;/target&gt;</pre>
-<p>plays the <samp>bell.wav</samp> sound file if the build succeeded, or the <samp>ohno.wav</samp>
-sound file if the build failed, three times, if the <code>fun</code> property is set to <q>true</q>.
-If the target is a dependency of an "initialization" target that other targets depend on,
-the <code>fun.done</code> property prevents the target from being executed more than once.</p>
+
+<p>Randomly select a sound file to play when the build succeeds or fails.</p>
 <pre>
 &lt;target name=&quot;fun&quot; if=&quot;fun&quot; unless=&quot;fun.done&quot;&gt;
   &lt;sound&gt;
@@ -95,7 +97,6 @@ the <code>fun.done</code> property prevents the target from being executed more 
   &lt;property name=&quot;fun.done&quot; value=&quot;true&quot;/&gt;
 &lt;/target&gt;
 </pre>
-<p>randomly selects a sound file to play when the build succeeds or fails.</p>
 
 </body>
 </html>

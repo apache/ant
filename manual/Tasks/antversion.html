@@ -62,17 +62,19 @@ as condition).</p>
 
 <h3>Examples</h3>
 
+<p>Store the current Ant version in the property <code>antversion</code>.</p>
 <pre>&lt;antversion property=&quot;antversion&quot;/&gt;</pre>
-<p>Stores the current Ant version in the property <code>antversion</code>.</p>
 
+<p>Store the Ant version in the property <code>antversion</code> if the current Ant version is 1.6.0
+or higher. Otherwise the property remains unset.</p>
 <pre>&lt;antversion property=&quot;antversion&quot; atleast=&quot;1.6&quot;/&gt;</pre>
-<p>Stores the Ant version in the property <code>antversion</code> if the current Ant version is
-1.6.0 or higher. Otherwise the property remains unset.</p>
 
-<pre>&lt;antversion property=&quot;ant-is-exact-7&quot; exactly=&quot;1.7.0&quot;/&gt;</pre>
-<p>Sets the property <code>ant-is-exact-7</code> if Ant 1.7.0 is running. Neither 1.6.5 nor 1.7.1
+<p>Set the property <code>ant-is-exact-7</code> if Ant 1.7.0 is running. Neither 1.6.5 nor 1.7.1
 would match.</p>
+<pre>&lt;antversion property=&quot;ant-is-exact-7&quot; exactly=&quot;1.7.0&quot;/&gt;</pre>
 
+<p>Set <code>Ant17isOnline</code> if Ant 1.7.0 is running and can get a non-error-response from the
+Ant homepage.</p>
 <pre>
 &lt;condition property=&quot;Ant17isOnline&quot;&gt;
   &lt;and&gt;
@@ -80,8 +82,6 @@ would match.</p>
     &lt;http url=&quot;http://ant.apache.org&quot;/&gt;
   &lt;/and&gt;
 &lt;/condition&gt;</pre>
-<p>Sets <code>Ant17isOnline</code> if Ant 1.7.0 is running and can get a non-error-response from the
-Ant homepage.</p>
 
 </body>
 </html>

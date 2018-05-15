@@ -216,11 +216,17 @@ properties</a>. Properties can be used to set the schema used to validate the XM
 </table>
 
 <h3>Examples</h3>
+<p>Validate a document against an XML schema. The document does not declare any schema itself, which
+is why the <var>noNamespaceFile</var> is needed.</p>
 <pre>
 &lt;schemavalidate noNamespaceFile="document.xsd"
                 file="xml/endpiece.xml"/&gt;</pre>
-<p>Validate a document against an XML schema. The document does not declare any schema itself, which
-is why the <var>noNamespaceFile</var> is needed.</p>
+
+<p>Declare a new preset task, <code>&lt;validate-soap&gt;</code>, that validates XSD and WSDL
+documents against the relevant specifications. To validate XSD documents, you also
+need <samp>XMLSchema.dtd</samp> and <samp>datatypes.dtd</samp> in the same directory
+as <samp>XMLSchema.xsd</samp>, or pointed to via the catalog. All these files can be fetched
+from <a href="https://www.w3.org/2001/XMLSchema" target="_top">W3C</a>.</p>
 <pre>
 &lt;presetdef name="validate-soap"&gt;
   &lt;schemavalidate&gt;
@@ -234,13 +240,9 @@ is why the <var>noNamespaceFile</var> is needed.</p>
             file="${soap.dir}/XMLSchema.xsd"/&gt;
     &lt;/schemavalidate&gt;
 &lt;/presetdef&gt;</pre>
-<p>Declare a new preset task, <code>&lt;validate-soap&gt;</code>, that validates XSD and WSDL
-documents against the relevant specifications.  To validate XSD documents, you also
-need <samp>XMLSchema.dtd</samp> and <samp>datatypes.dtd</samp> in the same directory
-as <samp>XMLSchema.xsd</samp>, or pointed to via the catalog. All these files can be fetched
-from <a href="https://www.w3.org/2001/XMLSchema" target="_top">W3C</a>.</p>
-<pre>&lt;validate-soap file="xml/test.xsd"/&gt;</pre>
+
 <p>Use the preset task defined above to validate an XML Schema document.</p>
+<pre>&lt;validate-soap file="xml/test.xsd"/&gt;</pre>
 
 </body>
 </html>

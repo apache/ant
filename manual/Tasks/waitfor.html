@@ -95,17 +95,22 @@ for the <a href="condition.html"><code>&lt;condition&gt;</code></a>
 task. See <a href="conditions.html">here</a> for the full list.</p>
 
 <h3>Examples</h3>
+
+<p>Wait up to 30 seconds for a file called <samp>errors.log</samp> to appear.</p>
 <pre>
 &lt;waitfor maxwait="30" maxwaitunit="second"&gt;
     &lt;available file="errors.log"/&gt;
 &lt;/waitfor&gt;</pre>
-<p>waits up to 30 seconds for a file called <samp>errors.log</samp> to appear.</p>
+
+<p>Wait up to 3 minutes (and checks every 500 milliseconds) for a web server
+on <samp>localhost</samp> to serve up the specified URL.</p>
 <pre>
 &lt;waitfor maxwait="3" maxwaitunit="minute" checkevery="500"&gt;
     &lt;http url="http://localhost/myapp/index.html"/&gt;
 &lt;/waitfor&gt;</pre>
-<p>waits up to 3 minutes (and checks every 500 milliseconds) for a web server
-on <samp>localhost</samp> to serve up the specified URL.</p>
+
+<p>Wait up to 10 seconds for a server on the <samp>dbserver</samp> machine to begin listening on
+port 1521 and for the <samp>http://webserver/mypage.html</samp> web page to become available.</p>
 <pre>
 &lt;waitfor maxwait="10" maxwaitunit="second"&gt;
     &lt;and&gt;
@@ -113,8 +118,6 @@ on <samp>localhost</samp> to serve up the specified URL.</p>
         &lt;http url="http://webserver/mypage.html"/&gt;
     &lt;/and&gt;
 &lt;/waitfor&gt;</pre>
-<p>waits up to 10 seconds for a server on the <samp>dbserver</samp> machine to begin listening on
-port 1521 and for the <samp>http://webserver/mypage.html</samp> web page to become available.</p>
 
 </body>
 </html>

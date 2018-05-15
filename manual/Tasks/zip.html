@@ -397,66 +397,72 @@ that <code>zipfileset</code> <var>src</var> files are added.</p>
 supports all of its attributes and nested elements.</p>
 
 <h3>Examples</h3>
-<pre>
-&lt;zip destfile=&quot;${dist}/manual.zip&quot;
-     basedir=&quot;htdocs/manual&quot;/&gt;</pre>
-<p>zips all files in the <samp>htdocs/manual</samp> directory into a file
+<p>Zip all files in the <samp>htdocs/manual</samp> directory into a file
 called <samp>manual.zip</samp> in the <samp>${dist}</samp> directory.</p>
 <pre>
 &lt;zip destfile=&quot;${dist}/manual.zip&quot;
-     basedir=&quot;htdocs/manual&quot;
-     update=&quot;true&quot;/&gt;</pre>
-<p>zips all files in the <samp>htdocs/manual</samp> directory into a file
+     basedir=&quot;htdocs/manual&quot;/&gt;</pre>
+
+<p>Zip all files in the <samp>htdocs/manual</samp> directory into a file
 called <samp>manual.zip</samp> in the <samp>${dist}</samp> directory. If <samp>manual.zip</samp>
 doesn't exist, it is created; otherwise it is updated with the new/changed files.</p>
 <pre>
 &lt;zip destfile=&quot;${dist}/manual.zip&quot;
      basedir=&quot;htdocs/manual&quot;
-     excludes=&quot;mydocs/**, **/todo.html&quot;/&gt;</pre>
-<p>zips all files in the <samp>htdocs/manual</samp> directory. Files in the
+     update=&quot;true&quot;/&gt;</pre>
+
+<p>Zip all files in the <samp>htdocs/manual</samp> directory. Files in the
 directory <samp>mydocs</samp>, or files with the name <samp>todo.html</samp> are excluded.</p>
+<pre>
+&lt;zip destfile=&quot;${dist}/manual.zip&quot;
+     basedir=&quot;htdocs/manual&quot;
+     excludes=&quot;mydocs/**, **/todo.html&quot;/&gt;</pre>
+
+<p>Zip all files in the <samp>htdocs/manual</samp> directory. Only <samp>html</samp> files under the
+directory <samp>api</samp> are zipped, and files with the name <samp>todo.html</samp> are
+excluded.</p>
 <pre>
 &lt;zip destfile=&quot;${dist}/manual.zip&quot;
      basedir=&quot;htdocs/manual&quot;
      includes=&quot;api/**/*.html&quot;
      excludes=&quot;**/todo.html&quot;/&gt;</pre>
-<p>zips all files in the <samp>htdocs/manual</samp> directory. Only <samp>html</samp> files under
-the directory <samp>api</samp> are zipped, and files with the name <samp>todo.html</samp> are
-excluded.</p>
+
+<p>Zip all files in the <samp>htdocs/manual</samp> directory, and also add the
+file <samp>ChangeLog.txt</samp> in the current directory. <samp>ChangeLog.txt</samp> will be added
+to the top of the ZIP file, just as if it had been located
+at <samp>htdocs/manual/ChangeLog.txt</samp>.</p>
 <pre>
 &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
   &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
   &lt;fileset dir=&quot;.&quot; includes=&quot;ChangeLog.txt&quot;/&gt;
 &lt;/zip&gt;</pre>
-<p>zips all files in the <samp>htdocs/manual</samp> directory, and also adds the
-file <samp>ChangeLog.txt</samp> in the current directory. <samp>ChangeLog.txt</samp> will be added
-to the top of the ZIP file, just as if it had been located
-at <samp>htdocs/manual/ChangeLog.txt</samp>.</p>
+
+<p>Zip all files in the <samp>htdocs/manual</samp> directory into the <samp>docs/user-guide</samp>
+directory in the archive, adds the file <samp>ChangeLog27.txt</samp> in the current directory
+as <samp>docs/ChangeLog.txt</samp>, and includes all the <samp>html</samp> files
+in <samp>examples.zip</samp> under <samp>docs/examples</samp>.</p>
 <pre>
 &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
   &lt;zipfileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
   &lt;zipfileset dir=&quot;.&quot; includes=&quot;ChangeLog27.txt&quot; fullpath=&quot;docs/ChangeLog.txt&quot;/&gt;
   &lt;zipfileset src=&quot;examples.zip&quot; includes=&quot;**/*.html&quot; prefix=&quot;docs/examples&quot;/&gt;
 &lt;/zip&gt;</pre>
-<p>zips all files in the <samp>htdocs/manual</samp> directory into the <samp>docs/user-guide</samp>
-directory in the archive, adds the file <samp>ChangeLog27.txt</samp> in the current directory
-as <samp>docs/ChangeLog.txt</samp>, and includes all the <samp>html</samp> files
-in <samp>examples.zip</samp> under <samp>docs/examples</samp>.  The archive might end up containing
-the files:</p>
+<p>The archive might end up containing the files:</p>
 <pre>
     docs/user-guide/html/index.html
     docs/ChangeLog.txt
     docs/examples/index.html</pre>
-<p>The code</p>
+
+<p>Zip all files in the <samp>htdocs/manual</samp> directory into the <samp>docs/user-guide</samp>
+directory in the archive and include all the files in any file that
+matches <samp>examples*.zip</samp>, such as all files within <samp>examples1.zip</samp>
+or <samp>examples_for_brian.zip</samp>.</p>
 <pre>
 &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
   &lt;zipfileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
   &lt;zipgroupfileset dir=&quot;.&quot; includes=&quot;examples*.zip&quot;/&gt;
 &lt;/zip&gt;</pre>
-<p>zips all files in the <samp>htdocs/manual</samp> directory into the <samp>docs/user-guide</samp>
-directory in the archive and includes all the files in any file that
-matches <samp>examples*.zip</samp>, such as all files within <samp>examples1.zip</samp>
-or <samp>examples_for_brian.zip</samp>.  The same can be achieved with</p>
+<p>The same can be achieved with</p>
 <pre>
 &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
   &lt;mappedresources&gt;
@@ -470,15 +476,12 @@ or <samp>examples_for_brian.zip</samp>.  The same can be achieved with</p>
   &lt;/archives&gt;
 &lt;/zip&gt;</pre>
 
-<p>The next example</p>
-
+<p>Re-package a TAR archive as a ZIP archive. If Unix file permissions have been stored as part of
+the TAR file, they will be retained in the resulting ZIP archive.</p>
 <pre>
 &lt;zip destfile="release.zip"&gt;
   &lt;tarfileset src="release.tar"/&gt;
 &lt;/zip&gt;</pre>
-
-<p>re-packages a TAR archive as a ZIP archive.  If Unix file permissions have been stored as part of
-the TAR file, they will be retained in the resulting ZIP archive.</p>
 
 </body>
 </html>

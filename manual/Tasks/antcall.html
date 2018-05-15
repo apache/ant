@@ -154,6 +154,7 @@ single target whose dependencies are the targets so specified, in the order spec
 </table>
 
 <h3>Examples</h3>
+<p>The following</p>
 <pre>
 &lt;target name=&quot;default&quot;&gt;
   &lt;antcall target=&quot;doSomethingElse&quot;&gt;
@@ -164,13 +165,11 @@ single target whose dependencies are the targets so specified, in the order spec
 &lt;target name=&quot;doSomethingElse&quot;&gt;
   &lt;echo message=&quot;param1=${param1}&quot;/&gt;
 &lt;/target&gt;</pre>
-<p>Will run the target <var>doSomethingElse</var> and echo <code>param1=value</code>.</p>
-
+<p>will run the target <var>doSomethingElse</var> and echo <code>param1=value</code>, whereas</p>
 <pre>
 &lt;antcall ... &gt;
   &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot;/&gt;
 &lt;/antcall&gt;</pre>
-
 <p>will copy the parent's definition of <samp>path1</samp> into the new project using
 the <var>id</var> <samp>path2</samp>.</p>
 

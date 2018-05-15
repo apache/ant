@@ -169,22 +169,23 @@ attribute can contain spaces in their name.</p>
 </table>
 
 <h3>Examples</h3>
+
+<p>Check out the package/module <samp>ant</samp> from the CVS repository pointed to by
+the <var>cvsRoot</var> attribute, and store the files in <samp>${ws.dir}</samp>.</p>
 <pre>
 &lt;cvs cvsRoot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot;
      package=&quot;ant&quot;
      dest=&quot;${ws.dir}&quot;/&gt;</pre>
-<p>checks out the package/module <samp>ant</samp> from the CVS repository pointed to by
-the <var>cvsRoot</var> attribute, and stores the files in <samp>${ws.dir}</samp>.</p>
 
+<p>Update the package/module that has previously been checked out into <samp>${ws.dir}</samp>.</p>
 <pre>&lt;cvs dest=&quot;${ws.dir}&quot; command=&quot;update&quot;/&gt;</pre>
-<p>updates the package/module that has previously been checked out into <samp>${ws.dir}</samp>.</p>
 
+<p>Silently (<kbd>-q</kbd>) create a file called <samp>patch.txt</samp> containing a unified
+(<kbd>-u</kbd>) diff which includes new files added via <kbd>cvs add</kbd> (<kbd>-N</kbd>) and can
+be used as input to <kbd>patch</kbd>.</p>
 <pre>&lt;cvs command=&quot;-q diff -u -N&quot; output=&quot;patch.txt&quot;/&gt;</pre>
 
-<p>silently (<kbd>-q</kbd>) creates a file called <samp>patch.txt</samp> which contains a unified
-(<kbd>-u</kbd>) diff which includes new files added via <kbd>cvs add</kbd> (<kbd>-N</kbd>) and
-can be used as input to <kbd>patch</kbd>.  The equivalent, using <code>&lt;commandline&gt;</code>
-elements, is:</p>
+<p>The equivalent, using <code>&lt;commandline&gt;</code> elements, is:</p>
 <pre>
 &lt;cvs output=&quot;patch&quot;&gt;
     &lt;commandline&gt;
@@ -205,15 +206,15 @@ elements, is:</p>
 the <var>failonerror</var>, <var>compression</var>, and other &quot;global&quot; parameters from
 the <code>&lt;cvs&gt;</code> element.</p>
 
-<pre>  &lt;cvs command=&quot;update -A -d&quot;/&gt;</pre>
-<p>Updates from the head of repository ignoring sticky bits (<kbd>-A</kbd>) and creating any new
+<p>Update from the head of repository ignoring sticky bits (<kbd>-A</kbd>) and creating any new
 directories as necessary (<kbd>-d</kbd>).</p>
-<p>Note: the text of the command is passed to <kbd>cvs</kbd> &quot;as-is&quot; so any cvs options
-should appear before the command, and any command options should appear after the command as in the
-diff example above. See <a href="http://cvsbook.red-bean.com/cvsbook.html" target="_top">the CVS
-book</a> for details, specifically
+<pre>&lt;cvs command=&quot;update -A -d&quot;/&gt;</pre>
+<p>Note: the text of the command is passed to <kbd>cvs</kbd> &quot;as-is&quot; so any <kbd>cvs</kbd>
+options should appear before the command, and any command options should appear after the command as
+in the <code>diff</code> example above. See <a href="http://cvsbook.red-bean.com/cvsbook.html"
+target="_top">the CVS book</a> for details, specifically
 the <a href="http://cvsbook.red-bean.com/cvsbook.html#Commands%20And%20Options" target="_top">Guide
-to CVS commands</a></p>
+to CVS commands</a>.</p>
 
 </body>
 </html>

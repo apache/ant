@@ -111,16 +111,20 @@ value to your current OS.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>&lt;chown file="${dist}/start.sh" owner="coderjoe"/&gt;</pre>
-<p>makes the <samp>start.sh</samp> file belong to <samp>coderjoe</samp> on a UNIX system.</p>
 
+<p>Make the <samp>start.sh</samp> file belong to <samp>coderjoe</samp> on a UNIX system.</p>
+<pre>&lt;chown file="${dist}/start.sh" owner="coderjoe"/&gt;</pre>
+
+<p>Make all <samp>.sh</samp> files below <samp>${dist}/bin</samp> belong to <samp>coderjoe</samp> on
+a UNIX system.</p>
 <pre>
 &lt;chown owner="coderjoe"&gt;
   &lt;fileset dir="${dist}/bin" includes="**/*.sh"/&gt;
 &lt;/chown&gt;</pre>
-<p>makes all <samp>.sh</samp> files below <samp>${dist}/bin</samp> belong to <samp>coderjoe</samp>
-on a UNIX system.</p>
 
+<p>Make all files below <samp>shared/sources1</samp> (except those below any directory
+named <samp>trial</samp>) belong to <samp>coderjoe</samp> on a UNIX system. In addition, all files
+belonging to a FileSet with <var>id</var>=<code>other.shared.sources</code> get the same owner.</p>
 <pre>
 &lt;chown owner="coderjoe"&gt;
   &lt;fileset dir="shared/sources1"&gt;
@@ -128,10 +132,10 @@ on a UNIX system.</p>
   &lt;/fileset&gt;
   &lt;fileset refid="other.shared.sources"/&gt;
 &lt;/chown&gt;</pre>
-<p>makes all files below <samp>shared/sources1</samp> (except those below any directory
-named <samp>trial</samp>) belong to <samp>coderjoe</samp> on a UNIX system. In addition all files
-belonging to a FileSet with <var>id</var> <code>other.shared.sources</code> get the same owner.</p>
 
+<p>Make <samp>cgi</samp> scripts, files with a <samp>.old</samp> extension or directories beginning
+with <samp>private_</samp> belong to the user named <samp>webadmin</samp>. A directory ending
+in <samp>.old</samp> or a file beginning with <samp>private_</samp> would remain unaffected.</p>
 <pre>
 &lt;chown owner="webadmin" type="file"&gt;
   &lt;fileset dir="/web"&gt;
@@ -142,9 +146,6 @@ belonging to a FileSet with <var>id</var> <code>other.shared.sources</code> get 
     &lt;include name="**/private_*"/&gt;
   &lt;/dirset&gt;
 &lt;/chmod&gt;</pre>
-<p>makes <samp>cgi</samp> scripts, files with a <samp>.old</samp> extension or directories beginning
-with <samp>private_</samp> belong to the user named <samp>webadmin</samp>. A directory ending
-in <samp>.old</samp> or a file beginning with <samp>private_</samp> would remain unaffected.</p>
 
 </body>
 </html>

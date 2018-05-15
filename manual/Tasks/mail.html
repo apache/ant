@@ -274,14 +274,21 @@ or more nested header elements:</p>
 
 <h3>Examples</h3>
 
+<p>Send an email from <q>me</q> to <q>you</q> with a subject of <q>Results of nightly build</q> and
+include the contents of the file <samp>build.log</samp> in the body of the message.</p>
+
 <pre>
 &lt;mail from=&quot;me&quot;
       tolist=&quot;you&quot;
       subject=&quot;Results of nightly build&quot;
       files=&quot;build.log&quot;/&gt;</pre>
 
-<p>Sends an email from <q>me</q> to <q>you</q> with a subject of <q>Results of nightly build</q> and
-includes the contents of the file <samp>build.log</samp> in the body of the message.</p>
+<p>Send an email from <q>config@myisp.com</q> to <q>all@xyz.com</q> with a subject of <q>Test
+Build</q>. Replies to this email will go to <q>me@myisp.com</q>. Any zip files from
+the <samp>dist</samp> directory are attached. The task will attempt to use JavaMail and fall back to
+UU encoding or no encoding in that order depending on what support classes are
+available. <samp>${buildname}</samp> will be replaced with the <code>buildname</code> property's
+value.</p>
 
 <pre>
 &lt;mail mailhost=&quot;smtp.myisp.com&quot; mailport=&quot;1025&quot; subject=&quot;Test build&quot;&gt;
@@ -296,12 +303,8 @@ includes the contents of the file <samp>build.log</samp> in the body of the mess
   &lt;/attachments&gt;
 &lt;/mail&gt;</pre>
 
-<p>Sends an eMail from <q>config@myisp.com</q> to <q>all@xyz.com</q> with a subject of <q>Test
-Build</q>. Replies to this email will go to <q>me@myisp.com</q>.  Any zip files from
-the <samp>dist</samp> directory are attached. The task will attempt to use JavaMail and fall back to
-UU encoding or no encoding in that order depending on what support classes are
-available. <samp>${buildname}</samp> will be replaced with the <code>buildname</code> property's
-value.</p>
+<p>Send an email from <q>me@myisp.com</q> to <q>all@xyz.com</q> with a subject of <q>Test Build</q>,
+the message body being coded in UTF-8.
 
 <pre>
 &lt;property name=&quot;line2&quot; value=&quot;some_international_message&quot;/&gt;
@@ -312,9 +315,6 @@ value.</p>
   &lt;to address=&quot;all@xyz.com&quot;/&gt;
   &lt;message&gt;some international text:${line2}&lt;/message&gt;
 &lt;/mail&gt;</pre>
-
-<p>Sends an eMail from <q>me@myisp.com</q> to <q>all@xyz.com</q> with a subject of <q>Test
-Build</q>, the message body being coded in UTF-8.
 
 </body>
 </html>

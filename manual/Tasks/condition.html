@@ -63,6 +63,9 @@ condition.</p>
 see <a href="conditions.html">here</a>.</p>
 
 <h3>Examples</h3>
+
+<p>Set the property <code>javamail.complete</code> if both the JavaBeans Activation Framework and
+JavaMail are available in the classpath.</p>
 <pre>
 &lt;condition property=&quot;javamail.complete&quot;&gt;
   &lt;and&gt;
@@ -70,9 +73,9 @@ see <a href="conditions.html">here</a>.</p>
     &lt;available classname=&quot;javax.mail.Transport&quot;/&gt;
   &lt;/and&gt;
 &lt;/condition&gt;</pre>
-<p>sets the property <code>javamail.complete</code> if both the JavaBeans Activation Framework and
-JavaMail are available in the classpath.</p>
 
+<p>Set the property <code>isMacOsButNotMacOsX</code> if the current operating system is MacOS, but
+not MacOS X/macOS&mdash;which Ant considers to be in the Unix family as well.</p>
 <pre>
 &lt;condition property=&quot;isMacOsButNotMacOsX&quot;&gt;
   &lt;and&gt;
@@ -82,15 +85,13 @@ JavaMail are available in the classpath.</p>
     &lt;/not&gt;
   &lt;/and&gt;
 &lt;/condition&gt;</pre>
-<p>sets the property <code>isMacOsButNotMacOsX</code> if the current operating system is MacOS, but
-not MacOS X/macOS&mdash;which Ant considers to be in the Unix family as well.</p>
 
+<p>Set the property <code>isSunOSonSparc</code> if the current operating system is SunOS and if it
+is running on a SPARC architecture.</p>
 <pre>
 &lt;condition property=&quot;isSunOSonSparc&quot;&gt;
   &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot;/&gt;
 &lt;/condition&gt;</pre>
-<p>sets the property <code>isSunOSonSparc</code> if the current operating system is SunOS and if it
-is running on a SPARC architecture.</p>
 
 </body>
 </html>

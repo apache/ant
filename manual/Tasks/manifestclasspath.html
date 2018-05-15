@@ -84,15 +84,17 @@ a path defined elsewhere using the <code>&lt;classpath refid=&quot;pathid&quot;/
 This classpath must not be empty, and is required.</p>
 
 <h3>Examples</h3>
+
+<p>Assuming a path with <var>id</var>=<q>classpath</q> was already defined, convert this path
+relatively to the <samp>build/</samp> directory that will contain <samp>acme.jar</samp>, which can
+later be created with <code>&lt;jar&gt;</code> with a nested <code>&lt;manifest&gt;</code> element
+that lists an <code>&lt;attribute name="Class-Path" value="${jar.classpath}"/&gt;</code>.</p>
+
 <pre>
 &lt;manifestclasspath property="jar.classpath"
                    jarfile="build/acme.jar"&gt;
     &lt;classpath refid="classpath"/&gt;
 &lt;/manifestclasspath&gt;</pre>
-<p>Assuming a path with <var>id</var> <q>classpath</q> was already defined, convert this path
-relatively to the <samp>build/</samp> directory that will contain <samp>acme.jar</samp>, which can
-later be created with <code>&lt;jar&gt;</code> with a nested <code>&lt;manifest&gt;</code> element
-that lists an <code>&lt;attribute name="Class-Path" value="${jar.classpath}"/&gt;</code>.</p>
 
 </body>
 </html>

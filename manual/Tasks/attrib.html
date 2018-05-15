@@ -129,16 +129,17 @@ alternative.</p>
 
 <h3>Examples</h3>
 
+<p>Make the <code>run.bat</code> file read-only and hidden.</p>
 <pre>&lt;attrib file=&quot;${dist}/run.bat&quot; readonly=&quot;true&quot; hidden=&quot;true&quot;/&gt;</pre>
 
-<p>makes the <code>run.bat</code> file read-only and hidden.</p>
-
+<p>Make all <samp>.xml</samp> files below <samp>${meta.inf}</samp> readable.</p>
 <pre>&lt;attrib readonly=&quot;false&quot;&gt;
   &lt;fileset dir=&quot;${meta.inf}&quot; includes=&quot;**/*.xml&quot;/&gt;
 &lt;/attrib&gt;</pre>
 
-<p>makes all <samp>.xml</samp> files below <samp>${meta.inf}</samp> readable.</p>
-
+<p>Make all files below <samp>shared/sources1</samp> (except those below any directory
+named <samp>trial</samp>) read-only and archived. In addition all files belonging to a FileSet
+with <var>id</var> <samp>other.shared.sources</samp> get the same attributes.</p>
 <pre>
 &lt;attrib readonly=&quot;true&quot; archive=&quot;true&quot;&gt;
   &lt;fileset dir=&quot;shared/sources1&quot;&gt;
@@ -146,10 +147,6 @@ alternative.</p>
   &lt;/fileset&gt;
   &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
 &lt;/attrib&gt;</pre>
-
-<p>makes all files below <samp>shared/sources1</samp> (except those below any directory
-named <samp>trial</samp>) read-only and archived. In addition all files belonging to a FileSet
-with <var>id</var> <samp>other.shared.sources</samp> get the same attributes.</p>
 
 </body>
 </html>

@@ -71,28 +71,32 @@ is not set.</p>
 <p>The LoadFile task supports nested <a href="../Types/filterchain.html">FilterChain</a>s.</p>
 
 <h3>Examples</h3>
+<p>Load file <samp>message.txt</samp> into property <code>message</code>;
+an <code>&lt;echo&gt;</code> can print this.</p>
 <pre>
 &lt;loadfile property="message"
           srcFile="message.txt"/&gt;</pre>
-<p>Load file message.txt into property <code>message</code>; an <code>&lt;echo&gt;</code> can print
-this.  This is identical to</p>
+
+<p>The above is identical to</p>
 <pre>
 &lt;loadresource property="message"&gt;
     &lt;file file="message.txt"/&gt;
 &lt;/loadresource&gt;</pre>
 
+<p>Load a file using the Latin-1 encoding</p>
 <pre>
 &lt;loadfile property="encoded-file"
           srcFile="loadfile.xml"
           encoding="ISO-8859-1"/&gt;</pre>
-<p>Load a file using the Latin-1 encoding</p>
 
+<p>Load a file, don't fail if it is missing (a message is printed, though)</p>
 <pre>
 &lt;loadfile property="optional.value"
           srcFile="optional.txt"
           failonerror="false"/&gt;</pre>
-<p>Load a file, don't fail if it is missing (a message is printed, though)</p>
 
+<p>Load a property which can be used as a parameter for another task (in this
+case <code>mail</code>), merging lines to ensure this happens.</p>
 <pre>
 &lt;loadfile property="mail.recipients"
           srcFile="recipientlist.txt"&gt;
@@ -100,9 +104,9 @@ this.  This is identical to</p>
         &lt;<a href="../Types/filterchain.html#striplinebreaks">striplinebreaks</a>/&gt;
     &lt;/filterchain&gt;
 &lt;/loadfile&gt;</pre>
-<p>Load a property which can be used as a parameter for another task (in this
-case <code>mail</code>), merging lines to ensure this happens.</p>
 
+<p>Load an XML file into a property, expanding all properties declared in the file in the
+process.</p>
 <pre>
 &lt;loadfile property="system.configuration.xml"
           srcFile="configuration.xml"&gt;
@@ -110,8 +114,6 @@ case <code>mail</code>), merging lines to ensure this happens.</p>
         &lt;<a href="../Types/filterchain.html#expandproperties">expandproperties</a>/&gt;
     &lt;/filterchain&gt;
 &lt;/loadfile&gt;</pre>
-<p>Load an XML file into a property, expanding all properties declared in the file in the
-process.</p>
 
 </body>
 </html>

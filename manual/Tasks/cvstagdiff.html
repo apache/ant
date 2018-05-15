@@ -147,6 +147,9 @@ attribute can contain spaces in their name.</p>
 </table>
 
 <h3>Examples</h3>
+<p>Generate a <code>tagdiff</code> report for all the changes that have been made in
+  the <code>ant</code> module between the tags <samp>ANT_14</samp>
+  and <samp>ANT_141</samp>. Write these changes into the file <samp>tagdiff.xml</samp>.</p>
 <pre>
 &lt;cvstagdiff cvsRoot=&quot;:pserver:anoncvs@cvs.apache.org:/home/cvspublic&quot;
             destfile=&quot;tagdiff.xml&quot;
@@ -154,36 +157,31 @@ attribute can contain spaces in their name.</p>
             startTag=&quot;ANT_14&quot;
             endTag=&quot;ANT_141&quot;/&gt;</pre>
 
-<p>Generates a <code>tagdiff</code> report for all the changes that have been made in
-the <code>ant</code> module between the tags <samp>ANT_14</samp> and <samp>ANT_141</samp>.  It
-writes these changes into the file <samp>tagdiff.xml</samp>.</p>
-
+<p>Generate a <code>tagdiff</code> report for all the changes that have been made in
+  the <samp>ant</samp> module in January 2002. Write the changes into the
+  file <samp>tagdiff.xml</samp>. In this example, <var>cvsRoot</var> has not been
+  set. The current <var>cvsRoot</var> will be used (assuming the build is started from a folder stored
+  in CVS.</p>
 <pre>
 &lt;cvstagdiff destfile=&quot;tagdiff.xml&quot;
             package=&quot;ant&quot;
             startDate=&quot;2002-01-01&quot;
             endDate=&quot;2002-31-01&quot;/&gt;</pre>
 
-<p>Generates a <code>tagdiff</code> report for all the changes that have been made in
-the <samp>ant</samp> module in January 2002. In this example <var>cvsRoot</var> has not been
-set. The current <var>cvsRoot</var> will be used (assuming the build is started from a folder stored
-in <samp>cvs</samp>.  It writes these changes into the file <samp>tagdiff.xml</samp>.</p>
-
+<p>Generate a <code>tagdiff</code> report for all the changes that have been made in
+  the <samp>ant</samp> and <samp>jakarta-gump</samp> modules in January 2003. Write the changes into
+  the file <samp>tagdiff.xml</samp>. In this
+  example, <var>cvsRoot</var> has not been set. The current <var>cvsRoot</var> will be used (assuming
+  the build is started from a folder stored in CVS.</p>
 <pre>
 &lt;cvstagdiff destfile=&quot;tagdiff.xml&quot;
             package=&quot;ant jakarta-gump&quot;
             startDate=&quot;2003-01-01&quot;
             endDate=&quot;2003-31-01&quot;/&gt;</pre>
 
-<p>Generates a <code>tagdiff</code> report for all the changes that have been made in
-the <samp>ant</samp> and <samp>jakarta-gump</samp> modules in January 2003.  In this
-example <var>cvsRoot</var> has not been set. The current <var>cvsRoot</var> will be used (assuming
-the build is started from a folder stored in <samp>cvs</samp>.  It writes these changes into the
-file <samp>tagdiff.xml</samp>.</p>
-
 <h4>Generate Report</h4>
-<p>Ant includes a basic XSLT stylesheet that you can use to generate a HTML report based on the xml
-output. The following example illustrates how to generate a HTML report from the XML report.</p>
+<p>Ant includes a basic XSLT stylesheet that you can use to generate a HTML report based on the XML
+output. The following example illustrates how to generate an HTML report from the XML report.</p>
 
 <pre>
 &lt;style in="tagdiff.xml"
@@ -195,27 +193,31 @@ output. The following example illustrates how to generate a HTML report from the
 &lt;/style&gt;</pre>
 
 <h4>Output</h4>
-<p>The <var>cvsroot</var> and <var>package</var> attributes of the <code>tagdiff</code> element are
-new in Ant 1.6.<br/>  Notes on <code>entry</code> attributes:</p>
+<p>The <var>cvsroot</var> and <var>package</var> attributes of the <code>&lt;tagdiff&gt;</code> element are
+  added <em>since Ant 1.6</em>.</p>
+
+<p>Description of <code>&lt;entry&gt;</code> attributes:</p>
 <table>
   <tr>
     <th>Attribute</th>
     <th>Comment</th>
   </tr>
   <tr>
-    <td>name</td>
+    <td><var>name</var></td>
     <td>when reporting on one package, the package name is removed from the output</td>
   </tr>
   <tr>
-    <td>revision</td>
+    <td><var>revision</var></td>
     <td>supplied for files which exist at the end of the reporting period</td>
   </tr>
   <tr>
-    <td>prevrevision</td>
+    <td><var>prevrevision</var></td>
     <td>supplied for files which exist at the beginning of the reporting period.<br/>Old CVS servers
       do not supply it for deleted files. CVS 1.12.2 supplies it.</td>
   </tr>
 </table>
+
+<p>Example:</p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;tagdiff startTag=&quot;ANT_14&quot; endTag=&quot;ANT_141&quot;

@@ -51,12 +51,12 @@ a <code>BuildException</code> is thrown.</p>
 <p>Any valid Ant task may be embedded within the retry task.</p>
 
 <h3>Example</h3>
+<p>This example shows how to use <code>&lt;retry&gt;</code> to wrap a task which must interact with
+an unreliable network resource.</p>
 <pre>
 &lt;retry retrycount="3"&gt;
   &lt;get src="http://www.unreliable-server.com/unreliable.tar.gz"
        dest="/home/retry/unreliable.tar.gz"/&gt;
 &lt;/retry&gt;</pre>
-<p>This example shows how to use <code>&lt;retry&gt;</code> to wrap a task which must interact with
-an unreliable network resource.</p>
 </body>
 </html>

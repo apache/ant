@@ -102,26 +102,28 @@ and <code>&lt;patternset&gt;</code> elements.</p>
   </tr>
 </table>
 <h3>Examples</h3>
+<p>Copy the directory <samp>${src}/resources</samp> to <samp>${dist}</samp>.</p>
 <pre>
 &lt;copydir src=&quot;${src}/resources&quot;
          dest=&quot;${dist}&quot;/&gt;</pre>
-<p>copies the directory <samp>${src}/resources</samp> to <samp>${dist}</samp>.</p>
-<pre>
-&lt;copydir src=&quot;${src}/resources&quot;
-         dest=&quot;${dist}&quot;
-         includes=&quot;**/*.java&quot;
-         excludes=&quot;**/Test.java&quot;/&gt;</pre>
-<p>copies the directory <samp>${src}/resources</samp> to <samp>${dist}</samp>
+
+<p>Copy the directory <samp>${src}/resources</samp> to <samp>${dist}</samp>
 recursively. All <samp>.java</samp> files are copied, except for files with the
 name <samp>Test.java</samp>.</p>
 <pre>
 &lt;copydir src=&quot;${src}/resources&quot;
          dest=&quot;${dist}&quot;
          includes=&quot;**/*.java&quot;
-         excludes=&quot;mypackage/test/**&quot;/&gt;</pre>
-<p>copies the directory <samp>${src}/resources</samp> to <samp>${dist}</samp>
+         excludes=&quot;**/Test.java&quot;/&gt;</pre>
+
+<p>Copy the directory <samp>${src}/resources</samp> to <samp>${dist}</samp>
 recursively. All <samp>.java</samp> files are copied, except for the files under
 the <samp>mypackage/test</samp> directory.</p>
+<pre>
+&lt;copydir src=&quot;${src}/resources&quot;
+         dest=&quot;${dist}&quot;
+         includes=&quot;**/*.java&quot;
+         excludes=&quot;mypackage/test/**&quot;/&gt;</pre>
 
 </body>
 </html>

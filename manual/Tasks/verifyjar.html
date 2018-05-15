@@ -124,14 +124,15 @@ the <var>jar</var> attribute. Nested paths are also supported.</p>
       variables</a></td>
     <td>No, and only one can be supplied</td>
   </tr>
- </table>
+</table>
 
 <h3>Examples</h3>
+
+<p>Verify the <samp>ant.jar</samp> with alias <q>apache-group</q> accessing the keystore and private
+key via <q>secret</q> password.</p>
 <pre>
 &lt;verifyjar jar=&quot;${dist}/lib/ant.jar&quot;
            alias=&quot;apache-group&quot; storepass=&quot;secret&quot;/&gt;</pre>
-<p>verifies the <samp>ant.jar</samp> with alias <q>apache-group</q> accessing the keystore and
-private key via <q>secret</q> password.</p>
 
 </body>
 </html>

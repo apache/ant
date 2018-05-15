@@ -293,6 +293,7 @@ will be set to the specified value of the property element unless the correspond
 the <var>dir</var> attribute explicitly.</p>
 
 <h3>Examples</h3>
+<p>These are different ways of using the task:</p>
 <pre>
 &lt;ant antfile=&quot;subproject/subbuild.xml&quot; target=&quot;compile&quot;/&gt;
 
@@ -325,12 +326,12 @@ this:</p>
 &lt;/path&gt;</pre>
 
 <p>and the called build file (<samp>subbuild.xml</samp>) also defines a <code>&lt;path&gt;</code>
-with the <var>id</var> <samp>path1</samp>, but <samp>path2</samp> is not defined:</p>
+with the <var>id</var> <samp>path1</samp>, but <samp>path2</samp> is not defined; then</p>
 
 <pre>&lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;true&quot;/&gt;</pre>
 
 <p>will not override <samp>subbuild</samp>'s definition of <samp>path1</samp>, but make the parent's
-definition of <samp>path2</samp> available in the <samp>subbuild</samp>.</p>
+definition of <samp>path2</samp> available in the <samp>subbuild</samp>, whereas</p>
 
 <pre>&lt;ant antfile=&quot;subbuild.xml&quot;/&gt;</pre>
 
@@ -338,14 +339,14 @@ definition of <samp>path2</samp> available in the <samp>subbuild</samp>.</p>
 
 <pre>&lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;/&gt;</pre>
 
-<p>will neither override <samp>path1</samp> nor copy <samp>path2</samp>.</p>
+<p>will neither override <samp>path1</samp> nor copy <samp>path2</samp>, while</p>
 
 <pre>
 &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;&gt;
   &lt;reference refid=&quot;path1&quot;/&gt;
 &lt;/ant&gt;</pre>
 
-<p>will override <samp>subbuild</samp>'s definition of <samp>path1</samp>.</p>
+<p>will override <samp>subbuild</samp>'s definition of <samp>path1</samp>, and</p>
 
 <pre>
 &lt;ant antfile=&quot;subbuild.xml&quot; inheritrefs=&quot;false&quot;&gt;

@@ -394,15 +394,19 @@ to <q>false</q>.</em>  On remote filesets hidden files are not checked for being
 Hidden files are currently assumed to not be symbolic links.</p>
 
 <h3>Sending files</h3>
-<p>The easiest way to describe how to send files is with a couple of examples:</p>
+<p>The easiest way to describe how to send files is with a couple of examples.</p>
+<p>Log in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and upload all files in
+the <samp>htdocs/manual</samp> directory to the default directory for that user.</p>
 <pre>
 &lt;ftp server="ftp.apache.org"
      userid="anonymous"
      password="me@myorg.com"&gt;
     &lt;fileset dir="htdocs/manual"/&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and uploads all files in
-the <samp>htdocs/manual</samp> directory to the default directory for that user.</p>
+
+<p>Log in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and upload all new or changed
+files in the <samp>htdocs/manual</samp> directory to the <samp>incoming</samp> directory relative to
+the default directory for <samp>anonymous</samp>.</p>
 <pre>
 &lt;ftp server="ftp.apache.org"
      remotedir="incoming"
@@ -411,9 +415,12 @@ the <samp>htdocs/manual</samp> directory to the default directory for that user.
      depends="yes"&gt;
     &lt;fileset dir="htdocs/manual"/&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and uploads all new or changed
-files in the <samp>htdocs/manual</samp> directory to the <samp>incoming</samp> directory relative to
-the default directory for <samp>anonymous</samp>.</p>
+
+<p>Log in to <samp>ftp.apache.org</samp> at port <samp>2121</samp> as <samp>coder</samp> with
+password <samp>java1</samp> and upload all new or changed HTML files in
+the <samp>htdocs/manual</samp> directory to the <samp>/pub/incoming</samp> directory. The files are
+transferred in text mode.  Passive mode has been switched on to send files from behind a
+firewall.</p>
 <pre>
 &lt;ftp server="ftp.apache.org"
      port="2121"
@@ -427,11 +434,11 @@ the default directory for <samp>anonymous</samp>.</p>
         &lt;include name="**/*.html"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs in to <samp>ftp.apache.org</samp> at port <samp>2121</samp> as <samp>coder</samp> with
-password <samp>java1</samp> and uploads all new or changed HTML files in
-the <samp>htdocs/manual</samp> directory to the <samp>/pub/incoming</samp> directory. The files are
-transferred in text mode.  Passive mode has been switched on to send files from behind a
-firewall.</p>
+
+<p>Log in to a Windows server at <samp>ftp.hypothetical.india.org</samp> at port <samp>2121</samp>
+as <samp>coder</samp> with password <samp>java1</samp> and upload all new or changed (accounting for
+timezone differences) HTML files in the <samp>htdocs/manual</samp> directory to
+the <samp>/pub/incoming</samp> directory. The files are transferred in text mode.</p>
 <pre>
 &lt;ftp server="ftp.hypothetical.india.org"
      port="2121"
@@ -446,10 +453,10 @@ firewall.</p>
         &lt;include name="**/*.html"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs in to a Windows server at <samp>ftp.hypothetical.india.org</samp> at port <samp>2121</samp>
-as <samp>coder</samp> with password <samp>java1</samp> and uploads all new or changed (accounting
-for timezone differences) HTML files in the <samp>htdocs/manual</samp> directory to
-the <samp>/pub/incoming</samp> directory. The files are transferred in text mode.</p>
+
+<p>Log in to the Windows-based <samp>ftp.nt.org</samp> as <samp>coder</samp> with
+password <samp>java1</samp> and upload all HTML files in the <samp>htdocs/manual</samp> directory to
+the <samp>c:\uploads</samp> directory. Progress messages are displayed as each file is uploaded.</p>
 <pre>
 &lt;ftp server="ftp.nt.org"
      remotedir="c:\uploads"
@@ -461,15 +468,16 @@ the <samp>/pub/incoming</samp> directory. The files are transferred in text mode
         &lt;include name="**/*.html"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs in to the Windows-based <samp>ftp.nt.org</samp> as <samp>coder</samp> with
-password <samp>java1</samp> and uploads all HTML files in the <samp>htdocs/manual</samp> directory
-to the <samp>c:\uploads</samp> directory.  Progress messages are displayed as each file is
-uploaded.</p>
+
 <h3>Getting files</h3>
-<p>Getting files from an FTP server works pretty much the same way as sending them does.  The only
+<p>Getting files from an FTP server works pretty much the same way as sending them does. The only
 difference is that the nested filesets use the <var>remotedir</var> attribute as the base directory
 for the files on the FTP server, and the <var>dir</var> attribute as the local directory to put the
-files into.  The file structure from the FTP site is preserved on the local machine.</p>
+files into. The file structure from the FTP site is preserved on the local machine.</p>
+
+<p>Log in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and recursively download
+all <samp>.html</samp> files from default directory for that user into
+the <samp>htdocs/manual</samp> directory on the local machine.</p>
 <pre>
 &lt;ftp action="get"
      server="ftp.apache.org"
@@ -479,9 +487,12 @@ files into.  The file structure from the FTP site is preserved on the local mach
         &lt;include name="**/*.html"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and recursively downloads
-all <samp>.html</samp> files from default directory for that user into
-the <samp>htdocs/manual</samp> directory on the local machine.</p>
+
+<p>If <samp>apache.org</samp> ever switches to a Unix FTP server that uses the new all-numeric
+format for timestamps, this version would become necessary. It would accomplish the same
+functionality as the previous example but would successfully handle the numeric
+timestamps. The <var>systemTypeKey</var> is not necessary here but helps clarify what is going
+on.</p>
 <pre>
 &lt;ftp action="get"
      server="ftp.apache.org"
@@ -493,10 +504,11 @@ the <samp>htdocs/manual</samp> directory on the local machine.</p>
         &lt;include name="**/*.html"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>If <samp>apache.org</samp> ever switches to a Unix FTP server that uses the new all-numeric
-format for timestamps, this version would become necessary.  It would accomplish the same
-functionality as the previous example but would successfully handle the numeric timestamps.
-The <var>systemTypeKey</var> is not necessary here but helps clarify what is going on.</p>
+
+<p>Log into a UNIX FTP server at <samp>ftp.hypothetical.fr</samp> which displays dates with French
+names in Standard European format, as <samp>anonymous</samp>, and recursively download
+all <samp>.html</samp> files from default directory for that user into
+the <samp>htdocs/manual</samp> directory on the local machine.</p>
 <pre>
 &lt;ftp action="get"
      server="ftp.hypthetical.fr"
@@ -509,16 +521,15 @@ The <var>systemTypeKey</var> is not necessary here but helps clarify what is goi
         &lt;include name="**/*.html"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs into a UNIX FTP server at <samp>ftp.hypothetical.fr</samp> which displays dates with French
-names in Standard European format, as <samp>anonymous</samp>, and recursively downloads
-all <samp>.html</samp> files from default directory for that user into
-the <samp>htdocs/manual</samp> directory on the local machine.</p>
 
 <h3>Deleting files</h3>
 <p>As you've probably guessed by now, you use nested fileset elements to select the files to delete
 from the remote FTP server.  Again, the filesets are relative to the remote directory, not a local
 directory.  In fact, the <var>dir</var> attribute of the fileset is ignored completely.</p>
 
+<p>Log in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and try to delete
+all <samp>*.tmp</samp> files from the default directory for that user.  If you don't have permission
+to delete a file, a <code>BuildException</code> is thrown.</p>
 <pre>
 &lt;ftp action="del"
      server="ftp.apache.org"
@@ -528,10 +539,11 @@ directory.  In fact, the <var>dir</var> attribute of the fileset is ignored comp
         &lt;include name="**/*.tmp"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and tries to delete
-all <samp>*.tmp</samp> files from the default directory for that user.  If you don't have permission
-to delete a file, a <code>BuildException</code> is thrown.</p>
+
 <h3>Listing Files</h3>
+<p>Get a file listing in <samp>data/ftp.listing</samp> of all the files on the FTP server relative
+to the default directory of the <samp>anonymous</samp> user. The listing is in whatever format the
+FTP server normally lists files.</p>
 <pre>
 &lt;ftp action="list"
      server="ftp.apache.org"
@@ -542,30 +554,34 @@ to delete a file, a <code>BuildException</code> is thrown.</p>
         &lt;include name="**"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>This provides a file listing in <samp>data/ftp.listing</samp> of all the files on the FTP server
-relative to the default directory of the <samp>anonymous</samp> user. The listing is in whatever
-format the FTP server normally lists files.</p>
 
 <h3>Creating directories</h3>
 <p>Note that with the <q>mkdir</q> action, the directory to create is specified using
 the <var>remotedir</var> attribute.</p>
+<p>Create the directory <samp>some/remote/dir</samp> beneath the default root directory. As with all
+other actions, the directory separator character must be correct according to the desires of the FTP
+server.</p>
 <pre>
 &lt;ftp action="mkdir"
      server="ftp.apache.org"
      userid="anonymous"
      password="me@myorg.com"
      remotedir="some/remote/dir"/&gt;</pre>
-<p>This creates the directory <samp>some/remote/dir</samp> beneath the default root directory.  As
-with all other actions, the directory separator character must be correct according to the desires
-of the FTP server.</p>
+
 <h3>Removing directories</h3>
 <p>This action uses nested fileset elements to select the directories to remove from the remote FTP
-server.  The filesets are relative to the remote directory, not a local directory.
-The <var>dir</var> attribute of the fileset is ignored completely.  The directories to be removed
-must be empty, or contain only other directories that have been also selected to be removed by the
-filesets patterns, otherwise a <code>BuildException</code> will be thrown.  Also, if you don't have
-permission to remove a directory, a <code>BuildException</code> is thrown.</p>
+server. The filesets are relative to the remote directory, not a local directory. The <var>dir</var>
+attribute of the fileset is ignored completely. The directories to be removed must be empty, or
+contain only other directories that have been also selected to be removed by the filesets patterns,
+otherwise a <code>BuildException</code> will be thrown. Also, if you don't have permission to remove
+a directory, a <code>BuildException</code> is thrown.</p>
 
+<p>Log in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and try to
+remove <samp>/somedir/dira</samp> directory and all the directory tree starting at, and
+including, <samp>/somedir/dirb</samp>.  When removing the <samp>/somedir/dirb</samp> tree, the task
+starts at the leaves moving up to the root, so that when it tries to remove a directory it is sure
+all the directories under it are already removed.  Obviously all the files in the tree must have
+been already deleted.</p>
 <pre>
 &lt;ftp action="rmdir"
      server="ftp.apache.org"
@@ -577,14 +593,8 @@ permission to remove a directory, a <code>BuildException</code> is thrown.</p>
         &lt;include name="dirb/**"/&gt;
     &lt;/fileset&gt;
 &lt;/ftp&gt;</pre>
-<p>Logs in to <samp>ftp.apache.org</samp> as <samp>anonymous</samp> and tries to
-remove <samp>/somedir/dira</samp> directory and all the directories tree starting at, and
-including, <samp>/somedir/dirb</samp>.  When removing the <samp>/somedir/dirb</samp> tree, it will
-start at the leaves moving up to the root, so that when it tries to remove a directory it is sure
-all the directories under it are already removed.  Obviously all the files in the tree must have
-been already deleted.</p>
-<p>As an example suppose you want to delete everything contained into <samp>/somedir</samp>, so
-invoke first the <code>&lt;ftp&gt;</code> task with <var>action</var>=<q>delete</q>, then
+<p>As an example suppose you want to delete everything contained in <samp>/somedir</samp>, so invoke
+first the <code>&lt;ftp&gt;</code> task with <var>action</var>=<q>delete</q>, then
 with <var>action</var>=<q>rmdir</q> specifying in both cases <var>remotedir</var>=<q>/somedir</q>
 and</p>
 <pre>

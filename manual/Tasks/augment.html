@@ -58,16 +58,18 @@ declared <code>augment</code> element as though it were the original element.</p
 
 <pre>&lt;fileset id="input-fs" dir="${basedir}"/&gt;</pre>
 
+<p>invocation</p>
+
 <pre>&lt;augment id="input-fs" excludes="foo"/&gt;</pre>
 
-<p>modifies the <var>excludes</var> attribute of <samp>input-fs</samp>.</p>
+<p>modifies the <var>excludes</var> attribute of <samp>input-fs</samp>, whereas</p>
 
 <pre>
 &lt;augment id="input-fs"&gt;
   &lt;filename name="bar"/&gt;
 &lt;/augment&gt;</pre>
 
-<p>Adds a <code>filename</code> selector to <samp>input-fs</samp>.</p>
+<p>adds a <code>filename</code> selector to <samp>input-fs</samp>.</p>
 
 </body>
 </html>

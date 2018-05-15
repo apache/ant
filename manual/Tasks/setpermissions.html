@@ -79,18 +79,21 @@ different sets of permissions to apply to either type of resource.</p>
 <h4>any resource collection</h4>
 <p><a href="../Types/resources.html#collection">resource collections</a> are used to select groups
 of resources.</p>
+
 <h3>Examples</h3>
+
+<p>Make the <samp>start.sh</samp> file readable and executable for anyone and in addition writable
+by the owner.</p>
 <pre>
 &lt;setpermissions mode=&quot;755&quot;&gt;
   &lt;file file=&quot;${dist}/start.sh&quot;/&gt;
 &lt;/setpermissions&gt;</pre>
-<p>makes the <samp>start.sh</samp> file readable and executable for anyone and in addition writable
+
+<p>Make the <samp>start.sh</samp> file readable and executable for anyone and in addition writable
 by the owner.</p>
 <pre>
 &lt;setpermissions permissions=&quot;OWNER_READ,OWNER_WRITE,OWNER_EXECUTE,OTHERS_READ,OTHERS_EXECUTE,GROUP_READ,GROUP_EXECUTE&quot;&gt;
   &lt;file file=&quot;${dist}/start.sh&quot;/&gt;
 &lt;/setpermissions&gt;</pre>
-<p>makes the <samp>start.sh</samp> file readable and executable for anyone and in addition writable
-by the owner.</p>
 </body>
 </html>

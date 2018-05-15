@@ -110,19 +110,21 @@ set its value to your current OS.</p>
   </tr>
 </table>
 <h3>Examples</h3>
+
+<p>Make the <samp>start.sh</samp> file belong to the <samp>coders</samp> group on a UNIX system.</p>
 <pre>&lt;chgrp file=&quot;${dist}/start.sh&quot; group=&quot;coders&quot;/&gt;</pre>
 
-<p>makes the <samp>start.sh</samp> file belong to the <samp>coders</samp> group on a UNIX
-system.</p>
-
+<p>Make all <samp>.sh</samp> files below <samp>${dist}/bin</samp> belong to the <samp>coders</samp>
+group on a UNIX system.</p>
 <pre>
 &lt;chgrp group=&quot;coders&quot;&gt;
   &lt;fileset dir=&quot;${dist}/bin&quot; includes=&quot;**/*.sh&quot;/&gt;
 &lt;/chgrp&gt;</pre>
 
-<p>makes all <samp>.sh</samp> files below <samp>${dist}/bin</samp> belong to the <samp>coders</samp>
-group on a UNIX system.</p>
-
+<p>Make all files below <samp>shared/sources1</samp> (except those below any directory
+named <samp>trial</samp>) belong to the <samp>coders</samp> group on a UNIX system. In addition, all
+files belonging to a FileSet with <var>id</var>=<samp>other.shared.sources</samp> get the same
+group.</p>
 <pre>
 &lt;chgrp group=&quot;coders&quot;&gt;
   &lt;fileset dir=&quot;shared/sources1&quot;&gt;
@@ -132,11 +134,10 @@ group on a UNIX system.</p>
 &lt;/chgrp&gt;
 </pre>
 
-<p>makes all files below <samp>shared/sources1</samp> (except those below any directory
-named <samp>trial</samp>) belong to the <samp>coders</samp> group on a UNIX system. In addition all
-files belonging to a FileSet with <var>id</var> <samp>other.shared.sources</samp> get the same
-group.</p>
-
+<p>Make all <samp>.test.jsp</samp>, and <samp>.new</samp> files belong to
+group <samp>webdev</samp>. Directories with names beginning with <samp>test_</samp> also will belong
+to <samp>webdev</samp>, but if there is a directory name that ends in <samp>.new</samp> or a file
+name that begins with <samp>test_</samp> it will be unaffected.</p>
 <pre>
 &lt;chgrp group=&quot;webdev&quot; type=&quot;file&quot;&gt;
   &lt;fileset dir=&quot;/web&quot;&gt;
@@ -147,11 +148,6 @@ group.</p>
     &lt;include name=&quot;**/test_*&quot;/&gt;
   &lt;/dirset&gt;
 &lt;/chmod&gt;</pre>
-
-<p>makes all <samp>.test.jsp</samp>, and <samp>.new</samp> files belong to
-group <samp>webdev</samp>. Directories with names beginning with <samp>test_</samp> also will belong
-to <samp>webdev</samp>, but if there is a directory name that ends in <samp>.new</samp> or a file
-name that begins with <samp>test_</samp> it will be unaffected.</p>
 
 </body>
 </html>

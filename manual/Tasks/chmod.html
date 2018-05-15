@@ -138,19 +138,24 @@ alternative.</p>
   </tr>
 </table>
 <h3>Examples</h3>
+
+<p>Make the <samp>start.sh</samp> file readable and executable for anyone on a UNIX system.</p>
 <pre>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;/&gt;</pre>
-<p>makes the <samp>start.sh</samp> file readable and executable for anyone on a UNIX system.</p>
 
-<pre>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;700&quot;/&gt;</pre>
-<p>makes the <samp>start.sh</samp> file readable, writable and executable only for the owner on a
+<p>Make the <samp>start.sh</samp> file readable, writable and executable only for the owner on a
 UNIX system.</p>
+<pre>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;700&quot;/&gt;</pre>
 
+<p>Make all <samp>.sh</samp> files below <samp>${dist}/bin</samp> readable and executable for anyone
+on a UNIX system.</p>
 <pre>
 &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot;
        includes=&quot;**/*.sh&quot;/&gt;</pre>
-<p>makes all <samp>.sh</samp> files below <samp>${dist}/bin</samp> readable and executable for
-anyone on a UNIX system.</p>
 
+<p>Make all files below <samp>shared/sources1</samp> (except those below any directory
+named <samp>trial</samp>) writable for members of the same group on a UNIX system. In addition, all
+files belonging to a FileSet with <var>id</var> <samp>other.shared.sources</samp> get the same
+permissions.</p>
 <pre>
 &lt;chmod perm=&quot;g+w&quot;&gt;
   &lt;fileset dir=&quot;shared/sources1&quot;&gt;
@@ -158,10 +163,10 @@ anyone on a UNIX system.</p>
   &lt;/fileset&gt;
   &lt;fileset refid=&quot;other.shared.sources&quot;/&gt;
 &lt;/chmod&gt;</pre>
-<p>makes all files below <samp>shared/sources1</samp> (except those below any directory named trial)
-writable for members of the same group on a UNIX system. In addition all files belonging to a
-FileSet with <var>id</var> <samp>other.shared.sources</samp> get the same permissions.</p>
 
+<p>Keep non-owners from touching <code>cgi</code> scripts, files with a <samp>.old</samp> extension
+or directories beginning with <samp>private_</samp>. A directory ending in <samp>.old</samp> or a
+file beginning with <samp>private_</samp> would remain unaffected.</p>
 <pre>
 &lt;chmod perm=&quot;go-rwx&quot; type=&quot;file&quot;&gt;
   &lt;fileset dir=&quot;/web&quot;&gt;
@@ -172,9 +177,6 @@ FileSet with <var>id</var> <samp>other.shared.sources</samp> get the same permis
     &lt;include name=&quot;**/private_*&quot;/&gt;
   &lt;/dirset&gt;
 &lt;/chmod&gt;</pre>
-<p>keeps non-owners from touching cgi scripts, files with a <samp>.old</samp> extension or
-directories beginning with <samp>private_</samp>. A directory ending in <samp>.old</samp> or a file
-beginning with <samp>private_</samp> would remain unaffected.</p>
 
 <h3>Note on <var>maxparallel</var> attribute</h3>
 <p>Some shells have a limit of the number of characters that a command line may contain.  This

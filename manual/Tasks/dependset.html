@@ -110,6 +110,15 @@ and <code>&lt;sourcefilelist&gt;</code> filelists, and if any are older, they ar
 Multiple <code>&lt;targetfilelist&gt;</code> filelists may be specified.</p>
 
 <h3>Examples</h3>
+
+<p>Remove derived HTML files in the ${output.dir} directory if they are out-of-date with respect
+to:</p>
+<ol>
+    <li>the DTD of their source XML files</li>
+    <li>a common DTD (imported by the main DTD)</li>
+    <li>a subordinate XSLT stylesheet (imported by the main stylesheet), or</li>
+    <li>the buildfile</li>
+</ol>
 <pre>
 &lt;dependset&gt;
   &lt;srcfilelist
@@ -126,17 +135,8 @@ Multiple <code>&lt;targetfilelist&gt;</code> filelists may be specified.</p>
       includes = &quot;**/*.html&quot;/&gt;
 &lt;/dependset&gt;</pre>
 
-<p>In this example derived HTML files in the ${output.dir} directory will be removed if any are
-out-of-date with respect to:</p>
-<ol>
-  <li>the DTD of their source XML files</li>
-  <li>a common DTD (imported by the main DTD)</li>
-  <li>a subordinate XSLT stylesheet (imported by the main stylesheet), or</li>
-  <li>the buildfile</li>
-</ol>
-
-<p>If any of the sources in the above example does not exist, all target files will also be removed.
-To ignore missing sources instead, use filesets instead of filelists for the sources.</p>
+<p>If any of the sources in the above example does not exist, all target files will also be
+removed. To ignore missing sources instead, use filesets instead of filelists for the sources.</p>
 
 </body>
 </html>

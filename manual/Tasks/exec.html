@@ -330,21 +330,24 @@ means it is not on the path. Any time you see such an error from any Ant task, i
 Ant bug, but some configuration problem on your machine.</p>
 
 <h3>Examples</h3>
+
+<p>Start <kbd>emacs</kbd> on display 1 of the X Window System.</p>
 <pre>
 &lt;exec executable=&quot;emacs&quot;&gt;
   &lt;env key=&quot;DISPLAY&quot; value=&quot;:1.0&quot;/&gt;
 &lt;/exec&gt;
 </pre>
-<p>starts <code>emacs</code> on display 1 of the X Window System.</p>
 
+<p>Add <samp>${basedir}/bin</samp> to the <code>PATH</code> of the system command.</p>
 <pre>
 &lt;property environment=&quot;env&quot;/&gt;
 &lt;exec ... &gt;
   &lt;env key=&quot;PATH&quot; path=&quot;${env.PATH}:${basedir}/bin&quot;/&gt;
 &lt;/exec&gt;
 </pre>
-<p>adds <samp>${basedir}/bin</samp> to the <code>PATH</code> of the system command.</p>
 
+<p>Start the <samp>${browser}</samp> with the specified <samp>${file}</samp> and end the Ant
+process. The browser will remain.</p>
 <pre>
 &lt;property name="browser" location="C:/Program Files/Internet Explorer/iexplore.exe"/&gt;
 &lt;property name="file" location="ant/docs/manual/index.html"/&gt;
@@ -353,9 +356,12 @@ Ant bug, but some configuration problem on your machine.</p>
     &lt;arg value="${file}"/&gt;
 &lt;/exec&gt;
 </pre>
-<p>Starts the <samp>${browser}</samp> with the specified <samp>${file}</samp> and end the Ant
-process. The browser will remain.</p>
 
+<p>Send the string <q>blah before blah</q> to the <kbd>cat</kbd> executable, using
+an <a href="../Types/filterchain.html">&lt;inputfilterchain&gt;</a> to replace <q>before</q>
+with <q>after</q> on the way in. Output is sent to the file <samp>redirector.out</samp> and stored
+in a property of the same name. Similarly, error output is sent to a file and a property, both
+named <samp>redirector.err</samp>.</p>
 <pre>
 &lt;exec executable=&quot;cat&quot;&gt;
     &lt;redirector outputproperty=&quot;redirector.out&quot;
@@ -369,12 +375,6 @@ process. The browser will remain.</p>
     &lt;/redirector&gt;
 &lt;/exec&gt;
 </pre>
-
-<p>Sends the string <q>blah before blah</q> to the <kbd>cat</kbd> executable, using
-an <a href="../Types/filterchain.html">&lt;inputfilterchain&gt;</a> to replace <q>before</q>
-with <q>after</q> on the way in.  Output is sent to the file <samp>redirector.out</samp> and stored
-in a property of the same name.  Similarly, error output is sent to a file and a property, both
-named <samp>redirector.err</samp>.</p>
 
 <p><strong>Note</strong>: do not try to specify arguments using a simple <code>arg</code>-element
 and separate them by spaces. This results in only a single argument containing the entire

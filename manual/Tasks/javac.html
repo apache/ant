@@ -488,6 +488,10 @@ type can be used as an alternative to the <var>compiler</var> attribute.</p>
 
 <h3>Examples</h3>
 
+<p>Compile all <samp>.java</samp> files under the <samp>${src}</samp> directory, and store
+the <samp>.class</samp> files in the <samp>${build}</samp> directory. The classpath used
+includes <samp>xyz.jar</samp>, and compiling with debug information is on. The source level
+is <q>1.4</q>, so you can use <code>assert</code> statements.</p>
 <pre>
 &lt;javac srcdir=&quot;${src}&quot;
        destdir=&quot;${build}&quot;
@@ -495,11 +499,10 @@ type can be used as an alternative to the <var>compiler</var> attribute.</p>
        debug=&quot;on&quot;
        source=&quot;1.4&quot;/&gt;</pre>
 
-<p>compiles all <samp>.java</samp> files under the <samp>${src}</samp> directory, and stores
-the <samp>.class</samp> files in the <samp>${build}</samp> directory.  The classpath used
-includes <samp>xyz.jar</samp>, and compiling with debug information is on. The source level
-is <q>1.4</q>, so you can use <code>assert</code> statements.</p>
-
+<p>Compile all <samp>.java</samp> files under the <samp>${src}</samp> directory, and store
+the <samp>.class</samp> files in the <samp>${build}</samp> directory. Java compiler is forked using
+the default <kbd>javac</kbd> executable. The source level is <q>1.2</q> (similar to <q>1.1</q>
+or <q>1.3</q>) and the class files should be runnable under JDK 1.2+ as well.</p>
 <pre>
 &lt;javac srcdir=&quot;${src}&quot;
        destdir=&quot;${build}&quot;
@@ -507,22 +510,23 @@ is <q>1.4</q>, so you can use <code>assert</code> statements.</p>
        source=&quot;1.2&quot;
        target=&quot;1.2&quot;/&gt;</pre>
 
-<p>compiles all <samp>.java</samp> files under the <samp>${src}</samp> directory, and stores
-the <samp>.class</samp> files in the <samp>${build}</samp> directory.  This will fork off the Java
-compiler using the default <kbd>javac</kbd> executable.  The source level is <q>1.2</q> (similar
-to <q>1.1</q> or <q>1.3</q>) and the class files should be runnable under JDK 1.2+ as well.</p>
-
+<p>Compile all <samp>.java</samp> files under the <samp>${src}</samp> directory, and store
+the <samp>.class</samp> files in the <samp>${build}</samp> directory. Java compiler is forked using
+the executable named <kbd>java$javac.exe</kbd>. Note that the <q>$</q> sign needs to be escaped by a
+second one. The source level is <q>1.5</q>, so you can use generics.</p>
 <pre>
 &lt;javac srcdir=&quot;${src}&quot;
        destdir=&quot;${build}&quot;
        fork=&quot;java$$javac.exe&quot;
        source=&quot;1.5&quot;/&gt;</pre>
 
-<p>compiles all <samp>.java</samp> files under the <samp>${src}</samp> directory, and stores
-the <samp>.class</samp> files in the <samp>${build}</samp> directory.  This will fork off the Java
-compiler, using the executable named <kbd>java$javac.exe</kbd>.  Note that the <q>$</q> sign needs
-to be escaped by a second one.  The source level is <q>1.5</q>, so you can use generics.</p>
-
+<p>Compile <samp>.java</samp> files under the <samp>${src}</samp> directory, and store
+the <samp>.class</samp> files in the <code>${build}</code> directory. The classpath used
+includes <samp>xyz.jar</samp>, and debug information is on. Only files
+under <samp>mypackage/p1</samp> and <samp>mypackage/p2</samp> are used. All files in and below
+the <samp>mypackage/p1/testpackage</samp> directory are excluded from compilation. You didn't
+specify a source or target level, so the actual values used will depend on which JDK you ran Ant
+with.</p>
 <pre>
 &lt;javac srcdir=&quot;${src}&quot;
        destdir=&quot;${build}&quot;
@@ -531,26 +535,9 @@ to be escaped by a second one.  The source level is <q>1.5</q>, so you can use g
        classpath=&quot;xyz.jar&quot;
        debug=&quot;on&quot;/&gt;</pre>
 
-<p>compiles <samp>.java</samp> files under the <samp>${src}</samp> directory, and stores
-the <samp>.class</samp> files in the <code>${build}</code> directory.  The classpath used
-includes <samp>xyz.jar</samp>, and debug information is on.  Only files
-under <samp>mypackage/p1</samp> and <samp>mypackage/p2</samp> are used. All files in and below
-the <samp>mypackage/p1/testpackage</samp> directory are excluded from compilation.  You didn't
-specify a source or target level, so the actual values used will depend on which JDK you ran Ant
-with.</p>
-
-<pre>
-&lt;javac srcdir=&quot;${src}:${src2}&quot;
-       destdir=&quot;${build}&quot;
-       includes=&quot;mypackage/p1/**,mypackage/p2/**&quot;
-       excludes=&quot;mypackage/p1/testpackage/**&quot;
-       classpath=&quot;xyz.jar&quot;
-       debug=&quot;on&quot;/&gt;</pre>
-
-<p>is the same as the previous example, with the addition of a second source path, defined by the
-property <samp>src2</samp>. This can also be represented using nested <code>&lt;src&gt;</code>
+<p>This is the same as the previous example, with the addition of a second source path, defined by
+the property <samp>src2</samp>. This can also be represented using nested <code>&lt;src&gt;</code>
 elements as follows:</p>
-
 <pre>
 &lt;javac destdir=&quot;${build}&quot;
        classpath=&quot;xyz.jar&quot;
@@ -562,11 +549,10 @@ elements as follows:</p>
   &lt;exclude name=&quot;mypackage/p1/testpackage/**&quot;/&gt;
 &lt;/javac&gt;</pre>
 
-<p>If you want to run the <kbd>javac</kbd> compiler of a different JDK, you should tell Ant, where
-to find the compiler and which version of JDK you will be using so it can choose the correct command
-line switches.  The following example executes a JDK 1.1 <kbd>javac</kbd> in a new process and
-uses the correct command line switches even when Ant is running in a JVM of a different version:</p>
-
+<p>If you want to run the <kbd>javac</kbd> compiler of a different JDK, you should tell Ant where to
+find the compiler and which version of JDK you will be using so it can choose the correct command
+line switches. The following example executes a JDK 1.1 <kbd>javac</kbd> in a new process and uses
+the correct command line switches even when Ant is running in a JVM of a different version:</p>
 <pre>
 &lt;javac srcdir=&quot;${src}&quot;
        destdir=&quot;${build}&quot;
@@ -584,7 +570,6 @@ target="_top">Ant FAQ</a> for additional information.</p>
 
 <p>If you wish to compile only files explicitly specified and disable <code>javac</code>'s default
 searching mechanism then you can unset the <var>sourcepath</var> attribute:</p>
-
 <pre>
 &lt;javac sourcepath=&quot;&quot; srcdir=&quot;${src}&quot;
        destdir=&quot;${build}&quot; &gt;
@@ -599,7 +584,6 @@ files refers to them.</p>
 <p>If you wish to compile with a special JDK (another than the one Ant is currently using), set
 the <var>executable</var> and <var>fork</var> attribute. Using <var>taskname</var> could show in the
 log, that these settings are fix.</p>
-
 <pre>
 &lt;javac srcdir=&quot;&quot;
        destdir=&quot;&quot;
@@ -613,7 +597,6 @@ with all JDKs prior to 1.2.</p>
 
 <p>If you want to activate other compiler options like <code>lint</code> you could use
 the <code>&lt;compilerarg&gt;</code> element:</p>
-
 <pre>
 &lt;javac srcdir="${src.dir}"
        destdir="${classes.dir}"
@@ -641,6 +624,12 @@ the <var>compiler</var> attribute:</p>
 
 <p>in which case your compiler adapter can support attributes and nested elements of its own.</p>
 
+<p>The following examples demonstrate the use of Java 9+ modules.</p>
+
+<p>Compile all <samp>.java</samp> files in a single module under the <samp>${src}</samp> directory,
+and store the <samp>.class</samp> files in the <code>${build}</code> directory. The compilation uses
+application modules located in <samp>modules</samp> folder. The source level is <q>9</q> to enable
+modules.</p>
 <pre>
 &lt;javac srcdir=&quot;${src}&quot;
        destdir=&quot;${build}&quot;
@@ -648,26 +637,20 @@ the <var>compiler</var> attribute:</p>
        modulepath=&quot;modules&quot;
        source=&quot;9&quot;/&gt;</pre>
 
-<p>compiles all <samp>.java</samp> files in a single module under the <samp>${src}</samp> directory,
-and stores the <samp>.class</samp> files in the <code>${build}</code> directory. The compilation
-uses application modules located in <samp>modules</samp> folder.The source level is <q>9</q> to
-enable modules.</p>
-
+<p>Compile all <samp>.java</samp> files in <samp>gen/classes</samp>, <samp>lin32/classes</samp>
+and <code>lin64/classes</code> in all source modules under the <code>${src}</code>
+directory. Generate module directories in the <samp>${build}</samp> directory. Each generated module
+directory under the <samp>${build}</samp> directory contains <code>.class</code> files from
+corresponding source module. The <samp>*</samp> is a token representing the name of any of the
+modules in the compilation module set. The <code>{ ... , ... }</code> express alternates for
+expansion. The compilation uses application modules located in <code>modules</code> folder. The
+source level is <q>9</q> to enable modules.</p>
 <pre>
 &lt;javac modulesourcepath=&quot;${src}/*/{gen,lin{32,64}}/classes&quot;
        destdir=&quot;${build}&quot;
        includeantruntime=&quot;false&quot;
        modulepath=&quot;modules&quot;
        source=&quot;9&quot;/&gt;</pre>
-
-<p>compiles all <samp>.java</samp> files in <samp>gen/classes</samp>, <samp>lin32/classes</samp>
-and <code>lin64/classes</code> in all source modules under the <code>${src}</code> directory.
-Generates module directories in the <samp>${build}</samp> directory. Each generated module directory
-under the <samp>${build}</samp> directory contains <code>.class</code> files from corresponding
-source module.  The <samp>*</samp> is a token representing the name of any of the modules in the
-compilation module set.  The <code>{ ... , ... }</code> express alternates for expansion.  The
-compilation uses application modules located in <code>modules</code> folder.The source level
-is <q>9</q> to enable modules.</p>
 
 <h3 id="jikes">Jikes notes</h3>
 

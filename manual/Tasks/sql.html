@@ -307,6 +307,11 @@ that need to be set when connecting to the database.</p>
 </table>
 
 <h3>Examples</h3>
+
+<p>Connect to the database given in <var>url</var> as the <q>sa</q> user using
+the <code>org.database.jdbcDriver</code> and execute the SQL statements contained within the
+file <samp>data.sql</samp></p>
+
 <pre>
 &lt;sql driver=&quot;org.database.jdbcDriver&quot;
      url=&quot;jdbc:database-url&quot;
@@ -314,9 +319,10 @@ that need to be set when connecting to the database.</p>
      password=&quot;pass&quot;
      src=&quot;data.sql&quot;/&gt;</pre>
 
-<p>Connects to the database given in <var>url</var> as the <q>sa</q> user using
-the <code>org.database.jdbcDriver</code> and executes the SQL statements contained within the
-file <samp>data.sql</samp></p>
+<p>Connect to the database given in <var>url</var> as the <q>sa</q> user using
+the <code>org.database.jdbcDriver</code> and execute the SQL statements contained within the
+file <samp>data.sql</samp>. Also set the property <code>internal_logon</code> to the
+value <q>SYSDBA</q>.</p>
 
 <pre>
 &lt;sql driver=&quot;org.database.jdbcDriver&quot;
@@ -327,10 +333,10 @@ file <samp>data.sql</samp></p>
   &lt;connectionProperty name=&quot;internal_logon&quot; value=&quot;SYSDBA&quot;&gt;
 &lt;/sql&gt;</pre>
 
-<p>Connects to the database given in <var>url</var> as the <q>sa</q> user using
-the <code>org.database.jdbcDriver</code> and executes the SQL statements contained within the
-file <samp>data.sql</samp>.  Also sets the property <code>internal_logon</code> to the
-value <q>SYSDBA</q>.</p>
+<p>Connect to the database given in <var>url</var> as the <q>sa</q> user using
+the <code>org.database.jdbcDriver</code> and execute the two SQL statements inserting data
+into <samp>some_table</samp> and truncating <samp>some_other_table</samp>. Ant properties in the
+nested text will not be expanded.</p>
 
 <pre>
 &lt;sql driver=&quot;org.database.jdbcDriver&quot;
@@ -343,11 +349,6 @@ values(1,2,3,4);
 
 truncate table some_other_table;
 &lt;/sql&gt;</pre>
-
-<p>Connects to the database given in <var>url</var> as the <q>sa</q> user using
-the <code>org.database.jdbcDriver</code> and executes the two SQL statements inserting data
-into <samp>some_table</samp> and truncating <samp>some_other_table</samp>. Ant Properties in the
-nested text will not be expanded.</p>
 
 <p>Note that you may want to enclose your statements in <code>&lt;![CDATA[</code>
 ... <code>]]&gt;</code> sections so you don't need to

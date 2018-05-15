@@ -141,24 +141,23 @@ file as the JJTree grammar file with a suffix <samp>.jj</samp>.</p>
   <td>No</td>
 </tr>
 
-  <tr>
-    <td>maxmemory</td>
-    <td>Max amount of memory to allocate to the forked JVM.  <em>since Ant 1.8.3</em></td>
-    <td>No</td>
-  </tr>
+<tr>
+  <td>maxmemory</td>
+  <td>Max amount of memory to allocate to the forked JVM.  <em>since Ant 1.8.3</em></td>
+  <td>No</td>
+</tr>
 </table>
 
 <h3>Example</h3>
 
+<p>Invoke JJTree on grammar file <samp>src/Parser.jjt</samp>, writing the generated grammar
+file, <samp>Parser.jj</samp>, to <samp>build/src</samp>. The grammar option NODE_USES_PARSER is set
+to <q>true</q> when invoking JJTree.</p>
 <pre>
 &lt;jjtree target="src/Parser.jjt"
         outputdirectory="build/src"
         javacchome="c:/program files/JavaCC"
         nodeusesparser="true"/&gt;</pre>
-
-<p>This invokes JJTree on grammar file <samp>src/Parser.jjt</samp>, writing the generated grammar
-file, <samp>Parser.jj</samp>, file to <samp>build/src</samp>. The grammar option NODE_USES_PARSER is
-set to <q>true</q> when invoking JJTree.</p>
 
 <h3>Comparison of output locations between command line JJTree and different Ant <code>taskdef</code>
 versions</h3>

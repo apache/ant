@@ -184,59 +184,53 @@ attribute can contain spaces in their name.</p>
 </table>
 
 <h3>Examples</h3>
+<p>Generate a change log report for all the changes that have been made under
+the <samp>dve/network</samp> directory. Write these changes into the
+file <samp>changelog.xml</samp>.</p>
 <pre>
 &lt;cvschangelog dir=&quot;dve/network&quot;
               destfile=&quot;changelog.xml&quot;/&gt;</pre>
 
-<p>Generates a change log report for all the changes that have been made under
-the <samp>dve/network</samp> directory.  It writes these changes into the
-file <samp>changelog.xml</samp>.</p>
-
+<p>Generate a change log report for any changes that were made under the <samp>dve/network</samp>
+directory in the past 10 days. Write these changes into the file <samp>changelog.xml</samp>.</p>
 <pre>
 &lt;cvschangelog dir=&quot;dve/network&quot;
               destfile=&quot;changelog.xml&quot;
               daysinpast=&quot;10&quot;/&gt;</pre>
 
-<p>Generates a change log report for any changes that were made under the <samp>dve/network</samp>
-directory in the past 10 days.  It writes these changes into the
+<p>Generate a change log report for any changes that were made between February 20, 2002 and March
+20, 2002 under the <samp>dve/network</samp> directory. Write these changes into the
 file <samp>changelog.xml</samp>.</p>
-
 <pre>
 &lt;cvschangelog dir=&quot;dve/network&quot;
               destfile=&quot;changelog.xml&quot;
               start=&quot;20 Feb 2002&quot;
               end=&quot;20 Mar 2002&quot;/&gt;</pre>
 
-<p>Generates a change log report for any changes that were made between February 20, 2002 and March
-20, 2002 under the <samp>dve/network</samp> directory.  It writes these changes into the
+<p>Generate a change log report for any changes that were made after February 20, 2002 under
+the <samp>dve/network</samp> directory. Write these changes into the
 file <samp>changelog.xml</samp>.</p>
-
 <pre>
 &lt;cvschangelog dir=&quot;dve/network&quot;
               destfile=&quot;changelog.xml&quot;
               start=&quot;20 Feb 2002&quot;/&gt;</pre>
 
-<p>Generates a change log report for any changes that were made after February 20, 2002 under
-the <samp>dve/network</samp> directory.  It writes these changes into the
-file <samp>changelog.xml</samp>.</p>
-
+<p>Generate a change log report for all the changes that were made under
+the <code>dve/network</code> directory, substituting the name <samp>Peter Donald</samp> in
+the <code>&lt;author&gt;</code> tags anytime a change made by the user ID <samp>donaldp</samp> is
+encountered.  Write these changes into the file <samp>changelog.xml</samp>.</p>
 <pre>
 &lt;cvschangelog dir=&quot;dve/network&quot;
               destfile=&quot;changelog.xml&quot;&gt;
     &lt;user displayname=&quot;Peter Donald&quot; userid=&quot;donaldp&quot;/&gt;
 &lt;/cvschangelog&gt;</pre>
 
-<p>Generates a change log report for all the changes that were made under
-the <code>dve/network</code> directory, substituting the name <samp>Peter Donald</samp> in
-the <code>&lt;author&gt;</code> tags anytime it encounters a change made by the user
-ID <samp>donaldp</samp>.  It writes these changes into the file <samp>changelog.xml</samp>.</p>
-
-<p>Generates a change log report on the <code>ANT_16_BRANCH</code>.</p>
+<p>Generate a change log report on the <code>ANT_16_BRANCH</code>.</p>
 <pre>
 &lt;cvschangelog dir=&quot;c:/dev/asf/ant.head&quot; passfile=&quot;c:/home/myself/.cvspass&quot;
               destfile=&quot;changelogant.xml&quot; tag=&quot;ANT_16_BRANCH&quot;/&gt;</pre>
 <h4>Generate Report</h4>
-<p>Ant includes a basic XSLT stylesheet that you can use to generate a HTML report based on the xml
+<p>Ant includes a basic XSLT stylesheet that you can use to generate a HTML report based on the XML
 output. The following example illustrates how to generate a HTML report from the XML report.</p>
 
 <pre>

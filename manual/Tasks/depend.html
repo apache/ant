@@ -83,7 +83,6 @@ relationship complexity and how many class files are out of date. The decision a
 cheaper to just recompile all classes or to use the <code>depend</code> task will depend on the size
 of your project and how interrelated your classes are.</p>
 
-
 <h3>Limitations</h3>
 
 <p>There are some source dependencies which <code>depend</code> will not detect.</p>
@@ -170,27 +169,26 @@ as well as the nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>
 and <code>&lt;patternset&gt;</code> elements.</p>
 
 <h3>Examples</h3>
+
+<p>Remove any classes in the <samp>${build.classes}</samp> directory that depend on out-of-date
+classes. Classes are considered out-of-date with respect to the source in
+the <samp>${java.dir}</samp> directory, using the same mechanism as the <code>&lt;javac&gt;</code>
+task. In this example, the <code>&lt;depend&gt;</code> task caches its dependency information in
+the <samp>depcache</samp> directory.</p>
 <pre>
 &lt;depend srcdir=&quot;${java.dir}&quot;
         destdir=&quot;${build.classes}&quot;
         cache=&quot;depcache&quot;
         closure=&quot;yes&quot;/&gt;</pre>
 
-<p>removes any classes in the <samp>${build.classes}</samp> directory that depend on out-of-date
-classes. Classes are considered out-of-date with respect to the source in
-the <samp>${java.dir}</samp> directory, using the same mechanism as the <code>&lt;javac&gt;</code>
-task. In this example, the <code>&lt;depend&gt;</code> task caches its dependency information in
-the <samp>depcache</samp> directory.</p>
-
+<p>Do the same as the previous example, but explicitly include all <samp>.java</samp> files, except
+those that match the list given in <samp>${java.dir}/build_excludes</samp>.</p>
 <pre>
 &lt;depend srcdir=&quot;${java.dir}&quot; destdir=&quot;${build.classes}&quot;
         cache=&quot;depcache&quot; closure=&quot;yes&quot;&gt;
   &lt;include name=&quot;**/*.java&quot;/&gt;
   &lt;excludesfile name=&quot;${java.dir}/build_excludes&quot;/&gt;
 &lt;/depend&gt;</pre>
-
-<p>does the same as the previous example, but explicitly includes all <samp>.java</samp> files,
-except those that match the list given in <samp>${java.dir}/build_excludes</samp>.</p>
 
 </body>
 </html>

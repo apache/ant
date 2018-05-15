@@ -183,17 +183,21 @@ the same <code>&lt;copy&gt;</code> task, all <code>&lt;filterchain&gt;</code> el
 first followed by <code>&lt;filterset&gt;</code> elements.</p>
 
 <h3>Examples</h3>
-<p><strong>Copy a single file</strong></p>
+
+<p>Copy a single file</p>
 <pre>&lt;copy file=&quot;myfile.txt&quot; tofile=&quot;mycopy.txt&quot;/&gt;</pre>
-<p><strong>Copy a single file to a directory</strong></p>
+
+<p>Copy a single file to a directory</p>
 <pre>&lt;copy file=&quot;myfile.txt&quot; todir=&quot;../some/other/dir&quot;/&gt;</pre>
-<p><strong>Copy a directory to another directory</strong></p>
+
+<p>Copy a directory to another directory</p>
 <pre>
 &lt;copy todir=&quot;../new/dir&quot;&gt;
   &lt;fileset dir=&quot;src_dir&quot;/&gt;
 &lt;/copy&gt;
 </pre>
-<p><strong>Copy a set of files to a directory</strong></p>
+
+<p>Copy a set of files to a directory</p>
 <pre>
 &lt;copy todir=&quot;../dest/dir&quot;&gt;
   &lt;fileset dir=&quot;src_dir&quot;&gt;
@@ -204,16 +208,17 @@ first followed by <code>&lt;filterset&gt;</code> elements.</p>
 &lt;copy todir=&quot;../dest/dir&quot;&gt;
   &lt;fileset dir=&quot;src_dir&quot; excludes=&quot;**/*.java&quot;/&gt;
 &lt;/copy&gt;</pre>
-<p><strong>Copy a set of files to a directory, appending <samp>.bak</samp> to the file name on the
-fly</strong></p>
+
+<p>Copy a set of files to a directory, appending <samp>.bak</samp> to the file name on the
+fly</p>
 <pre>
 &lt;copy todir=&quot;../backup/dir&quot;&gt;
   &lt;fileset dir=&quot;src_dir&quot;/&gt;
   &lt;globmapper from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
 &lt;/copy&gt;</pre>
 
-<p><strong>Copy a set of files to a directory, replacing <code>@TITLE@</code> with <samp>Foo
-Bar</samp> in all files.</strong></p>
+<p>Copy a set of files to a directory, replacing <code>@TITLE@</code> with <samp>Foo
+Bar</samp> in all files.</p>
 <pre>
 &lt;copy todir=&quot;../backup/dir&quot;&gt;
   &lt;fileset dir=&quot;src_dir&quot;/&gt;
@@ -222,8 +227,8 @@ Bar</samp> in all files.</strong></p>
   &lt;/filterset&gt;
 &lt;/copy&gt;</pre>
 
-<p><strong>Collect all items from the current <code>CLASSPATH</code> setting into a destination
-directory, flattening the directory structure.</strong></p>
+<p>Collect all items from the current <code>CLASSPATH</code> setting into a destination
+directory, flattening the directory structure.</p>
 <pre>
 &lt;copy todir=&quot;dest&quot; flatten=&quot;true&quot;&gt;
   &lt;path&gt;
@@ -231,7 +236,7 @@ directory, flattening the directory structure.</strong></p>
   &lt;/path&gt;
 &lt;/copy&gt;</pre>
 
-<p><strong>Copies some resources to a given directory.</strong></p>
+<p>Copies some resources to a given directory.</p>
 <pre>
 &lt;copy todir=&quot;dest&quot; flatten=&quot;true&quot;&gt;
   &lt;resources&gt;
@@ -245,7 +250,7 @@ resource would have returned its full path as source and target name and would n
 at all.  In general it is a good practice to use an explicit mapper together with resources that use
 an absolute path as their names.</p>
 
-<p><strong>Copies the two newest resources into a destination directory.</strong></p>
+<p>Copies the two newest resources into a destination directory.</p>
 <pre>
 &lt;copy todir=&quot;dest&quot; flatten=&quot;true&quot;&gt;
   &lt;first count=&quot;2&quot;&gt;

@@ -153,45 +153,46 @@ nested <code>&lt;fileset&gt;</code>.</p>
 </table>
 
 <h3>Examples</h3>
+
+<p>Delete the file <samp>/lib/ant.jar</samp>.</p>
 <pre>&lt;delete file=&quot;/lib/ant.jar&quot;/&gt;</pre>
-<p>deletes the file <samp>/lib/ant.jar</samp>.</p>
 
-<pre>&lt;delete dir=&quot;lib&quot;/&gt;</pre>
-<p>deletes the <samp>lib</samp> directory, including all files and subdirectories
+<p>Delete the <samp>lib</samp> directory, including all files and subdirectories
 of <samp>lib</samp>.</p>
+<pre>&lt;delete dir=&quot;lib&quot;/&gt;</pre>
 
+<p>Delete all files with the extension <samp>.bak</samp> from the current directory and any
+subdirectories.</p>
 <pre>
 &lt;delete&gt;
   &lt;fileset dir=&quot;.&quot; includes=&quot;**/*.bak&quot;/&gt;
 &lt;/delete&gt;
 </pre>
-<p>deletes all files with the extension <samp>.bak</samp> from the current directory and any
-subdirectories.</p>
 
+<p>Delete all files and subdirectories of <samp>build</samp>, including <samp>build</samp>
+itself.</p>
 <pre>
 &lt;delete includeEmptyDirs=&quot;true&quot;&gt;
   &lt;fileset dir=&quot;build&quot;/&gt;
 &lt;/delete&gt;
 </pre>
-<p>deletes all files and subdirectories of <samp>build</samp>, including <samp>build</samp>
-itself.</p>
 
+<p>Delete all files and subdirectories of <samp>build</samp>, without <samp>build</samp> itself.</p>
 <pre>
 &lt;delete includeemptydirs=&quot;true&quot;&gt;
   &lt;fileset dir=&quot;build&quot; includes=&quot;**/*&quot;/&gt;
 &lt;/delete&gt;
 </pre>
-<p>deletes all files and subdirectories of <samp>build</samp>, without <samp>build</samp>
-itself.</p>
 
+<p>Delete the Subversion metadata directories under <samp>src</samp>. Because <samp>.svn</samp> is
+on of the <a href="../dirtasks.html#defaultexcludes">default excludes</a> you have to use
+the <var>defaultexcludes</var> flag, otherwise Ant won't delete these directories and the files in
+it.</p>
 <pre>
 &lt;delete includeemptydirs=&quot;true&quot;&gt;
   &lt;fileset dir=&quot;src&quot; includes=&quot;**/.svn/&quot; defaultexcludes=&quot;false&quot;/&gt;
 &lt;/delete&gt;
 </pre>
-<p>deletes the subversion metadata directories under <samp>src</samp>. Because <samp>.svn</samp> is
-on of the <a href="../dirtasks.html#defaultexcludes">default excludes</a> you have to use the
-<var>defaultexcludes</var> flag, otherwise Ant won't delete these directories and the files in it.</p>
 
 </body>
 </html>

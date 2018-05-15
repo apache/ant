@@ -85,14 +85,27 @@ FTP proxy, or a SOCKS server, reset the server settings, or do nothing at all.</
 </table>
 
 <h3>Examples</h3>
-<pre>&lt;setproxy/&gt;</pre> do nothing
-<pre>&lt;setproxy proxyhost="firewall"/&gt;</pre> set the proxy to firewall:80
-<pre>&lt;setproxy proxyhost="firewall" proxyport="81"/&gt;</pre> set the proxy to <samp>firewall:81</samp>
-<pre>&lt;setproxy proxyhost=""/&gt;</pre> stop using HTTP proxy; don't change SOCKS settings
-<pre>&lt;setproxy socksproxyhost="socksy"/&gt;</pre> use SOCKS via socksy:1080
-<pre>&lt;setproxy socksproxyhost=""/&gt;</pre> stop using the SOCKS server.
-<p>You can set a username and password for http with the <var>proxyHost</var>
-and <var>proxyPassword</var> attributes. On Java 1.4 and above these can also be used against SOCKS
+
+<p>Do nothing</p>
+<pre>&lt;setproxy/&gt;</pre>
+
+<p>Set the proxy to <samp>firewall:80</samp></p>
+<pre>&lt;setproxy proxyhost="firewall"/&gt;</pre>
+
+<p>Set the proxy to <samp>firewall:81</samp></p>
+<pre>&lt;setproxy proxyhost="firewall" proxyport="81"/&gt;</pre>
+
+<p>Stop using HTTP proxy; don't change SOCKS settings</p>
+<pre>&lt;setproxy proxyhost=""/&gt;</pre>
+
+<p>Use SOCKS via <samp>socksy:1080</samp></p>
+<pre>&lt;setproxy socksproxyhost="socksy"/&gt;</pre>
+
+<p>Stop using the SOCKS server</p>
+<pre>&lt;setproxy socksproxyhost=""/&gt;</pre>
+
+<p>You can set a username and password for HTTP with the <var>proxyHost</var>
+and <var>proxyPassword</var> attributes. On Java 1.4 and above, these can also be used against SOCKS
 5 servers.</p>
 
 </body>

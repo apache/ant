@@ -177,7 +177,11 @@ nested <code>&lt;classpath&gt;</code> will be used to load the processor.</p>
 <p><em>Since Ant 1.9.5</em>. Like for the <a href="../Tasks/style.html#factory">XSLT task</a>, a
 nested <code>&lt;factory&gt;</code> can be used to specify factory settings.</p>
 
-<h3>Example of report</h3>
+<h3>Examples</h3>
+
+<p>Generate a <samp>TESTS-TestSuites.xml</samp> file in the directory <samp>reports</samp> and
+generate the default framed report in the directory <samp>report/html</samp>.</p>
+
 <pre>
 &lt;junitreport todir=&quot;./reports&quot;&gt;
     &lt;fileset dir=&quot;./reports&quot;&gt;
@@ -186,10 +190,9 @@ nested <code>&lt;factory&gt;</code> can be used to specify factory settings.</p>
     &lt;report format=&quot;frames&quot; todir=&quot;./report/html&quot;/&gt;
 &lt;/junitreport&gt;</pre>
 
-<p>would generate a <samp>TESTS-TestSuites.xml</samp> file in the directory <samp>reports</samp> and
-generate the default framed report in the directory <samp>report/html</samp>.</p>
+<p>This example requires a file called <samp>junitreport/junit-frames.xsl</samp>. The XSL
+parameters <q>key1</q> and <q>key2</q> will be passed to the XSL transformation.</p>
 
-<h3>Example of report with XSL params</h3>
 <pre>
 &lt;junitreport todir="${outputdir}"&gt;
     &lt;fileset dir="${jrdir}"&gt;
@@ -202,9 +205,6 @@ generate the default framed report in the directory <samp>report/html</samp>.</p
         &lt;param name="key2" expression="value2"/&gt;
     &lt;/report&gt;
 &lt;/junitreport&gt;</pre>
-
-<p>This example requires a file called <samp>junitreport/junit-frames.xsl</samp>.  The XSL
-parameters <q>key1</q> and <q>key2</q> will be passed to the XSL transformation.</p>
 
 </body>
 </html>

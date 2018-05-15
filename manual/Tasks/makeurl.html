@@ -71,14 +71,17 @@ them.</p>
 <h4><strong>path</strong> (org.apache.tools.ant.types.Path)</h4>
 
 <p>Add a path to the URL. All elements in the path will be converted to individual URL entries.</p>
+
 <h3>Examples</h3>
-<pre>&lt;makeurl file="${user.home}/.m2/repository" property="m2.repository.url"/&gt;</pre>
-<p>Sets the property <code>m2.repository.url</code> to the file: URL of the local Maven2
+
+<p>Set the property <code>m2.repository.url</code> to the file: URL of the local Maven2
 repository.</p>
+<pre>&lt;makeurl file="${user.home}/.m2/repository" property="m2.repository.url"/&gt;</pre>
+
+<p>Set the property <code>codebase</code> to the three URLs of the files provided as nested
+elements.</p>
 <pre>&lt;makeurl property="codebase"&gt;
   &lt;fileset dir="lib includes="*.jar"/&gt;
 &lt;/makeurl&gt;</pre>
-<p>Set the property <code>codebase</code> to the three URLs of the files provided as nested
-elements.</p>
 </body>
 </html>

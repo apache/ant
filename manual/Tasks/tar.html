@@ -164,22 +164,28 @@ of files to archive.</p>
 element.</p>
 
 <h3>Examples</h3>
+
+<p>Tar all files in the <samp>htdocs/manual</samp> directory into a file
+called <samp>manual.tar</samp> in the <samp>${dist}</samp> directory, then apply
+the <code>gzip</code> task to compress it.</p>
+
 <pre>
 &lt;tar destfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot;/&gt;
 &lt;gzip destfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot;/&gt;</pre>
 
-<p>tars all files in the <samp>htdocs/manual</samp> directory into a file
-called <samp>manual.tar</samp> in the <samp>${dist}</samp> directory, then applies
-the <code>gzip</code> task to compress it.</p>
+<p>Tar all files in the <samp>htdocs/manual</samp> directory into a file
+called <samp>manual.tar</samp> in the <samp>${dist}</samp> directory. Files in the
+directory <samp>mydocs</samp>, or files with the name <samp>todo.html</samp> are excluded.</p>
 
 <pre>
 &lt;tar destfile=&quot;${dist}/manual.tar&quot;
      basedir=&quot;htdocs/manual&quot;
      excludes=&quot;mydocs/**, **/todo.html&quot;/&gt;</pre>
 
-<p>tars all files in the <samp>htdocs/manual</samp> directory into a file
-called <samp>manual.tar</samp> in the <samp>${dist}</samp> directory. Files in the
-directory <samp>mydocs</samp>, or files with the name <samp>todo.html</samp> are excluded.</p>
+<p>Write the file <samp>docs/readme.txt</samp> as <samp>/usr/doc/ant/README</samp> into the
+archive. All <samp>*.html</samp> files in the <samp>docs</samp> directory are prefixed
+by <samp>/usr/doc/ant</samp>, so for example <samp>docs/index.html</samp> is written
+as <samp>/usr/doc/ant/index.html</samp> to the archive.</p>
 
 <pre>
 &lt;tar destfile=&quot;${basedir}/docs.tar&quot;&gt;
@@ -195,10 +201,10 @@ directory <samp>mydocs</samp>, or files with the name <samp>todo.html</samp> are
   &lt;/tarfileset&gt;
 &lt;/tar&gt;</pre>
 
-<p>Writes the file <samp>docs/readme.txt</samp> as <samp>/usr/doc/ant/README</samp> into the
-archive. All <samp>*.html</samp> files in the <samp>docs</samp> directory are prefixed
-by <samp>/usr/doc/ant</samp>, so for example <samp>docs/index.html</samp> is written
-as <samp>/usr/doc/ant/index.html</samp> to the archive.</p>
+<p>Build a tar which uses the GNU extensions for long paths where some files need to be marked as
+executable (mode 755) and the rest use the default mode (read-write by owner). The first fileset
+selects just the executable files. The second fileset must exclude the executable files and include
+all others.</p>
 
 <pre>
 &lt;tar longfile=&quot;gnu&quot;
@@ -214,11 +220,6 @@ as <samp>/usr/doc/ant/index.html</samp> to the archive.</p>
   &lt;/tarfileset&gt;
 &lt;/tar&gt;</pre>
 
-<p>This example shows building a tar which uses the GNU extensions for long paths and where some
-files need to be marked as executable (mode 755) and the rest are use the default mode (read-write
-by owner). The first fileset selects just the executable files. The second fileset must exclude the
-executable files and include all others.</p>
-
 <p><strong>Note</strong>: The <code>tar</code> task does not ensure that a file is only selected by
 one resource collection. If the same file is selected by more than one collection, it will be
 included in the tar file twice, with the same path.</p>
@@ -229,13 +230,13 @@ filesets.  In the example above, <samp>${dist.name}</samp> is not an absolute pa
 name of a directory, so <samp>${dist.name}</samp> is a valid path relative
 to <samp>${dist.name}/..</samp>.</p>
 
+<p>Re-package a ZIP archive as a GZip compressed tar archive.  If Unix file permissions have been
+stored as part of the ZIP file, they will be retained in the resulting tar archive.</p>
+
 <pre>
 &lt;tar destfile="release.tar.gz" compression="gzip"&gt;
   &lt;zipfileset src="release.zip"/&gt;
 &lt;/tar&gt;</pre>
-
-<p>Re-packages a ZIP archive as a GZip compressed tar archive.  If Unix file permissions have been
-stored as part of the ZIP file, they will be retained in the resulting tar archive.</p>
 
 <p><strong>Note</strong>: Please note the <code>tar</code> task creates a tar file, it does not
 append to an existing tar file. The existing tar file is replaced instead.  As with most tasks in

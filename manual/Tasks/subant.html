@@ -156,7 +156,13 @@ whose dependencies are the targets so specified, in the order specified.</p>
     <td>Yes</td>
   </tr>
 </table>
+
 <h3 id="examples">Examples</h3>
+
+<p>This snippet build file will run <kbd>ant</kbd> in each subdirectory of the project directory,
+where a file called <samp>build.xml</samp> can be found. The property <code>build.dir</code> will
+have the value <q>subant1.build</q> in the Ant projects called by <code>subant</code>.</p>
+
 <pre>
 &lt;project name="subant" default="subant1"&gt;
     &lt;property name="build.dir" value="subant.build"/&gt;
@@ -168,9 +174,11 @@ whose dependencies are the targets so specified, in the order specified.</p>
         &lt;/subant&gt;
     &lt;/target&gt;
 &lt;/project&gt;</pre>
-<p>this snippet build file will run <kbd>ant</kbd> in each subdirectory of the project directory,
-where a file called <samp>build.xml</samp> can be found.  The property <code>build.dir</code> will
-have the value <q>subant1.build</q> in the Ant projects called by <code>subant</code>.</p>
+
+<p>This snippet build file will run <kbd>ant</kbd> in each subdirectory of the project directory,
+where a file called <samp>build.xml</samp> can be found. All properties whose name starts
+with <q>foo</q> are passed, their names are changed to start with <q>bar</q> instead</p>
+
 <pre>
 &lt;subant target=""&gt;
     &lt;propertyset&gt;
@@ -179,19 +187,20 @@ have the value <q>subant1.build</q> in the Ant projects called by <code>subant</
     &lt;/propertyset&gt;
     &lt;fileset dir="." includes="*/build.xml"/&gt;
 &lt;/subant&gt;</pre>
-<p>this snippet build file will run <kbd>ant</kbd> in each subdirectory of the project directory,
-where a file called <samp>build.xml</samp> can be found.  All properties whose name starts
-with <q>foo</q> are passed, their names are changed to start with <q>bar</q> instead</p>
+
+<p>Assuming the subdirs of the project dir are
+called <samp>projects1</samp>, <samp>projects2</samp>, <samp>projects3</samp>, this snippet will
+execute the <q>compile</q> target of <samp>/opt/project/build1.xml</samp>, setting
+the <var>basedir</var> to <q>projects1</q>, <q>projects2</q>, <q>projects3</q></p>
+
 <pre>
 &lt;subant target="compile" genericantfile="/opt/project/build1.xml"&gt;
     &lt;dirset dir="." includes="projects*"/&gt;
 &lt;/subant&gt;</pre>
-<p>assuming the subdirs of the project dir are
-called <samp>projects1</samp>, <samp>projects2</samp>, <samp>projects3</samp> this snippet will
-execute the compile target of <samp>/opt/project/build1.xml</samp>, setting the <var>basedir</var>
-to <q>projects1</q>, <q>projects2</q>, <q>projects3</q></p>
+
 <p>Now a little more complex&mdash;but useful&mdash;scenario. Assume that we have a directory
 structure like this:</p>
+
 <pre>
 root
   |  common.xml
@@ -244,6 +253,8 @@ root
 (<samp>common.xml</samp>) and a clear project structure. Additionally the root build file is capable
 to run the whole build over all modules.</p>
 
+<p>This task performs a <q>clean build</q> for each subproject.</p>
+
 <pre>
 &lt;subant failonerror="false"&gt;
     &lt;fileset dir="." includes="**/build.xml" excludes="build.xml"/&gt;
@@ -251,8 +262,7 @@ to run the whole build over all modules.</p>
     &lt;target name="build"/&gt;
 &lt;/subant&gt;</pre>
 
-<p>Does a &quot;clean build&quot; for each subproject.</p>
-<p><strong>Hint</strong>: because build files are plain xml, you could generate the master build
+<p><strong>Hint</strong>: because build files are plain XML, you could generate the master build
 file from the common build file by using a XSLT transformation:</p>
 
 <pre>

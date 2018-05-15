@@ -122,30 +122,30 @@ the time to generate different time values.</p>
 
 <h3>Examples</h3>
 
-<pre>&lt;tstamp/&gt;</pre>
-<p>sets the standard <code>DSTAMP</code>, <code>TSTAMP</code>, and <code>TODAY</code> properties
+<p>Set the standard <code>DSTAMP</code>, <code>TSTAMP</code>, and <code>TODAY</code> properties
 according to the default formats.</p>
+<pre>&lt;tstamp/&gt;</pre>
 
+<p>Set the standard properties as well as the property <code>TODAY_UK</code> with the date/time
+pattern <q>d-MMMM-yyyy</q> using English locale (eg. 21-May-2001).</p>
 <pre>
 &lt;tstamp&gt;
     &lt;format property=&quot;TODAY_GB&quot; pattern=&quot;d-MMMM-yyyy&quot; locale=&quot;en,GB&quot;/&gt;
 &lt;/tstamp&gt;</pre>
-<p>sets the standard properties as well as the property <code>TODAY_UK</code> with the date/time
-pattern <q>d-MMMM-yyyy</q> using English locale (eg. 21-May-2001).</p>
 
+<p>Create a timestamp, in the property <code>touch.time</code>, 5 hours before the current time. The
+format in this example is suitable for use with the <code>&lt;touch&gt;</code> task. The standard
+properties are set also.</p>
 <pre>
 &lt;tstamp&gt;
     &lt;format property=&quot;touch.time&quot; pattern=&quot;MM/dd/yyyy hh:mm aa&quot;
             offset=&quot;-5&quot; unit=&quot;hour&quot;/&gt;
 &lt;/tstamp&gt;</pre>
-<p>Creates a timestamp, in the property <code>touch.time</code>, 5 hours before the current
-time. The format in this example is suitable for use with the <code>&lt;touch&gt;</code> task. The
-standard properties are set also.</p>
 
-<pre>&lt;tstamp prefix="start"/&gt;</pre>
-<p>Sets three properties with the standard formats, prefixed
+<p>Set three properties with the standard formats, prefixed
 with <q>start.</q>: <code>start.DSTAMP</code>, <code>start.TSTAMP</code>,
 and <code>start.TODAY</code>.</p>
+<pre>&lt;tstamp prefix="start"/&gt;</pre>
 
 </body>
 </html>

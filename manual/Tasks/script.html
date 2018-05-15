@@ -183,10 +183,8 @@ file.</p>
   &lt;/classpath&gt;
   System.out.println("Hello world");
 &lt;/script&gt;</pre>
-  <p>
-    The following script uses JavaScript to create a number of
-    <code>echo</code> tasks and execute them.
-  </p>
+<p>The following script uses JavaScript to create a number of <code>echo</code> tasks and execute
+them.</p>
 <pre>
 &lt;project name=&quot;squares&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
   &lt;target name=&quot;main&quot;&gt;
@@ -267,17 +265,17 @@ of all files a <code>&lt;fileset/&gt;</code> caught.</p>
 import. Rhino knows two different methods for import statements: one for packages and one for a
 single class. By default only the <code>java</code> packages are available,
 so <code class="code">java.lang.System</code> can be directly imported
-with <code>importClass/importPackage</code>.  For other packages you have to prefix the full
-classified name with <strong>Packages</strong>.  For example Ant's <code>FileUtils</code> class can
-be imported
+with <code>importClass</code>/<code>importPackage</code>. For other packages you have to prefix the
+full classified name with <strong>Packages</strong>. For example
+Ant's <code class="code">FileUtils</code> class can be imported
 with <code class="code">importClass(<strong>Packages</strong>.org.apache.tools.ant.util.FileUtils)</code><br/>
 The <code>&lt;script&gt;</code> task populates the Project instance under the
 name <code>project</code>, so we can use that reference. Another way is to use its given name or
-getting its reference from the task itself.<br/>  The Project provides methods for accessing and
-setting properties, creating DataTypes and Tasks and much more.<br/>  After creating a FileSet
-object we initialize that by calling its set-methods. Then we can use that object like a normal Ant
-task (<code>&lt;copy&gt;</code> for example).<br/>  For getting the size of a file we instantiate
-a <code class="code">java.io.File</code>. So we are using normal Java API here.<br/>  Finally we use
+getting its reference from the task itself.<br/>The Project provides methods for accessing and
+setting properties, creating DataTypes and Tasks and much more.<br/>After creating a FileSet object
+we initialize that by calling its set-methods. Then we can use that object like a normal Ant task
+(<code>&lt;copy&gt;</code> for example).<br/>For getting the size of a file we instantiate
+a <code class="code">java.io.File</code>. So we are using normal Java API here.<br/>Finally we use
 the <code>&lt;echo&gt;</code> task for producing the output. The task is not executed by
 its <code class="code">execute()</code> method, because the <code class="code">perform()</code>
 method (implemented in Task itself) does the appropriate logging before and after

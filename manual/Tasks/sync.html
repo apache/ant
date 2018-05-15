@@ -121,12 +121,17 @@ to <q>false</q>.</p>
 
 <h3>Examples</h3>
 
+<p>Overwrite all files in <samp>site</samp> with newer files from <samp>generated-site</samp>,
+delete files from <samp>site</samp> that are not present in <samp>generated-site</samp>.</p>
+
 <pre>
 &lt;sync todir=&quot;site&quot;&gt;
   &lt;fileset dir=&quot;generated-site&quot;/&gt;
 &lt;/sync&gt;</pre>
-<p>overwrites all files in <samp>site</samp> with newer files from <samp>generated-site</samp>,
-deletes files from <samp>site</samp> that are not present in <samp>generated-site</samp>.</p>
+
+<p>Overwrite all files in <samp>site</samp> with newer files from <samp>generated-site</samp>,
+delete files from <samp>site</samp> that are not present in <samp>generated-site</samp> but keep all
+files in any <samp>CVS</samp> sub-directory.</p>
 
 <pre>
 &lt;sync todir=&quot;site&quot;&gt;
@@ -135,9 +140,6 @@ deletes files from <samp>site</samp> that are not present in <samp>generated-sit
     &lt;include name=&quot;**/CVS/**&quot;/&gt;
   &lt;/preserveintarget&gt;
 &lt;/sync&gt;</pre>
-<p>overwrites all files in <samp>site</samp> with newer files from <samp>generated-site</samp>,
-deletes files from <samp>site</samp> that are not present in <samp>generated-site</samp> but keeps
-all files in any <samp>CVS</samp> sub-directory.</p>
 
 </body>
 </html>

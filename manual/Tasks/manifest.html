@@ -131,6 +131,13 @@ sections.</p>
 
 <h3>Examples</h3>
 
+<p>Create or replace the file <samp>MANIFEST.MF</samp>. Note that the <code>Built-By</code>
+attribute will take the value of the Ant property <code>${user.name}</code>. The same is true for
+the <code>${version}</code> and <code>${TODAY}</code> properties. This example produces
+a <samp>MANIFEST.MF</samp> that
+contains <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html#wp90779"
+target="_top">package version identification</a> for the package <samp>common</samp>.</p>
+
 <pre>
 &lt;manifest file=&quot;MANIFEST.MF&quot;&gt;
   &lt;attribute name=&quot;Built-By&quot; value=&quot;${user.name}&quot;/&gt;
@@ -146,13 +153,6 @@ sections.</p>
     &lt;attribute name=&quot;Sealed&quot; value=&quot;false&quot;/&gt;
   &lt;/section&gt;
 &lt;/manifest&gt;</pre>
-
-<p>Creates or replaces the file <samp>MANIFEST.MF</samp>.  Note that the <code>Built-By</code>
-attribute will take the value of the Ant property <code>${user.name}</code>.  The same is true for
-the <code>${version}</code> and <code>${TODAY}</code> properties.  This example produces
-a <samp>MANIFEST.MF</samp> that
-contains <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/versioning/spec/versioning2.html#wp90779"
-target="_top">package version identification</a> for the package <samp>common</samp>.</p>
 
 <p>The manifest produced by the above would look like this:</p>
 

@@ -630,24 +630,29 @@ can ensure they will be generated even if the build file disables them.</p>
 
 <h3>Examples</h3>
 
+<p>Run the test defined in <code>my.test.TestCase</code> in the same VM. No output will be generated
+unless the test fails.</p>
 <pre>
 &lt;junit&gt;
     &lt;test name="my.test.TestCase"/&gt;
 &lt;/junit&gt;</pre>
 
-<p>Runs the test defined in <code>my.test.TestCase</code> in the same VM. No output will be
-generated unless the test fails.</p>
-
+<p>Run the test defined in <code>my.test.TestCase</code> in a separate JVM. At the end of the test,
+a one-line summary will be printed. A detailed report of the test can be found
+in <samp>TEST-my.test.TestCase.txt</samp>. The build process will be stopped if the test fails.</p>
 <pre>
 &lt;junit printsummary="yes" fork="yes" haltonfailure="yes"&gt;
     &lt;formatter type="plain"/&gt;
     &lt;test name="my.test.TestCase"/&gt;
 &lt;/junit&gt;</pre>
 
-<p>Runs the test defined in <code>my.test.TestCase</code> in a separate JVM.  At the end of the
-test, a one-line summary will be printed. A detailed report of the test can be found
-in <samp>TEST-my.test.TestCase.txt</samp>. The build process will be stopped if the test fails.</p>
-
+<p>Run <code>my.test.TestCase</code> in the same JVM, ignoring the given <code>CLASSPATH</code>;
+only a warning is printed if this test fails. In addition to the plain text test results, for this
+test a XML result will be output to <samp>result.xml</samp>. Then, for each matching file in the
+directory defined for <samp>${src.tests}</samp>, a test is run in a separate JVM. If a test fails,
+the build process is aborted. Results are collected in files
+named <samp>TEST-</samp><var>name</var><samp>.txt</samp> and written
+to <samp>${reports.tests}</samp>.</p>
 <pre>
 &lt;junit printsummary="yes" haltonfailure="yes"&gt;
     &lt;classpath&gt;
@@ -669,14 +674,14 @@ in <samp>TEST-my.test.TestCase.txt</samp>. The build process will be stopped if 
     &lt;/batchtest&gt;
 &lt;/junit&gt;</pre>
 
-<p>Runs <code>my.test.TestCase</code> in the same JVM, ignoring the given <code>CLASSPATH</code>;
-only a warning is printed if this test fails. In addition to the plain text test results, for this
-test a XML result will be output to <samp>result.xml</samp>.  Then, for each matching file in the
-directory defined for <samp>${src.tests}</samp> a test is run in a separate JVM. If a test fails,
-the build process is aborted. Results are collected in files
-named <samp>TEST-</samp><var>name</var><samp>.txt</samp> and written
-to <samp>${reports.tests}</samp>.</p>
-
+<p>On the first run, all tests are collected via the <code>&lt;batchtest/&gt;</code>
+element. Its <var>plain</var> formatter shows the output on the console. The <var>failure</var>
+formatter creates a Java source file in <samp>${build.dir}/failingTests/FailedTests.java</samp>
+which extends <code class="code">junit.framework.TestCase</code> and returns from
+a <code class="code">suite()</code> method a test suite for the failing tests.<br/>On a second run
+the collector class exists and instead of the <code>&lt;batchtest/&gt;</code> the
+single <code>&lt;test/&gt;</code> will run. So only the failing test cases are re-run. The two
+nested formatters are for displaying (for the user) and for updating the collector class.</p>
 <pre>
 &lt;target name=&quot;test&quot;&gt;
     &lt;property name=&quot;collector.dir&quot; value=&quot;${build.dir}/failingTests&quot;/&gt;
@@ -708,14 +713,17 @@ to <samp>${reports.tests}</samp>.</p>
         &lt;/test&gt;
     &lt;/junit&gt;
 &lt;/target&gt;</pre>
-<p>On the first run all tests are collected via the <code>&lt;batchtest/&gt;</code>
-element. Its <var>plain</var> formatter shows the output on the console. The <var>failure</var>
-formatter creates a Java source file in <samp>${build.dir}/failingTests/FailedTests.java</samp>
-which extends <code>junit.framework.TestCase</code> and returns from a <code>suite()</code> method a
-test suite for the failing tests.<br/>  On a second run the collector class exists and instead of
-the <code>&lt;batchtest/&gt;</code> the single <code>&lt;test/&gt;</code> will run. So only the
-failing test cases are re-run.  The two nested formatters are for displaying (for the user) and for
-updating the collector class.</p>
+
+<p>Run <code>my.test.TestCase</code> as a white-box test in the forked JVM given by
+the <code>platform.java</code> property. The JUnit library is a part of an unnamed module while the
+tested project and required modules are on the module path. The tests do not have module-info file
+and are executed in the project module given by <code>module.name</code>
+property.<br/>The <kbd>--patch-module</kbd> Java option executes the tests built
+into <samp>${build.test.classes}</samp> in a module given by <code>module.name</code>
+property.<br/>The <kbd>--add-modules</kbd> Java option enables the tested
+module.<br/>The <kbd>--add-reads</kbd> Java option makes the unnamed module containing JUnit
+readable by tested module.<br/>The <kbd>--add-exports</kbd> Java option makes the non-exported test
+package <code>my.test</code> accessible from the unnamed module containing JUnit.</p>
 <pre>
 &lt;junit fork="true"
        jvm="${platform.java}"&gt;
@@ -731,18 +739,15 @@ updating the collector class.</p>
     &lt;/modulepath&gt;
     &lt;formatter type="plain"/&gt;
     &lt;test name="my.test.TestCase"/&gt;
-&lt;/junit&gt;
-</pre>
-<p>Runs <code>my.test.TestCase</code> as a white-box test in the forked JVM given by
-the <code>platform.java</code> property.  The JUnit library is a part of an unnamed module while the
-tested project and required modules are on the module path. The tests do not have module-info file
-and are executed in the project module given by <code>module.name</code> property.<br/>
-The <kbd>--patch-module</kbd> Java option executes the tests built
-into <samp>${build.test.classes}</samp> in a module given by <code>module.name</code> property.<br/>
-The <kbd>--add-modules</kbd> Java option enables the tested module.<br/>
-The <kbd>--add-reads</kbd> Java option makes the unnamed module containing JUnit readable by
-tested module.<br/>  The <kbd>--add-exports</kbd> Java option makes the non-exported test
-package <code>my.test</code> accessible from the unnamed module containing JUnit.</p>
+&lt;/junit&gt;</pre>
+
+<p>Run <code>my.test.TestCase</code> as a black-box test in the forked JVM given by
+the <code>platform.java</code> property. The JUnit library is used as an automatic module. The
+tests' module-info requires the tested module and JUnit.<br/>The <kbd>--add-modules</kbd> Java
+option enables the test module.<br/>The <kbd>--add-exports</kbd> Java option makes the non-exported
+test package <code>my.test</code> accessible from the JUnit module and Ant's test runner. Another
+possibility is to export the test package in the tests' module-info by <code>exports my.test</code>
+directive.</p>
 <pre>
 &lt;junit fork="true"
        jvm="${platform.java}"&gt;
@@ -753,14 +758,6 @@ package <code>my.test</code> accessible from the unnamed module containing JUnit
     &lt;/modulepath&gt;
     &lt;formatter type="plain"/&gt;
     &lt;test name="my.test.TestCase"/&gt;
-&lt;/junit&gt;
-</pre>
-<p>Runs <code>my.test.TestCase</code> as a black-box test in the forked JVM given by
-the <code>platform.java</code> property.  The JUnit library is used as an automatic module. The
-tests' module-info requires the tested module and JUnit.<br/>  The <kbd>--add-modules</kbd> Java
-option enables the test module.<br/>  The <kbd>--add-exports</kbd> Java option makes the
-non-exported test package <code>my.test</code> accessible from the JUnit module and Ant's test
-runner.  Another possibility is to export the test package in the tests' module-info
-by <code>exports my.test</code> directive.</p>
+&lt;/junit&gt;</pre>
 </body>
 </html>

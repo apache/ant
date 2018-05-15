@@ -74,14 +74,15 @@ temporary file, but it does guarantee that the file did not exist when the task 
     <td>No; defaults to <q>false</q></td>
   </tr>
 </table>
+
 <h3>Examples</h3>
+<p>Create a temporary file</p>
 <pre>&lt;tempfile property="temp.file"/&gt;</pre>
-<p>create a temporary file</p>
 
+<p>Create a temporary file with the <code>.xml</code> suffix</p>
 <pre>&lt;tempfile property="temp.file" suffix=".xml"/&gt;</pre>
-<p>create a temporary file with the <code>.xml</code> suffix</p>
 
+<p>Create a temporary file in the <code>build</code> subdirectory</p>
 <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
-<p>create a temporary file in the <code>build</code> subdirectory</p>
 </body>
 </html>

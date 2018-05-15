@@ -100,27 +100,27 @@ collection</a>s.</p>
 
 <h3>Examples</h3>
 
+<p>Store the length of the string <q>foo</q> in the property named <code>length.foo</code>.</p>
 <pre>&lt;length string=&quot;foo&quot; property=&quot;length.foo&quot;/&gt;</pre>
-<p>Stores the length of the string <q>foo</q> in the property named <code>length.foo</code>.</p>
 
+<p>Store the length of file <samp>bar</samp> in the property named <code>length.bar</code>.</p>
 <pre>&lt;length file=&quot;bar&quot; property=&quot;length.bar&quot;/&gt;</pre>
-<p>Stores the length of file <samp>bar</samp> in the property named <code>length.bar</code>.</p>
 
+<p>Store the file paths of <samp>foo</samp> and <samp>bar</samp> and their length into the
+property <code>length</code>.</p>
 <pre>
 &lt;length property=&quot;length&quot; mode=&quot;each&quot;&gt;
     &lt;fileset dir=&quot;.&quot; includes=&quot;foo,bar&quot;/&gt;
 &lt;/length&gt;
 </pre>
-<p>Writes the file paths of <samp>foo</samp> and <samp>bar</samp> and their length into the
-property <code>length</code>.</p>
 
+<p>Add the length of <samp>foo</samp> and <samp>bar</samp> and store the result in
+property <code>length</code>.</p>
 <pre>
 &lt;length property=&quot;length&quot; mode=&quot;all&quot;&gt;
     &lt;fileset dir=&quot;.&quot; includes=&quot;foo,bar&quot;/&gt;
 &lt;/length&gt;
 </pre>
-<p>Adds the length of <samp>foo</samp> and <samp>bar</samp> and stores the result in
-property <code>length</code>.</p>
 
 </body>
 </html>

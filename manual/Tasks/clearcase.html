@@ -118,16 +118,15 @@ problem.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>checkin</code> on the file <samp>c:/views/viewdir/afile</samp>. Comment
+text from the file <samp>acomment.txt</samp> is added to ClearCase as a comment. All warning
+messages are suppressed. The file is checked in even if it is <em>identical</em> to the
+original.</p>
 <pre>
 &lt;cccheckin viewpath="c:/views/viewdir/afile"
            commentfile="acomment.txt"
            nowarn="true"
            identical="true"/&gt;</pre>
-
-<p>Does a ClearCase <code>checkin</code> on the file <samp>c:/views/viewdir/afile</samp>.  Comment
-text from the file <samp>acomment.txt</samp> is added to ClearCase as a comment.  All warning
-messages are suppressed. The file is checked in even if it is <em>identical</em> to the
-original.</p>
 
 <hr/>
 
@@ -200,16 +199,15 @@ original.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>checkout</code> on the file <samp>c:/views/viewdir/afile</samp>. It is
+checked out as <em>reserved</em> on branch called <samp>abranch</samp>. All warning messages are
+suppressed. A &quot;<samp>Some comment text</samp>&quot; is added to ClearCase as a comment.</p>
 <pre>
 &lt;cccheckout viewpath="c:/views/viewdir/afile"
             reserved="true"
             branch="abranch"
             nowarn="true"
             comment="Some comment text"/&gt;</pre>
-
-<p>Does a ClearCase <code>checkout</code> on the file <samp>c:/views/viewdir/afile</samp>.  It is
-checked out as <em>reserved</em> on branch called <samp>abranch</samp>. All warning messages are
-suppressed. A &quot;<samp>Some comment text</samp>&quot; is added to ClearCase as a comment.</p>
 
 <hr/>
 
@@ -241,10 +239,9 @@ suppressed. A &quot;<samp>Some comment text</samp>&quot; is added to ClearCase a
 </table>
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>uncheckout</code> on the file <samp>c:/views/viewdir/afile</samp>. A
+copy of the file named <samp>c:/views/viewdir/afile.keep</samp> is kept.</p>
 <pre>&lt;ccuncheckout viewpath="c:/views/viewdir/afile" keepcopy="true"/&gt;</pre>
-
-<p>Does a ClearCase <code>uncheckout</code> on the file <samp>c:/views/viewdir/afile</samp>.  A copy
-of the file called <samp>c:/views/viewdir/afile.keep</samp> is kept.</p>
 
 <hr/>
 
@@ -303,6 +300,10 @@ of the file called <samp>c:/views/viewdir/afile.keep</samp> is kept.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>update</code> on the snapshot view
+directory <samp>c:/views/viewdir</samp>. A graphical dialog will be displayed. The output will be
+logged to <samp>log.log</samp> and it will overwrite any hijacked files. The modified time will be
+set to the current time.</p>
 <pre>
 &lt;ccupdate viewpath="c:/views/viewdir"
           graphical="false"
@@ -310,11 +311,6 @@ of the file called <samp>c:/views/viewdir/afile.keep</samp> is kept.</p>
           overwrite="true"
           currenttime="true"
           rename="false"/&gt;</pre>
-
-<p>Does a ClearCase <code>update</code> on the snapshot view
-directory <samp>c:/views/viewdir</samp>.  A graphical dialog will be displayed. The output will be
-logged to <samp>log.log</samp> and it will overwrite any hijacked files. The modified time will be
-set to the current time.</p>
 
 <hr/>
 
@@ -382,14 +378,13 @@ set to the current time.</p>
 
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>mklbtype</code> to create a label type named <samp>VERSION_1</samp>. It
+is created as <em>ordinary</em> so it is available only to the current VOB. The text <q>Development
+version 1</q> is added as a comment.</p>
 <pre>
 &lt;ccmklbtype typename="VERSION_1"
             ordinary="true"
             comment="Development version 1"/&gt;</pre>
-
-<p>Does a ClearCase <code>mklbtype</code> to create a label type named <samp>VERSION_1</samp>.  It
-is created as <em>ordinary</em> so it is available only to the current VOB.  The text <q>Development
-version 1</q> is added as a comment.</p>
 
 <hr/>
 
@@ -451,6 +446,9 @@ version 1</q> is added as a comment.</p>
 
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>mklabel</code> on the file <samp>c:/views/viewdir/afile</samp> under
+the <samp>main</samp> branch for version 2 (<samp>\main\2</samp>). Text &quot;<samp>Some comment
+text</samp>&quot; is added as a comment. It will <em>recurse</em> all subdirectories.</p>
 <pre>
 &lt;ccmklabel viewpath="c:/views/viewdir/afile"
            comment="Some comment text"
@@ -458,10 +456,6 @@ version 1</q> is added as a comment.</p>
            version="\main\2"
            typename="VERSION_1"/&gt;
 </pre>
-
-<p>Does a ClearCase <code>mklabel</code> on the file <samp>c:/views/viewdir/afile</samp> under the
-main branch for version 2 (<samp>\main\2</samp>). Text &quot;<samp>Some comment text</samp>&quot; is
-added as a comment. It will <em>recurse</em> all subdirectories.</p>
 
 <hr/>
 
@@ -544,15 +538,14 @@ added as a comment. It will <em>recurse</em> all subdirectories.</p>
 
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>rmtype</code> to remove a label type (<q>lbtype</q>)
+named <samp>VERSION_1</samp>. Comment text from the file <samp>acomment.txt</samp> is added as a
+comment. All instances of the type are removed, including the type object itself.</p>
 <pre>
 &lt;ccrmtype typekind="lbtype"
           typename="VERSION_1"
           commentfile="acomment.txt"
           rmall="true"/&gt;</pre>
-
-<p>Does a ClearCase <code>rmtype</code> to remove a label type (<q>lbtype</q>)
-named <samp>VERSION_1</samp>.  Comment text from the file <samp>acomment.txt</samp> is added as a
-comment. All instances of the type are removed, including the type object itself.</p>
 
 <hr/>
 
@@ -609,10 +602,9 @@ comment. All instances of the type are removed, including the type object itself
 </table>
 <h3>Examples</h3>
 
-<pre>&lt;cclock objsel="stream:Application_Integration@\MyProject_PVOB"/&gt;</pre>
-
-<p>Does a ClearCase <code>lock</code> on the
+<p>Perform a ClearCase <code>lock</code> on the
 object <samp>stream:Application_Integration@\MyProject_PVOB</samp>.</p>
+<pre>&lt;cclock objsel="stream:Application_Integration@\MyProject_PVOB"/&gt;</pre>
 
 <hr/>
 
@@ -654,10 +646,9 @@ object <samp>stream:Application_Integration@\MyProject_PVOB</samp>.</p>
 </table>
 <h3>Examples</h3>
 
-<pre>&lt;ccunlock objsel="stream:Application_Integration@\MyProject_PVOB"/&gt;</pre>
-
-<p>Does a ClearCase <code>unlock</code> on the
+<p>Perform a ClearCase <code>unlock</code> on the
 object <samp>stream:Application_Integration@\MyProject_PVOB</samp>.</p>
+<pre>&lt;ccunlock objsel="stream:Application_Integration@\MyProject_PVOB"/&gt;</pre>
 
 <hr/>
 
@@ -713,15 +704,14 @@ object <samp>stream:Application_Integration@\MyProject_PVOB</samp>.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>mkbl</code> on the Integration view at <samp>v:\ApplicationCC</samp>
+even if it is <em>identical</em> to a previous baseline. The new baseline with be incremental and
+named <samp>Application_Baseline_AUTO</samp>.</p>
 <pre>
 &lt;ccmkbl baselinerootname="Application_Baseline_AUTO"
         identical="yes"
         full="no"
         viewpath="v:\ApplicationCC"/&gt;</pre>
-
-<p>Does a ClearCase <code>mkbl</code> on the Integration view at <samp>v:\ApplicationCC</samp> even
-if it is <em>identical</em> to a previous baseline. The new baseline with be incremental and
-named <samp>Application_Baseline_AUTO</samp>.</p>
 
 <hr/>
 
@@ -783,14 +773,13 @@ named <samp>Application_Baseline_AUTO</samp>.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>mkattr</code> on the file <samp>c:/views/viewdir/afile</samp> and
+attach the attribute <samp>BugFix</samp> with a value of <samp>34445</samp> to it.</p>
 <pre>
 &lt;ccmkattr viewpath=&quot;c:/views/viewdir/afile&quot;
           typename=&quot;BugFix&quot;
           typevalue=&quot;34445&quot;/&gt;
 </pre>
-
-<p>Does a ClearCase <code>mkattr</code> on the file <samp>c:/views/viewdir/afile</samp> and attaches
-the attribute <samp>BugFix</samp> with a value of <samp>34445</samp> to it.</p>
 
 <hr/>
 
@@ -832,13 +821,12 @@ the attribute <samp>BugFix</samp> with a value of <samp>34445</samp> to it.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform a ClearCase <code>mkdir</code> on the dir <samp>c:/views/viewdir/adir</samp> and do not
+automatically check it out.</p>
 <pre>
 &lt;ccmkdir viewpath=&quot;c:/views/viewdir/adir&quot;
          nocheckout=&quot;true&quot;
          comment=&quot;Some comment text&quot;/&gt;</pre>
-
-<p>Does a ClearCase <code>mkdir</code> on the dir <samp>c:/views/viewdir/adir</samp> and does not
-automatically check it out.</p>
 
 <hr/>
 
@@ -905,14 +893,13 @@ automatically check it out.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform ClearCase <code>mkelem</code> on the file <samp>c:/views/viewdir/afile</samp> with
+element type <samp>text_file</samp>, check in the file after creation.</p>
 <pre>
 &lt;ccmkelem viewpath=&quot;c:/views/viewdir/afile&quot;
           eltype=&quot;text_file&quot;
           checkin=&quot;true&quot;
           comment=&quot;Some comment text&quot;/&gt;</pre>
-
-<p>Does a ClearCase <code>mkelem</code> on the file <samp>c:/views/viewdir/afile</samp> with element
-type <samp>text_file</samp>. It also checks in the file after creation.</p>
 
 </body>
 </html>

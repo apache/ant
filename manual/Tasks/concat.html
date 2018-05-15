@@ -185,27 +185,23 @@
 
     <h3>Examples</h3>
 
-    <p><strong>Concatenate a string to a file:</strong></p>
-
+    <p>Concatenate a string to a file:</p>
     <pre>&lt;concat destfile=&quot;README&quot;&gt;Hello, World!&lt;/concat&gt;</pre>
 
-    <p><strong>Concatenate a series of files to the console:</strong></p>
-
+    <p>Concatenate a series of files to the console:</p>
     <pre>
 &lt;concat&gt;
   &lt;fileset dir=&quot;messages&quot; includes=&quot;*important*&quot;/&gt;
 &lt;/concat&gt;</pre>
 
-    <p><strong>Concatenate a single file, appending if the destination file exists:</strong></p>
-
+    <p>Concatenate a single file, appending if the destination file exists:</p>
     <pre>
 &lt;concat destfile=&quot;NOTES&quot; append=&quot;true&quot;&gt;
   &lt;filelist dir=&quot;notes&quot; files=&quot;note.txt&quot;/&gt;
 &lt;/concat&gt;</pre>
 
-    <p><strong>Concatenate a series of files, update the destination file only if is older that all
-      the source files:</strong></p>
-
+    <p>Concatenate a series of files, update the destination file only if is older that all the
+      source files:</p>
     <pre>
 &lt;concat destfile=&quot;${docbook.dir}/all-sections.xml&quot;
         force=&quot;no&quot;&gt;
@@ -216,7 +212,7 @@
            excludes=&quot;introduction.xml,overview.xml&quot;/&gt;
 &lt;/concat&gt;</pre>
 
-    <p><strong>Concatenate a series of files, expanding Ant properties</strong></p>
+    <p>Concatenate a series of files, expanding Ant properties.</p>
     <pre>
 &lt;concat destfile="${build.dir}/subs"&gt;
   &lt;path&gt;
@@ -228,8 +224,8 @@
   &lt;/filterchain&gt;
 &lt;/concat&gt;</pre>
 
-    <p><strong>Filter the lines containing project from build.xml and output them to report.output,
-      prepending with a header</strong></p>
+    <p>Filter the lines containing project from <samp>build.xml</samp> and output them
+      to <samp>report.output</samp>, prepending with a header.</p>
     <pre>
 &lt;concat destfile="${build.dir}/report.output"&gt;
   &lt;header filtering="no" trimleading="yes"&gt;
@@ -244,7 +240,7 @@
   &lt;/filterchain&gt;
 &lt;/concat&gt;</pre>
 
-    <p><strong>Concatenate a number of binary files.</strong></p>
+    <p>Concatenate a number of binary files.</p>
     <pre>
 &lt;concat destfile="${build.dir}/dist.bin" binary="yes"&gt;
   &lt;fileset file="${src.dir}/scripts/dist.sh"/&gt;

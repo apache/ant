@@ -159,7 +159,30 @@ extract an Ant generated ZIP archive.</p>
     &lt;mapper type=&quot;flatten&quot;/&gt;
 &lt;/unzip&gt;</pre>
 
+<p>Extract all images from <samp>ant.jar</samp> which are stored in the <samp>images</samp>
+  directory of the jar file (or somewhere under it). While extracting the directory structure
+  (<samp>images</samp>) will be preserved.</p>
+<pre>
+&lt;unzip src=&quot;${ant.home}/lib/ant.jar&quot; dest=&quot;...&quot;&gt;
+  &lt;patternset&gt;
+    &lt;include name=&quot;images/&quot;/&gt;
+  &lt;/patternset&gt;
+&lt;/unzip&gt;</pre>
+
+<p>Extract two files, <samp>ant_logo_large.gif</samp> and <samp>LICENSE.txt</samp>,
+  from <samp>ant.jar</samp>. More exactly: extract all files with these names from anywhere in the
+  source file. While extracting the directory structure will be preserved.</p>
+<pre>
+&lt;unzip src=&quot;${ant.home}/lib/ant.jar&quot; dest=&quot;...&quot;&gt;
+  &lt;patternset&gt;
+    &lt;include name=&quot;**/ant_logo_large.gif&quot;/&gt;
+    &lt;include name=&quot;**/LICENSE.txt&quot;/&gt;
+  &lt;/patternset&gt;
+&lt;/unzip&gt;</pre>
+
 <h3>Related tasks</h3>
+
+<p>The task</p>
 
 <pre>
 &lt;unzip src="some-archive" dest="some-dir"&gt;
@@ -186,36 +209,13 @@ and <code>&lt;tarfileset&gt;</code>.  <code>&lt;copy&gt;</code> offers additiona
 like <a href="../Types/filterchain.html">filtering files</a> on the fly, allowing a file to be
 mapped to multiple destinations or a configurable file system timestamp granularity.</p>
 
+<p>&quot;Delete&quot; files from a zipfile.</p>
+
 <pre>&lt;zip destfile=&quot;new.jar&quot;&gt;
   &lt;zipfileset src=&quot;old.jar&quot;&gt;
     &lt;exclude name=&quot;do/not/include/this/class&quot;/&gt;
   &lt;/zipfileset&gt;
 &lt;/zip&gt;</pre>
-
-<p>&quot;Deletes&quot; files from a zipfile.</p>
-
-<pre>
-&lt;unzip src=&quot;${ant.home}/lib/ant.jar&quot; dest=&quot;...&quot;&gt;
-  &lt;patternset&gt;
-    &lt;include name=&quot;images/&quot;/&gt;
-  &lt;/patternset&gt;
-&lt;/unzip&gt;</pre>
-
-<p>This extracts all images from <samp>ant.jar</samp> which are stored in the <samp>images</samp>
-directory of the Jar (or somewhere under it). While extracting the directory structure
-(<samp>images</samp>) will be taken.</p>
-
-<pre>
-&lt;unzip src=&quot;${ant.home}/lib/ant.jar&quot; dest=&quot;...&quot;&gt;
-  &lt;patternset&gt;
-    &lt;include name=&quot;**/ant_logo_large.gif&quot;/&gt;
-    &lt;include name=&quot;**/LICENSE.txt&quot;/&gt;
-  &lt;/patternset&gt;
-&lt;/unzip&gt;</pre>
-
-<p>This extracts the two files <samp>ant_logo_large.gif</samp> and <samp>LICENSE.txt</samp> from
-the <samp>ant.jar</samp>. More exactly: it extracts all files with these names from anywhere in the
-source file. While extracting the directory structure will be taken.</p>
 
 </body>
 </html>

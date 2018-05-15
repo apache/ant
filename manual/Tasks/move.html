@@ -169,18 +169,21 @@ the same <code>&lt;move&gt;</code> task, all <code>&lt;filterchain&gt;</code> el
 first followed by <code>&lt;filterset&gt;</code> elements.</p>
 
 <h3>Examples</h3>
-<p><strong>Move a single file (rename a file)</strong></p>
+<p>Move a single file (rename a file)</p>
 <pre>&lt;move file=&quot;file.orig&quot; tofile=&quot;file.moved&quot;/&gt;</pre>
-<p><strong>Move a single file to a directory</strong></p>
+
+<p>Move a single file to a directory</p>
 <pre>&lt;move file=&quot;file.orig&quot; todir=&quot;dir/to/move/to&quot;/&gt;</pre>
-<p><strong>Move a directory to a new directory</strong></p>
+
+<p>Move a directory to a new directory</p>
 <pre>
 &lt;move todir=&quot;new/dir/to/move/to&quot;&gt;
   &lt;fileset dir=&quot;src/dir&quot;/&gt;
 &lt;/move&gt;</pre>
 <p>or, <em>since Ant 1.6.3</em>:</p>
 <pre>&lt;move file=&quot;src/dir&quot; tofile=&quot;new/dir/to/move/to&quot;/&gt;</pre>
-<p><strong>Move a set of files to a new directory</strong></p>
+
+<p>Move a set of files to a new directory</p>
 <pre>
 &lt;move todir=&quot;some/new/dir&quot;&gt;
   &lt;fileset dir=&quot;my/src/dir&quot;&gt;
@@ -188,7 +191,8 @@ first followed by <code>&lt;filterset&gt;</code> elements.</p>
     &lt;exclude name=&quot;**/ant.jar&quot;/&gt;
   &lt;/fileset&gt;
 &lt;/move&gt;</pre>
-<p><strong>Move a list of files to a new directory</strong></p>
+
+<p>Move a list of files to a new directory</p>
 <pre>
 &lt;move todir=&quot;some/new/dir&quot;&gt;
   &lt;filelist dir=&quot;my/src/dir&quot;&gt;
@@ -196,8 +200,8 @@ first followed by <code>&lt;filterset&gt;</code> elements.</p>
     &lt;file name="file2.txt"/&gt;
   &lt;/filelist&gt;
 &lt;/move&gt;</pre>
-<p><strong>Append <code>&quot;.bak&quot;</code> to the names of all files in a
-directory.</strong></p>
+
+<p>Append <code>&quot;.bak&quot;</code> to the names of all files in a directory.</p>
 <pre>
 &lt;move todir=&quot;my/src/dir&quot; includeemptydirs=&quot;false&quot;&gt;
   &lt;fileset dir=&quot;my/src/dir&quot;&gt;

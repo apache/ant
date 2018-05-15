@@ -297,13 +297,15 @@ using one of the built-in compilers.</p>
 can be used as an alternative to the <var>compiler</var> attribute.</p>
 
 <h3>Examples</h3>
-<pre>&lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot;/&gt;</pre>
-<p>runs the <kbd>rmic</kbd> compiler for the class <code>com.xyz.FooBar</code>. The compiled files
+
+<p>Run the <kbd>rmic</kbd> compiler for the class <code>com.xyz.FooBar</code>. The compiled files
 will be stored in the directory <samp>${build}/classes</samp>.</p>
-<pre>&lt;rmic base=&quot;${build}/classes&quot; includes=&quot;**/Remote*.class&quot;/&gt;</pre>
-<p>runs the <kbd>rmic</kbd> compiler for all classes with <samp>.class</samp> files
+<pre>&lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot;/&gt;</pre>
+
+<p>Run the <kbd>rmic</kbd> compiler for all classes with <samp>.class</samp> files
 below <samp>${build}/classes</samp> whose classname starts with <code>Remote</code>. The compiled
 files will be stored in the directory <samp>${build}/classes</samp>.</p>
+<pre>&lt;rmic base=&quot;${build}/classes&quot; includes=&quot;**/Remote*.class&quot;/&gt;</pre>
 
 <p>If you want to use a custom RmicAdapter <code>org.example.MyAdapter</code> you can either use
 the <var>compiler</var> attribute:</p>

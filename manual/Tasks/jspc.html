@@ -213,7 +213,11 @@ checking to the compiler.</p>
     <td>Yes</td>
   </tr>
 </table>
+
 <h3>Example</h3>
+<p>Build all <samp>.jsp</samp> files under <samp>src/war</samp> into the
+destination <samp>/gensrc</samp>, in a package hierarchy beginning
+with <samp>com.i3sp.jsp</samp>.</p>
 <pre>
 &lt;jspc srcdir="${basedir}/src/war"
       destdir="${basedir}/gensrc"
@@ -222,9 +226,10 @@ checking to the compiler.</p>
       verbose="9"&gt;
   &lt;include name="**/*.jsp"/&gt;
 &lt;/jspc&gt;</pre>
-<p>Build all <samp>.jsp</samp> files under <samp>src/war</samp> into the
-destination <samp>/gensrc</samp>, in a package hierarchy beginning
-with <samp>com.i3sp.jsp</samp>.</p>
+
+<p>Generate <samp>.java</samp> files from <samp>.jsp</samp> files, then <code>javac</code> them down
+to bytecode. Include <samp>lib/taglibs.jar</samp> in the Java compilation. Dependency checking is
+used to scrub the <samp>.java</samp> files if class dependencies indicate it is needed.</p>
 <pre>
 &lt;jspc destdir="interim"
       verbose="1"
@@ -241,9 +246,6 @@ with <samp>com.i3sp.jsp</samp>.</p>
          destdir="build"
          classpath="lib/taglibs.jar"
          debug="on"/&gt;</pre>
-<p>Generate <samp>.java</samp> files from <samp>.jsp</samp> files then <code>javac</code> them down
-to bytecodes. Include <samp>lib/taglibs.jar</samp> in the Java compilation.  Dependency checking is
-used to scrub the <samp>.java</samp> files if class dependencies indicate it is needed.</p>
 
 <h4>Notes</h4>
 <p>Using the <var>package</var> attribute it is possible to identify the

@@ -136,6 +136,16 @@ reported.</p>
 from Ant. By using <code>&lt;daemons&gt;</code> such servers do not halt the build.</p>
 
 <h3>Examples</h3>
+<p>This is a typical pattern for testing a server application. In one thread the server is started
+(the <code>&lt;wlrun&gt;</code> task). The other thread consists of a three tasks which are
+performed in sequence. The <code>&lt;sleep&gt;</code> task is used to give the server time to come
+up. Another task which is capable of validating that the server is available could be used in place
+of the <code>&lt;sleep&gt;</code> task. The <code>&lt;junit&gt;</code> test harness then runs, again
+in its own JVM. Once the tests are complete, the server is stopped
+(using <code>&lt;wlstop&gt;</code> in this example), allowing both threads to
+complete. The <code>&lt;parallel&gt;</code> task will also complete at this time and the build will
+then continue.</p>
+
 <pre>
 &lt;parallel&gt;
   &lt;wlrun ... &gt;
@@ -145,15 +155,14 @@ from Ant. By using <code>&lt;daemons&gt;</code> such servers do not halt the bui
     &lt;wlstop/&gt;
   &lt;/sequential&gt;
 &lt;/parallel&gt;</pre>
-<p>This example represents a typical pattern for testing a server application.  In one thread the
-server is started (the <code>&lt;wlrun&gt;</code> task).  The other thread consists of a three tasks
-which are performed in sequence. The <code>&lt;sleep&gt;</code> task is used to give the server time
-to come up. Another task which is capable of validating that the server is available could be used
-in place of the <code>&lt;sleep&gt;</code> task. The <code>&lt;junit&gt;</code> test harness then
-runs, again in its own JVM. Once the tests are complete, the server is stopped
-(using <code>&lt;wlstop&gt;</code> in this example), allowing both threads to complete. The
-<code>&lt;parallel&gt;</code> task will also complete at this time and the build will then
-continue.</p>
+
+<p>Here, two independent tasks run to achieve better resource utilization during the build. In this
+instance, some servlets are being compiled in one thread and a set of JSPs is being precompiled in
+another. Developers need to be careful that the two tasks are independent, both in terms of their
+dependencies and in terms of their potential interactions in Ant's external environment. Here we
+set <var>fork</var>=<q>true</q> for the <code>&lt;javac&gt;</code> task, so that it runs in a new
+process; if the <code>&lt;wljspc&gt;</code> task used the <kbd>javac</kbd> compiler in-VM (it may),
+concurrency problems may arise.</p>
 
 <pre>
 &lt;parallel&gt;
@@ -161,13 +170,12 @@ continue.</p>
   &lt;wljspc ...&gt; &lt;!-- precompile JSPs --&gt;
 &lt;/parallel&gt;</pre>
 
-<p>This example shows two independent tasks being run to achieve better resource utilization during
-the build. In this instance, some servlets are being compiled in one thread and a set of JSPs is
-being precompiled in another. Developers need to be careful that the two tasks are independent, both
-in terms of their dependencies and in terms of their potential interactions in Ant's external
-environment. Here we set <var>fork</var>=<q>true</q> for the <code>&lt;javac&gt;</code> task, so
-that it runs in a new process; if the <code>&lt;wljspc&gt;</code> task used the <kbd>javac</kbd>
-compiler in-VM (it may), concurrency problems may arise.</p>
+<p>This example represents a typical need for use of the <var>threadCount</var>
+and <var>threadsPerProcessor</var> attributes. Spinning up all 40 of those tasks could cripple the
+system for memory and CPU time. By limiting the number of concurrent executions you can reduce
+contention for CPU, memory and disk IO, and so actually finish faster. This is also a good candidate
+for use of <var>threadCount</var> (and possibly <var>threadsPerProcessor</var>) because each task is
+independent (every new JVM is forked) and has no dependencies on the other tasks.</p>
 
 <pre>
  &lt;macrodef name="dbpurge"&gt;
@@ -190,13 +198,6 @@ compiler in-VM (it may), concurrency problems may arise.</p>
   &lt;dbpurge file="db/eight"/&gt;
   &lt;!-- repeated about 40 times --&gt;
 &lt;/parallel&gt;</pre>
-
-<p>This example represents a typical need for use of the <var>threadCount</var>
-and <var>threadsPerProcessor</var> attributes.  Spinning up all 40 of those tasks could cripple the
-system for memory and CPU time.  By limiting the number of concurrent executions you can reduce
-contention for CPU, memory and disk IO, and so actually finish faster.  This is also a good
-candidate for use of <var>threadCount</var> (and possibly <var>threadsPerProcessor</var>) because
-each task is independent (every new JVM is forked) and has no dependencies on the other tasks.</p>
 
 </body>
 </html>

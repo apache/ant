@@ -123,6 +123,9 @@ instance.</p>
 
 <h3>Examples</h3>
 
+<p>Replace occurrences of the property name <q>OldProperty</q> with <q>NewProperty</q> in a
+properties file, preserving the existing value, in all files ending in <samp>.properties</samp> in
+the current directory:</p>
 <pre>
 &lt;replaceregexp byline=&quot;true&quot;&gt;
     &lt;regexp pattern=&quot;OldProperty=(.*)&quot;/&gt;
@@ -131,42 +134,37 @@ instance.</p>
         &lt;include name=&quot;*.properties&quot;/&gt;
     &lt;/fileset&gt;
 &lt;/replaceregexp&gt;</pre>
-<p>replaces occurrences of the property name <q>OldProperty</q> with <q>NewProperty</q> in a
-properties file, preserving the existing value, in all files ending in <samp>.properties</samp> in
-the current directory</p>
 
+<p>Replace all whitespaces (blanks, tabs, etc) by one blank remaining the line separator:</p>
 <pre>
 &lt;replaceregexp match="\s+" replace=" " flags="g" byline="true"&gt;
     &lt;fileset dir="${html.dir}" includes="**/*.html"/&gt;
 &lt;/replaceregexp&gt;</pre>
-<p>replaces all whitespaces (blanks, tabs, etc) by one blank remaining the line separator. So with
-input</p>
-
+<p>Then, input</p>
 <pre>
 &lt;html&gt;    &lt;body&gt;
 &lt;&lt;TAB&gt;&gt;&lt;h1&gt;    T E S T   &lt;/h1&gt;  &lt;&lt;TAB&gt;&gt;
 &lt;&lt;TAB&gt;&gt; &lt;/body&gt;&lt;/html&gt;</pre>
-<p>would converted to</p>
+<p>is converted to</p>
 <pre>
 &lt;html&gt; &lt;body&gt;
  &lt;h1&gt; T E S T &lt;/h1&gt; &lt;/body&gt;&lt;/html&gt;</pre>
 
-<br/><!-- small distance from code of the previous example -->
-
+<p>The task</p>
 <pre>
 &lt;replaceregexp match="\\n" replace="${line.separator}" flags="g" byline="true"&gt;
     &lt;fileset dir="${dir}"/&gt;
 &lt;/replaceregexp&gt;</pre>
-<p>replaces all <q>\n</q> markers (beware the quoting of the backslash) by a line break.  So with
+<p>replaces all <q>\n</q> markers (beware the quoting of the backslash) by a line break. Then,
 input</p>
 <pre>one\ntwo\nthree</pre>
-<p>would converted to</p>
+<p>is converted to</p>
 <pre>
 one
 two
 three</pre>
 
-<p>Beware that inserting line breaks could break file syntax. For example in xml:</p>
+<p>Beware that inserting line breaks could break file syntax. For example in XML:</p>
 <pre>
 &lt;root&gt;
     &lt;text&gt;line breaks \n should work in text&lt;/text&gt;

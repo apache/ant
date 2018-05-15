@@ -201,6 +201,10 @@ the <code>&lt;replace&gt;</code> attribute <var>value</var> and/or
 the <code>&lt;replacevalue&gt;</code> element is used. If no value was specified using either of
 these options, the token is replaced with an empty string.</p>
 <h3>Examples</h3>
+<p>In file <samp>configure.sh</samp>, replace all instances of <q>@token1@</q>
+with <q>defaultvalue</q>, all instances of <q>@token2@</q> with <q>value2</q>, and all instances
+of <q>@token3@</q> with the value of the property <code>property.key</code>, as it appears in
+property file <samp>src/name.properties</samp>.</p>
 <pre>
 &lt;replace file=&quot;configure.sh&quot;
          value=&quot;defaultvalue&quot;
@@ -215,10 +219,6 @@ these options, the token is replaced with an empty string.</p>
     &lt;replacevalue&gt;value4&lt;/replacevalue&gt;
   &lt;/replacefilter&gt;
 &lt;/replace&gt;</pre>
-<p>In file <samp>configure.sh</samp>, replace all instances of <q>@token1@</q>
-with <q>defaultvalue</q>, all instances of <q>@token2@</q> with <q>value2</q>, and all instances
-of <q>@token3@</q> with the value of the property <code>property.key</code>, as it appears in
-property file <samp>src/name.properties</samp>.</p>
 <p><strong>Note</strong>: It is possible to use either
 the <var>token</var>/<code>&lt;replacetoken&gt;</code>
 and <var>value</var>/<code>&lt;replacevalue&gt;</code> attributes/elements, the

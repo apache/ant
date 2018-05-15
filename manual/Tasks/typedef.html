@@ -158,11 +158,12 @@ structure</a> and can also be set via a nested <code>classpath</code> element.</
 <p>The data type is now available to Ant. The class <code>com.mydomain.URLSet</code> implements this
 type.</p>
 
-<p>Assuming a class <code>org.acme.ant.RunnableAdapter</code> that extends Task and
+<p>Assuming a class <code>org.acme.ant.RunnableAdapter</code> that
+extends <code class="code">Task</code> and
 implements <code class="code">org.apache.tools.ant.TypeAdapter</code>, and in
 the <code class="code">execute()</code> method invokes <code class="code">run()</code> on the
-proxied object, one may use a <code>Runnable</code> class as an Ant task. The following fragment
-defines a task called <code>runclock</code>.</p>
+proxied object, one may use a <code class="code">Runnable</code> class as an Ant task. The following
+fragment defines a task called <code>runclock</code>.</p>
 <pre>
 &lt;typedef name="runclock"
          classname="com.acme.ant.RunClock"
@@ -183,7 +184,7 @@ load up two definitions.</p>
          classname="org.acme.filters.Filter2"
          loaderref="lib.path.loader"/&gt;</pre>
 
-<p>If you want to load an antlib into a special xml-namespace, the <tt>uri</tt> attribute is
+<p>If you want to load an antlib into a special XML namespace, the <var>uri</var> attribute is
 important:</p>
 <pre>
 &lt;project xmlns:antcontrib="antlib:net.sf.antcontrib"&gt;

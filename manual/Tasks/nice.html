@@ -47,15 +47,19 @@
     <td>No</td>
   </tr>
 </table>
+
 <h3>Examples</h3>
-<pre>&lt;nice newpriority=&quot;10&quot;/&gt;</pre>
+
 <p>Set the Thread priority to 10 (highest).</p>
-<pre>&lt;nice currentpriority=&quot;priority&quot;/&gt;</pre>
+<pre>&lt;nice newpriority=&quot;10&quot;/&gt;</pre>
+
 <p>Store the current Thread priority in the user property <code>priority</code>.</p>
-<pre>&lt;nice currentpriority=&quot;currentpriority&quot; newpriority=&quot;1&quot;/&gt;</pre>
+<pre>&lt;nice currentpriority=&quot;priority&quot;/&gt;</pre>
+
 <p>Set the current Thread priority to 1 (lowest), storing the original priority in the user
-property <code>currentpriority</code>.  This can be used to set the priority back to its original
+property <code>currentpriority</code>. This can be used to set the priority back to its original
 value later.</p>
+<pre>&lt;nice currentpriority=&quot;currentpriority&quot; newpriority=&quot;1&quot;/&gt;</pre>
 
 </body>
 </html>

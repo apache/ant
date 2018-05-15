@@ -69,7 +69,7 @@ extension.</p>
 extension in.</p>
 
 <h3>Examples</h3>
-<p><strong>Search for extension in single file</strong></p>
+<p>Search for extension in single file</p>
 <pre>
 &lt;jarlib-available property=&quot;myext.present&quot; file=&quot;myfile.jar&quot;&gt;
   &lt;extension extensionName=&quot;org.apache.tools.ant&quot;
@@ -78,7 +78,7 @@ extension in.</p>
 &lt;/jarlib-available&gt;
 </pre>
 
-<p><strong>Search for extension in single file referencing external Extension</strong></p>
+<p>Search for extension in single file referencing external Extension</p>
 <pre>
 &lt;extension id=&quot;myext&quot;
            extensionName=&quot;org.apache.tools.ant&quot;
@@ -88,7 +88,8 @@ extension in.</p>
 &lt;jarlib-available property=&quot;myext.present&quot; file=&quot;myfile.jar&quot;&gt;
   &lt;extension refid=&quot;myext&quot;/&gt;
 &lt;/jarlib-available&gt;</pre>
-<p><strong>Search for extension in fileset</strong></p>
+
+<p>Search for extension in fileset</p>
 <pre>
 &lt;extension id=&quot;myext&quot;
            extensionName=&quot;org.apache.tools.ant&quot;
@@ -101,7 +102,8 @@ extension in.</p>
     &lt;include name="*.jar"/&gt;
   &lt;/fileset&gt;
 &lt;/jarlib-available&gt;</pre>
-<p><strong>Search for extension in extensionSet</strong></p>
+
+<p>Search for extension in extensionSet</p>
 <pre>
 &lt;extension id=&quot;myext&quot;
            extensionName=&quot;org.apache.tools.ant&quot;
@@ -121,4 +123,3 @@ extension in.</p>
 
 </body>
 </html>
-

@@ -74,12 +74,11 @@ other platforms with <kbd>ccm</kbd> installed.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Check in the file <samp>c:/wa/com/foo/MyFile.java</samp>.  Text <samp>mycomment</samp> is added
+as a comment. The task used is the one set as the default.</p>
 <pre>
 &lt;ccmcheckin file=&quot;c:/wa/com/foo/MyFile.java&quot;
             comment=&quot;mycomment&quot;/&gt;</pre>
-
-<p>Checks in the file <samp>c:/wa/com/foo/MyFile.java</samp>.  Text <samp>mycomment</samp> is added
-as a comment. The task used is the one set as the default.</p>
 
 <hr/>
 
@@ -121,24 +120,22 @@ as a comment. The task used is the one set as the default.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Check out the file <samp>c:/wa/com/foo/MyFile.java</samp>.  Comment
+attribute <samp>mycomment</samp> is added as a task comment. The task used is the one set as the
+default.</p>
 <pre>
 &lt;ccmcheckout file=&quot;c:/wa/com/foo/MyFile.java&quot;
              comment=&quot;mycomment&quot;/&gt;</pre>
 
-<p>Check out the file <samp>c:/wa/com/foo/MyFile.java</samp>.  Comment
-attribute <samp>mycomment</samp> is added as a task comment The used task is the one set as the
-default.</p>
-
+<p>Check out all the files in the <samp>lib</samp> directory having the <samp>.jar</samp>
+extension. Comment attribute <samp>mycomment</samp> is added as a task comment The used task is the
+one set as the default.</p>
 <pre>
 &lt;ccmcheckout comment=&quot;mycomment&quot;&gt;
   &lt;fileset dir=&quot;lib&quot; &gt;
     &lt;include name=&quot;**/*.jar&quot;/&gt;
   &lt;/fileset&gt;
 &lt;/ccmcheckout &gt;</pre>
-
-<p>Check out all the files in the <samp>lib</samp> directory having the <samp>.jar</samp> extension.
-Comment attribute <samp>mycomment</samp> is added as a task comment The used task is the one set as
-the default.</p>
 
 <hr/>
 
@@ -171,9 +168,8 @@ the default.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform a Checkin default task on all the checked out files in the current task.</p>
 <pre>&lt;ccmcheckintask comment=&quot;blahblah/&gt;</pre>
-
-<p>Does a Checkin default task on all the checked out files in the current task.</p>
 
 <hr/>
 
@@ -211,11 +207,10 @@ the default.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Perform a Continuus <code>reconfigure</code> on the project <samp>ANTCCM_TEST#BMO_1</samp>.</p>
 <pre>
 &lt;ccmreconfigure ccmproject=&quot;ANTCCM_TEST#BMO_1&quot;
                 verbose=&quot;true&quot;/&gt;</pre>
-
-<p>Does a Continuus <code>reconfigure</code> on the project <samp>ANTCCM_TEST#BMO_1</samp>.</p>
 
 <hr/>
 
@@ -268,12 +263,11 @@ the default.</p>
 </table>
 <h3>Examples</h3>
 
+<p>Create a task for the release <samp>ANTCCM_TEST</samp> with the current user as the resolver for
+this task.</p>
 <pre>
 &lt;ccmcreatetask resolver=&quot;${user.name}&quot;
                release=&quot;ANTCCM_TEST&quot; comment=&quot;blahblah&quot;/&gt;</pre>
-
-<p>Creates a task for the release <samp>ANTCCM_TEST</samp> with the current user as the resolver for
-this task.</p>
 
 </body>
 </html>
