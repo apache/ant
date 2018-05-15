@@ -28,13 +28,13 @@
   <p>Properties are key-value pairs where Apache Ant tries to expand <code>${key}</code>
     to <code>value</code> at run time.</p>
 
-  <p>There are many tasks that can set properties, the most common one is
+  <p>There are many tasks that can set properties; the most common one is
     the <a href="Tasks/property.html">property</a> task.  In addition properties can be defined
     via <a href="running.html">command line arguments</a> or similar mechanisms from outside of
     Ant.</p>
 
-  <p>Normally property values can not be changed, once a property is set, most tasks will not allow
-    its value to be modified.  In general properties are of global scope, i.e. once they have been
+  <p>Normally property values can not be changed: once a property is set, most tasks will not allow
+    its value to be modified.  In general properties are of global scope, i.e., once they have been
     defined they are available for any task or target invoked subsequently&mdash;it is not possible
     to set a property in a child build process created via
     the <a href="Tasks/ant.html">ant</a>, <a href="Tasks/antcall.html">antcall</a>
@@ -74,12 +74,12 @@
     <dd>the name of the currently executing project's default target; it is set via
       the <var>default</var> attribute of <code>&lt;project&gt;</code>.</dd>
     <dt><code>ant.project.invoked-targets</code></dt>
-    <dd>a comma separated list of the targets that have been specified on the command line (the IDE,
-      an <code>&lt;ant&gt;</code> task ...) when invoking the current project.<br/>  This property
-      is set properly when the first target is executed.  If you use it in the implicit target
-      (directly under the <code>&lt;project&gt;</code> tag) the list will be empty if no target has
-      been specified while it will contain the project's default target in this case for tasks
-      nested into targets.</dd>
+    <dd>a comma-separated list of the targets that have been specified (on the command line, inside
+      of an IDE, by an <code>&lt;ant&gt;</code> task, etc...) when invoking the current
+      project.<br/>This property is set properly when the first target is executed. If you use it in
+      the implicit target (directly under the <code>&lt;project&gt;</code> tag) the list will be
+      empty if no target has been specified while it will contain the project's default target in
+      this case for tasks nested into targets.</dd>
     <dt><code>ant.java.version</code></dt>
     <dd>the JVM version Ant detected; currently it can hold the
       values <q>9</q>, <q>1.8</q>, <q>1.7</q>, <q>1.6</q>, <q>1.5</q>, <q>1.4</q>, <q>1.3</q>
@@ -117,7 +117,7 @@
     PropertyHelper and its delegates from the context of the Ant buildfile.</p>
 
   <p>There are three sub-interfaces of <code class="code">Delegate</code> that may be useful to
-  implement.</p>
+  implement:</p>
 
   <ul>
     <li><code>org.apache.tools.ant.property.PropertyExpander</code> is responsible for finding the
@@ -150,11 +150,10 @@
       for setting properties.
 
       <p>This is the interface you'd implement if you want to provide your own storage independent
-        of Ant's project instance&mdash;the interface represents the reading end.  An example for
+        of Ant's project instance&mdash;the interface represents the writing end.  An example for
         this would be <code class="code">org.apache.tools.ant.property.LocalProperties</code> which
         implements storage for <a href="Tasks/local.html">local properties</a>.</p>
     </li>
-
   </ul>
 
   <p>The default <code class="code">PropertyExpander</code> looks similar to:</p>
@@ -204,7 +203,7 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 
   <p>In its default configuration Ant will expand the text <q>$$</q> to a single <q>$</q> and
     suppress the normal property expansion mechanism for the text immediately following it,
-    i.e. <samp>$${key}</samp> expands to <samp>${key}</samp> and not <code>value</code> even though
+    i.e., <samp>$${key}</samp> expands to <samp>${key}</samp> and not <code>value</code> even though
     a property named <code>key</code> was defined and had the value <samp>value</samp>.  This can be
     used to escape literal <q>$</q> characters and is useful in constructs that only look like
     property expansions or when you want to provide diagnostic output like in</p>
@@ -219,7 +218,7 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 
   <p>In order to maintain backward compatibility with older Ant releases, a single <q>$</q>
     character encountered apart from a property-like construct (including a matched pair of french
-    braces) will be interpreted literally; that is, as <q>$</q>.  The "correct" way to specify this
+    braces) will be interpreted literally, that is, as <q>$</q>.  The "correct" way to specify this
     literal character, however, is by using the escaping mechanism unconditionally, so
     that <q>$$</q> is obtained by specifying <q>$$$$</q>.  Mixing the two approaches yields
     unpredictable results, as <q>$$$</q> results in <q>$$</q>.</p>
@@ -235,14 +234,14 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
     <li>the literal text <samp>}</samp> resulting from the second closing brace</li>
   </ol>
 
-  <p>This means you can't use easily expand properties whose names are given by properties, but
+  <p>This means you can't use easily expand properties whose names are stored in properties, but
     there are <a href="https://ant.apache.org/faq.html#propertyvalue-as-name-for-property"
     target="_top">some workarounds</a> for older versions of Ant. <em>Since Ant 1.8.0</em> using
     the <a href="https://ant.apache.org/antlibs/props/" target="_top">props Antlib</a> you can
     configure Ant to use the <code class="code">NestedPropertyExpander</code> defined there if you
     need such a feature.</p>
 
-  <h2>Expanding a "Property Name"</h2>
+  <h2>Expanding a Property Reference</h2>
 
   <p>In its most simple form <samp>${key}</samp> is supposed to look up a property
     named <code>key</code> and expand to the value of the property.
@@ -254,13 +253,13 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 
   <h3 id="toString">Getting the value of a Reference with <samp>${toString:}</samp></h3>
 
-  <p>Any Ant type which has been declared with a reference can also its string value extracted by
-    using the <samp>${toString:}</samp> operation, with the name of the reference listed after
+  <p>Any Ant type item which has been declared with a reference can also its string value extracted
+    by using the <samp>${toString:}</samp> operation, with the name of the reference listed after
     the <code>toString:</code> text.  The <code class="code">toString()</code> method of the Java
     class instance that is referenced is invoked&mdash;all built in types strive to produce useful
     and relevant output in such an instance.</p>
 
-  <p>For example, here is how to get a listing of the files in a fileset,<p>
+  <p>For example, here is how to get a listing of the files in a fileset:<p>
 
 <pre>
 &lt;fileset id=&quot;sourcefiles&quot; dir=&quot;src&quot; includes=&quot;**/*.java&quot;/&gt;
@@ -271,8 +270,8 @@ public class ToStringEvaluator implements PropertyHelper.PropertyEvaluator {
 
   <h3 id="ant.refid">Getting the value of a Reference with <samp>${ant.refid:}</samp></h3>
 
-  <p>Any Ant type which has been declared with a reference can also be used as a property by using
-    the <samp>${ant.refid:}</samp> operation, with the name of the reference listed after
+  <p>Any Ant type item which has been declared with a reference can also be used as a property by
+    using the <samp>${ant.refid:}</samp> operation, with the name of the reference listed after
     the <code>ant.refid:</code> text.  The difference between this operation
     and <a href="#toString"><samp>${toString:}</samp></a> is that <samp>${ant.refid:}</samp> will
     expand to the referenced object itself.  In most circumstances
