@@ -43,6 +43,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -1376,9 +1378,7 @@ public class JUnitTask extends Task {
                 LoaderUtils.classNameToResource(Project.class.getName());
             URL previous = null;
             try {
-                for (final Enumeration<URL> e = loader.getResources(projectResourceName);
-                     e.hasMoreElements();) {
-                    final URL current = e.nextElement();
+                for (final URL current : Collections.list(loader.getResources(projectResourceName))) {
                     if (previous != null && !urlEquals(current, previous)) {
                         log(String.format(
                                 "WARNING: multiple versions of ant detected in path for junit%n"
@@ -1660,16 +1660,9 @@ public class JUnitTask extends Task {
      * @since Ant 1.3
      */
     protected Enumeration<JUnitTest> getIndividualTests() {
-        final int count = batchTests.size();
-        @SuppressWarnings("unchecked")
-        final Enumeration<JUnitTest>[] enums = new Enumeration[ count + 1];
-
-        for (int i = 0; i < count; i++) {
-            final BatchTest batchtest = batchTests.get(i);
-            enums[i] = batchtest.elements();
-        }
-        enums[enums.length - 1] = Collections.enumeration(tests);
-        return Enumerations.fromCompound(enums);
+        return Collections.enumeration(Stream.concat(batchTests.stream()
+                .flatMap(b -> Collections.list(b.elements()).stream()), tests.stream())
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -1685,11 +1678,8 @@ public class JUnitTask extends Task {
         if (tests.isEmpty()) {
             return;
         }
-        for (JUnitTest test : tests) {
-            if (test.hasMethodsSpecified() && test.shouldRun(getProject())) {
-                test.resolveMethods();
-            }
-        }
+        tests.stream().filter(test -> test.hasMethodsSpecified() && test.shouldRun(getProject()))
+                .forEach(JUnitTest::resolveMethods);
     }
 
     /**
@@ -1763,8 +1753,8 @@ public class JUnitTask extends Task {
      * @since Ant 1.3
      */
     protected Enumeration<BaseTest> allTests() {
-        return Enumerations.fromCompound(Collections.enumeration(tests),
-            Collections.enumeration(batchTests));
+        return Collections.enumeration(Stream.concat(tests.stream(), batchTests.stream())
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -2164,8 +2154,7 @@ public class JUnitTask extends Task {
         final Enumeration<JUnitTest> testList, final boolean runIndividual) {
         final Map<ForkedTestConfiguration, List<JUnitTest>> testConfigurations =
             new HashMap<>();
-        while (testList.hasMoreElements()) {
-            final JUnitTest test = testList.nextElement();
+        for (final JUnitTest test : Collections.list(testList)) {
             if (test.shouldRun(getProject())) {
                 /* with multi-threaded runs need to defer execution of even */
                 /* individual tests so the threads can pick tests off the queue. */

@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,6 +30,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
@@ -276,17 +276,12 @@ public class PropertySet extends DataType implements ResourceCollection {
 
     /**
      * Convert the system properties to a Map.
-     * Use propertynames to get the list of properties (including
+     * Use stringPropertyNames to get the list of properties (including
      * default ones).
      */
     private Map<String, Object> getAllSystemProperties() {
-        Map<String, Object>  ret = new HashMap<>();
-        for (Enumeration<?> e = System.getProperties().propertyNames();
-             e.hasMoreElements();) {
-            String name = (String) e.nextElement();
-            ret.put(name, System.getProperties().getProperty(name));
-        }
-        return ret;
+        return System.getProperties().stringPropertyNames().stream()
+                .collect(Collectors.toMap(name -> name, name -> System.getProperties().getProperty(name), (a, b) -> b));
     }
 
     /**

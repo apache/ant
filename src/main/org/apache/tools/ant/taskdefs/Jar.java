@@ -33,7 +33,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -325,10 +324,8 @@ public class Jar extends Zip {
 
             // must not use getEntry as "well behaving" applications
             // must accept the manifest in any capitalization
-            Enumeration<? extends ZipEntry> e = zf.entries();
-            while (e.hasMoreElements()) {
-                ZipEntry ze = e.nextElement();
-                if (MANIFEST_NAME.equalsIgnoreCase(ze.getName())) {
+            for (ZipEntry ze : Collections.list(zf.entries())) {
+                 if (MANIFEST_NAME.equalsIgnoreCase(ze.getName())) {
                     try (InputStreamReader isr =
                         new InputStreamReader(zf.getInputStream(ze), "UTF-8")) {
                         return getManifest(isr);
@@ -354,14 +351,8 @@ public class Jar extends Zip {
 
     private boolean jarHasIndex(File jarFile) throws IOException {
         try (ZipFile zf = new ZipFile(jarFile)) {
-            Enumeration<? extends ZipEntry> e = zf.entries();
-            while (e.hasMoreElements()) {
-                ZipEntry ze = e.nextElement();
-                if (INDEX_NAME.equalsIgnoreCase(ze.getName())) {
-                    return true;
-                }
-            }
-            return false;
+            return Collections.list(zf.entries()).stream()
+                    .anyMatch(ze -> INDEX_NAME.equalsIgnoreCase(ze.getName()));
         }
     }
 
@@ -1072,11 +1063,8 @@ public class Jar extends Zip {
                                                  List<String> files)
         throws IOException {
         try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(file, "utf-8")) {
-            Enumeration<org.apache.tools.zip.ZipEntry> entries = zf.getEntries();
             Set<String> dirSet = new HashSet<>();
-            while (entries.hasMoreElements()) {
-                org.apache.tools.zip.ZipEntry ze =
-                    entries.nextElement();
+            for (org.apache.tools.zip.ZipEntry ze : Collections.list(zf.getEntries())) {
                 String name = ze.getName();
                 if (ze.isDirectory()) {
                     dirSet.add(name);

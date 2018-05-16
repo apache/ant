@@ -18,6 +18,7 @@
 package org.apache.tools.ant.util;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
@@ -79,7 +80,7 @@ public class LinkedHashtable<K, V> extends Hashtable<K, V> {
 
     @Override
     public Enumeration<V> elements() {
-        return CollectionUtils.asEnumeration(values().iterator());
+        return Collections.enumeration(values());
     }
 
     @Override
@@ -109,7 +110,7 @@ public class LinkedHashtable<K, V> extends Hashtable<K, V> {
 
     @Override
     public Enumeration<K> keys() {
-        return CollectionUtils.asEnumeration(keySet().iterator());
+        return Collections.enumeration(keySet());
     }
 
     @Override

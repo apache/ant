@@ -618,16 +618,11 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         final XSLTProcess.Factory factory = xsltTask.getFactory();
         if (factory != null) {
             setFactory(factory.getName());
-
             // configure factory attributes
-            for (final XSLTProcess.Factory.Attribute attr
-                    : Collections.list(factory.getAttributes())) {
-                setAttribute(attr.getName(), attr.getValue());
-            }
-            for (final XSLTProcess.Factory.Feature feature
-                     : factory.getFeatures()) {
-                setFeature(feature.getName(), feature.getValue());
-            }
+            Collections.list(factory.getAttributes())
+                    .forEach(attr -> setAttribute(attr.getName(), attr.getValue()));
+            factory.getFeatures()
+                    .forEach(feature -> setFeature(feature.getName(), feature.getValue()));
         }
 
         final XMLCatalog xmlCatalog = xsltTask.getXMLCatalog();
@@ -637,12 +632,9 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             setURIResolver(xmlCatalog);
         }
 
-
         // configure output properties
-        for (final XSLTProcess.OutputProperty prop
-                : Collections.list(xsltTask.getOutputProperties())) {
-            setOutputProperty(prop.getName(), prop.getValue());
-        }
+        Collections.list(xsltTask.getOutputProperties())
+                .forEach(prop -> setOutputProperty(prop.getName(), prop.getValue()));
 
         suppressWarnings = xsltTask.getSuppressWarnings();
 

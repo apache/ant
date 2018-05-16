@@ -23,7 +23,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -117,14 +117,8 @@ public class HostInfo extends Task {
     private void executeLocal() {
         try {
             inetAddrs = new LinkedList<>();
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface currentif = interfaces.nextElement();
-                Enumeration<InetAddress> addrs = currentif.getInetAddresses();
-                while (addrs.hasMoreElements()) {
-                    inetAddrs.add(addrs.nextElement());
-                }
-            }
+            Collections.list(NetworkInterface.getNetworkInterfaces())
+                    .forEach(netInterface -> inetAddrs.addAll(Collections.list(netInterface.getInetAddresses())));
             selectAddresses();
 
             if (nameAddr != null && hasHostName(nameAddr)) {

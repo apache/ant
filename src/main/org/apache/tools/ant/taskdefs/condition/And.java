@@ -18,7 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import java.util.Enumeration;
+import java.util.Collections;
 
 import org.apache.tools.ant.BuildException;
 
@@ -38,13 +38,7 @@ public class And extends ConditionBase implements Condition {
      */
     @Override
     public boolean eval() throws BuildException {
-        Enumeration<Condition> e = getConditions();
-        while (e.hasMoreElements()) {
-            if (!e.nextElement().eval()) {
-                return false;
-            }
-        }
-        return true;
+        return Collections.list(getConditions()).stream().allMatch(Condition::eval);
     }
 
 }

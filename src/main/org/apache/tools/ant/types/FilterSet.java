@@ -20,7 +20,7 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
@@ -252,10 +252,8 @@ public class FilterSet extends DataType implements Cloneable {
         dieOnCircularReference();
         if (filterHash == null) {
             filterHash = new Hashtable<>(getFilters().size());
-            for (Enumeration<Filter> e = getFilters().elements(); e.hasMoreElements();) {
-               Filter filter = e.nextElement();
-               filterHash.put(filter.getToken(), filter.getValue());
-            }
+            Collections.list(getFilters().elements())
+                    .forEach(filter -> filterHash.put(filter.getToken(), filter.getValue()));
         }
         return filterHash;
     }

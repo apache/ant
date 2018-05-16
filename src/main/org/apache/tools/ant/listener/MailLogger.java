@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -129,11 +128,8 @@ public class MailLogger extends DefaultLogger {
             }
         }
 
-        for (Enumeration<?> e = fileProperties.keys(); e.hasMoreElements();) {
-            String key = (String) e.nextElement();
-            String value = fileProperties.getProperty(key);
-            properties.put(key, project.replaceProperties(value));
-        }
+        fileProperties.stringPropertyNames()
+                .forEach(key -> properties.put(key, project.replaceProperties(fileProperties.getProperty(key))));
 
         boolean success = (event.getException() == null);
         String prefix = success ? "success" : "failure";

@@ -24,7 +24,7 @@ import java.io.PrintStream;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Stack;
 
@@ -345,14 +345,9 @@ public class XmlLogger implements BuildLogger {
         if (element != null) {
             return element;
         }
-        for (Enumeration<Task> e = tasks.keys(); e.hasMoreElements();) {
-            Task key = e.nextElement();
-            if (key instanceof UnknownElement
-                && ((UnknownElement) key).getTask() == task) {
-                return tasks.get(key);
-            }
-        }
-        return null;
+        return Collections.list(tasks.keys()).stream().filter(UnknownElement.class::isInstance)
+                .filter(key -> ((UnknownElement) key).getTask() == task).findFirst()
+                .map(key -> tasks.get(key)).orElse(null);
     }
 
     /**

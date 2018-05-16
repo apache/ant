@@ -19,7 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Collections;
 
 /**
  * This selector is here just to shake up your thinking a bit. Don't get
@@ -75,11 +75,9 @@ public class MajoritySelector extends BaseSelectorContainer {
         validate();
         int yesvotes = 0;
         int novotes = 0;
-        Enumeration<FileSelector> e = selectorElements();
 
-        while (e.hasMoreElements()) {
-            if (e.nextElement().isSelected(basedir,
-                    filename, file)) {
+        for (FileSelector fs : Collections.list(selectorElements())) {
+            if (fs.isSelected(basedir, filename, file)) {
                 yesvotes++;
             } else {
                 novotes++;

@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.util;
 
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -112,7 +113,7 @@ public class LinkedHashtableTest {
     @Test
     public void testKeys() {
         multiSetup();
-        assertKeys(CollectionUtils.asIterator(h.keys()));
+        assertKeys(Collections.list(h.keys()).iterator());
     }
 
     @Test
@@ -124,7 +125,7 @@ public class LinkedHashtableTest {
     @Test
     public void testElements() {
         multiSetup();
-        assertValues(CollectionUtils.asIterator(h.elements()));
+        assertValues(Collections.list(h.elements()).iterator());
     }
 
     @Test

@@ -28,10 +28,11 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.AbstractCvsTask;
-import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.DOMUtils;
 import org.apache.tools.ant.util.FileUtils;
@@ -420,7 +421,7 @@ public class CvsTagDiff extends AbstractCvsTask {
 
             root.setAttribute("cvsroot", getCvsRoot());
             root.setAttribute("package",
-                              CollectionUtils.flattenToString(packageNames));
+                    packageNames.stream().collect(Collectors.joining(",")));
             DOM_WRITER.openElement(root, writer, 0, "\t");
             writer.println();
             for (CvsTagEntry entry : entries) {

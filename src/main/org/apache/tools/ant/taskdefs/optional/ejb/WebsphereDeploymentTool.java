@@ -21,17 +21,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.optional.ejb.EjbJar.DTDLocation;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -353,9 +354,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         // any supplied by the user
         handler.registerDTD(PUBLICID_EJB11, ejb11DTD);
 
-        for (DTDLocation dtdLocation : getConfig().dtdLocations) {
-            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
-        }
+        getConfig().dtdLocations.forEach(l -> handler.registerDTD(l.getPublicId(), l.getLocation()));
         return handler;
     }
 
@@ -372,9 +371,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 }
             };
 
-        for (DTDLocation dtdLocation : getConfig().dtdLocations) {
-            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
-        }
+        getConfig().dtdLocations.forEach(l -> handler.registerDTD(l.getPublicId(), l.getLocation()));
         return handler;
     }
 
@@ -669,72 +666,63 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 genericJar = new JarFile(genericJarFile);
                 wasJar = new JarFile(websphereJarFile);
 
-                Hashtable<String, JarEntry> genericEntries = new Hashtable<>();
-                Hashtable<String, JarEntry> wasEntries = new Hashtable<>();
-                Hashtable<String, JarEntry> replaceEntries = new Hashtable<>();
-
                 //get the list of generic jar entries
-                for (Enumeration<JarEntry> e = genericJar.entries(); e.hasMoreElements();) {
-                    JarEntry je = e.nextElement();
-                    genericEntries.put(je.getName().replace('\\', '/'), je);
-                }
+                Hashtable<String, JarEntry> genericEntries = Collections.list(genericJar.entries()).stream()
+                        .collect(Collectors.toMap(je -> je.getName().replace('\\', '/'),
+                                je -> je, (a, b) -> b, Hashtable::new));
+
                 // get the list of WebSphere jar entries
-                for (Enumeration<JarEntry> e = wasJar.entries(); e.hasMoreElements();) {
-                    JarEntry je = e.nextElement();
-                    wasEntries.put(je.getName(), je);
-                }
+                Hashtable<String, JarEntry> wasEntries = Collections.list(wasJar.entries()).stream()
+                        .collect(Collectors.toMap(ZipEntry::getName, je -> je, (a, b) -> b, Hashtable::new));
 
                 // Cycle through generic and make sure its in WebSphere
                 genericLoader = getClassLoaderFromJar(genericJarFile);
 
-                for (Enumeration<String> e = genericEntries.keys(); e.hasMoreElements();) {
-                    String filepath = e.nextElement();
-
-                    if (wasEntries.containsKey(filepath)) {
-                        // File name/path match
-                        // Check files see if same
-                        JarEntry genericEntry = genericEntries.get(filepath);
-                        JarEntry wasEntry = wasEntries.get(filepath);
-
-                        if (genericEntry.getCrc() != wasEntry.getCrc()
-                            || genericEntry.getSize() != wasEntry.getSize()) {
-
-                            if (genericEntry.getName().endsWith(".class")) {
-                                //File are different see if its an object or an interface
-                                String classname
-                                    = genericEntry.getName().replace(File.separatorChar, '.');
-
-                                classname = classname.substring(0, classname.lastIndexOf(".class"));
-
-                                Class<?> genclass = genericLoader.loadClass(classname);
-
-                                if (genclass.isInterface()) {
-                                    //Interface changed   rebuild jar.
-                                    log("Interface " + genclass.getName()
-                                        + " has changed", Project.MSG_VERBOSE);
-                                    rebuild = true;
-                                    break;
-                                }
-                                //Object class Changed   update it.
-                                replaceEntries.put(filepath, genericEntry);
-                            } else {
-                                // is it the manifest. If so ignore it
-                                if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
-                                    //File other then class changed  rebuild
-                                    log("Non class file " + genericEntry.getName()
-                                        + " has changed", Project.MSG_VERBOSE);
-                                    rebuild = true;
-                                }
-                                break;
-                            }
-                        }
-                    } else {
+                Hashtable<String, JarEntry> replaceEntries = new Hashtable<>();
+                for (String filepath : genericEntries.keySet()) {
+                    if (!wasEntries.containsKey(filepath)) {
                         // a file doesn't exist rebuild
-
                         log("File " + filepath + " not present in websphere jar",
                             Project.MSG_VERBOSE);
                         rebuild = true;
                         break;
+                    }
+                    // File name/path match
+                    // Check files see if same
+                    JarEntry genericEntry = genericEntries.get(filepath);
+                    JarEntry wasEntry = wasEntries.get(filepath);
+
+                    if (genericEntry.getCrc() != wasEntry.getCrc()
+                        || genericEntry.getSize() != wasEntry.getSize()) {
+
+                        if (genericEntry.getName().endsWith(".class")) {
+                            //File are different see if its an object or an interface
+                            String classname
+                                = genericEntry.getName().replace(File.separatorChar, '.');
+
+                            classname = classname.substring(0, classname.lastIndexOf(".class"));
+
+                            Class<?> genclass = genericLoader.loadClass(classname);
+
+                            if (genclass.isInterface()) {
+                                //Interface changed   rebuild jar.
+                                log("Interface " + genclass.getName()
+                                    + " has changed", Project.MSG_VERBOSE);
+                                rebuild = true;
+                                break;
+                            }
+                            //Object class Changed   update it.
+                            replaceEntries.put(filepath, genericEntry);
+                        } else {
+                            // is it the manifest. If so ignore it
+                            if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
+                                //File other then class changed  rebuild
+                                log("Non class file " + genericEntry.getName()
+                                    + " has changed", Project.MSG_VERBOSE);
+                                rebuild = true;
+                            }
+                            break;
+                        }
                     }
                 }
 
@@ -749,9 +737,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     newJarStream.setLevel(0);
 
                     // Copy files from old WebSphere jar
-                    for (Enumeration<JarEntry> e = wasEntries.elements(); e.hasMoreElements();) {
-                        JarEntry je = e.nextElement();
-
+                    for (JarEntry je : Collections.list(wasEntries.elements())) {
                         if (je.getCompressedSize() == -1
                             || je.getCompressedSize() == je.getSize()) {
                             newJarStream.setLevel(0);

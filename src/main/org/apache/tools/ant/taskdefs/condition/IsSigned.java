@@ -19,13 +19,12 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Collections;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ManifestTask;
 import org.apache.tools.ant.types.DataType;
-import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
 /**
@@ -73,15 +72,8 @@ public class IsSigned extends DataType implements Condition {
         throws IOException {
         try (ZipFile jarFile = new ZipFile(zipFile)) {
             if (null == name) {
-                Enumeration<ZipEntry> entries = jarFile.getEntries();
-                while (entries.hasMoreElements()) {
-                    String eName = entries.nextElement().getName();
-                    if (eName.startsWith(SIG_START)
-                        && eName.endsWith(SIG_END)) {
-                        return true;
-                    }
-                }
-                return false;
+                return Collections.list(jarFile.getEntries()).stream()
+                        .anyMatch(e -> e.getName().startsWith(SIG_START) && e.getName().endsWith(SIG_END));
             }
             name = replaceInvalidChars(name);
             boolean shortSig = jarFile.getEntry(SIG_START

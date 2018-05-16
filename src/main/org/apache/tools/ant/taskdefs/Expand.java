@@ -24,8 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -189,10 +189,8 @@ public class Expand extends Task {
         }
         try (ZipFile zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields)) {
             boolean empty = true;
-            Enumeration<ZipEntry> e = zf.getEntries();
-            while (e.hasMoreElements()) {
+            for (ZipEntry ze : Collections.list(zf.getEntries())) {
                 empty = false;
-                ZipEntry ze = e.nextElement();
                 InputStream is = null;
                 log("extracting " + ze.getName(), Project.MSG_DEBUG);
                 try {

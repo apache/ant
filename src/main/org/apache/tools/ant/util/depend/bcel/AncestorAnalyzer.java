@@ -16,9 +16,10 @@
  *
  */
 package org.apache.tools.ant.util.depend.bcel;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
@@ -69,12 +70,8 @@ public class AncestorAnalyzer extends AbstractAnalyzer {
         // classes upon which they depend
         Set<String> dependencies = new HashSet<>();
         Set<File> containers = new HashSet<>();
-        Set<String> toAnalyze = new HashSet<>();
+        Set<String> toAnalyze = new HashSet<>(Collections.list(getRootClasses()));
         Set<String> nextAnalyze = new HashSet<>();
-
-        for (Enumeration<String> e = getRootClasses(); e.hasMoreElements();) {
-            toAnalyze.add(e.nextElement());
-        }
 
         int count = 0;
         int maxCount = isClosureRequired() ? MAX_LOOPS : 2;
@@ -115,9 +112,8 @@ public class AncestorAnalyzer extends AbstractAnalyzer {
                 }
             }
 
-            Set<String> temp = toAnalyze;
-            toAnalyze = nextAnalyze;
-            nextAnalyze = temp;
+            toAnalyze.clear();
+            toAnalyze.addAll(nextAnalyze);
         }
 
         files.clear();

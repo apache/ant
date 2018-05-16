@@ -20,7 +20,7 @@ package org.apache.tools.ant;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -679,8 +679,7 @@ public class UnknownElement extends Task {
         }
         copyRC.addText(getWrapper().getText().toString());
 
-        for (Enumeration<RuntimeConfigurable> e = getWrapper().getChildren(); e.hasMoreElements();) {
-            RuntimeConfigurable r = e.nextElement();
+        for (RuntimeConfigurable r : Collections.list(getWrapper().getChildren())) {
             UnknownElement ueChild = (UnknownElement) r.getProxy();
             UnknownElement copyChild = ueChild.copy(newProject);
             copyRC.addChild(copyChild.getWrapper());

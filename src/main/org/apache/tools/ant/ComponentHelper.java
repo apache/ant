@@ -25,7 +25,6 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -756,10 +755,9 @@ public class ComponentHelper  {
         ClassLoader classLoader = getClassLoader(null);
         Properties props = getDefaultDefinitions(false);
         for (String name : props.stringPropertyNames()) {
-            String className = props.getProperty(name);
             AntTypeDefinition def = new AntTypeDefinition();
             def.setName(name);
-            def.setClassName(className);
+            def.setClassName(props.getProperty(name));
             def.setClassLoader(classLoader);
             def.setAdaptToClass(Task.class);
             def.setAdapterClass(TaskAdapter.class);
@@ -816,13 +814,10 @@ public class ComponentHelper  {
     private void initTypes() {
         ClassLoader classLoader = getClassLoader(null);
         Properties props = getDefaultDefinitions(true);
-        Enumeration<?> e = props.propertyNames();
-        while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            String className = props.getProperty(name);
+        for (String name : props.stringPropertyNames()) {
             AntTypeDefinition def = new AntTypeDefinition();
             def.setName(name);
-            def.setClassName(className);
+            def.setClassName(props.getProperty(name));
             def.setClassLoader(classLoader);
             antTypeTable.put(name, def);
         }

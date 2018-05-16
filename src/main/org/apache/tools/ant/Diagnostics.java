@@ -27,7 +27,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.TimeZone;
 
@@ -357,12 +356,8 @@ public final class Diagnostics {
             out.println("Access to System.getProperties() blocked " + "by a security manager");
             return;
         }
-        for (Enumeration<?> keys = sysprops.propertyNames();
-            keys.hasMoreElements();) {
-            String key = (String) keys.nextElement();
-            String value = getProperty(key);
-            out.println(key + " : " + value);
-        }
+        sysprops.stringPropertyNames().stream()
+                .map(key -> key + " : " + getProperty(key)).forEach(out::println);
     }
 
     /**
@@ -483,8 +478,7 @@ public final class Diagnostics {
             Properties props = new Properties();
             try {
                 props.load(is);
-                for (Enumeration<?> keys = props.keys(); keys.hasMoreElements();) {
-                    String key = (String) keys.nextElement();
+                for (String key : props.stringPropertyNames()) {
                     String classname = props.getProperty(key);
                     try {
                         Class.forName(classname);

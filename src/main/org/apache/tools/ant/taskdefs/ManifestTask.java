@@ -25,12 +25,11 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Enumeration;
+import java.util.Collections;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Manifest.Attribute;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -113,12 +112,8 @@ public class ManifestTask extends Task {
      */
     public void addConfiguredSection(Manifest.Section section)
          throws ManifestException {
-        Enumeration<String> attributeKeys = section.getAttributeKeys();
-        while (attributeKeys.hasMoreElements()) {
-            Attribute attribute = section.getAttribute(
-                attributeKeys.nextElement());
-            checkAttribute(attribute);
-        }
+        Collections.list(section.getAttributeKeys()).stream()
+                .map(section::getAttribute).forEach(this::checkAttribute);
         nestedManifest.addConfiguredSection(section);
     }
 
@@ -245,12 +240,9 @@ public class ManifestTask extends Task {
             }
         }
 
-        //look for and print warnings
-        for (Enumeration<String> e = nestedManifest.getWarnings();
-                e.hasMoreElements();) {
-            log("Manifest warning: " + e.nextElement(),
-                    Project.MSG_WARN);
-        }
+        // look for and print warnings
+        Collections.list(nestedManifest.getWarnings())
+                .forEach(e -> log("Manifest warning: " + e, Project.MSG_WARN));
         try {
             if ("update".equals(mode.getValue()) && manifestFile.exists()) {
                 if (current != null) {

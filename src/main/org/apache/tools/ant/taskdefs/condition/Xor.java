@@ -17,7 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import java.util.Enumeration;
+import java.util.Collections;
 
 import org.apache.tools.ant.BuildException;
 
@@ -36,12 +36,10 @@ public class Xor extends ConditionBase implements Condition {
      */
     @Override
     public boolean eval() throws BuildException {
-        Enumeration<Condition> e = getConditions();
-        //initial state is false.
+        // initial state is false.
         boolean state = false;
-        while (e.hasMoreElements()) {
-            Condition c = e.nextElement();
-            //every condition is xored against the previous one
+        for (Condition c : Collections.list(getConditions())) {
+            // every condition is xored against the previous one
             state ^= c.eval();
         }
         return state;

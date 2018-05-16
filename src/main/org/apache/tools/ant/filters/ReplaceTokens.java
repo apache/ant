@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
@@ -330,11 +329,7 @@ public final class ReplaceTokens
 
     private void makeTokensFromProperties(Resource r) {
         Properties props = getProperties(r);
-        for (Enumeration<?> e = props.keys(); e.hasMoreElements();) {
-            String key = (String) e.nextElement();
-            String value = props.getProperty(key);
-            hash.put(key, value);
-        }
+        props.stringPropertyNames().forEach(key -> hash.put(key, props.getProperty(key)));
     }
 
     /**

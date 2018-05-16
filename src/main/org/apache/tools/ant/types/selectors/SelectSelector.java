@@ -221,11 +221,7 @@ public class SelectSelector extends BaseSelectorContainer {
         }
 
         Enumeration<FileSelector> e = selectorElements();
-        if (!e.hasMoreElements()) {
-            return true;
-        }
-        FileSelector f = e.nextElement();
-        return f.isSelected(basedir, filename, file);
+        return !e.hasMoreElements() || e.nextElement().isSelected(basedir, filename, file);
     }
 }
 

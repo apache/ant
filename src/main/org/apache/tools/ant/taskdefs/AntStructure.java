@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
@@ -309,10 +309,7 @@ public class AntStructure extends Task {
                 v.add(TASKS);
             }
 
-            Enumeration<String> e = ih.getNestedElements();
-            while (e.hasMoreElements()) {
-                v.add(e.nextElement());
-            }
+            v.addAll(Collections.list(ih.getNestedElements()));
 
             final Collector<CharSequence, ?, String> joinAlts =
                 Collectors.joining(" | ", "(", ")");
@@ -331,9 +328,7 @@ public class AntStructure extends Task {
             sb = new StringBuilder();
             sb.append(String.format("<!ATTLIST %s%n          id ID #IMPLIED", name));
 
-            e = ih.getAttributes();
-            while (e.hasMoreElements()) {
-                final String attrName = e.nextElement();
+            for (final String attrName : Collections.list(ih.getAttributes())) {
                 if ("id".equals(attrName)) {
                     continue;
                 }

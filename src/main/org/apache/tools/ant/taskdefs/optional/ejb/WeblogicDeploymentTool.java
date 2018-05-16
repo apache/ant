@@ -766,9 +766,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                     newJarStream.setLevel(0);
 
                     // Copy files from old WebLogic jar
-                    for (Enumeration<JarEntry> e = wlEntries.elements(); e.hasMoreElements();) {
-                        JarEntry je = e.nextElement();
-
+                    for (JarEntry je : wlEntries.values()) {
                         if (je.getCompressedSize() == -1
                             || je.getCompressedSize() == je.getSize()) {
                             newJarStream.setLevel(0);

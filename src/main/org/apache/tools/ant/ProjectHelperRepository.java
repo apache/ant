@@ -24,7 +24,7 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -85,10 +85,7 @@ public class ProjectHelperRepository {
         try {
             ClassLoader classLoader = LoaderUtils.getContextClassLoader();
             if (classLoader != null) {
-                Enumeration<URL> resources =
-                    classLoader.getResources(ProjectHelper.SERVICE_ID);
-                while (resources.hasMoreElements()) {
-                    URL resource = resources.nextElement();
+                for (URL resource : Collections.list(classLoader.getResources(ProjectHelper.SERVICE_ID))) {
                     URLConnection conn = resource.openConnection();
                     conn.setUseCaches(false);
                     projectHelper =

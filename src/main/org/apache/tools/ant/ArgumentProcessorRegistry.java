@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.tools.ant.util.FileUtils;
@@ -74,9 +74,7 @@ public class ArgumentProcessorRegistry {
         try {
             ClassLoader classLoader = LoaderUtils.getContextClassLoader();
             if (classLoader != null) {
-                Enumeration<URL> resources = classLoader.getResources(SERVICE_ID);
-                while (resources.hasMoreElements()) {
-                    URL resource = resources.nextElement();
+                for (URL resource : Collections.list(classLoader.getResources(SERVICE_ID))) {
                     URLConnection conn = resource.openConnection();
                     conn.setUseCaches(false);
                     ArgumentProcessor processor = getProcessorByService(conn.getInputStream());

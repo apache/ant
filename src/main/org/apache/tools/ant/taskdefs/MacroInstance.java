@@ -19,7 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -277,9 +277,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         rc.addText(macroSubs(ue.getWrapper().getText().toString(),
                              localAttributes));
 
-        Enumeration<RuntimeConfigurable> e = ue.getWrapper().getChildren();
-        while (e.hasMoreElements()) {
-            RuntimeConfigurable r = e.nextElement();
+        for (RuntimeConfigurable r : Collections.list(ue.getWrapper().getChildren())) {
             UnknownElement unknownElement = (UnknownElement) r.getProxy();
             String tag = unknownElement.getTaskType();
             if (tag != null) {

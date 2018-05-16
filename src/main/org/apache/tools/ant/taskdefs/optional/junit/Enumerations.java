@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
  * instead of 1.1.
  *
  */
+@Deprecated
 public final class Enumerations {
 
     private Enumerations() {
@@ -38,7 +39,9 @@ public final class Enumerations {
      * @param <T> object type
      * @param array the array of object to enumerate.
      * @return the enumeration over the array of objects.
+     * @deprecated use Collections.enumeration(Arrays.asList(array))
      */
+    @Deprecated
     @SafeVarargs
     public static <T> Enumeration<T> fromArray(T... array) {
         return Collections.enumeration(Arrays.asList(array));
@@ -51,7 +54,10 @@ public final class Enumerations {
      * @param <T> object type
      * @param enums the array of enumerations.
      * @return the enumeration over the array of enumerations.
+     * @deprecated Stream.concat(Collections.list ( one).stream(), Collections.list(two).stream())
+     *             .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::enumeration))
      */
+    @Deprecated
     @SafeVarargs
     public static <T> Enumeration<T> fromCompound(Enumeration<? extends T>... enums) {
         return new CompoundEnumeration<>(enums);
@@ -89,6 +95,7 @@ public final class Enumerations {
  * }
  * </pre>
  */
+@Deprecated
 class CompoundEnumeration<T> implements Enumeration<T> {
 
     /** enumeration array */

@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
@@ -838,12 +838,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             }
         }
 
-        Enumeration<String> e = dependencyAnalyzer.getClassDependencies();
-
-        while (e.hasMoreElements()) {
-            String classname = e.nextElement();
-            String location
-                = classname.replace('.', File.separatorChar) + ".class";
+        for (String classname : Collections.list(dependencyAnalyzer.getClassDependencies())) {
+            String location = classname.replace('.', File.separatorChar) + ".class";
             File classFile = new File(config.srcDir, location);
             if (classFile.exists()) {
                 checkEntries.put(location, classFile);

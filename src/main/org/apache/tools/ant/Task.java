@@ -19,7 +19,7 @@
 package org.apache.tools.ant;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.Collections;
 
 import org.apache.tools.ant.dispatch.DispatchUtils;
 
@@ -425,11 +425,8 @@ public abstract class Task extends ProjectComponent {
      */
     private void replaceChildren(RuntimeConfigurable wrapper,
                                  UnknownElement parentElement) {
-        Enumeration<RuntimeConfigurable> e = wrapper.getChildren();
-        while (e.hasMoreElements()) {
-            RuntimeConfigurable childWrapper = e.nextElement();
-            UnknownElement childElement =
-                new UnknownElement(childWrapper.getElementTag());
+        for (RuntimeConfigurable childWrapper : Collections.list(wrapper.getChildren())) {
+            UnknownElement childElement = new UnknownElement(childWrapper.getElementTag());
             parentElement.addChild(childElement);
             childElement.setProject(getProject());
             childElement.setRuntimeConfigurableWrapper(childWrapper);

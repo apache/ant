@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -48,7 +47,6 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
 import org.apache.tools.ant.types.resources.FileResource;
-import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.VectorSet;
@@ -1249,7 +1247,7 @@ public class Project implements ResourceFactory {
      */
     public void executeTargets(final Vector<String> names) throws BuildException {
         setUserProperty(MagicNames.PROJECT_INVOKED_TARGETS,
-                        CollectionUtils.flattenToString(names));
+                names.stream().collect(Collectors.joining(",")));
         getExecutor().executeTargets(this, names.toArray(new String[names.size()]));
     }
 
@@ -1374,9 +1372,7 @@ public class Project implements ResourceFactory {
         BuildException buildException = null; // first build exception
         for (final Target curtarget : sortedTargets) {
             boolean canExecute = true;
-            for (final Enumeration<String> depIter = curtarget.getDependencies();
-                 depIter.hasMoreElements();) {
-                final String dependencyName = depIter.nextElement();
+            for (final String dependencyName : Collections.list(curtarget.getDependencies())) {
                 if (!succeededTargets.contains(dependencyName)) {
                     canExecute = false;
                     log(curtarget,
@@ -1833,8 +1829,7 @@ public class Project implements ResourceFactory {
                 + " is " + ret, MSG_VERBOSE);
 
         final Vector<Target> complete = (returnAll) ? ret : new Vector<>(ret);
-        for (final Enumeration<String> en = targetTable.keys(); en.hasMoreElements();) {
-            final String curTarget = en.nextElement();
+        for (final String curTarget : targetTable.keySet()) {
             final String st = state.get(curTarget);
             if (st == null) {
                 tsort(curTarget, targetTable, state, visiting, complete);
@@ -1912,8 +1907,7 @@ public class Project implements ResourceFactory {
             }
             throw new BuildException(new String(sb));
         }
-        for (final Enumeration<String> en = target.getDependencies(); en.hasMoreElements();) {
-            final String cur = en.nextElement();
+        for (final String cur : Collections.list(target.getDependencies())) {
             final String m = state.get(cur);
             if (m == null) {
                 // Not been visited

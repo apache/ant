@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.jar.Attributes;
@@ -42,10 +43,11 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
@@ -740,14 +742,9 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     private InputStream loadResource(final String name) {
         // we need to search the components of the path to see if we can
         // find the class we want.
-        InputStream stream = null;
-
-        final Enumeration<File> e = pathComponents.elements();
-        while (e.hasMoreElements() && stream == null) {
-            final File pathComponent = e.nextElement();
-            stream = getResourceStream(pathComponent, name);
-        }
-        return stream;
+        return Collections.list(pathComponents.elements()).stream()
+                .map(path -> getResourceStream(path, name))
+                .filter(Objects::nonNull).findFirst().orElse(null);
     }
 
     /**
@@ -829,23 +826,10 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
         // TODO - shouldn't this always return false in isolated mode?
 
-        boolean useParentFirst = parentFirst;
-
-        for (final Enumeration<String> e = systemPackages.elements(); e.hasMoreElements();) {
-            final String packageName = e.nextElement();
-            if (resourceName.startsWith(packageName)) {
-                useParentFirst = true;
-                break;
-            }
-        }
-        for (final Enumeration<String> e = loaderPackages.elements(); e.hasMoreElements();) {
-            final String packageName = e.nextElement();
-            if (resourceName.startsWith(packageName)) {
-                useParentFirst = false;
-                break;
-            }
-        }
-        return useParentFirst;
+        return Collections.list(loaderPackages.elements()).stream()
+                .noneMatch(resourceName::startsWith)
+                && (Collections.list(systemPackages.elements()).stream()
+                .anyMatch(resourceName::startsWith) || parentFirst);
     }
 
     /**
@@ -885,12 +869,11 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         } else {
             // try and load from this loader if the parent either didn't find
             // it or wasn't consulted.
-            final Enumeration<File> e = pathComponents.elements();
-            while (e.hasMoreElements() && url == null) {
-                final File pathComponent = e.nextElement();
+            for (final File pathComponent : Collections.list(pathComponents.elements())) {
                 url = getResourceURL(pathComponent, name);
                 if (url != null) {
                     log("Resource " + name + " loaded from ant loader", Project.MSG_DEBUG);
+                    break;
                 }
             }
         }
@@ -974,14 +957,19 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         }
         if (isParentFirst(name)) {
             // Normal case.
-            return CollectionUtils.append(base, mine);
+            return append(base, mine);
         }
         if (ignoreBase) {
-            return getRootLoader() == null ? mine : CollectionUtils.append(mine, getRootLoader()
-                    .getResources(name));
+            return getRootLoader() == null ? mine
+                    : append(mine, getRootLoader().getResources(name));
         }
         // parent last:
-        return CollectionUtils.append(mine, base);
+        return append(mine, base);
+    }
+
+    private static Enumeration<URL> append(Enumeration<URL> one, Enumeration<URL> two) {
+        return Stream.concat(Collections.list(one).stream(), Collections.list(two).stream())
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::enumeration));
     }
 
     /**
@@ -1355,9 +1343,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         // we need to search the components of the path to see if
         // we can find the class we want.
         final String classFilename = getClassFilename(name);
-        final Enumeration<File> e = pathComponents.elements();
-        while (e.hasMoreElements()) {
-            final File pathComponent = e.nextElement();
+        for (final File pathComponent : Collections.list(pathComponents.elements())) {
             InputStream stream = null;
             try {
                 stream = getResourceStream(pathComponent, classFilename);
@@ -1519,12 +1505,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * here
      */
     public void addJavaLibraries() {
-        final Vector<String> packages = JavaEnvUtils.getJrePackages();
-        final Enumeration<String> e = packages.elements();
-        while (e.hasMoreElements()) {
-            final String packageName = e.nextElement();
-            addSystemPackageRoot(packageName);
-        }
+        JavaEnvUtils.getJrePackages().forEach(this::addSystemPackageRoot);
     }
 
     /**

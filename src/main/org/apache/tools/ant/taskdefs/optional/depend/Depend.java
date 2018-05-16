@@ -25,7 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -322,14 +322,9 @@ public class Depend extends MatchingTask {
                 analyzer.addRootClass(info.className);
                 analyzer.addClassPath(destPath);
                 analyzer.setClosure(false);
-                dependencyList = new ArrayList<>();
-                Enumeration<String> depEnum = analyzer.getClassDependencies();
-                while (depEnum.hasMoreElements()) {
-                    String o = depEnum.nextElement();
-                    dependencyList.add(o);
-                    log("Class " + info.className + " depends on " + o,
-                        Project.MSG_DEBUG);
-                }
+                dependencyList = new ArrayList<>(Collections.list(analyzer.getClassDependencies()));
+                dependencyList.forEach(o -> log("Class " + info.className + " depends on " + o,
+                        Project.MSG_DEBUG));
                 cacheDirty = true;
                 dependencyMap.put(info.className, dependencyList);
             }

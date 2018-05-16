@@ -18,7 +18,7 @@
 package org.apache.tools.ant.types.optional.depend;
 
 import java.io.File;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.Set;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -126,12 +126,8 @@ public class DependScanner extends DirectoryScanner {
         Set<String> parentSet = Stream.of(parentScanner.getIncludedFiles())
             .collect(Collectors.toSet());
 
-        Enumeration<String> e = analyzer.getClassDependencies();
-
-        while (e.hasMoreElements()) {
-            String classname = e.nextElement();
-            String filename =
-                classname.replace('.', File.separatorChar) + ".class";
+        for (String classname : Collections.list(analyzer.getClassDependencies())) {
+            String filename = classname.replace('.', File.separatorChar) + ".class";
             File depFile = new File(basedir, filename);
             if (depFile.exists() && parentSet.contains(filename)) {
                 // This is included

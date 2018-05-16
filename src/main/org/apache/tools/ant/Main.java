@@ -33,10 +33,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
@@ -45,7 +45,6 @@ import org.apache.tools.ant.listener.SilentLogger;
 import org.apache.tools.ant.property.GetProperty;
 import org.apache.tools.ant.property.ResolvePropertyMap;
 import org.apache.tools.ant.util.ClasspathUtils;
-import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ProxySetup;
 
@@ -213,12 +212,8 @@ public class Main implements AntMain {
         }
 
         if (additionalUserProperties != null) {
-            for (final Enumeration<?> e = additionalUserProperties.keys();
-                    e.hasMoreElements();) {
-                final String key = (String) e.nextElement();
-                final String property = additionalUserProperties.getProperty(key);
-                definedProps.put(key, property);
-            }
+            additionalUserProperties.stringPropertyNames()
+                    .forEach(key -> definedProps.put(key, additionalUserProperties.getProperty(key)));
         }
 
         // expect the worst
@@ -407,9 +402,7 @@ public class Main implements AntMain {
                     final int newI = processor.readArguments(args, i);
                     if (newI != -1) {
                         List<String> extraArgs = extraArguments.computeIfAbsent(processor.getClass(), k -> new ArrayList<>());
-                        for (; i < newI && i < args.length; i++) {
-                            extraArgs.add(args[i]);
-                        }
+                        extraArgs.addAll(Arrays.asList(args).subList(newI, args.length));
                         processed = true;
                         break;
                     }
@@ -656,13 +649,9 @@ public class Main implements AntMain {
             }
 
             // ensure that -D properties take precedence
-            final Enumeration<?> propertyNames = props.propertyNames();
-            while (propertyNames.hasMoreElements()) {
-                final String name = (String) propertyNames.nextElement();
-                if (definedProps.getProperty(name) == null) {
-                    definedProps.put(name, props.getProperty(name));
-                }
-            }
+            props.stringPropertyNames().stream()
+                    .filter(name -> definedProps.getProperty(name) == null)
+                    .forEach(name -> definedProps.put(name, props.getProperty(name)));
         }
     }
 
@@ -896,11 +885,7 @@ public class Main implements AntMain {
         resolver.resolveAllProperties(props, null, false);
 
         // set user-define properties
-        for (final Entry<String, Object> ent : props.entrySet()) {
-            final String arg = ent.getKey();
-            final Object value = ent.getValue();
-            project.setUserProperty(arg, String.valueOf(value));
-        }
+        props.forEach((arg, value) -> project.setUserProperty(arg, String.valueOf(value)));
 
         project.setUserProperty(MagicNames.ANT_FILE,
                                 buildFile.getAbsolutePath());
@@ -915,7 +900,7 @@ public class Main implements AntMain {
         // Setting it here allows top-level tasks to access the
         // property.
         project.setUserProperty(MagicNames.PROJECT_INVOKED_TARGETS,
-                                CollectionUtils.flattenToString(targets));
+                targets.stream().collect(Collectors.joining(",")));
     }
 
     /**
@@ -1136,25 +1121,18 @@ public class Main implements AntMain {
      */
     private static Map<String, Target> removeDuplicateTargets(final Map<String, Target> targets) {
         final Map<Location, Target> locationMap = new HashMap<>();
-        for (final Entry<String, Target> entry : targets.entrySet()) {
-            final String name = entry.getKey();
-            final Target target = entry.getValue();
+        targets.forEach((name, target) -> {
             final Target otherTarget = locationMap.get(target.getLocation());
             // Place this entry in the location map if
             //  a) location is not in the map
             //  b) location is in map, but its name is longer
             //     (an imported target will have a name. prefix)
-            if (otherTarget == null
-                || otherTarget.getName().length() > name.length()) {
-                locationMap.put(
-                    target.getLocation(), target); // Smallest name wins
+            if (otherTarget == null || otherTarget.getName().length() > name.length()) {
+                locationMap.put(target.getLocation(), target); // Smallest name wins
             }
-        }
-        final Map<String, Target> ret = new HashMap<>();
-        for (final Target target : locationMap.values()) {
-            ret.put(target.getName(), target);
-        }
-        return ret;
+        });
+        return locationMap.values().stream()
+                .collect(Collectors.toMap(Target::getName, target -> target, (a, b) -> b));
     }
 
     /**
@@ -1287,18 +1265,9 @@ public class Main implements AntMain {
                 msg.append(descriptions.elementAt(i));
             }
             msg.append(eol);
-            if (!dependencies.isEmpty()) {
-                final Enumeration<String> deps = dependencies.elementAt(i);
-                if (deps.hasMoreElements()) {
-                    msg.append("   depends on: ");
-                    while (deps.hasMoreElements()) {
-                        msg.append(deps.nextElement());
-                        if (deps.hasMoreElements()) {
-                            msg.append(", ");
-                        }
-                    }
-                    msg.append(eol);
-                }
+            if (!dependencies.isEmpty() && dependencies.elementAt(i).hasMoreElements()) {
+                msg.append(Collections.list(dependencies.elementAt(i)).stream()
+                        .collect(Collectors.joining(", ", "   depends on: ", eol)));
             }
         }
         project.log(msg.toString(), Project.MSG_WARN);

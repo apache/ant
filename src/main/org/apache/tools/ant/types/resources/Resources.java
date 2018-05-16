@@ -34,7 +34,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.util.CollectionUtils;
 
 /**
  * Generic ResourceCollection: Either stores nested ResourceCollections,
@@ -90,7 +89,8 @@ public class Resources extends DataType implements ResourceCollection {
         private synchronized Collection<Resource> getCache() {
             Collection<Resource> coll = cached;
             if (coll == null) {
-                coll = CollectionUtils.asCollection(new MyIterator());
+                coll = new ArrayList<>();
+                new MyIterator().forEachRemaining(coll::add);
                 if (cache) {
                     cached = coll;
                 }
