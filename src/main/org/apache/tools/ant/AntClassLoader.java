@@ -742,8 +742,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     private InputStream loadResource(final String name) {
         // we need to search the components of the path to see if we can
         // find the class we want.
-        return Collections.list(pathComponents.elements()).stream()
-                .map(path -> getResourceStream(path, name))
+        return pathComponents.stream().map(path -> getResourceStream(path, name))
                 .filter(Objects::nonNull).findFirst().orElse(null);
     }
 
@@ -826,10 +825,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
         // TODO - shouldn't this always return false in isolated mode?
 
-        return Collections.list(loaderPackages.elements()).stream()
-                .noneMatch(resourceName::startsWith)
-                && (Collections.list(systemPackages.elements()).stream()
-                .anyMatch(resourceName::startsWith) || parentFirst);
+        return loaderPackages.stream().noneMatch(resourceName::startsWith)
+                && (systemPackages.stream().anyMatch(resourceName::startsWith) || parentFirst);
     }
 
     /**
@@ -869,7 +866,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         } else {
             // try and load from this loader if the parent either didn't find
             // it or wasn't consulted.
-            for (final File pathComponent : Collections.list(pathComponents.elements())) {
+            for (final File pathComponent : pathComponents) {
                 url = getResourceURL(pathComponent, name);
                 if (url != null) {
                     log("Resource " + name + " loaded from ant loader", Project.MSG_DEBUG);
@@ -1343,7 +1340,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         // we need to search the components of the path to see if
         // we can find the class we want.
         final String classFilename = getClassFilename(name);
-        for (final File pathComponent : Collections.list(pathComponents.elements())) {
+        for (final File pathComponent : pathComponents) {
             InputStream stream = null;
             try {
                 stream = getResourceStream(pathComponent, classFilename);

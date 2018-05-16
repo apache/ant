@@ -737,7 +737,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                     newJarStream.setLevel(0);
 
                     // Copy files from old WebSphere jar
-                    for (JarEntry je : Collections.list(wasEntries.elements())) {
+                    for (JarEntry je : wasEntries.values()) {
                         if (je.getCompressedSize() == -1
                             || je.getCompressedSize() == je.getSize()) {
                             newJarStream.setLevel(0);
