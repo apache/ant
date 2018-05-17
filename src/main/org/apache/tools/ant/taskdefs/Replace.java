@@ -45,6 +45,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * Replaces all occurrences of one or more string tokens with given
@@ -511,14 +512,12 @@ public class Replace extends MatchingTask {
 
         try {
             if (replaceFilterResource != null) {
-                Properties props = getProperties(replaceFilterResource);
-                Iterator<Object> e = getOrderedIterator(props);
-                while (e.hasNext()) {
-                    String tok = e.next().toString();
+                final Properties properties = getProperties(replaceFilterResource);
+                StreamUtils.iteratorAsStream(getOrderedIterator(properties)).forEach(tok -> {
                     Replacefilter replaceFilter = createReplacefilter();
                     replaceFilter.setToken(tok);
-                    replaceFilter.setValue(props.getProperty(tok));
-                }
+                    replaceFilter.setValue(properties.getProperty(tok));
+                });
             }
 
             validateAttributes();
@@ -936,10 +935,9 @@ public class Replace extends MatchingTask {
      *
      * @param props Properties
      */
-    private Iterator<Object> getOrderedIterator(Properties props) {
-        List<Object> keys = new ArrayList<>(props.keySet());
-        keys.sort(Comparator.comparingInt(o -> Objects.toString(o, "").length())
-                .reversed());
+    private Iterator<String> getOrderedIterator(Properties props) {
+        List<String> keys = new ArrayList<>(props.stringPropertyNames());
+        keys.sort(Comparator.<String>comparingInt(s -> s.length()).reversed());
         return keys.iterator();
     }
 }

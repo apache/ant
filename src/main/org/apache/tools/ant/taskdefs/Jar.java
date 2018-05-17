@@ -55,6 +55,7 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.spi.Service;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StreamUtils;
 import org.apache.tools.zip.JarMarker;
 import org.apache.tools.zip.ZipExtraField;
 import org.apache.tools.zip.ZipOutputStream;
@@ -321,18 +322,17 @@ public class Jar extends Zip {
      */
     private Manifest getManifestFromJar(File jarFile) throws IOException {
         try (ZipFile zf = new ZipFile(jarFile)) {
-
             // must not use getEntry as "well behaving" applications
             // must accept the manifest in any capitalization
-            for (ZipEntry ze : Collections.list(zf.entries())) {
-                 if (MANIFEST_NAME.equalsIgnoreCase(ze.getName())) {
-                    try (InputStreamReader isr =
-                        new InputStreamReader(zf.getInputStream(ze), "UTF-8")) {
-                        return getManifest(isr);
-                    }
-                }
+            ZipEntry ze = StreamUtils.enumerationAsStream(zf.entries())
+                    .filter(entry -> MANIFEST_NAME.equalsIgnoreCase(entry.getName()))
+                    .findFirst().orElse(null);
+            if (ze == null) {
+                return null;
             }
-            return null;
+            try (InputStreamReader isr = new InputStreamReader(zf.getInputStream(ze), "UTF-8")) {
+                return getManifest(isr);
+            }
         }
     }
 
@@ -351,7 +351,7 @@ public class Jar extends Zip {
 
     private boolean jarHasIndex(File jarFile) throws IOException {
         try (ZipFile zf = new ZipFile(jarFile)) {
-            return Collections.list(zf.entries()).stream()
+            return StreamUtils.enumerationAsStream(zf.entries())
                     .anyMatch(ze -> INDEX_NAME.equalsIgnoreCase(ze.getName()));
         }
     }
@@ -524,9 +524,8 @@ public class Jar extends Zip {
 
     private void writeManifest(ZipOutputStream zOut, Manifest manifest)
         throws IOException {
-        for (String warning : Collections.list(manifest.getWarnings())) {
-            log("Manifest warning: " + warning, Project.MSG_WARN);
-        }
+        StreamUtils.enumerationAsStream(manifest.getWarnings())
+                .forEach(warning -> log("Manifest warning: " + warning, Project.MSG_WARN));
 
         zipDir((Resource) null, zOut, "META-INF/", ZipFileSet.DEFAULT_DIR_MODE,
                JAR_MARKER);
@@ -1064,7 +1063,7 @@ public class Jar extends Zip {
         throws IOException {
         try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(file, "utf-8")) {
             Set<String> dirSet = new HashSet<>();
-            for (org.apache.tools.zip.ZipEntry ze : Collections.list(zf.getEntries())) {
+            StreamUtils.enumerationAsStream(zf.getEntries()).forEach(ze -> {
                 String name = ze.getName();
                 if (ze.isDirectory()) {
                     dirSet.add(name);
@@ -1077,7 +1076,7 @@ public class Jar extends Zip {
                     // well.
                     dirSet.add(name.substring(0, name.lastIndexOf('/') + 1));
                 }
-            }
+            });
             dirs.addAll(dirSet);
         }
     }

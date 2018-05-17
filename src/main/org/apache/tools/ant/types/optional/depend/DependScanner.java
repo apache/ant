@@ -18,7 +18,6 @@
 package org.apache.tools.ant.types.optional.depend;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.Set;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -27,8 +26,8 @@ import java.util.stream.Stream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.StreamUtils;
 import org.apache.tools.ant.util.depend.DependencyAnalyzer;
-
 
 /**
  * DirectoryScanner for finding class dependencies.
@@ -126,14 +125,11 @@ public class DependScanner extends DirectoryScanner {
         Set<String> parentSet = Stream.of(parentScanner.getIncludedFiles())
             .collect(Collectors.toSet());
 
-        for (String classname : Collections.list(analyzer.getClassDependencies())) {
-            String filename = classname.replace('.', File.separatorChar) + ".class";
-            File depFile = new File(basedir, filename);
-            if (depFile.exists() && parentSet.contains(filename)) {
-                // This is included
-                included.addElement(filename);
-            }
-        }
+        // This is included
+        StreamUtils.enumerationAsStream(analyzer.getClassDependencies())
+                .map(cName -> cName.replace('.', File.separatorChar) + ".class")
+                .filter(fName -> new File(basedir, fName).exists() && parentSet.contains(fName))
+                .forEach(fName -> included.addElement(fName));
     }
 
     /**

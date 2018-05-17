@@ -19,12 +19,12 @@ package org.apache.tools.ant.taskdefs.condition;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ManifestTask;
 import org.apache.tools.ant.types.DataType;
+import org.apache.tools.ant.util.StreamUtils;
 import org.apache.tools.zip.ZipFile;
 
 /**
@@ -72,7 +72,7 @@ public class IsSigned extends DataType implements Condition {
         throws IOException {
         try (ZipFile jarFile = new ZipFile(zipFile)) {
             if (null == name) {
-                return Collections.list(jarFile.getEntries()).stream()
+                return StreamUtils.enumerationAsStream(jarFile.getEntries())
                         .anyMatch(e -> e.getName().startsWith(SIG_START) && e.getName().endsWith(SIG_END));
             }
             name = replaceInvalidChars(name);

@@ -28,7 +28,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -177,9 +176,7 @@ public class Execute {
     @Deprecated
     public static synchronized Vector<String> getProcEnvironment() {
         Vector<String> v = new Vector<>();
-        for (Entry<String, String> entry : getEnvironmentVariables().entrySet()) {
-            v.add(entry.getKey() + "=" + entry.getValue());
-        }
+        getEnvironmentVariables().forEach((key, value) -> v.add(key + "=" + value));
         return v;
     }
 

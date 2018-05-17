@@ -47,7 +47,7 @@ import org.apache.tools.ant.property.ResolvePropertyMap;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.ProxySetup;
-
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * Command line entry point into Ant. This class is entered via the
@@ -1266,7 +1266,7 @@ public class Main implements AntMain {
             }
             msg.append(eol);
             if (!dependencies.isEmpty() && dependencies.elementAt(i).hasMoreElements()) {
-                msg.append(Collections.list(dependencies.elementAt(i)).stream()
+                msg.append(StreamUtils.enumerationAsStream(dependencies.elementAt(i))
                         .collect(Collectors.joining(", ", "   depends on: ", eol)));
             }
         }

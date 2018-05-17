@@ -38,6 +38,7 @@ import org.apache.tools.ant.types.resources.comparators.Reverse;
 import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.resources.selectors.Not;
 import org.apache.tools.ant.types.resources.selectors.ResourceSelector;
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * Examines and removes out of date target files.  If any of the target files
@@ -263,18 +264,8 @@ public class DependSet extends MatchingTask {
     }
 
     private Resource getXest(ResourceCollection rc, ResourceComparator c) {
-        Iterator<Resource> i = rc.iterator();
-        if (!i.hasNext()) {
-            return null;
-        }
-        Resource xest = i.next();
-        while (i.hasNext()) {
-            Resource next = i.next();
-            if (c.compare(xest, next) < 0) {
-                xest = next;
-            }
-        }
-        return xest;
+        return StreamUtils.iteratorAsStream(rc.iterator())
+                .min(c::compare).orElse(null);
     }
 
     private Resource getOldest(ResourceCollection rc) {

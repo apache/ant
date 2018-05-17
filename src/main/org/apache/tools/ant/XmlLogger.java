@@ -24,7 +24,6 @@ import java.io.PrintStream;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Stack;
 
@@ -32,6 +31,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.StreamUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -345,7 +345,8 @@ public class XmlLogger implements BuildLogger {
         if (element != null) {
             return element;
         }
-        return Collections.list(tasks.keys()).stream().filter(UnknownElement.class::isInstance)
+        return StreamUtils.enumerationAsStream(tasks.keys())
+                .filter(UnknownElement.class::isInstance)
                 .filter(key -> ((UnknownElement) key).getTask() == task).findFirst()
                 .map(key -> tasks.get(key)).orElse(null);
     }

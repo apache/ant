@@ -322,7 +322,7 @@ public class Depend extends MatchingTask {
                 analyzer.addRootClass(info.className);
                 analyzer.addClassPath(destPath);
                 analyzer.setClosure(false);
-                dependencyList = new ArrayList<>(Collections.list(analyzer.getClassDependencies()));
+                dependencyList = Collections.list(analyzer.getClassDependencies());
                 dependencyList.forEach(o -> log("Class " + info.className + " depends on " + o,
                         Project.MSG_DEBUG));
                 cacheDirty = true;

@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -36,6 +35,7 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * WebSphere deployment tool that augments the ejbjar task.
@@ -667,13 +667,16 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 wasJar = new JarFile(websphereJarFile);
 
                 //get the list of generic jar entries
-                Hashtable<String, JarEntry> genericEntries = Collections.list(genericJar.entries()).stream()
+                Hashtable<String, JarEntry> genericEntries
+                        = StreamUtils.enumerationAsStream(genericJar.entries())
                         .collect(Collectors.toMap(je -> je.getName().replace('\\', '/'),
                                 je -> je, (a, b) -> b, Hashtable::new));
 
                 // get the list of WebSphere jar entries
-                Hashtable<String, JarEntry> wasEntries = Collections.list(wasJar.entries()).stream()
-                        .collect(Collectors.toMap(ZipEntry::getName, je -> je, (a, b) -> b, Hashtable::new));
+                Hashtable<String, JarEntry> wasEntries
+                        = StreamUtils.enumerationAsStream(wasJar.entries())
+                        .collect(Collectors.toMap(ZipEntry::getName,
+                                je -> je, (a, b) -> b, Hashtable::new));
 
                 // Cycle through generic and make sure its in WebSphere
                 genericLoader = getClassLoaderFromJar(genericJarFile);

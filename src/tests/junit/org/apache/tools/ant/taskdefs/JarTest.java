@@ -24,7 +24,6 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -32,6 +31,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StreamUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -239,7 +239,7 @@ public class JarTest {
     public void testNoDuplicateIndex() throws IOException {
         buildRule.executeTarget("testIndexTests");
         try (ZipFile archive = new ZipFile(new File(getOutputDir(), tempJar))) {
-            assertEquals(1, (int) Collections.list(archive.entries()).stream()
+            assertEquals(1, StreamUtils.enumerationAsStream(archive.entries())
                     .filter(ze -> ze.getName().equals("META-INF/INDEX.LIST")).count());
         }
     }

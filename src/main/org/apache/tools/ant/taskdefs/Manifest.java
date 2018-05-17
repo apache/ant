@@ -26,7 +26,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -39,6 +38,7 @@ import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * Holds the data of a jar manifest.
@@ -676,7 +676,7 @@ public class Manifest {
         public Object clone() {
             Section cloned = new Section();
             cloned.setName(name);
-            Collections.list(getAttributeKeys()).stream()
+            StreamUtils.enumerationAsStream(getAttributeKeys())
                     .map(key -> new Attribute(getAttribute(key).getName(),
                     getAttribute(key).getValue())).forEach(cloned::storeAttribute);
             return cloned;
@@ -932,8 +932,7 @@ public class Manifest {
 
              for (String sectionName : Collections.list(other.getSectionNames())) {
                  Section ourSection = sections.get(sectionName);
-                 Section otherSection
-                    = other.sections.get(sectionName);
+                 Section otherSection = other.sections.get(sectionName);
                  if (ourSection == null) {
                      if (otherSection != null) {
                          addConfiguredSection((Section) otherSection.clone());
@@ -1020,7 +1019,7 @@ public class Manifest {
      */
     public Enumeration<String> getWarnings() {
         // create a vector and add in the warnings for the main section
-        List<String> warnings = new ArrayList<>(Collections.list(mainSection.getWarnings()));
+        List<String> warnings = Collections.list(mainSection.getWarnings());
 
         // add in the warnings for all the sections
         sections.values().stream().map(section -> Collections.list(section.getWarnings()))

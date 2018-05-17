@@ -54,8 +54,8 @@ public final class Enumerations {
      * @param <T> object type
      * @param enums the array of enumerations.
      * @return the enumeration over the array of enumerations.
-     * @deprecated Stream.concat(Collections.list ( one).stream(), Collections.list(two).stream())
-     *             .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::enumeration))
+     * @deprecated use Stream.concat(Collections.list(one).stream(), Collections.list(two).stream())
+     *                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::enumeration))
      */
     @Deprecated
     @SafeVarargs

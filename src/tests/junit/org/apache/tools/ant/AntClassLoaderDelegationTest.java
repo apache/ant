@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
+
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
@@ -52,8 +52,7 @@ public class AntClassLoaderDelegationTest {
     }
 
     /** Sample resource present in build/testcases/ */
-    private static final String TEST_RESOURCE
-        = "apache/tools/ant/IncludeTest.class";
+    private static final String TEST_RESOURCE = "apache/tools/ant/IncludeTest.class";
 
     @SuppressWarnings("resource")
     @Test
@@ -75,11 +74,11 @@ public class AntClassLoaderDelegationTest {
         URL urlFromParent = new URL("http://ant.apache.org/" + TEST_RESOURCE);
         assertEquals("correct resources (regular delegation order)",
             Arrays.asList(urlFromParent, urlFromPath),
-            enum2List(acl.getResources(TEST_RESOURCE)));
+                Collections.list(acl.getResources(TEST_RESOURCE)));
         acl = new AntClassLoader(parent, p, path, false);
         assertEquals("correct resources (reverse delegation order)",
             Arrays.asList(urlFromPath, urlFromParent),
-            enum2List(acl.getResources(TEST_RESOURCE)));
+                Collections.list(acl.getResources(TEST_RESOURCE)));
     }
 
     @SuppressWarnings("resource")
@@ -99,11 +98,7 @@ public class AntClassLoaderDelegationTest {
         acl.setIsolated(true);
         assertEquals("correct resources (reverse delegation order)",
                 Collections.singletonList(urlFromPath),
-            enum2List(acl.getResources(TEST_RESOURCE)));
-    }
-
-    private static List<URL> enum2List(Enumeration<URL> e) {
-        return Collections.list(e);
+                Collections.list(acl.getResources(TEST_RESOURCE)));
     }
 
     /** Special loader that just knows how to find TEST_RESOURCE. */

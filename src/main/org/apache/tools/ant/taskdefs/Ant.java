@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,7 +32,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Main;
@@ -197,10 +195,7 @@ public class Ant extends Task {
     private void initializeProject() {
         newProject.setInputHandler(getProject().getInputHandler());
 
-        Iterator<BuildListener> iter = getBuildListeners();
-        while (iter.hasNext()) {
-            newProject.addBuildListener(iter.next());
-        }
+        getProject().getBuildListeners().forEach(bl -> newProject.addBuildListener(bl));
 
         if (output != null) {
             File outfile;
@@ -746,13 +741,6 @@ public class Ant extends Task {
             reinit();
         }
         return newProject;
-    }
-
-    /**
-     * @since Ant 1.6.2
-     */
-    private Iterator<BuildListener> getBuildListeners() {
-        return getProject().getBuildListeners().iterator();
     }
 
     /**

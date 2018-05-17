@@ -18,9 +18,8 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
-import java.util.Collections;
-
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * &lt;and&gt; condition container.
@@ -38,7 +37,7 @@ public class And extends ConditionBase implements Condition {
      */
     @Override
     public boolean eval() throws BuildException {
-        return Collections.list(getConditions()).stream().allMatch(Condition::eval);
+        return StreamUtils.enumerationAsStream(getConditions()).allMatch(Condition::eval);
     }
 
 }

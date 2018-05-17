@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import java.util.zip.CRC32;
@@ -207,7 +207,9 @@ public class jlink {
             return;
         }
         try (ZipFile zipf = new ZipFile(f)) {
-            for (ZipEntry inputEntry : Collections.list(zipf.entries())) {
+            Enumeration<? extends ZipEntry> entries = zipf.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry inputEntry = entries.nextElement();
                 //Ignore manifest entries.  They're bound to cause conflicts between
                 //files that are being merged.  User should supply their own
                 //manifest file when doing the merge.

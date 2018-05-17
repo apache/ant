@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import org.apache.tools.ant.helper.ProjectHelper2;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * Repository of {@link ProjectHelper} found in the classpath or via
@@ -77,8 +78,7 @@ public class ProjectHelperRepository {
 
     private void collectProjectHelpers() {
         // First, try the system property
-        Constructor<? extends ProjectHelper> projectHelper = getProjectHelperBySystemProperty();
-        registerProjectHelper(projectHelper);
+        registerProjectHelper(getProjectHelperBySystemProperty());
 
         // A JDK1.3 'service' (like in JAXP). That will plug a helper
         // automatically if in CLASSPATH, with the right META-INF/services.
@@ -88,17 +88,14 @@ public class ProjectHelperRepository {
                 for (URL resource : Collections.list(classLoader.getResources(ProjectHelper.SERVICE_ID))) {
                     URLConnection conn = resource.openConnection();
                     conn.setUseCaches(false);
-                    projectHelper =
-                        getProjectHelperByService(conn.getInputStream());
-                    registerProjectHelper(projectHelper);
+                    registerProjectHelper(getProjectHelperByService(conn.getInputStream()));
                 }
             }
 
             InputStream systemResource =
                 ClassLoader.getSystemResourceAsStream(ProjectHelper.SERVICE_ID);
             if (systemResource != null) {
-                projectHelper = getProjectHelperByService(systemResource);
-                registerProjectHelper(projectHelper);
+                registerProjectHelper(getProjectHelperByService(systemResource));
             }
         } catch (Exception e) {
             System.err.println("Unable to load ProjectHelper from service "
@@ -250,20 +247,19 @@ public class ProjectHelperRepository {
      * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
      */
     public ProjectHelper getProjectHelperForBuildFile(Resource buildFile) throws BuildException {
-        for (Iterator<ProjectHelper> it = getHelpers(); it.hasNext();) {
-            ProjectHelper helper = it.next();
-            if (helper.canParseBuildFile(buildFile)) {
-                if (DEBUG) {
-                    System.out.println("ProjectHelper "
-                                       + helper.getClass().getName()
-                                       + " selected for the build file "
-                                       + buildFile);
-                }
-                return helper;
-            }
+        ProjectHelper ph = StreamUtils.iteratorAsStream(getHelpers())
+                .filter(helper -> helper.canParseBuildFile(buildFile))
+                .findFirst().orElse(null);
+
+        if (ph == null) {
+            throw new BuildException("BUG: at least the ProjectHelper2 should "
+                    + "have supported the file " + buildFile);
         }
-        throw new BuildException("BUG: at least the ProjectHelper2 should "
-                                   + "have supported the file " + buildFile);
+        if (DEBUG) {
+            System.out.println("ProjectHelper " + ph.getClass().getName()
+                    + " selected for the build file " + buildFile);
+        }
+        return ph;
     }
 
     /**
@@ -274,20 +270,19 @@ public class ProjectHelperRepository {
      * @return the first ProjectHelper that fit the requirement (never <code>null</code>).
      */
     public ProjectHelper getProjectHelperForAntlib(Resource antlib) throws BuildException {
-        for (Iterator<ProjectHelper> it = getHelpers(); it.hasNext();) {
-            ProjectHelper helper = it.next();
-            if (helper.canParseAntlibDescriptor(antlib)) {
-                if (DEBUG) {
-                    System.out.println("ProjectHelper "
-                                       + helper.getClass().getName()
-                                       + " selected for the antlib "
-                                       + antlib);
-                }
-                return helper;
-            }
+        ProjectHelper ph = StreamUtils.iteratorAsStream(getHelpers())
+                .filter(helper -> helper.canParseAntlibDescriptor(antlib))
+                .findFirst().orElse(null);
+
+        if (ph == null) {
+            throw new BuildException("BUG: at least the ProjectHelper2 should "
+                    + "have supported the file " + antlib);
         }
-        throw new BuildException("BUG: at least the ProjectHelper2 should "
-                                   + "have supported the file " + antlib);
+        if (DEBUG) {
+            System.out.println("ProjectHelper " + ph.getClass().getName()
+                    + " selected for the antlib " + antlib);
+        }
+        return ph;
     }
 
     /**

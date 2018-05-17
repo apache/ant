@@ -25,12 +25,12 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Collections;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * Creates a manifest file for inclusion in a JAR, Ant task wrapper
@@ -112,7 +112,7 @@ public class ManifestTask extends Task {
      */
     public void addConfiguredSection(Manifest.Section section)
          throws ManifestException {
-        Collections.list(section.getAttributeKeys()).stream()
+        StreamUtils.enumerationAsStream(section.getAttributeKeys())
                 .map(section::getAttribute).forEach(this::checkAttribute);
         nestedManifest.addConfiguredSection(section);
     }
@@ -241,7 +241,7 @@ public class ManifestTask extends Task {
         }
 
         // look for and print warnings
-        Collections.list(nestedManifest.getWarnings())
+        StreamUtils.enumerationAsStream(nestedManifest.getWarnings())
                 .forEach(e -> log("Manifest warning: " + e, Project.MSG_WARN));
         try {
             if ("update".equals(mode.getValue()) && manifestFile.exists()) {

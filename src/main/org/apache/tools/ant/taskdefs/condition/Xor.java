@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.condition;
 import java.util.Collections;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * The <tt>Xor</tt> condition type to exclusive or operations.
@@ -36,13 +37,9 @@ public class Xor extends ConditionBase implements Condition {
      */
     @Override
     public boolean eval() throws BuildException {
-        // initial state is false.
-        boolean state = false;
-        for (Condition c : Collections.list(getConditions())) {
-            // every condition is xored against the previous one
-            state ^= c.eval();
-        }
-        return state;
+        // initial state is false
+        return StreamUtils.enumerationAsStream(getConditions()).map(Condition::eval)
+                .reduce((a, b) -> a ^ b).orElse(Boolean.FALSE);
     }
 
 }

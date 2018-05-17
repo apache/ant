@@ -307,13 +307,9 @@ public class Recorder extends Task implements SubBuildListener {
      */
     @SuppressWarnings("unchecked")
     private void cleanup() {
-        Hashtable<String, RecorderEntry> entries
-                = (Hashtable<String, RecorderEntry>) recorderEntries.clone();
-        for (Map.Entry<String, RecorderEntry> entry : entries.entrySet()) {
-            if (entry.getValue().getProject() == getProject()) {
-                recorderEntries.remove(entry.getKey());
-            }
-        }
+        ((Hashtable<String, RecorderEntry>) recorderEntries.clone()).entrySet().stream()
+                .filter(entry -> entry.getValue().getProject() == getProject())
+                .forEach(entry -> recorderEntries.remove(entry.getKey()));
         getProject().removeBuildListener(this);
     }
 }

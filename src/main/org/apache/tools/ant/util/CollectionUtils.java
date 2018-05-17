@@ -83,7 +83,7 @@ public class CollectionUtils {
 
         // don't need the opposite check as the Dictionaries have the
         // same size, so we've also covered all keys of d2 already.
-        return Collections.list(d1.keys()).stream()
+        return StreamUtils.enumerationAsStream(d1.keys())
                 .allMatch(key -> d1.get(key).equals(d2.get(key)));
     }
 
@@ -113,7 +113,7 @@ public class CollectionUtils {
     @Deprecated
     public static <K, V> void putAll(Dictionary<? super K, ? super V> m1,
         Dictionary<? extends K, ? extends V> m2) {
-        Collections.list(m2.keys()).forEach(key -> m1.put(key, m2.get(key)));
+        StreamUtils.enumerationAsStream(m2.keys()).forEach(key -> m1.put(key, m2.get(key)));
     }
 
     /**
@@ -210,7 +210,7 @@ public class CollectionUtils {
      * @param <T> element type
      * @return the collection
      * @since Ant 1.8.0
-     * @deprecated instantiate a list an use forEachRemaining(list::add)
+     * @deprecated instantiate a list and use forEachRemaining(list::add)
      */
     @Deprecated
     public static <T> Collection<T> asCollection(final Iterator<? extends T> iter) {

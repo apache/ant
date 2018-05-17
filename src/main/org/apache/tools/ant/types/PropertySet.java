@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -494,17 +493,8 @@ public class PropertySet extends DataType implements ResourceCollection {
             return getRef().toString();
         }
         dieOnCircularReference();
-        StringBuilder b = new StringBuilder();
-        TreeMap<String, Object> sorted = new TreeMap<>(getPropertyMap());
-        for (Entry<String, Object> e : sorted.entrySet()) {
-            if (b.length() > 0) {
-                b.append(", ");
-            }
-            b.append(e.getKey());
-            b.append("=");
-            b.append(e.getValue());
-        }
-        return b.toString();
+        return new TreeMap<>(getPropertyMap()).entrySet().stream()
+                .map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining(", "));
     }
 
     /**

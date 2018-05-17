@@ -28,7 +28,6 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -64,6 +63,7 @@ import org.apache.tools.ant.types.resources.URLProvider;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.StreamUtils;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -619,7 +619,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         if (factory != null) {
             setFactory(factory.getName());
             // configure factory attributes
-            Collections.list(factory.getAttributes())
+            StreamUtils.enumerationAsStream(factory.getAttributes())
                     .forEach(attr -> setAttribute(attr.getName(), attr.getValue()));
             factory.getFeatures()
                     .forEach(feature -> setFeature(feature.getName(), feature.getValue()));
@@ -633,7 +633,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         }
 
         // configure output properties
-        Collections.list(xsltTask.getOutputProperties())
+        StreamUtils.enumerationAsStream(xsltTask.getOutputProperties())
                 .forEach(prop -> setOutputProperty(prop.getName(), prop.getValue()));
 
         suppressWarnings = xsltTask.getSuppressWarnings();
