@@ -903,8 +903,8 @@ public abstract class AbstractFileSet extends DataType
         try {
             AbstractFileSet fs = (AbstractFileSet) super.clone();
             fs.defaultPatterns = (PatternSet) defaultPatterns.clone();
-            fs.additionalPatterns = additionalPatterns.stream().map(
-                    PatternSet::clone).map(PatternSet.class::cast).collect(Collectors.toList());
+            fs.additionalPatterns = additionalPatterns.stream().map(PatternSet::clone)
+                    .map(PatternSet.class::cast).collect(Collectors.toList());
             fs.selectors = new ArrayList<>(selectors);
             return fs;
         } catch (CloneNotSupportedException e) {
@@ -963,12 +963,9 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            selectors.stream().filter(DataType.class::isInstance).forEach(fileSelector ->
-                pushAndInvokeCircularReferenceCheck((DataType) fileSelector, stk, p)
-            );
-            for (PatternSet ps : additionalPatterns) {
-                pushAndInvokeCircularReferenceCheck(ps, stk, p);
-            }
+            selectors.stream().filter(DataType.class::isInstance).map(DataType.class::cast)
+                    .forEach(type -> pushAndInvokeCircularReferenceCheck(type, stk, p));
+            additionalPatterns.forEach(ps -> pushAndInvokeCircularReferenceCheck(ps, stk, p));
             setChecked(true);
         }
     }

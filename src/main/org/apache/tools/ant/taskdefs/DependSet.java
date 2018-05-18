@@ -264,8 +264,7 @@ public class DependSet extends MatchingTask {
     }
 
     private Resource getXest(ResourceCollection rc, ResourceComparator c) {
-        return StreamUtils.iteratorAsStream(rc.iterator())
-                .min(c::compare).orElse(null);
+        return StreamUtils.iteratorAsStream(rc.iterator()).min(c).orElse(null);
     }
 
     private Resource getOldest(ResourceCollection rc) {

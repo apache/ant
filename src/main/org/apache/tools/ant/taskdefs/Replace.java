@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
@@ -937,7 +936,7 @@ public class Replace extends MatchingTask {
      */
     private Iterator<String> getOrderedIterator(Properties props) {
         List<String> keys = new ArrayList<>(props.stringPropertyNames());
-        keys.sort(Comparator.<String>comparingInt(s -> s.length()).reversed());
+        keys.sort(Comparator.<String>comparingInt(String::length).reversed());
         return keys.iterator();
     }
 }

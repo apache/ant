@@ -17,8 +17,6 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import java.util.Collections;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.StreamUtils;
 

@@ -149,10 +149,8 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
         // store project reference for logging
         super.setProject(project);
         // check if already registered
-        boolean alreadyRegistered = project.getBuildListeners().stream()
-            .anyMatch(FailureRecorder.class::isInstance);
         // register if needed
-        if (!alreadyRegistered) {
+        if (!project.getBuildListeners().stream().anyMatch(FailureRecorder.class::isInstance)) {
             verbose("Register FailureRecorder (@" + this.hashCode() + ") as BuildListener");
             project.addBuildListener(this);
         }

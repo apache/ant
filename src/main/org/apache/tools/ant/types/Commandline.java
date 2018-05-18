@@ -224,9 +224,9 @@ public class Commandline implements Cloneable {
          */
         public int getPosition() {
             if (realPos == -1) {
-                realPos = (executable == null ? 0 : 1) + (int)
-                arguments.stream().limit(position).map(Argument::getParts)
-                        .flatMap(Stream::of).count();
+                realPos = (executable == null ? 0 : 1)
+                        + (int) arguments.stream().limit(position)
+                        .map(Argument::getParts).flatMap(Stream::of).count();
             }
             return realPos;
         }
