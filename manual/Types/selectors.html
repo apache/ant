@@ -84,6 +84,10 @@
         symlinks.</li>
       <li><a href="#ownedBy"><code>&lt;ownedBy&gt;</code></a>&mdash;Select files if they are owned
         by a given user.</li>
+      <li><a href="#posixGroup"><code>&lt;posixGroup&gt;</code>&mdash;Select
+        files if they have a given POSIX group.</li>
+      <li><a href="#posixPermissions"><code>&lt;posixPermissions&gt;</code>&mdash;Select
+        files if they have given POSIX permissions.</li>
     </ul>
 
     <h4 id="containsselect">Contains Selector</h4>
@@ -921,6 +925,50 @@
         <td>Username of the expected owner</td>
         <td>Yes</td>
       </tr>
+    </table>
+
+    <h4 id="posixGroup">PosixGroup Selector</h4>
+
+    <p>The <code>&lt;posixGroup&gt;</code> selector selects only files that are owned by the given
+      POSIX group.  Ant only invokes <code class="code">java.nio.file.Files#readAttributes</code> so
+      if a file system doesn't support the operation or POSIX attributes this selector will not
+      select the file.</p>
+
+    <p><em>Since Ant 1.10.4</em></p>
+
+    <table class="attr">
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Description</th>
+            <th scope="col">Required</th>
+        </tr>
+        <tr>
+            <td>group</td>
+            <td>POSIX group name</td>
+            <td>Yes</td>
+        </tr>
+    </table>
+
+    <h4 id="posixPermissions">PosixPermissions Selector</h4>
+
+    <p>The <code>&lt;posixPermissions&gt;</code> selector selects only files that have the given
+      POSIX permissions.  Ant only
+      invokes <code class="code">java.nio.file.Files#getPosixFilePermissions</code> so if a file
+      system doesn't support the operation this selector will not select the file.</p>
+
+    <p><em>Since Ant 1.10.4</em></p>
+
+    <table class="attr">
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Description</th>
+            <th scope="col">Required</th>
+        </tr>
+        <tr>
+            <td>permissions</td>
+            <td>POSIX permissions in string (<q>rwxrwxrwx</q>) or octal (<q>777</q>) format</td>
+            <td>Yes</td>
+        </tr>
     </table>
 
     <h4 id="scriptselector">Script Selector</h4>

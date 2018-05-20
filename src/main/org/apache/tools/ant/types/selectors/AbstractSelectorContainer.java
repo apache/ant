@@ -325,6 +325,22 @@ public abstract class AbstractSelectorContainer extends DataType
     }
 
     /**
+     * @param o PosixGroupSelector
+     * @since 1.10.4
+     */
+    public void addPosixGroup(PosixGroupSelector o) {
+        appendSelector(o);
+    }
+
+    /**
+     * @param o PosixPermissionsSelector
+     * @since 1.10.4
+     */
+    public void addPosixPermissions(PosixPermissionsSelector o) {
+        appendSelector(o);
+    }
+
+    /**
      * add an arbitrary selector
      * @param selector the selector to add
      * @since Ant 1.6

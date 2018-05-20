@@ -46,6 +46,8 @@ import org.apache.tools.ant.types.selectors.NoneSelector;
 import org.apache.tools.ant.types.selectors.NotSelector;
 import org.apache.tools.ant.types.selectors.OrSelector;
 import org.apache.tools.ant.types.selectors.OwnedBySelector;
+import org.apache.tools.ant.types.selectors.PosixGroupSelector;
+import org.apache.tools.ant.types.selectors.PosixPermissionsSelector;
 import org.apache.tools.ant.types.selectors.PresentSelector;
 import org.apache.tools.ant.types.selectors.ReadableSelector;
 import org.apache.tools.ant.types.selectors.SelectSelector;
@@ -824,7 +826,7 @@ public abstract class AbstractFileSet extends DataType
     /**
      * Add the modified selector.
      * @param selector the <code>ModifiedSelector</code> to add.
-     * @since ant 1.6
+     * @since Ant 1.6
      */
     @Override
     public void addModified(ModifiedSelector selector) {
@@ -860,6 +862,22 @@ public abstract class AbstractFileSet extends DataType
      * @since 1.10.0
      */
     public void addOwnedBy(OwnedBySelector o) {
+        appendSelector(o);
+    }
+
+    /**
+     * @param o PosixGroupSelector
+     * @since 1.10.4
+     */
+    public void addPosixGroup(PosixGroupSelector o) {
+        appendSelector(o);
+    }
+
+    /**
+     * @param o PosixPermissionsSelector
+     * @since 1.10.4
+     */
+    public void addPosixPermissions(PosixPermissionsSelector o) {
         appendSelector(o);
     }
 
