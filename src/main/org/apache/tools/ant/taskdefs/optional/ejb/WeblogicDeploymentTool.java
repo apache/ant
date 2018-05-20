@@ -21,13 +21,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -36,7 +39,6 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.optional.ejb.EjbJar.DTDLocation;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Environment.Variable;
 import org.apache.tools.ant.types.Path;
@@ -424,9 +426,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         handler.registerDTD(PUBLICID_WEBLOGIC_EJB510, weblogicDTD);
         handler.registerDTD(PUBLICID_WEBLOGIC_EJB600, weblogicDTD);
 
-        for (DTDLocation dtdLocation : getConfig().dtdLocations) {
-            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
-        }
+        getConfig().dtdLocations.forEach(l -> handler.registerDTD(l.getPublicId(), l.getLocation()));
         return handler;
     }
 
@@ -685,73 +685,62 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 genericJar = new JarFile(genericJarFile);
                 wlJar = new JarFile(weblogicJarFile);
 
-                Hashtable<String, JarEntry> genericEntries = new Hashtable<>();
-                Hashtable<String, JarEntry> wlEntries = new Hashtable<>();
-                Hashtable<String, JarEntry> replaceEntries = new Hashtable<>();
+                Map<String, JarEntry> replaceEntries = new HashMap<>();
 
                 //get the list of generic jar entries
-                for (Enumeration<JarEntry> e = genericJar.entries(); e.hasMoreElements();) {
-                    JarEntry je = e.nextElement();
-                    genericEntries.put(je.getName().replace('\\', '/'), je);
-                }
+                Map<String, JarEntry> genericEntries = genericJar.stream()
+                        .collect(Collectors.toMap(je -> je.getName().replace('\\', '/'),
+                                je -> je, (a, b) -> b));
                 // get the list of WebLogic jar entries
-                for (Enumeration<JarEntry> e = wlJar.entries(); e.hasMoreElements();) {
-                    JarEntry je = e.nextElement();
-                    wlEntries.put(je.getName(), je);
-                }
+                Map<String, JarEntry> wlEntries = wlJar.stream().collect(Collectors.toMap(ZipEntry::getName,
+                        je -> je, (a, b) -> b));
 
                 // Cycle through generic and make sure its in WebLogic
                 genericLoader = getClassLoaderFromJar(genericJarFile);
 
-                for (Enumeration<String> e = genericEntries.keys(); e.hasMoreElements();) {
-                    String filepath = e.nextElement();
-
-                    if (wlEntries.containsKey(filepath)) {
-                        // File name/path match
-
-                        // Check files see if same
-                        JarEntry genericEntry = genericEntries.get(filepath);
-                        JarEntry wlEntry = wlEntries.get(filepath);
-
-                        if (genericEntry.getCrc() != wlEntry.getCrc()
-                            || genericEntry.getSize() != wlEntry.getSize()) {
-
-                            if (genericEntry.getName().endsWith(".class")) {
-                                //File are different see if its an object or an interface
-                                String classname
-                                    = genericEntry.getName()
-                                    .replace(File.separatorChar, '.')
-                                    .replace('/', '.');
-
-                                classname = classname.substring(0, classname.lastIndexOf(".class"));
-
-                                Class<?> genclass = genericLoader.loadClass(classname);
-
-                                if (genclass.isInterface()) {
-                                    //Interface changed   rebuild jar.
-                                    log("Interface " + genclass.getName()
-                                        + " has changed", Project.MSG_VERBOSE);
-                                    rebuild = true;
-                                    break;
-                                }
-                                //Object class Changed   update it.
-                                replaceEntries.put(filepath, genericEntry);
-                            } else if (!"META-INF/MANIFEST.MF".equals(genericEntry.getName())) {
-                                // it is not the manifest, otherwise we'd ignore it
-                                // File other then class changed   rebuild
-                                log("Non class file " + genericEntry.getName()
-                                    + " has changed", Project.MSG_VERBOSE);
-                                rebuild = true;
-                                break;
-                            }
-                        }
-                    } else {
+                for (String filepath : genericEntries.keySet()) {
+                    if (!wlEntries.containsKey(filepath)) {
                         // a file doesn't exist rebuild
-
                         log("File " + filepath + " not present in weblogic jar",
                             Project.MSG_VERBOSE);
                         rebuild = true;
                         break;
+                    }
+                    // File name/path match
+                    // Check files see if same
+                    JarEntry genericEntry = genericEntries.get(filepath);
+                    JarEntry wlEntry = wlEntries.get(filepath);
+
+                    if (genericEntry.getCrc() != wlEntry.getCrc()
+                        || genericEntry.getSize() != wlEntry.getSize()) {
+
+                        if (genericEntry.getName().endsWith(".class")) {
+                            //File are different see if its an object or an interface
+                            String classname = genericEntry.getName()
+                                    .replace(File.separatorChar, '.')
+                                    .replace('/', '.');
+
+                            classname = classname.substring(0, classname.lastIndexOf(".class"));
+
+                            Class<?> genclass = genericLoader.loadClass(classname);
+
+                            if (genclass.isInterface()) {
+                                //Interface changed   rebuild jar.
+                                log("Interface " + genclass.getName()
+                                    + " has changed", Project.MSG_VERBOSE);
+                                rebuild = true;
+                                break;
+                            }
+                            //Object class Changed   update it.
+                            replaceEntries.put(filepath, genericEntry);
+                        } else if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
+                            // it is not the manifest, otherwise we'd ignore it
+                            // File other then class changed   rebuild
+                            log("Non class file " + genericEntry.getName()
+                                + " has changed", Project.MSG_VERBOSE);
+                            rebuild = true;
+                            break;
+                        }
                     }
                 }
 

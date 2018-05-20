@@ -25,13 +25,13 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.tools.ant.util.DOMElementWriter;
-import org.apache.tools.ant.util.StreamUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -108,16 +108,16 @@ public class XmlLogger implements BuildLogger {
     private Document doc = builder.newDocument();
 
     /** Mapping for when tasks started (Task to TimedElement). */
-    private Hashtable<Task, TimedElement> tasks = new Hashtable<>();
+    private Map<Task, TimedElement> tasks = new Hashtable<>();
 
     /** Mapping for when targets started (Target to TimedElement). */
-    private Hashtable<Target, TimedElement> targets = new Hashtable<>();
+    private Map<Target, TimedElement> targets = new Hashtable<>();
 
     /**
      * Mapping of threads to stacks of elements
      * (Thread to Stack of TimedElement).
      */
-    private Hashtable<Thread, Stack<TimedElement>> threadStacks = new Hashtable<>();
+    private Map<Thread, Stack<TimedElement>> threadStacks = new Hashtable<>();
 
     /**
      * When the build started.
@@ -345,8 +345,7 @@ public class XmlLogger implements BuildLogger {
         if (element != null) {
             return element;
         }
-        return StreamUtils.enumerationAsStream(tasks.keys())
-                .filter(UnknownElement.class::isInstance)
+        return tasks.keySet().stream().filter(UnknownElement.class::isInstance)
                 .filter(key -> ((UnknownElement) key).getTask() == task).findFirst()
                 .map(key -> tasks.get(key)).orElse(null);
     }

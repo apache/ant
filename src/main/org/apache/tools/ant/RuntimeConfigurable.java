@@ -43,10 +43,6 @@ public class RuntimeConfigurable implements Serializable {
     /** Serialization version */
     private static final long serialVersionUID = 1L;
 
-    /** Empty Hashtable. */
-    private static final Hashtable<String, Object> EMPTY_HASHTABLE =
-            new Hashtable<>(0);
-
     /** Name of the element to configure. */
     private String elementTag = null;
 
@@ -336,8 +332,7 @@ public class RuntimeConfigurable implements Serializable {
      * @since Ant 1.6
      */
     public synchronized Hashtable<String, Object> getAttributeMap() {
-        return (attributeMap == null)
-            ? EMPTY_HASHTABLE : new Hashtable<>(attributeMap);
+        return new Hashtable<>(attributeMap == null ? Collections.emptyMap() : attributeMap);
     }
 
     /**

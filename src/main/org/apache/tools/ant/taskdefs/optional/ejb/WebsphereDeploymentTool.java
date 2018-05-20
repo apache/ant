@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -35,7 +37,6 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.StreamUtils;
 
 /**
  * WebSphere deployment tool that augments the ejbjar task.
@@ -667,21 +668,18 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 wasJar = new JarFile(websphereJarFile);
 
                 //get the list of generic jar entries
-                Hashtable<String, JarEntry> genericEntries
-                        = StreamUtils.enumerationAsStream(genericJar.entries())
+                Map<String, JarEntry> genericEntries = genericJar.stream()
                         .collect(Collectors.toMap(je -> je.getName().replace('\\', '/'),
-                                je -> je, (a, b) -> b, Hashtable::new));
+                                je -> je, (a, b) -> b));
 
                 // get the list of WebSphere jar entries
-                Hashtable<String, JarEntry> wasEntries
-                        = StreamUtils.enumerationAsStream(wasJar.entries())
-                        .collect(Collectors.toMap(ZipEntry::getName,
-                                je -> je, (a, b) -> b, Hashtable::new));
+                Map<String, JarEntry> wasEntries = wasJar.stream()
+                        .collect(Collectors.toMap(ZipEntry::getName, je -> je, (a, b) -> b));
 
                 // Cycle through generic and make sure its in WebSphere
                 genericLoader = getClassLoaderFromJar(genericJarFile);
 
-                Hashtable<String, JarEntry> replaceEntries = new Hashtable<>();
+                Map<String, JarEntry> replaceEntries = new HashMap<>();
                 for (String filepath : genericEntries.keySet()) {
                     if (!wasEntries.containsKey(filepath)) {
                         // a file doesn't exist rebuild

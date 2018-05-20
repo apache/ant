@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.launch.Launcher;
 import org.apache.tools.ant.taskdefs.Definer;
@@ -228,7 +229,8 @@ public class ComponentHelper  {
     public void initSubProject(ComponentHelper helper) {
         // add the types of the parent project
         @SuppressWarnings("unchecked")
-        final Hashtable<String, AntTypeDefinition> typeTable = (Hashtable<String, AntTypeDefinition>) helper.antTypeTable.clone();
+        final Hashtable<String, AntTypeDefinition> typeTable
+                = (Hashtable<String, AntTypeDefinition>) helper.antTypeTable.clone();
         synchronized (antTypeTable) {
             for (AntTypeDefinition def : typeTable.values()) {
                 antTypeTable.put(def.getName(), def);
@@ -239,7 +241,8 @@ public class ComponentHelper  {
         synchronized (this) {
             checkedNamespaces.addAll(inheritedCheckedNamespace);
         }
-        Map<String, List<AntTypeDefinition>> inheritedRestrictedDef = helper.getRestrictedDefinition();
+        Map<String, List<AntTypeDefinition>> inheritedRestrictedDef
+                = helper.getRestrictedDefinition();
         synchronized (restrictedDefinitions) {
             restrictedDefinitions.putAll(inheritedRestrictedDef);
         }
@@ -398,15 +401,11 @@ public class ComponentHelper  {
             synchronized (antTypeTable) {
                 if (rebuildTaskClassDefinitions) {
                     taskClassDefinitions.clear();
-                    for (Map.Entry<String, AntTypeDefinition> e : antTypeTable.entrySet()) {
-                        final Class<?> clazz = e.getValue().getExposedClass(project);
-                        if (clazz == null) {
-                            continue;
-                        }
-                        if (Task.class.isAssignableFrom(clazz)) {
-                            taskClassDefinitions.put(e.getKey(), e.getValue().getTypeClass(project));
-                        }
-                    }
+                    antTypeTable.entrySet().stream()
+                            .filter(e -> e.getValue().getExposedClass(project) != null
+                                    && Task.class.isAssignableFrom(e.getValue().getExposedClass(project)))
+                            .forEach(e -> taskClassDefinitions.put(e.getKey(),
+                                    e.getValue().getTypeClass(project)));
                     rebuildTaskClassDefinitions = false;
                 }
             }
@@ -426,15 +425,11 @@ public class ComponentHelper  {
             synchronized (antTypeTable) {
                 if (rebuildTypeClassDefinitions) {
                     typeClassDefinitions.clear();
-                    for (Map.Entry<String, AntTypeDefinition> e : antTypeTable.entrySet()) {
-                        final Class<?> clazz = e.getValue().getExposedClass(project);
-                        if (clazz == null) {
-                            continue;
-                        }
-                        if (!Task.class.isAssignableFrom(clazz)) {
-                            typeClassDefinitions.put(e.getKey(), e.getValue().getTypeClass(project));
-                        }
-                    }
+                    antTypeTable.entrySet().stream()
+                            .filter(e -> e.getValue().getExposedClass(project) != null
+                                    && !Task.class.isAssignableFrom(e.getValue().getExposedClass(project)))
+                            .forEach(e -> typeClassDefinitions.put(e.getKey(),
+                                    e.getValue().getTypeClass(project)));
                     rebuildTypeClassDefinitions = false;
                 }
             }
@@ -1077,14 +1072,9 @@ public class ComponentHelper  {
      * @return the (possibly empty) list of definitions
      */
     private List<AntTypeDefinition> findTypeMatches(String prefix) {
-        final List<AntTypeDefinition> result = new ArrayList<>();
         synchronized (antTypeTable) {
-            for (AntTypeDefinition def : antTypeTable.values()) {
-                if (def.getName().startsWith(prefix)) {
-                    result.add(def);
-                }
-            }
+            return antTypeTable.values().stream().filter(def -> def.getName().startsWith(prefix))
+                    .collect(Collectors.toList());
         }
-        return result;
     }
 }

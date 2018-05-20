@@ -19,11 +19,10 @@
 package org.apache.tools.ant.attribute;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.ProjectComponent;
-import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.UnknownElement;
 
 
@@ -68,17 +67,10 @@ public abstract class BaseIfAttribute
      * @return a map of attributes.
      */
     protected Map<String, String> getParams(UnknownElement el) {
-        Map<String, String> ret = new HashMap<>();
-        RuntimeConfigurable rc = el.getWrapper();
-        Hashtable<String, Object> attributes = rc.getAttributeMap(); // This does a copy!
-        for (Map.Entry<String, Object> entry : attributes.entrySet()) {
-            String key = entry.getKey();
-            if (key.startsWith("ant-attribute:param")) {
-                int pos = key.lastIndexOf(':');
-                ret.put(key.substring(pos + 1),
-                    el.getProject().replaceProperties((String) entry.getValue()));
-            }
-        }
-        return ret;
+        // this makes a copy!
+        return el.getWrapper().getAttributeMap().entrySet().stream()
+                .filter(e -> e.getKey().startsWith("ant-attribute:param"))
+                .collect(Collectors.toMap(e -> e.getKey().substring(e.getKey().lastIndexOf(':') + 1),
+                        e -> el.getProject().replaceProperties((String) e.getValue()), (a, b) -> b));
     }
 }

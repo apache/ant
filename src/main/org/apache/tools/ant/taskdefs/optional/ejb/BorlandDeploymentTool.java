@@ -16,9 +16,7 @@
  *
  */
 
-
 package org.apache.tools.ant.taskdefs.optional.ejb;
-
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,6 +29,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ExecTask;
@@ -40,7 +39,6 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.optional.ejb.EjbJar.DTDLocation;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-
 
 /**
  * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5 and 4.5.1
@@ -60,7 +58,7 @@ import org.apache.tools.ant.types.Path;
  * <li>version (int)       : tell what is the Borland appserver version 4 or 5 </li>
  * </ul>
  *
- *<PRE>
+ *<pre>
  *
  *      &lt;ejbjar srcdir=&quot;${build.classes}&quot;
  *               basejarname=&quot;vsmp&quot;
@@ -74,7 +72,7 @@ import org.apache.tools.ant.types.Path;
  *          &lt;include name=&quot;demo\helper\*.class&quot;/&gt;
  *         &lt;/support&gt;
  *     &lt;/ejbjar&gt;
- *</PRE>
+ *</pre>
  *
  */
 public class BorlandDeploymentTool extends GenericDeploymentTool

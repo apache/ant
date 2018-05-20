@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
@@ -66,7 +67,7 @@ public class Recorder extends Task implements SubBuildListener {
     /** Strip task banners if true.  */
     private boolean emacsMode = false;
     /** The list of recorder entries. */
-    private static Hashtable<String, RecorderEntry> recorderEntries = new Hashtable<>();
+    private static Map<String, RecorderEntry> recorderEntries = new Hashtable<>();
 
     //////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / INITIALIZERS
@@ -304,11 +305,8 @@ public class Recorder extends Task implements SubBuildListener {
      *
      * @since Ant 1.7
      */
-    @SuppressWarnings("unchecked")
     private void cleanup() {
-        ((Hashtable<String, RecorderEntry>) recorderEntries.clone()).entrySet().stream()
-                .filter(entry -> entry.getValue().getProject() == getProject())
-                .forEach(entry -> recorderEntries.remove(entry.getKey()));
+        recorderEntries.entrySet().removeIf(e -> e.getValue().getProject() == getProject());
         getProject().removeBuildListener(this);
     }
 }

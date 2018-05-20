@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -233,7 +234,7 @@ public class DescriptorHandler extends HandlerBase {
      * @return the map of files
      */
     public Hashtable<String, File> getFiles() {
-        return ejbFiles == null ? new Hashtable<>() : ejbFiles;
+        return new Hashtable<>(ejbFiles == null ? Collections.emptyMap() : ejbFiles);
     }
 
     /**
