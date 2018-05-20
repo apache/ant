@@ -247,7 +247,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a name entry on the include files list
-     * @return a NameEntry object to be configured
+     * @return a PatternFileNameEntry object to be configured
      */
     public PatternSet.NameEntry createIncludesFile() {
         usedMatchingTask = true;
@@ -265,7 +265,7 @@ public class Delete extends MatchingTask {
 
     /**
      * add a name entry on the include files list
-     * @return a NameEntry object to be configured
+     * @return a PatternFileNameEntry object to be configured
      */
     public PatternSet.NameEntry createExcludesFile() {
         usedMatchingTask = true;

@@ -48,6 +48,11 @@ Other changes:
    generated.
    Bugzilla Report 62379
 
+ * The <includesfile> and <excludesfile> nested elements of
+   <patternset> and <fileset> now support an encoding attribute that
+   can be used to specify the file's encoding.
+   Bugzilla Report 62379
+
 Changes from Ant 1.9.10 TO Ant 1.9.11
 =====================================
 

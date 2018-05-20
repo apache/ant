@@ -20,11 +20,18 @@ package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -201,5 +208,27 @@ public class PatternSetTest {
 
         assertEquals("Includes", "**/*.java", includes[0]);
         assertEquals("Excludes", "**/*.class", excludes[0]);
+    }
+
+    @Test
+    public void testEncodingOfIncludesFile() throws IOException {
+        File testFile = File.createTempFile("ant-", ".pattern");
+        testFile.deleteOnExit();
+        OutputStream o = null;
+        Writer w = null;
+        try {
+            o = new FileOutputStream(testFile);
+            w = new OutputStreamWriter(o, "UTF-16LE");
+            w.write("\u00e4\n");
+        } finally {
+            FileUtils.close(w);
+            FileUtils.close(o);
+        }
+        PatternSet p = new PatternSet();
+        PatternSet.PatternFileNameEntry ne =
+            (PatternSet.PatternFileNameEntry) p.createIncludesFile();
+        ne.setName(testFile.getAbsolutePath());
+        ne.setEncoding("UTF-16LE");
+        assertArrayEquals(new String[] { "\u00e4" }, p.getIncludePatterns(project));
     }
 }
