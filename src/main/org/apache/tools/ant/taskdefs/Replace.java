@@ -936,7 +936,7 @@ public class Replace extends MatchingTask {
      */
     private Iterator<String> getOrderedIterator(Properties props) {
         List<String> keys = new ArrayList<>(props.stringPropertyNames());
-        keys.sort(Comparator.<String>comparingInt(String::length).reversed());
+        keys.sort(Comparator.comparingInt(String::length).reversed());
         return keys.iterator();
     }
 }

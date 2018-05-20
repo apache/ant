@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.attribute;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
