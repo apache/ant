@@ -19,6 +19,7 @@ package org.apache.tools.ant.types.resources;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -49,6 +50,7 @@ public class ResourceList extends DataType implements ResourceCollection {
     private final Union cachedResources = new Union();
     private volatile boolean cached = false;
     private String encoding = null;
+    private File baseDir;
 
     public ResourceList() {
         cachedResources.setCache(true);
@@ -97,6 +99,21 @@ public class ResourceList extends DataType implements ResourceCollection {
             throw tooManyAttributes();
         }
         this.encoding = encoding;
+    }
+
+    /**
+     * Basedir to use for file resources read from nested resources -
+     * this allows the resources contained inside this collection to
+     * be considered relative to a certain base directory.
+     *
+     * @param basedir the basedir
+     * @since Ant 1.10.4
+     */
+    public final void setBasedir(File baseDir) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        this.baseDir = baseDir;
     }
 
     /**
@@ -241,6 +258,11 @@ public class ResourceList extends DataType implements ResourceCollection {
                 // probably it's an absolute path fall back to file
                 // resource
             }
+        }
+        if (baseDir != null) {
+            FileResource fr = new FileResource(baseDir, expandedLine);
+            fr.setProject(getProject());
+            return fr;
         }
         return new FileResource(getProject(), expandedLine);
     }

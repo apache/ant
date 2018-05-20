@@ -18,17 +18,41 @@
 
 package org.apache.tools.ant.types;
 
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * JUnit 4 testcases for org.apache.tools.ant.types.FileSet.
- *
- * <p>This doesn't actually test much, mainly reference handling.</p>
  */
 
 public class FileSetTest extends AbstractFileSetTest {
 
+    @Rule
+    public BuildFileRule buildRule = new BuildFileRule();
+
+    @Before
+    public void buildFileRuleSetUp() {
+        buildRule.configureProject("src/etc/testcases/types/fileset.xml");
+    }
+
     protected AbstractFileSet getInstance() {
         return new FileSet();
+    }
+
+    @Test
+    public void testNoEncoding() {
+        buildRule.executeTarget("no-encoding");
+        assertEquals("/abc/fileset.xml", buildRule.getLog());
+    }
+
+    @Test
+    public void testEncoding() {
+        buildRule.executeTarget("encoding");
+        assertEquals("/abc/fileset.xml", buildRule.getLog());
     }
 
 }

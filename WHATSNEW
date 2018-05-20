@@ -60,6 +60,16 @@ Other changes:
    strings to be present in the line.
    Bugzilla Report 62313
 
+ * <resourcelist> has a new basedir attribute that can be used to
+   resolve relative names and provides a root for the FileResources
+   generated.
+   Bugzilla Report 62379
+
+ * The <includesfile> and <excludesfile> nested elements of
+   <patternset> and <fileset> now support an encoding attribute that
+   can be used to specify the file's encoding.
+   Bugzilla Report 62379
+
 Changes from Ant 1.10.2 TO Ant 1.10.3
 =====================================
 

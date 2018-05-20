@@ -197,7 +197,7 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Add a name entry to the include files list.
-     * @return <code>PatternSet.NameEntry</code>.
+     * @return <code>PatternSet.PatternFileNameEntry</code>.
      */
     public synchronized PatternSet.NameEntry createIncludesFile() {
         if (isReference()) {
@@ -221,7 +221,7 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Add a name entry to the excludes files list.
-     * @return <code>PatternSet.NameEntry</code>.
+     * @return <code>PatternSet.PatternFileNameEntry</code>.
      */
     public synchronized PatternSet.NameEntry createExcludesFile() {
         if (isReference()) {

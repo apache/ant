@@ -476,4 +476,22 @@ public class NullByteStreamResource extends Resource {
     </copy>
     <au:assertFileExists file="${output}/filea"/>
   </target>
+
+  <target name="testCopyOfResourceListDoesntFlatten"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=62379">
+    <mkdir dir="${input}/dir"/>
+    <touch file="${input}/a"/>
+    <touch file="${input}/b"/>
+    <touch file="${input}/c"/>
+    <echo file="${input}/dir/c">Testfile</echo>
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <resourcelist basedir="${input}">
+        <string value="${input}/dir/c"/>
+      </resourcelist>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/c"/>
+    <au:assertFileExists file="${output}/dir/c"/>
+    <au:assertFilesMatch expected="${input}/dir/c" actual="${output}/dir/c"/>
+  </target>
 </project>
