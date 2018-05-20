@@ -43,6 +43,11 @@ Other changes:
    availableProcessors, freeMemory, maxMemory and totalMemory methods
    of the Java Runtime class.
 
+ * <resourcelist> has a new basedir attribute that can be used to
+   resolve relative names and provides a root for the FileResources
+   generated.
+   Bugzilla Report 62379
+
 Changes from Ant 1.9.10 TO Ant 1.9.11
 =====================================
 
