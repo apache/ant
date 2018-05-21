@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Collections;
@@ -97,7 +98,7 @@ public class DescriptorHandler extends HandlerBase {
      * put into the jar file, mapped to File objects  Accessed by the SAX
      * parser call-back method characters().
      */
-    protected Hashtable<String, File> ejbFiles = null;
+    protected Map<String, File> ejbFiles = null;
 
     /**
      * Instance variable that stores the value found in the &lt;ejb-name&gt; element
@@ -169,7 +170,7 @@ public class DescriptorHandler extends HandlerBase {
                 URL urldtd = new URL(location);
                 urlDTDs.put(publicId, urldtd);
             }
-        } catch (java.net.MalformedURLException e) {
+        } catch (MalformedURLException e) {
             //ignored
         }
 

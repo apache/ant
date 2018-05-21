@@ -19,10 +19,12 @@
 package org.apache.tools.ant.types;
 
 import java.lang.reflect.Constructor;
+import java.net.SocketPermission;
 import java.security.UnresolvedPermission;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PropertyPermission;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -122,27 +124,27 @@ public class Permissions {
             }
         }
         // Add base set of permissions
-        granted.add(new java.net.SocketPermission("localhost:1024-", "listen"));
-        granted.add(new java.util.PropertyPermission("java.version", "read"));
-        granted.add(new java.util.PropertyPermission("java.vendor", "read"));
-        granted.add(new java.util.PropertyPermission("java.vendor.url", "read"));
-        granted.add(new java.util.PropertyPermission("java.class.version", "read"));
-        granted.add(new java.util.PropertyPermission("os.name", "read"));
-        granted.add(new java.util.PropertyPermission("os.version", "read"));
-        granted.add(new java.util.PropertyPermission("os.arch", "read"));
-        granted.add(new java.util.PropertyPermission("file.encoding", "read"));
-        granted.add(new java.util.PropertyPermission("file.separator", "read"));
-        granted.add(new java.util.PropertyPermission("path.separator", "read"));
-        granted.add(new java.util.PropertyPermission("line.separator", "read"));
-        granted.add(new java.util.PropertyPermission("java.specification.version", "read"));
-        granted.add(new java.util.PropertyPermission("java.specification.vendor", "read"));
-        granted.add(new java.util.PropertyPermission("java.specification.name", "read"));
-        granted.add(new java.util.PropertyPermission("java.vm.specification.version", "read"));
-        granted.add(new java.util.PropertyPermission("java.vm.specification.vendor", "read"));
-        granted.add(new java.util.PropertyPermission("java.vm.specification.name", "read"));
-        granted.add(new java.util.PropertyPermission("java.vm.version", "read"));
-        granted.add(new java.util.PropertyPermission("java.vm.vendor", "read"));
-        granted.add(new java.util.PropertyPermission("java.vm.name", "read"));
+        granted.add(new SocketPermission("localhost:1024-", "listen"));
+        granted.add(new PropertyPermission("java.version", "read"));
+        granted.add(new PropertyPermission("java.vendor", "read"));
+        granted.add(new PropertyPermission("java.vendor.url", "read"));
+        granted.add(new PropertyPermission("java.class.version", "read"));
+        granted.add(new PropertyPermission("os.name", "read"));
+        granted.add(new PropertyPermission("os.version", "read"));
+        granted.add(new PropertyPermission("os.arch", "read"));
+        granted.add(new PropertyPermission("file.encoding", "read"));
+        granted.add(new PropertyPermission("file.separator", "read"));
+        granted.add(new PropertyPermission("path.separator", "read"));
+        granted.add(new PropertyPermission("line.separator", "read"));
+        granted.add(new PropertyPermission("java.specification.version", "read"));
+        granted.add(new PropertyPermission("java.specification.vendor", "read"));
+        granted.add(new PropertyPermission("java.specification.name", "read"));
+        granted.add(new PropertyPermission("java.vm.specification.version", "read"));
+        granted.add(new PropertyPermission("java.vm.specification.vendor", "read"));
+        granted.add(new PropertyPermission("java.vm.specification.name", "read"));
+        granted.add(new PropertyPermission("java.vm.version", "read"));
+        granted.add(new PropertyPermission("java.vm.vendor", "read"));
+        granted.add(new PropertyPermission("java.vm.name", "read"));
     }
 
     private java.security.Permission createPermission(
@@ -187,7 +189,7 @@ public class Permissions {
          */
         @Override
         public void checkExit(final int status) {
-            final java.security.Permission perm = new java.lang.RuntimePermission("exitVM", null);
+            final java.security.Permission perm = new RuntimePermission("exitVM", null);
             try {
                 checkPermission(perm);
             } catch (final SecurityException e) {

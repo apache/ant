@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -227,7 +228,7 @@ public class ProjectHelper2 extends ProjectHelper {
             try {
                 context.setBuildFile((File) null);
                 context.setBuildFile(url);
-            } catch (java.net.MalformedURLException ex) {
+            } catch (MalformedURLException ex) {
                 throw new BuildException(ex);
             }
             buildFileName = url.toString();
@@ -783,7 +784,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 if (MagicNames.ANT_FILE_TYPE_URL.equals(dupType)) {
                     try {
                         dupFile = new URL(dup);
-                    } catch (java.net.MalformedURLException mue) {
+                    } catch (MalformedURLException mue) {
                         throw new BuildException("failed to parse "
                                                  + dup + " as URL while looking"
                                                  + " at a duplicate project"
