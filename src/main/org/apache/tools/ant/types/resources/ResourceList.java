@@ -106,7 +106,7 @@ public class ResourceList extends DataType implements ResourceCollection {
      * this allows the resources contained inside this collection to
      * be considered relative to a certain base directory.
      *
-     * @param basedir the basedir
+     * @param baseDir the basedir
      * @since Ant 1.10.4
      */
     public final void setBasedir(File baseDir) {
