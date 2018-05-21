@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 
@@ -168,7 +169,7 @@ public class DescriptorHandler extends HandlerBase {
                 URL urldtd = new URL(location);
                 urlDTDs.put(publicId, urldtd);
             }
-        } catch (java.net.MalformedURLException e) {
+        } catch (MalformedURLException e) {
             //ignored
         }
 
@@ -262,7 +263,6 @@ public class DescriptorHandler extends HandlerBase {
         inEJBRef = false;
     }
 
-
     /**
      * SAX parser call-back method that is invoked when a new element is entered
      * into.  Used to store the context (attribute name) in the currentAttribute
@@ -289,7 +289,6 @@ public class DescriptorHandler extends HandlerBase {
             parseState = STATE_IN_MESSAGE;
         }
     }
-
 
     /**
      * SAX parser call-back method that is invoked when an element is exited.
@@ -338,10 +337,8 @@ public class DescriptorHandler extends HandlerBase {
      */
     public void characters(char[] ch, int start, int length)
         throws SAXException {
-
         currentText += new String(ch, start, length);
     }
-
 
     /**
      * Called when an endelement is seen.
@@ -357,15 +354,14 @@ public class DescriptorHandler extends HandlerBase {
             return;
         }
 
-        if (currentElement.equals(HOME_INTERFACE)
-            || currentElement.equals(REMOTE_INTERFACE)
-            || currentElement.equals(LOCAL_INTERFACE)
-            || currentElement.equals(LOCAL_HOME_INTERFACE)
-            || currentElement.equals(BEAN_CLASS)
-            || currentElement.equals(PK_CLASS)) {
+        if (HOME_INTERFACE.equals(currentElement)
+            || REMOTE_INTERFACE.equals(currentElement)
+            || LOCAL_INTERFACE.equals(currentElement)
+            || LOCAL_HOME_INTERFACE.equals(currentElement)
+            || BEAN_CLASS.equals(currentElement)
+            || PK_CLASS.equals(currentElement)) {
 
             // Get the filename into a String object
-            File classFile = null;
             String className = currentText.trim();
 
             // If it's a primitive wrapper then we shouldn't try and put
@@ -376,8 +372,7 @@ public class DescriptorHandler extends HandlerBase {
                 // name, create the File object and add it to the Hashtable.
                 className = className.replace('.', File.separatorChar);
                 className += ".class";
-                classFile = new File(srcDir, className);
-                ejbFiles.put(className, classFile);
+                ejbFiles.put(className, new File(srcDir, className));
             }
         }
 
