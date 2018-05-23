@@ -50,7 +50,7 @@ public class PropertyExpansionTest {
                 {"$$$$-", "$$-"},
                 {"", ""},
                 {"Class$$subclass", "Class$subclass"},
-		        /* dollar passthrough */
+                /* dollar passthrough */
                 {"$-", "$-"},
                 {"Class$subclass", "Class$subclass"},
                 {"$$$-", "$$-"},
@@ -63,7 +63,7 @@ public class PropertyExpansionTest {
                 {"$$$-", "$-"},
                 {"a$b", "ab"},
                 {"$}}", "}}"},
-		        */
+                */
         });
     }
 
