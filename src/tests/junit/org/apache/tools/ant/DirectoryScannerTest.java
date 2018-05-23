@@ -217,14 +217,14 @@ public class DirectoryScannerTest {
     }
 
     /**
-     * Test case for setFollowLinks() and associated functionality.
+     * Test case for setFollowSymlinks() and associated functionality.
      * Only supports test on Linux at the moment because Java has
      * no real notion of symlinks built in, so an os-specfic call
      * to Runtime.exec() must be made to create a link to test against.
      * @throws InterruptedException if something goes wrong
      */
     @Test
-    public void testSetFollowLinks() throws IOException, InterruptedException {
+    public void testSetFollowSymlinks() throws IOException, InterruptedException {
         if (supportsSymlinks) {
             File dir = new File(buildRule.getProject().getBaseDir(),
                     "../../../main/org/apache/tools");
@@ -240,7 +240,7 @@ public class DirectoryScannerTest {
                 Process process = Runtime.getRuntime().exec(command);
                 assertEquals("0 return code expected for external process", 0, process.waitFor());
 
-                // followLinks should be true by default, but if this ever
+                // followSymlinks should be true by default, but if this ever
                 // changes we will need this line.
                 ds.setFollowSymlinks(true);
 

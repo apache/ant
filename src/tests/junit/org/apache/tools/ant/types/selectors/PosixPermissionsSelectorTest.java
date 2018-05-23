@@ -125,7 +125,7 @@ public class PosixPermissionsSelectorTest {
 
             s.setPermissions(argument);
             assertFalse(s.isSelected(null, null, symbolicLink.toFile()));
-            s.setFollowLinks("yes");
+            s.setFollowSymlinks("yes");
             assertTrue(s.isSelected(null, null, symbolicLink.toFile()));
         }
     }

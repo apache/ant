@@ -42,7 +42,7 @@ public class PosixGroupSelector implements FileSelector {
 
     private String group;
 
-    private boolean followLinks = false;
+    private boolean followSymlinks = false;
 
     /**
      * Sets the group name to look for.
@@ -54,10 +54,10 @@ public class PosixGroupSelector implements FileSelector {
 
     /**
      * Sets the "follow links" flag.
-     * @param followLinks the user name
+     * @param followSymlinks the user name
      */
-    public void setFollowLinks(String followLinks) {
-        this.followLinks = PropertyHelper.toBoolean(followLinks);
+    public void setFollowSymlinks(String followSyminks) {
+        this.followSymlinks = PropertyHelper.toBoolean(followSymlinks);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class PosixGroupSelector implements FileSelector {
             throw new BuildException("the group attribute is required");
         }
         try {
-            GroupPrincipal actualGroup = followLinks ? Files.readAttributes(file.toPath(),
+            GroupPrincipal actualGroup = followSymlinks ? Files.readAttributes(file.toPath(),
                     PosixFileAttributes.class).group() : Files.readAttributes(file.toPath(),
                     PosixFileAttributes.class, LinkOption.NOFOLLOW_LINKS).group();
             return actualGroup != null && actualGroup.getName().equals(group);

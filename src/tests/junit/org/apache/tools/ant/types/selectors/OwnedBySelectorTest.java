@@ -80,7 +80,7 @@ public class OwnedBySelectorTest {
 
         s.setOwner(SELF);
         assertTrue(s.isSelected(null, null, symbolicLink.toFile()));
-        s.setFollowLinks("yes");
+        s.setFollowSymlinks("yes");
         assertFalse(s.isSelected(null, null, symbolicLink.toFile()));
     }
 }

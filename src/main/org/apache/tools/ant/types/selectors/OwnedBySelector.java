@@ -42,7 +42,7 @@ public class OwnedBySelector implements FileSelector {
 
     private String owner;
 
-    private boolean followLinks = false;
+    private boolean followSymlinks = false;
 
     /**
      * Sets the user name to look for.
@@ -54,10 +54,10 @@ public class OwnedBySelector implements FileSelector {
 
     /**
      * Sets the "follow links" flag.
-     * @param followLinks the user name
+     * @param followSymlinks the user name
      */
-    public void setFollowLinks(String followLinks) {
-        this.followLinks = PropertyHelper.toBoolean(followLinks);
+    public void setFollowSymlinks(String followSymlinks) {
+        this.followSymlinks = PropertyHelper.toBoolean(followSymlinks);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class OwnedBySelector implements FileSelector {
         }
         if (file != null) {
             try {
-                UserPrincipal user = followLinks ? Files.getOwner(file.toPath())
+                UserPrincipal user = followSymlinks ? Files.getOwner(file.toPath())
                         : Files.getOwner(file.toPath(), LinkOption.NOFOLLOW_LINKS);
                 return user != null && owner.equals(user.getName());
             } catch (UnsupportedOperationException | IOException ex) {

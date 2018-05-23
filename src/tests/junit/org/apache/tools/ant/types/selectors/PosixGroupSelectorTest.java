@@ -87,7 +87,7 @@ public class PosixGroupSelectorTest {
 
         s.setGroup(linkGroup.getName());
         assertTrue(s.isSelected(null, null, symbolicLink.toFile()));
-        s.setFollowLinks("yes");
+        s.setFollowSymlinks("yes");
         assertFalse(s.isSelected(null, null, symbolicLink.toFile()));
     }
 }
