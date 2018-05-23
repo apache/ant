@@ -98,7 +98,7 @@ public class DescriptorHandler extends HandlerBase {
      * put into the jar file, mapped to File objects  Accessed by the SAX
      * parser call-back method characters().
      */
-    protected Map<String, File> ejbFiles = null;
+    protected Hashtable<String, File> ejbFiles = null;
 
     /**
      * Instance variable that stores the value found in the &lt;ejb-name&gt; element
@@ -235,7 +235,7 @@ public class DescriptorHandler extends HandlerBase {
      * @return the map of files
      */
     public Hashtable<String, File> getFiles() {
-        return new Hashtable<>(ejbFiles == null ? Collections.emptyMap() : ejbFiles);
+        return ejbFiles == null ? new Hashtable<>(Collections.emptyMap()) : ejbFiles;
     }
 
     /**
