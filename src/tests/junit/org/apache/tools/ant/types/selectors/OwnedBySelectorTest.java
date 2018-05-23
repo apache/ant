@@ -19,14 +19,19 @@
 package org.apache.tools.ant.types.selectors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.nio.file.attribute.UserPrincipal;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -36,18 +41,46 @@ public class OwnedBySelectorTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
-    @Test
-    public void ownedByIsTrueForSelf() throws Exception {
+    private final File TEST_FILE = new File("/etc/passwd");
+
+    private final String SELF = System.getProperty("user.name");
+
+    private final String ROOT = "root";
+
+    private OwnedBySelector s;
+
+    @Before
+    public void setUp() {
         // at least on Jenkins the file is owned by "BUILTIN\Administrators"
         assumeFalse(Os.isFamily("windows"));
-        String self = System.getProperty("user.name");
+
+        s = new OwnedBySelector();
+    }
+
+    @Test
+    public void ownedByIsTrueForSelf() throws Exception {
         File file = folder.newFile("f.txt");
         UserPrincipal user = Files.getOwner(file.toPath());
-        assertEquals(self, user.getName());
+        assertEquals(SELF, user.getName());
 
-        OwnedBySelector s = new OwnedBySelector();
-        s.setOwner(self);
+        s.setOwner(SELF);
         assertTrue(s.isSelected(null, null, file));
     }
 
+    @Test
+    public void ownedByFollowSymlinks() throws IOException {
+        File target = new File(folder.getRoot(), "link");
+        Path symbolicLink = Files.createSymbolicLink(target.toPath(), TEST_FILE.toPath());
+
+        UserPrincipal root = Files.getOwner(symbolicLink);
+        assertEquals(ROOT, root.getName());
+
+        UserPrincipal user = Files.getOwner(symbolicLink, LinkOption.NOFOLLOW_LINKS);
+        assertEquals(SELF, user.getName());
+
+        s.setOwner(SELF);
+        assertTrue(s.isSelected(null, null, symbolicLink.toFile()));
+        s.setFollowLinks("yes");
+        assertFalse(s.isSelected(null, null, symbolicLink.toFile()));
+    }
 }

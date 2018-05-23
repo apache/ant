@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.PropertyHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +42,8 @@ public class PosixGroupSelector implements FileSelector {
 
     private String group;
 
+    private boolean followLinks = false;
+
     /**
      * Sets the group name to look for.
      * @param group the group name
@@ -49,13 +52,22 @@ public class PosixGroupSelector implements FileSelector {
         this.group = group;
     }
 
+    /**
+     * Sets the "follow links" flag.
+     * @param followLinks the user name
+     */
+    public void setFollowLinks(String followLinks) {
+        this.followLinks = PropertyHelper.toBoolean(followLinks);
+    }
+
     @Override
     public boolean isSelected(File basedir, String filename, File file) {
         if (group == null) {
             throw new BuildException("the group attribute is required");
         }
         try {
-            GroupPrincipal actualGroup = Files.readAttributes(file.toPath(),
+            GroupPrincipal actualGroup = followLinks ? Files.readAttributes(file.toPath(),
+                    PosixFileAttributes.class).group() : Files.readAttributes(file.toPath(),
                     PosixFileAttributes.class, LinkOption.NOFOLLOW_LINKS).group();
             return actualGroup != null && actualGroup.getName().equals(group);
         } catch (IOException e) {

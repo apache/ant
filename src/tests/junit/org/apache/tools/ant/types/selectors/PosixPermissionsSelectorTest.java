@@ -10,9 +10,16 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
@@ -35,7 +42,7 @@ public class PosixPermissionsSelectorTest {
 
         @Before
         public void setUp() {
-            assumeTrue("no POSIX", Os.isFamily("unix"));
+            assumeTrue("Not POSIX", Os.isFamily("unix"));
             s = new PosixPermissionsSelector();
         }
 
@@ -54,9 +61,9 @@ public class PosixPermissionsSelectorTest {
         public TemporaryFolder folder = new TemporaryFolder();
 
         // requires JUnit 4.12
-        @Parameterized.Parameters(name = "legal argument: |{0}|")
+        @Parameterized.Parameters(name = "legal argument (self): |{0}|")
         public static Collection<String> data() {
-            return Arrays.asList("755", "rwxr-xr-x");
+            return Arrays.asList("750", "rwxr-x---");
         }
 
         @Parameterized.Parameter
@@ -64,14 +71,62 @@ public class PosixPermissionsSelectorTest {
 
         @Before
         public void setUp() {
-            assumeTrue("No POSIX", Os.isFamily("unix"));
+            assumeTrue("Not POSIX", Os.isFamily("unix"));
             s = new PosixPermissionsSelector();
         }
 
         @Test
-        public void PosixPermissionsIsTrueForSelf() throws Exception {
+        public void test() throws Exception {
+            // do not depend on default umask
+            File subFolder = folder.newFolder();
+            Set<PosixFilePermission> permissions = new HashSet<>();
+            permissions.add(PosixFilePermission.OWNER_READ);
+            permissions.add(PosixFilePermission.OWNER_WRITE);
+            permissions.add(PosixFilePermission.OWNER_EXECUTE);
+            permissions.add(PosixFilePermission.GROUP_READ);
+            permissions.add(PosixFilePermission.GROUP_EXECUTE);
+            Files.setPosixFilePermissions(subFolder.toPath(), permissions);
+
             s.setPermissions(argument);
-            assertTrue(s.isSelected(null, null, folder.newFolder()));
+            assertTrue(s.isSelected(null, null, subFolder));
+        }
+    }
+
+    @RunWith(Parameterized.class)
+    public static class LegalSymbolicLinkArgumentTest {
+
+        private final File TEST_FILE = new File("/etc/passwd");
+
+        private PosixPermissionsSelector s;
+
+        @Rule
+        public TemporaryFolder folder = new TemporaryFolder();
+
+        // requires JUnit 4.12
+        @Parameterized.Parameters(name = "legal argument (link): |{0}|")
+        public static Collection<String> data() {
+            return Arrays.asList("644", "rw-r--r--");
+        }
+
+        @Parameterized.Parameter
+        public String argument;
+
+        @Before
+        public void setUp() {
+            assumeTrue("Not POSIX", Os.isFamily("unix"));
+            s = new PosixPermissionsSelector();
+        }
+
+        @Test
+        public void test() throws Exception {
+            // symlinks have execute bit set by default
+            File target = new File(folder.getRoot(), "link");
+            Path symbolicLink = Files.createSymbolicLink(target.toPath(), TEST_FILE.toPath());
+
+            s.setPermissions(argument);
+            assertFalse(s.isSelected(null, null, symbolicLink.toFile()));
+            s.setFollowLinks("yes");
+            assertTrue(s.isSelected(null, null, symbolicLink.toFile()));
         }
     }
 

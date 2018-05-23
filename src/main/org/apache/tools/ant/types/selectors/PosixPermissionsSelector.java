@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.util.PermissionUtils;
 
 import java.io.File;
@@ -40,6 +41,8 @@ public class PosixPermissionsSelector implements FileSelector {
 
     private String permissions;
 
+    private boolean followLinks = false;
+
     /**
      * Sets the permissions to look for.
      * @param permissions the permissions string (rwxrwxrwx or octal)
@@ -59,14 +62,23 @@ public class PosixPermissionsSelector implements FileSelector {
         }
     }
 
+    /**
+     * Sets the "follow links" flag.
+     * @param followLinks the user name
+     */
+    public void setFollowLinks(String followLinks) {
+        this.followLinks = PropertyHelper.toBoolean(followLinks);
+    }
+
     @Override
     public boolean isSelected(File basedir, String filename, File file) {
         if (permissions == null) {
             throw new BuildException("the permissions attribute is required");
         }
         try {
-            return PosixFilePermissions.toString(
-                    Files.getPosixFilePermissions(file.toPath(), LinkOption.NOFOLLOW_LINKS))
+            return PosixFilePermissions.toString(followLinks
+                    ? Files.getPosixFilePermissions(file.toPath())
+                    : Files.getPosixFilePermissions(file.toPath(), LinkOption.NOFOLLOW_LINKS))
                     .equals(permissions);
         } catch (IOException e) {
             // => not the expected permissions
