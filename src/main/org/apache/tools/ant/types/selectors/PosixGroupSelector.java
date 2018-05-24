@@ -56,7 +56,7 @@ public class PosixGroupSelector implements FileSelector {
      * Sets the "follow links" flag.
      * @param followSymlinks the user name
      */
-    public void setFollowSymlinks(String followSyminks) {
+    public void setFollowSymlinks(String followSymlinks) {
         this.followSymlinks = PropertyHelper.toBoolean(followSymlinks);
     }
 
