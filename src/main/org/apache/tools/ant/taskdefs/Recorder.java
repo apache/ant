@@ -67,7 +67,8 @@ public class Recorder extends Task implements SubBuildListener {
     /** Strip task banners if true.  */
     private boolean emacsMode = false;
     /** The list of recorder entries. */
-    private static Hashtable<String, RecorderEntry> recorderEntries = new Hashtable<>();
+    private static Hashtable<String, RecorderEntry> recorderEntries
+            = new Hashtable<String, RecorderEntry>();
 
     //////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / INITIALIZERS
