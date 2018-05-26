@@ -887,24 +887,24 @@ public class NetRexxC extends MatchingTask {
                 }
                 // verbose level logging for suppressed messages
                 if (suppressMethodArgumentNotUsed
-                    && l.indexOf(MSG_METHOD_ARGUMENT_NOT_USED) != -1) {
+                    && l.contains(MSG_METHOD_ARGUMENT_NOT_USED)) {
                     log(l, Project.MSG_VERBOSE);
                 } else if (suppressPrivatePropertyNotUsed
-                    && l.indexOf(MSG_PRIVATE_PROPERTY_NOT_USED) != -1) {
+                    && l.contains(MSG_PRIVATE_PROPERTY_NOT_USED)) {
                     log(l, Project.MSG_VERBOSE);
                 } else if (suppressVariableNotUsed
-                    && l.indexOf(MSG_VARIABLE_NOT_USED) != -1) {
+                    && l.contains(MSG_VARIABLE_NOT_USED)) {
                     log(l, Project.MSG_VERBOSE);
                 } else if (suppressExceptionNotSignalled
-                    && l.indexOf(MSG_EXCEPTION_NOT_SIGNALLED) != -1) {
+                    && l.contains(MSG_EXCEPTION_NOT_SIGNALLED)) {
                     log(l, Project.MSG_VERBOSE);
                 } else if (suppressDeprecation
-                    && l.indexOf(MSG_DEPRECATION) != -1) {
+                    && l.contains(MSG_DEPRECATION)) {
                     log(l, Project.MSG_VERBOSE);
-                } else if (l.indexOf("Error:") != -1) {
+                } else if (l.contains("Error:")) {
                     // error level logging for compiler errors
                     log(l, Project.MSG_ERR);
-                } else if (l.indexOf("Warning:") != -1) {
+                } else if (l.contains("Warning:")) {
                     // warning for all warning messages
                     log(l, Project.MSG_WARN);
                 } else {

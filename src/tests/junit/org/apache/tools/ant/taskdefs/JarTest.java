@@ -344,33 +344,33 @@ public class JarTest {
     @Test
     public void testNoVersionInfoIgnore() {
         buildRule.executeTarget("testNoVersionInfoIgnore");
-        assertTrue(buildRule.getFullLog().indexOf("No Implementation-Title set.") > -1);
-        assertTrue(buildRule.getFullLog().indexOf("No Implementation-Version set.") > -1);
-        assertTrue(buildRule.getFullLog().indexOf("No Implementation-Vendor set.") > -1);
+        assertTrue(buildRule.getFullLog().contains("No Implementation-Title set."));
+        assertTrue(buildRule.getFullLog().contains("No Implementation-Version set."));
+        assertTrue(buildRule.getFullLog().contains("No Implementation-Vendor set."));
     }
 
     @Test
     public void testNoVersionInfoWarn() {
         buildRule.executeTarget("testNoVersionInfoWarn");
-        assertTrue(buildRule.getLog().indexOf("No Implementation-Title set.") > -1);
-        assertTrue(buildRule.getLog().indexOf("No Implementation-Version set.") > -1);
-        assertTrue(buildRule.getLog().indexOf("No Implementation-Vendor set.") > -1);
+        assertTrue(buildRule.getLog().contains("No Implementation-Title set."));
+        assertTrue(buildRule.getLog().contains("No Implementation-Version set."));
+        assertTrue(buildRule.getLog().contains("No Implementation-Vendor set."));
     }
 
     @Test
     public void testNoVersionInfoNoStrict() {
         buildRule.executeTarget("testNoVersionInfoNoStrict");
-        assertFalse(buildRule.getLog().indexOf("No Implementation-Title set.") > -1);
-        assertFalse(buildRule.getLog().indexOf("No Implementation-Version set.") > -1);
-        assertFalse(buildRule.getLog().indexOf("No Implementation-Vendor set.") > -1);
+        assertFalse(buildRule.getLog().contains("No Implementation-Title set."));
+        assertFalse(buildRule.getLog().contains("No Implementation-Version set."));
+        assertFalse(buildRule.getLog().contains("No Implementation-Vendor set."));
     }
 
     @Test
     public void testHasVersionInfo() {
         buildRule.executeTarget("testHasVersionInfo");
-        assertFalse(buildRule.getLog().indexOf("No Implementation-Title set.") > -1);
-        assertFalse(buildRule.getLog().indexOf("No Implementation-Version set.") > -1);
-        assertFalse(buildRule.getLog().indexOf("No Implementation-Vendor set.") > -1);
+        assertFalse(buildRule.getLog().contains("No Implementation-Title set."));
+        assertFalse(buildRule.getLog().contains("No Implementation-Version set."));
+        assertFalse(buildRule.getLog().contains("No Implementation-Vendor set."));
     }
 
 }

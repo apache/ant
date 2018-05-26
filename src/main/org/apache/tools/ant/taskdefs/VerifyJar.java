@@ -180,15 +180,15 @@ public class VerifyJar extends AbstractJarSignerTask {
         String results = outputCache.toString();
         //deal with jdk1.4.2 bug:
         if (ex != null) {
-            if (results.indexOf("zip file closed") >= 0) {
-                log("You are running " + JARSIGNER_COMMAND + " against a JVM with"
-                    + " a known bug that manifests as an IllegalStateException.",
+            if (results.contains("zip file closed")) {
+                log("You are running " + JARSIGNER_COMMAND
+                    + " against a JVM with a known bug that manifests as an IllegalStateException.",
                     Project.MSG_WARN);
             } else {
                 throw ex;
             }
         }
-        if (results.indexOf(VERIFIED_TEXT) < 0) {
+        if (!results.contains(VERIFIED_TEXT)) {
             throw new BuildException(ERROR_NO_VERIFY + jar);
         }
     }

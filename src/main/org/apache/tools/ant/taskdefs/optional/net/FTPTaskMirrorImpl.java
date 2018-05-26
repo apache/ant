@@ -1480,12 +1480,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         if (!rc) {
             task.log("Failed to issue Site Command: " + theCMD, Project.MSG_WARN);
         } else {
-
-            myReply = ftp.getReplyStrings();
-
-            for (int x = 0; x < myReply.length; x++) {
-                if (myReply[x].indexOf("200") == -1) {
-                    task.log(myReply[x], Project.MSG_WARN);
+            for (String reply : ftp.getReplyStrings()) {
+                if (!reply.contains("200")) {
+                    task.log(reply, Project.MSG_WARN);
                 }
             }
         }

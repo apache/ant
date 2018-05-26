@@ -2093,12 +2093,9 @@ public class FTP extends Task implements FTPTaskConfig {
         if (!rc) {
             log("Failed to issue Site Command: " + theCMD, Project.MSG_WARN);
         } else {
-
-            myReply = ftp.getReplyStrings();
-
-            for (int x = 0; x < myReply.length; x++) {
-                if (myReply[x] != null && myReply[x].indexOf("200") == -1) {
-                    log(myReply[x], Project.MSG_WARN);
+            for (String reply : ftp.getReplyStrings()) {
+                if (reply != null && !reply.contains("200")) {
+                    log(reply, Project.MSG_WARN);
                 }
             }
         }

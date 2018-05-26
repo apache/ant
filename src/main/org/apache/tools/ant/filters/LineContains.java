@@ -118,7 +118,7 @@ public final class LineContains
                 boolean matches = true;
                 for (int i = 0; matches && i < containsSize; i++) {
                     String containsStr = (String) contains.elementAt(i);
-                    matches = line.indexOf(containsStr) >= 0;
+                    matches = line.contains(containsStr);
                 }
                 if (matches ^ isNegated()) {
                     break;

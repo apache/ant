@@ -601,7 +601,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             addExisting(systemBootClasspath);
         }
 
-        if (System.getProperty("java.vendor").toLowerCase(Locale.ENGLISH).indexOf("microsoft") >= 0) {
+        if (System.getProperty("java.vendor").toLowerCase(Locale.ENGLISH).contains("microsoft")) {
             // TODO is this code still necessary? is there any 1.2+ port?
             // Pull in *.zip from packages directory
             FileSet msZipFiles = new FileSet();
@@ -765,8 +765,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @since Ant 1.8.2
      */
     private static boolean containsWildcards(String path) {
-        return path != null
-            && (path.indexOf("*") > -1 || path.indexOf("?") > -1);
+        return path != null && (path.contains("*") || path.contains("?"));
     }
 
 }

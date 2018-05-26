@@ -94,7 +94,7 @@ public class CommandlineJavaTest {
         assertEquals("with classpath", "-Djava.compiler=NONE", s[1]);
         assertEquals("with classpath", "-classpath", s[2]);
         assertTrue("build.xml contained",
-               s[3].indexOf("build.xml"+java.io.File.pathSeparator) >= 0);
+                s[3].contains("build.xml" + java.io.File.pathSeparator));
         assertTrue("ant.jar contained", s[3].endsWith("ant.jar"));
         assertEquals("with classpath", "junit.textui.TestRunner", s[4]);
         assertEquals("with classpath",

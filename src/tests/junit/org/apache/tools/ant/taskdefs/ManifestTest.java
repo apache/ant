@@ -395,14 +395,14 @@ public class ManifestTest {
         String mfAsString = mf.toString();
         assertNotNull(mfAsString);
         assertTrue(mfAsString.startsWith("Manifest-Version: 2.0"));
-        assertTrue(mfAsString.indexOf("Foo: Bar") > -1);
+        assertTrue(mfAsString.contains("Foo: Bar"));
 
         mf = getManifest(new File(outDir, "mftest2.mf"));
         assertNotNull(mf);
         mfAsString = mf.toString();
         assertNotNull(mfAsString);
         assertEquals(-1, mfAsString.indexOf("Foo: Bar"));
-        assertTrue(mfAsString.indexOf("Foo: Baz") > -1);
+        assertTrue(mfAsString.contains("Foo: Baz"));
     }
 
     @Test

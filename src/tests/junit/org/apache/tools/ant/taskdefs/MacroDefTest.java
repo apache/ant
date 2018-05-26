@@ -188,7 +188,7 @@ public class MacroDefTest {
         try {
             buildRule.executeTarget("backtraceoff");
         } catch (BuildException ex) {
-            if (ex.getMessage().indexOf("following error occurred") != -1) {
+            if (ex.getMessage().contains("following error occurred")) {
                 fail("error message contained backtrace - " + ex.getMessage());
             }
         }

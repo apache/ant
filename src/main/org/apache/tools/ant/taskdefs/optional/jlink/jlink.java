@@ -245,9 +245,7 @@ public class jlink {
                         //entry from another mergefile was called "com".
                         //In that case, just ignore the error and go on to the
                         //next entry.
-                        String mess = ex.getMessage();
-
-                        if (mess.indexOf("duplicate") >= 0) {
+                        if (ex.getMessage().contains("duplicate")) {
                             //It was the duplicate entry.
                             continue;
                         } else {

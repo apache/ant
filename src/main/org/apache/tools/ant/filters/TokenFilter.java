@@ -428,7 +428,7 @@ public class TokenFilter extends BaseFilterReader
             if (contains == null) {
                 throw new BuildException("Missing contains in containsstring");
             }
-            if (string.indexOf(contains) > -1) {
+            if (string.contains(contains)) {
                 return string;
             }
             return null;

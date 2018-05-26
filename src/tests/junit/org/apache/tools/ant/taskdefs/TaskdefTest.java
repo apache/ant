@@ -119,10 +119,10 @@ public class TaskdefTest {
         buildRule.executeTarget("testOverride");
         String log = buildRule.getLog();
         assertTrue("override warning sent",
-                   log.indexOf("Trying to override old definition of task copy") > -1);
+                log.contains("Trying to override old definition of task copy"));
         assertTrue("task inside target worked",
-                   log.indexOf("In target") > -1);
+                log.contains("In target"));
         assertTrue("task inside target worked",
-                   log.indexOf("In TaskContainer") > -1);
+                log.contains("In TaskContainer"));
     }
 }

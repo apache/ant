@@ -2230,7 +2230,7 @@ public class Javadoc extends Task {
             if (useExternalFile) {
                 // TODO what is the following doing?
                 //     should it run if !javadoc4 && executable != null?
-                if (sourceFileName.indexOf(" ") > -1) {
+                if (sourceFileName.contains(" ")) {
                     String name = sourceFileName;
                     if (File.separatorChar == '\\') {
                         name = sourceFileName.replace(File.separatorChar, '/');
@@ -2516,7 +2516,7 @@ public class Javadoc extends Task {
 
         // check if file may be vulnerable because it was not
         // patched with "validURL(url)":
-        if (fileContents.indexOf("function validURL(url) {") < 0) {
+        if (!fileContents.contains("function validURL(url) {")) {
             // we need to patch the file!
             final String patchedFileContents = patchContent(fileContents, fixData);
             if (!patchedFileContents.equals(fileContents)) {

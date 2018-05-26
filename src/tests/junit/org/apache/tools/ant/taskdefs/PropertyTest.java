@@ -69,7 +69,7 @@ public class PropertyTest {
             fail("Did not throw exception on circular exception");
         } catch (BuildException e) {
             assertTrue("Circular definition not detected - ",
-                     e.getMessage().indexOf("was circularly defined") != -1);
+                    e.getMessage().contains("was circularly defined"));
         }
 
     }

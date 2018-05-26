@@ -83,7 +83,7 @@ public class Jikes {
             // Windows has a 32k limit on total arg size, so
             // create a temporary file to store all the arguments
 
-            if (myos.toLowerCase(Locale.ENGLISH).indexOf("windows") >= 0
+            if (myos.toLowerCase(Locale.ENGLISH).contains("windows")
                 && args.length > MAX_FILES_ON_COMMAND_LINE) {
                 BufferedWriter out = null;
                 try {

@@ -70,18 +70,16 @@ public class LocationTest {
     public void testMacrodefWrappedTask() {
         buildRule.executeTarget("testMacrodefWrappedTask");
         Echo e = (Echo) buildRule.getProject().getReference("echo3");
-        assertTrue(buildRule.getLog().indexOf("Line: "
-                                    + (e.getLocation().getLineNumber() + 1))
-                   > -1);
+        assertTrue(buildRule.getLog().contains("Line: "
+                + (e.getLocation().getLineNumber() + 1)));
     }
 
     @Test
     public void testPresetdefWrappedTask() {
         buildRule.executeTarget("testPresetdefWrappedTask");
         Echo e = (Echo) buildRule.getProject().getReference("echo4");
-        assertTrue(buildRule.getLog().indexOf("Line: "
-                                    + (e.getLocation().getLineNumber() + 1))
-                   > -1);
+        assertTrue(buildRule.getLog().contains("Line: "
+                + (e.getLocation().getLineNumber() + 1)));
     }
 
     public static class EchoLocation extends Task {

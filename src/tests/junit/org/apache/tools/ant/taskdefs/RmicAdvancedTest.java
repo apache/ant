@@ -465,7 +465,7 @@ public class RmicAdvancedTest {
                 buildRule.executeTarget(target);
                 fail("Target should have thrown a BuildException");
             } catch (BuildException ex) {
-                if (target.indexOf("IDL") > -1) {
+                if (target.contains("IDL")) {
                     assertEquals("this rmic implementation doesn't support the -idl switch", ex.getMessage());
                 } else {
                     assertEquals("this rmic implementation doesn't support the -iiop switch", ex.getMessage());

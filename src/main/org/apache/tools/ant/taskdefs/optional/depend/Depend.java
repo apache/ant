@@ -522,7 +522,7 @@ public class Depend extends MatchingTask {
                 // without closure we may delete an inner class but not the
                 // top level class which would not trigger a recompile.
 
-                if (affectedClass.indexOf("$") == -1) {
+                if (!affectedClass.contains("$")) {
                     continue;
                 }
                 // need to delete the main class

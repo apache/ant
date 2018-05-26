@@ -714,7 +714,7 @@ public class Jar extends Zip {
                            + " be replaced by a newly generated one.",
                            Project.MSG_WARN);
         } else {
-            if (index && vPath.indexOf("/") == -1) {
+            if (index && !vPath.contains("/")) {
                 rootEntries.addElement(vPath);
             }
             super.zipFile(is, zOut, vPath, lastModified, fromArchive, mode);

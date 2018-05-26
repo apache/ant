@@ -559,7 +559,7 @@ public abstract class DefaultCompilerAdapter
                         "files", "", getJavac().getTempdir(), true, true);
                     out = new BufferedWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
-                        if (quoteFiles && args[i].indexOf(" ") > -1) {
+                        if (quoteFiles && args[i].contains(" ")) {
                             args[i] = args[i].replace(File.separatorChar, '/');
                             out.write("\"" + args[i] + "\"");
                         } else {

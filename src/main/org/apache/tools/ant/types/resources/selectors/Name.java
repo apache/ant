@@ -143,7 +143,7 @@ public class Name implements ResourceSelector {
     }
 
     private String modify(String s) {
-        if (s == null || !handleDirSep || s.indexOf("\\") == -1) {
+        if (s == null || !handleDirSep || !s.contains("\\")) {
             return s;
         }
         return s.replace('\\', '/');

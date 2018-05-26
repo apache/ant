@@ -56,10 +56,10 @@ public class ScriptDefTest {
         File baseDir = fileset.getDir(p);
         String log = buildRule.getLog();
         assertTrue("Expecting attribute value printed",
-            log.indexOf("Attribute attr1 = test") != -1);
+                log.contains("Attribute attr1 = test"));
 
         assertTrue("Expecting nested element value printed",
-            log.indexOf("Fileset basedir = " + baseDir.getAbsolutePath()) != -1);
+                log.contains("Fileset basedir = " + baseDir.getAbsolutePath()));
     }
 
     @Test
@@ -91,10 +91,10 @@ public class ScriptDefTest {
         File baseDir = fileset.getDir(p);
         String log = buildRule.getLog();
         assertTrue("Expecting attribute value to be printed",
-            log.indexOf("Attribute attr1 = test") != -1);
+                log.contains("Attribute attr1 = test"));
 
         assertTrue("Expecting nested element value to be printed",
-            log.indexOf("Fileset basedir = " + baseDir.getAbsolutePath()) != -1);
+                log.contains("Fileset basedir = " + baseDir.getAbsolutePath()));
     }
 
     @Test
@@ -117,8 +117,8 @@ public class ScriptDefTest {
     public void testDoubleDef() {
         buildRule.executeTarget("doubledef");
         String log = buildRule.getLog();
-        assertTrue("Task1 did not execute", log.indexOf("Task1") != -1);
-        assertTrue("Task2 did not execute", log.indexOf("Task2") != -1);
+        assertTrue("Task1 did not execute", log.contains("Task1"));
+        assertTrue("Task2 did not execute", log.contains("Task2"));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class ScriptDefTest {
         // get the fileset and its basedir
         String log = buildRule.getLog();
         assertTrue("Expecting property in attribute value replaced",
-            log.indexOf("Attribute value = test") != -1);
+                log.contains("Attribute value = test"));
     }
 
 

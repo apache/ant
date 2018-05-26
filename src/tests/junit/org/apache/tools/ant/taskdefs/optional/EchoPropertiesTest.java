@@ -131,7 +131,7 @@ public class EchoPropertiesTest {
         try {
             String read = null;
             while ((read = br.readLine()) != null) {
-                if (read.indexOf("<property name=\"test.property\" value=\""+TEST_VALUE+"\" />") >= 0) {
+                if (read.contains("<property name=\"test.property\" value=\"" + TEST_VALUE + "\" />")) {
                     // found the property we set - it's good.
                     return;
                 }

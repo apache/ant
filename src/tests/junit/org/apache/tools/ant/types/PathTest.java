@@ -572,7 +572,7 @@ public class PathTest {
             assertEquals(0, p.list().length);
         } catch (BuildException x) {
             String m = x.toString();
-            assertTrue(m, m.indexOf("circular") != -1);
+            assertTrue(m, m.contains("circular"));
         }
     }
 

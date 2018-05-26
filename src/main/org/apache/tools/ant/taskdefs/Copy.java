@@ -1091,7 +1091,7 @@ public class Copy extends Task {
             }
             message.append(ex.getMessage());
         }
-        if (ex.getClass().getName().indexOf("MalformedInput") != -1) {
+        if (ex.getClass().getName().contains("MalformedInput")) {
             message.append(LINE_SEPARATOR);
             message.append(
                 "This is normally due to the input file containing invalid");
