@@ -20,6 +20,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Locale;
@@ -326,17 +327,16 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @param tryUserDir  if true try the user directory if the file is not present
      */
     public void addExisting(Path source, boolean tryUserDir) {
-        String[] list = source.list();
         File userDir = (tryUserDir) ? new File(System.getProperty("user.dir"))
                 : null;
 
-        for (int i = 0; i < list.length; i++) {
-            File f = resolveFile(getProject(), list[i]);
+        for (String name : source.list()) {
+            File f = resolveFile(getProject(), name);
 
             // probably not the best choice, but it solves the problem of
             // relative paths in CLASSPATH
             if (tryUserDir && !f.exists()) {
-                f = new File(userDir, list[i]);
+                f = new File(userDir, name);
             }
             if (f.exists()) {
                 setLocation(f);
@@ -624,28 +624,25 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
                                  + File.separator + "rt.jar"));
 
             // Sun's and Apple's 1.4 have JCE and JSSE in separate jars.
-            String[] secJars = {"jce", "jsse"};
-            for (int i = 0; i < secJars.length; i++) {
+            for (String secJar : Arrays.asList("jce", "jsse")) {
                 addExisting(new Path(null,
-                                     System.getProperty("java.home")
-                                     + File.separator + "lib"
-                                     + File.separator + secJars[i] + ".jar"));
+                        System.getProperty("java.home")
+                                + File.separator + "lib"
+                                + File.separator + secJar + ".jar"));
                 addExisting(new Path(null,
-                                     System.getProperty("java.home")
-                                     + File.separator + ".."
-                                     + File.separator + "Classes"
-                                     + File.separator + secJars[i] + ".jar"));
+                        System.getProperty("java.home")
+                                + File.separator + ".."
+                                + File.separator + "Classes"
+                                + File.separator + secJar + ".jar"));
             }
 
             // IBM's 1.4 has rt.jar split into 4 smaller jars and a combined
             // JCE/JSSE in security.jar.
-            String[] ibmJars
-                = {"core", "graphics", "security", "server", "xml"};
-            for (int i = 0; i < ibmJars.length; i++) {
+            for (String ibmJar : Arrays.asList("core", "graphics", "security", "server", "xml")) {
                 addExisting(new Path(null,
-                                     System.getProperty("java.home")
-                                     + File.separator + "lib"
-                                     + File.separator + ibmJars[i] + ".jar"));
+                        System.getProperty("java.home")
+                                + File.separator + "lib"
+                                + File.separator + ibmJar + ".jar"));
             }
 
             // Added for MacOS X
@@ -679,9 +676,8 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             }
         }
 
-        String[] dirs = extdirs.list();
-        for (int i = 0; i < dirs.length; i++) {
-            File dir = resolveFile(getProject(), dirs[i]);
+        for (String d : extdirs.list()) {
+            File dir = resolveFile(getProject(), d);
             if (dir.exists() && dir.isDirectory()) {
                 FileSet fs = new FileSet();
                 fs.setDir(dir);

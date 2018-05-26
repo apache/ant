@@ -42,11 +42,11 @@ public class IgnoreDependenciesExecutor implements Executor {
         throws BuildException {
         Hashtable<String, Target> targets = project.getTargets();
         BuildException thrownException = null;
-        for (int i = 0; i < targetNames.length; i++) {
+        for (String targetName : targetNames) {
             try {
-                Target t = targets.get(targetNames[i]);
+                Target t = targets.get(targetName);
                 if (t == null) {
-                  throw new BuildException("Unknown target " + targetNames[i]);
+                    throw new BuildException("Unknown target " + targetName);
                 }
                 t.performTasks();
             } catch (BuildException ex) {

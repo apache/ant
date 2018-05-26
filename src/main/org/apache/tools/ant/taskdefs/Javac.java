@@ -1153,10 +1153,9 @@ public class Javac extends MatchingTask {
      */
     protected void scanDir(final File srcDir, final File destDir, final String[] files) {
         final GlobPatternMapper m = new GlobPatternMapper();
-        final String[] extensions = findSupportedFileExtensions();
 
-        for (int i = 0; i < extensions.length; i++) {
-            m.setFrom(extensions[i]);
+        for (String extension : findSupportedFileExtensions()) {
+            m.setFrom(extension);
             m.setTo("*.class");
             final SourceFileScanner sfs = new SourceFileScanner(this);
             final File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
@@ -1175,9 +1174,8 @@ public class Javac extends MatchingTask {
     }
 
     private void collectFileListFromSourcePath() {
-        final String[] list = src.list();
-        for (int i = 0; i < list.length; i++) {
-            final File srcDir = getProject().resolveFile(list[i]);
+        for (String filename : src.list()) {
+            final File srcDir = getProject().resolveFile(filename);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \""
                                          + srcDir.getPath()
@@ -1195,7 +1193,8 @@ public class Javac extends MatchingTask {
         final FileUtils fu = FileUtils.getFileUtils();
         for (String pathElement : moduleSourcepath.list()) {
             boolean valid = false;
-            for (Map.Entry<String,Collection<File>> modules : resolveModuleSourcePathElement(getProject().getBaseDir(), pathElement).entrySet()) {
+            for (Map.Entry<String,Collection<File>> modules : resolveModuleSourcePathElement(
+                    getProject().getBaseDir(), pathElement).entrySet()) {
                 final String moduleName = modules.getKey();
                 for (File srcDir : modules.getValue()) {
                     if (srcDir.exists()) {

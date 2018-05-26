@@ -1215,7 +1215,7 @@ public class DirectoryScanner
     }
 
     private void scandir(final File dir, final TokenizedPath path, final boolean fast,
-                         String[] newfiles, final LinkedList<String> directoryNamesFollowed) {
+                         String[] newFiles, final LinkedList<String> directoryNamesFollowed) {
         String vpath = path.toString();
         if (vpath.length() > 0 && !vpath.endsWith(File.separator)) {
             vpath += File.separator;
@@ -1227,11 +1227,11 @@ public class DirectoryScanner
         }
         if (!followSymlinks) {
             final ArrayList<String> noLinks = new ArrayList<String>();
-            for (int i = 0; i < newfiles.length; i++) {
+            for (final String newFile : newFiles) {
                 try {
-                    if (SYMLINK_UTILS.isSymbolicLink(dir, newfiles[i])) {
-                        final String name = vpath + newfiles[i];
-                        final File file = new File(dir, newfiles[i]);
+                    if (SYMLINK_UTILS.isSymbolicLink(dir, newFile)) {
+                        final String name = vpath + newFile;
+                        final File file = new File(dir, newFile);
                         if (file.isDirectory()) {
                             dirsExcluded.addElement(name);
                         } else if (file.isFile()) {
@@ -1239,25 +1239,25 @@ public class DirectoryScanner
                         }
                         accountForNotFollowedSymlink(name, file);
                     } else {
-                        noLinks.add(newfiles[i]);
+                        noLinks.add(newFile);
                     }
                 } catch (final IOException ioe) {
                     final String msg = "IOException caught while checking "
                         + "for links, couldn't get canonical path!";
                     // will be caught and redirected to Ant's logging system
                     System.err.println(msg);
-                    noLinks.add(newfiles[i]);
+                    noLinks.add(newFile);
                 }
             }
-            newfiles = (noLinks.toArray(new String[noLinks.size()]));
+            newFiles = (noLinks.toArray(new String[noLinks.size()]));
         } else {
             directoryNamesFollowed.addFirst(dir.getName());
         }
 
-        for (int i = 0; i < newfiles.length; i++) {
-            final String name = vpath + newfiles[i];
-            final TokenizedPath newPath = new TokenizedPath(path, newfiles[i]);
-            final File file = new File(dir, newfiles[i]);
+        for (String newFile : newFiles) {
+            final String name = vpath + newFile;
+            final TokenizedPath newPath = new TokenizedPath(path, newFile);
+            final File file = new File(dir, newFile);
             final String[] children = file.list();
             if (children == null || (children.length == 0 && file.isFile())) {
                 if (isIncluded(newPath)) {
@@ -1269,8 +1269,7 @@ public class DirectoryScanner
             } else if (file.isDirectory()) { // dir
 
                 if (followSymlinks
-                    && causesIllegalSymlinkLoop(newfiles[i], dir,
-                                                directoryNamesFollowed)) {
+                        && causesIllegalSymlinkLoop(newFile, dir, directoryNamesFollowed)) {
                     // will be caught and redirected to Ant's logging system
                     System.err.println("skipping symbolic link "
                                        + file.getAbsolutePath()

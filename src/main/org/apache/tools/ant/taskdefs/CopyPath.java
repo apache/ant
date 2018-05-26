@@ -177,17 +177,15 @@ public class CopyPath extends Task {
             return;
         }
 
-        for (int sources = 0; sources < sourceFiles.length; sources++) {
+        for (String sourceFileName : sourceFiles) {
 
-            String sourceFileName = sourceFiles[sources];
             File sourceFile = new File(sourceFileName);
             String[] toFiles = (String[]) mapper.mapFileName(sourceFileName);
             if (toFiles == null) {
                 continue;
             }
 
-            for (int i = 0; i < toFiles.length; i++) {
-                String destFileName = toFiles[i];
+            for (String destFileName : toFiles) {
                 File destFile = new File(destDir, destFileName);
 
                 if (sourceFile.equals(destFile)) {

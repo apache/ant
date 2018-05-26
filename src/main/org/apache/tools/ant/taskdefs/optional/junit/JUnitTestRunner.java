@@ -364,9 +364,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     public void run() {
         res = new IgnoredTestResult();
         res.addListener(wrapListener(this));
-        final int size = formatters.size();
-        for (int i = 0; i < size; i++) {
-            res.addListener(wrapListener((TestListener) formatters.elementAt(i)));
+        for (JUnitTaskMirror.JUnitResultFormatterMirror f : formatters) {
+            res.addListener(wrapListener((TestListener) f));
         }
 
         final ByteArrayOutputStream errStrm = new ByteArrayOutputStream();
@@ -507,9 +506,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                             suite = TestSuite.createTest(testClass, methods[0]);
                         } else {
                             final TestSuite testSuite = new TestSuite(testClass.getName());
-                            for (int i = 0; i < methods.length; i++) {
-                                testSuite.addTest(
-                                    TestSuite.createTest(testClass, methods[i]));
+                            for (String method : methods) {
+                                testSuite.addTest(TestSuite.createTest(testClass, method));
                             }
                             suite = testSuite;
                         }
@@ -527,9 +525,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             fireStartTestSuite();
             startTestSuiteSuccess = true;
             if (exception != null) { // had an exception constructing suite
-                final int formatterSize = formatters.size();
-                for (int i = 0; i < formatterSize; i++) {
-                    ((TestListener) formatters.elementAt(i)).addError(null, exception);
+                for (JUnitTaskMirror.JUnitResultFormatterMirror f : formatters) {
+                    ((TestListener) f).addError(null, exception);
                 }
                 junitTest.setCounts(1, 0, 1, 0);
                 junitTest.setRunTime(0);
@@ -825,27 +822,22 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     private void sendOutAndErr(final String out, final String err) {
-        final int size = formatters.size();
-        for (int i = 0; i < size; i++) {
-            final JUnitResultFormatter formatter =
-                ((JUnitResultFormatter) formatters.elementAt(i));
-
+        for (JUnitTaskMirror.JUnitResultFormatterMirror f : formatters) {
+            final JUnitResultFormatter formatter = (JUnitResultFormatter) f;
             formatter.setSystemOutput(out);
             formatter.setSystemError(err);
         }
     }
 
     private void fireStartTestSuite() {
-        final int size = formatters.size();
-        for (int i = 0; i < size; i++) {
-            ((JUnitResultFormatter) formatters.elementAt(i)).startTestSuite(junitTest);
+        for (JUnitTaskMirror.JUnitResultFormatterMirror f : formatters) {
+            ((JUnitResultFormatter) f).startTestSuite(junitTest);
         }
     }
 
     private void fireEndTestSuite() {
-        final int size = formatters.size();
-        for (int i = 0; i < size; i++) {
-            ((JUnitResultFormatter) formatters.elementAt(i)).endTestSuite(junitTest);
+        for (JUnitTaskMirror.JUnitResultFormatterMirror f : formatters) {
+            ((JUnitResultFormatter) f).endTestSuite(junitTest);
         }
     }
 
@@ -924,52 +916,52 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             args[0] = args[0].substring(Constants.TESTSFILE.length());
         }
 
-        for (int i = 1; i < args.length; i++) {
-            if (args[i].startsWith(Constants.METHOD_NAMES)) {
+        for (String arg : args) {
+            if (arg.startsWith(Constants.METHOD_NAMES)) {
                 try {
-                    final String methodsList = args[i].substring(Constants.METHOD_NAMES.length());
+                    final String methodsList = arg.substring(Constants.METHOD_NAMES.length());
                     methods = JUnitTest.parseTestMethodNamesList(methodsList);
                 } catch (final IllegalArgumentException ex) {
-                    System.err.println("Invalid specification of test method names: " + args[i]);
+                    System.err.println("Invalid specification of test method names: " + arg);
                     System.exit(ERRORS);
                 }
-            } else if (args[i].startsWith(Constants.HALT_ON_ERROR)) {
-                haltError = Project.toBoolean(args[i].substring(Constants.HALT_ON_ERROR.length()));
-            } else if (args[i].startsWith(Constants.HALT_ON_FAILURE)) {
-                haltFail = Project.toBoolean(args[i].substring(Constants.HALT_ON_FAILURE.length()));
-            } else if (args[i].startsWith(Constants.FILTERTRACE)) {
-                stackfilter = Project.toBoolean(args[i].substring(Constants.FILTERTRACE.length()));
-            } else if (args[i].startsWith(Constants.CRASHFILE)) {
-                crashFile = args[i].substring(Constants.CRASHFILE.length());
+            } else if (arg.startsWith(Constants.HALT_ON_ERROR)) {
+                haltError = Project.toBoolean(arg.substring(Constants.HALT_ON_ERROR.length()));
+            } else if (arg.startsWith(Constants.HALT_ON_FAILURE)) {
+                haltFail = Project.toBoolean(arg.substring(Constants.HALT_ON_FAILURE.length()));
+            } else if (arg.startsWith(Constants.FILTERTRACE)) {
+                stackfilter = Project.toBoolean(arg.substring(Constants.FILTERTRACE.length()));
+            } else if (arg.startsWith(Constants.CRASHFILE)) {
+                crashFile = arg.substring(Constants.CRASHFILE.length());
                 registerTestCase(Constants.BEFORE_FIRST_TEST);
-            } else if (args[i].startsWith(Constants.FORMATTER)) {
+            } else if (arg.startsWith(Constants.FORMATTER)) {
                 try {
-                    createAndStoreFormatter(args[i].substring(Constants.FORMATTER.length()));
+                    createAndStoreFormatter(arg.substring(Constants.FORMATTER.length()));
                 } catch (final BuildException be) {
                     System.err.println(be.getMessage());
                     System.exit(ERRORS);
                 }
-            } else if (args[i].startsWith(Constants.PROPSFILE)) {
-                final FileInputStream in = new FileInputStream(args[i]
+            } else if (arg.startsWith(Constants.PROPSFILE)) {
+                final FileInputStream in = new FileInputStream(arg
                         .substring(Constants.PROPSFILE.length()));
                 props.load(in);
                 in.close();
-            } else if (args[i].startsWith(Constants.SHOWOUTPUT)) {
-                showOut = Project.toBoolean(args[i].substring(Constants.SHOWOUTPUT.length()));
-            } else if (args[i].startsWith(Constants.LOGTESTLISTENEREVENTS)) {
+            } else if (arg.startsWith(Constants.SHOWOUTPUT)) {
+                showOut = Project.toBoolean(arg.substring(Constants.SHOWOUTPUT.length()));
+            } else if (arg.startsWith(Constants.LOGTESTLISTENEREVENTS)) {
                 logTestListenerEvents = Project.toBoolean(
-                    args[i].substring(Constants.LOGTESTLISTENEREVENTS.length()));
-            } else if (args[i].startsWith(Constants.OUTPUT_TO_FORMATTERS)) {
+                    arg.substring(Constants.LOGTESTLISTENEREVENTS.length()));
+            } else if (arg.startsWith(Constants.OUTPUT_TO_FORMATTERS)) {
                 outputToFormat = Project.toBoolean(
-                    args[i].substring(Constants.OUTPUT_TO_FORMATTERS.length()));
-            } else if (args[i].startsWith(Constants.LOG_FAILED_TESTS)) {
+                    arg.substring(Constants.OUTPUT_TO_FORMATTERS.length()));
+            } else if (arg.startsWith(Constants.LOG_FAILED_TESTS)) {
                 logFailedTests = Project.toBoolean(
-                    args[i].substring(Constants.LOG_FAILED_TESTS.length()));
-            } else if (args[i].startsWith(Constants.SKIP_NON_TESTS)) {
+                    arg.substring(Constants.LOG_FAILED_TESTS.length()));
+            } else if (arg.startsWith(Constants.SKIP_NON_TESTS)) {
                 skipNonTests = Project.toBoolean(
-                    args[i].substring(Constants.SKIP_NON_TESTS.length()));
-            } else if (args[i].startsWith(Constants.THREADID)) {
-                antThreadID = Integer.parseInt(args[i].substring(Constants.THREADID.length()));
+                    arg.substring(Constants.SKIP_NON_TESTS.length()));
+            } else if (arg.startsWith(Constants.THREADID)) {
+                antThreadID = Integer.parseInt(arg.substring(Constants.THREADID.length()));
             }
         }
 
@@ -1045,7 +1037,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         System.exit(returnCode);
     }
 
-    private static Vector fromCmdLine = new Vector();
+    private static Vector<FormatterElement> fromCmdLine = new Vector<FormatterElement>();
 
     private static void transferFormatters(final JUnitTestRunner runner,
                                            final JUnitTest test) {
@@ -1079,9 +1071,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                 registerTestCase(JUnitVersionHelper.getTestCaseName(arg0));
             }
         });
-        final int size = fromCmdLine.size();
-        for (int i = 0; i < size; i++) {
-            final FormatterElement fe = (FormatterElement) fromCmdLine.elementAt(i);
+        for (FormatterElement fe : fromCmdLine) {
             if (multipleTests && fe.getUseFile()) {
                 final File destFile = new File(test.getTodir(),
                         test.getOutfile() + fe.getExtension());
@@ -1163,8 +1153,8 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     }
 
     private static boolean filterLine(final String line) {
-        for (int i = 0; i < DEFAULT_TRACE_FILTERS.length; i++) {
-            if (line.indexOf(DEFAULT_TRACE_FILTERS[i]) != -1) {
+        for (String filter : DEFAULT_TRACE_FILTERS) {
+            if (line.indexOf(filter) != -1) {
                 return true;
             }
         }

@@ -262,8 +262,7 @@ public class MacroDef extends AntlibDefinition  {
                 + "\" has already been used by the text element");
         }
         final int size = attributes.size();
-        for (int i = 0; i < size; ++i) {
-            Attribute att = (Attribute) attributes.get(i);
+        for (Attribute att : attributes) {
             if (att.getName().equals(attribute.getName())) {
                 throw new BuildException(
                     "the name \"" + attribute.getName()

@@ -90,9 +90,7 @@ public class Deltree extends Task {
         //        if (dir.getCanonicalPath().equals(dir.getAbsolutePath())) {
         // (costin) It will not work if /home/costin is symlink to
         // /da0/home/costin ( taz for example )
-        String[] list = dir.list();
-        for (int i = 0; i < list.length; i++) {
-            String s = list[i];
+        for (String s : dir.list()) {
             File f = new File(dir, s);
             if (f.isDirectory()) {
                 removeDir(f);

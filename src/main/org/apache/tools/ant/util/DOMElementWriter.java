@@ -576,8 +576,8 @@ public class DOMElementWriter {
         }
 
         String name = ent.substring(1, ent.length() - 1);
-        for (int i = 0; i < knownEntities.length; i++) {
-            if (name.equals(knownEntities[i])) {
+        for (String knownEntity : knownEntities) {
+            if (name.equals(knownEntity)) {
                 return true;
             }
         }

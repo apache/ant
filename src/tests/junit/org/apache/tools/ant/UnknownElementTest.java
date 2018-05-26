@@ -96,7 +96,7 @@ public class UnknownElementTest {
     }
 
     public static class Parent extends Task implements TaskContainer {
-        List children = new ArrayList();
+        List<Task> children = new ArrayList<>();
         public void addTask(Task t) {
             children.add(t);
         }
@@ -106,8 +106,8 @@ public class UnknownElementTest {
         }
 
         public void execute() {
-            for (Iterator i = children.iterator(); i.hasNext();) {
-                UnknownElement el = (UnknownElement) i.next();
+            for (Task task : children) {
+                UnknownElement el = (UnknownElement) task;
                 el.maybeConfigure();
                 Child child = (Child) el.getRealThing();
                 child.injectParent(this);

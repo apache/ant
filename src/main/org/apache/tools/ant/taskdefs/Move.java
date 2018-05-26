@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -167,17 +168,16 @@ public class Move extends Copy {
 
         if (includeEmpty) {
             int createCount = 0;
-            for (Iterator fromDirNames = dirCopyMap.keySet().iterator(); fromDirNames.hasNext();) {
-                String fromDirName = (String) fromDirNames.next();
-                String[] toDirNames = (String[]) dirCopyMap.get(fromDirName);
+            for (Map.Entry<String, String[]> entry : dirCopyMap.entrySet()) {
+                String fromDirName = entry.getKey();
                 boolean selfMove = false;
-                for (int i = 0; i < toDirNames.length; i++) {
-                    if (fromDirName.equals(toDirNames[i])) {
+                for (String toDirName : entry.getValue()) {
+                    if (fromDirName.equals(toDirName)) {
                         log("Skipping self-move of " + fromDirName, verbosity);
                         selfMove = true;
                         continue;
                     }
-                    File d = new File(toDirNames[i]);
+                    File d = new File(toDirName);
                     if (!d.exists()) {
                         if (!(d.mkdirs() || d.exists())) {
                             log("Unable to create directory "

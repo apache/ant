@@ -120,7 +120,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private boolean force = false;
 
     /** XSL output properties to be used */
-    private final Vector outputProperties = new Vector();
+    private final Vector<OutputProperty> outputProperties = new Vector<OutputProperty>();
 
     /** for resolving entities such as dtds */
     private final XMLCatalog xmlCatalog = new XMLCatalog();
@@ -940,7 +940,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * Get an enumeration on the outputproperties.
      * @return the outputproperties
      */
-    public Enumeration getOutputProperties() {
+    public Enumeration<OutputProperty> getOutputProperties() {
         return outputProperties.elements();
     }
 
@@ -1513,7 +1513,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
          * return the attribute elements.
          * @return the enumeration of attributes
          */
-        public Enumeration getAttributes() {
+        public Enumeration<Attribute> getAttributes() {
             return Collections.enumeration(attributes);
         }
 

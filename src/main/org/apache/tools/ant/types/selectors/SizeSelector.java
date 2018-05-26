@@ -167,22 +167,22 @@ public class SizeSelector extends BaseExtendSelector {
     public void setParameters(Parameter[] parameters) {
         super.setParameters(parameters);
         if (parameters != null) {
-            for (int i = 0; i < parameters.length; i++) {
-                String paramname = parameters[i].getName();
+            for (Parameter parameter : parameters) {
+                String paramname = parameter.getName();
                 if (SIZE_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setValue(Long.parseLong(parameters[i].getValue()));
+                        setValue(Long.parseLong(parameter.getValue()));
                     } catch (NumberFormatException nfe) {
                         setError("Invalid size setting "
-                                + parameters[i].getValue());
+                                + parameter.getValue());
                     }
                 } else if (UNITS_KEY.equalsIgnoreCase(paramname)) {
                     ByteUnits units = new ByteUnits();
-                    units.setValue(parameters[i].getValue());
+                    units.setValue(parameter.getValue());
                     setUnits(units);
                 } else if (WHEN_KEY.equalsIgnoreCase(paramname)) {
                     SizeComparisons scmp = new SizeComparisons();
-                    scmp.setValue(parameters[i].getValue());
+                    scmp.setValue(parameter.getValue());
                     setWhen(scmp);
                 } else {
                     setError("Invalid parameter " + paramname);

@@ -109,9 +109,8 @@ public final class ExtensionUtil {
 
             final DirectoryScanner scanner = fileSet.getDirectoryScanner(project);
             final File basedir = scanner.getBasedir();
-            final String[] files = scanner.getIncludedFiles();
-            for (int i = 0; i < files.length; i++) {
-                final File file = new File(basedir, files[ i ]);
+            for (String fileName : scanner.getIncludedFiles()) {
+                final File file = new File(basedir, fileName);
                 loadExtensions(file, extensions, includeImpl, includeURL);
             }
         }

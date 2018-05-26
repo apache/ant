@@ -422,8 +422,7 @@ public final class Diagnostics {
      */
     private static void doReportAntHomeLibraries(PrintStream out) {
         out.println(MagicNames.ANT_HOME + ": " + System.getProperty(MagicNames.ANT_HOME));
-        File[] libs = listLibraries();
-        printLibraries(libs, out);
+        printLibraries(listLibraries(), out);
     }
 
     /**
@@ -435,8 +434,7 @@ public final class Diagnostics {
         String home = System.getProperty(Launcher.USER_HOMEDIR);
         out.println("user.home: " + home);
         File libDir = new File(home, Launcher.USER_LIBDIR);
-        File[] libs = listJarFiles(libDir);
-        printLibraries(libs, out);
+        printLibraries(listJarFiles(libDir), out);
     }
 
     /**
@@ -449,8 +447,8 @@ public final class Diagnostics {
             out.println("No such directory.");
             return;
         }
-        for (int i = 0; i < libs.length; i++) {
-            out.println(libs[i].getName() + " (" + libs[i].length() + " bytes)");
+        for (File lib : libs) {
+            out.println(lib.getName() + " (" + lib.length() + " bytes)");
         }
     }
 

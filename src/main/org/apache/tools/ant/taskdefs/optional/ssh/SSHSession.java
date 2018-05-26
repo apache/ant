@@ -86,10 +86,9 @@ public class SSHSession extends SSHBase {
      * tunnel specifications
      */
     public void setLocaltunnels(final String tunnels) {
-        final String[] specs = tunnels.split(", ");
-        for (int i = 0; i < specs.length; i++) {
-            if (specs[i].length() > 0) {
-                final String[] spec = specs[i].split(":", 3);
+        for (String tunnelSpec : tunnels.split(", ")) {
+            if (tunnelSpec.length() > 0) {
+                final String[] spec = tunnelSpec.split(":", 3);
                 final int lport = Integer.parseInt(spec[0]);
                 final String rhost = spec[1];
                 final int rport = Integer.parseInt(spec[2]);
@@ -109,10 +108,9 @@ public class SSHSession extends SSHBase {
      * tunnel specifications
      */
     public void setRemotetunnels(final String tunnels) {
-        final String[] specs = tunnels.split(", ");
-        for (int i = 0; i < specs.length; i++) {
-            if (specs[i].length() > 0) {
-                final String[] spec = specs[i].split(":", 3);
+        for (String tunnelSpec : tunnels.split(", ")) {
+            if (tunnelSpec.length() > 0) {
+                final String[] spec = tunnelSpec.split(":", 3);
                 final int rport = Integer.parseInt(spec[0]);
                 final String lhost = spec[1];
                 final int lport = Integer.parseInt(spec[2]);

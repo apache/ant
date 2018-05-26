@@ -113,17 +113,17 @@ public class MailMessage {
     private String from;
 
     /** list of email addresses to reply to */
-    private Vector replyto;
+    private Vector<String> replyto = new Vector<String>();
 
     /** list of email addresses to send to */
-    private Vector to;
+    private Vector<String> to = new Vector<String>();
 
     /** list of email addresses to cc to */
-    private Vector cc;
+    private Vector<String> cc = new Vector<String>();
 
     /** headers to send in the mail */
-    private Vector headersKeys;
-    private Vector headersValues;
+    private Vector<String> headersKeys = new Vector<String>();
+    private Vector<String> headersValues = new Vector<String>();
 
     private MailPrintStream out;
 
@@ -139,46 +139,41 @@ public class MailMessage {
     private static final int OK_DOT = 250;
     private static final int OK_QUIT = 221;
 
-  /**
-   * Constructs a new MailMessage to send an email.
-   * Use localhost as the mail server with port 25.
-   *
-   * @exception IOException if there's any problem contacting the mail server
-   */
-  public MailMessage() throws IOException {
-    this(DEFAULT_HOST, DEFAULT_PORT);
-  }
+    /**
+     * Constructs a new MailMessage to send an email.
+     * Use localhost as the mail server with port 25.
+     *
+     * @exception IOException if there's any problem contacting the mail server
+    */
+    public MailMessage() throws IOException {
+        this(DEFAULT_HOST, DEFAULT_PORT);
+    }
 
-  /**
-   * Constructs a new MailMessage to send an email.
-   * Use the given host as the mail server with port 25.
-   *
-   * @param host the mail server to use
-   * @exception IOException if there's any problem contacting the mail server
-   */
-  public MailMessage(String host) throws IOException {
-    this(host, DEFAULT_PORT);
-  }
+    /**
+     * Constructs a new MailMessage to send an email.
+     * Use the given host as the mail server with port 25.
+     *
+     * @param host the mail server to use
+     * @exception IOException if there's any problem contacting the mail server
+     */
+    public MailMessage(String host) throws IOException {
+        this(host, DEFAULT_PORT);
+    }
 
-  /**
-   * Constructs a new MailMessage to send an email.
-   * Use the given host and port as the mail server.
-   *
-   * @param host the mail server to use
-   * @param port the port to connect to
-   * @exception IOException if there's any problem contacting the mail server
-   */
-  public MailMessage(String host, int port) throws IOException {
-    this.port = port;
-    this.host = host;
-    replyto = new Vector();
-    to = new Vector();
-    cc = new Vector();
-    headersKeys = new Vector();
-    headersValues = new Vector();
-    connect();
-    sendHelo();
-  }
+    /**
+     * Constructs a new MailMessage to send an email.
+     * Use the given host and port as the mail server.
+     *
+     * @param host the mail server to use
+     * @param port the port to connect to
+     * @exception IOException if there's any problem contacting the mail server
+     */
+    public MailMessage(String host, int port) throws IOException {
+        this.port = port;
+        this.host = host;
+        connect();
+        sendHelo();
+    }
 
     /**
      * Set the port to connect to the SMTP host.
@@ -208,231 +203,230 @@ public class MailMessage {
      *
      */
     public void replyto(String rto) {
-      this.replyto.addElement(rto);
+        this.replyto.addElement(rto);
     }
 
-  /**
-   * Sets the to address.  Also sets the "To" header.  This method may be
-   * called multiple times.
-   *
-   * @param to the to address
-   * @exception IOException if there's any problem reported by the mail server
-   */
-  public void to(String to) throws IOException {
-    sendRcpt(to);
-    this.to.addElement(to);
-  }
-
-  /**
-   * Sets the cc address.  Also sets the "Cc" header.  This method may be
-   * called multiple times.
-   *
-   * @param cc the cc address
-   * @exception IOException if there's any problem reported by the mail server
-   */
-  public void cc(String cc) throws IOException {
-    sendRcpt(cc);
-    this.cc.addElement(cc);
-  }
-
-  /**
-   * Sets the bcc address.  Does NOT set any header since it's a *blind* copy.
-   * This method may be called multiple times.
-   *
-   * @param bcc the bcc address
-   * @exception IOException if there's any problem reported by the mail server
-   */
-  public void bcc(String bcc) throws IOException {
-    sendRcpt(bcc);
-    // No need to keep track of Bcc'd addresses
-  }
-
-  /**
-   * Sets the subject of the mail message.  Actually sets the "Subject"
-   * header.
-   * @param subj the subject of the mail message
-   */
-  public void setSubject(String subj) {
-    setHeader("Subject", subj);
-  }
-
-  /**
-   * Sets the named header to the given value.  RFC 822 provides the rules for
-   * what text may constitute a header name and value.
-   * @param name name of the header
-   * @param value contents of the header
-   */
-  public void setHeader(String name, String value) {
-    // Blindly trust the user doesn't set any invalid headers
-    headersKeys.add(name);
-    headersValues.add(value);
-  }
-
-  /**
-   * Returns a PrintStream that can be used to write the body of the message.
-   * A stream is used since email bodies are byte-oriented.  A writer can
-   * be wrapped on top if necessary for internationalization.
-   * This is actually done in Message.java
-   *
-   * @return a printstream containing the data and the headers of the email
-   * @exception IOException if there's any problem reported by the mail server
-   * @see org.apache.tools.ant.taskdefs.email.Message
-   */
-  public PrintStream getPrintStream() throws IOException {
-    setFromHeader();
-    setReplyToHeader();
-    setToHeader();
-    setCcHeader();
-    setHeader("X-Mailer", "org.apache.tools.mail.MailMessage (ant.apache.org)");
-    sendData();
-    flushHeaders();
-    return out;
-  }
-
-
-  // RFC 822 s4.1: "From:" header must be sent
-  // We rely on error checking by the MTA
-  void setFromHeader() {
-    setHeader("From", from);
-  }
-
-  // RFC 822 s4.1: "Reply-To:" header is optional
-  void setReplyToHeader() {
-    if (!replyto.isEmpty()) {
-      setHeader("Reply-To", vectorToList(replyto));
+    /**
+     * Sets the to address.  Also sets the "To" header.  This method may be
+     * called multiple times.
+     *
+     * @param to the to address
+     * @exception IOException if there's any problem reported by the mail server
+     */
+    public void to(String to) throws IOException {
+        sendRcpt(to);
+        this.to.addElement(to);
     }
-  }
 
-  void setToHeader() {
-    if (!to.isEmpty()) {
-      setHeader("To", vectorToList(to));
+    /**
+     * Sets the cc address.  Also sets the "Cc" header.  This method may be
+     * called multiple times.
+     *
+     * @param cc the cc address
+     * @exception IOException if there's any problem reported by the mail server
+     */
+    public void cc(String cc) throws IOException {
+        sendRcpt(cc);
+        this.cc.addElement(cc);
     }
-  }
 
-  void setCcHeader() {
-    if (!cc.isEmpty()) {
-      setHeader("Cc", vectorToList(cc));
+    /**
+     * Sets the bcc address.  Does NOT set any header since it's a *blind* copy.
+     * This method may be called multiple times.
+     *
+     * @param bcc the bcc address
+     * @exception IOException if there's any problem reported by the mail server
+     */
+    public void bcc(String bcc) throws IOException {
+        sendRcpt(bcc);
+        // No need to keep track of Bcc'd addresses
     }
-  }
 
-  String vectorToList(Vector v) {
-    StringBuffer buf = new StringBuffer();
-    Enumeration e = v.elements();
-    while (e.hasMoreElements()) {
-      buf.append(e.nextElement());
-      if (e.hasMoreElements()) {
-        buf.append(", ");
-      }
+    /**
+     * Sets the subject of the mail message.  Actually sets the "Subject"
+     * header.
+     * @param subj the subject of the mail message
+     */
+    public void setSubject(String subj) {
+        setHeader("Subject", subj);
     }
-    return buf.toString();
-  }
 
-  void flushHeaders() throws IOException {
-    // RFC 822 s4.1:
-    //   "Header fields are NOT required to occur in any particular order,
-    //    except that the message body MUST occur AFTER the headers"
-    // (the same section specifies a recommended order, which we ignore)
-   final int size = headersKeys.size();
-   for (int i = 0; i < size; i++) {
-      String name = (String) headersKeys.elementAt(i);
-      String value = (String) headersValues.elementAt(i);
-      out.println(name + ": " + value);
+    /**
+     * Sets the named header to the given value.  RFC 822 provides the rules for
+     * what text may constitute a header name and value.
+     * @param name name of the header
+     * @param value contents of the header
+     */
+    public void setHeader(String name, String value) {
+        // Blindly trust the user doesn't set any invalid headers
+        headersKeys.add(name);
+        headersValues.add(value);
     }
-    out.println();
-    out.flush();
-  }
 
-  /**
-   * Sends the message and closes the connection to the server.
-   * The MailMessage object cannot be reused.
-   *
-   * @exception IOException if there's any problem reported by the mail server
-   */
-  public void sendAndClose() throws IOException {
-      try {
-          sendDot();
-          sendQuit();
-      } finally {
-          disconnect();
-      }
-  }
+    /**
+     * Returns a PrintStream that can be used to write the body of the message.
+     * A stream is used since email bodies are byte-oriented.  A writer can
+     * be wrapped on top if necessary for internationalization.
+     * This is actually done in Message.java
+     *
+     * @return a printstream containing the data and the headers of the email
+     * @exception IOException if there's any problem reported by the mail server
+     * @see org.apache.tools.ant.taskdefs.email.Message
+     */
+     public PrintStream getPrintStream() throws IOException {
+        setFromHeader();
+        setReplyToHeader();
+        setToHeader();
+        setCcHeader();
+        setHeader("X-Mailer", "org.apache.tools.mail.MailMessage (ant.apache.org)");
+        sendData();
+        flushHeaders();
+        return out;
+    }
 
-  // Make a limited attempt to extract a sanitized email address
-  // Prefer text in <brackets>, ignore anything in (parentheses)
-  static String sanitizeAddress(String s) {
-    int paramDepth = 0;
-    int start = 0;
-    int end = 0;
-    int len = s.length();
+    // RFC 822 s4.1: "From:" header must be sent
+    // We rely on error checking by the MTA
+    void setFromHeader() {
+        setHeader("From", from);
+    }
 
-    for (int i = 0; i < len; i++) {
-      char c = s.charAt(i);
-      if (c == '(') {
-        paramDepth++;
-        if (start == 0) {
-          end = i;  // support "address (name)"
+    // RFC 822 s4.1: "Reply-To:" header is optional
+    void setReplyToHeader() {
+        if (!replyto.isEmpty()) {
+            setHeader("Reply-To", vectorToList(replyto));
         }
-      } else if (c == ')') {
-        paramDepth--;
+    }
+
+    void setToHeader() {
+        if (!to.isEmpty()) {
+            setHeader("To", vectorToList(to));
+        }
+    }
+
+    void setCcHeader() {
+        if (!cc.isEmpty()) {
+            setHeader("Cc", vectorToList(cc));
+        }
+    }
+
+    String vectorToList(Vector v) {
+        StringBuffer buf = new StringBuffer();
+        Enumeration e = v.elements();
+        while (e.hasMoreElements()) {
+            buf.append(e.nextElement());
+            if (e.hasMoreElements()) {
+                buf.append(", ");
+            }
+        }
+        return buf.toString();
+    }
+
+    void flushHeaders() {
+         // RFC 822 s4.1:
+        //   "Header fields are NOT required to occur in any particular order,
+        //    except that the message body MUST occur AFTER the headers"
+        // (the same section specifies a recommended order, which we ignore)
+        final int size = headersKeys.size();
+        for (int i = 0; i < size; i++) {
+            String name = headersKeys.elementAt(i);
+            String value = headersValues.elementAt(i);
+            out.println(name + ": " + value);
+        }
+        out.println();
+        out.flush();
+    }
+
+    /**
+     * Sends the message and closes the connection to the server.
+     * The MailMessage object cannot be reused.
+     *
+     * @exception IOException if there's any problem reported by the mail server
+     */
+    public void sendAndClose() throws IOException {
+        try {
+            sendDot();
+            sendQuit();
+        } finally {
+            disconnect();
+        }
+    }
+
+    // Make a limited attempt to extract a sanitized email address
+    // Prefer text in <brackets>, ignore anything in (parentheses)
+    static String sanitizeAddress(String s) {
+        int paramDepth = 0;
+        int start = 0;
+        int end = 0;
+        int len = s.length();
+
+        for (int i = 0; i < len; i++) {
+            char c = s.charAt(i);
+            if (c == '(') {
+                paramDepth++;
+                if (start == 0) {
+                    end = i;  // support "address (name)"
+                }
+            } else if (c == ')') {
+                paramDepth--;
+                if (end == 0) {
+                    start = i + 1;  // support "(name) address"
+                }
+            } else if (paramDepth == 0 && c == '<') {
+                start = i + 1;
+            } else if (paramDepth == 0 && c == '>') {
+                end = i;
+            }
+        }
+
         if (end == 0) {
-          start = i + 1;  // support "(name) address"
+            end = len;
         }
-      } else if (paramDepth == 0 && c == '<') {
-        start = i + 1;
-      } else if (paramDepth == 0 && c == '>') {
-        end = i;
-      }
+
+        return s.substring(start, end);
     }
 
-    if (end == 0) {
-      end = len;
+    // * * * * * Raw protocol methods below here * * * * *
+
+    void connect() throws IOException {
+        socket = new Socket(host, port);
+        out = new MailPrintStream(new BufferedOutputStream(socket.getOutputStream()));
+        in = new SmtpResponseReader(socket.getInputStream());
+        getReady();
     }
 
-    return s.substring(start, end);
-  }
-
-  // * * * * * Raw protocol methods below here * * * * *
-
-  void connect() throws IOException {
-    socket = new Socket(host, port);
-    out = new MailPrintStream(
-          new BufferedOutputStream(
-          socket.getOutputStream()));
-    in = new SmtpResponseReader(socket.getInputStream());
-    getReady();
-  }
-
-  void getReady() throws IOException {
-    String response = in.getResponse();
-    int[] ok = {OK_READY};
-    if (!isResponseOK(response, ok)) {
-      throw new IOException(
-        "Didn't get introduction from server: " + response);
+    void getReady() throws IOException {
+        String response = in.getResponse();
+        int[] ok = {OK_READY};
+        if (!isResponseOK(response, ok)) {
+            throw new IOException("Didn't get introduction from server: " + response);
+        }
     }
-  }
-  void sendHelo() throws IOException {
-    String local = InetAddress.getLocalHost().getHostName();
-    int[] ok = {OK_HELO};
-    send("HELO " + local, ok);
-  }
-  void sendFrom(String from) throws IOException {
-    int[] ok = {OK_FROM};
-    send("MAIL FROM: " + "<" + sanitizeAddress(from) + ">", ok);
-  }
-  void sendRcpt(String rcpt) throws IOException {
-    int[] ok = {OK_RCPT_1, OK_RCPT_2};
-    send("RCPT TO: " + "<" + sanitizeAddress(rcpt) + ">", ok);
-  }
 
-  void sendData() throws IOException {
-    int[] ok = {OK_DATA};
-    send("DATA", ok);
-  }
+    void sendHelo() throws IOException {
+        String local = InetAddress.getLocalHost().getHostName();
+        int[] ok = {OK_HELO};
+         send("HELO " + local, ok);
+    }
 
-  void sendDot() throws IOException {
-    int[] ok = {OK_DOT};
-    send("\r\n.", ok);  // make sure dot is on new line
-  }
+    void sendFrom(String from) throws IOException {
+        int[] ok = {OK_FROM};
+        send("MAIL FROM: " + "<" + sanitizeAddress(from) + ">", ok);
+    }
+
+    void sendRcpt(String rcpt) throws IOException {
+        int[] ok = {OK_RCPT_1, OK_RCPT_2};
+        send("RCPT TO: " + "<" + sanitizeAddress(rcpt) + ">", ok);
+    }
+
+    void sendData() throws IOException {
+        int[] ok = {OK_DATA};
+        send("DATA", ok);
+    }
+
+    void sendDot() throws IOException {
+        int[] ok = {OK_DOT};
+        send("\r\n.", ok);  // make sure dot is on new line
+    }
 
     void sendQuit() throws IOException {
         int[] ok = {OK_QUIT};
@@ -452,17 +446,17 @@ public class MailMessage {
         }
     }
 
-  boolean isResponseOK(String response, int[] ok) {
-    // Check that the response is one of the valid codes
-    for (int i = 0; i < ok.length; i++) {
-      if (response.startsWith("" + ok[i])) {
-        return true;
-      }
+    boolean isResponseOK(String response, int[] ok) {
+        // Check that the response is one of the valid codes
+        for (int status : ok) {
+            if (response.startsWith("" + status)) {
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-    void disconnect() throws IOException {
+    void disconnect() {
         if (out != null) {
             out.close();
         }
@@ -489,42 +483,40 @@ public class MailMessage {
 */
 class MailPrintStream extends PrintStream {
 
-  private int lastChar;
+    private int lastChar;
 
-  public MailPrintStream(OutputStream out) {
-    super(out, true);  // deprecated, but email is byte-oriented
-  }
-
-  // Mac does \n\r, but that's tough to distinguish from Windows \r\n\r\n.
-  // Don't tackle that problem right now.
-  public void write(int b) {
-    if (b == '\n' && lastChar != '\r') {
-      rawWrite('\r');  // ensure always \r\n
-      rawWrite(b);
-    } else if (b == '.' && lastChar == '\n') {
-      rawWrite('.');  // add extra dot
-      rawWrite(b);
-    } else {
-      rawWrite(b);
+    public MailPrintStream(OutputStream out) {
+        super(out, true);  // deprecated, but email is byte-oriented
     }
-    lastChar = b;
-  }
 
-  public void write(byte[] buf, int off, int len) {
-    for (int i = 0; i < len; i++) {
-      write(buf[off + i]);
+    // Mac does \n\r, but that's tough to distinguish from Windows \r\n\r\n.
+    // Don't tackle that problem right now.
+    public void write(int b) {
+        if (b == '\n' && lastChar != '\r') {
+            rawWrite('\r');  // ensure always \r\n
+            rawWrite(b);
+        } else if (b == '.' && lastChar == '\n') {
+            rawWrite('.');  // add extra dot
+            rawWrite(b);
+        } else {
+            rawWrite(b);
+        }
+        lastChar = b;
     }
-  }
 
-  void rawWrite(int b) {
-    super.write(b);
-  }
-
-  void rawPrint(String s) {
-    int len = s.length();
-    for (int i = 0; i < len; i++) {
-      rawWrite(s.charAt(i));
+    public void write(byte[] buf, int off, int len) {
+        for (int i = 0; i < len; i++) {
+            write(buf[off + i]);
+        }
     }
-  }
+
+    void rawWrite(int b) {
+        super.write(b);
+    }
+
+    void rawPrint(String s) {
+        for (char ch : s.toCharArray()) {
+            rawWrite(ch);
+        }
+    }
 }
-

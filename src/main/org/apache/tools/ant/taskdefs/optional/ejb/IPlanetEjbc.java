@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -898,7 +897,7 @@ public class IPlanetEjbc {
         private boolean cmp       = false;      // Does this EJB support CMP?
         private boolean iiop      = false;      // Does this EJB support IIOP?
         private boolean hasession = false;      // Does this EJB require failover?
-        private List cmpDescriptors = new ArrayList();  // CMP descriptor list
+        private List<String> cmpDescriptors = new ArrayList<String>();  // CMP descriptor list
 
         /**
          * Construct a new EJBInfo object with the given name.
@@ -1233,10 +1232,8 @@ public class IPlanetEjbc {
              * Loop through each stub/skeleton class that must be generated, and
              * determine (if all exist) which file has the most recent timestamp
              */
-            for (int i = 0; i < classnames.length; i++) {
-
-                String pathToClass =
-                        classnames[i].replace('.', File.separatorChar) + ".class";
+            for (String classname : classnames) {
+                String pathToClass = classname.replace('.', File.separatorChar) + ".class";
                 File classFile = new File(destDir, pathToClass);
 
                 /*
@@ -1330,9 +1327,8 @@ public class IPlanetEjbc {
                         + "\n\r              iiop:      " + iiop
                         + "\n\r              hasession: " + hasession;
 
-            Iterator i = cmpDescriptors.iterator();
-            while (i.hasNext()) {
-                s += "\n\r              CMP Descriptor: " + i.next();
+            for (String cmpDescriptor : cmpDescriptors) {
+                s += "\n\r              CMP Descriptor: " + cmpDescriptor;
             }
 
             return s;

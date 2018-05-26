@@ -226,9 +226,8 @@ public class Sync extends Task {
         ds.addExcludes(excls);
 
         ds.scan();
-        String[] files = ds.getIncludedFiles();
-        for (int i = 0; i < files.length; i++) {
-            File f = new File(toDir, files[i]);
+        for (String file : ds.getIncludedFiles()) {
+            File f = new File(toDir, file);
             log("Removing orphan file: " + f, Project.MSG_DEBUG);
             f.delete();
             ++removedCount[1];
@@ -286,13 +285,11 @@ public class Sync extends Task {
         int removedCount = 0;
         if (dir.isDirectory()) {
             File[] children = dir.listFiles();
-            for (int i = 0; i < children.length; ++i) {
-                File file = children[i];
+            for (File file : children) {
                 // Test here again to avoid method call for non-directories!
                 if (file.isDirectory()) {
-                    removedCount +=
-                        removeEmptyDirectories(file, true,
-                                               preservedEmptyDirectories);
+                    removedCount += removeEmptyDirectories(file, true,
+                            preservedEmptyDirectories);
                 }
             }
             if (children.length > 0) {

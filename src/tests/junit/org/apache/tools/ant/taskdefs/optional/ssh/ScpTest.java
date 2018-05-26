@@ -66,7 +66,7 @@ public class ScpTest {
     private int port = Integer.parseInt(System.getProperty("scp.port", "22"));
     private String knownHosts = System.getProperty("scp.known.hosts");
 
-    private List cleanUpList = new ArrayList();
+    private List<File> cleanUpList = new ArrayList<File>();
 
     @Before
     public void setUp() {
@@ -79,8 +79,7 @@ public class ScpTest {
 
     @After
     public void tearDown() {
-        for (Iterator i = cleanUpList.iterator(); i.hasNext();) {
-            File file = (File) i.next();
+        for (File file : cleanUpList) {
             file.delete();
         }
     }
@@ -113,7 +112,7 @@ public class ScpTest {
     @Test
     public void testMultiUploadAndDownload() throws IOException {
         assertNotNull("system property scp.tmp must be set", tempDir);
-        List uploadList = new ArrayList();
+        List<File> uploadList = new ArrayList<File>();
         for (int i = 0; i < 5; i++) {
             uploadList.add(createTemporaryFile());
         }
@@ -137,8 +136,7 @@ public class ScpTest {
         scpTask.execute();
 
         FilesMatch match = new FilesMatch();
-        for (Iterator i = uploadList.iterator(); i.hasNext();) {
-            File f = (File) i.next();
+        for (File f : uploadList) {
             match.setFile1(f);
             File f2 = new File(multi, f.getName());
             match.setFile2(f2);

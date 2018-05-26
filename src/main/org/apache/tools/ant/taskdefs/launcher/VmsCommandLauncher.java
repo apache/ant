@@ -103,13 +103,13 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
             // add the environment as logicals to the DCL script
             if (env != null) {
                 int eqIndex;
-                for (int i = 0; i < env.length; i++) {
-                    eqIndex = env[i].indexOf('=');
+                for (String variable : env) {
+                    eqIndex = variable.indexOf('=');
                     if (eqIndex != -1) {
                         out.write("$ DEFINE/NOLOG ");
-                        out.write(env[i].substring(0, eqIndex));
+                        out.write(variable.substring(0, eqIndex));
                         out.write(" \"");
-                        out.write(env[i].substring(eqIndex + 1));
+                        out.write(variable.substring(eqIndex + 1));
                         out.write('\"');
                         out.newLine();
                     }

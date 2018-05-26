@@ -1105,14 +1105,13 @@ public class XMLCatalog extends DataType
                 if (catPath != null) {
                     log("Using catalogpath '" + getCatalogPath() + "'",
                         Project.MSG_DEBUG);
-                    String[] catPathList = getCatalogPath().list();
 
-                    for (int i = 0; i < catPathList.length; i++) {
-                        File catFile = new File(catPathList[i]);
+                    for (String catFileName : getCatalogPath().list()) {
+                        File catFile = new File(catFileName);
                         log("Parsing " + catFile, Project.MSG_DEBUG);
                         try {
                             parseCatalog.invoke(resolverImpl,
-                                    new Object[] {catFile.getPath()});
+                                    new Object[]{catFile.getPath()});
                         } catch (Exception ex) {
                             throw new BuildException(ex);
                         }

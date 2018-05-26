@@ -136,9 +136,9 @@ public class ProjectHelper {
             if (name == null) {
                 throw new NullPointerException();
             }
-            for (int i = 0; i < values.length; i++) {
-                if (name.equals(values[i].name())) {
-                    return values[i];
+            for (OnMissingExtensionPoint value : values) {
+                if (name.equals(value.name())) {
+                    return value;
                 }
             }
             throw new IllegalArgumentException(

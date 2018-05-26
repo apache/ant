@@ -153,9 +153,9 @@ public final class PrefixLines
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (PREFIX_KEY.equals(params[i].getName())) {
-                    prefix = params[i].getValue();
+            for (Parameter param : params) {
+                if (PREFIX_KEY.equals(param.getName())) {
+                    prefix = param.getValue();
                     break;
                 }
             }

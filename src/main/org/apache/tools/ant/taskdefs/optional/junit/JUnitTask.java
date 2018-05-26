@@ -34,6 +34,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -968,18 +969,13 @@ public class JUnitTask extends Task {
             /* I assume we don't want to do this with "per batch" forking. */
             List<List> newlist = new ArrayList<List>();
             if (forkMode.getValue().equals(ForkMode.PER_TEST)) {
-                final Iterator<List> i1 = testList.iterator();
-                while (i1.hasNext()) {
-                    final List l = i1.next();
-                    if (l.size() == 1) {
-                         newlist.add(l);
+                for (List<JUnitTest> list : testList) {
+                    if (list.size() == 1) {
+                        newlist.add(list);
                     } else {
-                         final Iterator i2 = l.iterator();
-                         while (i2.hasNext()) {
-                             final List tmpSingleton = new ArrayList();
-                             tmpSingleton.add(i2.next());
-                             newlist.add(tmpSingleton);
-                         }
+                        for (JUnitTest test : list) {
+                            newlist.add(Collections.singletonList(test));
+                        }
                     }
                 }
             } else {
@@ -1213,8 +1209,7 @@ public class JUnitTask extends Task {
 
         StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
-        for (int i = 0; i < feArray.length; i++) {
-            final FormatterElement fe = feArray[i];
+        for (final FormatterElement fe : feArray) {
             if (fe.shouldUse(this)) {
                 formatterArg.append(Constants.FORMATTER);
                 formatterArg.append(fe.getClassname());
@@ -1264,9 +1259,9 @@ public class JUnitTask extends Task {
 
         final String[] environment = env.getVariables();
         if (environment != null) {
-            for (int i = 0; i < environment.length; i++) {
-                log("Setting environment variable: " + environment[i],
-                    Project.MSG_VERBOSE);
+            for (String variable : environment) {
+                log("Setting environment variable: " + variable,
+                        Project.MSG_VERBOSE);
             }
         }
         execute.setNewenvironment(newEnvironment);
@@ -1635,9 +1630,7 @@ public class JUnitTask extends Task {
 
             runner.setPermissions(perm);
 
-            final FormatterElement[] feArray = mergeFormatters(test);
-            for (int i = 0; i < feArray.length; i++) {
-                final FormatterElement fe = feArray[i];
+            for (final FormatterElement fe : mergeFormatters(test)) {
                 if (fe.shouldUse(this)) {
                     final File outFile = getOutput(fe, test);
                     if (outFile != null) {
@@ -1958,8 +1951,7 @@ public class JUnitTask extends Task {
 
             test.setCounts(1, 0, 1, 0);
             test.setProperties(getProject().getProperties());
-            for (int i = 0; i < feArray.length; i++) {
-                final FormatterElement fe = feArray[i];
+            for (final FormatterElement fe : feArray) {
                 if (fe.shouldUse(this)) {
                     final JUnitTaskMirror.JUnitResultFormatterMirror formatter =
                         fe.createFormatter(classLoader);

@@ -54,19 +54,16 @@ public class Javac12 extends DefaultCompilerAdapter {
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
-            Class c = Class.forName(CLASSIC_COMPILER_CLASSNAME);
+            Class<?> c = Class.forName(CLASSIC_COMPILER_CLASSNAME);
             Constructor cons =
-                c.getConstructor(new Class[] {OutputStream.class,
-                                              String.class});
+                c.getConstructor(OutputStream.class, String.class);
             Object compiler
-                = cons.newInstance(new Object[] {logstr, "javac"});
+                = cons.newInstance(logstr, "javac");
 
             // Call the compile() method
-            Method compile = c.getMethod("compile",
-                                         new Class [] {String[].class});
-            Boolean ok =
-                (Boolean) compile.invoke(compiler,
-                                        new Object[] {cmd.getArguments()});
+            Method compile = c.getMethod("compile", String[].class);
+            Boolean ok = (Boolean) compile.invoke(compiler,
+                    new Object[] {cmd.getArguments()});
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
             throw new BuildException("Cannot use classic compiler, as it is "

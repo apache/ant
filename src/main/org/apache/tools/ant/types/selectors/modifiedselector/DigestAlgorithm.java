@@ -153,12 +153,12 @@ public class DigestAlgorithm implements Algorithm {
      */
     // implementation adapted from ...taskdefs.Checksum, thanks to Magesh for hint
     public String getValue(File file) {
+        if (!file.canRead()) {
+            return null;
+        }
         initMessageDigest();
         String checksum = null;
         try {
-            if (!file.canRead()) {
-                return null;
-            }
             FileInputStream fis = null;
 
             byte[] buf = new byte[readBufferSize];

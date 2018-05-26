@@ -1144,11 +1144,11 @@ public class PropertyHelper implements GetProperty {
         final HashSet<Class<? extends Delegate>> result = new HashSet<Class<? extends Delegate>>();
         Class<?> c = d.getClass();
         while (c != null) {
-            Class<?>[] ifs = c.getInterfaces();
-            for (int i = 0; i < ifs.length; i++) {
-                if (Delegate.class.isAssignableFrom(ifs[i])) {
+            for (Class<?> ifc : c.getInterfaces()) {
+                if (Delegate.class.isAssignableFrom(ifc)) {
                     @SuppressWarnings("unchecked")
-                    final Class<? extends Delegate> delegateInterface = (Class<? extends Delegate>) ifs[i];
+                    final Class<? extends Delegate> delegateInterface =
+                            (Class<? extends Delegate>) ifc;
                     result.add(delegateInterface);
                 }
             }

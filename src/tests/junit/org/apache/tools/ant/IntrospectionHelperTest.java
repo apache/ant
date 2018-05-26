@@ -203,8 +203,8 @@ public class IntrospectionHelperTest {
         }
     }
 
-    private Map getExpectedNestedElements() {
-        Map elemMap = new Hashtable();
+    private Map<String, Class<?>> getExpectedNestedElements() {
+        Map<String, Class<?>> elemMap = new Hashtable<>();
         elemMap.put("six", String.class);
         elemMap.put("thirteen", StringBuffer.class);
         elemMap.put("fourteen", StringBuffer.class);
@@ -214,7 +214,7 @@ public class IntrospectionHelperTest {
 
     @Test
     public void testGetNestedElements() {
-        Map elemMap = getExpectedNestedElements();
+        Map<String, Class<?>> elemMap = getExpectedNestedElements();
         Enumeration e = ih.getNestedElements();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
@@ -229,12 +229,11 @@ public class IntrospectionHelperTest {
 
     @Test
     public void testGetNestedElementMap() {
-        Map elemMap = getExpectedNestedElements();
-        Map actualMap = ih.getNestedElementMap();
-        for (Iterator i = actualMap.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
+        Map<String, Class<?>> elemMap = getExpectedNestedElements();
+        Map<String, Class<?>> actualMap = ih.getNestedElementMap();
+        for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
             String elemName = (String) entry.getKey();
-            Class elemClass = (Class) elemMap.get(elemName);
+            Class<?> elemClass = (Class) elemMap.get(elemName);
             assertNotNull("Support for " + elemName +
                           " in IntrospectionHelperTest?", elemClass);
             assertEquals("Type of " + elemName, elemClass, entry.getValue());
@@ -506,10 +505,9 @@ public class IntrospectionHelperTest {
 
     @Test
     public void testGetAttributeMap() {
-        Map attrMap = getExpectedAttributes();
-        Map actualMap = ih.getAttributeMap();
-        for (Iterator i = actualMap.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
+        Map<String, Class<?>> attrMap = getExpectedAttributes();
+        Map<String, Class<?>> actualMap = ih.getAttributeMap();
+        for (Map.Entry<String, Class<?>> entry : actualMap.entrySet()) {
             String attrName = (String) entry.getKey();
             Class attrClass = (Class) attrMap.get(attrName);
             assertNotNull("Support for " + attrName +

@@ -272,9 +272,8 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     public int fork(ProjectComponent pc) throws BuildException {
         CommandlineJava cmdl = new CommandlineJava();
         cmdl.setClassname(javaCommand.getExecutable());
-        String[] args = javaCommand.getArguments();
-        for (int i = 0; i < args.length; i++) {
-            cmdl.createArgument().setValue(args[i]);
+        for (String arg : javaCommand.getArguments()) {
+            cmdl.createArgument().setValue(arg);
         }
         if (classpath != null) {
             cmdl.createClasspath(pc.getProject()).append(classpath);

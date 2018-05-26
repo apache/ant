@@ -186,9 +186,9 @@ public final class StripLineComments
     private void initialize() {
         Parameter[] params = getParameters();
         if (params != null) {
-            for (int i = 0; i < params.length; i++) {
-                if (COMMENTS_KEY.equals(params[i].getType())) {
-                    comments.addElement(params[i].getValue());
+            for (Parameter param : params) {
+                if (COMMENTS_KEY.equals(param.getType())) {
+                    comments.addElement(param.getValue());
                 }
             }
         }

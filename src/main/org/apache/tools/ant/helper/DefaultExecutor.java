@@ -36,9 +36,9 @@ public class DefaultExecutor implements Executor {
     public void executeTargets(Project project, String[] targetNames)
         throws BuildException {
         BuildException thrownException = null;
-        for (int i = 0; i < targetNames.length; i++) {
+        for (String targetName : targetNames) {
             try {
-                project.executeTarget(targetNames[i]);
+                project.executeTarget(targetName);
             } catch (BuildException ex) {
                 if (project.isKeepGoingMode()) {
                     thrownException = ex;

@@ -29,7 +29,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -122,7 +122,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
     private URIResolver uriResolver;
 
     /** transformer output properties */
-    private final Vector outputProperties = new Vector();
+    private final Vector<String[]> outputProperties = new Vector<String[]>();
 
     /** stylesheet parameters */
     private final Hashtable<String, Object> params = new Hashtable<String, Object>();
@@ -334,9 +334,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         if (uriResolver != null) {
             transformer.setURIResolver(uriResolver);
         }
-        final int size = outputProperties.size();
-        for (int i = 0; i < size; i++) {
-            final String[] pair = (String[]) outputProperties.elementAt(i);
+        for (String[] pair : outputProperties) {
             transformer.setOutputProperty(pair[0], pair[1]);
         }
 
@@ -376,11 +374,8 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Sets the parameters for the transformer.
      */
     private void setTransformationParameters() {
-        for (final Enumeration enumeration = params.keys();
-             enumeration.hasMoreElements();) {
-            final String name = (String) enumeration.nextElement();
-            final Object value = params.get(name);
-            transformer.setParameter(name, value);
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            transformer.setParameter(entry.getKey(), entry.getValue());
         }
     }
 
@@ -435,8 +430,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
 
         // specific attributes for the transformer
         final int size = attributes.size();
-        for (int i = 0; i < size; i++) {
-            final Object[] pair = attributes.get(i);
+        for (final Object[] pair : attributes) {
             tfactory.setAttribute((String) pair[0], pair[1]);
         }
 
@@ -636,10 +630,8 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             setFactory(factory.getName());
 
             // configure factory attributes
-            for (final Enumeration attrs = factory.getAttributes();
-                    attrs.hasMoreElements();) {
-                final XSLTProcess.Factory.Attribute attr =
-                        (XSLTProcess.Factory.Attribute) attrs.nextElement();
+            for (final XSLTProcess.Factory.Attribute attr
+                    : Collections.list(factory.getAttributes())) {
                 setAttribute(attr.getName(), attr.getValue());
             }
             for (final XSLTProcess.Factory.Feature feature
@@ -657,10 +649,8 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
 
 
         // configure output properties
-        for (final Enumeration props = xsltTask.getOutputProperties();
-                props.hasMoreElements();) {
-            final XSLTProcess.OutputProperty prop
-                = (XSLTProcess.OutputProperty) props.nextElement();
+        for (final XSLTProcess.OutputProperty prop
+                : Collections.list(xsltTask.getOutputProperties())) {
             setOutputProperty(prop.getName(), prop.getValue());
         }
 

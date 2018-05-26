@@ -37,7 +37,7 @@ import java.lang.ref.WeakReference;
 public class WeakishReference  {
 
 
-    private WeakReference weakref;
+    private WeakReference<Object> weakref;
 
     /**
      * create a new soft reference, which is bound to a
@@ -47,7 +47,7 @@ public class WeakishReference  {
      * @see java.lang.ref.WeakReference
      */
     WeakishReference(Object reference) {
-        this.weakref = new WeakReference(reference);
+        this.weakref = new WeakReference<Object>(reference);
     }
 
     /**

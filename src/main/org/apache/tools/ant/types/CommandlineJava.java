@@ -108,8 +108,8 @@ public class CommandlineJava implements Cloneable {
         public void addDefinitionsToList(ListIterator<String> listIt) {
             String[] props = super.getVariables();
             if (props != null) {
-                for (int i = 0; i < props.length; i++) {
-                    listIt.add("-D" + props[i]);
+                for (String prop : props) {
+                    listIt.add("-D" + prop);
                 }
             }
             Properties propertySetProperties = mergePropertySets();

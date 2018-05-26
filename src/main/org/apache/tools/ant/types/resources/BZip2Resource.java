@@ -54,8 +54,8 @@ public class BZip2Resource extends CompressedResource {
      * @throws IOException if there is a problem.
      */
     protected InputStream wrapStream(InputStream in) throws IOException {
-        for (int i = 0; i < MAGIC.length; i++) {
-            if (in.read() != MAGIC[i]) {
+        for (char ch : MAGIC) {
+            if (in.read() != ch) {
                 throw new IOException("Invalid bz2 stream.");
             }
         }
@@ -69,8 +69,8 @@ public class BZip2Resource extends CompressedResource {
      * @throws IOException if there is a problem.
      */
     protected OutputStream wrapStream(OutputStream out) throws IOException {
-        for (int i = 0; i < MAGIC.length; i++) {
-            out.write(MAGIC[i]);
+        for (char ch : MAGIC) {
+            out.write(ch);
         }
         return new CBZip2OutputStream(out);
     }

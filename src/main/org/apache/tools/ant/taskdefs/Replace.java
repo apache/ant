@@ -70,7 +70,7 @@ public class Replace extends MatchingTask {
     private Resource propertyResource = null;
     private Resource replaceFilterResource = null;
     private Properties properties = null;
-    private ArrayList replacefilters = new ArrayList();
+    private ArrayList<Replacefilter> replacefilters = new ArrayList<Replacefilter>();
 
     private File dir = null;
 
@@ -744,9 +744,7 @@ public class Replace extends MatchingTask {
      */
     private StringBuffer buildFilterChain(StringBuffer inputBuffer) {
         StringBuffer buf = inputBuffer;
-        final int size = replacefilters.size();
-        for (int i = 0; i < size; i++) {
-            Replacefilter filter = (Replacefilter) replacefilters.get(i);
+        for (Replacefilter filter : replacefilters) {
             filter.setInputBuffer(buf);
             buf = filter.getOutputBuffer();
         }

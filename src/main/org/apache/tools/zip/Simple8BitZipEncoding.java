@@ -107,8 +107,8 @@ class Simple8BitZipEncoding implements ZipEncoding {
 
         byte code = 127;
 
-        for (int i = 0; i < this.highChars.length; ++i) {
-            temp.add(new Simple8BitChar(++code, this.highChars[i]));
+        for (char highChar : this.highChars) {
+            temp.add(new Simple8BitChar(++code, highChar));
         }
 
         Collections.sort(temp);

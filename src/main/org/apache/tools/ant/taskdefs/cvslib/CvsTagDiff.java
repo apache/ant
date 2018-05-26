@@ -441,8 +441,8 @@ public class CvsTagDiff extends AbstractCvsTask {
                               CollectionUtils.flattenToString(packageNames));
             DOM_WRITER.openElement(root, writer, 0, "\t");
             writer.println();
-            for (int i = 0, c = entries.length; i < c; i++) {
-                writeTagEntry(doc, writer, entries[i]);
+            for (CvsTagEntry entry : entries) {
+                writeTagEntry(doc, writer, entry);
             }
             DOM_WRITER.closeElement(root, writer, 0, "\t", true);
             writer.flush();

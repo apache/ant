@@ -220,22 +220,19 @@ public class Untar extends Expand {
          *  @exception BuildException thrown if bzip stream does not
          *     start with expected magic values
          */
-        public InputStream decompress(final String name,
-                                       final InputStream istream)
-            throws IOException, BuildException {
+        public InputStream decompress(final String name, final InputStream istream)
+                throws IOException, BuildException {
             final String v = getValue();
             if (GZIP.equals(v)) {
                 return new GZIPInputStream(istream);
-            } else {
-                if (BZIP2.equals(v)) {
-                    final char[] magic = new char[] {'B', 'Z'};
-                    for (int i = 0; i < magic.length; i++) {
-                        if (istream.read() != magic[i]) {
-                            throw new BuildException("Invalid bz2 file." + name);
-                        }
+            }
+            if (BZIP2.equals(v)) {
+                for (char c : new char[] {'B', 'Z'}) {
+                    if (istream.read() != c) {
+                        throw new BuildException("Invalid bz2 file." + name);
                     }
-                    return new CBZip2InputStream(istream);
                 }
+                return new CBZip2InputStream(istream);
             }
             return istream;
         }

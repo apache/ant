@@ -42,7 +42,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-
 /**
  * Aggregates all &lt;junit&gt; XML formatter testsuite data under
  * a specific directory and transforms the results via XSLT.
@@ -244,15 +243,12 @@ public class XMLResultAggregator extends Task implements XMLConstants {
         generatedId = 0;
 
         // get all files and add them to the document
-        File[] files = getFiles();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+        for (File file : getFiles()) {
             try {
                 log("Parsing file: '" + file + "'", Project.MSG_VERBOSE);
                 if (file.length() > 0) {
-                    Document testsuiteDoc
-                            = builder.parse(
-                                FileUtils.getFileUtils().toURI(files[i].getAbsolutePath()));
+                    Document testsuiteDoc = builder.parse(FileUtils
+                            .getFileUtils().toURI(file.getAbsolutePath()));
                     Element elem = testsuiteDoc.getDocumentElement();
                     // make sure that this is REALLY a testsuite.
                     if (TESTSUITE.equals(elem.getNodeName())) {

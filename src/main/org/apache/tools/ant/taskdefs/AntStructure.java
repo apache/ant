@@ -456,8 +456,8 @@ public class AntStructure extends Task {
          * @return true if all the strings in the array math XML-NMTOKEN
          */
         public static final boolean areNmtokens(final String[] s) {
-            for (int i = 0; i < s.length; i++) {
-                if (!isNmtoken(s[i])) {
+            for (String value : s) {
+                if (!isNmtoken(value)) {
                     return false;
                 }
             }

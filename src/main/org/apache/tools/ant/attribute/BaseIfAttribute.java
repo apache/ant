@@ -19,7 +19,6 @@
 package org.apache.tools.ant.attribute;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.tools.ant.ProjectComponent;
@@ -70,10 +69,9 @@ public abstract class BaseIfAttribute
     protected Map getParams(UnknownElement el) {
         Map ret = new HashMap();
         RuntimeConfigurable rc = el.getWrapper();
-        Map attributes = rc.getAttributeMap(); // This does a copy!
-        for (Iterator i = attributes.entrySet().iterator(); i.hasNext();) {
-            Map.Entry entry = (Map.Entry) i.next();
-            String key = (String) entry.getKey();
+        Map<String, Object> attributes = rc.getAttributeMap(); // This does a copy!
+        for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+            String key = entry.getKey();
             String value = (String) entry.getValue();
             if (key.startsWith("ant-attribute:param")) {
                 int pos = key.lastIndexOf(':');

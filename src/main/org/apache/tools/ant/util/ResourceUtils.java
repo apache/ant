@@ -206,15 +206,13 @@ public class ResourceUtils {
                       Project.MSG_VERBOSE);
                 continue;
             }
-            for (int i = 0; i < targetnames.length; i++) {
-                if (targetnames[i] == null) {
-                    targetnames[i] = "(no name)";
-                }
-            }
             final Union targetColl = new Union();
-            for (int i = 0; i < targetnames.length; i++) {
+            for (String targetname : targetnames) {
+                if (targetname == null) {
+                    targetname = "(no name)";
+                }
                 targetColl.add(targets.getResource(
-                    targetnames[i].replace(File.separatorChar, '/')));
+                        targetname.replace(File.separatorChar, '/')));
             }
             //find the out-of-date targets:
             final Restrict r = new Restrict();

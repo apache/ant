@@ -60,15 +60,14 @@ public class KaffeRmic extends DefaultRmicAdapter {
 
         Class c = getRmicClass();
         if (c == null) {
-            StringBuffer buf = new StringBuffer("Cannot use Kaffe rmic, as it"
-                                                + " is not available.  None"
-                                                + " of ");
-            for (int i = 0; i < RMIC_CLASSNAMES.length; i++) {
-                if (i != 0) {
+            StringBuilder buf = new StringBuilder(
+                "Cannot use Kaffe rmic, as it is not available.  None of ");
+            for (String className : RMIC_CLASSNAMES) {
+                if (buf.length() > 0) {
                     buf.append(", ");
                 }
 
-                buf.append(RMIC_CLASSNAMES[i]);
+                buf.append(className);
             }
             buf.append(" have been found. A common solution is to set the"
                        + " environment variable JAVA_HOME or CLASSPATH.");
@@ -101,10 +100,10 @@ public class KaffeRmic extends DefaultRmicAdapter {
      *
      * @return null if neither class can get loaded.
      */
-    private static Class getRmicClass() {
-        for (int i = 0; i < RMIC_CLASSNAMES.length; i++) {
+    private static Class<?> getRmicClass() {
+        for (String className : RMIC_CLASSNAMES) {
             try {
-                return Class.forName(RMIC_CLASSNAMES[i]);
+                return Class.forName(className);
             } catch (ClassNotFoundException cnfe) {
                 // Ignore
             }

@@ -627,8 +627,7 @@ public class Delete extends MatchingTask {
         }
 
         final int size = filesets.size();
-        for (int i = 0; i < size; i++) {
-            FileSet fs = (FileSet) filesets.get(i);
+        for (FileSet fs : filesets) {
             if (fs.getProject() == null) {
                 log("Deleting fileset with no project specified;"
                     + " assuming executing project", Project.MSG_VERBOSE);
@@ -674,11 +673,9 @@ public class Delete extends MatchingTask {
                         String[] links = new String[n.length];
                         System.arraycopy(n, 0, links, 0, n.length);
                         Arrays.sort(links, ReverseDirs.REVERSE);
-                        for (int l = 0; l < links.length; l++) {
+                        for (String link : links) {
                             try {
-                                SYMLINK_UTILS
-                                    .deleteSymbolicLink(new File(links[l]),
-                                                        this);
+                                SYMLINK_UTILS.deleteSymbolicLink(new File(link), this);
                             } catch (java.io.IOException ex) {
                                 handle(ex);
                             }
@@ -772,8 +769,7 @@ public class Delete extends MatchingTask {
         if (list == null) {
             list = new String[0];
         }
-        for (int i = 0; i < list.length; i++) {
-            String s = list[i];
+        for (String s : list) {
             File f = new File(d, s);
             if (f.isDirectory()) {
                 removeDir(f);
@@ -801,8 +797,8 @@ public class Delete extends MatchingTask {
         if (files.length > 0) {
             log("Deleting " + files.length + " files from "
                 + d.getAbsolutePath(), quiet ? Project.MSG_VERBOSE : verbosity);
-            for (int j = 0; j < files.length; j++) {
-                File f = new File(d, files[j]);
+            for (String filename : files) {
+                File f = new File(d, filename);
                 log("Deleting " + f.getAbsolutePath(),
                         quiet ? Project.MSG_VERBOSE : verbosity);
                 if (!delete(f)) {

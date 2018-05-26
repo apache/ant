@@ -242,16 +242,16 @@ public class AntTest {
             buildRule.getProject().resolveFile("ant/test3.log"),
             buildRule.getProject().resolveFile("ant/test4.log")
         };
-        for (int i=0; i<logFiles.length; i++) {
-            assertTrue(logFiles[i].getName()+" doesn\'t exist",
-                       !logFiles[i].exists());
+        for (File logFile : logFiles) {
+            assertTrue(logFile.getName() + " doesn\'t exist",
+                    !logFile.exists());
         }
 
         buildRule.executeTarget("testLogfilePlacement");
 
-        for (int i=0; i<logFiles.length; i++) {
-            assertTrue(logFiles[i].getName()+" exists",
-                       logFiles[i].exists());
+        for (File logFile : logFiles) {
+            assertTrue(logFile.getName() + " exists",
+                    logFile.exists());
         }
     }
 

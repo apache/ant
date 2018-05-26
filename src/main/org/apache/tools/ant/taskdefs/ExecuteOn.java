@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -369,19 +370,17 @@ public class ExecuteOn extends ExecTask {
                 DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
                 if (!FileDirBoth.DIR.equals(currentType)) {
-                    String[] s = getFiles(base, ds);
-                    for (int j = 0; j < s.length; j++) {
+                    for (String value : getFiles(base, ds)) {
                         totalFiles++;
-                        fileNames.addElement(s[j]);
-                        baseDirs.addElement(base);
+                        fileNames.add(value);
+                        baseDirs.add(base);
                     }
                 }
                 if (!FileDirBoth.FILE.equals(currentType)) {
-                    String[] s = getDirs(base, ds);
-                    for (int j = 0; j < s.length; j++) {
+                    for (String value : getDirs(base, ds)) {
                         totalDirs++;
-                        fileNames.addElement(s[j]);
-                        baseDirs.addElement(base);
+                        fileNames.add(value);
+                        baseDirs.add(base);
                     }
                 }
                 if (fileNames.size() == 0 && skipEmpty) {
@@ -516,9 +515,9 @@ public class ExecuteOn extends ExecTask {
         final char fileSeparator = File.separatorChar;
         Vector<String> targets = new Vector<String>();
         if (targetFilePos != null) {
-            HashSet<String> addedFiles = new HashSet<String>();
-            for (int i = 0; i < srcFiles.length; i++) {
-                String[] subTargets = mapper.mapFileName(srcFiles[i]);
+            Set<String> addedFiles = new HashSet<String>();
+            for (String srcFile : srcFiles) {
+                String[] subTargets = mapper.mapFileName(srcFile);
                 if (subTargets != null) {
                     for (int j = 0; j < subTargets.length; j++) {
                         String name = null;

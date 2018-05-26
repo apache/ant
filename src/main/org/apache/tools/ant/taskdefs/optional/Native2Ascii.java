@@ -254,10 +254,10 @@ public class Native2Ascii extends MatchingTask {
         String message = "Converting " + count + " file"
             + (count != 1 ? "s" : "") + " from ";
         log(message + srcDir + " to " + destDir);
-        for (int i = 0; i < files.length; i++) {
-            String[] dest = m.mapFileName(files[i]);
+        for (String file : files) {
+            String[] dest = m.mapFileName(file);
             if (dest != null && dest.length > 0) {
-                convert(files[i], dest[0]);
+                convert(file, dest[0]);
             }
         }
     }

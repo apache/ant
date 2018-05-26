@@ -228,9 +228,8 @@ public class FilterSet extends DataType implements Cloneable {
         //silly hack to avoid stack overflow...
         if (!readingFiles) {
             readingFiles = true;
-            final int size = filtersFiles.size();
-            for (int i = 0; i < size; i++) {
-                readFiltersFromFile(filtersFiles.get(i));
+            for (File filtersFile : filtersFiles) {
+                readFiltersFromFile(filtersFile);
             }
             filtersFiles.clear();
             readingFiles = false;

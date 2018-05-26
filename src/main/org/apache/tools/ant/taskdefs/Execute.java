@@ -612,8 +612,7 @@ public class Execute {
         }
         Map<String, String> osEnv =
             new LinkedHashMap<String, String>(getEnvironmentVariables());
-        for (int i = 0; i < env.length; i++) {
-            String keyValue = env[i];
+        for (String keyValue : env) {
             String key = keyValue.substring(0, keyValue.indexOf('='));
             // Find the key in the current environment copy
             // and remove it.

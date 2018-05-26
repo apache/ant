@@ -33,6 +33,7 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1918,32 +1919,26 @@ public class Javadoc extends Task {
     private void doDoclet(final Commandline toExecute) {
         if (doclet != null) {
             if (doclet.getName() == null) {
-                throw new BuildException("The doclet name must be "
-                                         + "specified.", getLocation());
-            } else {
-                toExecute.createArgument().setValue("-doclet");
-                toExecute.createArgument().setValue(doclet.getName());
-                if (doclet.getPath() != null) {
-                    final Path docletPath
-                        = doclet.getPath().concatSystemClasspath("ignore");
-                    if (docletPath.size() != 0) {
-                        toExecute.createArgument().setValue("-docletpath");
-                        toExecute.createArgument().setPath(docletPath);
-                    }
+                throw new BuildException("The doclet name must be specified.",
+                    getLocation());
+            }
+            toExecute.createArgument().setValue("-doclet");
+            toExecute.createArgument().setValue(doclet.getName());
+            if (doclet.getPath() != null) {
+                final Path docletPath
+                    = doclet.getPath().concatSystemClasspath("ignore");
+                if (docletPath.size() != 0) {
+                    toExecute.createArgument().setValue("-docletpath");
+                    toExecute.createArgument().setPath(docletPath);
                 }
-                for (final Enumeration<DocletParam> e = doclet.getParams();
-                     e.hasMoreElements();) {
-                    final DocletParam param = e.nextElement();
-                    if (param.getName() == null) {
-                        throw new BuildException("Doclet parameters must "
-                                                 + "have a name");
-                    }
-
-                    toExecute.createArgument().setValue(param.getName());
-                    if (param.getValue() != null) {
-                        toExecute.createArgument()
-                            .setValue(param.getValue());
-                    }
+            }
+            for (final DocletParam param : Collections.list(doclet.getParams())) {
+                if (param.getName() == null) {
+                    throw new BuildException("Doclet parameters must have a name");
+                }
+                toExecute.createArgument().setValue(param.getName());
+                if (param.getValue() != null) {
+                    toExecute.createArgument().setValue(param.getValue());
                 }
             }
         }
@@ -2152,27 +2147,20 @@ public class Javadoc extends Task {
                     // -tag arguments.
                     final DirectoryScanner tagDefScanner =
                         ta.getDirectoryScanner(getProject());
-                    final String[] files = tagDefScanner.getIncludedFiles();
-                    for (int i = 0; i < files.length; i++) {
-                        final File tagDefFile = new File(tagDir, files[i]);
+                    for (String file : tagDefScanner.getIncludedFiles()) {
+                        final File tagDefFile = new File(tagDir, file);
                         try {
-                            final BufferedReader in
-                                = new BufferedReader(
-                                    new FileReader(tagDefFile)
-                                                     );
+                            final BufferedReader in = new BufferedReader(
+                                    new FileReader(tagDefFile));
                             String line = null;
                             while ((line = in.readLine()) != null) {
-                                toExecute.createArgument()
-                                    .setValue("-tag");
-                                toExecute.createArgument()
-                                    .setValue(line);
+                                toExecute.createArgument().setValue("-tag");
+                                toExecute.createArgument().setValue(line);
                             }
                             in.close();
                         } catch (final IOException ioe) {
-                            throw new BuildException(
-                                "Couldn't read "
-                                + " tag file from "
-                                + tagDefFile.getAbsolutePath(), ioe);
+                            throw new BuildException("Couldn't read  tag file from "
+                                    + tagDefFile.getAbsolutePath(), ioe);
                         }
                     }
                 }
@@ -2278,9 +2266,8 @@ public class Javadoc extends Task {
     }
 
     private boolean containsWhitespace(final String s) {
-        final int len = s.length();
-        for (int i = 0; i < len; i++) {
-            if (Character.isWhitespace(s.charAt(i))) {
+        for (char c : s.toCharArray()) {
+            if (Character.isWhitespace(c)) {
                 return true;
             }
         }
@@ -2290,10 +2277,8 @@ public class Javadoc extends Task {
     private String quoteString(final String str, final char delim) {
         final StringBuffer buf = new StringBuffer(str.length() * 2);
         buf.append(delim);
-        final int len = str.length();
         boolean lastCharWasCR = false;
-        for (int i = 0; i < len; i++) {
-            final char c = str.charAt(i);
+        for (final char c : str.toCharArray()) {
             if (c == delim) { // can't put the non-constant delim into a case
                 buf.append('\\').append(c);
                 lastCharWasCR = false;
@@ -2429,11 +2414,10 @@ public class Javadoc extends Task {
             final File baseDir = ds.getDir(getProject());
             log("scanning " + baseDir + " for packages.", Project.MSG_DEBUG);
             final DirectoryScanner dsc = ds.getDirectoryScanner(getProject());
-            final String[] dirs = dsc.getIncludedDirectories();
             boolean containsPackages = false;
-            for (int i = 0; i < dirs.length; i++) {
+            for (String dir : dsc.getIncludedDirectories()) {
                 // are there any java files in this directory?
-                final File pd = new File(baseDir, dirs[i]);
+                final File pd = new File(baseDir, dir);
                 final String[] files = pd.list(new FilenameFilter () {
                         public boolean accept(final File dir1, final String name) {
                             return name.endsWith(".java")
@@ -2443,7 +2427,7 @@ public class Javadoc extends Task {
                     });
 
                 if (files.length > 0) {
-                    if ("".equals(dirs[i])) {
+                    if ("".equals(dir)) {
                         log(baseDir
                             + " contains source files in the default package,"
                             + " you must specify them as source files"
@@ -2452,7 +2436,7 @@ public class Javadoc extends Task {
                     } else {
                         containsPackages = true;
                         final String packageName =
-                            dirs[i].replace(File.separatorChar, '.');
+                                dir.replace(File.separatorChar, '.');
                         if (!addedPackages.contains(packageName)) {
                             addedPackages.add(packageName);
                             pn.addElement(packageName);

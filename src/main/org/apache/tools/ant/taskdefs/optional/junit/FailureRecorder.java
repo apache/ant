@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -89,7 +88,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
     private static final String LOG_PREFIX = "    [junit]";
 
     /** Class names of failed tests without duplicates. */
-    private static SortedSet/*<TestInfos>*/ failedTests = new TreeSet();
+    private static SortedSet<TestInfos> failedTests = new TreeSet<TestInfos>();
 
     /** A writer for writing the generated source to. */
     private BufferedWriter writer;
@@ -299,8 +298,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
         writer.newLine();
         writer.write("        TestSuite suite = new TestSuite();");
         writer.newLine();
-        for (Iterator iter = failedTests.iterator(); iter.hasNext();) {
-            TestInfos testInfos = (TestInfos) iter.next();
+        for (TestInfos testInfos : failedTests) {
             writer.write("        suite.addTest(");
             writer.write(String.valueOf(testInfos));
             writer.write(");");
