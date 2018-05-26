@@ -205,7 +205,7 @@ public abstract class ScriptRunnerBase {
 
     /**
      * Read some source in from the given reader
-     * @param in the input stream to pass into a buffered reader.
+     * @param reader the input stream to pass into a buffered reader.
      * @param name the name to use in error messages
      */
     private void readSource(Reader reader, String name) {

@@ -211,7 +211,7 @@ public class PropertyHelper implements GetProperty {
             // CheckStyle:LineLengthCheck OFF see too long
             /**
              * {@inheritDoc}
-             * @see org.apache.tools.ant.property.PropertyExpander#parsePropertyName(java.lang.String, java.text.ParsePosition, org.apache.tools.ant.PropertyHelper)
+             * @see org.apache.tools.ant.property.PropertyExpander#parsePropertyName(java.lang.String, java.text.ParsePosition, org.apache.tools.ant.property.ParseNextProperty)
              */
             // CheckStyle:LineLengthCheck ON
             public String parsePropertyName(

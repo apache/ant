@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
