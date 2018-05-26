@@ -366,7 +366,6 @@ public final class SelectorUtils {
         int patIdxEnd = patArr.length - 1;
         int strIdxStart = 0;
         int strIdxEnd = strArr.length - 1;
-        char ch;
 
         boolean containsStar = false;
         for (char ch : patArr) {
@@ -382,7 +381,7 @@ public final class SelectorUtils {
                 return false; // Pattern and string do not have the same size
             }
             for (int i = 0; i <= patIdxEnd; i++) {
-                ch = patArr[i];
+                char ch = patArr[i];
                 if (ch != '?') {
                     if (different(caseSensitive, ch, strArr[i])) {
                         return false; // Character mismatch
@@ -398,7 +397,7 @@ public final class SelectorUtils {
 
         // Process characters before first star
         while (true) {
-            ch = patArr[patIdxStart];
+            char ch = patArr[patIdxStart];
             if (ch == '*' || strIdxStart > strIdxEnd) {
                 break;
             }
@@ -418,7 +417,7 @@ public final class SelectorUtils {
 
         // Process characters after last star
         while (true) {
-            ch = patArr[patIdxEnd];
+            char ch = patArr[patIdxEnd];
             if (ch == '*' || strIdxStart > strIdxEnd) {
                 break;
             }
@@ -459,7 +458,7 @@ public final class SelectorUtils {
             strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
-                    ch = patArr[patIdxStart + j + 1];
+                    char ch = patArr[patIdxStart + j + 1];
                     if (ch != '?') {
                         if (different(caseSensitive, ch,
                                       strArr[strIdxStart + i + j])) {

@@ -204,7 +204,7 @@ public class IntrospectionHelperTest {
     }
 
     private Map<String, Class<?>> getExpectedNestedElements() {
-        Map<String, Class<?>> elemMap = new Hashtable<>();
+        Map<String, Class<?>> elemMap = new Hashtable<String, Class<?>>();
         elemMap.put("six", String.class);
         elemMap.put("thirteen", StringBuffer.class);
         elemMap.put("fourteen", StringBuffer.class);

@@ -96,7 +96,7 @@ public class UnknownElementTest {
     }
 
     public static class Parent extends Task implements TaskContainer {
-        List<Task> children = new ArrayList<>();
+        List<Task> children = new ArrayList<Task>();
         public void addTask(Task t) {
             children.add(t);
         }
