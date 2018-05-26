@@ -173,8 +173,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         StringBuffer macroName = null;
 
         int state = STATE_NORMAL;
-        for (int i = 0; i < s.length(); ++i) {
-            char ch = s.charAt(i);
+        for (final char ch : s.toCharArray()) {
             switch (state) {
                 case STATE_NORMAL:
                     if (ch == '@') {

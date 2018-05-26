@@ -129,9 +129,9 @@ public class CVSPass extends Task {
     }
 
     private final String mangle(String password) {
-        StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < password.length(); i++) {
-            buf.append(shifts[password.charAt(i)]);
+        StringBuilder buf = new StringBuilder();
+        for (final char ch : password.toCharArray()) {
+            buf.append(shifts[ch]);
         }
         return buf.toString();
     }

@@ -937,11 +937,9 @@ public class SQLExec extends JDBCTask {
         if (csvQuoteChar == null || s == null || (!forceCsvQuoteChar && s.indexOf(csvColumnSep) == -1 && s.indexOf(csvQuoteChar) == -1)) {
             return s;
         }
-        StringBuffer sb = new StringBuffer(csvQuoteChar);
-        int len = s.length();
+        StringBuilder sb = new StringBuilder(csvQuoteChar);
         char q = csvQuoteChar.charAt(0);
-        for (int i = 0; i < len; i++) {
-            char c = s.charAt(i);
+        for (final char c : s.toCharArray()) {
             if (c == q) {
                 sb.append(q);
             }
