@@ -946,7 +946,9 @@ public class Project implements ResourceFactory {
      */
     public void setSystemProperties() {
         final Properties systemP = System.getProperties();
-        for (final String propertyName : systemP.stringPropertyNames()) {
+        final Enumeration<?> e = systemP.propertyNames();
+        while (e.hasMoreElements()) {
+            final String propertyName = (String) e.nextElement();
             final String value = systemP.getProperty(propertyName);
             if (value != null) {
                 this.setPropertyInternal(propertyName, value);
