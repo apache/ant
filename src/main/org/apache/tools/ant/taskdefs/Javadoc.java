@@ -1908,14 +1908,12 @@ public class Javadoc extends Task {
     private void doDoclet(final Commandline toExecute) {
         if (doclet != null) {
             if (doclet.getName() == null) {
-                throw new BuildException("The doclet name must be specified.",
-                    getLocation());
+                throw new BuildException("The doclet name must be specified.", getLocation());
             }
             toExecute.createArgument().setValue("-doclet");
             toExecute.createArgument().setValue(doclet.getName());
             if (doclet.getPath() != null) {
-                final Path docletPath
-                    = doclet.getPath().concatSystemClasspath("ignore");
+                final Path docletPath = doclet.getPath().concatSystemClasspath("ignore");
                 if (docletPath.size() != 0) {
                     toExecute.createArgument().setValue("-docletpath");
                     toExecute.createArgument().setPath(docletPath);
@@ -1925,7 +1923,6 @@ public class Javadoc extends Task {
                 if (param.getName() == null) {
                     throw new BuildException("Doclet parameters must have a name");
                 }
-
                 toExecute.createArgument().setValue(param.getName());
                 if (param.getValue() != null) {
                     toExecute.createArgument().setValue(param.getValue());
@@ -2120,20 +2117,15 @@ public class Javadoc extends Task {
                         ta.getDirectoryScanner(getProject());
                     for (String file : tagDefScanner.getIncludedFiles()) {
                         final File tagDefFile = new File(tagDir, file);
-                        try (final BufferedReader in =
-                            new BufferedReader(new FileReader(tagDefFile))) {
-                            String line;
-                            while ((line = in.readLine()) != null) {
-                                toExecute.createArgument()
-                                    .setValue("-tag");
-                                toExecute.createArgument()
-                                    .setValue(line);
-                            }
+                        try (final BufferedReader in = new BufferedReader(
+                                new FileReader(tagDefFile))) {
+                            in.lines().forEach(line -> {
+                                toExecute.createArgument().setValue("-tag");
+                                toExecute.createArgument().setValue(line);
+                            });
                         } catch (final IOException ioe) {
-                            throw new BuildException(
-                                "Couldn't read tag file from "
-                                    + tagDefFile.getAbsolutePath(),
-                                ioe);
+                            throw new BuildException("Couldn't read tag file from "
+                                    + tagDefFile.getAbsolutePath(), ioe);
                         }
                     }
                 }

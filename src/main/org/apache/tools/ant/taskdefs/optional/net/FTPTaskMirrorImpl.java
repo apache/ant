@@ -476,9 +476,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
          * @param fast boolean
          */
         private void accountForIncludedDir(String name, AntFTPFile file, boolean fast) {
-            if (!dirsIncluded.contains(name)
-                && !dirsExcluded.contains(name)) {
-
+            if (!dirsIncluded.contains(name) && !dirsExcluded.contains(name)) {
                 if (!isExcluded(name)) {
                     if (fast) {
                         if (file.isSymbolicLink()) {
@@ -724,16 +722,14 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     }
                     this.curpwd = parent.getAbsolutePath();
                 } catch (IOException ioe) {
-                    throw new BuildException(
-                        "could not change working dir to %s", parent.curpwd);
+                    throw new BuildException("could not change working dir to %s", parent.curpwd);
                 }
                 for (String currentPathElement : pathElements) {
                     try {
                         if (!this.client.changeWorkingDirectory(currentPathElement)) {
                             if (!isCaseSensitive() && (remoteSystemCaseSensitive
-                                || !remoteSensitivityChecked)) {
-                                currentPathElement =
-                                    findPathElementCaseUnsensitive(this.curpwd,
+                                    || !remoteSensitivityChecked)) {
+                                currentPathElement = findPathElementCaseUnsensitive(this.curpwd,
                                         currentPathElement);
                                 if (currentPathElement == null) {
                                     return;
@@ -741,12 +737,10 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                             }
                             return;
                         }
-                        this.curpwd =
-                            getCurpwdPlusFileSep() + currentPathElement;
+                        this.curpwd = getCurpwdPlusFileSep() + currentPathElement;
                     } catch (IOException ioe) {
-                        throw new BuildException(
-                            "could not change working dir to %s from %s",
-                            currentPathElement, this.curpwd);
+                        throw new BuildException("could not change working dir to %s from %s",
+                                currentPathElement, this.curpwd);
                     }
                 }
                 String lastpathelement = pathElements.get(pathElements.size() - 1);

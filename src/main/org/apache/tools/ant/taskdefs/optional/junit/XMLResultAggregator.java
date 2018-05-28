@@ -42,7 +42,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-
 /**
  * Aggregates all &lt;junit&gt; XML formatter testsuite data under
  * a specific directory and transforms the results via XSLT.

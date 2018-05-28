@@ -218,9 +218,8 @@ public class Untar extends Expand {
          *  @exception BuildException thrown if bzip stream does not
          *     start with expected magic values
          */
-        public InputStream decompress(final String name,
-                                       final InputStream istream)
-            throws IOException, BuildException {
+        public InputStream decompress(final String name, final InputStream istream)
+                throws IOException, BuildException {
             final String v = getValue();
             if (GZIP.equals(v)) {
                 return new GZIPInputStream(istream);
