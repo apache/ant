@@ -62,5 +62,4 @@
     <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>
     <directory>../../../../target/${project.artifactId}</directory>
   </build>
-  
 </project>

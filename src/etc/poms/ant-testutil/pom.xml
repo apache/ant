@@ -70,5 +70,4 @@
     <outputDirectory>../../../../target/${project.artifactId}/classes</outputDirectory>
     <directory>../../../../target/${project.artifactId}</directory>
   </build>
-  
 </project>
