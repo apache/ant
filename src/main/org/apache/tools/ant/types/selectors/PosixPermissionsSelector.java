@@ -41,7 +41,7 @@ public class PosixPermissionsSelector implements FileSelector {
 
     private String permissions;
 
-    private boolean followSymlinks = false;
+    private boolean followSymlinks = true;
 
     /**
      * Sets the permissions to look for.
@@ -63,11 +63,11 @@ public class PosixPermissionsSelector implements FileSelector {
     }
 
     /**
-     * Sets the "follow links" flag.
-     * @param followSymlinks the user name
+     * Sets the "follow symbolic links" flag.
+     * @param followSymlinks whether or not symbolic links should be followed.
      */
-    public void setFollowSymlinks(String followSymlinks) {
-        this.followSymlinks = PropertyHelper.toBoolean(followSymlinks);
+    public void setFollowSymlinks(boolean followSymlinks) {
+        this.followSymlinks = followSymlinks;
     }
 
     @Override

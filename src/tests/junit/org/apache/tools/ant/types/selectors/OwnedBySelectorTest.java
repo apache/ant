@@ -79,8 +79,8 @@ public class OwnedBySelectorTest {
         assertEquals(SELF, user.getName());
 
         s.setOwner(SELF);
-        assertTrue(s.isSelected(null, null, symbolicLink.toFile()));
-        s.setFollowSymlinks("yes");
         assertFalse(s.isSelected(null, null, symbolicLink.toFile()));
+        s.setFollowSymlinks(false);
+        assertTrue(s.isSelected(null, null, symbolicLink.toFile()));
     }
 }

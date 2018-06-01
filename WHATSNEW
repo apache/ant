@@ -70,6 +70,11 @@ Other changes:
    can be used to specify the file's encoding.
    Bugzilla Report 62379
 
+ * New file selectors, posixGroup and posixPermissions, are available.
+   The new selectors and related ownedBy selector have "followSymlinks"
+   attribute that defaults to "true" for consistency.
+   Bugzilla Report 22370
+
 Changes from Ant 1.10.2 TO Ant 1.10.3
 =====================================
 

@@ -42,7 +42,7 @@ public class PosixGroupSelector implements FileSelector {
 
     private String group;
 
-    private boolean followSymlinks = false;
+    private boolean followSymlinks = true;
 
     /**
      * Sets the group name to look for.
@@ -53,11 +53,11 @@ public class PosixGroupSelector implements FileSelector {
     }
 
     /**
-     * Sets the "follow links" flag.
-     * @param followSymlinks the user name
+     * Sets the "follow symbolic links" option.
+     * @param followSymlinks whether or not symbolic links should be followed.
      */
-    public void setFollowSymlinks(String followSymlinks) {
-        this.followSymlinks = PropertyHelper.toBoolean(followSymlinks);
+    public void setFollowSymlinks(boolean followSymlinks) {
+        this.followSymlinks = followSymlinks;
     }
 
     @Override
