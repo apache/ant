@@ -25,7 +25,6 @@ import java.nio.file.LinkOption;
 import java.nio.file.attribute.UserPrincipal;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.PropertyHelper;
 
 /**
  * A selector that selects files based on their owner.

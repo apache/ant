@@ -19,7 +19,6 @@
 package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.util.PermissionUtils;
 
 import java.io.File;
