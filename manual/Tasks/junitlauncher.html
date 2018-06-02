@@ -330,6 +330,28 @@
             is <strong>not</strong> set</a>.</td>
         <td>No</td>
     </tr>
+    <tr>
+        <td>includeEngines</td>
+        <td>A comma separated set of test engine ids. If specified, only these test engine(s)
+            will be used for running the tests.
+            <br/>
+            For example: <code>includeEngines="junit-jupiter"</code> will only use the Jupiter
+            test engine for execution of the tests and will ignore any other engines that might
+            have been found in the classpath.
+        </td>
+        <td>No</td>
+    </tr>
+    <tr>
+        <td>excludeEngines</td>
+        <td>A comma separated set of test engine ids. If specified, these test engine(s)
+            will be excluded when running the tests.
+            <br/>
+            For example: <code>excludeEngines="junit-vintage"</code> will exclude the vintage
+            test engine during execution of the tests and will use any other engines that might
+            have been found in the classpath.
+        </td>
+        <td>No</td>
+    </tr>
 </table>
 
 <p>
@@ -381,6 +403,28 @@
         <td>unless</td>
         <td>Only run the tests <a href="../properties.html#if+unless">if the named property
             is <strong>not</strong> set</a>.</td>
+        <td>No</td>
+    </tr>
+    <tr>
+        <td>includeEngines</td>
+        <td>A comma separated set of test engine ids. If specified, only these test engine(s)
+            will be used for running the tests.
+            <br/>
+            For example: <code>includeEngines="junit-jupiter"</code> will only use the Jupiter
+            test engine for execution of the tests and will ignore any other engines that might
+            have been found in the classpath.
+        </td>
+        <td>No</td>
+    </tr>
+    <tr>
+        <td>excludeEngines</td>
+        <td>A comma separated set of test engine ids. If specified, these test engine(s)
+            will be excluded when running the tests.
+            <br/>
+            For example: <code>excludeEngines="junit-vintage"</code> will exclude the vintage
+            test engine during execution of the tests and will use any other engines that might
+            have been found in the classpath.
+        </td>
         <td>No</td>
     </tr>
 </table>
