@@ -1828,6 +1828,9 @@ ${antunit.reports}
           <exclude name="${taskdefs.package}/TaskdefTest*Task.java"/>
           <exclude name="${optional.package}/junit/TestFormatter.java"/>
 
+          <!-- JUnit 5 / junitlauncher tests that aren't meant to run by junit task -->
+          <exclude name="${optional.package}/junitlauncher/"/>
+
           <!-- interactive tests -->
           <exclude name="${taskdefs.package}/TestProcess.java"/>
           <exclude name="${optional.package}/splash/SplashScreenTest.java"/>
