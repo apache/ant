@@ -277,7 +277,9 @@ public class DefaultLogger implements BuildLogger {
             }
             Throwable ex = event.getException();
             if (Project.MSG_DEBUG <= msgOutputLevel && ex != null) {
-                    message.append(StringUtils.getStackTrace(ex));
+                String exn = ex.getClass().getName();
+                message.append(String.format("%n%s: ", exn.substring(exn.lastIndexOf('.') + 1)))
+                        .append(StringUtils.getStackTrace(ex));
             }
 
             String msg = message.toString();
