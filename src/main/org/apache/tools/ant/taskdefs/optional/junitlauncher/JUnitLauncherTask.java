@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class JUnitLauncherTask extends Task {
     private Path classPath;
     private boolean haltOnFailure;
     private String failureProperty;
+    private boolean printSummary;
     private final List<TestDefinition> tests = new ArrayList<>();
     private final List<ListenerDefinition> listeners = new ArrayList<>();
 
@@ -172,6 +174,10 @@ public class JUnitLauncherTask extends Task {
         this.failureProperty = failureProperty;
     }
 
+    public void setPrintSummary(final boolean printSummary) {
+        this.printSummary = printSummary;
+    }
+
     private void preConfigure(final TestDefinition test) {
         if (test.getHaltOnFailure() == null) {
             test.setHaltOnFailure(this.haltOnFailure);
@@ -267,6 +273,10 @@ public class JUnitLauncherTask extends Task {
     }
 
     private void handleTestExecutionCompletion(final TestDefinition test, final TestExecutionSummary summary) {
+        if (printSummary) {
+            // print the summary to System.out
+            summary.printTo(new PrintWriter(System.out, true));
+        }
         final boolean hasTestFailures = summary.getTestsFailedCount() != 0;
         try {
             if (hasTestFailures && test.getFailureProperty() != null) {
