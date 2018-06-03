@@ -75,6 +75,9 @@ Other changes:
    attribute that defaults to "true" for consistency.
    Bugzilla Report 22370
 
+ * The junitlauncher task now has a "printSummary" attribute which when
+   set to "true" will print the test execution summary to System.out.
+
 Changes from Ant 1.10.2 TO Ant 1.10.3
 =====================================
 
