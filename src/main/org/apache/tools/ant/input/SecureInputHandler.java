@@ -42,7 +42,7 @@ public class SecureInputHandler extends DefaultInputHandler {
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
         do {
-            char[] input = System.console().readPassword();
+            char[] input = System.console().readPassword(prompt);
             if (input == null) {
                 throw new BuildException("unexpected end of stream while reading input");
             }
