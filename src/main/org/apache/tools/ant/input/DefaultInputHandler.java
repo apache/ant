@@ -56,6 +56,9 @@ public class DefaultInputHandler implements InputHandler {
                 System.err.flush();
                 try {
                     String input = r.readLine();
+                    if (input == null) {
+                        throw new BuildException("unexpected end of stream while reading input");
+                    }
                     request.setInput(input);
                 } catch (IOException e) {
                     throw new BuildException("Failed to read input from"

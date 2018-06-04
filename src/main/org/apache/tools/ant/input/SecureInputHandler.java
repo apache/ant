@@ -43,6 +43,9 @@ public class SecureInputHandler extends DefaultInputHandler {
         String prompt = getPrompt(request);
         do {
             char[] input = System.console().readPassword();
+            if (input == null) {
+                throw new BuildException("unexpected end of stream while reading input");
+            }
             request.setInput(new String(input));
             Arrays.fill(input, ' ');
         } while (!request.isInputValid());
