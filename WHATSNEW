@@ -28,6 +28,10 @@ Fixed bugs:
  * The junit task when used with includeantruntime="no" was incorrectly
    printing a warning about multiple versions of ant detected in path
 
+ * Default and SecureInputHandler will now raise an error when then
+   end of the inout stream (usually System.in or System.console) are
+   reached before a valid input has been read.
+
 Other changes:
 --------------
 

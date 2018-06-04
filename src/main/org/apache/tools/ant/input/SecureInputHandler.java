@@ -40,6 +40,7 @@ public class SecureInputHandler extends DefaultInputHandler {
      * @throws BuildException if not possible to read from console
      */
     public void handleInput(InputRequest request) throws BuildException {
+        boolean nullInput = false;
         String prompt = getPrompt(request);
         try {
             Object console = ReflectUtil.invokeStatic(System.class, "console");
@@ -47,6 +48,10 @@ public class SecureInputHandler extends DefaultInputHandler {
                 char[] input = (char[]) ReflectUtil.invoke(
                     console, "readPassword", String.class, prompt,
                     Object[].class, (Object[]) null);
+                if (input == null) {
+                    nullInput = true;
+                    break;
+                }
                 request.setInput(new String(input));
                 /* for security zero char array after retrieving value */
                 java.util.Arrays.fill(input, ' ');
@@ -54,6 +59,9 @@ public class SecureInputHandler extends DefaultInputHandler {
         } catch (Exception e) {
             /* Java6 not present use default handler */
             super.handleInput(request);
+        }
+        if (nullInput) {
+            throw new BuildException("unexpected end of stream while reading input");
         }
     }
 }
