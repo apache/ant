@@ -33,7 +33,7 @@ addition, FileSet holds an implicit PatternSet and supports the
 nested <code>&lt;include&gt;</code>, <code>&lt;includesfile&gt;</code>, <code>&lt;exclude&gt;</code>
 and <code>&lt;excludesfile&gt;</code> elements of PatternSet directly, as well as PatternSet's
 attributes.</p>
-<p>Selectors are available as nested elements within the FileSet.  If any of the selectors
+<p>Selectors are available as nested elements within the FileSet. If any of the selectors
 within the FileSet do not select the file, the file is not considered part of the FileSet. This
 makes a FileSet equivalent to an <code>&lt;and&gt;</code> selector container.</p>
 <table class="attr">
@@ -93,7 +93,7 @@ makes a FileSet equivalent to an <code>&lt;and&gt;</code> selector container.</p
   <tr>
     <td>erroronmissingdir</td>
     <td>
-      Specify what happens if the base directory does not exist.  If <q>true</q> a build error
+      Specify what happens if the base directory does not exist. If <q>true</q> a build error
       will happen, if <q>false</q>, the fileset will be ignored/empty.
       <em>Since Apache Ant 1.7.1</em>
     </td>
@@ -102,8 +102,19 @@ makes a FileSet equivalent to an <code>&lt;and&gt;</code> selector container.</p
 </table>
 
 <p id="symlink"><strong>Note</strong>: All files/directories for which the canonical path is
-different from its path are considered symbolic links.  On Unix systems this usually means the
+different from its path are considered symbolic links. On Unix systems this usually means the
 file really is a symbolic link but it may lead to false results on other platforms.</p>
+
+<p>Ant is restricted to features that JRE considers portable, and symbolic links is one such feature
+that was long considered non-portable. That has changed with Java 7 and NIO.2, yet full support for
+symbolic links is still lacking (notably, in Zip files). Full support of symbolic links in Ant would
+require a different implementation of FileSet and revision of all tasks and/or types that derive
+from it. Currently, the semantics of <var>followsymlinks</var> in FileSet is such that <q>false</q>
+excludes symbolic links completely, and <q>true</q> allows symbolic links to be considered by
+selectors, which may have their own <var>followsymlinks</var> attributes with proper semantics;
+i.e., <q>false</q> allows selector to inspect properties of a symbolic link itself, and <q>true</q>
+those of its target.
+</p>
 
 <h4>Examples</h4>
 <pre>
