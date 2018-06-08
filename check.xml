@@ -103,6 +103,10 @@
             value="${build.dir}/simian"
             description="Where to store Simian reports"/>
 
+  <!-- OWASP Dependency Check -->
+  <property name="owasp.dc.report.dir"
+            value="${build.dir}/reports/owasp-dc"
+            description="Where to store the OWASP Dependency Check reports"/>
 
   <target name="init-ivy">
     <property name="ivy.version"  value="2.4.0"/>
@@ -226,28 +230,47 @@
     <fixcrlf srcdir="src/main" includes="${path}" javafiles="yes" tab="remove" tablength="4"/>
   </target>
 
-  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy,build" xmlns:fb="http://findbugs.sourceforge.net/">
-    <ivy:cachepath organisation="com.google.code.findbugs" module="findbugs-ant" revision="3.0.1"
-                   inline="true" conf="default" pathid="findbugs.real.classpath" transitive="true"/>
-    <!-- Load the Findbugs AntTasks -->               
-    <taskdef uri="http://findbugs.sourceforge.net/" resource="edu/umd/cs/findbugs/anttask/tasks.properties" classpathref="findbugs.real.classpath" />
+  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy,build"
+          xmlns:fb="http://findbugs.sourceforge.net/">
+    <property name="spotbugs.dir" value="build/download/spotbugs"/>
+    <property name="spotbugs.ver" value="3.1.3"/>
+    <ivy:cachefileset organisation="com.github.spotbugs" module="spotbugs-ant" revision="${spotbugs.ver}"
+                      inline="true" setid="spotbugs.fileset"/>
+    <!-- Hardcoded paths -->
+    <mkdir dir="${spotbugs.dir}/lib"/>
+    <copy todir="${spotbugs.dir}/lib">
+      <flattenmapper/>
+      <fileset refid="spotbugs.fileset"/>
+    </copy>
+    <delete dir="${spotbugs.dir}/lib" includes="ant-*,*-javadoc.jar,*-sources.jar"/>
+    <!-- Hardcoded names -->
+    <symlink resource="spotbugs-${spotbugs.ver}.jar" link="${spotbugs.dir}/lib/spotbugs.jar"/>
+    <symlink resource="spotbugs-annotations-${spotbugs.ver}.jar"
+             link="${spotbugs.dir}/lib/spotbugs-annotations.jar"/>
+    <!-- Path is provided through CLI to forked JVM -->
+    <path id="optional.libs">
+      <fileset dir="lib/optional" includes="*.jar"/>
+    </path>
+    <!-- Load the Findbugs AntTasks -->
+    <taskdef uri="http://findbugs.sourceforge.net/" resource="edu/umd/cs/findbugs/anttask/tasks.properties"
+             classpath="${spotbugs.dir}/lib/spotbugs-ant-${spotbugs.ver}.jar"/>
 
     <!-- Start Findbugs -->
     <mkdir dir="${findbugs.reportdir}"/>
-    <fb:findbugs pluginlistref="findbugs.real.classpath"
-                 classpathref="findbugs.real.classpath"
+    <fb:spotbugs home="${spotbugs.dir}"
                  output="xml:withMessages"
                  outputFile="${findbugs.reportdir}/${findbugs.raw}"
                  jvmargs="${findbugs.jvmargs}"
                  projectName="${Name} ${project.version}">
-      <class location="${build.classes}" />
-      <sourcePath path="${java.dir}" />
-    </fb:findbugs>
+      <class location="${build.classes}"/>
+      <sourcePath path="${java.dir}"/>
+      <auxClasspath refid="optional.libs"/>
+    </fb:spotbugs>
 
     <!-- Generate (human) readable output -->
     <xslt basedir="${findbugs.reportdir}" includes="${findbugs.raw}" destdir="${findbugs.reportdir}">
       <style>
-        <javaresource name="${findbugs.xsl}" classpathref="findbugs.real.classpath"/>
+        <javaresource name="${findbugs.xsl}" classpath="${spotbugs.dir}/lib/spotbugs-${spotbugs.ver}.jar"/>
       </style>  
     </xslt>
   </target>
@@ -267,39 +290,15 @@
     </rat:report>
   </target>
 
-  <target name="dependency-check" description="--> Runs the OWASP dependency check">
-    <property name="dependency-check.url" value="http://dl.bintray.com/jeremy-long/owasp/dependency-check-ant-3.1.0-release.zip"/>
-    <property name="tools.dir" value="tools"/>
-    <property name="dependency-check.dir" value="${tools.dir}/dependency-check"/>
-    <property name="dependency-check.home" value="${dependency-check.dir}/dependency-check-ant"/>
-
-    <!--available property="dependency-check.present" file="${dependency-check.home}/dependency-check-ant/dependency-check-ant.jar"/-->
-    <condition property="dependency-check.present">
-      <resourcecount when="greater" count="0">
-        <fileset dir="${dependency-check.home}" includes="**/dependency-check-ant.jar"/>
-      </resourcecount>
-    </condition>
-    
-    <sequential unless:set="dependency-check.present">
-      <mkdir dir="${dependency-check.home}"/>
-      <get src="${dependency-check.url}" dest="${dependency-check.dir}/dependency-check-ant.zip"/>
-      <unzip src="${dependency-check.dir}/dependency-check-ant.zip" dest="${dependency-check.dir}/dependency-check-ant"/>
-    </sequential>
-
-    <path id="dependency-check.path">
-      <pathelement location="${dependency-check.home}/dependency-check-ant.jar"/>
-      <fileset dir="${dependency-check.home}">
-        <include name="**/*.jar"/>
-      </fileset>
-    </path>
-    <taskdef resource="dependency-check-taskdefs.properties" uri="https://jeremylong.github.io/">
-      <classpath refid="dependency-check.path"/>
-    </taskdef>
-
-    <owasp:dependency-check
-        xmlns:owasp="https://jeremylong.github.io/"
-        projectName="${ant.project.name}"
-    >
+  <target name="dependency-check" description="--> Runs the OWASP dependency check" depends="init-ivy">
+    <ivy:cachepath organisation="org.owasp" module="dependency-check-ant" revision="3.2.1"
+                   inline="true" conf="default" pathid="dc.classpath" transitive="true"/>
+    <taskdef resource="dependency-check-taskdefs.properties" uri="https://jeremylong.github.io/"
+             classpathref="dc.classpath"/>
+    <mkdir dir="${owasp.dc.report.dir}"/>
+    <owasp:dependency-check xmlns:owasp="https://jeremylong.github.io/"
+                            projectName="${ant.project.name}"
+                            reportOutputDirectory="${owasp.dc.report.dir}">
       <fileset dir="lib" includes="**/*.jar"/>
       <fileset dir="." includes="dist/**/*.jar"/>
     </owasp:dependency-check>
