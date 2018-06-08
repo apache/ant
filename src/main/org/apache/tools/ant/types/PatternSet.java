@@ -207,6 +207,8 @@ public class PatternSet extends DataType implements Cloneable {
         /**
          * Encoding to use when reading the file, defaults to the platform's default
          * encoding.
+         *
+         * @return the encoding name
          */
         public final String getEncoding() {
             return encoding;
