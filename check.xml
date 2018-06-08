@@ -134,7 +134,7 @@
                      inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
       <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.classpath"/>
       <mkdir dir="${checkstyle.reportdir}"/>
-      <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
+      <checkstyle config="${checkstyle.src.dir}/checkstyle-config" failOnViolation="false">
         <formatter type="xml" toFile="${checkstyle.raw}"/>
         <fileset dir="${java.dir}">
           <include name="${tocheck}"/>
