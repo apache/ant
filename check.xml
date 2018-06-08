@@ -35,7 +35,7 @@
 
   <import file="build.xml"/>
 
-  <property name="config.dir" location="${etc.dir}/checkstyle"/>
+  <property name="checkstyle.src.dir" location="${etc.dir}/checkstyle"/>
 
   <!-- Ant Checkstyle report -->
   <property name="checkstyle.reportdir"
@@ -45,16 +45,16 @@
             location="${checkstyle.reportdir}/raw.xml"
             description="Name of Checkstyle XML-Report"/>
   <property name="stylesheet.html"
-            location="${config.dir}/checkstyle-frames.xsl"
+            location="${checkstyle.src.dir}/checkstyle-frames.xsl"
             description="Name of Checkstyle XSLT for generating HTML"/>
   <property name="stylesheet.html.sorted"
-            location="${config.dir}/checkstyle-frames-sortby-check.xsl"
+            location="${checkstyle.src.dir}/checkstyle-frames-sortby-check.xsl"
             description="Name of Checkstyle XSLT for generating 2nd HTML"/>
   <property name="stylesheet.text"
-            location="${config.dir}/checkstyle-text.xsl"
+            location="${checkstyle.src.dir}/checkstyle-text.xsl"
             description="Name of Checkstyle XSLT for generating plain text"/>
   <property name="stylesheet.xdoc"
-            location="${config.dir}/checkstyle-xdoc.xsl"
+            location="${checkstyle.src.dir}/checkstyle-xdoc.xsl"
             description="Name of Checkstyle XSLT for generating XDOC"/>
 
   <property name="checkstyle.basedir"
@@ -117,7 +117,7 @@
     <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
   </target>
 
-  <target name="checkstyle" description="--> checks Ant codebase according to ${config.dir}/checkstyle-config" depends="init-ivy">
+  <target name="checkstyle" description="--> checks Ant codebase according to ${checkstyle.src.dir}/checkstyle-config" depends="init-ivy">
     <available property="antlr.present" classname="antlr.CommonAST"/>
     <echo if:set="antlr.present">
         Found antlr on the classpath.
@@ -128,7 +128,7 @@
     <sequential unless:set="antlr.present">
       <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="6.19"
                      inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
-      <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.classpath" />
+      <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.classpath"/>
       <mkdir dir="${checkstyle.reportdir}"/>
       <checkstyle config="${config.dir}/checkstyle-config" failOnViolation="false">
         <formatter type="xml" toFile="${checkstyle.raw}"/>
@@ -203,7 +203,7 @@
     </taskdef>
     <mkdir dir="${simian.report.dir}"/>
     <simian failureProperty="simian.duplicates.found">
-        <fileset dir="${java.dir}" />
+        <fileset dir="${java.dir}"/>
         <formatter type="plain" toFile="${simian.report.dir}/simian-log.txt"/>
         <formatter type="xml" toFile="${simian.report.dir}/simian-log.xml"/>
     </simian>
