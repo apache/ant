@@ -86,7 +86,7 @@
             value="${rat.report.dir}/report.html"
             description="RAT-Report file"/>
   <property name="rat.version"
-            value="0.11"
+            value="0.12"
             description="Which Version of RAT to use"/>
 
   <!-- Simian -->
@@ -126,7 +126,7 @@
         Skip running Checkstyle.
     </echo>
     <sequential unless:set="antlr.present">
-      <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="6.18"
+      <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="6.19"
                      inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
       <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.classpath" />
       <mkdir dir="${checkstyle.reportdir}"/>
@@ -227,7 +227,7 @@
   </target>
 
   <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy,build" xmlns:fb="http://findbugs.sourceforge.net/">
-    <ivy:cachepath organisation="com.google.code.findbugs" module="findbugs-ant" revision="3.0.0"
+    <ivy:cachepath organisation="com.google.code.findbugs" module="findbugs-ant" revision="3.0.1"
                    inline="true" conf="default" pathid="findbugs.real.classpath" transitive="true"/>
     <!-- Load the Findbugs AntTasks -->               
     <taskdef uri="http://findbugs.sourceforge.net/" resource="edu/umd/cs/findbugs/anttask/tasks.properties" classpathref="findbugs.real.classpath" />
