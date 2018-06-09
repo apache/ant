@@ -18,16 +18,27 @@
 <project default="checkstyle" name="CheckAnt" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:if="ant:if" xmlns:unless="ant:unless">
 
   <description>
-    Check Ants codebase against certain code styleguide rules using
-    checkstyle and simian.
+    Check Ant codebase against certain code style guidelines using
+    Checkstyle, Apache Rat, SpotBugs, OWASP Dependency Check and Simian.
 
     Checkstyle uses an abstract syntax tree (AST) for doing checks
-    against java sources. It is available at http://checkstyle.sourceforge.net/
+    against Java sources. It is available at http://checkstyle.sourceforge.net/
     under GPL 2.1 license.
 
-    "Simian (Similarity Analyser) identifies duplication in Java, C#, C,
-    CPP, COBOL, JSP, HTML source code and even plain text files."
-    It is available at http://www.redhillconsulting.com.au/products/simian/
+    "Apache Rat is a release audit tool, focused on licenses." It is available
+    at https://creadur.apache.org/rat/ under Apache License, Version 2.0
+
+    "SpotBugs is a program which uses static analysis to look for bugs in Java
+    code." It is available at https://spotbugs.github.io/ under LGPL 3 license.
+
+    "Dependency-Check is a utility that identifies project dependencies and
+    checks if there are any known, publicly disclosed, vulnerabilities." It is
+    available at https://www.owasp.org/index.php/OWASP_Dependency_Check under
+    Apache License, Version 2.0
+
+    "Simian (Similarity Analyser) identifies duplication in Java, C#, C, CPP,
+    COBOL, Ruby, JSP, ASP, HTML, XML, Visual Basic, Groovy source code and even
+    plain text files."  It is available at https://www.harukizaemon.com/simian/
     and is for free use in open source projects.
 
     See external task page and homepages for more information.
@@ -91,7 +102,7 @@
 
   <!-- Simian -->
   <property name="simian.version"
-            value="2.5.9"
+            value="2.5.10"
             description="Which Version of Simian to use"/>
   <property name="simian.uri"
             value="http://www.harukizaemon.com/simian/simian-${simian.version}.tar.gz"
