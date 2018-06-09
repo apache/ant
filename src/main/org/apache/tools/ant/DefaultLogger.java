@@ -210,7 +210,7 @@ public class DefaultLogger implements BuildLogger {
       */
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel
-            && !event.getTarget().getName().isEmpty()) {
+                && !event.getTarget().getName().isEmpty()) {
             String msg = String.format("%n%s:", event.getTarget().getName());
             printMessage(msg, out, event.getPriority());
             log(msg);
@@ -277,8 +277,7 @@ public class DefaultLogger implements BuildLogger {
             }
             Throwable ex = event.getException();
             if (Project.MSG_DEBUG <= msgOutputLevel && ex != null) {
-                String exn = ex.getClass().getName();
-                message.append(String.format("%n%s: ", exn.substring(exn.lastIndexOf('.') + 1)))
+                message.append(String.format("%n%s: ", ex.getClass().getSimpleName()))
                         .append(StringUtils.getStackTrace(ex));
             }
 
