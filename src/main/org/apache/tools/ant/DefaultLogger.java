@@ -212,9 +212,8 @@ public class DefaultLogger implements BuildLogger {
       */
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel
-            && !event.getTarget().getName().equals("")) {
-            String msg = StringUtils.LINE_SEP
-                + event.getTarget().getName() + ":";
+                && !event.getTarget().getName().equals("")) {
+            String msg = String.format("%n%s:", event.getTarget().getName());
             printMessage(msg, out, event.getPriority());
             log(msg);
         }
@@ -302,7 +301,8 @@ public class DefaultLogger implements BuildLogger {
             }
             Throwable ex = event.getException();
             if (Project.MSG_DEBUG <= msgOutputLevel && ex != null) {
-                    message.append(StringUtils.getStackTrace(ex));
+                message.append(String.format("%n%s: ", ex.getClass().getSimpleName()))
+                        .append(StringUtils.getStackTrace(ex));
             }
 
             String msg = message.toString();
