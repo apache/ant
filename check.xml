@@ -48,13 +48,16 @@
 
   <property name="checkstyle.src.dir" location="${etc.dir}/checkstyle"/>
 
-  <!-- Ant Checkstyle report -->
+  <!-- Ant Checkstyle -->
+  <property name="checkstyle.version"
+            value="6.19"
+            description="Which version of Checkstyle to use"/>
   <property name="checkstyle.reportdir"
             location="${build.dir}/reports/checkstyle"
             description="Where to store Checkstyle reports"/>
   <property name="checkstyle.raw"
             location="${checkstyle.reportdir}/raw.xml"
-            description="Name of Checkstyle XML-Report"/>
+            description="Name of Checkstyle XML report"/>
   <property name="stylesheet.html"
             location="${checkstyle.src.dir}/checkstyle-frames.xsl"
             description="Name of Checkstyle XSLT for generating HTML"/>
@@ -75,30 +78,33 @@
             value="**/*.java"
             description="Include pattern of the files to check"/>
 
-  <!-- Findbugs: Running Findbugs -->
+  <!-- Findbugs: Running SpotBugs -->
+  <property name="spotbugs.version"
+            value="3.1.4"
+            description="Which version of SpotBugs to use"/>
   <property name="findbugs.reportdir"
             location="${build.dir}/reports/findbugs"
-            description="Where to store Findbugs results"/>
+            description="Where to store SpotBugs results"/>
   <property name="findbugs.raw"
             value="raw.xml"
-            description="Findbugs Output xml-file"/>
+            description="Name of SpotBugs XML report"/>
   <property name="findbugs.xsl"
             value="fancy.xsl"
-            description="Which XSL to use for generating Output: default, fancy, plain, summary"/>
+            description="Which XSL to use for generating output: default, fancy, plain, summary"/>
   <property name="findbugs.jvmargs"
             value="-Xms128m -Xmx512m"
-            description="JVMArgs for invoking Findbugs"/>
+            description="JVM arguments when invoking SpotBugs"/>
 
-  <!-- RAT Release Auditing Tool -->
-  <property name="rat.report.dir"
-            value="${build.dir}/reports/rat"
-            description="Where to store the RAT reports"/>
-  <property name="rat.report.file"
-            value="${rat.report.dir}/report.html"
-            description="RAT-Report file"/>
+  <!-- Apache Rat: Release Auditing Tool -->
   <property name="rat.version"
             value="0.12"
-            description="Which Version of RAT to use"/>
+            description="Which version of Apache Rat to use"/>
+  <property name="rat.report.dir"
+            value="${build.dir}/reports/rat"
+            description="Where to store Apache Rat reports"/>
+  <property name="rat.report.file"
+            value="${rat.report.dir}/report.html"
+            description="Name of Apache Rat report"/>
 
   <!-- Simian -->
   <property name="simian.version"
@@ -115,6 +121,9 @@
             description="Where to store Simian reports"/>
 
   <!-- OWASP Dependency Check -->
+  <property name="owasp.dc.version"
+            value="3.2.1"
+            description="Which version of OWASP Dependency Check to use"/>
   <property name="owasp.dc.report.dir"
             value="${build.dir}/reports/owasp-dc"
             description="Where to store the OWASP Dependency Check reports"/>
@@ -141,8 +150,8 @@
         Skip running Checkstyle.
     </echo>
     <sequential unless:set="antlr.present">
-      <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="6.19"
-                     inline="true" conf="default" pathid="checkstyle.classpath" transitive="true"/>
+      <ivy:cachepath organisation="com.puppycrawl.tools" module="checkstyle" revision="${checkstyle.version}"
+                     inline="true" conf="default" pathid="checkstyle.classpath"/>
       <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.classpath"/>
       <mkdir dir="${checkstyle.reportdir}"/>
       <checkstyle config="${checkstyle.src.dir}/checkstyle-config" failOnViolation="false">
@@ -182,7 +191,7 @@
 
   <target name="xdocreport" description="--> generates a xdoc checkstyle report" unless="antlr.present">
     <xslt in="${checkstyle.raw}" style="${stylesheet.xdoc}"
-           out="${checkstyle.reportdir}/xdocs/index.xml">
+          out="${checkstyle.reportdir}/xdocs/index.xml">
       <param name="basedir" expression="${checkstyle.basedir}"/>
     </xslt>
   </target>
@@ -241,34 +250,22 @@
     <fixcrlf srcdir="src/main" includes="${path}" javafiles="yes" tab="remove" tablength="4"/>
   </target>
 
-  <target name="findbugs" description="--> checks Ant codebase with Findbugs" depends="init-ivy,build"
+  <target name="findbugs" description="--> checks Ant codebase with SpotBugs" depends="init-ivy,build"
           xmlns:fb="http://findbugs.sourceforge.net/">
-    <property name="spotbugs.dir" value="build/download/spotbugs"/>
-    <property name="spotbugs.ver" value="3.1.3"/>
-    <ivy:cachefileset organisation="com.github.spotbugs" module="spotbugs-ant" revision="${spotbugs.ver}"
-                      inline="true" setid="spotbugs.fileset"/>
-    <!-- Hardcoded paths -->
-    <mkdir dir="${spotbugs.dir}/lib"/>
-    <copy todir="${spotbugs.dir}/lib">
-      <flattenmapper/>
-      <fileset refid="spotbugs.fileset"/>
-    </copy>
-    <delete dir="${spotbugs.dir}/lib" includes="ant-*,*-javadoc.jar,*-sources.jar"/>
-    <!-- Hardcoded names -->
-    <symlink resource="spotbugs-${spotbugs.ver}.jar" link="${spotbugs.dir}/lib/spotbugs.jar"/>
-    <symlink resource="spotbugs-annotations-${spotbugs.ver}.jar"
-             link="${spotbugs.dir}/lib/spotbugs-annotations.jar"/>
-    <!-- Path is provided through CLI to forked JVM -->
+    <!-- Path of optional libs is provided through CLI to forked JVM -->
     <path id="optional.libs">
       <fileset dir="lib/optional" includes="*.jar"/>
     </path>
-    <!-- Load the Findbugs AntTasks -->
-    <taskdef uri="http://findbugs.sourceforge.net/" resource="edu/umd/cs/findbugs/anttask/tasks.properties"
-             classpath="${spotbugs.dir}/lib/spotbugs-ant-${spotbugs.ver}.jar"/>
 
-    <!-- Start Findbugs -->
+    <ivy:cachepath organisation="com.github.spotbugs" module="spotbugs-ant" revision="${spotbugs.version}"
+                   inline="true" conf="default" pathid="spotbugs.classpath"/>
+    <!-- Load the SpotBugs AntTasks -->
+    <taskdef uri="http://findbugs.sourceforge.net/" resource="edu/umd/cs/findbugs/anttask/tasks.properties"
+             classpathref="spotbugs.classpath"/>
+
+    <!-- Start SpotBugs -->
     <mkdir dir="${findbugs.reportdir}"/>
-    <fb:spotbugs home="${spotbugs.dir}"
+    <fb:spotbugs classpathref="spotbugs.classpath"
                  output="xml:withMessages"
                  outputFile="${findbugs.reportdir}/${findbugs.raw}"
                  jvmargs="${findbugs.jvmargs}"
@@ -281,14 +278,14 @@
     <!-- Generate (human) readable output -->
     <xslt basedir="${findbugs.reportdir}" includes="${findbugs.raw}" destdir="${findbugs.reportdir}">
       <style>
-        <javaresource name="${findbugs.xsl}" classpath="${spotbugs.dir}/lib/spotbugs-${spotbugs.ver}.jar"/>
+        <javaresource name="${findbugs.xsl}" classpathref="spotbugs.classpath"/>
       </style>  
     </xslt>
   </target>
 
   <target name="rat" description="--> Runs the ReleaseAuditingTool" depends="init-ivy">
     <ivy:cachepath organisation="org.apache.rat" module="apache-rat-tasks" revision="${rat.version}"
-                   inline="true" conf="default" pathid="rat.classpath" transitive="true"/>
+                   inline="true" conf="default" pathid="rat.classpath"/>
     <typedef resource="org/apache/rat/anttasks/antlib.xml"
              uri="antlib:org.apache.rat.anttasks"
              classpathref="rat.classpath"/>
@@ -301,11 +298,11 @@
     </rat:report>
   </target>
 
-  <target name="dependency-check" description="--> Runs the OWASP dependency check" depends="init-ivy">
-    <ivy:cachepath organisation="org.owasp" module="dependency-check-ant" revision="3.2.1"
-                   inline="true" conf="default" pathid="dc.classpath" transitive="true"/>
+  <target name="dependency-check" description="--> Runs the OWASP Dependency Check" depends="init-ivy">
+    <ivy:cachepath organisation="org.owasp" module="dependency-check-ant" revision="${owasp.dc.version}"
+                   inline="true" conf="default" pathid="owasp.dc.classpath"/>
     <taskdef resource="dependency-check-taskdefs.properties" uri="https://jeremylong.github.io/"
-             classpathref="dc.classpath"/>
+             classpathref="owasp.dc.classpath"/>
     <mkdir dir="${owasp.dc.report.dir}"/>
     <owasp:dependency-check xmlns:owasp="https://jeremylong.github.io/"
                             projectName="${ant.project.name}"
