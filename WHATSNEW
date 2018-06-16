@@ -41,6 +41,10 @@ Fixed bugs:
    end of the inout stream (usually System.in or System.console) are
    reached before a valid input has been read.
 
+ * junitreport does not list testsuites that fail to start any tests
+   because of an exception inside the all-tests and alltests-errors frames.
+   Bugzilla Report 62443
+
 Other changes:
 --------------
 
