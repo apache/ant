@@ -228,6 +228,11 @@ of all files a <code>&lt;fileset/&gt;</code> caught.</p>
       // import statements
       <span style="color:blue">// importPackage(java.io)</span>;
       <span style="color:blue">importClass(java.io.File)</span>;
+      // Nashorn syntax
+      // <span style="color:blue">load("nashorn:mozilla_compat.js");</span>
+      // or
+      // <span style="color:blue">var File = Java.type('java.io.File');</span>
+
 
       // Access to Ant-Properties by their names
       dir      = <span style="color:blue">project</span>.getProperty("fs.dir");
@@ -268,13 +273,18 @@ so <code class="code">java.lang.System</code> can be directly imported
 with <code>importClass</code>/<code>importPackage</code>. For other packages you have to prefix the
 full classified name with <strong>Packages</strong>. For example
 Ant's <code class="code">FileUtils</code> class can be imported
-with <code class="code">importClass(<strong>Packages</strong>.org.apache.tools.ant.util.FileUtils)</code><br/>
-The <code>&lt;script&gt;</code> task populates the Project instance under the
-name <code>project</code>, so we can use that reference. Another way is to use its given name or
-getting its reference from the task itself.<br/>The Project provides methods for accessing and
-setting properties, creating DataTypes and Tasks and much more.<br/>After creating a FileSet object
-we initialize that by calling its set-methods. Then we can use that object like a normal Ant task
-(<code>&lt;copy&gt;</code> for example).<br/>For getting the size of a file we instantiate
+with <code class="code">importClass(<strong>Packages</strong>.org.apache.tools.ant.util.FileUtils)</code></p>
+<p>In Java 8+, you may use the built-in Nashorn JavaScript engine rather than Rhino (which is
+available in Java 7 runtime). Then, use <code>Java.type</code> as import statement for any Java
+class
+or <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/prog_guide/javascript.html#A1147207">the
+compatibility script</a>: <code>load("nashorn:mozilla_compat.js");</code>.</p>
+<p>The <code>&lt;script&gt;</code> task populates the Project instance under the
+name <code class="code">project</code>, so we can use that reference. Another way is to use its
+given name or getting its reference from the task itself. The Project provides methods for accessing
+and setting properties, creating DataTypes and Tasks and much more.<br/>After creating a FileSet
+object we initialize that by calling its set-methods. Then we can use that object like a normal Ant
+task (<code>&lt;copy&gt;</code> for example).<br/>For getting the size of a file we instantiate
 a <code class="code">java.io.File</code>. So we are using normal Java API here.<br/>Finally we use
 the <code>&lt;echo&gt;</code> task for producing the output. The task is not executed by
 its <code class="code">execute()</code> method, because the <code class="code">perform()</code>
