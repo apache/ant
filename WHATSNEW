@@ -38,7 +38,7 @@ Fixed bugs:
    Bug reported by Simon IJskes https://issues.apache.org/jira/browse/NETBEANS-781
 
  * Default and SecureInputHandler will now raise an error when then
-   end of the inout stream (usually System.in or System.console) are
+   end of the input stream (usually System.in or System.console) are
    reached before a valid input has been read.
 
  * junitreport does not list testsuites that fail to start any tests
