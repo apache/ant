@@ -20,8 +20,12 @@
   <import file="../antunit-base.xml" />
 
   <property name="location" value="http://ant.apache.org/webtest/gettest" />
-    
-  <target name="setUp">
+  <condition property="java.atleast.1_8">
+      <javaversion atleast="1.8"/>
+  </condition>
+
+
+    <target name="setUp">
     <mkdir dir="${output}" />
   </target>
 
@@ -124,7 +128,7 @@
   </target>
 
   <target name="testHttpToHttpsRedirect" description="Tests that a resource that's redirected
-        from HTTP to HTTPS works without an error. See bugzilla-62499 for details">
+        from HTTP to HTTPS works without an error. See bugzilla-62499 for details" if="java.atleast.1_8">
     <get  src="${location}/http-to-https.txt" dest="${output}/http-to-https-redirect.tmp"/>
     <au:assertFileExists file="${output}/http-to-https-redirect.tmp"/>
     <au:assertTrue>
