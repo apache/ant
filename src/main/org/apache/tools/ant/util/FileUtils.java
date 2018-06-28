@@ -1147,6 +1147,9 @@ public class FileUtils {
     /**
      * Removes a leading path from a second path.
      *
+     * <p>This method uses {@link #normalize} under the covers and
+     * does not resolve symbolic links.</p>
+     *
      * @param leading The leading path, must not be null, must be absolute.
      * @param path The path to remove from, must not be null, must be absolute.
      *
@@ -1171,8 +1174,12 @@ public class FileUtils {
 
     /**
      * Learn whether one path "leads" another.
+     *
+     * <p>This method uses {@link #normalize} under the covers and
+     * does not resolve symbolic links.</p>
+     *
      * @param leading The leading path, must not be null, must be absolute.
-     * @param path The path to remove from, must not be null, must be absolute.
+     * @param path The path to check, must not be null, must be absolute.
      * @return true if path starts with leading; false otherwise.
      * @since Ant 1.7
      */
