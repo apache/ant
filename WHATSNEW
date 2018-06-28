@@ -1,6 +1,14 @@
 Changes from Ant 1.9.12 TO Ant 1.9.13
 =====================================
 
+Fixed bugs:
+-----------
+
+ * Fixes a regression in the "get" task where redirects
+   from a HTTP resource to a HTTPS resource started throwing
+   an exception.
+   Bugzilla Report 62499
+
 Changes from Ant 1.9.11 TO Ant 1.9.12
 =====================================
 
