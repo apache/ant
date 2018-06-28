@@ -122,4 +122,13 @@
     </au:assertTrue>
     <au:assertLogContains text="local.cgi moved to http" />  
   </target>
+
+  <target name="testHttpToHttpsRedirect" description="Tests that a resource that's redirected
+        from HTTP to HTTPS works without an error. See bugzilla-62499 for details">
+    <get  src="${location}/http-to-https.txt" dest="${output}/http-to-https-redirect.tmp"/>
+    <au:assertFileExists file="${output}/http-to-https-redirect.tmp"/>
+    <au:assertTrue>
+      <resourcecontains resource="${output}/http-to-https-redirect.tmp" substring="hello world"/>
+    </au:assertTrue>
+  </target>
 </project>
