@@ -669,29 +669,34 @@ public class Get extends Task {
 
 
         private boolean redirectionAllowed(final URL aSource, final URL aDest) {
-            if (aSource.getProtocol().equals(aDest.getProtocol())
-                    && (HTTP.equals(aSource.getProtocol()) || HTTPS.equals(aDest.getProtocol()))) {
-                redirections++;
-                if (redirections > REDIRECT_LIMIT) {
-                    final String message = "More than " + REDIRECT_LIMIT
-                            + " times redirected, giving up";
-                    if (ignoreErrors) {
-                        log(message, logLevel);
-                        return false;
-                    }
+            if (!(aSource.getProtocol().equals(aDest.getProtocol()) || (HTTP
+                    .equals(aSource.getProtocol()) && HTTPS.equals(aDest
+                    .getProtocol())))) {
+                final String message = "Redirection detected from "
+                        + aSource.getProtocol() + " to " + aDest.getProtocol()
+                        + ". Protocol switch unsafe, not allowed.";
+                if (ignoreErrors) {
+                    log(message, logLevel);
+                    return false;
+                } else {
                     throw new BuildException(message);
                 }
-                return true;
             }
 
-            final String message = "Redirection detected from "
-                    + aSource.getProtocol() + " to " + aDest.getProtocol()
-                    + ". Protocol switch unsafe, not allowed.";
-            if (ignoreErrors) {
-                log(message, logLevel);
-                return false;
+            redirections++;
+            if (redirections > REDIRECT_LIMIT) {
+                final String message = "More than " + REDIRECT_LIMIT
+                        + " times redirected, giving up";
+                if (ignoreErrors) {
+                    log(message, logLevel);
+                    return false;
+                } else {
+                    throw new BuildException(message);
+                }
             }
-            throw new BuildException(message);
+
+
+            return true;
         }
 
         private URLConnection openConnection(final URL aSource) throws IOException {
