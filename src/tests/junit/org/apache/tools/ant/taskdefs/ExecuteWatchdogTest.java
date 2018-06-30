@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
+import org.junit.AssumptionViolatedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

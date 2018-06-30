@@ -18,7 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.junit.internal.AssumptionViolatedException;
+import org.junit.AssumptionViolatedException;
 
 /**
  * Interactive Testcase for Processdestroyer.

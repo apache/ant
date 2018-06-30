@@ -37,7 +37,7 @@ import org.apache.tools.ant.util.TeeOutputStream;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.internal.AssumptionViolatedException;
+import org.junit.AssumptionViolatedException;
 import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.containsString;
