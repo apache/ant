@@ -723,8 +723,12 @@ public class FileUtils {
      *   <li>DOS style paths that start with a drive letter will have
      *     \ as the separator.</li>
      * </ul>
-     * Unlike {@link File#getCanonicalPath()} this method
-     * specifically does not resolve symbolic links.
+     * <p>Unlike {@link File#getCanonicalPath()} this method
+     * specifically does not resolve symbolic links.</p>
+     *
+     * <p>If the path tries to go beyond the file system root (i.e. it
+     * contains more ".." segments than can be travelled up) the
+     * method will return the original path unchanged.</p>
      *
      * @param path the path to be normalized.
      * @return the normalized version of the path.
