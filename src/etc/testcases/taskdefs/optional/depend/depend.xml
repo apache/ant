@@ -24,7 +24,7 @@
     <property name="classes.dir" value="${output}/classes"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
 
   </target>
 
@@ -105,17 +105,17 @@
       <condition>
         <not>
           <and>
-            <resourcecount count="2" refid="result" />
+            <resourcecount count="2" refid="result"/>
             <resourcecount count="1">
               <intersect>
-                <resources refid="result" />
-                <file file="${classes.dir}/B.class" />
+                <resources refid="result"/>
+                <file file="${classes.dir}/B.class"/>
               </intersect>
             </resourcecount>
             <resourcecount count="1">
               <intersect>
-                <resources refid="result" />
-                <file file="${classes.dir}/C.class" />
+                <resources refid="result"/>
+                <file file="${classes.dir}/C.class"/>
               </intersect>
             </resourcecount>
           </and>
@@ -159,7 +159,7 @@
 
   <target name="testmethodparaminner" depends="src4setup, compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="test.MethodParam"/>
-  </target>  
+  </target>
 
   <target name="testnosource" depends="src1setup, compile">
     <depend destdir="${classes.dir}" closure="yes"/>
@@ -176,7 +176,7 @@
     </path>
 
     <javac srcdir="${tempsrc.dir}" destdir="${classes.dir}"
-           classpathref="path.compile" fork="false" />
+           classpathref="path.compile" fork="false"/>
 
    <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}"
             closure="yes" dump="yes"
@@ -186,9 +186,9 @@
   </target>
 
   <target name="testcache" depends="src1setup, compile">
-    <depend cache="${cache.dir}" srcdir="${tempsrc.dir}" 
+    <depend cache="${cache.dir}" srcdir="${tempsrc.dir}"
             destdir="${classes.dir}" closure="yes"/>
-    <depend cache="${cache.dir}" srcdir="${tempsrc.dir}" 
+    <depend cache="${cache.dir}" srcdir="${tempsrc.dir}"
             destdir="${classes.dir}" closure="yes"/>
   </target>
 

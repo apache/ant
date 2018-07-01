@@ -19,8 +19,8 @@
   <property name="jar.dir" location="jar_spi_dir"/>
   <property name="jar.src.dir" location="jar_spi_dir/src"/>
   <property name="jar.src.file" location="jar_spi_dir/src/a_file"/>
-    
-  <available property="jdk1.4+" classname="java.lang.CharSequence"/>  
+
+  <available property="jdk1.4+" classname="java.lang.CharSequence"/>
   <condition property="some.regexp.support">
     <or>
       <isset property="jdk1.4+"/>

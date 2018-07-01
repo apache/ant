@@ -19,7 +19,7 @@
          name="firstmatch-test"
          default="antunit">
 
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="testMatch">
     <mkdir dir="${input}"/>

@@ -17,7 +17,7 @@
 -->
 <project>
   <target name="testMaybeConfigure">
-    <taskdef name="parent" 
+    <taskdef name="parent"
              classname="org.apache.tools.ant.UnknownElementTest$Parent"
              loaderref="unknown.id">
       <classpath>

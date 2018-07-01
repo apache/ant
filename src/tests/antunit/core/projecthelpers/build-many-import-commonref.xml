@@ -18,6 +18,6 @@
 <project>
     <!-- build file imported by bot referenced build -->
     <target name="commonref" depends="init">
-        <property name="commonref" value="ok" />
+        <property name="commonref" value="ok"/>
     </target>
 </project>

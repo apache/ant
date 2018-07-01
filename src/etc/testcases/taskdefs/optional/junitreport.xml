@@ -21,7 +21,7 @@
   <import file="../../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
 
@@ -182,8 +182,7 @@
         </junitreport>
         <concat>
             <fileset file="${output}/html/index.html"/>
-        </concat>        
+        </concat>
     </target>
 
 </project>
-        

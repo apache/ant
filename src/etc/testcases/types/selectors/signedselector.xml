@@ -31,7 +31,7 @@
   </macrodef>
 
   <property name="issigned.dir" location="../../taskdefs/conditions/jars"/>
-  
+
   <target name="selectsigned">
     <pass failmessage="apassword.jar should be a signed file">
       <isfileselected file="${issigned.dir}/apassword.jar">

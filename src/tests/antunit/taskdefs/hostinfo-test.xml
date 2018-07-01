@@ -18,25 +18,25 @@
 <project name="hostinfo-test" default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
-  <property name="undef-name" value="nonexistenthost.nonexistentdomain" />
-  <property name="undef-hostname" value="nonexistenthost" />
-  <property name="undef-domainname" value="nonexistentdomain" />
-        
-  <property name="undef-ip4" value="0.0.0.0" />
-  <property name="undef-ip6" value="::" />
-      
-  <property name="xs4all-hostname" value="www.xs4all.nl" />
-  <property name="xs4all-domain" value="xs4all.nl" />
-  <property name="xs4all-realhost" value="www" />
-  <property name="xs4all-ip4" value="194.109.6.92" />
-    
+  <property name="undef-name" value="nonexistenthost.nonexistentdomain"/>
+  <property name="undef-hostname" value="nonexistenthost"/>
+  <property name="undef-domainname" value="nonexistentdomain"/>
+
+  <property name="undef-ip4" value="0.0.0.0"/>
+  <property name="undef-ip6" value="::"/>
+
+  <property name="xs4all-hostname" value="www.xs4all.nl"/>
+  <property name="xs4all-domain" value="xs4all.nl"/>
+  <property name="xs4all-realhost" value="www"/>
+  <property name="xs4all-ip4" value="194.109.6.92"/>
+
   <target name="setUp">
   </target>
 
   <target name="testLocal" depends="setUp">
-    <hostinfo prefix="local" />
+    <hostinfo prefix="local"/>
       <!-- Do not know what to expect here, machine dependent -->
   </target>
 
@@ -46,19 +46,19 @@
       <au:assertEquals expected="${xs4all-domain}" actual="${DOMAIN}"/>
       <au:assertEquals expected="${xs4all-ip4}" actual="${ADDR4}"/>
     </target>
-    
+
     <target name="testReverse" depends="setUp">
       <hostinfo prefix="reverse" host="${xs4all-ip4}"/>
       <au:assertEquals expected="${xs4all-realhost}" actual="${reverse.NAME}"/>
       <au:assertEquals expected="${xs4all-domain}" actual="${reverse.DOMAIN}"/>
       <au:assertEquals expected="${xs4all-ip4}" actual="${reverse.ADDR4}"/>
     </target>
-    
+
     <target name="testUndef" depends="setUp">
       <hostinfo prefix="undef" host="${undef-name}"/>
       <au:assertEquals expected="${undef-hostname}" actual="${undef.NAME}"/>
       <au:assertEquals expected="${undef-domainname}" actual="${undef.DOMAIN}"/>
       <au:assertEquals expected="${undef-ip4}" actual="${undef.ADDR4}"/>
     </target>
-    
+
 </project>

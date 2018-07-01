@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../../antunit-base.xml" />
+  <import file="../../../antunit-base.xml"/>
 
   <target name="setUp">
     <condition property="windows?">
@@ -39,7 +39,7 @@
     <touch file="${input}/9.tld"/>
     <attrib readonly="false">
       <fileset dir="${input}">
-        <include name="*.tld" />
+        <include name="*.tld"/>
       </fileset>
     </attrib>
   </target>

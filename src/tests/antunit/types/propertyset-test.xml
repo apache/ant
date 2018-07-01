@@ -20,7 +20,7 @@
 <project name="test-propertyset" basedir="." default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <property name="fooA" value="FooA"/>
   <property name="barB" value="BarB"/>
@@ -35,7 +35,7 @@
     <propertyset refid="properties-starting-with-foo"/>
     <propertyset refid="properties-starting-with-bar"/>
   </propertyset>
-  
+
   <macrodef name="expect.equals">
     <attribute name="test"/>
     <attribute name="exp"/>
@@ -63,11 +63,11 @@
     <propertyset id="nested-mapped">
       <propertyset>
         <propertyset refid="properties-starting-with-foo"/>
-        <globmapper from="foo*" to="boo*" />
+        <globmapper from="foo*" to="boo*"/>
       </propertyset>
       <propertyset>
         <propertyset refid="properties-starting-with-bar"/>
-        <globmapper from="bar*" to="far*" />
+        <globmapper from="bar*" to="far*"/>
       </propertyset>
     </propertyset>
     <expect.equals
@@ -80,15 +80,15 @@
     <propertyset id="nested-mapped-mapped">
       <propertyset>
         <propertyset refid="properties-starting-with-foo"/>
-        <globmapper from="foo*" to="boo*" />
+        <globmapper from="foo*" to="boo*"/>
       </propertyset>
       <propertyset>
         <propertyset refid="properties-starting-with-bar"/>
-        <globmapper from="bar*" to="far*" />
+        <globmapper from="bar*" to="far*"/>
       </propertyset>
       <mapper>
-        <globmapper from="boo*" to="hoo*" />
-        <globmapper from="far*" to="near*" />
+        <globmapper from="boo*" to="hoo*"/>
+        <globmapper from="far*" to="near*"/>
       </mapper>
     </propertyset>
     <expect.equals
@@ -101,8 +101,8 @@
     <au:assertTrue>
       <resourcecount count="2">
         <restrict>
-          <exists />
-          <resources refid="my-set" />
+          <exists/>
+          <resources refid="my-set"/>
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -112,10 +112,10 @@
     <au:assertTrue>
       <resourcecount count="2">
         <restrict>
-          <exists />
+          <exists/>
           <propertyset>
-            <propertyset refid="my-set" />
-            <globmapper from="bar*" to="far*" />
+            <propertyset refid="my-set"/>
+            <globmapper from="bar*" to="far*"/>
           </propertyset>
         </restrict>
       </resourcecount>

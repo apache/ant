@@ -16,20 +16,20 @@
   limitations under the License.
 -->
 <project name="exec-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-    <import file="../../antunit-base.xml" />
+    <import file="../../antunit-base.xml"/>
 
     <macrodef name="assert-trimmed-resource-content">
-        <attribute name="content" />
-        <attribute name="astext" default="true" />
-        <element name="resource" implicit="true" />
+        <attribute name="content"/>
+        <attribute name="astext" default="true"/>
+        <element name="resource" implicit="true"/>
         <sequential>
             <au:assertTrue>
                 <resourcesmatch astext="@{astext}">
-                    <string value="@{content}" />
+                    <string value="@{content}"/>
                     <concat>
-                        <resource />
+                        <resource/>
                         <filterchain>
-                            <trim />
+                            <trim/>
                         </filterchain>
                     </concat>
                 </resourcesmatch>
@@ -38,78 +38,78 @@
     </macrodef>
 
     <target name="setUp">
-        <mkdir dir="${input}" />
-        <mkdir dir="${output}" />
-        <property environment="env" />
+        <mkdir dir="${input}"/>
+        <mkdir dir="${output}"/>
+        <property environment="env"/>
         <!-- UNIX -->
-        <available file="sh" filepath="${env.PATH}" property="sh.executable" />
+        <available file="sh" filepath="${env.PATH}" property="sh.executable"/>
         <!-- CYGWIN -->
-        <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable" />
+        <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable"/>
         <condition property="test.can.run">
             <or>
-                <isset property="sh.executable" />
-                <isset property="sh.exe.executable" />
+                <isset property="sh.executable"/>
+                <isset property="sh.exe.executable"/>
             </or>
         </condition>
         <!-- UNIX -->
-        <available file="wc" filepath="${env.PATH}" property="wc.executable" />
+        <available file="wc" filepath="${env.PATH}" property="wc.executable"/>
         <!-- CYGWIN -->
-        <available file="wc.exe" filepath="${env.PATH}" property="wc.exe.executable" />
+        <available file="wc.exe" filepath="${env.PATH}" property="wc.exe.executable"/>
         <condition property="wc.can.run">
             <or>
-                <isset property="wc.executable" />
-                <isset property="wc.exe.executable" />
+                <isset property="wc.executable"/>
+                <isset property="wc.exe.executable"/>
             </or>
         </condition>
         <!-- UNIX -->
-        <available file="cat" filepath="${env.PATH}" property="cat.executable" />
+        <available file="cat" filepath="${env.PATH}" property="cat.executable"/>
         <!-- CYGWIN -->
-        <available file="cat.exe" filepath="${env.PATH}" property="cat.exe.executable" />
+        <available file="cat.exe" filepath="${env.PATH}" property="cat.exe.executable"/>
         <condition property="cat.can.run">
             <or>
-                <isset property="cat.executable" />
-                <isset property="cat.exe.executable" />
+                <isset property="cat.executable"/>
+                <isset property="cat.exe.executable"/>
             </or>
         </condition>
     </target>
 
     <target name="test-no-redirect" depends="setUp" if="test.can.run">
         <exec executable="sh">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
-        <au:assertLogContains text="${ant.file} out" />
-        <au:assertLogContains text="${ant.file} err" />
+        <au:assertLogContains text="${ant.file} out"/>
+        <au:assertLogContains text="${ant.file} err"/>
     </target>
 
     <target name="test-redirect-output" depends="setUp" if="test.can.run">
         <exec executable="sh" output="${output}/redirect.out">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out${line.separator}${ant.file} err</string>
-                <file file="${output}/redirect.out" />
+                <file file="${output}/redirect.out"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
 
     <target name="test-redirect-output-error" depends="setUp" if="test.can.run">
         <exec executable="sh" output="${output}/redirect.out" error="${output}/redirect.err">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out</string>
-                <file file="${output}/redirect.out" />
+                <file file="${output}/redirect.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} err</string>
-                <file file="${output}/redirect.err" />
+                <file file="${output}/redirect.err"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
@@ -117,17 +117,17 @@
     <target name="test-redirect-output-outputproperty-logerror" depends="setUp" if="test.can.run">
         <exec executable="sh" logerror="true"
               output="${output}/redirect.out" outputproperty="redirect.out">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out</string>
-                <file file="${output}/redirect.out" />
-                <propertyresource name="redirect.out" />
+                <file file="${output}/redirect.out"/>
+                <propertyresource name="redirect.out"/>
             </resourcesmatch>
         </au:assertTrue>
-        <au:assertLogContains text="${ant.file} err" />
+        <au:assertLogContains text="${ant.file} err"/>
     </target>
 
     <target name="test-redirect-output-outputproperty-error-errorproperty"
@@ -135,21 +135,21 @@
         <exec executable="sh"
               error="${output}/redirect.err" errorproperty="redirect.err"
               output="${output}/redirect.out" outputproperty="redirect.out">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out</string>
-                <file file="${output}/redirect.out" />
-                <propertyresource name="redirect.out" />
+                <file file="${output}/redirect.out"/>
+                <propertyresource name="redirect.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} err</string>
-                <file file="${output}/redirect.err" />
-                <propertyresource name="redirect.err" />
+                <file file="${output}/redirect.err"/>
+                <propertyresource name="redirect.err"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
@@ -159,19 +159,19 @@
         <exec executable="wc" inputstring="x y z"
               error="${output}/redirect.err" errorproperty="redirect.err"
               output="${output}/redirect.out" outputproperty="redirect.out">
-            <arg value="-w" />
+            <arg value="-w"/>
         </exec>
         <au:assertTrue>
             <length length="0">
-                <file file="${output}/redirect.err" />
-                <propertyresource name="redirect.err" />
+                <file file="${output}/redirect.err"/>
+                <propertyresource name="redirect.err"/>
             </length>
         </au:assertTrue>
         <assert-trimmed-resource-content content="3">
-            <file file="${output}/redirect.out" />
+            <file file="${output}/redirect.out"/>
         </assert-trimmed-resource-content>
         <assert-trimmed-resource-content content="3">
-            <propertyresource name="redirect.out" />
+            <propertyresource name="redirect.out"/>
         </assert-trimmed-resource-content>
     </target>
 
@@ -181,19 +181,19 @@
         <exec executable="wc" input="${input}/redirect.in"
               error="${output}/redirect.err" errorproperty="redirect.err"
               output="${output}/redirect.out" outputproperty="redirect.out">
-            <arg value="-w" />
+            <arg value="-w"/>
         </exec>
         <au:assertTrue>
             <length length="0">
-                <file file="${output}/redirect.err" />
-                <propertyresource name="redirect.err" />
+                <file file="${output}/redirect.err"/>
+                <propertyresource name="redirect.err"/>
             </length>
         </au:assertTrue>
         <assert-trimmed-resource-content content="3">
-            <file file="${output}/redirect.out" />
+            <file file="${output}/redirect.out"/>
         </assert-trimmed-resource-content>
         <assert-trimmed-resource-content content="3">
-            <propertyresource name="redirect.out" />
+            <propertyresource name="redirect.out"/>
         </assert-trimmed-resource-content>
     </target>
 
@@ -202,22 +202,22 @@
         <exec executable="wc" inputstring="x y z"
               error="${output}/redirect.err"
               output="${output}/redirect.out" outputproperty="redirect.out">
-            <arg value="-w" />
+            <arg value="-w"/>
         </exec>
         <au:assertTrue>
             <length length="0">
-                <file file="${output}/redirect.err" />
+                <file file="${output}/redirect.err"/>
             </length>
         </au:assertTrue>
         <concat>
-            <file file="${output}/redirect.out" />
-            <propertyresource name="redirect.out" />
+            <file file="${output}/redirect.out"/>
+            <propertyresource name="redirect.out"/>
         </concat>
         <assert-trimmed-resource-content content="3">
-            <file file="${output}/redirect.out" />
+            <file file="${output}/redirect.out"/>
         </assert-trimmed-resource-content>
         <assert-trimmed-resource-content content="3">
-            <propertyresource name="redirect.out" />
+            <propertyresource name="redirect.out"/>
         </assert-trimmed-resource-content>
     </target>
 
@@ -225,85 +225,85 @@
             depends="setUp" if="test.can.run">
         <au:expectfailure>
             <exec executable="sh">
-                <arg value="parrot.sh" />
-                <arg value="${ant.file}" />
-                <redirector output="${output}/redirector.out" />
-                <redirector output="whocares" />
+                <arg value="parrot.sh"/>
+                <arg value="${ant.file}"/>
+                <redirector output="${output}/redirector.out"/>
+                <redirector output="whocares"/>
             </exec>
         </au:expectfailure>
     </target>
 
     <target name="test-redirector-output" depends="setUp" if="test.can.run">
         <exec executable="sh">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
-            <redirector output="${output}/redirector.out" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
+            <redirector output="${output}/redirector.out"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out${line.separator}${ant.file} err</string>
-                <file file="${output}/redirector.out" />
+                <file file="${output}/redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
 
     <target name="test-redirector-output-error" depends="setUp" if="test.can.run">
         <exec executable="sh">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
-            <redirector output="${output}/redirector.out" error="${output}/redirector.err" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
+            <redirector output="${output}/redirector.out" error="${output}/redirector.err"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out</string>
-                <file file="${output}/redirector.out" />
+                <file file="${output}/redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} err</string>
-                <file file="${output}/redirector.err" />
+                <file file="${output}/redirector.err"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
 
     <target name="test-redirector-output-outputproperty-logerror" depends="setUp" if="test.can.run">
         <exec executable="sh">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
             <redirector output="${output}/redirector.out" logerror="true"
-                        outputproperty="redirector.out" />
+                        outputproperty="redirector.out"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out</string>
-                <file file="${output}/redirector.out" />
-                <propertyresource name="redirector.out" />
+                <file file="${output}/redirector.out"/>
+                <propertyresource name="redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
-        <au:assertLogContains text="${ant.file} err" />
+        <au:assertLogContains text="${ant.file} err"/>
     </target>
 
     <target name="test-redirector-output-outputproperty-error-errorproperty"
             depends="setUp" if="test.can.run">
         <exec executable="sh">
             <redirector error="${output}/redirector.err" errorproperty="redirector.err"
-              output="${output}/redirector.out" outputproperty="redirector.out" />
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+              output="${output}/redirector.out" outputproperty="redirector.out"/>
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out</string>
-                <file file="${output}/redirector.out" />
-                <propertyresource name="redirector.out" />
+                <file file="${output}/redirector.out"/>
+                <propertyresource name="redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} err</string>
-                <file file="${output}/redirector.err" />
-                <propertyresource name="redirector.err" />
+                <file file="${output}/redirector.err"/>
+                <propertyresource name="redirector.err"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
@@ -313,24 +313,24 @@
         <exec executable="sh">
             <redirector outputproperty="redirector.out"
                         errorproperty="redirector.err">
-                <outputmapper type="merge" to="${output}/redirector.out" />
-                <errormapper type="merge" to="${output}/redirector.err" />
+                <outputmapper type="merge" to="${output}/redirector.out"/>
+                <errormapper type="merge" to="${output}/redirector.err"/>
             </redirector>
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out</string>
-                <file file="${output}/redirector.out" />
-                <propertyresource name="redirector.out" />
+                <file file="${output}/redirector.out"/>
+                <propertyresource name="redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} err</string>
-                <file file="${output}/redirector.err" />
-                <propertyresource name="redirector.err" />
+                <file file="${output}/redirector.err"/>
+                <propertyresource name="redirector.err"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
@@ -340,27 +340,27 @@
         <exec executable="sh">
             <redirector outputproperty="redirector.out"
                         errorproperty="redirector.err">
-                <outputmapper type="merge" to="${output}/redirector.out" />
-                <errormapper type="merge" to="${output}/redirector.err" />
+                <outputmapper type="merge" to="${output}/redirector.out"/>
+                <errormapper type="merge" to="${output}/redirector.err"/>
                 <errorfilterchain>
-                    <replacestring from="err" to="ERROR!!!" />
+                    <replacestring from="err" to="ERROR!!!"/>
                 </errorfilterchain>
             </redirector>
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} out</string>
-                <file file="${output}/redirector.out" />
-                <propertyresource name="redirector.out" />
+                <file file="${output}/redirector.out"/>
+                <propertyresource name="redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <resourcesmatch astext="true">
                 <string>${ant.file} ERROR!!!</string>
-                <file file="${output}/redirector.err" />
-                <propertyresource name="redirector.err" />
+                <file file="${output}/redirector.err"/>
+                <propertyresource name="redirector.err"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
@@ -371,22 +371,22 @@
         <exec executable="wc">
             <redirector outputproperty="redirector.out"
                         errorproperty="redirector.err">
-                <inputmapper type="merge" to="${input}/redirector.in" />
-                <outputmapper type="merge" to="${output}/redirector.out" />
-                <errormapper type="merge" to="${output}/redirector.err" />
+                <inputmapper type="merge" to="${input}/redirector.in"/>
+                <outputmapper type="merge" to="${output}/redirector.out"/>
+                <errormapper type="merge" to="${output}/redirector.err"/>
             </redirector>
-            <arg value="-w" />
+            <arg value="-w"/>
         </exec>
         <assert-trimmed-resource-content content="3">
-            <file file="${output}/redirector.out" />
+            <file file="${output}/redirector.out"/>
         </assert-trimmed-resource-content>
         <assert-trimmed-resource-content content="3">
-            <propertyresource name="redirector.out" />
+            <propertyresource name="redirector.out"/>
         </assert-trimmed-resource-content>
         <au:assertTrue>
             <length length="0">
-                <file file="${output}/redirector.err" />
-                <propertyresource name="redirector.err" />
+                <file file="${output}/redirector.err"/>
+                <propertyresource name="redirector.err"/>
             </length>
         </au:assertTrue>
     </target>
@@ -398,24 +398,24 @@
             <redirector outputproperty="redirector.out"
                         errorproperty="redirector.err">
                 <inputfilterchain>
-                    <replacestring from="before" to="after" />
+                    <replacestring from="before" to="after"/>
                 </inputfilterchain>
-                <inputmapper type="merge" to="${input}/redirector.in" />
-                <outputmapper type="merge" to="${output}/redirector.out" />
-                <errormapper type="merge" to="${output}/redirector.err" />
+                <inputmapper type="merge" to="${input}/redirector.in"/>
+                <outputmapper type="merge" to="${output}/redirector.out"/>
+                <errormapper type="merge" to="${output}/redirector.err"/>
             </redirector>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
-                <string value="blah after blah" />
-                <file file="${output}/redirector.out" />
-                <propertyresource name="redirector.out" />
+                <string value="blah after blah"/>
+                <file file="${output}/redirector.out"/>
+                <propertyresource name="redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <length length="0">
-                <file file="${output}/redirector.err" />
-                <propertyresource name="redirector.err" />
+                <file file="${output}/redirector.err"/>
+                <propertyresource name="redirector.err"/>
             </length>
         </au:assertTrue>
     </target>
@@ -427,24 +427,24 @@
             <redirector outputproperty="redirector.out"
                         errorproperty="redirector.err">
                 <outputfilterchain>
-                    <replacestring from="before" to="after" />
+                    <replacestring from="before" to="after"/>
                 </outputfilterchain>
-                <outputmapper type="merge" to="${output}/redirector.out" />
-                <errormapper type="merge" to="${output}/redirector.err" />
+                <outputmapper type="merge" to="${output}/redirector.out"/>
+                <errormapper type="merge" to="${output}/redirector.err"/>
             </redirector>
-            <arg value="${input}/redirector.in" />
+            <arg value="${input}/redirector.in"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
-                <string value="blah after blah" />
-                <file file="${output}/redirector.out" />
-                <propertyresource name="redirector.out" />
+                <string value="blah after blah"/>
+                <file file="${output}/redirector.out"/>
+                <propertyresource name="redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <length length="0">
-                <file file="${output}/redirector.err" />
-                <propertyresource name="redirector.err" />
+                <file file="${output}/redirector.err"/>
+                <propertyresource name="redirector.err"/>
             </length>
         </au:assertTrue>
     </target>
@@ -456,23 +456,23 @@
                         errorproperty="redirector.err"
                         inputstring="blah before blah">
                 <inputfilterchain>
-                    <replacestring from="before" to="after" />
+                    <replacestring from="before" to="after"/>
                 </inputfilterchain>
-                <outputmapper type="merge" to="${output}/redirector.out" />
-                <errormapper type="merge" to="${output}/redirector.err" />
+                <outputmapper type="merge" to="${output}/redirector.out"/>
+                <errormapper type="merge" to="${output}/redirector.err"/>
             </redirector>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
-                <string value="blah after blah" />
-                <file file="${output}/redirector.out" />
-                <propertyresource name="redirector.out" />
+                <string value="blah after blah"/>
+                <file file="${output}/redirector.out"/>
+                <propertyresource name="redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <length length="0">
-                <file file="${output}/redirector.err" />
-                <propertyresource name="redirector.err" />
+                <file file="${output}/redirector.err"/>
+                <propertyresource name="redirector.err"/>
             </length>
         </au:assertTrue>
     </target>
@@ -484,29 +484,29 @@
             <redirector outputproperty="redirector.out"
                         errorproperty="redirector.err">
                 <outputfilterchain>
-                    <replacestring from="before" to="after" />
+                    <replacestring from="before" to="after"/>
                 </outputfilterchain>
-                <outputmapper type="glob" from="nomatch" to="${output}/nomatchout" />
-                <errormapper type="glob" from="nomatch" to="${output}/nomatcherr" />
+                <outputmapper type="glob" from="nomatch" to="${output}/nomatchout"/>
+                <errormapper type="glob" from="nomatch" to="${output}/nomatcherr"/>
             </redirector>
-            <arg value="${input}/redirector.in" />
+            <arg value="${input}/redirector.in"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
-                <string value="blah after blah" />
-                <file file="${output}/redirector.out" />
-                <propertyresource name="redirector.out" />
+                <string value="blah after blah"/>
+                <file file="${output}/redirector.out"/>
+                <propertyresource name="redirector.out"/>
             </resourcesmatch>
         </au:assertTrue>
         <au:assertTrue>
             <length length="0">
-                <file file="${output}/redirector.err" />
-                <propertyresource name="redirector.err" />
+                <file file="${output}/redirector.err"/>
+                <propertyresource name="redirector.err"/>
             </length>
         </au:assertTrue>
         <au:assertTrue>
             <resourcecount count="0">
-                <fileset dir="${output}" includes="nomatch???" />
+                <fileset dir="${output}" includes="nomatch???"/>
             </resourcecount>
         </au:assertTrue>
     </target>
@@ -516,17 +516,17 @@
         <exec executable="sh">
             <redirector>
                 <outputfilterchain>
-                    <replacestring from="out" to="OUTPUT???" />
+                    <replacestring from="out" to="OUTPUT???"/>
                 </outputfilterchain>
                 <errorfilterchain>
-                    <replacestring from="err" to="ERROR!!!" />
+                    <replacestring from="err" to="ERROR!!!"/>
                 </errorfilterchain>
             </redirector>
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
         </exec>
-        <au:assertLogContains text="${ant.file} OUTPUT???" />
-        <au:assertLogContains text="${ant.file} ERROR!!!" />
+        <au:assertLogContains text="${ant.file} OUTPUT???"/>
+        <au:assertLogContains text="${ant.file} ERROR!!!"/>
     </target>
 
     <target name="test-redirector-inputstring-outputfilterchain-outputmapper-errormapper"
@@ -534,25 +534,25 @@
         <exec executable="cat">
             <redirector inputstring="blah before blah">
                 <outputfilterchain>
-                    <replacestring from="before" to="after" />
+                    <replacestring from="before" to="after"/>
                 </outputfilterchain>
-                <outputmapper type="glob" from="nomatch" to="nomatchout" />
-                <errormapper type="glob" from="nomatch" to="nomatcherr" />
+                <outputmapper type="glob" from="nomatch" to="nomatchout"/>
+                <errormapper type="glob" from="nomatch" to="nomatcherr"/>
             </redirector>
         </exec>
-        <au:assertLogContains text="blah after blah" />
+        <au:assertLogContains text="blah after blah"/>
     </target>
 
     <target name="test-redirector-input-output-inputencoding-outputencoding"
             depends="setUp" if="cat.can.run">
         <exec executable="cat">
             <redirector input="input/iso8859-1" output="${output}/redirector.out"
-                        inputencoding="ISO8859_1" outputencoding="UTF8" />
+                        inputencoding="ISO8859_1" outputencoding="UTF8"/>
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
-                <file file="${output}/redirector.out" />
-                <file file="expected/utf-8" />
+                <file file="${output}/redirector.out"/>
+                <file file="expected/utf-8"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
@@ -560,12 +560,12 @@
     <target name="test-redirector-inputstring-output-error" depends="setUp" if="test.can.run">
         <exec executable="sh">
             <redirector inputstring="exit"
-                        output="${output}/redirector.out" error="${output}/redirector.err" />
+                        output="${output}/redirector.out" error="${output}/redirector.err"/>
         </exec>
         <au:assertTrue>
             <and>
-                <available file="${output}/redirector.out" type="file" />
-                <available file="${output}/redirector.err" type="file" />
+                <available file="${output}/redirector.out" type="file"/>
+                <available file="${output}/redirector.err" type="file"/>
             </and>
         </au:assertTrue>
     </target>
@@ -574,13 +574,13 @@
             depends="setUp" if="test.can.run">
         <exec executable="sh">
             <redirector inputstring="exit" createemptyfiles="false"
-                        output="${output}/redirector.out" error="${output}/redirector.err" />
+                        output="${output}/redirector.out" error="${output}/redirector.err"/>
         </exec>
         <au:assertTrue>
             <not>
                 <or>
-                    <available file="${output}/redirector.out" type="file" />
-                    <available file="${output}/redirector.err" type="file" />
+                    <available file="${output}/redirector.out" type="file"/>
+                    <available file="${output}/redirector.err" type="file"/>
                 </or>
             </not>
         </au:assertTrue>
@@ -588,15 +588,15 @@
 
     <target name="test-redirector-alwayslog-outputproperty" depends="setUp" if="test.can.run">
         <exec executable="sh">
-            <arg value="parrot.sh" />
-            <arg value="${ant.file}" />
+            <arg value="parrot.sh"/>
+            <arg value="${ant.file}"/>
             <redirector alwayslog="true" logerror="true"
-                        outputproperty="redirector.out" />
+                        outputproperty="redirector.out"/>
         </exec>
         <au:assertTrue>
-            <equals arg1="${ant.file} out" arg2="${redirector.out}" />
+            <equals arg1="${ant.file} out" arg2="${redirector.out}"/>
         </au:assertTrue>
-        <au:assertLogContains text="${ant.file} out" />
+        <au:assertLogContains text="${ant.file} out"/>
     </target>
 
     <!-- test will succeed as the OS wont match-->
@@ -615,11 +615,11 @@
       <exec executable="cmd.exe"
             failonerror="true"
             osFamily="winnt">
-            <arg value="/c" />
-            <arg value="time /t" />
+            <arg value="/c"/>
+            <arg value="time /t"/>
       </exec>
     </target>
-    
+
     <target name="testExecInconsistentSettings">
       <exec executable="nonexistent-program-we-expect"
             failonerror="true"
@@ -627,7 +627,7 @@
             os="linux unix">
       </exec>
     </target>
-    
+
     <target name="testDoesntWaitForChildren"
             description="https://issues.apache.org/bugzilla/show_bug.cgi?id=5003">
       <condition property="java"
@@ -687,8 +687,8 @@ public class Hello {
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
-                <file file="${output}/redirector.out" />
-                <file file="${output}/expected" />
+                <file file="${output}/redirector.out"/>
+                <file file="${output}/expected"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>
@@ -701,8 +701,8 @@ public class Hello {
         </exec>
         <au:assertTrue>
             <resourcesmatch astext="true">
-                <file file="${output}/redirector.out" />
-                <file file="${input}/redirector.in" />
+                <file file="${output}/redirector.out"/>
+                <file file="${input}/redirector.in"/>
             </resourcesmatch>
         </au:assertTrue>
     </target>

@@ -47,10 +47,10 @@
 
   <target name="test4" depends="init-test4" if="valid.os">
     <dirname property="local.dir" file="/usr/local/foo.txt"/>
-    <au:assertPropertyEquals name="local.dir" 
+    <au:assertPropertyEquals name="local.dir"
       value="${file.separator}usr${file.separator}local"/>
   </target>
-  
+
   <target name="test5">
     <dirname property="base.dir" file="foo.txt"/>
     <au:assertPropertyEquals name="base.dir" value="${basedir}"/>

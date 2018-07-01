@@ -33,44 +33,44 @@
 
 <project name="symlink-test" basedir="." default="all">
 
-  <!-- 
+  <!--
        Since the symlink task and some of these targets rely on
-       calls to exec, it may be possible for the JVM to outrun the 
+       calls to exec, it may be possible for the JVM to outrun the
        execution of the command line  system calls, so this value is
        the number of seconds we give the operating system to
-       catch up before executing a task that depends on the 
+       catch up before executing a task that depends on the
        completion of previous tasks. This delay is also added to
        the end of each target so junit doesn't go testing things
        before they have finnished (hopefully). Tweak if needed.
   -->
 
   <property name="delay" value="0"/>
- 
+
   <import file="../../../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
 
   <target name="all"
               depends="setUp, test-single, test-delete, test-record, test-recreate, tearDown"/>
-        
+
   <!-- test for action = single -->
-  <!-- 
+  <!--
     Creates:
          File: ${output}/symlink.test
          Link: ${output}/singletest
   -->
   <target name="test-single">
     <touch file="${output}/symlink.test"/>
-    <symlink resource="${output}/symlink.test" 
-             link="${output}/singletest" 
+    <symlink resource="${output}/symlink.test"
+             link="${output}/singletest"
              failonerror="yes"/>
     <sleep seconds="${delay}"/> <!-- make sure OS has time to catch up -->
-    <available file="${output}/symlink.test" 
+    <available file="${output}/symlink.test"
                property="test.single.file.created"/>
-    <available file="${output}/singletest" 
+    <available file="${output}/singletest"
                property="test.single.link.created"/>
   </target>
 
@@ -78,7 +78,7 @@
 
   <!-- test for action = delete  (no calls to command line so no sleep) -->
 
-  <!-- 
+  <!--
     Creates:
          (none)
     Deletes:
@@ -87,8 +87,8 @@
 
   <target name="test-delete">
     <touch file="${output}/symlink.test"/>
-    <symlink resource="${output}/symlink.test" 
-             link="${output}/singletest" 
+    <symlink resource="${output}/symlink.test"
+             link="${output}/singletest"
              failonerror="yes"/>
     <sleep seconds="${delay}"/> <!-- make sure OS has time to catch up -->
 
@@ -96,19 +96,19 @@
     <symlink action="delete" link="${output}/symlink.test" failonerror="no"/>
     <sleep seconds="${delay}"/> <!-- make sure OS has time to catch up -->
 
-    <available file="${output}/symlink.test" 
+    <available file="${output}/symlink.test"
                property="test.delete.file.still.there"/>
-    <available file="${output}/singletest" 
+    <available file="${output}/singletest"
                property="test.delete.link.still.there"
                value="ERROR: link deletion failed"/>
-    
+
   </target>
 
 
 
   <!-- test for action = record -->
 
-  <!-- 
+  <!--
     Creates:
          Dir:  ${output}/symtest1
          Dir:  ${output}/symtest1/symtest2
@@ -143,22 +143,22 @@
     <touch file="${output}/symtest1/symtest3/fileB"/>
     <touch file="${output}/symtest1/symtest3/fileC"/>
 
-    <symlink resource="${output}/symtest1/file1" 
-             link="${output}/symtest1/link1" 
-             failonerror="no" />
-    <symlink resource="${output}/symtest1/symtest2/file2" 
-             link="${output}/symtest1/link2" 
-             failonerror="no" />
-    <symlink resource="${output}/symtest1/symtest2/file2" 
-             link="${output}/symtest1/symtest2/link3" 
-             failonerror="no" />
+    <symlink resource="${output}/symtest1/file1"
+             link="${output}/symtest1/link1"
+             failonerror="no"/>
+    <symlink resource="${output}/symtest1/symtest2/file2"
+             link="${output}/symtest1/link2"
+             failonerror="no"/>
+    <symlink resource="${output}/symtest1/symtest2/file2"
+             link="${output}/symtest1/symtest2/link3"
+             failonerror="no"/>
     <symlink resource="${output}/symtest1/symtest3"
              link="${output}/symtest1/dirlink"
-             failonerror="no" />
-    <symlink resource="${output}/symtest1/symtest3" 
+             failonerror="no"/>
+    <symlink resource="${output}/symtest1/symtest3"
              link="${output}/symtest1/dirlink2"
              failonerror="no"/>
-    <symlink resource="${output}/symtest1/symtest3" 
+    <symlink resource="${output}/symtest1/symtest3"
              link="${output}/symtest1/dirlink3"
              failonerror="no"/>
 
@@ -217,7 +217,7 @@
 
     <!-- this is redundant for this test, but used in the recreate test -->
 
-    <available file="${output}/symtest1/dirlink2" 
+    <available file="${output}/symtest1/dirlink2"
                property="test.record.dirlink2.created"/>
 
     <!-- Test to see if the linkfiles were created -->
@@ -239,7 +239,7 @@
 
   <!-- test for action = recreate -->
 
-  <!-- 
+  <!--
     Deletes:
          Link: ${output}/symtest1/link1==>${output}/symtest1/file1
          Link: ${output}/symtest1/link2==>${output}/symtest1/symtest2/file2
@@ -278,7 +278,7 @@
 
     <sleep seconds="${delay}"/>  <!-- make sure OS has time to catch up -->
 
-    <symlink resource="${output}/symtest1/symtest2" 
+    <symlink resource="${output}/symtest1/symtest2"
              link="${output}/symtest1/dirlink3"
              failonerror="no"/>
 
@@ -321,7 +321,7 @@
                property="test.recreate.dirlink.recreated"/>
 
     <!-- this should not get set -->
-    <available file="${output}/symtest1/symtest3/symtest3" 
+    <available file="${output}/symtest1/symtest3/symtest3"
                property="test.recreate.dirlink2.recreated.twice"
                value="ERROR: dirlink2 was created a second time (bug 25181)"/>
 
@@ -329,7 +329,7 @@
 
     <sleep seconds="${delay}"/>  <!-- make sure OS has time to do the execs -->
 
-    <available file="${output}/symtest1/symtest3/WhereAmI" 
+    <available file="${output}/symtest1/symtest3/WhereAmI"
                property="test.recreate.dirlink3.was.altered"/>
   </target>
 

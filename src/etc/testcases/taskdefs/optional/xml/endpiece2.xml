@@ -15,11 +15,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<doc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<doc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="doc.xsd"
     xmlns="http://Massive/Attack+Mezzanine">
   <section title="endpiece">
- With a little luck, the network will pick me up. 
+ With a little luck, the network will pick me up.
  This is Ripley - last survivor of The Nostromo - signing off.
  <illegal-element/>
   </section>

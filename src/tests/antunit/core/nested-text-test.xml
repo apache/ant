@@ -24,7 +24,7 @@
   </target>
 
   <target name="testRejectNested">
-    <typedef name="object" classname="java.lang.Object" />
+    <typedef name="object" classname="java.lang.Object"/>
     <au:expectfailure expectedMessage="The &lt;object&gt; type doesn't support nested text data (&quot;foo&quot;).">
       <object>foo</object>
     </au:expectfailure>

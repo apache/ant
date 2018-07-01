@@ -16,31 +16,31 @@
   limitations under the License.
 -->
 <project>
-  <property name="file" location="echoed.xml" />
+  <property name="file" location="echoed.xml"/>
   <target name="init">
     <echoxml file="${file}">
       <project>
-        <property name="foo" value="bar" />
+        <property name="foo" value="bar"/>
         <fail message="$$$${foo}=$${foo}">
           <condition>
-            <istrue value="${mustfail}" />
+            <istrue value="${mustfail}"/>
           </condition>
         </fail>
       </project>
     </echoxml>
   </target>
   <target name="tearDown">
-    <delete file="${file}" />
+    <delete file="${file}"/>
   </target>
   <target name="testPass" depends="init">
-    <ant antfile="${file}" />
+    <ant antfile="${file}"/>
   </target>
   <target name="testFail" depends="init">
     <ant antfile="${file}">
-      <property name="mustfail" value="true" />
+      <property name="mustfail" value="true"/>
     </ant>
   </target>
   <target name="testEmpty">
-    <echoxml />
+    <echoxml/>
   </target>
 </project>

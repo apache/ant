@@ -17,18 +17,18 @@
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
 
-    <import file="../../antunit-base.xml" />
+    <import file="../../antunit-base.xml"/>
 
     <!-- declare a target that depends on the extension point -->
-    <target name="compile" depends="all.compile" />
+    <target name="compile" depends="all.compile"/>
 
     <!-- declare our extension point -->
-    <extension-point name="all.compile" />
+    <extension-point name="all.compile"/>
 
     <!-- import all our modules -->
-    <import file="module1.xml" as="module1" />
+    <import file="module1.xml" as="module1"/>
 
     <target name="testImport" depends="compile">
-        <au:assertLogContains text="In module1 compile. Yay!" />
+        <au:assertLogContains text="In module1 compile. Yay!"/>
     </target>
 </project>

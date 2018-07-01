@@ -20,21 +20,21 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
-    <property name="subdir" location="${output}/subdir" />
+    <mkdir dir="${output}"/>
+    <property name="subdir" location="${output}/subdir"/>
     <property name="classes.dir" value="../../../build/classes"/>
-    <property name="test.jar" location="${output}/signtest.jar" />
-    <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
+    <property name="test.jar" location="${output}/signtest.jar"/>
+    <property name="subdirtest.jar" location="${subdir}/signtest.jar"/>
 
   </target>
 
 
   <macrodef name="assertSigned">
-    <attribute name="jar" default="${test.jar}" />
+    <attribute name="jar" default="${test.jar}"/>
     <sequential>
-      <fail message="not signed: @{jar}" >
+      <fail message="not signed: @{jar}">
         <condition>
-          <not><issigned file="@{jar}" /></not>
+          <not><issigned file="@{jar}"/></not>
         </condition>
       </fail>
     </sequential>
@@ -51,7 +51,7 @@
   </presetdef>
 
   <presetdef name="sign">
-    <sign-base jar="${test.jar}" />
+    <sign-base jar="${test.jar}"/>
   </presetdef>
 
   <target name="jar" depends="setUp">
@@ -63,7 +63,7 @@
   </target>
 
   <target name="basic" depends="jar">
-    <sign />
+    <sign/>
     <assertSigned/>
   </target>
 
@@ -85,13 +85,12 @@
 
   <target name="urlKeystoreHTTP" depends="jar">
     <sign
-      keystore="http://ant.apache.org/webtest/testkeystore"
-      />
+      keystore="http://ant.apache.org/webtest/testkeystore"/>
     <assertSigned/>
   </target>
 
   <target name="testTsaLocalhost" depends="jar">
-    <sign tsaurl="http://localhost:0/" />
+    <sign tsaurl="http://localhost:0/"/>
   </target>
 
 </project>

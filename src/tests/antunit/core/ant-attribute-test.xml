@@ -18,10 +18,9 @@
 <project name="ant-attribute-test" default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit"
          xmlns:if="ant:if"
-         xmlns:unless="ant:unless"
-         >
+         xmlns:unless="ant:unless">
 
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="test-if-set">
     <echo message="message1" if:set="not-set"/>
@@ -67,7 +66,7 @@
         <echo>hi</echo>
       </sequential>
     </macrodef>
-    <sayhi if:set="verbose" />
+    <sayhi if:set="verbose"/>
     <au:assertLogContains text="hi"/>
   </target>
 

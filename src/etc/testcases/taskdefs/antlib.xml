@@ -20,8 +20,8 @@
   <property name="testcases.dir" location="../../../../build/testcases"/>
 
   <path id="testclasses">
-    <pathelement location="${testcases.dir}" />
-    <pathelement path="${java.class.path}" />
+    <pathelement location="${testcases.dir}"/>
+    <pathelement path="${java.class.path}"/>
   </path>
 
   <target name="antlib.file">
@@ -53,13 +53,13 @@
     <x:p xmlns:x="abc">Hello from x:p</x:p>
   </target>
 
-  <target name="antlib_uri" >
+  <target name="antlib_uri">
     <typedef uri="antlib:org.example.tasks" onerror="failall"/>
   </target>
 
   <target name="antlib_uri_auto" xmlns:ex="antlib:org.example.tasks">
     <ex:simple>
-      <echo message="inside simple" />
+      <echo message="inside simple"/>
     </ex:simple>
   </target>
 
@@ -68,5 +68,5 @@
       <echo message="inside simple"/>
     </ex:simple>
   </target>
-  
+
 </project>

@@ -42,7 +42,7 @@ public class A extends TestCase {
       <classpath location="${output}"/>
       <batchtest todir="${output}">
         <fileset dir="${output}">
-          <include name="**/A.class" />
+          <include name="**/A.class"/>
         </fileset>
       </batchtest>
       <formatter type="xml"/>
@@ -72,7 +72,7 @@ public class A extends TestCase {
       <classpath location="${output}"/>
       <batchtest todir="${output}">
         <fileset dir="${output}">
-          <include name="**/A.class" />
+          <include name="**/A.class"/>
         </fileset>
       </batchtest>
       <formatter type="xml"/>
@@ -110,7 +110,7 @@ public class A extends TestCase {
       <classpath location="${output}"/>
       <batchtest todir="${output}">
         <fileset dir="${output}">
-          <include name="**/A.class" />
+          <include name="**/A.class"/>
         </fileset>
       </batchtest>
       <formatter type="xml"/>

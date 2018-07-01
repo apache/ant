@@ -56,10 +56,10 @@
           font-family: verdana,arial,helvetica;
           font-size: 80%;
           background:#eeeee0;
-          }	  
-	  </style> 
+          }
+	  </style>
       </head>
-      <body link="#000000" alink="#000000" vlink="#000000" text="#000000">       
+      <body link="#000000" alink="#000000" vlink="#000000" text="#000000">
           <h1>
             <a name="top"><xsl:value-of select="$title"/></a>
           </h1>
@@ -97,7 +97,7 @@
 			<xsl:with-param name="entries" select=".//entry[not(file/revision)][file/prevrevision]"/>
 		</xsl:call-template>
         </table>
-        
+
       </body>
     </html>
   </xsl:template>
@@ -125,7 +125,7 @@
 			</ul>
 		</td>
 	</tr>
-  </xsl:template>  
+  </xsl:template>
 
   <xsl:template match="entry">
 	<xsl:apply-templates select="file"/>
@@ -151,18 +151,18 @@
   <xsl:template match="file">
     <li>
       <a target="_new">
-        <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" /></xsl:attribute>
-        <xsl:value-of select="name" />
+        <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module"/>/<xsl:value-of select="name"/></xsl:attribute>
+        <xsl:value-of select="name"/>
       </a>
       <xsl:if test="string-length(prevrevision) > 0 or string-length(revision) > 0">
       <xsl:text> </xsl:text>
       <a target="_new">
         <xsl:choose>
           <xsl:when test="string-length(prevrevision) = 0 ">
-            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?rev=<xsl:value-of select="revision" />&amp;content-type=text/x-cvsweb-markup</xsl:attribute>
+            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module"/>/<xsl:value-of select="name"/>?rev=<xsl:value-of select="revision"/>&amp;content-type=text/x-cvsweb-markup</xsl:attribute>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?r1=<xsl:value-of select="revision" />&amp;r2=<xsl:value-of select="prevrevision"/>&amp;diff_format=h</xsl:attribute>
+            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module"/>/<xsl:value-of select="name"/>?r1=<xsl:value-of select="revision"/>&amp;r2=<xsl:value-of select="prevrevision"/>&amp;diff_format=h</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose> (<xsl:if test="count(prevrevision) &gt; 0"> <xsl:value-of select="prevrevision"/> --&gt; </xsl:if> <xsl:value-of select="revision"/>)
       </a>
@@ -175,5 +175,5 @@
   <xsl:template match="msg">
     <b><xsl:apply-templates/></b>
   </xsl:template>
-  
+
 </xsl:stylesheet>

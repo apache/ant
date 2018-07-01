@@ -15,8 +15,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xs:schema 
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
   elementFormDefault="qualified">
   <xs:element name="doc">
     <xs:complexType>

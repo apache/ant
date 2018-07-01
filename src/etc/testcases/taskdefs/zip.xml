@@ -49,15 +49,15 @@
   -->
 
   <target name="test5">
-    <zip zipfile="${output}/test5.zip" basedir="." >
-      <exclude name="test5.zip" />
+    <zip zipfile="${output}/test5.zip" basedir=".">
+      <exclude name="test5.zip"/>
     </zip>
   </target>
 
   <target name="test6">
     <zip destFile="${output}/test6.zip" basedir=".">
-      <include name="*.xml" />
-      <exclude name="zip.*" />
+      <include name="*.xml"/>
+      <exclude name="zip.*"/>
     </zip>
   </target>
 
@@ -65,19 +65,19 @@
     <copy todir="${output}">
       <fileset dir="."/>
     </copy>
-    <zip destFile="${output}/inner7.zip" basedir="${output}" >
-      <exclude name="inner7.zip" />
+    <zip destFile="${output}/inner7.zip" basedir="${output}">
+      <exclude name="inner7.zip"/>
     </zip>
     <zip destFile="${output}/test7.zip" basedir=".">
-      <exclude name="**/*.*" />
-      <zipfileset src="${output}/inner7.zip" />
+      <exclude name="**/*.*"/>
+      <zipfileset src="${output}/inner7.zip"/>
     </zip>
   </target>
 
   <target name="feather">
     <zip destFile="${output}/asf-logo.gif.zip"
          basedir=".."
-         includes="asf-logo.gif" />
+         includes="asf-logo.gif"/>
   </target>
 
   <target name="uncompressed-feather">
@@ -88,25 +88,25 @@
 
   <!-- legacy attribute support -->
   <target name="test8">
-    <zip zipfile="${output}/test8.zip" basedir="." >
-      <exclude name="test8.zip" />
+    <zip zipfile="${output}/test8.zip" basedir=".">
+      <exclude name="test8.zip"/>
     </zip>
   </target>
 
   <target name="testZipgroupfileset">
 
     <zip zipfile="${output}/zipgroupfileset.zip" basedir=".">
-      <zipgroupfileset dir="zip" 
-        includes="zipgroupfileset*.zip" 
-        excludes="zipgroupfileset3.zip" />
-      <include name="zip/zipgroupfileset3.zip" />
+      <zipgroupfileset dir="zip"
+        includes="zipgroupfileset*.zip"
+        excludes="zipgroupfileset3.zip"/>
+      <include name="zip/zipgroupfileset3.zip"/>
     </zip>
   </target>
 
   <target name="testDuplicateFail">
 
     <zip zipfile="${output}/duplicateFail.zip" basedir="." duplicate="fail">
-      <zipgroupfileset dir="duplicate" includes="duplicate*.zip" />
+      <zipgroupfileset dir="duplicate" includes="duplicate*.zip"/>
     </zip>
   </target>
 
@@ -114,16 +114,16 @@
     <zip destFile="${output}/asf-logo.gif.zip"
          basedir=".."
          includes="asf-logo.gif"
-         update="true" />
+         update="true"/>
   </target>
 
   <target name="testUpdateIsNecessary" depends="feather">
-    <touch file="${output}/dummyfile" />
+    <touch file="${output}/dummyfile"/>
     <copy file="../asf-logo.gif" todir="${output}"/>
     <zip destFile="${output}/asf-logo.gif.zip"
          basedir="${output}"
          includes="asf-logo.gif,dummyfile"
-         update="true" />
+         update="true"/>
   </target>
 
   <!-- Bugzilla Report 18403 -->
@@ -153,7 +153,7 @@
     <zip destFile="${output}/test3.zip" basedir="${output}/ziptest" whenempty="skip"/>
     <fail message="archive should get skipped">
       <condition>
-        <available file="${output}/test3.zip" />
+        <available file="${output}/test3.zip"/>
       </condition>
     </fail>
   </target>
@@ -166,15 +166,15 @@
       <condition>
         <or>
           <not>
-            <available file="${output}/test3.zip" />
+            <available file="${output}/test3.zip"/>
           </not>
           <resourcecount when="gt" count="0">
-            <zipfileset src="${output}/test3.zip" />
+            <zipfileset src="${output}/test3.zip"/>
           </resourcecount>
           <resourcecount when="ne" count="1">
             <restrict>
-              <exists xmlns="antlib:org.apache.tools.ant.types.resources.selectors" />
-              <zipentry zipfile="${output}/test3.zip" name="empty2/" />
+              <exists xmlns="antlib:org.apache.tools.ant.types.resources.selectors"/>
+              <zipentry zipfile="${output}/test3.zip" name="empty2/"/>
             </restrict>
           </resourcecount>
         </or>
@@ -184,11 +184,11 @@
 
   <!-- Bugzilla Report 40258 -->
   <target name="zipEmptyDirFilesOnly">
-    <mkdir dir="${output}/empty/empty2" />
-    <zip destFile="${output}/test3.zip" basedir="${output}/empty" update="true" filesonly="true" />
+    <mkdir dir="${output}/empty/empty2"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/empty" update="true" filesonly="true"/>
     <fail message="archive should get skipped">
       <condition>
-        <available file="${output}/test3.zip" />
+        <available file="${output}/test3.zip"/>
       </condition>
     </fail>
   </target>
@@ -200,10 +200,10 @@
       <condition>
         <or>
           <not>
-           <available file="${output}/test3.zip" />
+           <available file="${output}/test3.zip"/>
           </not>
           <resourcecount when="gt" count="0">
-            <zipfileset src="${output}/test3.zip" />
+            <zipfileset src="${output}/test3.zip"/>
           </resourcecount>
         </or>
       </condition>
@@ -211,21 +211,21 @@
   </target>
 
   <target name="testCompressionLevel" depends="test6">
-    <length property="test6.length" file="${output}/test6.zip" />
+    <length property="test6.length" file="${output}/test6.zip"/>
     <copy todir="${output}">
       <fileset dir=".">
         <include name="*.xml"/>
       </fileset>
     </copy>
     <zip destFile="${output}/testLevel.zip" basedir="${output}" level="9">
-      <include name="*.xml" />
-      <exclude name="zip.*" />
+      <include name="*.xml"/>
+      <exclude name="zip.*"/>
     </zip>
     <fail>
       <condition>
         <not>
           <isfileselected file="${output}/testLevel.zip">
-            <size when="less" value="${test6.length}" />
+            <size when="less" value="${test6.length}"/>
           </isfileselected>
         </not>
       </condition>
@@ -288,17 +288,17 @@
     <touch file="${output}/regexp.src/file1"/>
     <zip destFile="${output}/regexp.zip">
       <mappedresources>
-       <fileset dir="${output}/regexp.src" includes="file1" />
-       <regexpmapper from="^(([a-z][a-z]).*)" to="\2/\1.r" />
+       <fileset dir="${output}/regexp.src" includes="file1"/>
+       <regexpmapper from="^(([a-z][a-z]).*)" to="\2/\1.r"/>
       </mappedresources>
     </zip>
   </target>
   <target name="testRegexpMapper2">
-    <sleep seconds="3" />
+    <sleep seconds="3"/>
     <zip destFile="${output}/regexp.zip">
       <mappedresources>
-       <fileset dir="${output}/regexp.src" includes="file1" />
-       <regexpmapper from="^(([a-z][a-z]).*)" to="\2/\1.r" />
+       <fileset dir="${output}/regexp.src" includes="file1"/>
+       <regexpmapper from="^(([a-z][a-z]).*)" to="\2/\1.r"/>
       </mappedresources>
     </zip>
   </target>

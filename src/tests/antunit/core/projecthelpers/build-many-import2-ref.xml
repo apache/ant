@@ -16,10 +16,10 @@
   limitations under the License.
 -->
 <project>
-    <import file="build-many-import-ref.xmlref" />
-    <import file="build-many-import-common.xml" />
-    <import file="build-many-import-commonref.xml" />
+    <import file="build-many-import-ref.xmlref"/>
+    <import file="build-many-import-common.xml"/>
+    <import file="build-many-import-commonref.xml"/>
     <target name="setbar" depends="init,common">
-        <property name="bar" value="hello" />
+        <property name="bar" value="hello"/>
     </target>
 </project>

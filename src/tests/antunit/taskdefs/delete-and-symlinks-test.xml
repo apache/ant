@@ -18,11 +18,11 @@
 
 <project name="delete-test" basedir="." default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
-  
-  <import file="../antunit-base.xml" />
+
+  <import file="../antunit-base.xml"/>
 
   <condition property="unix">
-    <os family="unix" />
+    <os family="unix"/>
   </condition>
 
   <target name="tearDown" depends="removelink, antunit-base.tearDown"/>

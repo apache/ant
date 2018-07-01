@@ -16,23 +16,23 @@
   limitations under the License.
 -->
 <project name="test" basedir=".">
-  
+
   <property name="c" value="org.apache.tools.ant.types.PolyTest"/>
-  
+
   <path id="test-c">
-    <pathelement location="../../../../build/testcases" />
-    <pathelement path="${java.class.path}" />
+    <pathelement location="../../../../build/testcases"/>
+    <pathelement path="${java.class.path}"/>
   </path>
 
   <target name="init">
-    <typedef loaderref="poly"   classpathref="test-c"
-             name = "myfileset" classname="${c}$MyFileSet"/>
+    <typedef loaderref="poly" classpathref="test-c"
+             name="myfileset" classname="${c}$MyFileSet"/>
 
     <typedef loaderref="poly" classpathref="test-c"
-             name = "mypath"  classname="${c}$MyPath"/>
+             name="mypath"    classname="${c}$MyPath"/>
 
     <typedef loaderref="poly" classpathref="test-c"
-             name = "mytask"  classname="${c}$MyTask"/>
+             name="mytask"    classname="${c}$MyTask"/>
   </target>
 
   <target name="fileset" depends="init">

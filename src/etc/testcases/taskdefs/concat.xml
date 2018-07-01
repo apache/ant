@@ -18,10 +18,10 @@
 
 <project name="concat-test" basedir="." default="test1">
 
-  <property name="tmp.file" value="concat.tmp" />
-  <property name="tmp.file.2" value="concat.tmp.2" />
+  <property name="tmp.file" value="concat.tmp"/>
+  <property name="tmp.file.2" value="concat.tmp.2"/>
 
-  <property name="world" value="World" />
+  <property name="world" value="World"/>
 
   <target name="cleanup">
     <delete file="TESTDEST"/>
@@ -49,8 +49,8 @@
 
   <target name="test4">
     <concat destfile="${tmp.file.2}">
-      <fileset dir="${basedir}" includes="${tmp.file}" />
-      <filelist dir="${basedir}" files="${tmp.file},${tmp.file}" />
+      <fileset dir="${basedir}" includes="${tmp.file}"/>
+      <filelist dir="${basedir}" files="${tmp.file},${tmp.file}"/>
     </concat>
   </target>
 
@@ -158,7 +158,7 @@
       </filterchain>
     </concat>
   </target>
-  
+
   <target name="testmultireader">
     <concat destfile="${tmp.file}">Hello, World
     </concat>
@@ -183,7 +183,7 @@
       </filterchain>
     </concat>
   </target>
-  
+
   <target name="create-noel">
     <concat destfile="concat.noeol">This has no end of line</concat>
   </target>

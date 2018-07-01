@@ -31,19 +31,19 @@
   </target>
 
   <target name="test4">
-    <rename src="testdir" 
+    <rename src="testdir"
             dest="testdir"/>
   </target>
 
   <target name="test5">
-    <rename src="template.xml" 
+    <rename src="template.xml"
             dest="."/>
   </target>
 
   <target name="test6">
-    <rename src="template.xml" 
+    <rename src="template.xml"
             dest="template.tmp"/>
-    <rename src="template.tmp" 
+    <rename src="template.tmp"
             dest="template.xml"/>
   </target>
 

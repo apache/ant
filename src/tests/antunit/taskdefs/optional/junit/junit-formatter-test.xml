@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../../antunit-base.xml" />
+  <import file="../../../antunit-base.xml"/>
 
   <path id="junit">
     <fileset dir="../../../../../../lib/optional" includes="junit*"/>
@@ -43,7 +43,7 @@ public class ATest extends TestCase {
           <classpath location="${output}"/>
           <batchtest todir="${output}">
             <fileset dir="${output}">
-              <include name="**/*Test.class" />
+              <include name="**/*Test.class"/>
             </fileset>
           </batchtest>
           <formatter type="plain" if="${if}" extension=".dollar_if"/>

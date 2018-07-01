@@ -19,46 +19,46 @@
          xmlns:au="antlib:org.apache.ant.antunit"
          xmlns:rcmp="antlib:org.apache.tools.ant.types.resources.comparators">
 
-  <import file="../../../antunit-base.xml" />
+  <import file="../../../antunit-base.xml"/>
 
-  <property name="dirname" value="work" />
-  <property name="dir" location="${output}/${dirname}" />
-  <property name="echolevel" value="debug" />
+  <property name="dirname" value="work"/>
+  <property name="dir" location="${output}/${dirname}"/>
+  <property name="echolevel" value="debug"/>
 
   <target name="tearDown">
-    <delete dir="${dir}" />
-    <delete file="${zip}" />
-    <delete file="${jar}" deleteonexit="true" />
-    <delete file="${file}" />
+    <delete dir="${dir}"/>
+    <delete file="${zip}"/>
+    <delete file="${jar}" deleteonexit="true"/>
+    <delete file="${file}"/>
   </target>
 
   <target name="setUp">
-    <mkdir dir="${dir}" />
+    <mkdir dir="${dir}"/>
 
-    <echo file="${dir}/b" message="yyy" />
-    <echo file="${dir}/e" message="aaa" />
-    <sleep seconds="2" />
-    <echo file="${dir}/c" message="x" />
-    <echo file="${dir}/d" message="x" />
-    <sleep seconds="2" />
-    <echo file="${dir}/a" message="zz" />
-    <echo file="${dir}/f" message="zz" />
+    <echo file="${dir}/b" message="yyy"/>
+    <echo file="${dir}/e" message="aaa"/>
+    <sleep seconds="2"/>
+    <echo file="${dir}/c" message="x"/>
+    <echo file="${dir}/d" message="x"/>
+    <sleep seconds="2"/>
+    <echo file="${dir}/a" message="zz"/>
+    <echo file="${dir}/f" message="zz"/>
 
-    <mkdir dir="${dir}/a.dir" />
-    <mkdir dir="${dir}/b.dir" />
-    <mkdir dir="${dir}/c.dir" />
+    <mkdir dir="${dir}/a.dir"/>
+    <mkdir dir="${dir}/b.dir"/>
+    <mkdir dir="${dir}/c.dir"/>
 
     <macrodef name="mysort">
-      <attribute name="property" />
-      <attribute name="separator" default="," />
-      <element name="cmp" optional="true" implicit="true" />
+      <attribute name="property"/>
+      <attribute name="separator" default=","/>
+      <element name="cmp" optional="true" implicit="true"/>
       <sequential>
         <pathconvert property="@{property}" pathsep="@{separator}">
           <sort>
-            <fileset dir="${dir}" includes="a,b,c" />
-            <cmp />
+            <fileset dir="${dir}" includes="a,b,c"/>
+            <cmp/>
           </sort>
-          <flattenmapper />
+          <flattenmapper/>
         </pathconvert>
         <echo level="${echolevel}">@{property}=${@{property}}</echo>
       </sequential>
@@ -66,98 +66,98 @@
   </target>
 
   <target name="testsortdefault" depends="setUp">
-    <mysort property="sortdf" />
+    <mysort property="sortdf"/>
     <au:assertTrue>
-      <equals arg1="${sortdf}" arg2="a,b,c" />
+      <equals arg1="${sortdf}" arg2="a,b,c"/>
     </au:assertTrue>
   </target>
 
   <target name="testrvdefault" depends="setUp">
     <mysort property="sortdf-rev">
-      <rcmp:reverse />
+      <rcmp:reverse/>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortdf-rev}" arg2="c,b,a" />
+      <equals arg1="${sortdf-rev}" arg2="c,b,a"/>
     </au:assertTrue>
   </target>
 
   <target name="testname" depends="setUp">
     <mysort property="sortnm">
-      <rcmp:name />
+      <rcmp:name/>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortnm}" arg2="a,b,c" />
+      <equals arg1="${sortnm}" arg2="a,b,c"/>
     </au:assertTrue>
   </target>
 
   <target name="testrvname" depends="setUp">
     <mysort property="sortnm-rev">
       <rcmp:reverse>
-        <rcmp:name />
+        <rcmp:name/>
       </rcmp:reverse>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortnm-rev}" arg2="c,b,a" />
+      <equals arg1="${sortnm-rev}" arg2="c,b,a"/>
     </au:assertTrue>
   </target>
 
   <target name="testdate" depends="setUp">
     <mysort property="sortlm">
-      <rcmp:date />
+      <rcmp:date/>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortlm}" arg2="b,c,a" />
+      <equals arg1="${sortlm}" arg2="b,c,a"/>
     </au:assertTrue>
   </target>
 
   <target name="testrvdate" depends="setUp">
     <mysort property="sortlm-rev">
       <rcmp:reverse>
-        <rcmp:date />
+        <rcmp:date/>
       </rcmp:reverse>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortlm-rev}" arg2="a,c,b" />
+      <equals arg1="${sortlm-rev}" arg2="a,c,b"/>
     </au:assertTrue>
   </target>
 
   <target name="testsize" depends="setUp">
     <mysort property="sortsz">
-      <rcmp:size />
+      <rcmp:size/>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortsz}" arg2="c,a,b" />
+      <equals arg1="${sortsz}" arg2="c,a,b"/>
     </au:assertTrue>
   </target>
 
   <target name="testrvsize" depends="setUp">
     <mysort property="sortsz-rev">
       <rcmp:reverse>
-        <rcmp:size />
+        <rcmp:size/>
       </rcmp:reverse>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortsz-rev}" arg2="b,a,c" />
+      <equals arg1="${sortsz-rev}" arg2="b,a,c"/>
     </au:assertTrue>
   </target>
 
   <target name="testcontent" depends="setUp">
     <mysort property="sortct">
-      <rcmp:content />
+      <rcmp:content/>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortct}" arg2="c,b,a" />
+      <equals arg1="${sortct}" arg2="c,b,a"/>
     </au:assertTrue>
   </target>
 
   <target name="testrvcontent" depends="setUp">
     <mysort property="sortct-rev">
       <rcmp:reverse>
-        <rcmp:content />
+        <rcmp:content/>
       </rcmp:reverse>
     </mysort>
     <au:assertTrue>
-      <equals arg1="${sortct-rev}" arg2="a,b,c" />
+      <equals arg1="${sortct-rev}" arg2="a,b,c"/>
     </au:assertTrue>
   </target>
 
@@ -165,15 +165,15 @@
     <pathconvert property="sortex" pathsep=",">
       <sort>
         <resources>
-          <file file="${dir}/a" />
-          <resource name="redherring" exists="false" />
+          <file file="${dir}/a"/>
+          <resource name="redherring" exists="false"/>
         </resources>
-        <rcmp:exists />
+        <rcmp:exists/>
       </sort>
-      <flattenmapper />
+      <flattenmapper/>
     </pathconvert>
     <au:assertTrue>
-      <equals arg1="${sortex}" arg2="redherring,a" />
+      <equals arg1="${sortex}" arg2="redherring,a"/>
     </au:assertTrue>
   </target>
 
@@ -181,17 +181,17 @@
     <pathconvert property="sortex-rev" pathsep=",">
       <sort>
         <resources>
-          <file file="${dir}/a" />
-          <resource name="redherring" exists="false" />
+          <file file="${dir}/a"/>
+          <resource name="redherring" exists="false"/>
         </resources>
         <rcmp:reverse>
-          <rcmp:exists />
+          <rcmp:exists/>
         </rcmp:reverse>
       </sort>
-      <flattenmapper />
+      <flattenmapper/>
     </pathconvert>
     <au:assertTrue>
-      <equals arg1="${sortex-rev}" arg2="a,redherring" />
+      <equals arg1="${sortex-rev}" arg2="a,redherring"/>
     </au:assertTrue>
   </target>
 
@@ -199,79 +199,79 @@
     <pathconvert property="sorttp" pathsep=",">
       <sort>
         <resources>
-          <file file="${dir}/a" />
-          <file file="${dir}/a.dir" />
+          <file file="${dir}/a"/>
+          <file file="${dir}/a.dir"/>
         </resources>
-        <rcmp:type />
+        <rcmp:type/>
       </sort>
-      <flattenmapper />
+      <flattenmapper/>
     </pathconvert>
-    <au:assertPropertyEquals name="sorttp" value="a,a.dir" />
+    <au:assertPropertyEquals name="sorttp" value="a,a.dir"/>
   </target>
 
   <target name="testrvtype" depends="setUp">
     <pathconvert property="sorttp-rev" pathsep=",">
       <sort>
         <resources>
-          <file file="${dir}/a" />
-          <file file="${dir}/a.dir" />
+          <file file="${dir}/a"/>
+          <file file="${dir}/a.dir"/>
         </resources>
         <rcmp:reverse>
-          <rcmp:type />
+          <rcmp:type/>
         </rcmp:reverse>
       </sort>
-      <flattenmapper />
+      <flattenmapper/>
     </pathconvert>
     <au:assertTrue>
-      <equals arg1="${sorttp-rev}" arg2="a.dir,a" />
+      <equals arg1="${sorttp-rev}" arg2="a.dir,a"/>
     </au:assertTrue>
   </target>
 
   <target name="forwardsort"
-    depends="testsortdefault,testname,testdate,testsize,testcontent,testexists,testtype" />
+    depends="testsortdefault,testname,testdate,testsize,testcontent,testexists,testtype"/>
 
   <target name="reversesort"
-    depends="testrvdefault,testrvname,testrvdate,testrvsize,testrvcontent,testrvexists,testrvtype" />
+    depends="testrvdefault,testrvname,testrvdate,testrvsize,testrvcontent,testrvexists,testrvtype"/>
 
   <target name="testcompoundsort1" depends="setUp">
     <pathconvert property="sortcmp1" pathsep=",">
       <sort>
         <resources>
-          <file file="${dir}/c" />
-          <file file="${dir}/b.dir" />
-          <file file="${dir}/a" />
-          <file file="${dir}/c.dir" />
-          <file file="${dir}/b" />
-          <file file="${dir}/a.dir" />
+          <file file="${dir}/c"/>
+          <file file="${dir}/b.dir"/>
+          <file file="${dir}/a"/>
+          <file file="${dir}/c.dir"/>
+          <file file="${dir}/b"/>
+          <file file="${dir}/a.dir"/>
         </resources>
         <rcmp:reverse>
-          <rcmp:type />
+          <rcmp:type/>
         </rcmp:reverse>
-        <rcmp:name />
+        <rcmp:name/>
       </sort>
-      <flattenmapper />
+      <flattenmapper/>
     </pathconvert>
-    <au:assertPropertyEquals name="sortcmp1" value="a.dir,b.dir,c.dir,a,b,c" />
+    <au:assertPropertyEquals name="sortcmp1" value="a.dir,b.dir,c.dir,a,b,c"/>
   </target>
 
   <target name="testcompoundsort2" depends="setUp">
     <pathconvert property="sortcmp2" pathsep=",">
       <sort>
         <fileset dir="${dir}" includes="?"/>
-        <rcmp:size />
-        <rcmp:content />
+        <rcmp:size/>
+        <rcmp:content/>
         <rcmp:reverse>
-          <rcmp:name />
+          <rcmp:name/>
         </rcmp:reverse>
       </sort>
-      <flattenmapper />
+      <flattenmapper/>
     </pathconvert>
-    <au:assertPropertyEquals name="sortcmp2" value="d,c,f,a,e,b" />
+    <au:assertPropertyEquals name="sortcmp2" value="d,c,f,a,e,b"/>
   </target>
 
-  <target name="compoundsort" depends="testcompoundsort1,testcompoundsort2" />
+  <target name="compoundsort" depends="testcompoundsort1,testcompoundsort2"/>
 
-  <target name="sort" depends="forwardsort,reversesort,compoundsort" />
+  <target name="sort" depends="forwardsort,reversesort,compoundsort"/>
 
   <target name="testEquals">
     <!-- test for PR 46527 -->
@@ -284,15 +284,15 @@
     </sort>
 
     <au:assertTrue>
-      <resourcecount refid="testEquals" count="3" />
+      <resourcecount refid="testEquals" count="3"/>
     </au:assertTrue>
 
     <pathconvert refid="testEquals" property="testEquals" pathsep="" preserveduplicates="true">
-      <mergemapper to="X" />
+      <mergemapper to="X"/>
     </pathconvert>
 
     <au:assertTrue>
-      <length string="${testEquals}" length="3" />
+      <length string="${testEquals}" length="3"/>
     </au:assertTrue>
   </target>
 

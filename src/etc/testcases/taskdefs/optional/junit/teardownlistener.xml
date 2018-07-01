@@ -18,8 +18,8 @@
 <project>
 
   <path id="test">
-    <pathelement path="${java.class.path}" />
-    <pathelement location="../../../../../../build/testcases" />
+    <pathelement path="${java.class.path}"/>
+    <pathelement location="../../../../../../build/testcases"/>
   </path>
 
   <target name="testNoTeardown">

@@ -22,7 +22,7 @@
 -->
 
     <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
-    <xsl:decimal-format decimal-separator="." grouping-separator="," />
+    <xsl:decimal-format decimal-separator="." grouping-separator=","/>
 
     <xsl:param name="output.dir" select="'.'"/>
     <xsl:param name="basedir" select="'.'"/>
@@ -229,7 +229,7 @@
         <!-- Convert a windows path '\' to a unix path '/' for further processing. -->
         <xsl:variable name="path2" select="translate($path,'\','/')"/>
 
-        
+
         <xsl:if test="contains($path2,'/')">
             <xsl:text>../</xsl:text>
             <xsl:call-template name="path">

@@ -36,7 +36,7 @@ This build file is intended to be used for testing Ant
     <javac srcdir="${src.dir}" destdir="${output}"/>
   </target>
 
-  <target name="testbadref" depends="compile" >
+  <target name="testbadref" depends="compile">
     <taskdef loaderref="loaderref-test"
              name="test1"
              classname="Test1"

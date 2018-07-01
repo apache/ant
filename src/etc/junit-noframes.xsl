@@ -3,8 +3,8 @@
         xmlns:lxslt="http://xml.apache.org/xslt"
         xmlns:string="xalan://java.lang.String">
 <xsl:output method="html" indent="yes" encoding="UTF-8"
-  doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
-<xsl:decimal-format decimal-separator="." grouping-separator="," />
+  doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"/>
+<xsl:decimal-format decimal-separator="." grouping-separator=","/>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -164,7 +164,7 @@
                 <xsl:variable name="testCount" select="sum($testsuites-in-package/@tests)"/>
                 <xsl:variable name="errorCount" select="sum($testsuites-in-package/@errors)"/>
                 <xsl:variable name="failureCount" select="sum($testsuites-in-package/@failures)"/>
-                <xsl:variable name="skippedCount" select="sum($testsuites-in-package/@skipped)" />
+                <xsl:variable name="skippedCount" select="sum($testsuites-in-package/@skipped)"/>
                 <xsl:variable name="timeCount" select="sum($testsuites-in-package/@time)"/>
 
                 <!-- write a summary for the package -->
@@ -180,7 +180,7 @@
                     <td><xsl:value-of select="$testCount"/></td>
                     <td><xsl:value-of select="$errorCount"/></td>
                     <td><xsl:value-of select="$failureCount"/></td>
-                    <td><xsl:value-of select="$skippedCount" /></td>
+                    <td><xsl:value-of select="$skippedCount"/></td>
                     <td>
                     <xsl:call-template name="display-time">
                         <xsl:with-param name="value" select="$timeCount"/>
@@ -255,7 +255,7 @@
         <xsl:variable name="testCount" select="sum(testsuite/@tests)"/>
         <xsl:variable name="errorCount" select="sum(testsuite/@errors)"/>
         <xsl:variable name="failureCount" select="sum(testsuite/@failures)"/>
-        <xsl:variable name="skippedCount" select="sum(testsuite/@skipped)" />
+        <xsl:variable name="skippedCount" select="sum(testsuite/@skipped)"/>
         <xsl:variable name="timeCount" select="sum(testsuite/@time)"/>
         <xsl:variable name="successRate" select="($testCount - $failureCount - $errorCount) div $testCount"/>
         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
@@ -277,7 +277,7 @@
             <td><xsl:value-of select="$testCount"/></td>
             <td><xsl:value-of select="$failureCount"/></td>
             <td><xsl:value-of select="$errorCount"/></td>
-            <td><xsl:value-of select="$skippedCount" /></td>
+            <td><xsl:value-of select="$skippedCount"/></td>
             <td>
                 <xsl:call-template name="display-percent">
                     <xsl:with-param name="value" select="$successRate"/>
@@ -376,7 +376,7 @@
         <td><xsl:value-of select="@tests"/></td>
         <td><xsl:value-of select="@errors"/></td>
         <td><xsl:value-of select="@failures"/></td>
-        <td><xsl:value-of select="@skipped" /></td>
+        <td><xsl:value-of select="@skipped"/></td>
         <td>
             <xsl:call-template name="display-time">
                 <xsl:with-param name="value" select="@time"/>

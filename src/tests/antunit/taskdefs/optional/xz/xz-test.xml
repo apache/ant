@@ -18,20 +18,20 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
     <!-- note relies on antunit 1.1 -->
-    <import file="../../../antunit-base.xml" />
+    <import file="../../../antunit-base.xml"/>
 
     <target name="setUp">
-        <mkdir dir="${output}" />
-        <mkdir dir="${output}/empty" />
-        <touch file="${output}/fileone" />
-        <touch file="${output}/filetwo" />
+        <mkdir dir="${output}"/>
+        <mkdir dir="${output}/empty"/>
+        <touch file="${output}/fileone"/>
+        <touch file="${output}/filetwo"/>
         <available property="xz.present" classname="org.tukaani.xz.XZOutputStream"/>
     </target>
 
     <target name="testFailNone" if="xz.present">
         <au:expectfailure expectedmessage="No resource selected, xz needs exactly one resource." message="Should have thrown an exception">
             <xz destfile="${output}/file.gz">
-                <fileset dir="${output}/empty" />
+                <fileset dir="${output}/empty"/>
             </xz>
         </au:expectfailure>
     </target>
@@ -39,7 +39,7 @@
     <target name="testFailTwo" if="xz.present">
         <au:expectfailure expectedmessage="xz cannot handle multiple resources at once. (2 resources were selected.)" message="Should have thrown an exception">
             <xz destfile="${output}/file.xz">
-                <fileset dir="${output}" />
+                <fileset dir="${output}"/>
             </xz>
         </au:expectfailure>
     </target>

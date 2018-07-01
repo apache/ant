@@ -159,7 +159,7 @@
     </multirootfileset>
     <pathconvert property="dirs" pathsep=":" refid="the-one-dirs"/>
     <au:assertPropertyEquals value="${a}${file.separator}1" name="dirs"/>
-    <resourcecount property="dir-count" refid="the-one-dirs" />
+    <resourcecount property="dir-count" refid="the-one-dirs"/>
     <au:assertPropertyEquals value="1" name="dir-count"/>
   </target>
 

@@ -16,6 +16,6 @@
    limitations under the License.
 -->
 <project default="foo">
-  <echo message="Called" />
-  <target name="foo" />
+  <echo message="Called"/>
+  <target name="foo"/>
 </project>

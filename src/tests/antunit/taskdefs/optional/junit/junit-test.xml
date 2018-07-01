@@ -16,16 +16,16 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../../antunit-base.xml" />
+  <import file="../../../antunit-base.xml"/>
 
   <path id="junit">
-    <fileset dir="../../../../../../lib/optional" includes="junit*" />
-    <fileset dir="../../../../../../lib/optional" includes="hamcrest-core*" />
+    <fileset dir="../../../../../../lib/optional" includes="junit*"/>
+    <fileset dir="../../../../../../lib/optional" includes="hamcrest-core*"/>
   </path>
 
   <macrodef name="empty-test">
-    <attribute name="classname" />
-    <attribute name="package" default="test" />
+    <attribute name="classname"/>
+    <attribute name="package" default="test"/>
     <sequential>
       <echo file="${input}/@{classname}.java">
         <![CDATA[
@@ -41,14 +41,14 @@ public class @{classname} extends TestCase {
   </macrodef>
 
   <target name="setUp">
-    <mkdir dir="${input}" />
-    <mkdir dir="${output}" />
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
   </target>
 
   <target name="testTimeoutLogOfBatchTests">
-    <mkdir dir="${input}" />
-    <mkdir dir="${output}" />
-    <empty-test classname="ATest" package="org.apache.ant.test" />
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <empty-test classname="ATest" package="org.apache.ant.test"/>
     <echo file="${input}/BTest.java">
       <![CDATA[
 package org.apache.ant.test;
@@ -61,30 +61,30 @@ public class BTest extends TestCase {
 }
 ]]>
     </echo>
-    <empty-test classname="CTest" package="org.apache.ant.test" />
-    <empty-test classname="DTest" package="org.apache.ant.test" />
+    <empty-test classname="CTest" package="org.apache.ant.test"/>
+    <empty-test classname="DTest" package="org.apache.ant.test"/>
     <javac srcdir="${input}" destdir="${output}">
-      <classpath refid="junit" />
+      <classpath refid="junit"/>
     </javac>
     <junit fork="true" forkMode="perBatch" timeout="5000" printsummary="yes">
-      <classpath refid="junit" />
-      <classpath location="${output}" />
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
       <batchtest>
         <fileset dir="${output}">
-          <include name="**/*Test.class" />
+          <include name="**/*Test.class"/>
         </fileset>
       </batchtest>
     </junit>
-    <au:assertLogContains text="ATest" />
-    <au:assertLogContains text="BTest" />
-    <au:assertLogContains text="org.apache.ant.test.Batch-With-Multiple-Tests" />
-    <au:assertLogDoesntContain text="CTest" />
-    <au:assertLogDoesntContain text="DTest" />
+    <au:assertLogContains text="ATest"/>
+    <au:assertLogContains text="BTest"/>
+    <au:assertLogContains text="org.apache.ant.test.Batch-With-Multiple-Tests"/>
+    <au:assertLogDoesntContain text="CTest"/>
+    <au:assertLogDoesntContain text="DTest"/>
   </target>
 
   <target name="testFailurePropertyOnTestCase">
-    <mkdir dir="${input}" />
-    <mkdir dir="${output}" />
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
     <echo file="${input}/ATest.java">
       <![CDATA[
 package test;
@@ -98,23 +98,23 @@ public class ATest extends TestCase {
 ]]>
     </echo>
     <javac srcdir="${input}" destdir="${output}">
-      <classpath refid="junit" />
+      <classpath refid="junit"/>
     </javac>
     <junit failureProperty="testcase.failed" haltonfailure="false">
-      <classpath refid="junit" />
-      <classpath location="${output}" />
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
       <batchtest>
         <fileset dir="${output}">
-          <include name="**/*Test.class" />
+          <include name="**/*Test.class"/>
         </fileset>
       </batchtest>
     </junit>
-    <au:assertPropertySet name="testcase.failed" />
+    <au:assertPropertySet name="testcase.failed"/>
   </target>
 
   <target name="testFailurePropertyOnTestSuite">
-    <mkdir dir="${input}" />
-    <mkdir dir="${output}" />
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
     <echo file="${input}/ATest.java">
       <![CDATA[
 package test;
@@ -132,44 +132,44 @@ public class ATest extends TestSuite {
 ]]>
     </echo>
     <javac srcdir="${input}" destdir="${output}">
-      <classpath refid="junit" />
+      <classpath refid="junit"/>
     </javac>
     <junit failureProperty="testsuite.failed" haltonfailure="false">
-      <classpath refid="junit" />
-      <classpath location="${output}" />
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
       <batchtest>
         <fileset dir="${output}">
-          <include name="**/*Test.class" />
+          <include name="**/*Test.class"/>
         </fileset>
       </batchtest>
     </junit>
-    <au:assertPropertySet name="testsuite.failed" />
+    <au:assertPropertySet name="testsuite.failed"/>
   </target>
 
   <target name="testTimeoutAndFormattersForkPerTest">
     <antcall target="runTimeoutAndFormattersTest">
-      <param name="forkMode" value="perTest" />
+      <param name="forkMode" value="perTest"/>
     </antcall>
-    <au:assertFileExists file="${output}/TEST-test.CTest.txt" />
-    <au:assertFileExists file="${output}/TEST-test.CTest.xml" />
-    <au:assertFileExists file="${output}/TEST-test.DTest.txt" />
-    <au:assertFileExists file="${output}/TEST-test.DTest.xml" />
+    <au:assertFileExists file="${output}/TEST-test.CTest.txt"/>
+    <au:assertFileExists file="${output}/TEST-test.CTest.xml"/>
+    <au:assertFileExists file="${output}/TEST-test.DTest.txt"/>
+    <au:assertFileExists file="${output}/TEST-test.DTest.xml"/>
   </target>
 
   <target name="testTimeoutAndFormattersForkOnce">
     <antcall target="runTimeoutAndFormattersTest">
-      <param name="forkMode" value="once" />
+      <param name="forkMode" value="once"/>
     </antcall>
-    <au:assertFileDoesntExist file="${output}/TEST-test.CTest.txt" />
-    <au:assertFileDoesntExist file="${output}/TEST-test.CTest.xml" />
-    <au:assertFileDoesntExist file="${output}/TEST-test.DTest.txt" />
-    <au:assertFileDoesntExist file="${output}/TEST-test.DTest.xml" />
+    <au:assertFileDoesntExist file="${output}/TEST-test.CTest.txt"/>
+    <au:assertFileDoesntExist file="${output}/TEST-test.CTest.xml"/>
+    <au:assertFileDoesntExist file="${output}/TEST-test.DTest.txt"/>
+    <au:assertFileDoesntExist file="${output}/TEST-test.DTest.xml"/>
   </target>
 
   <target name="runTimeoutAndFormattersTest" description="https://issues.apache.org/bugzilla/show_bug.cgi?id=35634">
-    <mkdir dir="${input}" />
-    <mkdir dir="${output}" />
-    <empty-test classname="ATest" />
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <empty-test classname="ATest"/>
     <echo file="${input}/BTest.java">
       <![CDATA[
 package test;
@@ -182,27 +182,27 @@ public class BTest extends TestCase {
 }
 ]]>
     </echo>
-    <empty-test classname="CTest" />
-    <empty-test classname="DTest" />
+    <empty-test classname="CTest"/>
+    <empty-test classname="DTest"/>
     <javac srcdir="${input}" destdir="${output}">
-      <classpath refid="junit" />
+      <classpath refid="junit"/>
     </javac>
     <junit fork="true" timeout="5000" forkmode="${forkMode}">
-      <classpath refid="junit" />
-      <classpath location="${output}" />
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
       <batchtest todir="${output}">
         <fileset dir="${output}">
-          <include name="**/*Test.class" />
+          <include name="**/*Test.class"/>
         </fileset>
       </batchtest>
-      <formatter type="brief" />
-      <formatter type="xml" />
+      <formatter type="brief"/>
+      <formatter type="xml"/>
     </junit>
-    <au:assertFileExists file="${output}/TEST-test.ATest.txt" />
-    <au:assertFileExists file="${output}/TEST-test.ATest.xml" />
+    <au:assertFileExists file="${output}/TEST-test.ATest.txt"/>
+    <au:assertFileExists file="${output}/TEST-test.ATest.xml"/>
    <!--
-    <au:assertFileExists file="${output}/TEST-test.BTest.txt" />
-    <au:assertFileExists file="${output}/TEST-test.BTest.xml" />
+    <au:assertFileExists file="${output}/TEST-test.BTest.txt"/>
+    <au:assertFileExists file="${output}/TEST-test.BTest.xml"/>
 
     These files should only exist if something was written to the log by te runner.
     The test previously passed even though the files were empty, which isn't a meaningful result.
@@ -211,44 +211,44 @@ public class BTest extends TestCase {
   </target>
 
   <target name="-ifUnlessSetup" depends="setUp">
-    <empty-test classname="ATest" />
-    <empty-test classname="BTest" />
-    <empty-test classname="CTest" />
-    <empty-test classname="DTest" />
-    <empty-test classname="ETest" />
-    <empty-test classname="FTest" />
-    <empty-test classname="GTest" />
-    <empty-test classname="HTest" />
+    <empty-test classname="ATest"/>
+    <empty-test classname="BTest"/>
+    <empty-test classname="CTest"/>
+    <empty-test classname="DTest"/>
+    <empty-test classname="ETest"/>
+    <empty-test classname="FTest"/>
+    <empty-test classname="GTest"/>
+    <empty-test classname="HTest"/>
     <javac srcdir="${input}" destdir="${output}">
-      <classpath refid="junit" />
+      <classpath refid="junit"/>
     </javac>
     <macrodef name="j">
       <sequential>
         <junit fork="true" forkMode="perBatch" printsummary="yes">
-          <classpath refid="junit" />
-          <classpath location="${output}" />
-          <test name="test.ATest" if="${if}" />
-          <test name="test.BTest" if="if" />
-          <test name="test.CTest" unless="${if}" />
-          <test name="test.DTest" unless="if" />
+          <classpath refid="junit"/>
+          <classpath location="${output}"/>
+          <test name="test.ATest" if="${if}"/>
+          <test name="test.BTest" if="if"/>
+          <test name="test.CTest" unless="${if}"/>
+          <test name="test.DTest" unless="if"/>
           <batchtest if="${if}">
             <fileset dir="${output}">
-              <include name="**/ETest.class" />
+              <include name="**/ETest.class"/>
             </fileset>
           </batchtest>
           <batchtest if="if">
             <fileset dir="${output}">
-              <include name="**/FTest.class" />
+              <include name="**/FTest.class"/>
             </fileset>
           </batchtest>
           <batchtest unless="${if}">
             <fileset dir="${output}">
-              <include name="**/GTest.class" />
+              <include name="**/GTest.class"/>
             </fileset>
           </batchtest>
           <batchtest unless="if">
             <fileset dir="${output}">
-              <include name="**/HTest.class" />
+              <include name="**/HTest.class"/>
             </fileset>
           </batchtest>
         </junit>
@@ -257,61 +257,61 @@ public class BTest extends TestCase {
   </target>
 
   <target name="testPropertiesNotSet" depends="-ifUnlessSetup">
-    <j />
-    <au:assertLogDoesntContain text="Running test.ATest" />
-    <au:assertLogDoesntContain text="Running test.BTest" />
-    <au:assertLogContains text="Running test.CTest" />
-    <au:assertLogContains text="Running test.DTest" />
-    <au:assertLogDoesntContain text="Running test.ETest" />
-    <au:assertLogDoesntContain text="Running test.FTest" />
-    <au:assertLogContains text="Running test.GTest" />
-    <au:assertLogContains text="Running test.HTest" />
+    <j/>
+    <au:assertLogDoesntContain text="Running test.ATest"/>
+    <au:assertLogDoesntContain text="Running test.BTest"/>
+    <au:assertLogContains text="Running test.CTest"/>
+    <au:assertLogContains text="Running test.DTest"/>
+    <au:assertLogDoesntContain text="Running test.ETest"/>
+    <au:assertLogDoesntContain text="Running test.FTest"/>
+    <au:assertLogContains text="Running test.GTest"/>
+    <au:assertLogContains text="Running test.HTest"/>
   </target>
 
   <target name="testPropertiesSet" depends="-ifUnlessSetup">
-    <property name="if" value="whatever" />
-    <j />
-    <au:assertLogDoesntContain text="Running test.ATest" />
-    <au:assertLogContains text="Running test.BTest" />
-    <au:assertLogContains text="Running test.CTest" />
-    <au:assertLogDoesntContain text="Running test.DTest" />
-    <au:assertLogDoesntContain text="Running test.ETest" />
-    <au:assertLogContains text="Running test.FTest" />
-    <au:assertLogContains text="Running test.GTest" />
-    <au:assertLogDoesntContain text="Running test.HTest" />
+    <property name="if" value="whatever"/>
+    <j/>
+    <au:assertLogDoesntContain text="Running test.ATest"/>
+    <au:assertLogContains text="Running test.BTest"/>
+    <au:assertLogContains text="Running test.CTest"/>
+    <au:assertLogDoesntContain text="Running test.DTest"/>
+    <au:assertLogDoesntContain text="Running test.ETest"/>
+    <au:assertLogContains text="Running test.FTest"/>
+    <au:assertLogContains text="Running test.GTest"/>
+    <au:assertLogDoesntContain text="Running test.HTest"/>
   </target>
 
   <target name="testPropertiesTrue" depends="-ifUnlessSetup">
-    <property name="if" value="true" />
-    <j />
-    <au:assertLogContains text="Running test.ATest" />
-    <au:assertLogContains text="Running test.BTest" />
-    <au:assertLogDoesntContain text="Running test.CTest" />
-    <au:assertLogDoesntContain text="Running test.DTest" />
-    <au:assertLogContains text="Running test.ETest" />
-    <au:assertLogContains text="Running test.FTest" />
-    <au:assertLogDoesntContain text="Running test.GTest" />
-    <au:assertLogDoesntContain text="Running test.HTest" />
+    <property name="if" value="true"/>
+    <j/>
+    <au:assertLogContains text="Running test.ATest"/>
+    <au:assertLogContains text="Running test.BTest"/>
+    <au:assertLogDoesntContain text="Running test.CTest"/>
+    <au:assertLogDoesntContain text="Running test.DTest"/>
+    <au:assertLogContains text="Running test.ETest"/>
+    <au:assertLogContains text="Running test.FTest"/>
+    <au:assertLogDoesntContain text="Running test.GTest"/>
+    <au:assertLogDoesntContain text="Running test.HTest"/>
   </target>
 
   <target name="testPropertiesFalse" depends="-ifUnlessSetup">
-    <property name="if" value="false" />
-    <j />
-    <au:assertLogDoesntContain text="Running test.ATest" />
-    <au:assertLogContains text="Running test.BTest" />
-    <au:assertLogContains text="Running test.CTest" />
-    <au:assertLogDoesntContain text="Running test.DTest" />
-    <au:assertLogDoesntContain text="Running test.ETest" />
-    <au:assertLogContains text="Running test.FTest" />
-    <au:assertLogContains text="Running test.GTest" />
-    <au:assertLogDoesntContain text="Running test.HTest" />
+    <property name="if" value="false"/>
+    <j/>
+    <au:assertLogDoesntContain text="Running test.ATest"/>
+    <au:assertLogContains text="Running test.BTest"/>
+    <au:assertLogContains text="Running test.CTest"/>
+    <au:assertLogDoesntContain text="Running test.DTest"/>
+    <au:assertLogDoesntContain text="Running test.ETest"/>
+    <au:assertLogContains text="Running test.FTest"/>
+    <au:assertLogContains text="Running test.GTest"/>
+    <au:assertLogDoesntContain text="Running test.HTest"/>
   </target>
 
   <target name="testMissingTestName">
-    <property name="test.name" value="null" />
+    <property name="test.name" value="null"/>
     <au:expectfailure message="test name must be specified">
       <junit fork="false">
-        <test name="${test.name}" />
+        <test name="${test.name}"/>
       </junit>
     </au:expectfailure>
   </target>
@@ -326,42 +326,42 @@ public class BTest extends TestCase {
     <echo file="${input}/T2.java">
 		    import org.junit.Test;
 		    public class T2 {
-			@Test 
+			@Test
 			public void ok() {}
-			@Test 
+			@Test
 			public void bad() {
 			throw new RuntimeException("failed");}
 			}</echo>
     <javac srcdir="${input}" destdir="${output}" includes="T1.java,T2.java" source="${source}" includeantruntime="false">
       <classpath>
-        <path refid="junit" />
+        <path refid="junit"/>
       </classpath>
     </javac>
     <junit fork="true" printsummary="true" haltonerror="true">
       <classpath>
-        <pathelement location="${output}" />
-        <path refid="junit" />
+        <pathelement location="${output}"/>
+        <path refid="junit"/>
       </classpath>
-      <test name="T1" methods="testOK" />
-      <test name="T2" methods="ok" />
+      <test name="T1" methods="testOK"/>
+      <test name="T2" methods="ok"/>
     </junit>
   </target>
 
   <target name="testClasspathBuildingSurvivesNonZips" depends="setUp"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53964">
-    <empty-test classname="ATest" package="org.apache.ant.test" />
+    <empty-test classname="ATest" package="org.apache.ant.test"/>
     <javac srcdir="${input}" destdir="${output}">
-      <classpath refid="junit" />
+      <classpath refid="junit"/>
     </javac>
     <junit fork="true" printsummary="true" haltonerror="true">
       <classpath>
-        <pathelement location="${output}" />
-        <pathelement location="${ant.file}" />
-        <path refid="junit" />
+        <pathelement location="${output}"/>
+        <pathelement location="${ant.file}"/>
+        <path refid="junit"/>
       </classpath>
       <batchtest>
         <fileset dir="${output}">
-          <include name="**/*Test.class" />
+          <include name="**/*Test.class"/>
         </fileset>
       </batchtest>
     </junit>

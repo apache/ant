@@ -16,21 +16,21 @@
   limitations under the License.
 -->
 <project default="end" xmlns:au="antlib:org.apache.ant.antunit">
-    <import file="build-cross-extension-ref.xmlref" />
+    <import file="build-cross-extension-ref.xmlref"/>
     <target name="init">
-        <property name="start" value="true" />
+        <property name="start" value="true"/>
     </target>
 
     <target name="setprop" extensionOf="extension-ref">
-        <property name="prop" value="ok" />
+        <property name="prop" value="ok"/>
     </target>
 
-    <extension-point name="extension" />
+    <extension-point name="extension"/>
 
     <target name="end" depends="setfoo,extension">
-        <au:assertPropertyEquals name="start" value="true" />
-        <au:assertPropertyEquals name="foo" value="hello" />
-        <au:assertPropertyEquals name="bar" value="hello" />
-        <au:assertPropertyEquals name="prop" value="ok" />
+        <au:assertPropertyEquals name="start" value="true"/>
+        <au:assertPropertyEquals name="foo" value="hello"/>
+        <au:assertPropertyEquals name="bar" value="hello"/>
+        <au:assertPropertyEquals name="prop" value="ok"/>
     </target>
 </project>

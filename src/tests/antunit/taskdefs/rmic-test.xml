@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="-create-rmic-adapter">
     <mkdir dir="${input}/org/example"/>

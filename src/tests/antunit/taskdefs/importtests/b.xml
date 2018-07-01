@@ -20,4 +20,3 @@
     <property name="foo" value="baz"/>
   </target>
 </project>
-

@@ -18,12 +18,12 @@
 
 <project name="untar-test" default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="setUp">
     <mkdir dir="${input}"/>
-    <mkdir dir="${output}/expected" />
-    <mkdir dir="${output}/actual" />
+    <mkdir dir="${output}/expected"/>
+    <mkdir dir="${output}/actual"/>
     <available property="xz.present" classname="org.tukaani.xz.XZOutputStream"/>
   </target>
 

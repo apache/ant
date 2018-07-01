@@ -31,26 +31,26 @@
   </target>
 
   <target name="test4">
-    <gzip src="gzip.xml" zipfile="." />
+    <gzip src="gzip.xml" zipfile="."/>
   </target>
 
   <target name="realTest">
-    <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />
+    <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz"/>
   </target>
 
   <target name="realTestWithResource">
     <gzip zipfile="asf-logo.gif.gz">
       <file file="../asf-logo.gif"/>
-    </gzip>    
+    </gzip>
   </target>
 
   <target name="testDateCheck">
     <touch file="asf-logo.gif.gz"/>
-    <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz" />
+    <gzip src="../asf-logo.gif" zipfile="asf-logo.gif.gz"/>
   </target>
 
   <target name="cleanup">
-    <delete file="asf-logo.gif.gz" />
+    <delete file="asf-logo.gif.gz"/>
   </target>
 
 </project>
