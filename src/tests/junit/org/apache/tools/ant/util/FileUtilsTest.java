@@ -32,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -601,6 +602,36 @@ public class FileUtilsTest {
         assertFalse(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/../../bar")));
         assertFalse(FILE_UTILS.isLeadingPath(new File("c:\\foo"), new File("c:\\foo\\..\\..\\bar")));
         assertFalse(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/../..")));
+    }
+
+    /**
+     * @see "https://bz.apache.org/bugzilla/show_bug.cgi?id=62502"
+     */
+    @Test
+    public void isLeadingPathCanonicalVersionCannotBeFooledByTooManyDoubleDots() throws IOException {
+        assertFalse(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/../../bar"), true));
+        assertFalse(FILE_UTILS.isLeadingPath(new File("c:\\foo"), new File("c:\\foo\\..\\..\\bar"), true));
+        assertFalse(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/../.."), true));
+    }
+
+    @Test
+    public void isLeadingPathCanonicalVersionWorksAsExpectedOnUnix() throws IOException {
+        assumeFalse("Test doesn't run on DOS", Os.isFamily("dos"));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/bar"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/baz/../bar"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/../foo/bar"), true));
+        assertFalse(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foobar"), true));
+        assertFalse(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/bar"), true));
+    }
+
+    @Test
+    public void isLeadingPathCanonicalVersionWorksAsExpectedOnDos() throws IOException {
+        assumeTrue("Test only runs on DOS", Os.isFamily("dos"));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\foo\\bar"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\foo\\baz\\..\\bar"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\foo\\..\\foo\\bar"), true));
+        assertFalse(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\foobar"), true));
+        assertFalse(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\bar"), true));
     }
 
     /**

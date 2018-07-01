@@ -1211,6 +1211,36 @@ public class FileUtils {
     }
 
     /**
+     * Learn whether one path "leads" another.
+     *
+     * @param leading The leading path, must not be null, must be absolute.
+     * @param path The path to check, must not be null, must be absolute.
+     * @param resolveSymlinks whether symbolic links shall be resolved
+     * prior to comparing the paths.
+     * @return true if path starts with leading; false otherwise.
+     * @since Ant 1.9.13
+     * @throws IOException if resolveSymlinks is true and invoking
+     * getCanonicaPath on either argument throws an exception
+     */
+    public boolean isLeadingPath(File leading, File path, boolean resolveSymlinks)
+        throws IOException {
+        if (!resolveSymlinks) {
+            return isLeadingPath(leading, path);
+        }
+        String l = leading.getCanonicalPath();
+        String p = path.getCanonicalPath();
+        if (l.equals(p)) {
+            return true;
+        }
+        // ensure that l ends with a /
+        // so we never think /foo was a parent directory of /foobar
+        if (!l.endsWith(File.separator)) {
+            l += File.separator;
+        }
+        return p.startsWith(l);
+    }
+
+    /**
      * Constructs a <code>file:</code> URI that represents the
      * external form of the given pathname.
      *
