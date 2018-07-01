@@ -592,6 +592,16 @@ public class FileUtilsTest {
     }
 
     /**
+     * @see "https://bz.apache.org/bugzilla/show_bug.cgi?id=62502"
+     */
+    @Test
+    public void isLeadingPathCannotBeFooledByTooManyDoubleDots() {
+        assertFalse(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/../../bar")));
+        assertFalse(FILE_UTILS.isLeadingPath(new File("c:\\foo"), new File("c:\\foo\\..\\..\\bar")));
+        assertFalse(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/../..")));
+    }
+
+    /**
      * adapt file separators to local conventions
      */
     private String localize(String path) {

@@ -1182,6 +1182,10 @@ public class FileUtils {
      * <p>This method uses {@link #normalize} under the covers and
      * does not resolve symbolic links.</p>
      *
+     * <p>If either path tries to go beyond the file system root
+     * (i.e. it contains more ".." segments than can be travelled up)
+     * the method will return false.</p>
+     *
      * @param leading The leading path, must not be null, must be absolute.
      * @param path The path to check, must not be null, must be absolute.
      * @return true if path starts with leading; false otherwise.
@@ -1197,6 +1201,11 @@ public class FileUtils {
         // so we never think /foo was a parent directory of /foobar
         if (!l.endsWith(File.separator)) {
             l += File.separator;
+        }
+        // ensure "/foo/"  is not considered a parent of "/foo/../../bar"
+        String up = File.separator + ".." + File.separator;
+        if (l.contains(up) || p.contains(up) || (p + File.separator).contains(up)) {
+            return false;
         }
         return p.startsWith(l);
     }
