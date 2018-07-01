@@ -586,6 +586,8 @@ public class FileUtilsTest {
         }
 
     }
+
+    @Test
     public void testGetDefaultEncoding() {
         // This just tests that the function does not blow up
         FILE_UTILS.getDefaultEncoding();
