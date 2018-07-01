@@ -729,8 +729,12 @@ public class FileUtils {
      *   <li>DOS style paths that start with a drive letter will have
      *     \ as the separator.</li>
      * </ul>
-     * Unlike {@link File#getCanonicalPath()} this method
-     * specifically does not resolve symbolic links.
+     * <p>Unlike {@link File#getCanonicalPath()} this method
+     * specifically does not resolve symbolic links.</p>
+     *
+     * <p>If the path tries to go beyond the file system root (i.e. it
+     * contains more ".." segments than can be travelled up) the
+     * method will return the original path unchanged.</p>
      *
      * @param path the path to be normalized.
      * @return the normalized version of the path.
@@ -1155,6 +1159,9 @@ public class FileUtils {
     /**
      * Removes a leading path from a second path.
      *
+     * <p>This method uses {@link #normalize} under the covers and
+     * does not resolve symbolic links.</p>
+     *
      * @param leading The leading path, must not be null, must be absolute.
      * @param path The path to remove from, must not be null, must be absolute.
      *
@@ -1179,14 +1186,57 @@ public class FileUtils {
 
     /**
      * Learn whether one path "leads" another.
+     *
+     * <p>This method uses {@link #normalize} under the covers and
+     * does not resolve symbolic links.</p>
+     *
+     * <p>If either path tries to go beyond the file system root
+     * (i.e. it contains more ".." segments than can be travelled up)
+     * the method will return false.</p>
+     *
      * @param leading The leading path, must not be null, must be absolute.
-     * @param path The path to remove from, must not be null, must be absolute.
+     * @param path The path to check, must not be null, must be absolute.
      * @return true if path starts with leading; false otherwise.
      * @since Ant 1.7
      */
     public boolean isLeadingPath(File leading, File path) {
         String l = normalize(leading.getAbsolutePath()).getAbsolutePath();
         String p = normalize(path.getAbsolutePath()).getAbsolutePath();
+        if (l.equals(p)) {
+            return true;
+        }
+        // ensure that l ends with a /
+        // so we never think /foo was a parent directory of /foobar
+        if (!l.endsWith(File.separator)) {
+            l += File.separator;
+        }
+        // ensure "/foo/"  is not considered a parent of "/foo/../../bar"
+        String up = File.separator + ".." + File.separator;
+        if (l.contains(up) || p.contains(up) || (p + File.separator).contains(up)) {
+            return false;
+        }
+        return p.startsWith(l);
+    }
+
+    /**
+     * Learn whether one path "leads" another.
+     *
+     * @param leading The leading path, must not be null, must be absolute.
+     * @param path The path to check, must not be null, must be absolute.
+     * @param resolveSymlinks whether symbolic links shall be resolved
+     * prior to comparing the paths.
+     * @return true if path starts with leading; false otherwise.
+     * @since Ant 1.10.5
+     * @throws IOException if resolveSymlinks is true and invoking
+     * getCanonicaPath on either argument throws an exception
+     */
+    public boolean isLeadingPath(File leading, File path, boolean resolveSymlinks)
+        throws IOException {
+        if (!resolveSymlinks) {
+            return isLeadingPath(leading, path);
+        }
+        String l = leading.getCanonicalPath();
+        String p = path.getCanonicalPath();
         if (l.equals(p)) {
             return true;
         }

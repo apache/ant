@@ -9,6 +9,12 @@ Fixed bugs:
    an exception.
    Bugzilla Report 62499
 
+ * the new allowFilesToEscapeDest didn't work when set to false and
+   archive entries contained relative paths with so many ".."
+   segnments that the resulting path would go beyond the file system
+   root.
+   Bugzilla Report 62502
+
 Changes from Ant 1.10.3 TO Ant 1.10.4
 =====================================
 
