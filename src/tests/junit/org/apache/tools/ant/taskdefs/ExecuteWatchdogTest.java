@@ -23,9 +23,9 @@ import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.AssumptionViolatedException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

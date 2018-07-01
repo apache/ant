@@ -34,9 +34,9 @@ import java.net.Socket;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
+import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.AssumptionViolatedException;
 
 /**
  * JUnit testcases for org.apache.tools.mail.MailMessage.
