@@ -625,6 +625,22 @@ public class FileUtilsTest {
     }
 
     @Test
+    public void isLeadingPathAndTrailingSlashesOnUnix() throws IOException {
+        assumeFalse("Test doesn't run on DOS", Os.isFamily("dos"));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo/"), new File("/foo/bar"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo/"), new File("/foo/bar/"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo/"), new File("/foo/"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo/"), new File("/foo"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/"), true));
+
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo/"), new File("/foo/bar"), false));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo/"), new File("/foo/bar/"), false));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo/"), new File("/foo/"), false));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo/"), new File("/foo"), false));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("/foo"), new File("/foo/"), false));
+    }
+
+    @Test
     public void isLeadingPathCanonicalVersionWorksAsExpectedOnDos() throws IOException {
         assumeTrue("Test only runs on DOS", Os.isFamily("dos"));
         assertTrue(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\foo\\bar"), true));
@@ -632,6 +648,22 @@ public class FileUtilsTest {
         assertTrue(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\foo\\..\\foo\\bar"), true));
         assertFalse(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\foobar"), true));
         assertFalse(FILE_UTILS.isLeadingPath(new File("C:\\foo"), new File("C:\\bar"), true));
+    }
+
+    @Test
+    public void isLeadingPathAndTrailingSlashesOnDos() throws IOException {
+        assumeTrue("Test only runs on DOS", Os.isFamily("dos"));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo\\"), new File("c:\\foo\\bar"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo\\"), new File("c:\\foo\\bar\\"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo\\"), new File("c:\\foo\\"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo\\"), new File("c:\\foo"), true));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo"), new File("c:\\foo\\"), true));
+
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo\\"), new File("c:\\foo\\bar"), false));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo\\"), new File("c:\\foo\\bar\\"), false));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo\\"), new File("c:\\foo\\"), false));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo\\"), new File("c:\\foo"), false));
+        assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo"), new File("c:\\foo\\"), false));
     }
 
     /**
