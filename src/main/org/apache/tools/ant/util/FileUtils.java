@@ -1235,17 +1235,15 @@ public class FileUtils {
         if (!resolveSymlinks) {
             return isLeadingPath(leading, path);
         }
-        String l = leading.getCanonicalPath();
-        String p = path.getCanonicalPath();
-        if (l.equals(p)) {
-            return true;
-        }
-        // ensure that l ends with a /
-        // so we never think /foo was a parent directory of /foobar
-        if (!l.endsWith(File.separator)) {
-            l += File.separator;
-        }
-        return p.startsWith(l);
+        final File l = leading.getCanonicalFile();
+        File p = path.getCanonicalFile();
+        do {
+            if (l.equals(p)) {
+                return true;
+            }
+            p = p.getParentFile();
+        } while (p != null);
+        return false;
     }
 
     /**
