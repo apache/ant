@@ -113,18 +113,18 @@ public class test1 {
     private static final String GREETING="*/Hello/*";
     private static final String GREETING1="/*Hello*/";
 
-    public static void main( String args[] ) {
+    public static void main(String args[]) {
     }
 }</echo>
       <echo file="nocomments.tmp">
 
 public class test1 {
-
+    
     int x = 1/2;
     private static final String GREETING="*/Hello/*";
     private static final String GREETING1="/*Hello*/";
 
-    public static void main( String args[] ) {
+    public static void main(String args[]) {
     }
 }</echo>
       <loadfile srcFile="loadfile1.tmp"

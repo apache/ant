@@ -27,7 +27,7 @@
   <target name="test2">
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
-      passfile="testpassfile.tmp"%/>
+      passfile="testpassfile.tmp"/>
   </target>
 
   <!-- testPassFile -->
