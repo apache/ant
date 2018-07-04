@@ -417,4 +417,68 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
 
     <target name="foo"/>
 
+    <target name="simpleSourceFile"
+            description="Tests that the single source file programs, introduced in Java 11, works as expected">
+        <mkdir dir="${output}/javasource"/>
+        <echo file="/tmp/foo.txt" message="${output}"/>
+        <echo file="${output}/javasource/A.java">
+            import java.nio.file.Files;
+            import java.nio.file.Paths;
+            import java.io.BufferedWriter;
+            public class A {
+                public static void main(String[] args) throws Exception {
+                    final String outFile = args[0];
+                    try(BufferedWriter bw = Files.newBufferedWriter(Paths.get(outFile));) {
+                        bw.write("Hello world!");
+                    }
+                }
+            }
+        </echo>
+        <java sourcefile="${output}/javasource/A.java" fork="true" failonerror="true" logerror="true">
+            <arg value="${output}/javasource/simpleSourceFileOutput.txt"/>
+        </java>
+        <loadfile property="simpleSourceFile.prog.output" srcfile="${output}/javasource/simpleSourceFileOutput.txt"/>
+        <condition property="simpleSourceFile.execution.success">
+            <equals arg1="${simpleSourceFile.prog.output}" arg2="Hello world!"/>
+        </condition>
+        <fail unless="simpleSourceFile.execution.success">Java source-file execution did not yield the expected
+            result</fail>
+    </target>
+
+
+    <target name="generateDummyJavaSource">
+        <mkdir dir="${output}/javasource"/>
+        <echo file="/tmp/foo.txt" message="${output}"/>
+        <echo file="${output}/javasource/ThrowsException.java">
+            public class ThrowsException {
+                public static void main(String[] args) throws Exception {
+                    throw new RuntimeException("Wasn't expected to be run");
+                }
+            }
+        </echo>
+    </target>
+
+    <target name="sourceFileRequiresFork" depends="generateDummyJavaSource">
+        <java sourcefile="${output}/javasource/ThrowsException.java" failonerror="true" logerror="true"/>
+        <fail>Execution of java task, for sourcefile, was expected to fail since fork wasn't set</fail>
+    </target>
+
+    <target name="sourceFileCantUseClassname" depends="generateDummyJavaSource">
+        <java classname="foo.bar" sourcefile="${output}/javasource/ThrowsException.java"
+              fork="true" failonerror="true" logerror="true"/>
+        <fail>Execution of java task, for sourcefile, was expected to fail since classname attribute was set</fail>
+    </target>
+
+    <target name="sourceFileCantUseJar" depends="generateDummyJavaSource">
+        <java jar="irrelevant.jar" sourcefile="${output}/javasource/ThrowsException.java"
+              fork="true" failonerror="true" logerror="true"/>
+        <fail>Execution of java task, for sourcefile, was expected to fail since jar attribute was set</fail>
+    </target>
+
+    <target name="sourceFileCantUseModule" depends="generateDummyJavaSource">
+        <java module="irrelevant" sourcefile="${output}/javasource/ThrowsException.java"
+              fork="true" failonerror="true" logerror="true"/>
+        <fail>Execution of java task, for sourcefile, was expected to fail since module attribute was set</fail>
+    </target>
+
 </project>

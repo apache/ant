@@ -368,6 +368,15 @@ public class CommandlineJava implements Cloneable {
         return null;
     }
 
+    public void setSourceFile(final String sourceFile) {
+        this.executableType = ExecutableType.SOURCE_FILE;
+        javaCommand.setExecutable(sourceFile);
+    }
+
+    public String getSourceFile() {
+        return this.executableType == ExecutableType.SOURCE_FILE ? this.javaCommand.getExecutable() : null;
+    }
+
     /**
      * Set the module to execute.
      * @param module  the module name.
@@ -534,9 +543,11 @@ public class CommandlineJava implements Cloneable {
         } else if (executableType == ExecutableType.MODULE) {
             listIterator.add("-m");
         }
-        // this is the classname to run as well as its arguments.
+        // this is the classname/source-file to run as well as its arguments.
         // in case of ExecutableType.JAR, the executable is a jar file,
         // in case of ExecutableType.MODULE, the executable is a module name, potentially including a class name.
+        // in case of ExecutableType.SOURCE_FILE, the executable is a Java source file (ending in .java) or a shebang
+        // file containing Java source
         javaCommand.addCommandToList(listIterator);
     }
 
@@ -887,6 +898,11 @@ public class CommandlineJava implements Cloneable {
         /**
          * Module execution.
          */
-        MODULE
+        MODULE,
+
+        /**
+         * Source file (introduced in Java 11)
+         */
+        SOURCE_FILE,
     }
 }

@@ -142,7 +142,8 @@ public class Java extends Task {
     protected void checkConfiguration() throws BuildException {
         String classname = getCommandLine().getClassname();
         String module = getCommandLine().getModule();
-        if (classname == null && getCommandLine().getJar() == null && module == null) {
+        final String sourceFile = getCommandLine().getSourceFile();
+        if (classname == null && getCommandLine().getJar() == null && module == null && sourceFile == null) {
             throw new BuildException("Classname must not be null.");
         }
         if (!fork && getCommandLine().getJar() != null) {
@@ -152,6 +153,9 @@ public class Java extends Task {
         if (!fork && getCommandLine().getModule() != null) {
             throw new BuildException(
                 "Cannot execute a module in non-forked mode. Please set fork='true'. ");
+        }
+        if (!fork && sourceFile != null) {
+            throw new BuildException("Cannot execute sourcefile in non-forked mode. Please set fork='true'");
         }
         if (spawn && !fork) {
             throw new BuildException(
@@ -355,12 +359,14 @@ public class Java extends Task {
      *
      * @param jarfile the jarfile to execute.
      *
-     * @throws BuildException if there is also a main class specified.
+     * @throws BuildException if there is also a {@code classname}, {@code module}
+     *              or {@code sourcefile} attribute specified
      */
     public void setJar(File jarfile) throws BuildException {
-        if (getCommandLine().getClassname() != null || getCommandLine().getModule() != null) {
+        if (getCommandLine().getClassname() != null || getCommandLine().getModule() != null
+                || getCommandLine().getSourceFile() != null) {
             throw new BuildException(
-                "Cannot use 'jar' with 'classname' or 'module' attributes in same command.");
+                    "Cannot use combination of 'jar', 'sourcefile', 'classname', 'module' attributes in same command");
         }
         getCommandLine().setJar(jarfile.getAbsolutePath());
     }
@@ -370,12 +376,12 @@ public class Java extends Task {
      *
      * @param s the name of the main class.
      *
-     * @throws BuildException if the jar attribute has been set.
+     * @throws BuildException if there is also a {@code jar} or {@code sourcefile} attribute specified
      */
     public void setClassname(String s) throws BuildException {
-        if (getCommandLine().getJar() != null) {
+        if (getCommandLine().getJar() != null || getCommandLine().getSourceFile() != null) {
             throw new BuildException(
-                "Cannot use 'jar' and 'classname' attributes in same command");
+                "Cannot use combination of 'jar', 'classname', sourcefile attributes in same command");
         }
         getCommandLine().setClassname(s);
     }
@@ -385,15 +391,35 @@ public class Java extends Task {
      *
      * @param module the name of the module.
      *
-     * @throws BuildException if the jar attribute has been set.
+     * @throws BuildException if there is also a {@code jar} or {@code sourcefile} attribute specified
      * @since 1.9.7
      */
     public void setModule(String module) throws BuildException {
-        if (getCommandLine().getJar() != null) {
+        if (getCommandLine().getJar() != null || getCommandLine().getSourceFile() != null) {
             throw new BuildException(
-                "Cannot use 'jar' and 'module' attributes in same command");
+                    "Cannot use combination of 'jar', 'module', sourcefile attributes in same command");
         }
         getCommandLine().setModule(module);
+    }
+
+    /**
+     * Set the Java source-file to execute. Support for single file source program
+     * execution, in Java, is only available since Java 11.
+     *
+     * @param sourceFile The path to the source file
+     * @throws BuildException if there is also a {@code jar}, {@code classname}
+     *              or {@code module} attribute specified
+     * @since Ant 1.10.5
+     */
+    public void setSourceFile(final String sourceFile) throws BuildException {
+        final String jar = getCommandLine().getJar();
+        final String className = getCommandLine().getClassname();
+        final String module = getCommandLine().getModule();
+        if (jar != null || className != null || module != null) {
+            throw new BuildException("Cannot use 'sourcefile' in combination with 'jar' or " +
+                    "'module' or 'classname'");
+        }
+        getCommandLine().setSourceFile(sourceFile);
     }
 
     /**
@@ -843,7 +869,7 @@ public class Java extends Task {
     }
 
     /**
-     * Executes the given classname with the given arguments in a separate VM.
+     * Executes the given source-file or classname with the given arguments in a separate VM.
      * @param command String[] of command-line arguments.
      */
     private int fork(String[] command) throws BuildException {
@@ -1018,4 +1044,6 @@ public class Java extends Task {
     public CommandlineJava.SysProperties getSysProperties() {
         return getCommandLine().getSystemProperties();
     }
+
+
 }

@@ -32,8 +32,10 @@ import java.io.PipedOutputStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.input.DefaultInputHandler;
+import org.apache.tools.ant.taskdefs.condition.JavaVersion;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
+import org.junit.Assume;
 import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -106,28 +108,28 @@ public class JavaTest {
     @Test
     public void testJarAndClassName() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("Cannot use 'jar' and 'classname' attributes in same command");
+        thrown.expectMessage("Cannot use combination of ");
         buildRule.executeTarget("testJarAndClassName");
     }
 
     @Test
     public void testClassnameAndJar() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("Cannot use 'jar' with 'classname' or 'module' attributes in same command.");
+        thrown.expectMessage("Cannot use combination of ");
         buildRule.executeTarget("testClassnameAndJar");
     }
 
     @Test
     public void testJarAndModule() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("Cannot use 'jar' and 'module' attributes in same command");
+        thrown.expectMessage("Cannot use combination of ");
         buildRule.executeTarget("testJarAndModule");
     }
 
     @Test
     public void testModuleAndJar() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("Cannot use 'jar' with 'classname' or 'module' attributes in same command.");
+        thrown.expectMessage("Cannot use combination of ");
         buildRule.executeTarget("testModuleAndJar");
     }
 
@@ -408,6 +410,78 @@ public class JavaTest {
 
         writingThread.start();
         buildRule.executeTarget("flushedInput");
+    }
+
+    /**
+     * Test that the Java single file source program feature introduced in Java 11 works fine
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSimpleSourceFile() throws Exception {
+        requireJava11();
+        buildRule.executeTarget("simpleSourceFile");
+    }
+
+    /**
+     * Test that the sourcefile option of the Java task can only be run when fork attribute is set
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSourceFileRequiresFork() throws Exception {
+        requireJava11();
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot execute sourcefile in non-forked mode. Please set fork='true'");
+        buildRule.executeTarget("sourceFileRequiresFork");
+    }
+
+    /**
+     * Tests that the sourcefile attribute and the classname attribute of the Java task cannot be used
+     * together
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSourceFileCantUseClassname() throws Exception {
+        requireJava11();
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot use 'sourcefile' in combination with");
+        buildRule.executeTarget("sourceFileCantUseClassname");
+    }
+
+    /**
+     * Tests that the sourcefile attribute and the jar attribute of the Java task cannot be used
+     * together
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSourceFileCantUseJar() throws Exception {
+        requireJava11();
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot use 'sourcefile' in combination with");
+        buildRule.executeTarget("sourceFileCantUseJar");
+    }
+
+    /**
+     * Tests that the sourcefile attribute and the module attribute of the Java task cannot be used
+     * together
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSourceFileCantUseModule() throws Exception {
+        requireJava11();
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Cannot use 'sourcefile' in combination with");
+        buildRule.executeTarget("sourceFileCantUseModule");
+    }
+
+    private static void requireJava11() {
+        final JavaVersion javaVersion = new JavaVersion();
+        javaVersion.setAtLeast("11");
+        Assume.assumeTrue("Skipping test which requires a minimum of Java 11 runtime", javaVersion.eval());
     }
 
     /**

@@ -15,6 +15,11 @@ Fixed bugs:
    root.
    Bugzilla Report 62502
 
+Other changes:
+--------------
+ * Java task now accepts a "sourcefile" attribute to allow single file
+   source program execution, a feature that is introduced in Java 11.
+
 Changes from Ant 1.10.3 TO Ant 1.10.4
 =====================================
 

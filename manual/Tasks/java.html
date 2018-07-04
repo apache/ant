@@ -50,7 +50,7 @@ because it tries to read from the standard input.</p>
   <tr id="classname">
     <td>classname</td>
     <td>the Java class to execute.</td>
-    <td rowspan="3">Exactly one of the three</td>
+    <td rowspan="4">Exactly one of the four</td>
   </tr>
   <tr>
     <td>jar</td>
@@ -64,6 +64,13 @@ because it tries to read from the standard input.</p>
     <td class="left">The initial or main module to resolve (must have a <code>Main-Class</code>
       entry in the manifest).  <var>fork</var> must be set to <q>true</q> if this option is
       selected. <em>since Ant 1.9.7</em></td>
+  </tr>
+  <tr>
+    <td>sourcefile</td>
+    <td class="left">The location of a ".java" file or a file containing shebang with Java source code.
+      Set this attribute to run Java single file source programs, a feature introduced in Java 11.
+      <var>fork</var> must be set to <q>true</q> if this option is selected.
+      <em>since Ant 1.10.5</em></td>
   </tr>
   <tr>
     <td>args</td>
