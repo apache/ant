@@ -20,7 +20,7 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
 
@@ -59,7 +59,7 @@
   </target>
 
   <target name="testFilterReaderHeadLinesSkip" depends="setUp">
-    <copy file="input/head-tail.test" 
+    <copy file="input/head-tail.test"
           tofile="${output}/head-tail.filterReaderHeadLinesSkip.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.HeadFilter">
@@ -113,7 +113,7 @@
   </target>
 
   <target name="testFilterReaderTailLinesSkip" depends="setUp">
-    <copy file="input/head-tail.test" 
+    <copy file="input/head-tail.test"
           tofile="${output}/head-tail.filterReaderTailLinesSkip.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.TailFilter">

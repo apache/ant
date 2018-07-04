@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 <xsl:output method="xml" indent="yes"/>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,21 +17,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  -->
- 
+
 <!--
 
   The purpose have this XSL is to provide a fast way to update a buildfile
   from deprecated tasks.
-  
+
   It should particularly be useful when there is a lot of build files to migrate.
   If you do not want to migrate to a particular task and want to keep it for
   various reason, just comment the appropriate template.
-  
+
   !!!! Use at your own risk. !!!!
-  
+
 -->
- 
- 
+
+
   <!-- (zip|jar|war|ear)file attributes are replaced by destfile in their respective task -->
   <xsl:template match="zip">
     <zip destfile="{@zipfile}">
@@ -53,8 +53,8 @@
       <xsl:apply-templates select="@*[not(name()='earfile')]|node()"/>
     </ear>
   </xsl:template>
-   
- 
+
+
   <!-- copydir is replaced by copy -->
   <xsl:template match="copydir">
     <copy todir="{@dest}">
@@ -113,5 +113,5 @@
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
   </xsl:template>
-  
+
 </xsl:stylesheet>

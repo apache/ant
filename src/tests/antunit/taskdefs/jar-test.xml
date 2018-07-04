@@ -16,31 +16,31 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="testIndexOnlyUpdate">
     <mkdir dir="${output}"/>
-    <property name="index.jar" location="${output}/index.jar" />
+    <property name="index.jar" location="${output}/index.jar"/>
 
     <jar destfile="${index.jar}" index="false">
-      <fileset dir="${basedir}" includes="*-test.xml" />
+      <fileset dir="${basedir}" includes="*-test.xml"/>
     </jar>
     <au:assertTrue>
       <resourcecount count="0">
         <restrict>
-          <zipentry zipfile="${index.jar}" name="META-INF/INDEX.LIST" />
-          <exists />
+          <zipentry zipfile="${index.jar}" name="META-INF/INDEX.LIST"/>
+          <exists/>
         </restrict>
       </resourcecount>
     </au:assertTrue>
     <jar destfile="${index.jar}" index="true" update="true">
-      <fileset dir="${basedir}" includes="*-test.xml" />
+      <fileset dir="${basedir}" includes="*-test.xml"/>
     </jar>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <zipentry zipfile="${index.jar}" name="META-INF/INDEX.LIST" />
-          <exists />
+          <zipentry zipfile="${index.jar}" name="META-INF/INDEX.LIST"/>
+          <exists/>
         </restrict>
       </resourcecount>
     </au:assertTrue>

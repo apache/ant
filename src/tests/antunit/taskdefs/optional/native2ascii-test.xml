@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../antunit-base.xml" />
+  <import file="../../antunit-base.xml"/>
 
   <target name="tearDown" depends="antunit-base.tearDown"
           if="n2a.tmp">
@@ -42,7 +42,7 @@ public class Adapter implements Native2AsciiAdapter {
   </target>
 
   <target name="testAdapterNotFound" depends="-create-native2ascii-adapter" unless="build.sysclasspath.only">
-    <!-- under gump the failure will not happen because the ${resources} directory is systematically on the classpath 
+    <!-- under gump the failure will not happen because the ${resources} directory is systematically on the classpath
          what would be cool would be a task which removes a path element from the classpath. Do we have that ? -->
     <au:expectfailure>
       <native2ascii src="${input}" dest="${output}" includes="**/*.java"

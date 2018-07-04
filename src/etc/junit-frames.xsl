@@ -79,7 +79,7 @@
         <xsl:with-param name="type" select="'errors'"/>
       </xsl:apply-templates>
     </redirect:write>
-    
+
     <!-- create the alltests-skipped.html at the root -->
     <redirect:write file="{$output.dir}/alltests-skipped.html">
       <xsl:apply-templates select="." mode="all.tests">
@@ -593,7 +593,7 @@ h6 {
         <xsl:variable name="testCount" select="sum(testsuite/@tests)"/>
         <xsl:variable name="errorCount" select="sum(testsuite/@errors)"/>
         <xsl:variable name="failureCount" select="sum(testsuite/@failures)"/>
-        <xsl:variable name="skippedCount" select="sum(testsuite/@skipped)" />
+        <xsl:variable name="skippedCount" select="sum(testsuite/@skipped)"/>
         <xsl:variable name="timeCount" select="sum(testsuite/@time)"/>
         <xsl:variable name="successRate" select="($testCount - $failureCount - $errorCount) div $testCount"/>
         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
@@ -616,7 +616,7 @@ h6 {
             <td><a title="Display all tests" href="all-tests.html"><xsl:value-of select="$testCount"/></a></td>
             <td><a title="Display all failures" href="alltests-fails.html"><xsl:value-of select="$failureCount"/></a></td>
             <td><a title="Display all errors" href="alltests-errors.html"><xsl:value-of select="$errorCount"/></a></td>
-            <td><a title="Display all skipped test" href="alltests-skipped.html"><xsl:value-of select="$skippedCount" /></a></td>
+            <td><a title="Display all skipped test" href="alltests-skipped.html"><xsl:value-of select="$skippedCount"/></a></td>
             <td>
                 <xsl:call-template name="display-percent">
                     <xsl:with-param name="value" select="$successRate"/>
@@ -660,7 +660,7 @@ h6 {
                     <td><xsl:value-of select="sum($insamepackage/@tests)"/></td>
                     <td><xsl:value-of select="sum($insamepackage/@errors)"/></td>
                     <td><xsl:value-of select="sum($insamepackage/@failures)"/></td>
-                    <td><xsl:value-of select="sum($insamepackage/@skipped)" /></td>
+                    <td><xsl:value-of select="sum($insamepackage/@skipped)"/></td>
                     <td>
                     <xsl:call-template name="display-time">
                         <xsl:with-param name="value" select="sum($insamepackage/@time)"/>

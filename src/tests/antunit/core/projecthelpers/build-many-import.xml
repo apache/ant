@@ -16,17 +16,17 @@
   limitations under the License.
 -->
 <project default="end" xmlns:au="antlib:org.apache.ant.antunit">
-    <import file="build-many-import-ref.xmlref" />
-    <import file="build-many-import2-ref.xmlref" />
-    <import file="build-many-import-common.xml" />
+    <import file="build-many-import-ref.xmlref"/>
+    <import file="build-many-import2-ref.xmlref"/>
+    <import file="build-many-import-common.xml"/>
     <target name="init">
-        <property name="start" value="true" />
+        <property name="start" value="true"/>
     </target>
     <target name="end" depends="setfoo,setbar,common,commonref">
-        <au:assertPropertyEquals name="start" value="true" />
-        <au:assertPropertyEquals name="foo" value="hello" />
-        <au:assertPropertyEquals name="bar" value="hello" />
-        <au:assertPropertyEquals name="common" value="ok" />
-        <au:assertPropertyEquals name="commonref" value="ok" />
+        <au:assertPropertyEquals name="start" value="true"/>
+        <au:assertPropertyEquals name="foo" value="hello"/>
+        <au:assertPropertyEquals name="bar" value="hello"/>
+        <au:assertPropertyEquals name="common" value="ok"/>
+        <au:assertPropertyEquals name="commonref" value="ok"/>
     </target>
 </project>

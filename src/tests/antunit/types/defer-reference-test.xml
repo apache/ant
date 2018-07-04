@@ -17,9 +17,9 @@
 -->
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
   <target name="notcalled">
-    <filelist id="ref1" dir="${basedir}" files="xxx" />
+    <filelist id="ref1" dir="${basedir}" files="xxx"/>
   </target>
-  
+
   <target name="test-macrodef-embedded-ref">
     <!-- bug 34458 -->
     <macrodef name="foo">
@@ -36,20 +36,20 @@
 
   <condition property="allow.script">
     <and>
-      <available classname="org.apache.bsf.BSFManager" />
-      <available classname="bsh.StringUtil" />
+      <available classname="org.apache.bsf.BSFManager"/>
+      <available classname="bsh.StringUtil"/>
     </and>
   </condition>
 
   <target name="test-script" if="allow.script">
     <!-- bugzilla: 37688 -->
-    <macrodef name="compileMapper" >
-      <attribute name="objDir" />
-      <attribute name="id" default="compileMapperID" />
+    <macrodef name="compileMapper">
+      <attribute name="objDir"/>
+      <attribute name="id" default="compileMapperID"/>
       <sequential>
         <mkdir dir="@{objDir}"/>
         <mapper id="@{id}">
-          <chainedmapper  >
+          <chainedmapper>
             <flattenmapper/>
             <globmapper from="*" to="@{objDir}/*.o"/>
           </chainedmapper>

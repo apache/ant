@@ -28,7 +28,7 @@
       ANT_HOME_6_5 (the directory containing ant 1.6.5)
       ANT_HOME_6_4
       ANT_HOME_5_4
-    
+
     * run ant
     For example:
        export ANT_HOME="c:/cygwin/home/me/svn/trunk/dist"
@@ -63,7 +63,7 @@
       </ac:if>
     </sequential>
   </macrodef>
-  
+
   <target name="do-times">
     <run-ant-files env-ant="env.ANT_HOME"/>
     <run-ant-files env-ant="env.ANT_HOME_6_5"/>

@@ -22,7 +22,7 @@
 -->
 
     <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
-    <xsl:decimal-format decimal-separator="." grouping-separator="," />
+    <xsl:decimal-format decimal-separator="." grouping-separator=","/>
 
     <xsl:param name="output.dir" select="'.'"/>
     <xsl:param name="basedir" select="'.'"/>
@@ -76,7 +76,7 @@
 
 
     <!--
-    Key for detecting duplicate CheckModules 
+    Key for detecting duplicate CheckModules
     -->
     <xsl:key name="module" match="file/error" use="@source"/>
 
@@ -84,7 +84,7 @@
 
     <!--
     Generates the navagation bar.
-    --> 
+    -->
     <xsl:template match="checkstyle" mode="navigation">
         <ul id="navigation">
             <xsl:for-each select="file/error[generate-id() = generate-id(key('module',@source))]">
@@ -100,13 +100,13 @@
                 </a></li>
             </xsl:for-each>
         </ul>
-    </xsl:template> 
+    </xsl:template>
 
 
 
     <!--
     Generates the data part.
-    --> 
+    -->
     <xsl:template match="checkstyle" mode="data">
         <div id="content">
             <xsl:for-each select="file/error[generate-id() = generate-id(key('module',@source))]">
@@ -120,13 +120,13 @@
                 </div>
             </xsl:for-each>
         </div>
-    </xsl:template> 
+    </xsl:template>
 
 
 
     <!--
     Generates the content table for the given check module.
-    @param filter full qualified module name 
+    @param filter full qualified module name
     -->
     <xsl:template name="data">
         <xsl:param name="filter"/>
@@ -157,7 +157,7 @@
     Generates the data rows for the current check module.
     Ignores errors in the current file from other modules.
     @param node the file with the errors
-    @param filter full qualified module name 
+    @param filter full qualified module name
     -->
     <xsl:template name="data-rows">
         <xsl:param name="node"/>
@@ -180,68 +180,68 @@
 
 
 
-    <!-- 
+    <!--
     Generates the CSS with the layout instructions.
     Generated so this XSL is the single source of the whole report.
     -->
     <xsl:template name="sorted.css">
-        body { 
+        body {
           font:normal 80% arial,helvetica,sanserif;
-          color: black; 
-          background-color: white; 
-          margin: 0; 
-          padding: 1em; 
+          color: black;
+          background-color: white;
+          margin: 0;
+          padding: 1em;
           min-width: 41em;
-        } 
-        h1 { 
+        }
+        h1 {
           font-weight:bold;
           font-size:140%;
-          margin: 0 0 0.7em; 
-          padding: 0.3em; 
-          text-align: center; 
-          background-color: #eee; 
-          border: 2px ridge silver; 
-        } 
-        html<xsl:text disable-output-escaping="yes">&gt;</xsl:text>body h1 { 
+          margin: 0 0 0.7em;
+          padding: 0.3em;
+          text-align: center;
+          background-color: #eee;
+          border: 2px ridge silver;
+        }
+        html<xsl:text disable-output-escaping="yes">&gt;</xsl:text>body h1 {
           border-color: gray;
-        } 
-
-        ul#navigation { 
-          font-size: 0.83em; 
-          float: left; width: 18em; 
-          margin: 0 0 1.2em; padding: 0; 
-          border: 1px dashed silver; 
-        } 
-        ul#navigation li { 
-          list-style: none; 
-          margin: 0; padding: 0.2em; 
-        } 
-        ul#navigation a { 
-          display: block; 
-          padding: 0.2em; 
-          font-weight: bold; 
-        } 
-        ul#navigation a:link { 
-          color: black; background-color: #eee; 
-        } 
-        ul#navigation a:visited { 
-          color: #666; background-color: #eee; 
-        } 
-        ul#navigation a:hover { 
-          color: red; background-color: white; 
-        } 
-        ul#navigation a:active { 
-          color: white; background-color: gray; 
         }
 
-        div#content { 
-          margin: 0 1em 1em 16em; 
-          padding: 0 1em; 
-        } 
-        * html div#content { 
-          height: 1em;  /* Workaround 3-Pixel-Bug of Internet Explorers */ 
-        } 
-        div#content h2 { 
+        ul#navigation {
+          font-size: 0.83em;
+          float: left; width: 18em;
+          margin: 0 0 1.2em; padding: 0;
+          border: 1px dashed silver;
+        }
+        ul#navigation li {
+          list-style: none;
+          margin: 0; padding: 0.2em;
+        }
+        ul#navigation a {
+          display: block;
+          padding: 0.2em;
+          font-weight: bold;
+        }
+        ul#navigation a:link {
+          color: black; background-color: #eee;
+        }
+        ul#navigation a:visited {
+          color: #666; background-color: #eee;
+        }
+        ul#navigation a:hover {
+          color: red; background-color: white;
+        }
+        ul#navigation a:active {
+          color: white; background-color: gray;
+        }
+
+        div#content {
+          margin: 0 1em 1em 16em;
+          padding: 0 1em;
+        }
+        * html div#content {
+          height: 1em;  /* Workaround 3-Pixel-Bug of Internet Explorers */
+        }
+        div#content h2 {
           font-size:100%;
           font-weight:bold;
           background: #525D76;
@@ -251,11 +251,11 @@
           margin-right: 2px;
           margin-left: 2px;
           margin-bottom: 0;
-        } 
-        div#content p { 
-          font-size: 1em; 
-          margin: 1em 0; 
-        } 
+        }
+        div#content p {
+          font-size: 1em;
+          margin: 1em 0;
+        }
         table {
           width:100%;
           border-collapse:collapse;
@@ -275,55 +275,55 @@
         table tr:nth-child(even) td {
           background: #fff;
         }
-    </xsl:template> 
+    </xsl:template>
 
 
 
-    <!-- 
-    Generates the JavaScript for the dynamic style. 
+    <!--
+    Generates the JavaScript for the dynamic style.
     Generated so this XSL is the single source of the whole report.
     -->
     <xsl:template name="switch.js">
-        /* 
+        /*
          * Hides all "hideable" div-containers
          */
         function hideAll() {
           allElements = document.getElementsByTagName("div");
-          for (i = 0; i <xsl:text disable-output-escaping="yes">&lt;</xsl:text> allElements.length; i++) { 
-            if (allElements[i].className=="hideable") { 
-              allElements[i].style.display="none"; 
-            } 
-          } 
-          return; 
-        } 
+          for (i = 0; i <xsl:text disable-output-escaping="yes">&lt;</xsl:text> allElements.length; i++) {
+            if (allElements[i].className=="hideable") {
+              allElements[i].style.display="none";
+            }
+          }
+          return;
+        }
 
-        /* 
+        /*
          * Shows one div-container and hides the other.
          * @param id id of the element to show
          */
-        function change(id) { 
-          hideAll(); 
-          e = document.getElementById(id); 
-          if (e.style.display=="none") { 
-            e.style.display=""; 
-          } 
-          window.scrollTo(0, 0); 
-          return; 
-        } 
+        function change(id) {
+          hideAll();
+          e = document.getElementById(id);
+          if (e.style.display=="none") {
+            e.style.display="";
+          }
+          window.scrollTo(0, 0);
+          return;
+        }
 
-        /* 
+        /*
          * Shows only the first data row.
          * Used in body:onload so the user could directly see some messages.
          */
         function openFirst() {
           hideAll();
-          for (i = 0; i <xsl:text disable-output-escaping="yes">&lt;</xsl:text> allElements.length; i++) { 
-            if (allElements[i].className=="hideable") { 
+          for (i = 0; i <xsl:text disable-output-escaping="yes">&lt;</xsl:text> allElements.length; i++) {
+            if (allElements[i].className=="hideable") {
               allElements[i].style.display="";
-              return; 
-            } 
-          } 
-          return; 
+              return;
+            }
+          }
+          return;
         }
     </xsl:template>
 

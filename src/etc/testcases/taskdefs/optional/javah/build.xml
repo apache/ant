@@ -42,15 +42,15 @@
       </classpath>
     </javah>
   </target>
-	
+
   <target name="test-fileset" depends="compile">
-  	<javah destdir="${output}">
-  	  <fileset dir="${output}">
-  		<include name="**/*.class"/>
-  	  </fileset>
-  	  <classpath>
-  		<pathelement location="${output}"/>
-  	  </classpath>
-  	</javah>
+    <javah destdir="${output}">
+      <fileset dir="${output}">
+        <include name="**/*.class"/>
+      </fileset>
+      <classpath>
+        <pathelement location="${output}"/>
+      </classpath>
+    </javah>
   </target>
 </project>

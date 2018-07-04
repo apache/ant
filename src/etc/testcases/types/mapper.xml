@@ -21,21 +21,21 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
   <target name="test1" depends="setUp">
     <union id="source.resourcecollection">
       <fileset dir="../../../main">
-        <include name="**/taskdefs/*.java" />
+        <include name="**/taskdefs/*.java"/>
       </fileset>
       <fileset dir="../../../tests/junit">
-        <include name="**/taskdefs/*.java" />
+        <include name="**/taskdefs/*.java"/>
       </fileset>
     </union>
     <copy todir="${output}">
       <union refid="source.resourcecollection"/>
-      <mapper type="flatten" />
+      <mapper type="flatten"/>
     </copy>
     <resourcecount property="sourcefiles.count">
       <union refid="source.resourcecollection"/>

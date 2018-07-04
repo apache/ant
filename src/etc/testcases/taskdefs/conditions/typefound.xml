@@ -27,7 +27,7 @@
 
     <target name="testUndefined">
         <condition property="testUndefined">
-            <typefound />
+            <typefound/>
         </condition>
     </target>
 

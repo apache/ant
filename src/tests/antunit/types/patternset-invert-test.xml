@@ -23,10 +23,10 @@
         <resourcecount count="0">
           <intersect>
             <fileset dir="${basedir}">
-              <patternset refid="plus" />
+              <patternset refid="plus"/>
             </fileset>
             <fileset dir="${basedir}">
-              <patternset refid="minus" />
+              <patternset refid="minus"/>
             </fileset>
           </intersect>
         </resourcecount>
@@ -35,31 +35,31 @@
   </macrodef>
 
   <target name="testInvertNested">
-    <basename property="basename" file="${ant.file}" />
+    <basename property="basename" file="${ant.file}"/>
     <echo>$${basename}=${basename}</echo>
-    <patternset id="plus" includes="${basename}" />
+    <patternset id="plus" includes="${basename}"/>
     <patternset id="minus">
       <invert>
-        <patternset refid="plus" />
+        <patternset refid="plus"/>
       </invert>
     </patternset>
-    <test />
+    <test/>
   </target>
 
   <target name="testInvertRefid">
-    <basename property="basename" file="${ant.file}" />
+    <basename property="basename" file="${ant.file}"/>
     <echo>$${basename}=${basename}</echo>
-    <patternset id="plus" includes="${basename}" />
+    <patternset id="plus" includes="${basename}"/>
     <patternset id="minus">
-      <invert refid="plus" />
+      <invert refid="plus"/>
     </patternset>
-    <test />
+    <test/>
   </target>
 
   <target name="all">
     <au:antunit>
       <fileset file="${ant.file}"/>
-      <au:plainlistener />
+      <au:plainlistener/>
     </au:antunit>
   </target>
 

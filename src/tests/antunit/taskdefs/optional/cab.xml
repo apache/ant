@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../antunit-base.xml" />
+  <import file="../../antunit-base.xml"/>
 
   <target name="testBasedirOrFilesetRequired">
     <au:expectfailure message="must specify basedir or fileset"

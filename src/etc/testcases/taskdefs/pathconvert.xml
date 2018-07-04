@@ -20,25 +20,25 @@
     <import file="../buildfiletest-base.xml"/>
 
     <path id="testpath">
-        <pathelement path="${ant.file}" />
+        <pathelement path="${ant.file}"/>
     </path>
 
     <target name="testmap">
         <pathconvert property="result" dirsep="#">
-            <path refid="testpath" />
-            <map from="${basedir}" to="test" />
+            <path refid="testpath"/>
+            <map from="${basedir}" to="test"/>
         </pathconvert>
     </target>
 
     <target name="testmapper">
         <pathconvert property="result" dirsep="#">
-            <path refid="testpath" />
-            <mapper type="glob" from="${basedir}*" to="test*" />
+            <path refid="testpath"/>
+            <mapper type="glob" from="${basedir}*" to="test*"/>
         </pathconvert>
     </target>
 
     <target name="testnotargetos">
-        <pathconvert property="result" refid="testpath" />
+        <pathconvert property="result" refid="testpath"/>
     </target>
 
     <target name="test-nonmatching-mapper" description="test for bug fix bz-62076">

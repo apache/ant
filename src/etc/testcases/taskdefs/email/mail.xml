@@ -21,20 +21,18 @@
   <target name="test1">
     <!-- this test is supposed to bring a build exception because user and password is not allowed with plain encoding -->
     <mail host="localhost" port="25" from="joe@abc.com" to="laura@xyz.com" subject="hello" encoding="plain" user="joe" password="secret">
-        <message>
+      <message>
             Hi Laura, how are you doing ?
-        </message>
+      </message>
     </mail>
   </target>
   <target name="test2">
-      <!-- this test is supposed to bring a build exception because SSL is not allowed with plain encoding -->
-      <mail host="localhost" port="465" from="joe@abc.com" to="laura@xyz.com" subject="hello" encoding="plain" ssl="true">
-          <message>
+    <!-- this test is supposed to bring a build exception because SSL is not allowed with plain encoding -->
+    <mail host="localhost" port="465" from="joe@abc.com" to="laura@xyz.com" subject="hello" encoding="plain" ssl="true">
+      <message>
               Hi Laura, how are you doing ?
-          </message>
-      </mail>
-    </target>
-
-
+      </message>
+    </mail>
+  </target>
 
 </project>

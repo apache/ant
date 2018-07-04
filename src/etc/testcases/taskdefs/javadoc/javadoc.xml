@@ -24,44 +24,44 @@
   </target>
 
   <path id="path.dirset">
-    <dirset dir="." />
+    <dirset dir="."/>
   </path>
 
 
   <target name="dirsetPath">
-    <javadoc sourcepathref="path.dirset" packagenames="*" destdir="${output}" />
+    <javadoc sourcepathref="path.dirset" packagenames="*" destdir="${output}"/>
   </target>
 
   <target name="dirsetPathWithoutPackagenames">
-    <javadoc sourcepathref="path.dirset" destdir="${output}" />
+    <javadoc sourcepathref="path.dirset" destdir="${output}"/>
   </target>
 
   <target name="nestedDirsetPath">
     <javadoc packagenames="*" destdir="${output}">
-      <sourcepath refid="path.dirset" />
+      <sourcepath refid="path.dirset"/>
     </javadoc>
   </target>
 
   <path id="path.fileset">
     <pathelement location="."/>
     <fileset dir="java/" id="fileset.inpath">
-      <include name="**/*.java" />
+      <include name="**/*.java"/>
     </fileset>
   </path>
 
   <target name="filesetPath">
-    <javadoc sourcepathref="path.fileset" packagenames="*" destdir="${output}" />
+    <javadoc sourcepathref="path.fileset" packagenames="*" destdir="${output}"/>
   </target>
 
   <target name="nestedFilesetPath">
     <javadoc packagenames="*" destdir="${output}">
-      <sourcepath refid="path.fileset" />
+      <sourcepath refid="path.fileset"/>
     </javadoc>
   </target>
 
   <target name="nestedFilesetRefInPath">
     <javadoc packagenames="*" destdir="${output}">
-      <fileset refid="fileset.inpath" />
+      <fileset refid="fileset.inpath"/>
     </javadoc>
   </target>
 
@@ -90,18 +90,18 @@
   <path id="path.filelist">
     <pathelement location="."/>
     <filelist dir="java/">
-      <file name="ClassToJavadoc.java" />
+      <file name="ClassToJavadoc.java"/>
     </filelist>
   </path>
 
   <target name="filelistPath">
     <javadoc sourcepathref="path.filelist" packagenames="*"
-      destdir="${output}" />
+      destdir="${output}"/>
   </target>
 
   <target name="nestedFilelistPath">
     <javadoc packagenames="*" destdir="${output}">
-      <sourcepath refid="path.filelist" />
+      <sourcepath refid="path.filelist"/>
     </javadoc>
   </target>
 
@@ -109,37 +109,37 @@
   <property name="root" location="../../../../.."/>
 
   <path id="path.pathelement.path">
-    <pathelement path="${root}/src" />
+    <pathelement path="${root}/src"/>
   </path>
 
   <target name="pathelementPath">
     <javadoc sourcepathref="path.pathelement.path"
-      packagenames="etc.testcases.taskdefs.javadoc.*" destdir="${output}" />
+      packagenames="etc.testcases.taskdefs.javadoc.*" destdir="${output}"/>
   </target>
 
   <path id="path.pathelement.location">
     <pathelement location="."/>
-    <pathelement path="java/ClassToJavadoc.java" />
+    <pathelement path="java/ClassToJavadoc.java"/>
   </path>
 
   <target name="pathelementLocationPath">
     <javadoc sourcepathref="path.pathelement.location"
-      packagenames="*" destdir="${output}" />
+      packagenames="*" destdir="${output}"/>
   </target>
 
   <target name="nestedSource">
     <javadoc destdir="${output}">
-      <source file="java/ClassToJavadoc.java" />
+      <source file="java/ClassToJavadoc.java"/>
     </javadoc>
   </target>
 
   <fileset dir="java/" id="fileset.simple">
-    <include name="**/*.java" />
+    <include name="**/*.java"/>
   </fileset>
 
   <target name="nestedFilesetRef">
     <javadoc destdir="${output}">
-      <fileset refid="fileset.simple" />
+      <fileset refid="fileset.simple"/>
     </javadoc>
   </target>
 

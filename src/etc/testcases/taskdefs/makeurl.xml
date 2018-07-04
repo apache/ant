@@ -15,8 +15,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project name="to-url" >
-
+<project name="to-url">
 
   <target name="testEmpty">
     <makeurl/>
@@ -29,36 +28,36 @@
   <target name="testNoFile">
     <makeurl property="foo"/>
   </target>
-    
+
   <target name="testWorks">
     <makeurl property="testWorks" file="foo" validate="false"/>
-    <fail unless="testWorks" />
+    <fail unless="testWorks"/>
   </target>
 
   <target name="testIllegalChars">
     <makeurl property="testIllegalChars" file="fo o%" validate="false"/>
   </target>
-  
+
   <target name="testRoundTrip">
     <makeurl property="testRoundTrip" file="${ant.file}"/>
   </target>
 
   <target name="testIllegalCombinations">
     <makeurl property="testIllegalCombinations" file="foo" validate="false">
-      <fileset dir="." includes="*.xml" />
+      <fileset dir="." includes="*.xml"/>
     </makeurl>
   </target>
-  
-  
+
+
   <target name="testFileset">
     <makeurl property="testFileset">
-      <fileset dir="." includes="*.xml" />
+      <fileset dir="." includes="*.xml"/>
     </makeurl>
   </target>
-  
+
   <target name="testFilesetSeparator">
     <makeurl property="testFilesetSeparator" separator='","'>
-      <fileset dir="." includes="*.xml" />
+      <fileset dir="." includes="*.xml"/>
     </makeurl>
   </target>
 
@@ -68,11 +67,11 @@
 
   <target name="testPath">
     <path id="test.path">
-      <pathelement location="." />
+      <pathelement location="."/>
       <fileset dir="." includes="*.xml"/>
     </path>
     <makeurl property="testPath">
-      <path refid="test.path" />
+      <path refid="test.path"/>
     </makeurl>
   </target>
 

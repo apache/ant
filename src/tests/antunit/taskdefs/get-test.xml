@@ -17,16 +17,14 @@
 -->
 
 <project name="get-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
-  <property name="location" value="http://ant.apache.org/webtest/gettest" />
-  <condition property="java.atleast.1_8">
+  <property name="location" value="http://ant.apache.org/webtest/gettest"/>
+    <condition property="java.atleast.1_8">
       <javaversion atleast="1.8"/>
   </condition>
-
-
-    <target name="setUp">
-    <mkdir dir="${output}" />
+  <target name="setUp">
+    <mkdir dir="${output}"/>
   </target>
 
   <target name="testSeeOtherRedirect">
@@ -34,70 +32,70 @@
       <au:assertTrue>
             <resourcecount count="1">
               <restrict>
-                <file file="${output}/other.tmp" />
-                <contains text="seeother redirect succeeded" />
+                <file file="${output}/other.tmp"/>
+                <contains text="seeother redirect succeeded"/>
               </restrict>
             </resourcecount>
           </au:assertTrue>
-    <au:assertLogContains text="other.txt moved to http" />  
+    <au:assertLogContains text="other.txt moved to http"/>
   </target>
-    
+
     <target name="testPermanentRedirect">
       <get  src="${location}/permanent.txt" dest="${output}/permanent.tmp"/>
         <au:assertTrue>
           <resourcecount count="1">
             <restrict>
-              <file file="${output}/permanent.tmp" />
-              <contains text="permanent redirect succeeded" />
+              <file file="${output}/permanent.tmp"/>
+              <contains text="permanent redirect succeeded"/>
             </restrict>
           </resourcecount>
         </au:assertTrue>
-        <au:assertLogContains text="permanent.txt permanently moved to http" />
+        <au:assertLogContains text="permanent.txt permanently moved to http"/>
     </target>
-    
+
     <target name="testTemporaryRedirect">
       <get  src="${location}/temp.txt" dest="${output}/temp.txt"/>
         <au:assertTrue>
           <resourcecount count="1">
             <restrict>
-              <file file="${output}/temp.txt" />
-              <contains text="temporary redirect succeeded" />
+              <file file="${output}/temp.txt"/>
+              <contains text="temporary redirect succeeded"/>
             </restrict>
           </resourcecount>
         </au:assertTrue>
-        <au:assertLogContains text="temp.txt moved to http" />
+        <au:assertLogContains text="temp.txt moved to http"/>
     </target>
-    
+
     <target name="testStatusCode307Redirect">
       <get  src="${location}/307.txt" dest="${output}/307.txt"/>
         <au:assertTrue>
           <resourcecount count="1">
             <restrict>
-              <file file="${output}/307.txt" />
-              <contains text="307 status code redirect succeeded" />
+              <file file="${output}/307.txt"/>
+              <contains text="307 status code redirect succeeded"/>
             </restrict>
           </resourcecount>
         </au:assertTrue>
-        <au:assertLogContains text="307.txt moved to http" />
+        <au:assertLogContains text="307.txt moved to http"/>
     </target>
-    
+
     <target name="test5LevelsOfRedirect">
       <get  src="${location}/redir5.txt" dest="${output}/redir5.tmp"/>
         <au:assertTrue>
           <resourcecount count="1">
             <restrict>
-              <file file="${output}/redir5.tmp" />
-              <contains text="5 levels of redirect succeeded" />
+              <file file="${output}/redir5.tmp"/>
+              <contains text="5 levels of redirect succeeded"/>
             </restrict>
           </resourcecount>
         </au:assertTrue>
 
-        <au:assertLogContains text="redir5.txt moved to http" />
+        <au:assertLogContains text="redir5.txt moved to http"/>
 
-        <au:assertLogContains text="redir5-4.txt moved to http" />
+        <au:assertLogContains text="redir5-4.txt moved to http"/>
     </target>
-    
-    
+
+
     <target name="testInfiniteRedirect" unless="jenkins">
         <au:expectfailure expectedmessage="More than 25 times redirected, giving up">
       <get  src="${location}/infinite.txt" dest="${output}/infinite.tmp"/>
@@ -107,7 +105,7 @@
 
     <target name="testNestedResources">
       <get dest="${output}/downloads">
-        <url url="http://ant.apache.org/index.html"/> 
+        <url url="http://ant.apache.org/index.html"/>
         <url url="http://ant.apache.org/faq.html"/>
       </get>
       <au:assertFileExists file="${output}/downloads/index.html"/>
@@ -119,12 +117,12 @@
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${output}/other.tmp" />
+          <file file="${output}/other.tmp"/>
           <contains text="local redirect succeeded"/>
         </restrict>
       </resourcecount>
     </au:assertTrue>
-    <au:assertLogContains text="local.cgi moved to http" />  
+    <au:assertLogContains text="local.cgi moved to http"/>
   </target>
 
   <target name="testHttpToHttpsRedirect" description="Tests that a resource that's redirected

@@ -20,7 +20,7 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
 
@@ -35,5 +35,5 @@
     </war>
     <unzip src="${output}/test.war" dest="${output}"/>
   </target>
-  
+
 </project>

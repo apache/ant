@@ -18,8 +18,8 @@
 
 <project name="delete-test" basedir="." default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
-  
-  <import file="../antunit-base.xml" />
+
+  <import file="../antunit-base.xml"/>
 
   <property name="existing.dir" location="${output}/exists"/>
   <property name="nonexistent.dir" location="${output}/nonexists"/>
@@ -36,13 +36,13 @@
        <fileset dir="${nonexistent.dir}"/>
     </delete>
 
-    <au:assertFileExists file="${existing.dir}" />
-      
+    <au:assertFileExists file="${existing.dir}"/>
+
     <delete quiet="true" includeEmptyDirs="true">
        <fileset dir="${existing.dir}"/>
     </delete>
 
-    <au:assertFileDoesntExist file="${existing.dir}" />
+    <au:assertFileDoesntExist file="${existing.dir}"/>
 
 
     <mkdir dir="${existing.dir}"/>
@@ -53,7 +53,7 @@
     </delete>
 
 
-    <au:assertFileDoesntExist file="${existing.dir}" />
+    <au:assertFileDoesntExist file="${existing.dir}"/>
 
     <mkdir dir="${existing.dir}"/>
 
@@ -63,13 +63,13 @@
     </delete>
 
 
-    <au:assertFileDoesntExist file="${existing.dir}" />
+    <au:assertFileDoesntExist file="${existing.dir}"/>
 
   </target>
 
   <target name="checkOs">
     <condition property="unix">
-      <os family="unix" />
+      <os family="unix"/>
     </condition>
   </target>
 
@@ -79,7 +79,7 @@
              resource="${output}/foo"/>
     <delete file="${output}/foo"/>
     <delete dir="${existing.dir}"/>
-    <au:assertFileDoesntExist file="${existing.dir}" />
+    <au:assertFileDoesntExist file="${existing.dir}"/>
   </target>
 
   <target name="testDanglingSymlink" if="unix" depends="checkOs,init">
@@ -92,12 +92,11 @@
     <!-- since File.exists returns false for dangling links, recreate
          the file so that assertFileDoesntExist can actually work -->
     <touch file="${output}/foo"/>
-    <au:assertFileDoesntExist file="${output}/link" />
+    <au:assertFileDoesntExist file="${output}/link"/>
   </target>
 
   <target name="testNotModifiedSelector"
-          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574"
-          >
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574">
     <mkdir dir="${input}/images"/>
     <mkdir dir="${input}/cache"/>
     <touch file="${input}/images/foo.jpg"/>
@@ -117,16 +116,16 @@
     <au:assertFileDoesntExist file="${input}/cache/cache.properties"/>
     <delete>
       <fileset dir="${input}/images">
-        <include name="*.jpg" />
-        <selector refid="cache.selector" />
+        <include name="*.jpg"/>
+        <selector refid="cache.selector"/>
       </fileset>
     </delete>
     <au:assertFileExists file="${input}/cache/cache.properties"/>
     <au:assertFileExists file="${input}/images/foo.jpg"/>
     <delete>
       <fileset dir="${input}/images">
-        <include name="*.jpg" />
-        <selector refid="cache.selector" />
+        <include name="*.jpg"/>
+        <selector refid="cache.selector"/>
       </fileset>
     </delete>
     <au:assertFileDoesntExist file="${input}/images/foo.jpg"/>

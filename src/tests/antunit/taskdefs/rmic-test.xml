@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="-create-rmic-adapter">
     <mkdir dir="${input}/org/example"/>
@@ -85,7 +85,7 @@ package org.example;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 public interface Foo extends Remote {
-    long bar() throws RemoteException ;
+    long bar() throws RemoteException;
 }]]></echo>
     <echo file="${input}/org/example/FooImpl.java"><![CDATA[
 package org.example;

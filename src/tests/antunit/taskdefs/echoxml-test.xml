@@ -25,34 +25,34 @@
     <mkdir dir="${output}"/>
     <echoxml file="${file}">
       <project>
-        <property name="foo" value="bar" />
+        <property name="foo" value="bar"/>
         <fail message="$$$${foo}=$${foo}">
           <condition>
-            <istrue value="${mustfail}" />
+            <istrue value="${mustfail}"/>
           </condition>
         </fail>
       </project>
     </echoxml>
   </target>
-  
+
   <target name="testPass">
     <ant antfile="${file}"/>
   </target>
-  
+
   <target name="testFail">
     <au:expectfailure expectedmessage="${foo}=bar" message="Should have thrown an exception">
       <ant antfile="${file}">
-        <property name="mustfail" value="true" />
+        <property name="mustfail" value="true"/>
       </ant>
     </au:expectfailure>
   </target>
-  
+
   <target name="testEmpty">
     <au:expectfailure expectedmessage="No nested XML specified" message="Should have thrown an exception">
-      <echoxml />
+      <echoxml/>
     </au:expectfailure>
   </target>
-  
+
  <!-- comment this and the next targets if you don't have the svn
       trunk of antunit -->
   <target name="test-ns-all">

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- 
+<!--
 	This stylesheet can be used to generate a master buildfile from a common
 	buildfile (see manual for <subant>).
-	Foreach <target> in the common buildfile it generates a corresponding 
+	Foreach <target> in the common buildfile it generates a corresponding
 	target in the master buildfile for iterating over that target.
 -->
 <xsl:stylesheet
@@ -38,7 +38,7 @@
 
 <xsl:template match="project">
 <![CDATA[
-<project name="master"> 
+<project name="master">
 
     <macrodef name="iterate">
         <attribute name="target"/>
@@ -49,9 +49,9 @@
         </sequential>
     </macrodef>
 ]]>
-   
+
     <xsl:apply-templates/>
-    
+
 <![CDATA[
 </project>
 ]]>
@@ -70,4 +70,3 @@
 
 
 </xsl:stylesheet>
-

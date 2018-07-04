@@ -21,7 +21,7 @@
   <import file="../../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
   <target name="initNonAscii" depends="setUp">
@@ -42,12 +42,12 @@
            style="xml/doc.xsl">
      </xslt>
   </target>
-  
+
   <xmlcatalog id="xdocs.catalog">
    <dtd publicID="-//stevo//DTD doc 1.0//EN"
      location="xml/doc.dtd"/>
-  </xmlcatalog>  
-  
+  </xmlcatalog>
+
   <target name="testCatalog" depends="setUp">
     <xslt destdir="${output}"
            includes="about.xml"
@@ -67,8 +67,8 @@
       <outputproperty name="indent" value="yes"/>
     </xslt>
   </target>
-  
-  
+
+
   <target name="testFactory" depends="setUp">
     <xslt in="xml/test.xml"
            out="${output}/test-out.xml"

@@ -27,17 +27,17 @@
   </target>
 
   <target name="cleanup">
-    <delete file="asf-logo.gif" />
+    <delete file="asf-logo.gif"/>
   </target>
 
   <target name="testGzipTask">
-    <ant antfile="gzip.xml" target="realTest" />
-    <gunzip src="asf-logo.gif.gz" dest="asf-logo.gif" />
-    <ant antfile="gzip.xml" target="cleanup" />
+    <ant antfile="gzip.xml" target="realTest"/>
+    <gunzip src="asf-logo.gif.gz" dest="asf-logo.gif"/>
+    <ant antfile="gzip.xml" target="cleanup"/>
   </target>
 
   <target name="realTest">
-    <gunzip src="expected/asf-logo.gif.gz" dest="asf-logo.gif" />
+    <gunzip src="expected/asf-logo.gif.gz" dest="asf-logo.gif"/>
   </target>
 
   <target name="realTestWithResource">

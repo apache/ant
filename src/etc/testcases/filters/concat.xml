@@ -20,7 +20,7 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
     <echo file="${output}/prepend.txt" message="this-should-be-the-first-line${line.separator}"/>
     <echo file="${output}/append.txt" message="this-should-be-the-last-line${line.separator}"/>
     <copy file="input/head-tail.test" tofile="${output}/concatfilter.test"/>

@@ -17,7 +17,7 @@
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
 
-  <import file="../../../antunit-base.xml" />
+  <import file="../../../antunit-base.xml"/>
 
   <property name="file" value="testfile"/>
 

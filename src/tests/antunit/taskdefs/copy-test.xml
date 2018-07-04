@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="-fileResourceSetup">
     <mkdir dir="${input}"/>
@@ -194,8 +194,7 @@ public class NullByteStreamResource extends Resource {
   </target>
 
   <target name="testNotModifiedSelector"
-          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574"
-          >
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574">
     <mkdir dir="${input}/images"/>
     <mkdir dir="${input}/cache"/>
     <touch file="${input}/images/foo.jpg"/>
@@ -216,16 +215,16 @@ public class NullByteStreamResource extends Resource {
     <au:assertFileDoesntExist file="${input}/cache/cache.properties"/>
     <copy todir="${output}" overwrite="true">
       <fileset dir="${input}/images">
-        <include name="*.jpg" />
-        <selector refid="cache.selector" />
+        <include name="*.jpg"/>
+        <selector refid="cache.selector"/>
       </fileset>
     </copy>
     <au:assertFileExists file="${input}/cache/cache.properties"/>
     <au:assertFileDoesntExist file="${output}/foo.jpg"/>
     <copy todir="${output}" overwrite="true">
       <fileset dir="${input}/images">
-        <include name="*.jpg" />
-        <selector refid="cache.selector" />
+        <include name="*.jpg"/>
+        <selector refid="cache.selector"/>
       </fileset>
     </copy>
     <au:assertFileExists file="${output}/foo.jpg"/>
@@ -244,8 +243,8 @@ public class NullByteStreamResource extends Resource {
   <target name="testQuiet">
     <mkdir dir="${output}"/>
     <mkdir dir="${input}"/>
-    <copy file="${input}/not-there.txt" todir="${output}" failonerror="false" quiet="true" />
-  	<au:assertLogDoesntContain text="Could not find file" />
+    <copy file="${input}/not-there.txt" todir="${output}" failonerror="false" quiet="true"/>
+    <au:assertLogDoesntContain text="Could not find file"/>
   </target>
 
   <target name="testMissingFilesetRoot">
@@ -411,8 +410,7 @@ public class NullByteStreamResource extends Resource {
   </target>
 
   <target name="testCopyWithResourceAndFile"
-          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49756"
-          >
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49756">
     <mkdir dir="${input}"/>
     <au:assertFileDoesntExist file="${input}/somefile"/>
     <copy tofile="${input}/somefile">
@@ -478,8 +476,8 @@ public class NullByteStreamResource extends Resource {
     <mkdir dir="${output}"/>
     <copy todir="${output}">
       <mappedresources>
-	<fileset dir="${input}" />
-	<globmapper from="a.*" to="*" />
+        <fileset dir="${input}"/>
+        <globmapper from="a.*" to="*"/>
       </mappedresources>
     </copy>
     <au:assertFileExists file="${output}/filea"/>

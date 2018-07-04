@@ -19,8 +19,8 @@
 <project name="test" basedir="." default="invalid">
   <property name="testcases.dir" location="../../../../build/testcases"/>
   <path id="testclasses">
-    <pathelement location="${testcases.dir}" />
-    <pathelement path="${java.class.path}" />
+    <pathelement location="${testcases.dir}"/>
+    <pathelement path="${java.class.path}"/>
   </path>
 
   <target name="taskadapter">

@@ -17,17 +17,17 @@
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
 
-  <import file="../../antunit-base.xml" />
+  <import file="../../antunit-base.xml"/>
 
   <tokens id="testrc">
-    <string value="1,2,3,4,5" />
-    <stringtokenizer delims="," />
+    <string value="1,2,3,4,5"/>
+    <stringtokenizer delims=","/>
   </tokens>
 
   <target name="testfirst0">
     <au:assertTrue>
       <resourcecount count="0">
-        <first count="0"><resources refid="testrc" /></first>
+        <first count="0"><resources refid="testrc"/></first>
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -36,8 +36,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <first><resources refid="testrc" /></first>
-          <string value="1" />
+          <first><resources refid="testrc"/></first>
+          <string value="1"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -47,10 +47,10 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <first count="2"><resources refid="testrc" /></first>
+          <first count="2"><resources refid="testrc"/></first>
           <resources>
-            <string value="1" />
-            <string value="2" />
+            <string value="1"/>
+            <string value="2"/>
           </resources>
         </difference>
       </resourcecount>
@@ -61,8 +61,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <first count="5"><resources refid="testrc" /></first>
-          <resources refid="testrc" />
+          <first count="5"><resources refid="testrc"/></first>
+          <resources refid="testrc"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -72,8 +72,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <first count="6"><resources refid="testrc" /></first>
-          <resources refid="testrc" />
+          <first count="6"><resources refid="testrc"/></first>
+          <resources refid="testrc"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -82,7 +82,7 @@
   <target name="testfirst-1">
     <au:expectfailure expectedmessage="size-limited collection count should be set to an int &gt;= 0">
       <resourcecount>
-        <first count="-1"><resources refid="testrc" /></first>
+        <first count="-1"><resources refid="testrc"/></first>
       </resourcecount>
     </au:expectfailure>
   </target>
@@ -90,7 +90,7 @@
   <target name="testlast0">
     <au:assertTrue>
       <resourcecount count="0">
-        <last count="0"><resources refid="testrc" /></last>
+        <last count="0"><resources refid="testrc"/></last>
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -99,8 +99,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <last><resources refid="testrc" /></last>
-          <string value="5" />
+          <last><resources refid="testrc"/></last>
+          <string value="5"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -110,10 +110,10 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <last count="2"><resources refid="testrc" /></last>
+          <last count="2"><resources refid="testrc"/></last>
           <resources>
-            <string value="4" />
-            <string value="5" />
+            <string value="4"/>
+            <string value="5"/>
           </resources>
         </difference>
       </resourcecount>
@@ -124,8 +124,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <last count="5"><resources refid="testrc" /></last>
-          <resources refid="testrc" />
+          <last count="5"><resources refid="testrc"/></last>
+          <resources refid="testrc"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -135,8 +135,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <last count="6"><resources refid="testrc" /></last>
-          <resources refid="testrc" />
+          <last count="6"><resources refid="testrc"/></last>
+          <resources refid="testrc"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -145,7 +145,7 @@
   <target name="testlast-1">
     <au:expectfailure expectedmessage="size-limited collection count should be set to an int &gt;= 0">
       <resourcecount>
-        <last count="-1"><resources refid="testrc" /></last>
+        <last count="-1"><resources refid="testrc"/></last>
       </resourcecount>
     </au:expectfailure>
   </target>
@@ -153,7 +153,7 @@
   <target name="testallbutfirst5">
     <au:assertTrue>
       <resourcecount count="0">
-        <allbutfirst count="5"><resources refid="testrc" /></allbutfirst>
+        <allbutfirst count="5"><resources refid="testrc"/></allbutfirst>
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -162,8 +162,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <allbutfirst count="4"><resources refid="testrc" /></allbutfirst>
-          <string value="5" />
+          <allbutfirst count="4"><resources refid="testrc"/></allbutfirst>
+          <string value="5"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -173,10 +173,10 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <allbutfirst count="3"><resources refid="testrc" /></allbutfirst>
+          <allbutfirst count="3"><resources refid="testrc"/></allbutfirst>
           <resources>
-            <string value="4" />
-            <string value="5" />
+            <string value="4"/>
+            <string value="5"/>
           </resources>
         </difference>
       </resourcecount>
@@ -187,12 +187,12 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <allbutfirst><resources refid="testrc" /></allbutfirst>
+          <allbutfirst><resources refid="testrc"/></allbutfirst>
           <resources>
-            <string value="2" />
-            <string value="3" />
-            <string value="4" />
-            <string value="5" />
+            <string value="2"/>
+            <string value="3"/>
+            <string value="4"/>
+            <string value="5"/>
           </resources>
         </difference>
       </resourcecount>
@@ -202,7 +202,7 @@
   <target name="testallbutfirst6">
     <au:assertTrue>
       <resourcecount count="0">
-        <allbutfirst count="6"><resources refid="testrc" /></allbutfirst>
+        <allbutfirst count="6"><resources refid="testrc"/></allbutfirst>
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -210,7 +210,7 @@
   <target name="testallbutfirst-1">
     <au:expectfailure expectedmessage="size-limited collection count should be set to an int &gt;= 0">
       <resourcecount>
-        <allbutfirst count="-1"><resources refid="testrc" /></allbutfirst>
+        <allbutfirst count="-1"><resources refid="testrc"/></allbutfirst>
       </resourcecount>
     </au:expectfailure>
   </target>
@@ -218,7 +218,7 @@
   <target name="testallbutlast5">
     <au:assertTrue>
       <resourcecount count="0">
-        <allbutlast count="5"><resources refid="testrc" /></allbutlast>
+        <allbutlast count="5"><resources refid="testrc"/></allbutlast>
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -227,8 +227,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <allbutlast count="4"><resources refid="testrc" /></allbutlast>
-          <string value="1" />
+          <allbutlast count="4"><resources refid="testrc"/></allbutlast>
+          <string value="1"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -238,12 +238,12 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <allbutlast><resources refid="testrc" /></allbutlast>
+          <allbutlast><resources refid="testrc"/></allbutlast>
           <resources>
-            <string value="1" />
-            <string value="2" />
-            <string value="3" />
-            <string value="4" />
+            <string value="1"/>
+            <string value="2"/>
+            <string value="3"/>
+            <string value="4"/>
           </resources>
         </difference>
       </resourcecount>
@@ -254,8 +254,8 @@
     <au:assertTrue>
       <resourcecount count="0">
         <difference>
-          <allbutlast count="0"><resources refid="testrc" /></allbutlast>
-          <resources refid="testrc" />
+          <allbutlast count="0"><resources refid="testrc"/></allbutlast>
+          <resources refid="testrc"/>
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -264,7 +264,7 @@
   <target name="testallbutlast6">
     <au:assertTrue>
       <resourcecount count="0">
-        <allbutlast count="6"><resources refid="testrc" /></allbutlast>
+        <allbutlast count="6"><resources refid="testrc"/></allbutlast>
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -272,7 +272,7 @@
   <target name="testallbutlast-1">
     <au:expectfailure expectedmessage="size-limited collection count should be set to an int &gt;= 0">
       <resourcecount>
-        <allbutlast count="-1"><resources refid="testrc" /></allbutlast>
+        <allbutlast count="-1"><resources refid="testrc"/></allbutlast>
       </resourcecount>
     </au:expectfailure>
   </target>

@@ -15,12 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsl:stylesheet 
+<xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:template="struts template" 
+    xmlns:template="struts template"
     version="1.0">
 <xsl:output method="text"/>
 <xsl:template match="/">
 <xsl:value-of select="/doc/section"/>
-</xsl:template> 
+</xsl:template>
 </xsl:stylesheet>

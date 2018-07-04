@@ -19,16 +19,16 @@
 
   <target name="testLatePath" depends="tearDown">
     <path id="p">
-      <fileset file="testLatePath" />
+      <fileset file="testLatePath"/>
     </path>
-    <pathconvert refid="p" />
-    <touch file="testLatePath" />
+    <pathconvert refid="p"/>
+    <touch file="testLatePath"/>
     <au:assertTrue>
-      <resourcecount when="eq" count="1" refid="p" />
+      <resourcecount when="eq" count="1" refid="p"/>
     </au:assertTrue>
   </target>
 
   <target name="tearDown">
-    <delete file="testLatePath" />
+    <delete file="testLatePath"/>
   </target>
 </project>

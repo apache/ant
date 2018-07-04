@@ -17,18 +17,18 @@
 -->
 <project>
   <property name="testclasses" location="../../../../../../build/testcases"/>
-  
+
   <path id="all-test-classes.id">
-    <pathelement location="../../../../build/testcases" />
-    <pathelement path="${java.class.path}" />
+    <pathelement location="../../../../build/testcases"/>
+    <pathelement path="${java.class.path}"/>
   </path>
 
   <path id="example-classes.id">
-    <pathelement location="${testclasses}/org/apache/tools/ant/util/facade" />
+    <pathelement location="${testclasses}/org/apache/tools/ant/util/facade"/>
   </path>
 
   <path id="test-classes.id">
-    <pathelement location="${testclasses}" />
+    <pathelement location="${testclasses}"/>
   </path>
 
   <target name="simple">

@@ -15,10 +15,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project name="sleeptest" default="all" >
+<project name="sleeptest" default="all">
 
     <target name="test1">
-        <sleep />
+        <sleep/>
     </target>
 
     <target name="test2">
@@ -42,6 +42,6 @@
     </target>
 
     <target name="all"
-        depends="test1,test2,test3,test4,test5" />
+        depends="test1,test2,test3,test4,test5"/>
 
 </project>

@@ -21,7 +21,7 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
   <target name="test1">
@@ -37,12 +37,12 @@
   </target>
 
   <target name="test4">
-    <copyfile src="template.xml" 
+    <copyfile src="template.xml"
              dest="template.xml"/>
   </target>
 
   <target name="test5">
-    <copyfile src="copyfile.xml" 
+    <copyfile src="copyfile.xml"
              dest="${output}/copyfile.tmp"/>
   </target>
 
@@ -50,7 +50,7 @@
     <mkdir dir="${output}/testdir"/>
     <copyfile src="copyfile.xml"
               dest="${output}/testdir"
-              forceoverwrite="true" />
+              forceoverwrite="true"/>
   </target>
 
 </project>

@@ -21,8 +21,8 @@
   <property name="root" location="../../../../.."/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
-    <copy file="replaceregexp.properties" tofile="${output}/test.properties" />
+    <mkdir dir="${output}"/>
+    <copy file="replaceregexp.properties" tofile="${output}/test.properties"/>
   </target>
 
   <target name="def">
@@ -30,39 +30,39 @@
   </target>
 
   <target name="setUp-nl">
-    <mkdir dir="${output}" />
-    <copy file="replaceregexp2.properties" tofile="${output}/test.properties" />
+    <mkdir dir="${output}"/>
+    <copy file="replaceregexp2.properties" tofile="${output}/test.properties"/>
   </target>
 
   <target name="testReplace" depends="setUp">
     <replaceregexp file="${output}/test.properties" byline="true">
-      <regexp pattern="Old(.*)=(.*)" />
-      <substitution expression="NewProp=\1\2" />
+      <regexp pattern="Old(.*)=(.*)"/>
+      <substitution expression="NewProp=\1\2"/>
     </replaceregexp>
   </target>
   <!-- use in conjunction with testDirectoryDateDoesNotChange to make sure something will happen -->
   <target name="touchDirectory">
-    <copy file="replaceregexp.properties" tofile="${output}/test.properties" />
+    <copy file="replaceregexp.properties" tofile="${output}/test.properties"/>
 
   </target>
   <target name="testDirectoryDateDoesNotChange">
     <replaceregexp file="${output}/test.properties" byline="true">
-      <regexp pattern="foo" />
+      <regexp pattern="foo"/>
         <substitution expression="bar"/>
       </replaceregexp>
   </target>
 
   <target name="testDontAddNewline1" depends="setUp-nl">
     <replaceregexp file="${output}/test.properties" byline="false">
-      <regexp pattern="Old(.*)=(.*)" />
-      <substitution expression="NewProp=\1\2" />
+      <regexp pattern="Old(.*)=(.*)"/>
+      <substitution expression="NewProp=\1\2"/>
     </replaceregexp>
   </target>
 
   <target name="testDontAddNewline2" depends="setUp-nl">
     <replaceregexp file="${output}/test.properties" byline="true">
-      <regexp pattern="Old(.*)=(.*)" />
-      <substitution expression="NewProp=\1\2" />
+      <regexp pattern="Old(.*)=(.*)"/>
+      <substitution expression="NewProp=\1\2"/>
     </replaceregexp>
   </target>
 
@@ -80,4 +80,3 @@
   </target>
 
 </project>
-

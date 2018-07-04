@@ -53,8 +53,8 @@
 
   <target name="antunit">
     <antunit xmlns="antlib:org.apache.ant.antunit">
-      <plainlistener />
-      <file file="${ant.file}" xmlns="antlib:org.apache.tools.ant" />
+      <plainlistener/>
+      <file file="${ant.file}" xmlns="antlib:org.apache.tools.ant"/>
     </antunit>
   </target>
 

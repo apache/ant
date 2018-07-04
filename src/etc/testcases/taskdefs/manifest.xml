@@ -32,7 +32,7 @@
       </patternset>
     </unjar>
   </target>
-  
+
   <target name="test2" depends="setUp">
     <jar file="${output}/mftest2.jar" manifest="manifests/test2.mf"/>
     <unjar src="${output}/mftest2.jar" dest="${output}/manifests">
@@ -41,27 +41,27 @@
       </patternset>
     </unjar>
   </target>
-  
+
   <target name="test3" depends="setUp">
     <jar file="${output}/mftest3.jar" manifest="manifests/test3.mf"/>
   </target>
-  
+
   <target name="test4" depends="setUp">
     <jar file="${output}/mftest4.jar" manifest="manifests/test4.mf"/>
   </target>
-  
+
   <target name="test5" depends="setUp">
     <jar file="${output}/mftest5.jar" manifest="manifests/test5.mf"/>
   </target>
-  
+
   <target name="test6" depends="setUp">
     <jar file="${output}/mftest6.jar" manifest="manifests/test6.mf"/>
   </target>
-  
+
   <target name="test7" depends="setUp">
     <jar file="${output}/mftest7.jar" manifest="manifests/test7.mf"/>
   </target>
-  
+
   <target name="test8" depends="setUp">
     <jar file="${output}/mftest8.jar">
       <manifest>
@@ -141,17 +141,17 @@
   </target>
 
   <target name="testNoFile">
-    <manifest />
+    <manifest/>
   </target>
 
   <target name="testLongLine" depends="setUp">
     <jar file="${output}/mftestLongLine.jar">
       <manifest>
-        <attribute name="Class-path" 
+        <attribute name="Class-path"
                    value="${test.longline}"/>
-        <attribute name="${test.long68name}" value="${test.value}" />
-        <attribute name="${test.long70name}" value="${test.value}" />
-        <attribute name="${test.notlongname}" value="${test.value}" />
+        <attribute name="${test.long68name}" value="${test.value}"/>
+        <attribute name="${test.long70name}" value="${test.value}"/>
+        <attribute name="${test.notlongname}" value="${test.value}"/>
       </manifest>
     </jar>
     <unjar src="${output}/mftestLongLine.jar" dest="${output}/manifests">
@@ -198,41 +198,41 @@
       </patternset>
     </unjar>
   </target>
-  
+
   <target name="testReplace" depends="setUp">
-    <copy file="manifests/test2.mf" toFile="${output}/mftest.mf" />
-    <manifest file="${output}/mftest.mf" />
+    <copy file="manifests/test2.mf" toFile="${output}/mftest.mf"/>
+    <manifest file="${output}/mftest.mf"/>
   </target>
 
   <target name="testUpdate" depends="setUp">
-    <copy file="manifests/test2.mf" toFile="${output}/mftest.mf" />
+    <copy file="manifests/test2.mf" toFile="${output}/mftest.mf"/>
     <manifest file="${output}/mftest.mf" mode="update">
-      <attribute name="Foo" value="Bar" />
+      <attribute name="Foo" value="Bar"/>
     </manifest>
 
-    <copy file="manifests/test2.mf" toFile="${output}/mftest2.mf" />
+    <copy file="manifests/test2.mf" toFile="${output}/mftest2.mf"/>
     <manifest file="${output}/mftest2.mf" mode="update">
       <section name="Test">
-        <attribute name="Foo" value="Bar" />
+        <attribute name="Foo" value="Bar"/>
       </section>
     </manifest>
     <manifest file="${output}/mftest2.mf" mode="update">
       <section name="Test">
-        <attribute name="Foo" value="Baz" />
+        <attribute name="Foo" value="Baz"/>
       </section>
     </manifest>
   </target>
 
   <target name="testFrom" depends="setUp">
-    <manifest file="${output}/mftestfrom.mf" >
+    <manifest file="${output}/mftestfrom.mf">
       <section name="Test">
-        <attribute name="before" value="before" />
+        <attribute name="before" value="before"/>
         <attribute name="From" value="illegal"/>
-        <attribute name="after" value="after" />
+        <attribute name="after" value="after"/>
       </section>
     </manifest>
   </target>
-  
+
   <target name="testIllegalName" depends="setUp">
     <manifest file="${output}/mftestillegalname.mf">
       <attribute name="has blank" value="value"/>

@@ -20,7 +20,7 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
   <target name="tokenfilter">
@@ -34,7 +34,7 @@
   <target name="trimignore">
     <concat destfile="${output}/input">
       Hello
-      
+
       World
     </concat>
     <copy file="${output}/input" tofile="${output}/output" overwrite="yes">
@@ -314,17 +314,17 @@
 
   <target name="customtokenfilter">
     <path id="test-classes">
-      <pathelement location="../../../../build/testcases" />
-      <pathelement path="${java.class.path}" />
+      <pathelement location="../../../../build/testcases"/>
+      <pathelement path="${java.class.path}"/>
     </path>
 
 
-    <typedef 
-      name="capitalize" 
+    <typedef
+      name="capitalize"
       classname="org.apache.tools.ant.filters.TokenFilterTest$Capitalize">
       <classpath refid="test-classes"/>
     </typedef>
-    
+
     <concat destfile="${output}/input">
       hello world
     </concat>
@@ -344,14 +344,14 @@
       i = 1;
     </script>
   </target>
-  
+
   <target name="hasregex">
     <concat destfile="${output}/replaceregexp">
       hello world
     </concat>
     <replaceregexp file="${output}/replaceregexp"
-                  match="hello( )world"
-                  replace="bye\1world"/>
+                   match="hello( )world"
+                   replace="bye\1world"/>
   </target>
 
 </project>

@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="testOnlyOneAppXml">
     <mkdir dir="${input}/META-INF"/>

@@ -17,7 +17,7 @@
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
 
-  <import file="../../antunit-base.xml" />
+  <import file="../../antunit-base.xml"/>
 
   <target name="tearDown" depends="antunit-base.tearDown">
     <delete file="cache.properties" quiet="true"/>

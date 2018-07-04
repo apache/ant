@@ -19,54 +19,54 @@
   <import file="../antunit-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${input}" />
+    <mkdir dir="${input}"/>
     <touch>
-      <filelist id="filelist" dir="${input}" files="foo,bar,baz" />
+      <filelist id="filelist" dir="${input}" files="foo,bar,baz"/>
     </touch>
-    <fileset id="input-fs" dir="${input}" />
+    <fileset id="input-fs" dir="${input}"/>
     <au:assertTrue>
-      <resourcecount refid="input-fs" count="3" />
+      <resourcecount refid="input-fs" count="3"/>
     </au:assertTrue>
   </target>
 
   <target name="test-augment-attribute" depends="setUp">
-    <augment id="input-fs" excludes="foo" />
+    <augment id="input-fs" excludes="foo"/>
     <au:assertTrue>
-      <resourcecount refid="input-fs" count="2" />
+      <resourcecount refid="input-fs" count="2"/>
     </au:assertTrue>
   </target>
 
   <target name="test-augment-element" depends="setUp">
     <augment id="input-fs">
-      <filename name="bar" />
+      <filename name="bar"/>
     </augment>
     <au:assertTrue>
-      <resourcecount refid="input-fs" count="1" />
+      <resourcecount refid="input-fs" count="1"/>
     </au:assertTrue>
   </target>
 
   <target name="test-noref">
     <au:expectfailure expectedMessage="Unknown reference &quot;nosuchreference&quot;">
-      <augment id="nosuchreference" />
+      <augment id="nosuchreference"/>
     </au:expectfailure>
   </target>
 
   <target name="test-id-not-set">
     <au:expectfailure expectedMessage="augment attribute 'id' unset">
-      <augment foo="bar" />
+      <augment foo="bar"/>
     </au:expectfailure>
   </target>
 
   <target name="test-illegal-attribute" depends="setUp">
     <au:expectfailure expectedMessage="augmented reference &quot;input-fs&quot; doesn't support the &quot;filesetwillmostlikelyneversupportthisattribute&quot; attribute">
-      <augment id="input-fs" filesetwillmostlikelyneversupportthisattribute="blah" />
+      <augment id="input-fs" filesetwillmostlikelyneversupportthisattribute="blah"/>
     </au:expectfailure>
   </target>
 
   <target name="test-illegal-element" depends="setUp">
     <au:expectfailure expectedMessage="augmented reference &quot;input-fs&quot; doesn't support the nested &quot;filesetwillmostlikelyneversupportthiselement&quot; element">
       <augment id="input-fs">
-        <filesetwillmostlikelyneversupportthiselement />
+        <filesetwillmostlikelyneversupportthiselement/>
       </augment>
     </au:expectfailure>
   </target>

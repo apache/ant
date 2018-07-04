@@ -56,19 +56,19 @@
 
   <target name="test7">
     <property name="test" value="original"/>
-    <pathconvert targetos="unix" property="test" >
+    <pathconvert targetos="unix" property="test">
       <path>
-        <pathelement location="/lib/weblogicaux.jar" />
-        <pathelement location="/classes" />
-        <pathelement location="/mssqlserver4/classes" />
-        <pathelement location="c:\winnt\System32" />
+        <pathelement location="/lib/weblogicaux.jar"/>
+        <pathelement location="/classes"/>
+        <pathelement location="/mssqlserver4/classes"/>
+        <pathelement location="c:\winnt\System32"/>
       </path>
     </pathconvert>
   </target>
 
   <target name="test8">
     <antcall inheritAll="false" target="echo-target">
-      <param name="echo.value" value="Meep meep!" />
+      <param name="echo.value" value="Meep meep!"/>
     </antcall>
   </target>
 

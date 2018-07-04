@@ -20,7 +20,7 @@
      requires a working CVS client. -->
 
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../antunit-base.xml" />
+  <import file="../../antunit-base.xml"/>
 
   <property name="cvsrootloc" location="repository"/>
   <property name="cvsroot" value=":local:${cvsrootloc}"/>

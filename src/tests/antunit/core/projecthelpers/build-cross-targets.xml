@@ -16,12 +16,12 @@
   limitations under the License.
 -->
 <project default="end" xmlns:au="antlib:org.apache.ant.antunit">
-    <import file="build-cross-targets-ref.xmlref" />
+    <import file="build-cross-targets-ref.xmlref"/>
     <target name="init">
-        <property name="start" value="true" />
+        <property name="start" value="true"/>
     </target>
     <target name="end" depends="setfoo">
-        <au:assertPropertyEquals name="start" value="true" />
-        <au:assertPropertyEquals name="foo" value="hello" />
+        <au:assertPropertyEquals name="start" value="true"/>
+        <au:assertPropertyEquals name="foo" value="hello"/>
     </target>
 </project>

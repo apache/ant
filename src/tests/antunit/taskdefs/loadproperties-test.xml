@@ -17,11 +17,11 @@
 -->
 <project name="loadproperties-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${input}" />
-    <property name="properties.tmp" location="${input}/properties.tmp" />
+    <mkdir dir="${input}"/>
+    <property name="properties.tmp" location="${input}/properties.tmp"/>
   </target>
 
   <target name="test-basic">
@@ -30,9 +30,9 @@
 basic.bar=bar
 basic.baz=baz</string>
     </loadproperties>
-    <au:assertPropertyEquals name="basic.foo" value="foo" />
-    <au:assertPropertyEquals name="basic.bar" value="bar" />
-    <au:assertPropertyEquals name="basic.baz" value="baz" />
+    <au:assertPropertyEquals name="basic.foo" value="foo"/>
+    <au:assertPropertyEquals name="basic.bar" value="bar"/>
+    <au:assertPropertyEquals name="basic.baz" value="baz"/>
   </target>
 
   <target name="test-xref">
@@ -41,9 +41,9 @@ basic.baz=baz</string>
 xref.bar=$${xref.foo}
 xref.baz=$${xref.bar}</string>
     </loadproperties>
-    <au:assertPropertyEquals name="xref.foo" value="foo" />
-    <au:assertPropertyEquals name="xref.bar" value="foo" />
-    <au:assertPropertyEquals name="xref.baz" value="foo" />
+    <au:assertPropertyEquals name="xref.foo" value="foo"/>
+    <au:assertPropertyEquals name="xref.bar" value="foo"/>
+    <au:assertPropertyEquals name="xref.baz" value="foo"/>
   </target>
 
   <target name="test-xref-complex">
@@ -55,12 +55,12 @@ xref-complex.d=x
 xref-complex.e=$${xref-complex.a}$${xref-complex.b}xref-complex.d$${xref-complex.c}
 xref-complex.f=$${xref-complex.e}</string>
     </loadproperties>
-    <au:assertPropertyEquals name="xref-complex.a" value="$$" />
-    <au:assertPropertyEquals name="xref-complex.b" value="{" />
-    <au:assertPropertyEquals name="xref-complex.c" value="}" />
-    <au:assertPropertyEquals name="xref-complex.d" value="x" />
-    <au:assertPropertyEquals name="xref-complex.e" value="$${xref-complex.d}" />
-    <au:assertPropertyEquals name="xref-complex.f" value="$${xref-complex.d}" />
+    <au:assertPropertyEquals name="xref-complex.a" value="$$"/>
+    <au:assertPropertyEquals name="xref-complex.b" value="{"/>
+    <au:assertPropertyEquals name="xref-complex.c" value="}"/>
+    <au:assertPropertyEquals name="xref-complex.d" value="x"/>
+    <au:assertPropertyEquals name="xref-complex.e" value="$${xref-complex.d}"/>
+    <au:assertPropertyEquals name="xref-complex.f" value="$${xref-complex.d}"/>
   </target>
 
   <target name="testEncoding"
@@ -93,16 +93,16 @@ http.@SERVER@ = ${server}
         <expandproperties/>
       </filterchain>
     </loadproperties>
-    <property name="server1.http.url" 
+    <property name="server1.http.url"
       value="http://${server1.http.server}:${server1.http.port}"/>
   </target>
 
   <target name="testLineCommentsWithoutFiltering">
     <loadproperties>
-      <string value="#foo=bar" />
+      <string value="#foo=bar"/>
     </loadproperties>
     <au:assertFalse>
-      <isset property="foo" />
+      <isset property="foo"/>
     </au:assertFalse>
   </target>
 
@@ -115,9 +115,9 @@ baz=${foo} ${bar}
     </loadproperties>
     <au:assertTrue>
       <and>
-        <equals arg1="foo" arg2="${prefixFromAttribute.foo}" />
-        <equals arg1="bar" arg2="${prefixFromAttribute.bar}" />
-        <equals arg1="foo bar" arg2="${prefixFromAttribute.baz}" />
+        <equals arg1="foo" arg2="${prefixFromAttribute.foo}"/>
+        <equals arg1="bar" arg2="${prefixFromAttribute.bar}"/>
+        <equals arg1="foo bar" arg2="${prefixFromAttribute.baz}"/>
       </and>
     </au:assertTrue>
   </target>
@@ -130,13 +130,13 @@ bar=bar
 baz=${foo} ${bar}
       </string>
       <filterchain>
-        <prefixlines prefix="prefixFromFilter." />
+        <prefixlines prefix="prefixFromFilter."/>
       </filterchain>
     </loadproperties>
     <au:assertTrue>
       <and>
-        <equals arg1="$${foo} $${bar}" arg2="${prefixFromFilter.baz}" />
-        <isset property="prefixFromFilter." />
+        <equals arg1="$${foo} $${bar}" arg2="${prefixFromFilter.baz}"/>
+        <isset property="prefixFromFilter."/>
       </and>
     </au:assertTrue>
   </target>
@@ -153,7 +153,7 @@ tpfr.c=@C@
 
   <presetdef name="assertPropertiesFromResourceOkay">
     <au:assertTrue>
-      <equals arg1="Abesea" arg2="${tpfr.a}${tpfr.b}${tpfr.c}" />
+      <equals arg1="Abesea" arg2="${tpfr.a}${tpfr.b}${tpfr.c}"/>
     </au:assertTrue>
   </presetdef>
 
@@ -169,14 +169,14 @@ tpfr.c=@C@
 
   <target name="testPropertiesFromFileSet" depends="write properties.tmp">
     <loadproperties>
-      <fileset file="${properties.tmp}" />
+      <fileset file="${properties.tmp}"/>
       <filterchain>
         <replacetokens>
           <token key="C" value="sea"/>
         </replacetokens>
       </filterchain>
     </loadproperties>
-    <assertPropertiesFromResourceOkay />
+    <assertPropertiesFromResourceOkay/>
   </target>
 
   <target name="testLastPropertyWins">
@@ -185,7 +185,7 @@ tpfr.c=@C@
 foo=bar</string>
     </loadproperties>
     <au:assertTrue>
-      <equals arg1="bar" arg2="${foo}" />
+      <equals arg1="bar" arg2="${foo}"/>
     </au:assertTrue>
   </target>
 

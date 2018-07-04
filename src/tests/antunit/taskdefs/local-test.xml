@@ -16,81 +16,81 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
-  <property name="foo" value="foo" />
+  <property name="foo" value="foo"/>
 
-  <local name="bar" />
-  <property name="bar" value="bar" />
-  <au:assertPropertyEquals name="bar" value="bar" />
+  <local name="bar"/>
+  <property name="bar" value="bar"/>
+  <au:assertPropertyEquals name="bar" value="bar"/>
 
   <target name="testGlobalLocal">
     <au:assertFalse>
-      <isset property="bar" />
+      <isset property="bar"/>
     </au:assertFalse>
   </target>
 
   <target name="testBaseline">
-    <au:assertPropertyEquals name="foo" value="foo" />
+    <au:assertPropertyEquals name="foo" value="foo"/>
   </target>
 
   <target name="testTarget">
-    <au:assertPropertyEquals name="foo" value="foo" />
-    <local name="foo" />
-    <property name="foo" value="foo.target" />
-    <au:assertPropertyEquals name="foo" value="foo.target" />
+    <au:assertPropertyEquals name="foo" value="foo"/>
+    <local name="foo"/>
+    <property name="foo" value="foo.target"/>
+    <au:assertPropertyEquals name="foo" value="foo.target"/>
   </target>
 
   <target name="testSequential">
     <sequential>
-      <local name="foo" />
-      <property name="foo" value="foo.1" />
+      <local name="foo"/>
+      <property name="foo" value="foo.1"/>
       <sequential>
-        <local name="foo" />
-        <property name="foo" value="foo.2" />
-        <au:assertPropertyEquals name="foo" value="foo.2" />
+        <local name="foo"/>
+        <property name="foo" value="foo.2"/>
+        <au:assertPropertyEquals name="foo" value="foo.2"/>
       </sequential>
-      <au:assertPropertyEquals name="foo" value="foo.1" />
+      <au:assertPropertyEquals name="foo" value="foo.1"/>
     </sequential>
-    <au:assertPropertyEquals name="foo" value="foo" />
+    <au:assertPropertyEquals name="foo" value="foo"/>
   </target>
 
   <target name="testParallel">
     <macrodef name="p">
-      <attribute name="value" />
-      <attribute name="sleep" default="0" />
+      <attribute name="value"/>
+      <attribute name="sleep" default="0"/>
       <sequential>
-        <local name="foo" />
-        <sleep seconds="@{sleep}" />
-        <property name="foo" value="@{value}" />
-        <au:assertPropertyEquals name="foo" value="@{value}" />
+        <local name="foo"/>
+        <sleep seconds="@{sleep}"/>
+        <property name="foo" value="@{value}"/>
+        <au:assertPropertyEquals name="foo" value="@{value}"/>
       </sequential>
     </macrodef>
     <parallel>
-      <p sleep="2" value="foo.a" />
-      <au:assertPropertyEquals name="foo" value="foo" />
-      <p sleep="1" value="foo.b" />
-      <au:assertPropertyEquals name="foo" value="foo" />
-      <p sleep="0" value="foo.c" />
-      <au:assertPropertyEquals name="foo" value="foo" />
+      <p sleep="2" value="foo.a"/>
+      <au:assertPropertyEquals name="foo" value="foo"/>
+      <p sleep="1" value="foo.b"/>
+      <au:assertPropertyEquals name="foo" value="foo"/>
+      <p sleep="0" value="foo.c"/>
+      <au:assertPropertyEquals name="foo" value="foo"/>
     </parallel>
-    <au:assertPropertyEquals name="foo" value="foo" />
+    <au:assertPropertyEquals name="foo" value="foo"/>
   </target>
 
   <target name="testMacrodef">
     <macrodef name="m">
       <sequential>
-        <local name="foo" />
-        <property name="foo" value="foo.x" />
-        <au:assertPropertyEquals name="foo" value="foo.x" />
+        <local name="foo"/>
+        <property name="foo" value="foo.x"/>
+        <au:assertPropertyEquals name="foo" value="foo.x"/>
       </sequential>
     </macrodef>
-    <m />
-    <au:assertPropertyEquals name="foo" value="foo" />
-    <m />
-    <au:assertPropertyEquals name="foo" value="foo" />
-    <m />
-    <au:assertPropertyEquals name="foo" value="foo" />
+    <m/>
+    <au:assertPropertyEquals name="foo" value="foo"/>
+    <m/>
+    <au:assertPropertyEquals name="foo" value="foo"/>
+    <m/>
+    <au:assertPropertyEquals name="foo" value="foo"/>
   </target>
 
 </project>

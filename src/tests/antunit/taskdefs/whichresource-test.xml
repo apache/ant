@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml" />
+  <import file="../antunit-base.xml"/>
 
   <target name="init">
     <delete quiet="yes" dir="${output}"/>
@@ -24,7 +24,7 @@
     <javac srcdir="javac-dir/good-src" destdir="${output}"/>
     <path id="whichresource-build" path="${output}"/>
   </target>
-  
+
   <target name="test-reference" depends="init">
     <whichresource
       property="whichresource.prop"
@@ -47,5 +47,5 @@
       <isset property="whichresource.prop2"/>
     </au:assertFalse>
   </target>
-    
+
 </project>

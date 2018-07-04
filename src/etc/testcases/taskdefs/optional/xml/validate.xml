@@ -19,10 +19,10 @@
 
  <target name="testValidate">
     <xmlvalidate warn="false">
-      <fileset dir="." includes="about.xml"/>  
+      <fileset dir="." includes="about.xml"/>
        <dtd publicID="-//stevo//DTD doc 1.0//EN"
          location="doc.dtd"/>
     </xmlvalidate>
   </target>
-  
+
 </project>

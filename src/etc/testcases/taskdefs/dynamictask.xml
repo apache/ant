@@ -19,14 +19,14 @@
 <project name="dynamic-test" default="simple">
 
   <path id="testclasses">
-    <pathelement location="../../../../build/testcases" />
-    <pathelement path="${java.class.path}" />
+    <pathelement location="../../../../build/testcases"/>
+    <pathelement path="${java.class.path}"/>
   </path>
 
   <target name="simple">
     <taskdef name="dyna"
              classname="org.apache.tools.ant.taskdefs.DynamicTask">
-      <classpath refid="testclasses" />
+      <classpath refid="testclasses"/>
     </taskdef>
     <dyna prop1="1" prop2="2">
       <sub prop3="3"/>
