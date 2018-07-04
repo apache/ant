@@ -92,10 +92,10 @@ public class Foo {
     <presetdef name="javah-fileset">
       <javah destdir="${output}">
         <fileset dir="${output}">
-  	  <include name="**/*.class"/>
+          <include name="**/*.class"/>
         </fileset>
         <classpath>
-  	  <pathelement location="${output}"/>
+          <pathelement location="${output}"/>
         </classpath>
       </javah>
     </presetdef>

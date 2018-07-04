@@ -109,10 +109,10 @@
             <file name="2"/>
           </filelist>
           <filterchain>
-	    <tokenfilter>
-	      <ignoreblank/>
-	    </tokenfilter>
-	  </filterchain>
+            <tokenfilter>
+              <ignoreblank/>
+            </tokenfilter>
+          </filterchain>
         </concat>
       </resourcesmatch>
     </au:assertTrue>
@@ -142,7 +142,7 @@
     <concat destfile="${output}/TESTDEST" ignoreEmpty="false">
       <filelist dir="${input}" files="thisfiledoesnotexist"/>
       <header filtering="false" trim="yes">
-	header
+        header
       </header>
     </concat>
     <au:assertFileExists file="${output}/TESTDEST"/>

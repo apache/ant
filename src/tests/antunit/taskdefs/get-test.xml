@@ -95,14 +95,14 @@
 
 
     <target name="testInfiniteRedirect" unless="jenkins">
-        <au:expectfailure expectedmessage="More than 25 times redirected, giving up">
+      <au:expectfailure expectedmessage="More than 25 times redirected, giving up">
       <get  src="${location}/infinite.txt" dest="${output}/infinite.tmp"/>
         </au:expectfailure>
     </target>
 
 
     <target name="testNestedResources">
-      <get dest="${output}/downloads">
+      <get  dest="${output}/downloads">
         <url url="http://ant.apache.org/index.html"/>
         <url url="http://ant.apache.org/faq.html"/>
       </get>

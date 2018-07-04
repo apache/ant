@@ -15,10 +15,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<xsl:stylesheet	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:lxslt="http://xml.apache.org/xslt"
-        xmlns:redirect="http://xml.apache.org/xalan/redirect"
-	extension-element-prefixes="redirect">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+                xmlns:lxslt="http://xml.apache.org/xslt"
+                xmlns:redirect="http://xml.apache.org/xalan/redirect"
+                extension-element-prefixes="redirect">
 <!--
 This is a test to ensure that systemid is set correctly
 for a xsl...the behavior might be dependent on Xalan1
@@ -30,7 +30,7 @@ the base or the JVM working dir just like: new File("xalan-redirect-out.tmp")
 
 <xsl:template match="/">
 <redirect:write file="./xalan{$xalan-version}-redirect-out.tmp">
-	<test>This should be written to the file</test>
+    <test>This should be written to the file</test>
 </redirect:write>
 </xsl:template>
 

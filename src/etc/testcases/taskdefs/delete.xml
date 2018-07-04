@@ -20,7 +20,6 @@
 
   <import file="../buildfiletest-base.xml"/>
 
-
   <property name="dir" location="${output}"/>
   <basename property="dirname" file="${output}"/>
 
@@ -120,7 +119,7 @@
   <target name="test9" depends="init">
     <delete>
       <files>
-          <include name="${dir}/**"/>
+        <include name="${dir}/**"/>
       </files>
     </delete>
     <expectabsent/>
@@ -153,17 +152,17 @@
   </target>
 
   <target name="test14" depends="init">
-	<delete quiet="false">
-		<fileset dir="${dir}"/>
-		<fileset dir="${dir}"/>
-	</delete>
+    <delete quiet="false">
+      <fileset dir="${dir}"/>
+      <fileset dir="${dir}"/>
+    </delete>
   </target>
 
   <target name="test15" depends="init">
-	<delete quiet="true">
-		<fileset dir="${dir}"/>
-		<fileset dir="${dir}"/>
-	</delete>
+    <delete quiet="true">
+      <fileset dir="${dir}"/>
+      <fileset dir="${dir}"/>
+    </delete>
   </target>
   <!-- Bugzilla 40313 -->
   <target name="test16.init">
@@ -188,7 +187,5 @@
     </fail>
     <expectabsent target="${dir}/subdir"/>
   </target>
-
-
 
 </project>

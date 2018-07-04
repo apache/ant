@@ -244,7 +244,7 @@ public class NullByteStreamResource extends Resource {
     <mkdir dir="${output}"/>
     <mkdir dir="${input}"/>
     <copy file="${input}/not-there.txt" todir="${output}" failonerror="false" quiet="true"/>
-  	<au:assertLogDoesntContain text="Could not find file"/>
+    <au:assertLogDoesntContain text="Could not find file"/>
   </target>
 
   <target name="testMissingFilesetRoot">
@@ -468,8 +468,8 @@ public class NullByteStreamResource extends Resource {
     <mkdir dir="${output}"/>
     <copy todir="${output}">
       <mappedresources>
-	<fileset dir="${input}"/>
-	<globmapper from="a.*" to="*"/>
+        <fileset dir="${input}"/>
+        <globmapper from="a.*" to="*"/>
       </mappedresources>
     </copy>
     <au:assertFileExists file="${output}/filea"/>

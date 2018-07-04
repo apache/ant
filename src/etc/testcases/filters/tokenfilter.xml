@@ -350,8 +350,8 @@
       hello world
     </concat>
     <replaceregexp file="${output}/replaceregexp"
-                  match="hello( )world"
-                  replace="bye\1world"/>
+                   match="hello( )world"
+                   replace="bye\1world"/>
   </target>
 
 </project>
