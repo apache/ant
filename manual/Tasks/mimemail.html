@@ -34,9 +34,10 @@
 <a href="https://javaee.github.io/javamail/">JavaMail</a>
 and <a href="https://github.com/javaee/activation">Java
 Activation Framework</a> are required for this task. The Java
-Activation Framework is part of the standard class library for Java6
-to Java9 but must be provided as an external library for Java10 and
-later again.</p>
+Activation Framework is part of the standard class library for Java 6
+to Java 10 but the <code>java.activation</code> module has been
+deprecated in Java 9 and must be enabled explicitly when running on
+Java 10. Alternatively it can be provided as an external library.</p>
 <p>Multiple files can be attached using <a href="../Types/fileset.html">FileSets.</a></p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
