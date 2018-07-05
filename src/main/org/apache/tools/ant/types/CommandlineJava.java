@@ -368,11 +368,24 @@ public class CommandlineJava implements Cloneable {
         return null;
     }
 
+    /**
+     * Set the source-file, to execute as single file source programs, a feature, available
+     * since Java 11.
+     *
+     * @param sourceFile The path to the source file
+     * @since Ant 1.10.5
+     */
     public void setSourceFile(final String sourceFile) {
         this.executableType = ExecutableType.SOURCE_FILE;
         javaCommand.setExecutable(sourceFile);
     }
 
+    /**
+     * @return Returns the source-file to execute, if this command line has
+     * been {@link #setSourceFile(String) configured for single file source program
+     * execution}. Else returns null.
+     * @since Ant 1.10.5
+     */
     public String getSourceFile() {
         return this.executableType == ExecutableType.SOURCE_FILE ? this.javaCommand.getExecutable() : null;
     }
