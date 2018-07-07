@@ -20,7 +20,7 @@
 
   <import file="../buildfiletest-base.xml"/>
 
-  <property name="dir" location="${output}"/>
+  <property name="dir" location="${output}" />
   <basename property="dirname" file="${output}"/>
 
   <macrodef name="expectabsent">
@@ -29,7 +29,7 @@
       <fileset id="detritus" dir="@{target}" erroronmissingdir="false"/>
       <fail message="@{target} still has: ${toString:detritus}">
         <condition>
-          <available file="@{target}"/>
+          <available file="@{target}" />
         </condition>
     </fail>
     </sequential>
@@ -41,11 +41,11 @@
         <condition>
           <or>
             <resourcecount when="greater" count="0">
-              <fileset dir="${dir}"/>
+              <fileset dir="${dir}" />
             </resourcecount>
             <not>
               <resourcecount count="${srcdirs}">
-                <dirset dir="${dir}"/>
+                <dirset dir="${dir}" />
               </resourcecount>
             </not>
           </or>
@@ -56,31 +56,31 @@
 
   <target name="init">
     <resourcecount property="srcdirs">
-      <dirset dir="${basedir}"/>
+      <dirset dir="${basedir}" />
     </resourcecount>
 
     <resourcecount property="srcsize">
-      <files includes="${basedir}/"/>
+      <files includes="${basedir}/" />
     </resourcecount>
 
-    <mkdir dir="${dir}"/>
+    <mkdir dir="${dir}" />
 
     <copy todir="${dir}">
-      <fileset dir="${basedir}" excludes="${dirname},${dirname}/**"/>
+      <fileset dir="${basedir}" excludes="${dirname},${dirname}/**" />
     </copy>
   </target>
 
   <target name="test1">
-    <delete/>
+    <delete />
   </target>
 
   <target name="test2" depends="init">
-    <delete file="${dir}"/>
+    <delete file="${dir}" />
     <fail>
       <condition>
         <not>
           <resourcecount count="${srcsize}">
-            <files includes="${dir}/"/>
+            <files includes="${dir}/" />
           </resourcecount>
         </not>
       </condition>
@@ -88,32 +88,32 @@
   </target>
 
   <target name="test4" depends="init">
-    <delete dir="${dir}"/>
-    <expectabsent/>
+    <delete dir="${dir}" />
+    <expectabsent />
   </target>
 
   <target name="test5" depends="init">
-    <delete dir="${dir}" includes="**"/>
-    <expectdirsonly/>
+    <delete dir="${dir}" includes="**" />
+    <expectdirsonly />
   </target>
 
   <target name="test6" depends="init">
-    <delete dir="${dir}" includes="**" includeemptydirs="true"/>
-    <expectabsent/>
+    <delete dir="${dir}" includes="**" includeemptydirs="true" />
+    <expectabsent />
   </target>
 
   <target name="test7" depends="init">
     <delete>
-      <fileset id="fs" dir="${dir}"/>
+      <fileset id="fs" dir="${dir}" />
     </delete>
-    <expectdirsonly/>
+    <expectdirsonly />
   </target>
 
   <target name="test8" depends="init">
     <delete includeemptydirs="true">
-      <fileset dir="${dir}"/>
+      <fileset dir="${dir}" />
     </delete>
-    <expectabsent/>
+    <expectabsent />
   </target>
 
   <target name="test9" depends="init">
@@ -122,47 +122,47 @@
         <include name="${dir}/**"/>
       </files>
     </delete>
-    <expectabsent/>
+    <expectabsent />
   </target>
 
   <target name="test10">
     <delete>
-      <filelist dir="${dir}" files="test10absentfile"/>
+      <filelist dir="${dir}" files="test10absentfile" />
     </delete>
   </target>
 
   <target name="test11">
     <delete failonerror="false">
-      <fileset dir="thisdenotesadirectorythatwillneverexistblah"/>
+      <fileset dir="thisdenotesadirectorythatwillneverexistblah" />
     </delete>
   </target>
 
   <target name="test12">
     <delete failonerror="false" includeemptydirs="true">
-      <fileset dir="thisdenotesadirectorythatwillneverexistblah"/>
+      <fileset dir="thisdenotesadirectorythatwillneverexistblah" />
     </delete>
   </target>
 
   <target name="test13" depends="init">
     <delete includeemptydirs="true">
-      <fileset dir="${dir}"/>
-      <fileset dir="${dir}"/>
+      <fileset dir="${dir}" />
+      <fileset dir="${dir}" />
     </delete>
-    <expectabsent/>
+    <expectabsent />
   </target>
 
   <target name="test14" depends="init">
-    <delete quiet="false">
-      <fileset dir="${dir}"/>
-      <fileset dir="${dir}"/>
-    </delete>
+	<delete quiet="false">
+		<fileset dir="${dir}" />
+		<fileset dir="${dir}" />
+	</delete>
   </target>
 
   <target name="test15" depends="init">
-    <delete quiet="true">
-      <fileset dir="${dir}"/>
-      <fileset dir="${dir}"/>
-    </delete>
+	<delete quiet="true">
+		<fileset dir="${dir}" />
+		<fileset dir="${dir}" />
+	</delete>
   </target>
   <!-- Bugzilla 40313 -->
   <target name="test16.init">

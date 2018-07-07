@@ -21,7 +21,7 @@
   <import file="../../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}"/>
+    <mkdir dir="${output}" />
   </target>
 
 
@@ -51,7 +51,7 @@
 
   <target name="testTransferParameterUnsetWithIf">
       <xslt in="data.xml" out="${output}/out.xml" style="printParams.xsl">
-          <param name="undefined" expression="${value}" if="value"/>
+          <param name="undefined" expression="${value}" if="value" />
       </xslt>
   </target>
 
@@ -124,7 +124,7 @@
       <!-- also testing style as resources, with refid -->
       <file id="xslFile" file="printParams.xsl"/>
       <xslt in="data.xml" out="${output}/out.xml" style="printParams.xsl">
-        <style refid="xslFile"/>
+        <style refid="xslFile" />
       </xslt>
   </target>
 
@@ -158,8 +158,10 @@
             basedir="${output}/xml"
             includes="**/*.xml"
             extension=".txt"
+
             filenameparameter="filename"
-            filedirparameter="filedir"/>
+            filedirparameter="filedir"
+      />
   </target>
 
   <target name="testFilenameAsParam">
@@ -173,7 +175,9 @@
             basedir="${output}/xml"
             includes="**/*.xml"
             extension=".txt"
-            filenameparameter="filename"/>
+
+            filenameparameter="filename"
+      />
   </target>
 
   <target name="testFilenameAsParamNoSetting">
@@ -186,8 +190,8 @@
             destdir="${output}"
             basedir="${output}/xml"
             includes="**/*.xml"
-            extension=".txt"/>
-      <!-- without 'filenameparameter' to check, that the xsl:param is NOT set -->
+            extension=".txt"
+      /> <!-- without 'filenameparameter' to check, that the xsl:param is NOT set -->
   </target>
 
 </project>

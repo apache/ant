@@ -19,7 +19,7 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}"/>
+    <mkdir dir="${output}" />
     <property name="src" location="${output}/source"/>
     <property name="dest" location="${output}/target"/>
     <mkdir dir="${src}"/>

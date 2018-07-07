@@ -19,7 +19,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
+   
 -->
   <xsl:param name="title"/>
   <xsl:param name="module"/>
@@ -79,18 +79,18 @@
         <p style="text-align: right">Designed for use with <a href="http://ant.apache.org/">Apache Ant</a>.</p>
         <hr/>
         <table border="0" width="100%" cellspacing="1">
-
+          
           <xsl:apply-templates select=".//entry">
             <xsl:sort select="date" data-type="text" order="descending"/>
             <xsl:sort select="time" data-type="text" order="descending"/>
           </xsl:apply-templates>
-
+          
         </table>
-
+        
       </body>
     </html>
   </xsl:template>
-
+  
   <xsl:template match="entry">
     <tr>
       <td class="dateAndAuthor">
@@ -129,13 +129,13 @@
       <a>
         <xsl:choose>
           <xsl:when test="string-length(prevrevision) = 0 ">
-            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module"/>/<xsl:value-of select="name"/>?rev=<xsl:value-of select="revision"/>&amp;content-type=text/x-cvsweb-markup</xsl:attribute>
+            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?rev=<xsl:value-of select="revision" />&amp;content-type=text/x-cvsweb-markup</xsl:attribute>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module"/>/<xsl:value-of select="name"/>?r1=<xsl:value-of select="revision"/>&amp;r2=<xsl:value-of select="prevrevision"/></xsl:attribute>
+            <xsl:attribute name="href"><xsl:value-of select="$cvsweb"/><xsl:value-of select="$module" />/<xsl:value-of select="name" />?r1=<xsl:value-of select="revision" />&amp;r2=<xsl:value-of select="prevrevision"/></xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:value-of select="name"/> (<xsl:value-of select="revision"/>)</a>
+        <xsl:value-of select="name" /> (<xsl:value-of select="revision"/>)</a>
     </li>
   </xsl:template>
 
@@ -144,5 +144,5 @@
   <xsl:template match="msg">
     <xsl:apply-templates/>
   </xsl:template>
-
+  
 </xsl:stylesheet>

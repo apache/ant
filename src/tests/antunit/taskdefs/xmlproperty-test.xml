@@ -18,7 +18,7 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <description/>
 
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
   <target name="test-empty">
     <xmlproperty file="xmlproperty-test.xml"/>
@@ -141,3 +141,4 @@
                              value="${b.c.loc}${path.separator}${glob.dot.jar}"/>
   </target>
 </project>
+

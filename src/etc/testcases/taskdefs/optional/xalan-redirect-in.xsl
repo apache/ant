@@ -25,7 +25,7 @@ for a xsl...the behavior might be dependent on Xalan1
 and Xalan2...this will be a problem to erase the files :(
 Can take as a systemid the base for the xsl document or
 the base or the JVM working dir just like: new File("xalan-redirect-out.tmp")
--->
+-->	
 <xsl:param name="xalan-version" select="'x'"/>
 
 <xsl:template match="/">

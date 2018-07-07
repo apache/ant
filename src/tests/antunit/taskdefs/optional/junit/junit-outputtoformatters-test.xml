@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../../antunit-base.xml"/>
+  <import file="../../../antunit-base.xml" />
   <property name="ant-build" location="../../../../../../build"/>
   <property name="build-junit-dir" location="${ant-build}/antunit/junit-dir"/>
   <property name="reports.dir" location="${build-junit-dir}/report"/>
@@ -43,7 +43,7 @@
 
   <macrodef name="assert-log-not-contains" backtrace="no">
     <sequential>
-      <au:assertLogDoesntContain text="Hello From Test"/>
+      <au:assertLogDoesntContain text="Hello From Test" />
     </sequential>
   </macrodef>
 
@@ -60,7 +60,7 @@
     <sequential>
       <junit fork="@{fork}" haltonfailure="no" showoutput="@{showoutput}"
            outputtoformatters="@{outputtoformatters}">
-        <test name="ExampleTest" todir="${reports.dir}"/>
+        <test name="ExampleTest" todir="${reports.dir}"/> 
         <classpath path="${resources}"/>
         <formatter type="plain" usefile="yes"/>
       </junit>
@@ -72,7 +72,7 @@
     <mkdir  dir="${resources}"/>
     <mkdir  dir="${reports.dir}"/>
   </target>
-
+    
   <target name="compile" depends="init">
     <javac srcdir="src" destdir="${resources}" debug="yes"/>
   </target>
@@ -134,3 +134,4 @@
   </target>
 
 </project>
+

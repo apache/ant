@@ -16,3 +16,4 @@ limitations under the License.
 */
 public class B extends C {
 }
+

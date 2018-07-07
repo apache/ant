@@ -91,7 +91,7 @@
         <archives refid="ref"/>
       </copy>
     </au:expectfailure>
-  </target>
+  </target>    
 
   <!-- works but takes a veeeeeery long time -->
   <target name="XtestResourcesManualExample">

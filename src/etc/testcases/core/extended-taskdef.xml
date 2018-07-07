@@ -24,7 +24,7 @@
   <property name="src" value="Foo.java"/>
   <property name="taskdefs" value="tasks.properties"/>
 
-  <target name="write">
+  <target name="write" >
     <echo file="${src}">
       import org.apache.tools.ant.BuildException;
 
@@ -67,7 +67,7 @@
       <fileset dir="${basedir}"
           includes="${src},*.class"/>
     </delete>
-    <delete file="${taskdefs}"/>
+    <delete file="${taskdefs}" />
   </target>
 
 </project>

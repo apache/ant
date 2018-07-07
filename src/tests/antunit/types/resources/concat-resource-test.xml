@@ -19,10 +19,10 @@
 <project name="test-concat" basedir="." default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../../antunit-base.xml"/>
+  <import file="../../antunit-base.xml" />
 
-  <property name="br" value="${line.separator}"/>
-  <property name="world" value="World"/>
+  <property name="br" value="${line.separator}" />
+  <property name="world" value="World" />
 
   <target name="testCountEquals1">
     <au:assertTrue>
@@ -46,9 +46,9 @@
       <resourcesmatch>
         <string>foobarbaz</string>
         <concat>
-          <string value="foo"/>
-          <string value="bar"/>
-          <string value="baz"/>
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
         </concat>
       </resourcesmatch>
     </au:assertTrue>
@@ -59,9 +59,9 @@
       <resourcesmatch>
         <string>foo${line.separator}bar${line.separator}baz${line.separator}</string>
         <concat fixlastline="true">
-          <string value="foo"/>
-          <string value="bar"/>
-          <string value="baz"/>
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
         </concat>
       </resourcesmatch>
     </au:assertTrue>
@@ -76,12 +76,12 @@
     </copy>
     <au:assertTrue>
       <resourcesmatch astext="true">
-        <file file="${output}/utf-16.in"/>
+        <file file="${output}/utf-16.in" />
         <concat outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
         <concat outputEncoding="utf-16" fixlastline="true">
-          <string value="foo"/>
-          <string value="bar"/>
-          <string value="baz"/>
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
         </concat>
       </resourcesmatch>
     </au:assertTrue>
@@ -100,9 +100,9 @@ baz
 #comment 3
           <filterchain>
             <striplinecomments>
-              <comment value="#"/>
+              <comment value="#" />
             </striplinecomments>
-            <ignoreblank/>
+            <ignoreblank />
           </filterchain>
         </concat>
       </resourcesmatch>
@@ -115,12 +115,12 @@ baz
     </resources>
     <au:assertTrue>
       <and>
-        <resourcecount count="1" refid="concat"/>
+        <resourcecount count="1" refid="concat" />
         <resourcesmatch>
           <string>foo</string>
-          <resources refid="concat"/>
+          <resources refid="concat" />
           <!-- purposely hit it twice to see what happens -->
-          <resources refid="concat"/>
+          <resources refid="concat" />
         </resourcesmatch>
       </and>
     </au:assertTrue>
@@ -132,7 +132,7 @@ baz
         <string>foobar</string>
         <concat>
           <string>foo</string>
-          <propertyresource name="someunsetproperty"/>
+          <propertyresource name="someunsetproperty" />
           <string>bar</string>
         </concat>
       </resourcesmatch>
@@ -143,7 +143,7 @@ baz
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <name name="snicklefritz"/>
+          <name name="snicklefritz" />
           <resources>
             <concat resourceName="snicklefritz">
               whatever

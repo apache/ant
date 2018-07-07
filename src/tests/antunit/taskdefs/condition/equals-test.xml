@@ -18,62 +18,62 @@
 <project name="equals-test" xmlns:au="antlib:org.apache.ant.antunit"
          default="antunit">
 
-  <import file="../../antunit-base.xml"/>
+  <import file="../../antunit-base.xml" />
 
   <target name="test-noforcestring">
-    <string id="s" value="foo"/>
+    <string id="s" value="foo" />
     <au:assertFalse>
-      <equals arg1="foo" arg2="${ant.refid:s}"/>
+      <equals arg1="foo" arg2="${ant.refid:s}" />
     </au:assertFalse>
   </target>
 
   <target name="test-forcestring">
-    <string id="s" value="foo"/>
+    <string id="s" value="foo" />
     <au:assertTrue>
-      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true"/>
+      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" />
     </au:assertTrue>
   </target>
 
   <target name="test-forcestring-notrim">
-    <string id="s" value=" foo "/>
+    <string id="s" value=" foo " />
     <au:assertFalse>
-      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true"/>
+      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" />
     </au:assertFalse>
   </target>
 
   <target name="test-forcestring-trim">
-    <string id="s" value=" foo "/>
+    <string id="s" value=" foo " />
     <au:assertTrue>
-      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" trim="true"/>
+      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" trim="true" />
     </au:assertTrue>
   </target>
 
   <target name="test-forcestring-cs">
-    <string id="s" value="Foo"/>
+    <string id="s" value="Foo" />
     <au:assertFalse>
-      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true"/>
+      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" />
     </au:assertFalse>
   </target>
 
   <target name="test-forcestring-nocs">
-    <string id="s" value="Foo"/>
+    <string id="s" value="Foo" />
     <au:assertTrue>
-      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" casesensitive="false"/>
+      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" casesensitive="false" />
     </au:assertTrue>
   </target>
 
   <target name="test-forcestring-trim-cs">
-    <string id="s" value=" Foo "/>
+    <string id="s" value=" Foo " />
     <au:assertFalse>
-      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" trim="true"/>
+      <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true" trim="true" />
     </au:assertFalse>
   </target>
 
   <target name="test-forcestring-trim-nocs">
-    <string id="s" value=" Foo "/>
+    <string id="s" value=" Foo " />
     <au:assertTrue>
       <equals arg1="foo" arg2="${ant.refid:s}" forcestring="true"
-              trim="true" casesensitive="false"/>
+              trim="true" casesensitive="false" />
     </au:assertTrue>
   </target>
 

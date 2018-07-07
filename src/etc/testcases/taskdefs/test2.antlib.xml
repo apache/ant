@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <antlib>
-  <typedef
+  <typedef 
     name="mytask2" onerror="ignore"
     classname="org.apache.tools.ant.taskdefs.AntlibTest$MyTask2"/>
 </antlib>

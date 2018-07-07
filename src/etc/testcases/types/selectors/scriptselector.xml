@@ -17,8 +17,8 @@
 -->
 <project name="scriptselector" default="def" basedir=".">
 
-  <property name="src.file" location="${ant.file}"/>
-
+  <property name="src.file" location="${ant.file}" />
+  
   <macrodef name="testselected">
     <element name="selector" implicit="yes" optional="true"/>
     <attribute name="message"/>
@@ -33,8 +33,8 @@
         </condition>
       </fail>
     </sequential>
-  </macrodef>
-
+  </macrodef>  
+  
   <macrodef name="testnoselected">
     <element name="selector" implicit="yes" optional="true"/>
     <attribute name="message"/>
@@ -47,18 +47,18 @@
         </condition>
       </fail>
     </sequential>
-  </macrodef>
+  </macrodef>    
 
   <!-- this is here to test the macro is well coded -->
   <target name="testNoSelector">
-    <testselected message="testNoSelector">
+    <testselected message="testNoSelector" >
     </testselected>
   </target>
 
   <target name="testNolanguage">
-    <testselected message="testNolanguage">
+    <testselected message="testNolanguage" >
       <selector>
-        <scriptselector>
+        <scriptselector >
           self.setSelected(true);
         </scriptselector>
       </selector>
@@ -66,7 +66,7 @@
   </target>
 
   <target name="testSelectionSetByDefault">
-    <testselected message="testSelectionSetByDefault">
+    <testselected message="testSelectionSetByDefault" >
       <selector>
         <scriptselector language="javascript">
         </scriptselector>
@@ -76,7 +76,7 @@
 
 
   <target name="testSelectionSetWorks">
-    <testselected message="testSelectionSetWorks">
+    <testselected message="testSelectionSetWorks" >
       <selector>
         <scriptselector language="javascript">
           self.setSelected(false);
@@ -95,29 +95,29 @@
       </selector>
     </testnoselected>
   </target>
-
+  
   <target name="testFileAttribute">
-    <testselected message="testFileAttribute">
+    <testselected message="testFileAttribute" >
       <selector>
         <scriptselector language="javascript">
           self.setSelected(file.equals(self.getFile()));
         </scriptselector>
       </selector>
     </testselected>
-  </target>
+  </target>  
 
   <target name="testFilenameAttribute">
-    <testselected message="testFilenameAttribute">
+    <testselected message="testFilenameAttribute" >
       <selector>
         <scriptselector language="javascript">
           self.setSelected(filename.equals(self.getFilename()));
         </scriptselector>
       </selector>
     </testselected>
-  </target>
-
+  </target>    
+  
   <target name="testBasedirAttribute">
-    <testselected message="testBasedirAttribute">
+    <testselected message="testBasedirAttribute" >
       <selector>
         <scriptselector language="javascript">
           self.setSelected(basedir.equals(self.getBasedir()));
@@ -125,14 +125,14 @@
       </selector>
     </testselected>
   </target>
-
+  
   <target name="notestFilenameLength">
-    <testselected message="notestFilenameLength">
+    <testselected message="notestFilenameLength" >
       <selector>
         <scriptselector language="javascript">
           self.setSelected((filename.length%2)==0);
         </scriptselector>
       </selector>
     </testselected>
-  </target>
+  </target>    
 </project>

@@ -21,7 +21,8 @@
   <target name="test-refid-modify">
     <fileset id="modify-refid-1"
              dir="${basedir}"
-             includes="*.xml"/>
+             includes="*.xml"
+             />
     <zipfileset id="modify-refid-2"
                 refid="modify-refid-1"
                 prefix="WEB-INF/lib/"/>

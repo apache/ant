@@ -20,8 +20,8 @@
   <import file="../buildfiletest-base.xml"/>
 
   <path id="testclasses">
-    <pathelement location="../../../../build/testcases"/>
-    <pathelement path="${java.class.path}"/>
+    <pathelement location="../../../../build/testcases" />
+    <pathelement path="${java.class.path}" />
   </path>
 
   <mapper id="testmapper"
@@ -75,8 +75,8 @@
     </condition>
     <fail unless="test2.outcome">mulitmove failed</fail>
   </target>
-
-  <!--
+  
+  <!-- 
        test traditional single file to single file copy explicitly telling
        task to ignore multiple mappings
        -->

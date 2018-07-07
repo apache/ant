@@ -18,7 +18,7 @@
 <project>
   <target name="foo">
     <echo>foo</echo>
-    <fail if="failfoo" message="failfoo"/>
+    <fail if="failfoo" message="failfoo" />
   </target>
   <target name="a" depends="foo">
     <echo>a</echo>

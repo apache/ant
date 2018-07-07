@@ -16,9 +16,9 @@
   limitations under the License.
 -->
 <project>
-    <import file="build-many-import-common.xml"/>
-    <import file="build-many-import-commonref.xml"/>
+    <import file="build-many-import-common.xml" />
+    <import file="build-many-import-commonref.xml" />
     <target name="setfoo" depends="init">
-        <property name="foo" value="hello"/>
+        <property name="foo" value="hello" />
     </target>
 </project>

@@ -29,7 +29,7 @@
         <touch file="${output}/delta/delta.xml"/>
     </target>
 
-    <target name="children-of-excluded-dir-setup" depends="extended-setup"/>
+    <target name="children-of-excluded-dir-setup" depends="extended-setup" />
 
     <target name="symlink-setup" depends="setUp">
         <mkdir dir="${output}/epsilon/gamma"/>

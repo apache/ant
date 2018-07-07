@@ -17,17 +17,17 @@
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
 
-  <import file="../../antunit-base.xml"/>
+  <import file="../../antunit-base.xml" />
 
-  <property name="output.dir" location="output"/>
-  <property name="foo.file" location="${output.dir}/foo"/>
+  <property name="output.dir" location="output" />
+  <property name="foo.file" location="${output.dir}/foo" />
 
   <target name="setUp">
-    <touch file="${foo.file}" mkdirs="true"/>
+    <touch file="${foo.file}" mkdirs="true" />
   </target>
 
   <target name="tearDown">
-    <delete dir="${output.dir}"/>
+    <delete dir="${output.dir}" />
   </target>
 
   <target name="testMapperByTypedef" depends="setUp">
@@ -35,7 +35,7 @@
       <resourcecount count="1">
         <fileset file="${foo.file}">
           <depend targetdir="${basedir}"><!-- dummy targetdir -->
-            <mergemapper to="${ant.file}"/>
+            <mergemapper to="${ant.file}" />
           </depend>
         </fileset>
       </resourcecount>

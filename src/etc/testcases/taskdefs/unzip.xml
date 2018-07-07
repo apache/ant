@@ -38,17 +38,17 @@
   </target>
 
   <target name="testZipTask">
-    <ant antfile="zip.xml" target="feather"/>
-    <unzip src="${output}/asf-logo.gif.zip" dest="${output}"/>
+    <ant antfile="zip.xml" target="feather" />
+    <unzip src="${output}/asf-logo.gif.zip" dest="${output}" />
   </target>
 
   <target name="testUncompressedZipTask">
-    <ant antfile="zip.xml" target="uncompressed-feather"/>
-    <unzip src="${output}/asf-logo.gif.zip" dest="${output}"/>
+    <ant antfile="zip.xml" target="uncompressed-feather" />
+    <unzip src="${output}/asf-logo.gif.zip" dest="${output}" />
   </target>
 
   <target name="realTest">
-    <unzip src="expected/asf-logo.gif.zip" dest="${output}"/>
+    <unzip src="expected/asf-logo.gif.zip" dest="${output}" />
   </target>
 
   <target name="prepareTestZip">
@@ -156,7 +156,7 @@
         <include name="1/**"/>
       </patternset>
       <mapper type="glob" from="*" to="*.txt"/>
-      <mapper type="flatten"/>
+      <mapper type="flatten"/>      
     </unzip>
   </target>
 

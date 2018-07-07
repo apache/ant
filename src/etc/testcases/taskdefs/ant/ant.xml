@@ -22,11 +22,11 @@
   </target>
 
   <target name="dummy">
-    <echo message="${basedir}"/>
+    <echo message="${basedir}" />
   </target>
 
   <target name="callback">
-    <ant antfile="../ant.xml" target="dummy" inheritAll="false"/>
+    <ant antfile="../ant.xml" target="dummy" inheritAll="false" />
   </target>
 
 

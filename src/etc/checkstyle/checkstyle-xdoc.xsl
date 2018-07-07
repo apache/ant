@@ -22,7 +22,7 @@
 -->
 
     <xsl:output method="xml" indent="yes"/>
-    <xsl:decimal-format decimal-separator="." grouping-separator=","/>
+    <xsl:decimal-format decimal-separator="." grouping-separator="," />
 
     <xsl:param name="output.dir" select="'.'"/>
     <xsl:param name="basedir" select="'.'"/>
@@ -127,3 +127,4 @@
         </xsl:attribute>
     </xsl:template>
 </xsl:stylesheet>
+

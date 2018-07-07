@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 
-<project name="abstractcvstask-test" basedir="../../../../"
+<project name="abstractcvstask-test" basedir="../../../../" 
          default="tearDown">
 
   <import file="../buildfiletest-base.xml" optional="false"/>
@@ -29,7 +29,7 @@
     <cvs cvsroot="anoncvs@anoncvs.ca.openbsd.org:/cvs"
          package="src/Makefile"
          dest="${output}"
-         quiet="true"/>
+         quiet="true" />
   </target>
 
   <target name="tag-attribute">
@@ -37,7 +37,7 @@
          package="src/Makefile"
          dest="${output}"
          quiet="true"
-         tag="OPENBSD_5_3"/>
+         tag="OPENBSD_5_3" />
     <cvs cvsroot="anoncvs@anoncvs.ca.openbsd.org:/cvs"
          package="src/Makefile"
          dest="${output}"

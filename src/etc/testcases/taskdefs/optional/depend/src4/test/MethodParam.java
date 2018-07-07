@@ -21,3 +21,4 @@ public class MethodParam {
         System.out.print(ContainsOnlyInner.class);
     }
 }
+

@@ -53,7 +53,7 @@ Fixed bugs:
  * <cab> died with a NullPointerException since Ant 1.10.2.
    Bugzilla Report 62335
 
- * The <depend> task would fail with
+ * The <depend> task would fail with 
    "java.lang.ClassFormatError: Invalid Constant Pool entry Type 19" while
    parsing a module-info.class. The task is compatible with
    Java bytecode version 53 now.

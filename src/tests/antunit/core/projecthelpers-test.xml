@@ -72,15 +72,15 @@
   </target>
 
   <target name="testCrossTargets" depends="defineHelpers">
-    <ant antfile="projecthelpers/build-cross-targets.xml"/>
+    <ant antfile="projecthelpers/build-cross-targets.xml" />
   </target>
 
   <target name="testManyImport" depends="defineHelpers">
-    <ant antfile="projecthelpers/build-many-import.xml"/>
+    <ant antfile="projecthelpers/build-many-import.xml" />
   </target>
 
   <target name="testCrossExtension" depends="defineHelpers">
-    <ant antfile="projecthelpers/build-cross-extension.xml"/>
+    <ant antfile="projecthelpers/build-cross-extension.xml" />
   </target>
 
 </project>

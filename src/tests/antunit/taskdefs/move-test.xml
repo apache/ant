@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
   <target name="test-move-caseonly">
     <!-- this test is inspired by bugzilla 41948 -->
@@ -60,7 +60,8 @@
   </target>
 
   <target name="testNotModifiedSelector"
-          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574">
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574"
+          >
     <mkdir dir="${input}/images"/>
     <mkdir dir="${input}/cache"/>
     <touch file="${input}/images/foo.jpg"/>
@@ -81,8 +82,8 @@
     <au:assertFileDoesntExist file="${input}/cache/cache.properties"/>
     <move todir="${output}" overwrite="true">
       <fileset dir="${input}/images">
-        <include name="*.jpg"/>
-        <selector refid="cache.selector"/>
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
       </fileset>
     </move>
     <au:assertFileExists file="${input}/cache/cache.properties"/>
@@ -90,8 +91,8 @@
     <au:assertFileDoesntExist file="${output}/foo.jpg"/>
     <move todir="${output}" overwrite="true">
       <fileset dir="${input}/images">
-        <include name="*.jpg"/>
-        <selector refid="cache.selector"/>
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
       </fileset>
     </move>
     <au:assertFileDoesntExist file="${input}/images/foo.jpg"/>

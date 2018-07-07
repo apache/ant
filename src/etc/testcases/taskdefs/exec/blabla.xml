@@ -1,7 +1,7 @@
 <project name="blabla" default="doit">
    <target name="blabla">
         <exec executable="sh">
-            <arg value="blabla.sh"/>
+            <arg value="blabla.sh" />
         </exec>
    </target>
    <target name="doit">

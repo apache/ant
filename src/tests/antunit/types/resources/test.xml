@@ -17,14 +17,14 @@
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../../antunit-base.xml"/>
+  <import file="../../antunit-base.xml" />
 
-  <property name="dirname" value="work"/>
-  <property name="dir" location="${output}/${dirname}"/>
-  <property name="zip" location="${output}/${dirname}.zip"/>
-  <property name="jar" location="${antunit.tmpdir}/${dirname}.jar"/>
-  <property name="file" location="${output}/${dirname}/file.txt"/>
-
+  <property name="dirname" value="work" />
+  <property name="dir" location="${output}/${dirname}" />
+  <property name="zip" location="${output}/${dirname}.zip" />
+  <property name="jar" location="${antunit.tmpdir}/${dirname}.jar" />
+  <property name="file" location="${output}/${dirname}/file.txt" />
+    
   <condition property="offline">
     <not>
       <or>
@@ -37,45 +37,45 @@
   <target name="setUp">
 
     <touch mkdirs="true">
-      <filelist dir="${dir}/foo/a" files="x,y,z"/>
+      <filelist dir="${dir}/foo/a" files="x,y,z" />
     </touch>
 
     <copy todir="${dir}/foo" enablemultiplemappings="true">
-      <fileset dir="${dir}/foo"/>
+      <fileset dir="${dir}/foo" />
       <mapper>
-        <globmapper handledirsep="true" from="a/*" to="b/*"/>
-        <globmapper handledirsep="true" from="a/*" to="c/*"/>
+        <globmapper handledirsep="true" from="a/*" to="b/*" />
+        <globmapper handledirsep="true" from="a/*" to="c/*" />
       </mapper>
     </copy>
 
     <copy todir="${dir}/bar">
-      <fileset dir="${dir}/foo"/>
+      <fileset dir="${dir}/foo" />
     </copy>
 
-    <property name="foo" location="${dir}/foo"/>
-    <property name="foo.a" location="${dir}/foo/a"/>
-    <property name="foo.b" location="${dir}/foo/b"/>
-    <property name="foo.c" location="${dir}/foo/c"/>
+    <property name="foo" location="${dir}/foo" />
+    <property name="foo.a" location="${dir}/foo/a" />
+    <property name="foo.b" location="${dir}/foo/b" />
+    <property name="foo.c" location="${dir}/foo/c" />
 
-    <property name="bar" location="${dir}/bar"/>
-    <property name="bar.a" location="${dir}/bar/a"/>
-    <property name="bar.b" location="${dir}/bar/b"/>
-    <property name="bar.c" location="${dir}/bar/c"/>
+    <property name="bar" location="${dir}/bar" />
+    <property name="bar.a" location="${dir}/bar/a" />
+    <property name="bar.b" location="${dir}/bar/b" />
+    <property name="bar.c" location="${dir}/bar/c" />
   </target>
 
   <target name="tearDown">
-    <delete dir="${dir}"/>
-    <delete file="${zip}"/>
-    <delete file="${jar}" deleteonexit="true"/>
-    <delete file="${file}"/>
+    <delete dir="${dir}" />
+    <delete file="${zip}" />
+    <delete file="${jar}" deleteonexit="true" />
+    <delete file="${file}" />
   </target>
 
   <target name="testfiles1" depends="setUp">
     <au:assertTrue>
       <resourcecount count="26">
         <files>
-          <include name="${dir}/foo/"/>
-          <include name="${dir}/bar/"/>
+          <include name="${dir}/foo/" />
+          <include name="${dir}/bar/" />
         </files>
       </resourcecount>
     </au:assertTrue>
@@ -85,9 +85,9 @@
     <au:assertTrue>
       <resourcecount count="8">
         <files>
-          <include name="${dir}/foo/"/>
-          <include name="${dir}/bar/"/>
-          <type type="dir"/>
+          <include name="${dir}/foo/" />
+          <include name="${dir}/bar/" />
+          <type type="dir" />
         </files>
       </resourcecount>
     </au:assertTrue>
@@ -97,9 +97,9 @@
     <au:assertTrue>
       <resourcecount count="18">
         <files>
-          <include name="${dir}/foo/"/>
-          <include name="${dir}/bar/"/>
-          <type type="file"/>
+          <include name="${dir}/foo/" />
+          <include name="${dir}/bar/" />
+          <type type="file" />
         </files>
       </resourcecount>
     </au:assertTrue>
@@ -110,13 +110,13 @@
       <resourcecount count="27"><!-- include duplicates! -->
         <resources>
           <files>
-            <include name="${dir}/foo/"/>
-            <include name="${dir}/bar/"/>
-            <type type="file"/>
+            <include name="${dir}/foo/" />
+            <include name="${dir}/bar/" />
+            <type type="file" />
           </files>
           <files>
-            <include name="${dir}/foo/"/>
-            <type type="file"/>
+            <include name="${dir}/foo/" />
+            <type type="file" />
           </files>
         </resources>
       </resourcecount>
@@ -125,13 +125,13 @@
 
   <target name="testresourcesref" depends="setUp">
     <files id="files">
-      <include name="${dir}/foo/"/>
-      <include name="${dir}/bar/"/>
-      <type type="file"/>
+      <include name="${dir}/foo/" />
+      <include name="${dir}/bar/" />
+      <type type="file" />
     </files>
     <au:assertTrue>
       <resourcecount count="18">
-        <resources refid="files"/>
+        <resources refid="files" />
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -139,7 +139,7 @@
   <target name="testfileset" depends="setUp">
     <au:assertTrue>
       <resourcecount count="9">
-        <fileset dir="${dir}/foo"/>
+        <fileset dir="${dir}/foo" />
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -147,7 +147,7 @@
   <target name="testdirset" depends="setUp">
     <au:assertTrue>
       <resourcecount count="4">
-        <dirset dir="${dir}/foo"/>
+        <dirset dir="${dir}/foo" />
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -155,7 +155,7 @@
   <target name="testfilelist">
     <au:assertTrue>
       <resourcecount count="5">
-        <filelist dir="${dir}/foo" files="1,2,3,4,5"/>
+        <filelist dir="${dir}/foo" files="1,2,3,4,5" />
       </resourcecount>
     </au:assertTrue>
   </target>
@@ -165,11 +165,11 @@
       <resourcecount count="24">
         <path>
           <path id="p">
-            <fileset id="fs" dir="${foo.a}"/> <!-- 3 -->
-            <dirset id="ds" dir="${foo}"/> <!-- 4 -->
+            <fileset id="fs" dir="${foo.a}" /> <!-- 3 -->
+            <dirset id="ds" dir="${foo}" /> <!-- 4 -->
           </path>
-          <pathelement id="pe" location="${dir}"/> <!-- 1 -->
-          <filelist id="fl" dir="${bar}" files="1,2,3,a,b,c"/> <!-- 6 -->
+          <pathelement id="pe" location="${dir}" /> <!-- 1 -->
+          <filelist id="fl" dir="${bar}" files="1,2,3,a,b,c" /> <!-- 6 -->
           <files id="f"> <!-- 13; 3 overlap fl -->
             <include name="${bar}/"/>
           </files>
@@ -179,31 +179,31 @@
   </target>
 
   <target name="createzip" depends="setUp">
-    <zip destfile="${zip}" basedir="${dir}"/>
+    <zip destfile="${zip}" basedir="${dir}" />
   </target>
 
   <target name="testzipfileset" depends="createzip">
     <au:assertTrue>
       <resourcecount count="9">
-        <zipfileset src="${zip}" includes="foo/"/>
+        <zipfileset src="${zip}" includes="foo/" />
       </resourcecount>
     </au:assertTrue>
   </target>
 
   <target name="testpropertyset">
-    <property name="testpropertyset.a" value="a"/>
-    <property name="testpropertyset.aa" value="aa"/>
-    <property name="testpropertyset.aaa" value="aaa"/>
+    <property name="testpropertyset.a" value="a" />
+    <property name="testpropertyset.aa" value="aa" />
+    <property name="testpropertyset.aaa" value="aaa" />
     <propertyset id="testpropertyset">
-      <propertyref prefix="testpropertyset."/>
+      <propertyref prefix="testpropertyset." />
     </propertyset>
     <au:assertTrue>
       <and>
-        <resourcecount refid="testpropertyset" count="3"/>
+        <resourcecount refid="testpropertyset" count="3" />
         <length length="12">
           <resources>
-            <resources refid="testpropertyset"/>
-            <propertyset refid="testpropertyset"/>
+            <resources refid="testpropertyset" />
+            <propertyset refid="testpropertyset" />
           </resources>
         </length>
       </and>
@@ -218,8 +218,8 @@
             <include name="${foo.a}/w"/>
             <include name="${foo.a}/x"/>
           </files>
-          <fileset dir="${foo.a}" includes="x,y"/> <!-- 2; net 1 -->
-          <filelist dir="${foo.a}" files="v"/> <!-- 1 -->
+          <fileset dir="${foo.a}" includes="x,y" /> <!-- 2; net 1 -->
+          <filelist dir="${foo.a}" files="v" /> <!-- 1 -->
           <files>  <!-- 2; net 1 -->
             <include name="${foo.a}/y"/>
             <include name="${foo.a}/z"/>
@@ -233,9 +233,9 @@
     <au:assertTrue>
       <resourcecount count="3">
         <intersect>
-          <filelist dir="${dir}" files="1,2,3,4,5"/>
-          <filelist dir="${dir}" files="2,3,4,5,6"/>
-          <filelist dir="${dir}" files="3,4,5,6,7"/>
+          <filelist dir="${dir}" files="1,2,3,4,5" />
+          <filelist dir="${dir}" files="2,3,4,5,6" />
+          <filelist dir="${dir}" files="3,4,5,6,7" />
         </intersect>
       </resourcecount>
     </au:assertTrue>
@@ -245,9 +245,9 @@
     <au:assertTrue>
       <resourcecount count="2">
         <difference id="diff">
-          <filelist dir="${dir}" files="1,2,3,4,5"/>
-          <filelist dir="${dir}" files="2,3,4,5,6"/>
-          <filelist dir="${dir}" files="3,4,5,6,7"/>
+          <filelist dir="${dir}" files="1,2,3,4,5" />
+          <filelist dir="${dir}" files="2,3,4,5,6" />
+          <filelist dir="${dir}" files="3,4,5,6,7" />
         </difference>
       </resourcecount>
     </au:assertTrue>
@@ -256,16 +256,16 @@
   <target name="testfileurl">
     <au:assertTrue>
       <length when="greater" length="0">
-        <url file="${ant.file}"/>
+        <url file="${ant.file}" />
       </length>
     </au:assertTrue>
   </target>
 
   <target name="testfileurlref">
-    <url id="fileurl" file="${ant.file}"/>
+    <url id="fileurl" file="${ant.file}" />
     <au:assertTrue>
       <length when="greater" length="0">
-        <url refid="fileurl"/>
+        <url refid="fileurl" />
       </length>
     </au:assertTrue>
   </target>
@@ -273,38 +273,38 @@
   <target name="testhttpurl1" unless="offline">
     <au:assertTrue>
       <length when="greater" length="0">
-        <url url="http://www.w3.org/MarkUp/"/>
+        <url url="http://www.w3.org/MarkUp/" />
       </length>
     </au:assertTrue>
   </target>
 
   <target name="testhttpurl2" unless="offline">
     <concat destfile="${file}" force="true" append="false">
-      <url id="httpurl" url="http://ant.apache.org/index.html"/>
-      <url refid="httpurl"/>
+      <url id="httpurl" url="http://ant.apache.org/index.html" />
+      <url refid="httpurl" />
     </concat>
     <length property="httpurl.length">
-      <url refid="httpurl"/>
+      <url refid="httpurl" />
     </length>
     <length property="file.length">
       <file file="${file}"/>
     </length>
     <au:assertTrue message="length of url ${httpurl.length} length of file ${file.length} file should be twice as big">
-      <length file="${file}" when="greater" length="${httpurl.length}"/>
+      <length file="${file}" when="greater" length="${httpurl.length}" />
     </au:assertTrue>
   </target>
 
   <target name="createjar" depends="setUp">
-    <jar destfile="${jar}" basedir="${dir}"/>
+    <jar destfile="${jar}" basedir="${dir}" />
   </target>
 
   <target name="testjarurl" depends="createjar">
     <pathconvert property="jarurl">
-      <url file="${jar}"/>
+      <url file="${jar}" />
     </pathconvert>
     <au:assertTrue>
       <length when="greater" length="0">
-        <url url="jar:${jarurl}!/META-INF/MANIFEST.MF"/>
+        <url url="jar:${jarurl}!/META-INF/MANIFEST.MF" />
       </length>
     </au:assertTrue>
   </target>
@@ -313,7 +313,7 @@
     <echo file="${file}">This is a test.</echo>
     <au:assertTrue>
       <length length="15">
-        <file file="${file}"/>
+        <file file="${file}" />
       </length>
     </au:assertTrue>
   </target>
@@ -321,7 +321,7 @@
   <target name="testzipentry" depends="createjar">
     <au:assertTrue>
       <length when="greater" length="0">
-        <zipentry zipfile="${jar}" name="META-INF/MANIFEST.MF"/>
+        <zipentry zipfile="${jar}" name="META-INF/MANIFEST.MF" />
       </length>
     </au:assertTrue>
   </target>
@@ -329,16 +329,16 @@
   <target name="teststring1">
     <au:assertTrue>
       <length length="15">
-        <string value="This is a test."/>
+        <string value="This is a test." />
       </length>
     </au:assertTrue>
   </target>
 
   <target name="teststring2">
-    <property name="test" value="foo"/>
+    <property name="test" value="foo" />
     <au:assertTrue>
       <length length="14">
-        <string value="This is a ${test}."/>
+        <string value="This is a ${test}." />
       </length>
     </au:assertTrue>
   </target>
@@ -346,26 +346,26 @@
   <target name="testresource">
     <au:assertTrue>
       <length length="4096">
-        <resource size="4096"/>
+        <resource size="4096" />
       </length>
     </au:assertTrue>
   </target>
 
   <target name="testproperty">
-    <property name="testproperty" value="abcdefghij"/>
+    <property name="testproperty" value="abcdefghij" />
     <au:assertTrue>
       <length length="10">
-        <propertyresource name="testproperty"/>
+        <propertyresource name="testproperty" />
       </length>
     </au:assertTrue>
   </target>
 
   <target name="testPropertyResolvedAsResource">
-    <string id="s" value="abcdefghij"/>
+    <string id="s" value="abcdefghij" />
     <au:assertTrue>
       <resourcesmatch>
-        <resource refid="s"/>
-        <propertyresource name="ant.refid:s"/>
+        <resource refid="s" />
+        <propertyresource name="ant.refid:s" />
       </resourcesmatch>
     </au:assertTrue>
   </target>
@@ -374,7 +374,7 @@
     <au:assertTrue>
       <resourcecount count="0">
         <first count="0">
-          <filelist dir="${dir}" files="1,2,3,4,5"/>
+          <filelist dir="${dir}" files="1,2,3,4,5" />
         </first>
       </resourcecount>
     </au:assertTrue>
@@ -384,7 +384,7 @@
     <au:assertTrue>
       <resourcecount count="1">
         <first>
-          <filelist dir="${dir}" files="1,2,3,4,5"/>
+          <filelist dir="${dir}" files="1,2,3,4,5" />
         </first>
       </resourcecount>
     </au:assertTrue>
@@ -394,7 +394,7 @@
     <au:assertTrue>
       <resourcecount count="2">
         <first count="2">
-          <filelist dir="${dir}" files="1,2,3,4,5"/>
+          <filelist dir="${dir}" files="1,2,3,4,5" />
         </first>
       </resourcecount>
     </au:assertTrue>
@@ -418,11 +418,11 @@
     <loadresource property="actual">
       <javaconstant name="org.apache.tools.ant.Main.DEFAULT_BUILD_FILENAME"/>
     </loadresource>
-    <au:assertEquals message="could not read java constant" expected="build.xml" actual="${actual}"/>
+    <au:assertEquals message="could not read java constant" expected="build.xml" actual="${actual}" />
 
-    <!--
-    We can't test for special error messages using built-in tasks
-    because they catch these messages
+    <!-- 
+    We can't test for special error messages using built-in tasks 
+    because they catch these messages 
     -->
     <au:expectfailure>
       <loadresource property="p">
@@ -453,7 +453,7 @@
         <javaconstant name="SomeClass.NOT_STATIC"/>
       </loadresource>
      </au:expectfailure>
-
+    
     <delete dir="${test.tmp.dir}"/>
   </target>
 

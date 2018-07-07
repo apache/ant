@@ -129,7 +129,7 @@
       </sequential>
     </parallel>
     <echo>|</echo>
-
+    
   </target>
 
   <target name="testDemux">
@@ -141,7 +141,7 @@
       <demuxtest/>
     </parallel>
   </target>
-
+  
   <target name="testSingleExit">
     <parallel>
       <echo message="all is well"/>
@@ -157,7 +157,7 @@
   </target>
 
   <target name="help">
-    <echo>Test build file for the &lt;parallel&gt; task.</echo>
+    <echo>Test build file for the &lt;parallel&gt; task.</echo> 
     <echo>Use the various targets to run the tests.</echo>
   </target>
 </project>

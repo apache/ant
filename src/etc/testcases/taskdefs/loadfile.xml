@@ -22,18 +22,18 @@
   </target>
 
   <target name="testNoSourcefileDefined" depends="init">
-    <loadfile property="foo"/>
+    <loadfile property="foo" />
   </target>
 
   <target name="testNoPropertyDefined"
     depends="init">
-    <loadfile srcFile="somefile"/>
+    <loadfile srcFile="somefile" />
   </target>
 
 
   <target name="testNoSourcefilefound"
     depends="init">
-    <loadfile property="missing" srcFile="somefile"/>
+    <loadfile property="missing" srcFile="somefile" />
   </target>
 
   <target name="testFailOnError"
@@ -48,8 +48,9 @@
     depends="init">
     <echo
       message="What's it going to be then, eh?"
-      file="loadfile1.tmp"/>
-    <loadfile property="testLoadAFile" srcFile="loadfile1.tmp"/>
+      file="loadfile1.tmp"
+      />
+    <loadfile property="testLoadAFile" srcFile="loadfile1.tmp" />
     <echo>${testLoadAFile}</echo>
   </target>
 
@@ -62,10 +63,11 @@
 
   <target name="testEvalProps"
     depends="init">
-    <property name="weather" value="rain"/>
+    <property name="weather" value="rain" />
     <echo
       message="All these moments will be lost in time, like teardrops in the ${weather}"
-      file="loadfile1.tmp"/>
+      file="loadfile1.tmp"
+      />
     <loadfile property="testEvalProps"
         srcFile="loadfile1.tmp">
         <filterchain>
@@ -82,7 +84,7 @@ REM Line 2
 --Line 3
 Line 4
 Hello World!</echo>
-      <loadfile srcFile="loadfile1.tmp"
+      <loadfile srcFile="loadfile1.tmp" 
         property="testFilterChain">
         <filterchain>
           <headfilter lines="5"/>
@@ -127,13 +129,13 @@ public class test1 {
     public static void main(String args[]) {
     }
 }</echo>
-      <loadfile srcFile="loadfile1.tmp"
+      <loadfile srcFile="loadfile1.tmp" 
         property="testStripJavaComments">
         <filterchain>
           <stripjavacomments/>
         </filterchain>
       </loadfile>
-      <loadfile srcFile="nocomments.tmp"
+      <loadfile srcFile="nocomments.tmp" 
         property="expected"/>
   </target>
 
@@ -141,7 +143,8 @@ public class test1 {
     depends="init">
     <echo
       message="1,&#10;2,&#13;3,&#13;&#10;4"
-      file="loadfile1.tmp"/>
+      file="loadfile1.tmp"
+      />
     <loadfile property="testOneLine"
         srcFile="loadfile1.tmp">
       <filterchain>

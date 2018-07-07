@@ -182,7 +182,7 @@
 </project>]]></echo>
     <ant dir="${output}" target="bar"/>
     <au:assertLogContains level="warning"
-        text="can't add target bar to extension-point foo because the extension-point is unknown"/>
+        text="can't add target bar to extension-point foo because the extension-point is unknown" />
   </target>
 
   <target name="testMissingExtensionPointIgnoredWhenConfigured">
@@ -193,7 +193,7 @@
 </project>]]></echo>
     <ant dir="${output}" target="bar"/>
     <au:assertLogDoesntContain level="warning"
-        text="can't add target bar to extension-point foo because the extension-point is unknown"/>
+        text="can't add target bar to extension-point foo because the extension-point is unknown" />
   </target>
 
   <target name="testOnlyAllowsExtensionPointMissingAttributeWhenExtensionOfPresent">

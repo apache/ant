@@ -21,21 +21,23 @@
   <taskdef name="cvspass" classname="org.apache.tools.ant.taskdefs.CVSPass"/>
 
   <target name="test1">
-    <cvspass/>
+    <cvspass />
   </target>
-
+ 
   <target name="test2">
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
-      passfile="testpassfile.tmp"/>
+      passfile="testpassfile.tmp"
+    />
   </target>
-
+ 
   <!-- testPassFile -->
   <target name="test3">
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
       password="anoncvs"
-      passfile="testpassfile.tmp"/>
+      passfile="testpassfile.tmp"
+    />
   </target>
 
   <!-- testPassFileDuplicateEntry -->
@@ -43,15 +45,18 @@
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
       password="anoncvs"
-      passfile="testpassfile.tmp"/>
+      passfile="testpassfile.tmp"
+    />
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
       password="anoncvs"
-      passfile="testpassfile.tmp"/>
+      passfile="testpassfile.tmp"
+    />
     <cvspass
       cvsroot=":pserver:guest@cvs.tigris.org:/cvs"
       password="guest"
-      passfile="testpassfile.tmp"/>
+      passfile="testpassfile.tmp"
+    />
   </target>
 
   <!-- testPassFileMultipleEntry -->
@@ -59,18 +64,21 @@
     <cvspass
       cvsroot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
       password="anoncvs"
-      passfile="testpassfile.tmp"/>
+      passfile="testpassfile.tmp"
+    />
     <cvspass
       cvsroot=":pserver:anoncvs@xml.apache.org:/home/cvspublic"
       password="anoncvs"
-      passfile="testpassfile.tmp"/>
+      passfile="testpassfile.tmp"
+    />
     <cvspass
       cvsroot=":pserver:guest@cvs.tigris.org:/cvs"
       password="guest"
-      passfile="testpassfile.tmp"/>
+      passfile="testpassfile.tmp"
+    />
   </target>
 
-  <target name="cleanup">
+  <target name="cleanup"> 
     <delete file="testpassfile.tmp"/>
   </target>
 

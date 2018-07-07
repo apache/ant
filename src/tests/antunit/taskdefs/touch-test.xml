@@ -20,14 +20,14 @@
 
   <target name="test-no-child">
     <au:expectfailure>
-      <touch/>
+      <touch />
     </au:expectfailure>
   </target>
 
   <target name="test-no-match">
     <touch>
       <fileset file="${ant.file}">
-        <filename name="IDONOTMATCH"/>
+        <filename name="IDONOTMATCH" />
       </fileset>
     </touch>
   </target>

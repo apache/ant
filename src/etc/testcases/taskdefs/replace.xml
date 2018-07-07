@@ -42,25 +42,25 @@
   </target>
 
   <target name="test5">
-    <replace file="template.xml"
+    <replace file="template.xml" 
              token="dont_want_to_really_replace_something"/>
   </target>
 
   <target name="test6">
     <replace file="template.xml">
-      <replacefilter/>
+      <replacefilter />
     </replace>
   </target>
 
   <target name="test7">
     <replace file="template.xml">
-      <replacefilter token=""/>
+      <replacefilter token="" />
     </replace>
   </target>
 
   <target name="test8">
     <replace file="template.xml">
-      <replacefilter token="dont_want_to_really_replace_something"/>
+      <replacefilter token="dont_want_to_really_replace_something" />
     </replace>
   </target>
 
@@ -70,8 +70,8 @@
     <!-- in certain cases (checkout done with cvs of cygwin, the line endings of the various files do not match-->
     <!-- the system property line.separator -->
     <copy file="replace/source.txt" tofile="${output}/output.txt"/>
-    <copy file="replace/value.txt" tofile="${output}/value.txt"/>
-    <copy file="replace/result.txt" tofile="${output}/result.txt"/>
+    <copy file="replace/value.txt" tofile="${output}/value.txt" />
+    <copy file="replace/result.txt" tofile="${output}/result.txt" />
     <fixcrlf srcdir="${output}" includes="*.txt"/>
   </target>
   <target name="test9" depends="test9-setup">

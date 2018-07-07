@@ -25,7 +25,7 @@ that succeeds must restore the saved value.
   <target name="noop">
     <nice/>
   </target>
-
+  
   <target name="current">
     <nice currentPriority="nice.now"/>
     <fail unless="nice.now"/>
@@ -35,22 +35,22 @@ that succeeds must restore the saved value.
     <nice newPriority="8" currentPriority="nice.old"/>
     <nice currentPriority="nice.now"/>
     <condition property="test.succeeded">
-      <equals arg1="${nice.now}" arg2="8"/>
+      <equals arg1="${nice.now}" arg2="8" /> 
     </condition>
     <nice newPriority="${nice.old}"/>
     <fail unless="test.succeeded"/>
   </target>
-
+  
   <target name="slower">
     <nice newPriority="3" currentPriority="nice.old"/>
     <nice currentPriority="nice.now"/>
     <condition property="test.succeeded">
-      <equals arg1="${nice.now}" arg2="3"/>
+      <equals arg1="${nice.now}" arg2="3" /> 
     </condition>
     <nice newPriority="${nice.old}"/>
     <fail unless="test.succeeded"/>
   </target>
-
+  
   <target name="too_slow">
     <nice currentPriority="nice.old"/>
     <nice newPriority="0"/>
@@ -62,5 +62,5 @@ that succeeds must restore the saved value.
     <nice newPriority="20"/>
     <nice newPriority="${nice.old}"/>
   </target>
-
+  
 </project>

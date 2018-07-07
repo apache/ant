@@ -16,20 +16,20 @@
    limitations under the License.
   -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
-  <property name="foo" value="FOO"/>
-  <property name="bar" value="BAR"/>
-  <property name="baz" value="BAZ"/>
+  <property name="foo" value="FOO" />
+  <property name="bar" value="BAR" />
+  <property name="baz" value="BAZ" />
 
   <target name="testClassic">
     <au:assertTrue>
       <resourcesmatch>
-        <string value="FOO BAR BAZ"/>
+        <string value="FOO BAR BAZ" />
         <concat>
-          <string value="$${foo} $${bar} $${baz}"/>
+          <string value="$${foo} $${bar} $${baz}" />
           <filterchain>
-            <expandproperties/>
+            <expandproperties />
           </filterchain>
         </concat>
       </resourcesmatch>
@@ -39,14 +39,14 @@
   <target name="testSubset">
     <au:assertTrue>
       <resourcesmatch>
-        <string value="FOO $${bar} BAZ"/>
+        <string value="FOO $${bar} BAZ" />
         <concat>
-          <string value="$${foo} $${bar} $${baz}"/>
+          <string value="$${foo} $${bar} $${baz}" />
           <filterchain>
             <expandproperties>
               <propertyset>
-                <propertyref name="foo"/>
-                <propertyref name="baz"/>
+                <propertyref name="foo" />
+                <propertyref name="baz" />
               </propertyset>
             </expandproperties>
           </filterchain>
@@ -58,14 +58,14 @@
   <target name="testMappedPropertySet">
     <au:assertTrue>
       <resourcesmatch>
-        <string value="FOO BAR BAZ"/>
+        <string value="FOO BAR BAZ" />
         <concat>
-          <string value="$${food} $${bard} $${bazd}"/>
+          <string value="$${food} $${bard} $${bazd}" />
           <filterchain>
             <expandproperties>
               <propertyset>
-                <propertyref builtin="all"/>
-                <globmapper from="*" to="*d"/>
+                <propertyref builtin="all" />
+                <globmapper from="*" to="*d" />
               </propertyset>
             </expandproperties>
           </filterchain>
@@ -78,11 +78,11 @@
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53626">
     <au:assertTrue>
       <resourcesmatch>
-        <string value=""/>
+        <string value="" />
         <concat>
-          <string value=""/>
+          <string value="" />
           <filterchain>
-            <expandproperties/>
+            <expandproperties />
           </filterchain>
         </concat>
       </resourcesmatch>

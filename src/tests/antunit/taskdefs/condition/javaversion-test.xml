@@ -16,24 +16,24 @@
   limitations under the License.
 -->
 <project name="javaversion-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../antunit-base.xml"/>
+  <import file="../../antunit-base.xml" />
 
   <target name="test-atleast">
     <au:assertTrue message="Expected javaversion of ${ant.version} to be at least 1.7.0">
       <!-- Ant 1.9.x requires Java5 at runtime - so this must be true -->
-      <javaversion atleast="1.5"/>
+      <javaversion atleast="1.5" />
     </au:assertTrue>
   </target>
 
   <target name="test-exactly">
     <au:assertTrue message="Expected javaversion of ${ant.java.version}">
-      <javaversion exactly="${ant.java.version}"/>
+      <javaversion exactly="${ant.java.version}" />
     </au:assertTrue>
   </target>
 
   <target name="test-atleast-fail">
     <au:assertFalse>
-      <javaversion atleast="1000.0"/>
+      <javaversion atleast="1000.0" />
     </au:assertFalse>
   </target>
 

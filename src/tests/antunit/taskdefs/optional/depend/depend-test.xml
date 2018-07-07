@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../../../antunit-base.xml"/>
+  <import file="../../../antunit-base.xml" />
 
   <property name="src1" location="${input}/src1"/>
   <property name="src2" location="${input}/src2"/>
@@ -59,8 +59,8 @@ public class Main {
 
     <!--to ensure that the classfiles generated in the previous step
         will be outdated-->
-    <sleep seconds="3"/>
-    <touch file="${src1}/a/B.java"/>
+    <sleep seconds="3" />
+    <touch file="${src1}/a/B.java" />
     <javac srcdir="${src1}" destdir="${output}"/>
     <jar destfile="${output}/A.jar" basedir="${output}" includes="a/**"/>
     <delete dir="${output}/a"/>
@@ -93,8 +93,8 @@ public class Main {
 
     <javac srcdir="${src1}" destdir="${resources}"/>
     <javac srcdir="${src2}" destdir="${dest2}" classpath="${resources}"/>
-    <sleep seconds="3"/>
-    <touch file="${src1}/a/B.java"/>
+    <sleep seconds="3" />
+    <touch file="${src1}/a/B.java" />
     <javac srcdir="${src1}" destdir="${resources}"/>
     <au:assertFileExists file="${dest2}/b/Main.class"/>
   </target>
@@ -109,7 +109,8 @@ public class Main {
 
     <depend srcDir="${src2}"
             destDir="${dest2}" cache="${output}"
-            classpathref="resources-id"/>
+            classpathref="resources-id"
+            />
     <au:assertFileDoesntExist file="${dest2}/b/Main.class"/>
 
   </target>
@@ -122,7 +123,8 @@ public class Main {
 
     <depend srcDir="${src2}"
             destDir="${dest2}" cache="${output}"
-            classpathref="resources-id"/>
+            classpathref="resources-id"
+            />
     <au:assertFileDoesntExist file="${dest2}/b/Main.class"/>
 
   </target>

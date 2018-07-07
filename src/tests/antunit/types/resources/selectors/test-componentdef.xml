@@ -17,27 +17,27 @@
 -->
 <project default="all" xmlns:au="antlib:org.apache.ant.antunit">
 
-  <available property="jdk1.4+" classname="java.lang.CharSequence"/>
+  <available property="jdk1.4+" classname="java.lang.CharSequence"/>  
   <condition property="some.regexp.support">
     <or>
       <isset property="jdk1.4+"/>
       <isset property="apache.regexp.present"/>
       <isset property="apache.oro.present"/>
     </or>
-  </condition>
-
+  </condition>    
+    
   <target name="testname1">
     <au:assertTrue>
       <resourcecount when="equal" count="2">
         <restrict>
           <resources>
-            <resource name="foo"/>
-            <resource name="bar"/>
-            <resource name="baz"/>
-            <resource name="boo"/>
-            <resource name="bang"/>
+            <resource name="foo" />
+            <resource name="bar" />
+            <resource name="baz" />
+            <resource name="boo" />
+            <resource name="bang" />
           </resources>
-          <name name="ba?"/>
+          <name name="ba?" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -48,28 +48,28 @@
       <resourcecount when="equal" count="3">
         <restrict>
           <resources>
-            <file file="foo"/>
-            <resource name="foo"/>
-            <file file="foo" basedir="${basedir}"/>
+            <file file="foo" />
+            <resource name="foo" />
+            <file file="foo" basedir="${basedir}" />
           </resources>
-          <name name="foo"/>
+          <name name="foo" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
   </target>
 
-  <target name="name" depends="testname1,testname2"/>
+  <target name="name" depends="testname1,testname2" />
 
   <target name="testexists">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <restrict>
           <resources>
-            <file file="idonotexist"/>
-            <resource name="foo"/>
-            <resource name="foo" exists="false"/>
+            <file file="idonotexist" />
+            <resource name="foo" />
+            <resource name="foo" exists="false" />
           </resources>
-          <exists/>
+          <exists />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -80,13 +80,13 @@
       <resourcecount when="equal" count="2">
         <restrict>
           <resources>
-            <file file="foo"/>
-            <url url="http://ant.apache.org/index.html"/>
-            <resource name="foo"/>
-            <string value="foo"/>
-            <file file="bar"/>
+            <file file="foo" />
+            <url url="http://ant.apache.org/index.html" />
+            <resource name="foo" />
+            <string value="foo" />
+            <file file="bar" />
           </resources>
-          <instanceof type="file"/>
+          <instanceof type="file" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -94,15 +94,15 @@
 
   <target name="testinstanceoftype2">
     <typedef name="file" uri="test"
-             classname="org.apache.tools.ant.types.resources.FileResource"/>
+             classname="org.apache.tools.ant.types.resources.FileResource" />
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <restrict>
           <resources>
-            <url file="foo"/>
-            <file file="bar" xmlns="test"/>
+            <url file="foo" />
+            <file file="bar" xmlns="test" />
           </resources>
-          <instanceof type="test:file"/>
+          <instanceof type="test:file" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -110,49 +110,49 @@
 
   <target name="testinstanceoftype3">
     <typedef name="file" uri="test"
-             classname="org.apache.tools.ant.types.resources.FileResource"/>
+             classname="org.apache.tools.ant.types.resources.FileResource" />
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <restrict>
           <resources>
-            <url file="foo"/>
-            <file file="bar" xmlns="test"/>
+            <url file="foo" />
+            <file file="bar" xmlns="test" />
           </resources>
-          <instanceof type="file" uri="test"/>
+          <instanceof type="file" uri="test" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
   </target>
 
   <target name="instanceoftype"
-    depends="testinstanceoftype1,testinstanceoftype2,testinstanceoftype3"/>
+    depends="testinstanceoftype1,testinstanceoftype2,testinstanceoftype3" />
 
   <target name="testinstanceofclass">
     <au:assertTrue>
       <resourcecount when="equal" count="7">
         <restrict>
           <resources>
-            <filelist dir="${basedir}" files="a,b,c,d,e,f,g"/>
+            <filelist dir="${basedir}" files="a,b,c,d,e,f,g" />
           </resources>
-          <instanceof class="org.apache.tools.ant.types.Resource"/>
+          <instanceof class="org.apache.tools.ant.types.Resource" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
   </target>
 
-  <target name="instanceof" depends="instanceoftype,testinstanceofclass"/>
+  <target name="instanceof" depends="instanceoftype,testinstanceofclass" />
 
   <target name="testtype">
     <au:assertTrue>
       <resourcecount when="equal" count="2">
         <restrict>
           <resources>
-             <file file="${basedir}"/>
-             <file file="${ant.file}"/>
-             <resource directory="true"/>
-             <resource directory="false"/>
+             <file file="${basedir}" />
+             <file file="${ant.file}" />
+             <resource directory="true" />
+             <resource directory="false" />
           </resources>
-          <type type="dir"/>
+          <type type="dir" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -163,13 +163,13 @@
       <resourcecount when="equal" count="3">
         <restrict>
           <resources>
-             <resource lastmodified="4"/>
-             <resource lastmodified="5"/>
-             <resource lastmodified="6"/>
-             <resource lastmodified="7"/>
-             <resource lastmodified="8"/>
+             <resource lastmodified="4" />
+             <resource lastmodified="5" />
+             <resource lastmodified="6" />
+             <resource lastmodified="7" />
+             <resource lastmodified="8" />
           </resources>
-          <date when="after" millis="5" granularity="0"/>
+          <date when="after" millis="5" granularity="0" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -180,13 +180,13 @@
       <resourcecount when="equal" count="4">
         <restrict>
           <resources>
-             <resource size="4"/>
-             <resource size="5"/>
-             <resource size="6"/>
-             <resource size="7"/>
-             <resource size="8"/>
+             <resource size="4" />
+             <resource size="5" />
+             <resource size="6" />
+             <resource size="7" />
+             <resource size="8" />
           </resources>
-          <size when="le" size="7"/>
+          <size when="le" size="7" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -197,14 +197,14 @@
       <resourcecount when="equal" count="1">
         <restrict>
           <resources>
-            <string value="fee"/>
-            <resource name="fi" size="3"/>
-            <resource name="fo"/>
-            <resource name="fum"/>
+            <string value="fee" />
+            <resource name="fi" size="3" />
+            <resource name="fo" />
+            <resource name="fum" />
           </resources>
           <and xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
-            <name name="f?"/>
-            <size size="3"/>
+            <name name="f?" />
+            <size size="3" />
           </and>
         </restrict>
       </resourcecount>
@@ -216,14 +216,14 @@
       <resourcecount when="equal" count="3">
         <restrict>
           <resources>
-            <string value="fee"/>
-            <resource name="fi" size="3"/>
-            <resource name="fo"/>
-            <resource name="fum"/>
+            <string value="fee" />
+            <resource name="fi" size="3" />
+            <resource name="fo" />
+            <resource name="fum" />
           </resources>
           <or xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
-            <name name="f?"/>
-            <size size="3"/>
+            <name name="f?" />
+            <size size="3" />
           </or>
         </restrict>
       </resourcecount>
@@ -235,13 +235,13 @@
       <resourcecount when="equal" count="2">
         <restrict>
           <resources>
-            <string value="fee"/>
-            <resource name="fi" size="3"/>
-            <resource name="fo"/>
-            <resource name="fum"/>
+            <string value="fee" />
+            <resource name="fi" size="3" />
+            <resource name="fo" />
+            <resource name="fum" />
           </resources>
           <not xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
-            <size size="3"/>
+            <size size="3" />
           </not>
         </restrict>
       </resourcecount>
@@ -253,14 +253,14 @@
       <resourcecount when="equal" count="1">
         <restrict>
           <resources>
-            <string value="fee"/>
-            <resource name="fi" size="3"/>
-            <resource name="fo"/>
-            <resource name="fum"/>
+            <string value="fee" />
+            <resource name="fi" size="3" />
+            <resource name="fo" />
+            <resource name="fum" />
           </resources>
           <none xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
-            <name name="f?"/>
-            <size size="3"/>
+            <name name="f?" />
+            <size size="3" />
           </none>
         </restrict>
       </resourcecount>
@@ -272,15 +272,15 @@
       <resourcecount when="equal" count="2">
         <restrict>
           <resources>
-            <string value="fee"/>
-            <resource name="fi" size="3"/>
-            <resource name="fo"/>
-            <resource name="fum"/>
+            <string value="fee" />
+            <resource name="fi" size="3" />
+            <resource name="fo" />
+            <resource name="fum" />
           </resources>
           <majority xmlns="antlib:org.apache.tools.ant.types.resources.selectors">
-            <name name="f?"/>
-            <size size="3"/>
-            <instanceof type="string"/>
+            <name name="f?" />
+            <size size="3" />
+            <instanceof type="string" />
           </majority>
         </restrict>
       </resourcecount>
@@ -292,15 +292,15 @@
       <resourcecount when="equal" count="3">
         <restrict>
           <resources>
-            <string value="fee"/>
-            <resource name="fi" size="3"/>
-            <resource name="fo"/>
-            <resource name="fum"/>
+            <string value="fee" />
+            <resource name="fi" size="3" />
+            <resource name="fo" />
+            <resource name="fum" />
           </resources>
           <majority>
-            <name name="f?"/>
-            <size size="3"/>
-            <instanceof type="resource"/>
+            <name name="f?" />
+            <size size="3" />
+            <instanceof type="resource" />
           </majority>
         </restrict>
       </resourcecount>
@@ -312,16 +312,16 @@
       <resourcecount when="equal" count="3">
         <restrict>
           <resources>
-            <string value="fee"/>
-            <resource name="fi" size="3"/>
-            <resource name="fo"/>
-            <resource name="fum"/>
+            <string value="fee" />
+            <resource name="fi" size="3" />
+            <resource name="fo" />
+            <resource name="fum" />
           </resources>
           <majority allowtie="true">
-            <name name="f?"/>
-            <size size="3"/>
-            <instanceof type="string"/>
-            <exists/>
+            <name name="f?" />
+            <size size="3" />
+            <instanceof type="string" />
+            <exists />
           </majority>
         </restrict>
       </resourcecount>
@@ -333,16 +333,16 @@
       <resourcecount when="equal" count="2">
         <restrict>
           <resources>
-            <string value="fee"/>
-            <resource name="fi" size="3"/>
-            <resource name="fo"/>
-            <resource name="fum"/>
+            <string value="fee" />
+            <resource name="fi" size="3" />
+            <resource name="fo" />
+            <resource name="fum" />
           </resources>
           <majority allowtie="false">
-            <name name="f?"/>
-            <size size="3"/>
-            <instanceof type="string"/>
-            <exists/>
+            <name name="f?" />
+            <size size="3" />
+            <instanceof type="string" />
+            <exists />
           </majority>
         </restrict>
       </resourcecount>
@@ -354,9 +354,9 @@
       <resourcecount when="equal" count="2">
         <restrict>
           <resources>
-            <string value="foo"/>
-            <string value="bar"/>
-            <string value="baz"/>
+            <string value="foo" />
+            <string value="bar" />
+            <string value="baz" />
           </resources>
           <contains text="b"/>
         </restrict>
@@ -369,9 +369,9 @@
       <resourcecount when="equal" count="2">
         <restrict>
           <resources>
-            <string value="foo"/>
-            <string value="bar"/>
-            <string value="baz"/>
+            <string value="foo" />
+            <string value="bar" />
+            <string value="baz" />
           </resources>
           <containsregexp expression="^b..$"/>
         </restrict>
@@ -386,14 +386,14 @@
         <resourcecount count="3">
           <restrict>
             <compare when="greater" against="each">
-              <control><string value="b"/></control>
+              <control><string value="b" /></control>
             </compare>
             <resources>
-              <string value="a"/>
-              <string value="b"/>
-              <string value="c"/>
-              <string value="d"/>
-              <string value="e"/>
+              <string value="a" />
+              <string value="b" />
+              <string value="c" />
+              <string value="d" />
+              <string value="e" />
             </resources>
           </restrict>
         </resourcecount>
@@ -401,15 +401,15 @@
         <resourcecount count="5">
           <restrict>
             <compare>
-              <control><string value="."/></control>
-              <size/>
+              <control><string value="." /></control>
+              <size />
             </compare>
             <resources>
-              <string value="a"/>
-              <string value="b"/>
-              <string value="c"/>
-              <string value="d"/>
-              <string value="e"/>
+              <string value="a" />
+              <string value="b" />
+              <string value="c" />
+              <string value="d" />
+              <string value="e" />
             </resources>
           </restrict>
         </resourcecount>
@@ -418,22 +418,22 @@
           <restrict>
             <compare when="greater" against="each">
               <control>
-                <string value="a"/>
-                <string value="b"/>
-                <string value="bb"/>
-                <string value="c"/>
-                <string value="ccc"/>
+                <string value="a" />
+                <string value="b" />
+                <string value="bb" />
+                <string value="c" />
+                <string value="ccc" />
               </control>
-              <name/>
-              <size/>
+              <name />
+              <size />
             </compare>
             <resources>
-              <string value="a"/>
-              <string value="bbbb"/>
-              <string value="ccc"/>
-              <string value="cccc"/>
-              <string value="d"/>
-              <string value="e"/>
+              <string value="a" />
+              <string value="bbbb" />
+              <string value="ccc" />
+              <string value="cccc" />
+              <string value="d" />
+              <string value="e" />
             </resources>
           </restrict>
         </resourcecount>
@@ -442,17 +442,17 @@
   </target>
 
   <target name="majority"
-          depends="testmajority1,testmajority2,testmajority3,testmajority4"/>
+          depends="testmajority1,testmajority2,testmajority3,testmajority4" />
 
   <target name="logical"
-          depends="testand,testor,testnone,testnot,majority"/>
+          depends="testand,testor,testnone,testnot,majority" />
 
   <target name="all"
-    depends="name,testexists,instanceof,testtype,testdate,testsize,testcontains,testcontainsregexp,logical,testcompare"/>
+    depends="name,testexists,instanceof,testtype,testdate,testsize,testcontains,testcontainsregexp,logical,testcompare" />
 
-  <!--
-    The tests for oata.types.selectors.ModifiedSelectorTest as
-    ResourceSelector are in its test-buildfile src\etc\testcases\types\selectors.xml.
+  <!-- 
+    The tests for oata.types.selectors.ModifiedSelectorTest as 
+    ResourceSelector are in its test-buildfile src\etc\testcases\types\selectors.xml. 
   -->
 
 </project>

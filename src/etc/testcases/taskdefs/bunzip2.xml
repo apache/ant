@@ -27,7 +27,7 @@
   </target>
 
   <target name="realTest">
-    <bunzip2 src="expected/asf-logo-huge.tar.bz2" dest="${output}/asf-logo-huge.tar"/>
+    <bunzip2 src="expected/asf-logo-huge.tar.bz2" dest="${output}/asf-logo-huge.tar" />
   </target>
 
   <target name="realTestWithResource">

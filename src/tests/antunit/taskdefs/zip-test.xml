@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
   <target name="testEmptyDirs">
     <mkdir dir="${input}/foo"/>
@@ -176,8 +176,8 @@
       <touch file="${input}/test1.txt"/>
       <mkdir dir="${output}"/>
       <zip destfile="${output}/test.zip" basedir="${input}">
-        <fileset dir="${input}"/>
-      </zip>
+        <fileset dir="${input}"/>                                          
+      </zip>                                                                  
       <zip destfile="${output}/test.zip" update="true">
         <fileset dir="${basedir}" includes="zip-test.xml"/>
       </zip>
@@ -189,17 +189,17 @@
       <touch file="${input}/test1.txt"/>
       <touch file="${input}/subdir/test2.txt"/>
       <mkdir dir="${output}"/>
-      <zip destfile="${output}/test.zip" basedir="${input}" modificationtime="2016-01-01 00:00"/>
-      <checksum file="${output}/test.zip" property="testSetZipModTime_hash"/>
-      <delete file="${output}/test.zip"/>
+      <zip destfile="${output}/test.zip" basedir="${input}" modificationtime="2016-01-01 00:00" />
+      <checksum file="${output}/test.zip" property="testSetZipModTime_hash" />
+      <delete file="${output}/test.zip" />
 
-      <sleep seconds="4"/> <!-- Necessary to ensure zips would have normally differed in timestamp -->
+      <sleep seconds="4" /> <!-- Necessary to ensure zips would have normally differed in timestamp -->
       <touch file="${input}/test1.txt"/>
       <touch file="${input}/subdir/test2.txt"/>
-      <zip destfile="${output}/test.zip" basedir="${input}" modificationtime="2016-01-01 00:00"/>
-      <checksum file="${output}/test.zip" property="${testSetZipModTime_hash}" verifyproperty="testSetZipModTime_okay"/>
+      <zip destfile="${output}/test.zip" basedir="${input}" modificationtime="2016-01-01 00:00" />
+      <checksum file="${output}/test.zip" property="${testSetZipModTime_hash}" verifyproperty="testSetZipModTime_okay" />
       <au:assertTrue>
-        <equals arg1="${testSetZipModTime_okay}" arg2="true"/>
+        <equals arg1="${testSetZipModTime_okay}" arg2="true" />
       </au:assertTrue>
     </target>
 </project>

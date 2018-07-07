@@ -100,7 +100,7 @@
   </target>
 
   <target name="testCondition">
-    <funtest>
+    <funtest >
       <condition>
          <isset property="unset"/>
       </condition>
