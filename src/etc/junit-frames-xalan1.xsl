@@ -257,11 +257,11 @@ h6 {
 
             <h2>Tests</h2>
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
-                <xsl:call-template name="testcase.test.header"/>
-                <!--
-                    test can even not be started at all (failure to load the class)
-                    so report the error directly
-                -->
+        <xsl:call-template name="testcase.test.header"/>
+              <!--
+              test can even not be started at all (failure to load the class)
+              so report the error directly
+              -->
                 <xsl:if test="./error">
                     <tr class="Error">
                         <td colspan="4"><xsl:apply-templates select="./error"/></td>
@@ -295,17 +295,17 @@ h6 {
     </html>
 </xsl:template>
 
-<!--
+  <!--
    Write properties into a JavaScript data structure.
    This is based on the original idea by Erik Hatcher (ehatcher@apache.org)
--->
-<xsl:template match="properties">
+   -->
+  <xsl:template match="properties">
     cur = TestCases['<xsl:value-of select="../@package"/>.<xsl:value-of select="../@name"/>'] = new Array();
     <xsl:for-each select="property">
     <xsl:sort select="@name"/>
         cur['<xsl:value-of select="@name"/>'] = '<xsl:call-template name="JS-escape"><xsl:with-param name="string" select="@value"/></xsl:call-template>';
     </xsl:for-each>
-</xsl:template>
+  </xsl:template>
 
 
 <!-- ======================================================================
@@ -466,7 +466,7 @@ h6 {
             <td><xsl:value-of select="$testCount"/></td>
             <td><xsl:value-of select="$failureCount"/></td>
             <td><xsl:value-of select="$errorCount"/></td>
-            <td><xsl:value-of select="$skipCount"/></td>
+            <td><xsl:value-of select="$skipCount" /></td>
             <td>
                 <xsl:call-template name="display-percent">
                     <xsl:with-param name="value" select="$successRate"/>
@@ -510,7 +510,7 @@ h6 {
                     <td><xsl:value-of select="sum($insamepackage/@tests)"/></td>
                     <td><xsl:value-of select="sum($insamepackage/@errors)"/></td>
                     <td><xsl:value-of select="sum($insamepackage/@failures)"/></td>
-                    <td><xsl:value-of select="sum($insamepackage/@skipped)"/></td>
+                    <td><xsl:value-of select="sum($insamepackage/@skipped)" /></td>
                     <td>
                     <xsl:call-template name="display-time">
                         <xsl:with-param name="value" select="sum($insamepackage/@time)"/>
@@ -637,7 +637,7 @@ h6 {
         <td><xsl:apply-templates select="@tests"/></td>
         <td><xsl:apply-templates select="@errors"/></td>
         <td><xsl:apply-templates select="@failures"/></td>
-        <td><xsl:apply-templates select="@skipped"/></td>
+        <td><xsl:apply-templates select="@skipped" /></td>
         <td><xsl:call-template name="display-time">
                 <xsl:with-param name="value" select="@time"/>
             </xsl:call-template>
@@ -667,8 +667,8 @@ h6 {
                 <td><xsl:apply-templates select="error"/></td>
             </xsl:when>
             <xsl:when test="skipped">
-                <td>Skipped</td>
-                <td><xsl:apply-templates select="skipped"/></td>
+            	<td>Skipped</td>
+            	<td><xsl:apply-templates select="skipped"/></td>
             </xsl:when>
             <xsl:otherwise>
                 <td>Success</td>

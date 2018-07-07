@@ -27,7 +27,7 @@
   </target>
 
   <target name="uncompressSource" depends="setUp">
-    <ant antfile="../../taskdefs/tar.xml" target="feather"/>
+    <ant antfile="../../taskdefs/tar.xml" target="feather" />
     <copy todir="${output}">
       <tarentry name="asf-logo.gif">
         <gzipresource>

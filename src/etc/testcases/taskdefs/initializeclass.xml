@@ -25,7 +25,7 @@
 
       <classpath>
         <pathelement path="../../../../build/testcases"/>
-        <pathelement location="${java.home}/lib/classes.zip"/>
+        <pathelement location="${java.home}/lib/classes.zip" />
       </classpath>
     </java>
   </target>
@@ -34,7 +34,7 @@
     <java className="org.apache.tools.ant.taskdefs.dir1.B">
       <classpath>
         <pathelement path="../../../../build/testcases"/>
-        <pathelement location="${java.home}/lib/classes.zip"/>
+        <pathelement location="${java.home}/lib/classes.zip" />
       </classpath>
     </java>
   </target>

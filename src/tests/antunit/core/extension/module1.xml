@@ -17,9 +17,9 @@
 -->
 <project name="module1">
 
-  <!-- declare a target with the same name as one in the master -->
-  <target name="compile" extensionOf="all.compile">
-    <echo message="In module1 compile. Yay!"/>
-  </target>
+	<!-- declare a target with the same name as one in the master -->
+	<target name="compile" extensionOf="all.compile">
+		<echo message="In module1 compile. Yay!"/>
+	</target>
 
 </project>

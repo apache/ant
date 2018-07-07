@@ -22,3 +22,4 @@
 
   <target name="dummy" depends="setProperty"/>
 </project>
+

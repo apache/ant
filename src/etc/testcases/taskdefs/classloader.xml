@@ -19,22 +19,22 @@
 
   <target name="init">
 
-    <path id="myJars">
+    <path id="myJars" >
       <!-- both ant-junit.jar and junit.jar must be loaded from the same path -->
-      <pathelement path="${ant.home}/lib/ant-junit.jar"/>
-      <pathelement path="${junit.jar}"/>
+      <pathelement path="${ant.home}/lib/ant-junit.jar" />
+      <pathelement path="${junit.jar}" />
     </path>
 
-    <classloader classpathRef="myJars"
-                 reverse="true">
-
+    <classloader classpathRef="myJars" 
+                 reverse="true" >
+      
     </classloader>
-    <junit/>
-
+    <junit />
+  
   </target>
 
   <target name="main" depends="init">
-    <echo message="Found JUNIT"/>
+    <echo message="Found JUNIT" />
   </target>
 
 </project>

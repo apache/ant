@@ -19,16 +19,16 @@
 
   <target name="testValidate">
     <xmlvalidate warn="false">
-      <fileset dir="xml" includes="**/about.xml"/>
+      <fileset dir="xml" includes="**/about.xml"/>  
        <dtd publicID="-//stevo//DTD doc 1.0//EN"
-            location="xml/doc.dtd"/>
+         location="xml/doc.dtd"/>
     </xmlvalidate>
   </target>
-
+  
   <target name="testDeepValidate">
-    <ant dir="xml"
-         antfile="validate.xml"
-         target="testValidate"/>
+    <ant dir="xml" 
+      antfile="validate.xml"
+      target="testValidate"/>
   </target>
 
   <target name="xmlcatalog">
@@ -55,8 +55,8 @@
     <xmlvalidate warn="false">
       <fileset dir="xml" includes="**/about.xml"/>
       <xmlcatalog classpath="xml">
-        <entity publicID="bogusImage"
-                location="/i/dont/exist.jpg"/>
+        <entity publicID = "bogusImage"
+                 location = "/i/dont/exist.jpg"/>
         <xmlcatalog>
           <dtd publicID="-//stevo//DTD doc 1.0//EN"
                location="doc.dtd"/>
@@ -78,7 +78,7 @@
       </xmlcatalog>
     </xmlvalidate>
   </target>
-
+ 
   <target name="xmlcatalogpath-override">
     <xmlvalidate warn="false">
       <fileset dir="xml" includes="**/about.xml"/>
@@ -87,11 +87,11 @@
           <pathelement location="xml/catalog"/>
         </catalogpath>
         <dtd publicID="-//stevo//DTD doc 1.0//EN"
-             location="doc.dtd"/>
+          location="doc.dtd"/>
       </xmlcatalog>
     </xmlvalidate>
   </target>
-
+ 
   <target name="xmlcatalogfiles">
     <xmlvalidate warn="false">
       <fileset dir="xml" includes="**/about.xml"/>
@@ -102,7 +102,7 @@
       </xmlcatalog>
     </xmlvalidate>
   </target>
-
+ 
   <target name="xmlcatalogpath">
     <xmlvalidate warn="false">
       <fileset dir="xml" includes="**/about.xml"/>
@@ -115,13 +115,13 @@
   </target>
 
   <target name="testSchemaGood">
-    <xmlvalidate warn="false" lenient="no">
+    <xmlvalidate warn="false" lenient="no" >
       <fileset dir="xml" includes="endpiece.xml"/>
 
-      <attribute name="http://xml.org/sax/features/validation"
-                 value="false"/>
-      <attribute name="http://apache.org/xml/features/validation/schema"
-                 value="false"/>
+        <attribute name="http://xml.org/sax/features/validation"
+                   value="false"/>
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="false"/>
 
     </xmlvalidate>
   </target>
@@ -129,14 +129,14 @@
   <target name="testSchemaBad">
     <xmlvalidate warn="false">
       <fileset dir="xml" includes="endpiece2.xml"/>
-
-      <attribute name="http://xml.org/sax/features/validation"
-                 value="true"/>
-      <attribute name="http://apache.org/xml/features/validation/schema"
-                 value="true"/>
+      
+        <attribute name="http://xml.org/sax/features/validation"
+                   value="true"/>
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
     </xmlvalidate>
   </target>
-
+    
   <target name="testIso2022Jp">
     <xmlvalidate warn="false" file="xml/iso-2022-jp.xml"/>
   </target>
@@ -151,20 +151,20 @@
 
     <!-- Converts path to URL format -->
     <pathconvert dirsep="/" property="xsd.file">
-      <path>
-        <pathelement location="xml/doc.xsd"/>
-      </path>
+    <path>
+    <pathelement location="xml/doc.xsd"/>
+    </path>
     </pathconvert>
 
     <xmlvalidate file="xml/endpiece-noSchema.xml" lenient="false"
-                 failonerror="true" warn="true">
+        failonerror="true" warn="true">
 
-      <attribute name="http://apache.org/xml/features/validation/schema"
-                 value="true"/>
+        <attribute name="http://apache.org/xml/features/validation/schema"
+            value="true"/>
 
-      <property
-          name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
-          value="${xsd.file}"/>
+        <property
+        name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+        value="${xsd.file}"/>
     </xmlvalidate>
   </target>
 
@@ -172,36 +172,37 @@
   <!-- Tests property element with XML file that fails schema validation -->
   <target name="testProperty.invalidXML">
 
-    <!-- Converts path to URL format -->
-    <pathconvert dirsep="/" property="xsd.file">
-      <path>
-        <pathelement location="xml/doc.xsd"/>
-      </path>
-    </pathconvert>
+      <!-- Converts path to URL format -->
+      <pathconvert dirsep="/" property="xsd.file">
+          <path>
+              <pathelement location="xml/doc.xsd"/>
+          </path>
+      </pathconvert>
 
-    <xmlvalidate file="xml/endpiece-noSchema-invalid.xml" lenient="false"
-                 failonerror="true" warn="true">
+      <xmlvalidate file="xml/endpiece-noSchema-invalid.xml" lenient="false"
+        failonerror="true" warn="true">
 
-      <attribute name="http://apache.org/xml/features/validation/schema"
-                 value="true"/>
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
 
-      <property
-          name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
-          value="${xsd.file}"/>
-    </xmlvalidate>
+        <property
+            name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+            value="${xsd.file}"/>
+      </xmlvalidate>
   </target>
 
   <target name="testSchemaWithXSD">
-    <xmlvalidate warn="false" lenient="false"
-                 file="xml/endpiece-noSchema.xml">
+    <xmlvalidate warn="false" lenient="false" 
+        file="xml/endpiece-noSchema.xml">
+      
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
+        <property
+            name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+            value="${xsd.file}"/>
 
-      <attribute name="http://apache.org/xml/features/validation/schema"
-                 value="true"/>
-      <property
-          name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
-          value="${xsd.file}"/>
-
-    </xmlvalidate>
+       </xmlvalidate>
   </target>
-
+  
 </project>
+

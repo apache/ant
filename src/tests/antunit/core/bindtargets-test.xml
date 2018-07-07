@@ -20,16 +20,16 @@
   <import file="../antunit-base.xml"/>
 
   <target name="bound">
-    <property name="test-bound" value="ok"/>
+    <property name="test-bound" value="ok" />
   </target>
 
   <target name="bound2">
-    <property name="test-bound2" value="ok"/>
+    <property name="test-bound2" value="ok" />
   </target>
 
-  <extension-point name="extension"/>
+  <extension-point name="extension" />
 
-  <bindtargets targets="bound,bound2" extensionPoint="extension"/>
+  <bindtargets targets="bound,bound2" extensionPoint="extension" />
 
   <target name="testBind" depends="extension">
     <au:assertPropertyEquals name="test-bound" value="ok"/>

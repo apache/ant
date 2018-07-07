@@ -21,7 +21,7 @@
 
   <target name="setUp">
     <condition property="isUnix">
-      <os family="unix"/>
+      <os family="unix" />
     </condition>
   </target>
 
@@ -33,9 +33,9 @@
 
   <target name="os">
 
-    <mkdir dir="${output}"/>
+    <mkdir dir="${output}" />
     <condition property="unix">
-      <os family="unix"/>
+      <os family="unix" />
     </condition>
     <property name="file_ref"
       location="${output}/file"/>
@@ -44,7 +44,7 @@
   </target>
 
   <target name="init" depends="os" if="unix">
-    <touch file="${file_ref}"/>
+    <touch file="${file_ref}" />
   </target>
 
   <target name="testCreateDouble" depends="init" if="unix">
@@ -63,7 +63,7 @@
   </target>
 
   <target name="testCreateOverFile" depends="init" if="unix">
-    <touch file="${output}/link3"/>
+    <touch file="${output}/link3" />
     <symlink overwrite="true" link="${output}/link3"
         resource="${file_ref}"/>
   </target>

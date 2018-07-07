@@ -185,7 +185,7 @@
     <mkdir dir="${input}/realdir"/>
     <touch file="${input}/realdir/file.txt"/>
     <symlink link="${base}" resource="${input}/realdir"/>
-  </target>
+  </target>    
 
   <target name="-link-to-parent" if="unix">
     <mkdir dir="${input}/B"/>

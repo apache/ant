@@ -23,32 +23,35 @@
   </target>
 
   <target name="test2">
-    <input message="Press Return key to continue..."/>
+    <input message="Press Return key to continue..." />
   </target>
 
   <target name="test3">
     <input message="All data is going to be deleted from DB continue?"
-           validargs="y,n"/>
+           validargs="y,n"
+           />
   </target>
 
   <target name="test5">
     <input message="All data is going to be deleted from db continue (y/n)?"
-           validargs="y,n"/>
+           validargs="y,n"
+           />
   </target>
 
   <target name="test6">
     <input message="Please enter db-username:"
-           addproperty="db.user"/>
+           addproperty="db.user"
+           />
   </target>
 
   <target name="testPropertyFileInlineHandler">
     <input message="Press Return key to continue..." addproperty="test">
-      <handler type="propertyfile"/>
+      <handler type="propertyfile" />
     </input>
     <fail>
       <condition>
         <not>
-          <equals arg1="${test}" arg2="test"/>
+          <equals arg1="${test}" arg2="test" />
         </not>
       </condition>
     </fail>
@@ -56,12 +59,12 @@
 
   <target name="testDefaultInlineHandler">
     <input message="Press Return key to continue..." addproperty="test">
-      <handler type="default"/>
+      <handler type="default" />
     </input>
     <fail message="$${test} = ${test}">
       <condition>
         <not>
-          <equals arg1="${test}" arg2="foo"/>
+          <equals arg1="${test}" arg2="foo" />
         </not>
       </condition>
     </fail>
@@ -69,13 +72,13 @@
 
   <target name="testGreedyInlineHandler">
     <input message="Press Return key to continue..." addproperty="test">
-      <handler type="greedy"/>
+      <handler type="greedy" />
     </input>
-    <loadfile srcFile="input.stdin" property="input"/>
+    <loadfile srcFile="input.stdin" property="input" />
     <fail message="$${test} = ${test}">
       <condition>
         <not>
-          <equals arg1="${test}" arg2="${input}"/>
+          <equals arg1="${test}" arg2="${input}" />
         </not>
       </condition>
     </fail>
@@ -83,13 +86,13 @@
 
   <target name="testGreedyInlineHandlerClassname">
     <input message="Press Return key to continue..." addproperty="test">
-      <handler classname="org.apache.tools.ant.input.GreedyInputHandler"/>
+      <handler classname="org.apache.tools.ant.input.GreedyInputHandler" />
     </input>
-    <loadfile srcFile="input.stdin" property="input"/>
+    <loadfile srcFile="input.stdin" property="input" />
     <fail message="$${test} = ${test}">
       <condition>
         <not>
-          <equals arg1="${test}" arg2="${input}"/>
+          <equals arg1="${test}" arg2="${input}" />
         </not>
       </condition>
     </fail>
@@ -97,17 +100,17 @@
 
   <target name="testGreedyInlineHandlerRefid">
     <typedef name="greedy"
-             classname="org.apache.tools.ant.input.GreedyInputHandler"/>
-    <greedy id="greedy"/>
+             classname="org.apache.tools.ant.input.GreedyInputHandler" />
+    <greedy id="greedy" />
 
     <input message="Press Return key to continue..." addproperty="test">
-      <handler refid="greedy"/>
+      <handler refid="greedy" />
     </input>
-    <loadfile srcFile="input.stdin" property="input"/>
+    <loadfile srcFile="input.stdin" property="input" />
     <fail message="$${test} = ${test}">
       <condition>
         <not>
-          <equals arg1="${test}" arg2="${input}"/>
+          <equals arg1="${test}" arg2="${input}" />
         </not>
       </condition>
     </fail>

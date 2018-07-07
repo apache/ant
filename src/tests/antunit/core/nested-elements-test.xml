@@ -35,7 +35,7 @@ public class ConditionRun extends ConditionBase implements TaskContainer {
     }
 
     public void execute() {
-        for (Iterator iter = tasks.iterator(); iter.hasNext();) {
+        for (Iterator iter = tasks.iterator(); iter.hasNext(); ) {
             Task t = (Task) iter.next();
             t.perform();
         }
@@ -67,7 +67,7 @@ public class Dynamic implements TaskContainer, DynamicElement {
     }
 
     public void execute() {
-        for (Iterator iter = tasks.iterator(); iter.hasNext();) {
+        for (Iterator iter = tasks.iterator(); iter.hasNext(); ) {
             Task t = (Task) iter.next();
             t.perform();
         }
@@ -102,7 +102,7 @@ public class Dynamic implements TaskContainer, DynamicElementNS {
     }
 
     public void execute() {
-        for (Iterator iter = tasks.iterator(); iter.hasNext();) {
+        for (Iterator iter = tasks.iterator(); iter.hasNext(); ) {
             Task t = (Task) iter.next();
             t.perform();
         }

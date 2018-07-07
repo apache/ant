@@ -17,20 +17,20 @@
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
 
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
-  <property name="br" value="${line.separator}"/>
+  <property name="br" value="${line.separator}" />
 
   <target name="testRecursionRegression">
     <mkdir dir="${output}"/>
     <copy todir="${output}">
-      <string value="@a@${br}@b@${br}@c@${br}@d@${br}"/>
-      <mergemapper to="filterset-output.txt"/>
+      <string value="@a@${br}@b@${br}@c@${br}@d@${br}" />
+      <mergemapper to="filterset-output.txt" />
       <filterset>
-        <filter token="a" value="aaa"/>
-        <filter token="b" value="bbb"/>
-        <filter token="c" value="@a@:@b@"/>
-        <filter token="d" value="@c@:@c@"/>
+        <filter token="a" value="aaa" />
+        <filter token="b" value="bbb" />
+        <filter token="c" value="@a@:@b@" />
+        <filter token="d" value="@c@:@c@" />
       </filterset>
     </copy>
 
@@ -45,11 +45,11 @@
   <target name="testOverlappingMulticharToken">
     <mkdir dir="${output}"/>
     <copy todir="${output}">
-      <string value="@@USER@@@@@HOST@@"/>
-      <mergemapper to="filterset-output.txt"/>
+      <string value="@@USER@@@@@HOST@@" />
+      <mergemapper to="filterset-output.txt" />
       <filterset begintoken="@@" endtoken="@@">
-        <filter token="USER" value="user"/>
-        <filter token="HOST" value="host"/>
+        <filter token="USER" value="user" />
+        <filter token="HOST" value="host" />
       </filterset>
     </copy>
 
@@ -77,19 +77,20 @@ Filter with property set test
 @bar.x@ - should not change
 @cccc@ - should not change
     </echo>
-    <property name="foo.x" value="1111"/>
-    <property name="foo.y" value="2222"/>
+    <property name="foo.x" value="1111" />
+    <property name="foo.y" value="2222" />
     <copy todir="${output}">
       <fileset dir="${input}"/>
       <filterset>
         <propertyset>
-          <propertyref prefix="foo."/>
+          <propertyref prefix="foo." />
         </propertyset>
       </filterset>
     </copy>
     <au:assertFilesMatch
         actual="${output}/src.txt"
-        expected="${output}/expected.txt"/>
+        expected="${output}/expected.txt"
+        />
   </target>
 
 </project>

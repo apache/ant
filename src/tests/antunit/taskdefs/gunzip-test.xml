@@ -16,12 +16,12 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
   <target name="setup">
     <mkdir dir="${output}"/>
   </target>
-
+  
   <target name="testWithFileResourceToFile" depends="setup">
     <gunzip dest="${output}/asf-logo.gif">
       <file file="../../../etc/testcases/taskdefs/expected/asf-logo.gif.gz"/>
@@ -59,3 +59,4 @@
   </target>
 
 </project>
+

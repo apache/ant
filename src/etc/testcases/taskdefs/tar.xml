@@ -176,15 +176,15 @@
   <target name="feather">
     <tar destfile="${output}/asf-logo.gif.tar"
          basedir=".."
-         includes="asf-logo.gif"/>
+         includes="asf-logo.gif" />
     <tar destfile="${output}/asf-logo.gif.tar.gz"
          basedir=".."
-         includes="asf-logo.gif"
+         includes="asf-logo.gif" 
          compression="gzip"/>
     <tar destfile="${output}/asf-logo.gif.tar.bz2"
          basedir=".."
          includes="asf-logo.gif"
-         compression="bzip2"/>
+         compression="bzip2" />
   </target>
 
   <target name="testGZipResource">

@@ -17,10 +17,10 @@
 -->
 <project>
   <path id="test-classes">
-    <pathelement location="../../../../build/testcases"/>
-    <pathelement path="${java.class.path}"/>
+    <pathelement location="../../../../build/testcases" />
+    <pathelement path="${java.class.path}" />
   </path>
-
+  
   <target name="simple">
     <presetdef name="my.echo">
       <echo message="Hello world"/>
@@ -75,7 +75,7 @@
         <include name="**/*.java"/>
       </fileset>
     </presetdef>
-
+    
     <anttypetest>
       <fileset ant-type="java.fileset" dir="."/>
       <configured ant-type="java.fileset" dir="."/>

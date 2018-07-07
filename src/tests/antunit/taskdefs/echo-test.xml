@@ -17,43 +17,43 @@
 -->
 
 <project name="echo-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
   <target name="setUp">
-    <mkdir dir="${output}"/>
+    <mkdir dir="${output}" />
   </target>
 
   <target name="test1">
     <echo/>
     <au:assertTrue>
       <length length="0">
-        <au:logcontent/>
+        <au:logcontent />
       </length>
     </au:assertTrue>
   </target>
 
   <target name="test2">
     <echo message="OUTPUT OF ECHO"/>
-    <au:assertLogContains text="OUTPUT OF ECHO"/>
+    <au:assertLogContains text="OUTPUT OF ECHO" />
   </target>
 
   <target name="test3">
     <echo>
-    This
+    This 
     is
-    a
+    a 
     multiline
     message
     </echo>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <au:logcontent/>
-          <contains text="This"/>
-          <contains text="is"/>
-          <contains text="a"/>
-          <contains text="multiline"/>
-          <contains text="message"/>
+          <au:logcontent />
+          <contains text="This" />
+          <contains text="is" />
+          <contains text="a" />
+          <contains text="multiline" />
+          <contains text="message" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -64,8 +64,8 @@
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${output}/echo.txt"/>
-          <contains text="Simple text"/>
+          <file file="${output}/echo.txt" />
+          <contains text="Simple text" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -76,8 +76,8 @@
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${output}/echo.txt"/>
-          <contains text="Simple text"/>
+          <file file="${output}/echo.txt" />
+          <contains text="Simple text" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -87,14 +87,14 @@
     <echo file="${output}/echo.txt">Simple text</echo>
     <echo file="${output}/echo.txt" append="true">Appended</echo>
     <concat>
-      <file file="${output}/echo.txt"/>
+      <file file="${output}/echo.txt" />
     </concat>
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${output}/echo.txt"/>
-          <contains text="Simple text"/>
-          <contains text="Appended"/>
+          <file file="${output}/echo.txt" />
+          <contains text="Simple text" />
+          <contains text="Appended" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -105,15 +105,15 @@
     <au:assertTrue>
       <resourcecount count="1">
         <restrict>
-          <file file="${output}/echo.txt"/>
-          <contains text="Simple text"/>
+          <file file="${output}/echo.txt" />
+          <contains text="Simple text" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
   </target>
 
   <target name="testUTF16Encoding">
-    <property name="char" value="&#169;"/>
+    <property name="char" value="&#169;" />
     <echo file="${output}/echo16.txt" encoding="UTF-16">${char}</echo>
     <loadfile property="out.16" srcfile="${output}/echo16.txt"
               encoding="UTF-16"/>
@@ -121,7 +121,7 @@
   </target>
 
   <target name="testUTF8Encoding">
-    <property name="char" value="&#169;"/>
+    <property name="char" value="&#169;" />
     <echo file="${output}/echo8.txt" encoding="UTF8">${char}</echo>
     <au:assertTrue>
       <resourcecount count="1">

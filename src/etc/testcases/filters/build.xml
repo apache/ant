@@ -18,7 +18,7 @@
 <project default="tearDown" basedir=".">
   <import file="../buildfiletest-base.xml"/>
   <target name="setUp">
-    <mkdir dir="${output}"/>
+    <mkdir dir="${output}" />
   </target>
 
 
@@ -34,7 +34,7 @@
       </filterchain>
     </copy>
   </target>
-
+  
   <target name="testNegateLineContains" depends="setUp">
     <copy file="input/linecontains.test"
           tofile="${output}/negatelinecontains.test">
@@ -49,12 +49,12 @@
       <condition>
         <not>
           <filesmatch file1="${output}/negatelinecontains.test"
-                      file2="expected/negatelinecontains.test"/>
+                      file2="expected/negatelinecontains.test" />
         </not>
       </condition>
     </fail>
   </target>
-
+  
   <target name="testEscapeUnicode" depends="setUp">
     <copy todir="${output}" encoding="UTF-8">
       <fileset dir="input">
@@ -71,16 +71,16 @@
 
   <target name="testStripJavaComments" depends="setUp">
     <copy todir="${output}">
-      <fileset dir="input" includes="stripjavacomments.test"/>
+      <fileset dir="input" includes="stripjavacomments.test" />
       <filterchain>
-        <filterreader classname="org.apache.tools.ant.filters.StripJavaComments"/>
+        <filterreader classname="org.apache.tools.ant.filters.StripJavaComments" />
       </filterchain>
     </copy>
   </target>
 
   <target name="testReplaceTokens" depends="setUp">
     <copy todir="${output}">
-      <fileset dir="input" includes="replacetokens.test"/>
+      <fileset dir="input" includes="replacetokens.test" />
       <filterchain>
         <replacetokens>
           <token key="foo" value=""/>
@@ -91,18 +91,18 @@
 
   <target name="testReplaceTokensPropertyFile" depends="setUp">
     <copy tofile="${output}/replacetokensPropertyFile.test">
-      <fileset dir="input" includes="replacetokens.test"/>
+      <fileset dir="input" includes="replacetokens.test" />
       <filterchain>
-        <filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
+      	<filterreader classname="org.apache.tools.ant.filters.ReplaceTokens">
           <param type="propertiesfile" value="${basedir}/input/sample.properties"/>
-          </filterreader>
+    	  </filterreader>
       </filterchain>
     </copy>
   </target>
 
   <target name="testReplaceTokensDoubleEncoded" depends="setUp">
     <copy todir="${output}">
-      <fileset dir="input" includes="replacetokens.double.test"/>
+      <fileset dir="input" includes="replacetokens.double.test" />
       <filterchain>
         <replacetokens>
           <token key="foo" value=""/>
@@ -113,7 +113,7 @@
 
   <target name="testReplaceTokensDoubleEncodedToSimple" depends="setUp">
     <copy todir="${output}">
-      <fileset dir="input" includes="replacetokens.double.test"/>
+      <fileset dir="input" includes="replacetokens.double.test" />
       <filterchain>
         <replacetokens begintoken="@@" endtoken="@@">
           <token key="foo" value=""/>
@@ -124,7 +124,7 @@
 
   <target name="testReplaceTokensMustacheStyle" depends="setUp">
     <copy todir="${output}">
-      <fileset dir="input" includes="replacetokens.mustache.test"/>
+      <fileset dir="input" includes="replacetokens.mustache.test" />
       <filterchain>
         <replacetokens begintoken="{{" endtoken="}}">
           <token key="foo" value=""/>

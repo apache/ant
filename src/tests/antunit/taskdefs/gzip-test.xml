@@ -18,19 +18,19 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
     <!-- note relies on antunit 1.1 -->
-    <import file="../antunit-base.xml"/>
+    <import file="../antunit-base.xml" />
 
     <target name="setUp">
-        <mkdir dir="${output}"/>
-        <mkdir dir="${output}/empty"/>
-        <touch file="${output}/fileone"/>
-        <touch file="${output}/filetwo"/>
+        <mkdir dir="${output}" />
+        <mkdir dir="${output}/empty" />
+        <touch file="${output}/fileone" />
+        <touch file="${output}/filetwo" />
     </target>
 
     <target name="testFailNone">
         <au:expectfailure expectedmessage="No resource selected, gzip needs exactly one resource." message="Should have thrown an exception">
             <gzip destfile="${output}/file.gz">
-                <fileset dir="${output}/empty"/>
+                <fileset dir="${output}/empty" />
             </gzip>
         </au:expectfailure>
     </target>
@@ -38,7 +38,7 @@
     <target name="testFailTwo">
         <au:expectfailure expectedmessage="gzip cannot handle multiple resources at once. (2 resources were selected.)" message="Should have thrown an exception">
             <gzip destfile="${output}/file.gz">
-                <fileset dir="${output}"/>
+                <fileset dir="${output}" />
             </gzip>
         </au:expectfailure>
     </target>

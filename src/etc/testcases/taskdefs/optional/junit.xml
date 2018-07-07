@@ -20,75 +20,75 @@
   <import file="../../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}"/>
+    <mkdir dir="${output}" />
   </target>
 
-  <property name="showoutput" value="false"/>
+  <property name="showoutput" value="false" />
   <path id="test">
-    <pathelement path="${java.class.path}"/>
-    <pathelement location="../../../../../build/testcases"/>
+    <pathelement path="${java.class.path}" />
+    <pathelement location="../../../../../build/testcases" />
   </path>
 
   <target name="testForkedOutput">
-    <junit fork="yes" haltonerror="true" haltonfailure="true"
+    <junit fork="yes" haltonerror="true" haltonfailure="true" 
            showoutput="${showoutput}">
-      <test name="org.example.junit.Output"/>
-      <classpath refid="test"/>
+      <test name="org.example.junit.Output" />
+      <classpath refid="test" />
     </junit>
   </target>
 
   <target name="testNonForkedOutput">
     <junit fork="false" haltonerror="true" haltonfailure="true"
            showoutput="${showoutput}">
-      <test name="org.example.junit.Output"/>
-      <classpath refid="test"/>
+      <test name="org.example.junit.Output" />
+      <classpath refid="test" />
     </junit>
   </target>
 
   <target name="testForkedThreadedOutput">
     <junit fork="yes" haltonerror="true" haltonfailure="true"
            showoutput="${showoutput}">
-      <test name="org.example.junit.ThreadedOutput"/>
-      <classpath refid="test"/>
+      <test name="org.example.junit.ThreadedOutput" />
+      <classpath refid="test" />
     </junit>
   </target>
 
   <target name="testNonForkedThreadedOutput">
     <junit fork="false" haltonerror="true" haltonfailure="true"
            showoutput="${showoutput}">
-      <test name="org.example.junit.ThreadedOutput"/>
-      <classpath refid="test"/>
+      <test name="org.example.junit.ThreadedOutput" />
+      <classpath refid="test" />
     </junit>
   </target>
 
-  <target name="outputTests"
-          depends="testForkedOutput,testNonForkedOutput,testForkedThreadedOutput,testNonForkedThreadedOutput"/>
+  <target name="outputTests" 
+          depends="testForkedOutput,testNonForkedOutput,testForkedThreadedOutput,testNonForkedThreadedOutput" />
 
   <target name="crash">
     <junit fork="true" errorproperty="crashed">
       <test name="org.apache.tools.ant.taskdefs.optional.junit.VmCrash"/>
-      <classpath refid="test"/>
+      <classpath refid="test" />
     </junit>
   </target>
 
   <target name="nocrash">
     <junit fork="true" errorproperty="crashed">
       <test name="org.apache.tools.ant.taskdefs.optional.junit.NoVmCrash"/>
-      <classpath refid="test"/>
+      <classpath refid="test" />
     </junit>
   </target>
 
   <target name="timeout">
     <junit fork="true" errorproperty="timeout" timeout="1000">
       <test name="org.apache.tools.ant.taskdefs.optional.junit.Sleeper"/>
-      <classpath refid="test"/>
+      <classpath refid="test" />
     </junit>
   </target>
 
   <target name="notimeout">
     <junit fork="true" errorproperty="timeout" timeout="15000">
       <test name="org.apache.tools.ant.taskdefs.optional.junit.Sleeper"/>
-      <classpath refid="test"/>
+      <classpath refid="test" />
     </junit>
   </target>
 
@@ -200,7 +200,7 @@
         }
     </echo>
     <echo file="${tmp.dir}/org/D.java">
-        package org;
+    	package org;
         import junit.framework.*;
         public class D extends TestCase {
             public D(String s) { super(s); }
@@ -210,7 +210,7 @@
     <javac srcdir="${tmp.dir}" destdir="${tmp.dir}"/>
   </target>
 
-  <target name="failureRecorder.internal">
+  <target name="failureRecorder.internal">  
     <property name="tmp.dir" value="${output}"/>
     <delete>
       <fileset dir="${tmp.dir}" includes="FailedTests*.class"/>
@@ -218,7 +218,7 @@
     <!-- compile the FailedTests class if present -->
     <javac srcdir="${tmp.dir}" destdir="${tmp.dir}"/>
     <available file="${tmp.dir}/FailedTests.class" property="hasFailingTests"/>
-
+    
     <property name="ant.junit.failureCollector" value="${tmp.dir}/FailedTests"/>
     <junit haltonerror="false" haltonfailure="false">
       <classpath>
@@ -232,21 +232,22 @@
         <formatter type="plain" usefile="false"/>
       </batchtest>
       <test name="FailedTests" if="hasFailingTests" todir="${tmp.dir}">
-        <!-- update the FailingTests.java -->
+      	<!-- update the FailingTests.java -->
         <formatter type="failure"/>
         <!-- again, I want to see something -->
         <formatter type="plain" usefile="false"/>
       </test>
     </junit>
   </target>
-
+  
   <target name="failureRecorder.runtest">
     <ant target="failureRecorder.internal"
-         antfile="junit.xml"
+         antfile="junit.xml" 
          inheritAll="false"
-         inheritRefs="false"/>
+         inheritRefs="false" 
+    />
   </target>
-
+  
   <target name="failureRecorder.fixing">
     <property name="tmp.dir" value="${output}"/>
     <echo file="${tmp.dir}/A.java">
@@ -259,7 +260,7 @@
         }
     </echo>
   </target>
-
+  
   <!-- Bugzilla Issue 45411 -->
   <target name="testMultilineAssertsNoFork">
     <junit>
@@ -280,14 +281,14 @@
   <target name="testSkippableTests">
     <mkdir dir="${output}"/>
     <junit>
-      <formatter type="xml"/>
-      <classpath refid="test"/>
-      <batchtest todir="${output}">
-        <fileset dir="../../../../tests/junit">
-          <include name="org/example/junit/JUnit4Skippable.java"/>
-          <!-- tests remove out-dir on tearDown -->
-        </fileset>
-      </batchtest>
+            <formatter type="xml"/>
+            <classpath refid="test"/>
+            <batchtest todir="${output}">
+                <fileset dir="../../../../tests/junit">
+                    <include name="org/example/junit/JUnit4Skippable.java"/>
+                    <!-- tests remove out-dir on tearDown -->
+                </fileset>
+            </batchtest>
     </junit>
   </target>
 
@@ -295,15 +296,15 @@
   <!-- Skipping classes that are not tests -->
   <target name="testNonTests">
     <mkdir dir="${output}"/>
-    <junit>
-      <formatter type="xml"/>
-      <classpath refid="test"/>
-      <batchtest todir="${output}" skipNonTests="true">
-        <fileset dir="../../../../tests/junit">
-          <include name="org/example/junit/*Missed.java"/>
-          <!-- tests remove out-dir on tearDown -->
-        </fileset>
-      </batchtest>
+        <junit>
+            <formatter type="xml"/>
+            <classpath refid="test"/>
+            <batchtest todir="${output}" skipNonTests="true">
+                <fileset dir="../../../../tests/junit">
+                    <include name="org/example/junit/*Missed.java"/>
+                    <!-- tests remove out-dir on tearDown -->
+                </fileset>
+            </batchtest>
     </junit>
   </target>
 
@@ -322,7 +323,7 @@
         </junit>
     </target>
 
-  <target name="testTestMethods">
+  <target name="testTestMethods" >
     <property name="tmp.dir" value="${output}"/>
     <echo file="${tmp.dir}/T1.java">public class T1 extends
       junit.framework.TestCase {
@@ -349,25 +350,25 @@
     </javac>
     <junit fork="false" printsummary="true" haltonerror="true">
       <classpath>
-        <pathelement location="${tmp.dir}"/>
-        <path refid="test"/>
+        <pathelement location="${tmp.dir}" />
+        <path refid="test" />
       </classpath>
-      <test name="T1" methods="testOK"/>
-      <test name="T2" methods="ok"/>
+      <test name="T1" methods="testOK" />
+      <test name="T2" methods="ok" />
     </junit>
   </target>
 
   <target name="testCheckForkedPath">
-    <property name="includeantruntime" value="yes"/>
+    <property name="includeantruntime" value="yes" />
     <!-- duplicate the Ant classes into a jar -->
-    <jar destfile="${output}/ant.jar" basedir="${antclasses}"/>
+    <jar destfile="${output}/ant.jar" basedir="${antclasses}" />
     <junit fork="yes" haltonerror="true" haltonfailure="true"
              showoutput="${showoutput}" includeantruntime="${includeantruntime}">
-      <test name="org.example.junit.Output"/>
+      <test name="org.example.junit.Output" />
       <classpath>
-        <pathelement location="../../../../../build/testcases"/>
-        <pathelement location="${junitjar}"/>
-        <pathelement location="${output}/ant.jar"/>
+        <pathelement location="../../../../../build/testcases" />
+        <pathelement location="${junitjar}" />
+        <pathelement location="${output}/ant.jar" />
       </classpath>
     </junit>
   </target>

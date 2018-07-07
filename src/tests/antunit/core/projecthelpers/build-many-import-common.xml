@@ -18,6 +18,6 @@
 <project>
     <!-- build file imported by every other build -->
     <target name="common" depends="init">
-        <property name="common" value="ok"/>
+        <property name="common" value="ok" />
     </target>
 </project>

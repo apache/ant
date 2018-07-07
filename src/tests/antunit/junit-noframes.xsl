@@ -3,8 +3,8 @@
         xmlns:lxslt="http://xml.apache.org/xslt"
         xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"
-  doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"/>
-<xsl:decimal-format decimal-separator="." grouping-separator=","/>
+  doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
+<xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file

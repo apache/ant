@@ -17,6 +17,6 @@
 -->
 <project>
     <target name="setfoo" depends="init">
-        <property name="foo" value="hello"/>
+        <property name="foo" value="hello" />
     </target>
 </project>

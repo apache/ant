@@ -20,7 +20,7 @@
   <property name="NL" value="&#10;"/>
   <regexp id="myid" pattern="^[a-z]{3,4}$"/>
 
-  <available property="jdk1.4+" classname="java.lang.CharSequence"/>
+  <available property="jdk1.4+" classname="java.lang.CharSequence"/>  
   <condition property="some.regexp.support">
     <or>
       <isset property="jdk1.4+"/>
@@ -28,7 +28,7 @@
       <isset property="apache.oro.present"/>
     </or>
   </condition>
-
+    
   <target name="test-refid" if="some.regexp.support">
     <au:assertTrue>
       <matches string="abc">
@@ -45,7 +45,7 @@
 
   <target name="test-nomatch" if="some.regexp.support">
     <au:assertFalse>
-      <matches string="abc" pattern="^b.*"/>
+      <matches string="abc" pattern="^b.*" />
     </au:assertFalse>
   </target>
 
@@ -55,7 +55,7 @@
     </tstamp>
     <au:assertTrue>
       <matches string="${today}">
-        <regexp pattern="^[0123]\d-[01]\d-[12]\d\d\d$"/>
+        <regexp pattern="^[0123]\d-[01]\d-[12]\d\d\d$" />
       </matches>
     </au:assertTrue>
   </target>

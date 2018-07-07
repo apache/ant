@@ -20,20 +20,20 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}"/>
+    <mkdir dir="${output}" />
   </target>
 
   <target name="dynamicfilter">
     <path id="test-classes">
-      <pathelement location="../../../../build/testcases"/>
-      <pathelement path="${java.class.path}"/>
+      <pathelement location="../../../../build/testcases" />
+      <pathelement path="${java.class.path}" />
     </path>
-    <typedef
-      name="customfilter"
+    <typedef 
+      name="customfilter" 
       classname="org.apache.tools.ant.filters.DynamicFilterTest$CustomFilter">
       <classpath refid="test-classes"/>
     </typedef>
-
+    
     <concat destfile="${output}/input">
       hello world
     </concat>

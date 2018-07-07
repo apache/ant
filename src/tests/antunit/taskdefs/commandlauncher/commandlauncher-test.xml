@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
-   <import file="../../antunit-base.xml"/>
+   <import file="../../antunit-base.xml" />
 
   <target name="testCommandLauncherTask">
    <echo message="${input}"/>
@@ -61,7 +61,7 @@ public class MyJavaExecutable {
            srcdir="${input}"/>
     <typedef
        name="my-command-launcher"
-       classname="MyCommandLauncher" classpath="${output}"/>
+       classname="MyCommandLauncher" classpath="${output}"/> 
 
     <commandlauncher vmlauncher="true">
         <my-command-launcher/>
@@ -83,5 +83,5 @@ public class MyJavaExecutable {
     <au:assertLogContains text="Hello World From CommandLauncher"/>
   </target>
 
-
+ 
 </project>

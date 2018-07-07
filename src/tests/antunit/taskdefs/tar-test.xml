@@ -19,17 +19,17 @@
 <project name="tar-test" default="antunit"
          xmlns:cond="antlib:org.apache.tools.ant.types.conditions"
          xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
   <target name="setUp">
-    <mkdir dir="${input}"/>
-    <mkdir dir="${output}"/>
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
   </target>
 
   <target name="testTarFilesetHandlesFilesetReferences" depends="setUp">
-    <fileset id="xml.fileset" dir="." includes="*.xml"/>
+    <fileset id="xml.fileset" dir="." includes="*.xml" />
     <tar  destfile="${output}/testtar.tar">
-      <tarfileset  prefix="pre" refid="xml.fileset"/>
+      <tarfileset  prefix="pre" refid="xml.fileset" />
     </tar>
   </target>
 

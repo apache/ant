@@ -21,7 +21,7 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}"/>
+    <mkdir dir="${output}" />
   </target>
 
   <target name="test1">
@@ -37,18 +37,18 @@
   </target>
 
   <target name="test4">
-    <copydir src="."
+    <copydir src="." 
              dest="."/>
   </target>
 
   <target name="test5">
-    <mkdir dir="${output}/taskdefs.tmp"/>
-    <copydir src="."
+    <mkdir dir="${output}/taskdefs.tmp" />
+    <copydir src="." 
              dest="${output}/taskdefs.tmp"/>
   </target>
 
   <target name="test6">
-    <copydir src="."
+    <copydir src="." 
              dest="template.xml"/>
   </target>
 

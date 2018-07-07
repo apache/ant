@@ -17,7 +17,7 @@
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../../../antunit-base.xml"/>
+  <import file="../../../antunit-base.xml" />
 
   <description>
     In which we test interesting aspects of scripting.
@@ -28,10 +28,10 @@
   <condition property="prereqs-ok">
     <or>
       <and>
-        <available classname="org.apache.bsf.BSFManager"/>
-        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine"/>
+        <available classname="org.apache.bsf.BSFManager" />
+        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine" />
       </and>
-      <available classname="javax.script.ScriptEngineManager"/>
+      <available classname="javax.script.ScriptEngineManager" />
     </or>
   </condition>
 
@@ -40,12 +40,12 @@
   <condition property="script.manager" value="javax">
     <and>
       <not>
-        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine"/>
+        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine" />
       </not>
       <isset property="prereqs-ok"/>
     </and>
   </condition>
-  <property name="script.manager" value="auto"/>
+  <property name="script.manager" value="auto" />
 
   <string id="script.code">
     self.log("Ant version =${ant.version}");
@@ -55,36 +55,36 @@
   <presetdef name="js">
     <scriptdef language="javascript" name="scripttest" manager="${script.manager}">
       <!-- optional property attribute-->
-      <attribute name="property"/>
+      <attribute name="property" />
     </scriptdef>
   </presetdef>
 
-  <property name="prop" value='self.log("Ant version =${ant.version}");project.setNewProperty("property","live");'/>
+  <property name="prop" value='self.log("Ant version =${ant.version}");project.setNewProperty("property","live");' />
 
   <presetdef name="assertPropSet">
-    <au:assertPropertyEquals name="property" value="live"/>
+    <au:assertPropertyEquals name="property" value="live" />
   </presetdef>
 
 
   <!--purely to test that everything works -->
   <target name="testInline" if="prereqs-ok">
     <js>self.log("Hello");</js>
-    <scripttest/>
+    <scripttest />
   </target>
 
   <target name="testStringResource" if="prereqs-ok">
     <js>
-      <string value='self.log("Ant version =${ant.version}");'/>
+      <string value='self.log("Ant version =${ant.version}");' />
     </js>
-    <scripttest/>
+    <scripttest />
   </target>
 
   <target name="testStringResourceRef" if="prereqs-ok">
     <js>
-      <string refid="script.code"/>
+      <string refid="script.code" />
     </js>
-    <scripttest/>
-    <assertPropSet/>
+    <scripttest />
+    <assertPropSet />
   </target>
 
   <target name="testStringResourceInline" if="prereqs-ok">
@@ -94,28 +94,28 @@
         project.setNewProperty("property","live");
       </string>
     </js>
-    <scripttest/>
-    <assertPropSet/>
+    <scripttest />
+    <assertPropSet />
   </target>
 
   <target name="testPropertyResource" if="prereqs-ok">
     <js>
-      <propertyresource name="prop"/>
+      <propertyresource name="prop" />
     </js>
-    <scripttest/>
-    <assertPropSet/>
+    <scripttest />
+    <assertPropSet />
   </target>
 
   <target name="testMixedResources" if="prereqs-ok">
     <js>
-      <string refid="script.code"/>
-      <propertyresource name="prop"/>
+      <string refid="script.code" />
+      <propertyresource name="prop" />
       <string>
         project.setNewProperty("property2","live");
       </string>
     </js>
-    <scripttest/>
-    <assertPropSet name="property2"/>
+    <scripttest />
+    <assertPropSet name="property2" />
   </target>
 
   <target name="testExceptionNesting" description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47509" if="prereqs-ok">
@@ -125,7 +125,7 @@
       ]]>
     </scriptdef>
     <au:expectfailure message="I failed!">
-      <quickfail/>
+      <quickfail />
     </au:expectfailure>
   </target>
 </project>

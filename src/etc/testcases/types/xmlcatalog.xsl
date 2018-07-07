@@ -15,12 +15,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsl:stylesheet
+<xsl:stylesheet 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0">
 
   <!-- I belong to:
-       org.apache.tools.ant.types.XMLCatalogBuildFileTest.java
+       org.apache.tools.ant.types.XMLCatalogBuildFileTest.java 
        -->
 
   <xsl:output method="text"/>

@@ -19,16 +19,16 @@
 <project default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
   <target name="testTimeout"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49527">
     <au:expectfailure message="Parallel execution timed out">
       <parallel timeout="2000">
         <sequential>
-          <echo message="Before sleep"/>
-          <sleep seconds="10"/>
-          <echo message="After sleep"/>
+          <echo message="Before sleep" />
+          <sleep seconds="10" />
+          <echo message="After sleep" />
         </sequential>
       </parallel>
     </au:expectfailure>

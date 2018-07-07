@@ -16,24 +16,24 @@
   limitations under the License.
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
   <!-- apt tests -->
 
-  <property name="build.dir" location="aptbuild"/>
-  <property name="classes.dir" location="${build.dir}/classes"/>
-  <property name="classes2.dir" location="${build.dir}/classes2"/>
-  <property name="preprocess.dir" location="${build.dir}/source"/>
-  <property name="src" location="apt"/>
+  <property name="build.dir" location="aptbuild" />
+  <property name="classes.dir" location="${build.dir}/classes" />
+  <property name="classes2.dir" location="${build.dir}/classes2" />
+  <property name="preprocess.dir" location="${build.dir}/source" />
+  <property name="src" location="apt" />
 
-  <property name="AptExample.class" location="${classes.dir}/AptExample.class"/>
+  <property name="AptExample.class" location="${classes.dir}/AptExample.class" />
 
   <macrodef name="assertCompiled">
-    <attribute name="file"/>
-    <sequential>
+    <attribute name="file" />
+    <sequential >
       <fail  message="not found: @{file}">
         <condition>
           <not>
-            <available file="@{file}"/>
+            <available file="@{file}" />
           </not>
         </condition>
       </fail>
@@ -69,7 +69,7 @@
          compile="true"
          preprocessdir="${preprocess.dir}">
     </apt>
-    <assertAptExampleCompiled/>
+    <assertAptExampleCompiled />
   </target>
 
   <target name="testAptFork" depends="setUp" unless="jdk1.8+">
@@ -80,7 +80,7 @@
          fork="true"
          preprocessdir="${preprocess.dir}">
     </apt>
-    <assertAptExampleCompiled/>
+    <assertAptExampleCompiled />
   </target>
 
   <target name="testAptForkFalse" depends="setUp" unless="jdk1.8+">
@@ -91,7 +91,7 @@
          fork="false"
          preprocessdir="${preprocess.dir}">
     </apt>
-    <assertAptExampleCompiled/>
+    <assertAptExampleCompiled />
     <au:assertLogContains text="Apt only runs in its own JVM; fork=false option ignored"/>
 
   </target>
@@ -102,11 +102,11 @@
          debug="on"
          compile="true"
          preprocessdir="${preprocess.dir}">
-         <compilerarg value="-XListAnnotationTypes"/>
-         <compilerarg value="-Xlint:deprecation"/>
+         <compilerarg value="-XListAnnotationTypes" />
+         <compilerarg value="-Xlint:deprecation" /> 
     </apt>
-
-    <assertAptExampleCompiled/>
+  
+    <assertAptExampleCompiled />
     <au:assertLogContains text="Set of annotations found:"/>
     <au:assertLogContains text="Distributed"/>
   </target>
@@ -122,11 +122,11 @@
          compile="true"
          factory="DistributedAnnotationFactory"
          preprocessdir="${preprocess.dir}">
-         <factorypath path="${classes.dir}"/>
-         <option name="build.dir" value="${build.dir}"/>
+         <factorypath path="${classes.dir}" />
+         <option name="build.dir" value="${build.dir}" />
     </apt>
-    <assertAptExampleCompiled/>
-    <assertProcessed/>
+    <assertAptExampleCompiled />
+    <assertProcessed />
   </target>
 
   <target name="testAptNewFactoryFork" depends="testApt" unless="jdk1.8+">
@@ -137,11 +137,11 @@
          fork="true"
          factory="DistributedAnnotationFactory"
          preprocessdir="${preprocess.dir}">
-         <factorypath path="${classes.dir}"/>
-         <option name="build.dir" value="${build.dir}"/>
+         <factorypath path="${classes.dir}" />
+         <option name="build.dir" value="${build.dir}" />
     </apt>
-    <assertAptExampleCompiled/>
-    <assertProcessed/>
+    <assertAptExampleCompiled />
+    <assertProcessed />
   </target>
 
   <target name="testAptUnderJDK18" if="jdk1.8+">

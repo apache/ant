@@ -24,5 +24,5 @@
         <xsl:value-of select="@name"/>
       </xsl:attribute>
     </author>
-  </xsl:template>
+  </xsl:template> 
 </xsl:stylesheet>

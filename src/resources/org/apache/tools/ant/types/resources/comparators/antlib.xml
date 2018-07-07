@@ -17,17 +17,17 @@
 -->
 <antlib>
   <typedef name="name"
-    classname="org.apache.tools.ant.types.resources.comparators.Name"/>
+    classname="org.apache.tools.ant.types.resources.comparators.Name" />
   <typedef name="size"
-    classname="org.apache.tools.ant.types.resources.comparators.Size"/>
+    classname="org.apache.tools.ant.types.resources.comparators.Size" />
   <typedef name="date"
-    classname="org.apache.tools.ant.types.resources.comparators.Date"/>
+    classname="org.apache.tools.ant.types.resources.comparators.Date" />
   <typedef name="exists"
-    classname="org.apache.tools.ant.types.resources.comparators.Exists"/>
+    classname="org.apache.tools.ant.types.resources.comparators.Exists" />
   <typedef name="type"
-    classname="org.apache.tools.ant.types.resources.comparators.Type"/>
+    classname="org.apache.tools.ant.types.resources.comparators.Type" />
   <typedef name="content"
-    classname="org.apache.tools.ant.types.resources.comparators.Content"/>
+    classname="org.apache.tools.ant.types.resources.comparators.Content" />
   <typedef name="reverse"
-    classname="org.apache.tools.ant.types.resources.comparators.Reverse"/>
+    classname="org.apache.tools.ant.types.resources.comparators.Reverse" />
 </antlib>

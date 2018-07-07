@@ -21,7 +21,7 @@
                 <fail>
                         <condition>
                                 <not>
-                                        <antversion atleast="1.7"/>
+                                        <antversion atleast="1.7" />
                                 </not>
                         </condition>
                 Should be at least 1.7
@@ -32,7 +32,7 @@
                 <fail>
                         <condition>
                                 <not>
-                                        <antversion exactly="1.9.13"/>
+                                        <antversion exactly="1.9.13" />
                                 </not>
                         </condition>
                         Should be exactly 1.9.13
@@ -41,11 +41,11 @@
         </target>
 
         <target name="testatleastfail">
-                <property name="version" value="1.8.9"/>
+                <property name="version" value="1.8.9" />
                 <fail>
                         <condition>
                                 <not>
-                                        <antversion atleast="1.9.13"/>
+                                        <antversion atleast="1.9.13" />
                                 </not>
                         </condition>
                 Should be at least 1.9.13
@@ -53,11 +53,11 @@
         </target>
 
         <target name="testexactlyfail">
-                <property name="version" value="1.8.0"/>
+                <property name="version" value="1.8.0" />
                 <fail>
                         <condition>
                                 <not>
-                                        <antversion exactly="1.9.13"/>
+                                        <antversion exactly="1.9.13" />
                                 </not>
                         </condition>
                   Should be exactly 1.9.13

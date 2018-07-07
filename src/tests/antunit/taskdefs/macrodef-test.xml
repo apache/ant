@@ -18,7 +18,7 @@
 <project name="length-test" default="antunit"
          xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../antunit-base.xml"/>
+  <import file="../antunit-base.xml" />
 
   <target name="testDefaultTest">
     <macrodef name="test-log">

@@ -17,7 +17,7 @@
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
-  <import file="../../antunit-base.xml"/>
+  <import file="../../antunit-base.xml" />
 
   <!-- using restrict/exists to force getFile() to be called -->
 
@@ -25,8 +25,8 @@
     <au:assertTrue>
       <resourcecount when="ge" count="0">
         <restrict>
-          <exists/>
-          <file name="foo"/>
+          <exists />
+          <file name="foo" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -36,8 +36,8 @@
     <au:assertTrue>
       <resourcecount when="ge" count="0">
         <restrict>
-          <exists/>
-          <file name="foo"/>
+          <exists />
+          <file name="foo" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
@@ -47,8 +47,8 @@
     <au:assertTrue>
       <resourcecount when="ge" count="0">
         <restrict>
-          <exists/>
-          <file basedir="${basedir}" name="foo"/>
+          <exists />
+          <file basedir="${basedir}" name="foo" />
         </restrict>
       </resourcecount>
     </au:assertTrue>
