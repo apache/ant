@@ -20,7 +20,7 @@
   <import file="../antunit-base.xml" />
 
   <property name="location" value="http://ant.apache.org/webtest/gettest" />
-    
+
   <target name="setUp">
     <mkdir dir="${output}" />
   </target>

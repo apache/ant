@@ -25,18 +25,15 @@
   </target>
 
   <target name="test2">
-    <pvcs pvcsbin="/home/tc/projects/pvcsant/src/etc/testcases/taskdefs"
-          repository="/mnt/pvcs"/>
+    <pvcs pvcsbin="/home/tc/projects/pvcsant/src/etc/testcases/taskdefs" repository="/mnt/pvcs"/>
   </target>
 
   <target name="test3">
-    <pvcs pvcsbin="\home\cvs\pvcsant\src\etc\testcases\taskdefs"
-          repository="/mnt/pvcs" pvcsproject="/qviknet"/>
+    <pvcs pvcsbin="\home\cvs\pvcsant\src\etc\testcases\taskdefs" repository="/mnt/pvcs" pvcsproject="/qviknet"/>
   </target>
 
   <target name="test4">
-    <pvcs pvcsbin="\home\cvs\pvcsant\src\etc\testcases\taskdefs"
-          repository="/mnt/pvcs" pvcsproject="/qviknet" workspace="/@/Public/buildws"/>
+    <pvcs pvcsbin="\home\cvs\pvcsant\src\etc\testcases\taskdefs" repository="/mnt/pvcs" pvcsproject="/qviknet" workspace="/@/Public/buildws"/>
   </target>
 
   <target name="test5" description="Get the latest from PVCS">

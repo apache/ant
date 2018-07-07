@@ -405,8 +405,8 @@
                 <td><xsl:apply-templates select="error"/></td>
             </xsl:when>
             <xsl:when test="skipped">
-                <td>Skipped</td>
-                <td><xsl:apply-templates select="skipped"/></td>
+            	<td>Skipped</td>
+            	<td><xsl:apply-templates select="skipped"/></td>
             </xsl:when>
             <xsl:otherwise>
                 <td>Success</td>

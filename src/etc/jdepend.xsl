@@ -18,7 +18,7 @@
    limitations under the License.
 -->
 
-<xsl:output method="html" indent="yes" encoding="US-ASCII"/>
+<xsl:output method="html" indent="yes"  encoding="US-ASCII"/>
 
 <xsl:template match="JDepend">
     <html>

@@ -119,7 +119,7 @@
   <target name="test9" depends="init">
     <delete>
       <files>
-        <include name="${dir}/**"/>
+          <include name="${dir}/**"/>
       </files>
     </delete>
     <expectabsent />
@@ -187,5 +187,7 @@
     </fail>
     <expectabsent target="${dir}/subdir"/>
   </target>
+
+
 
 </project>

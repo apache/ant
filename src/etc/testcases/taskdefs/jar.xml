@@ -57,7 +57,8 @@
   </target>
 
   <target name="testNoRecreateWithUpdate">
-    <jar destfile="${tmp.jar}"
+    <jar
+         destfile="${tmp.jar}"
          basedir="."
          includes="jar.xml"
          update="true"
@@ -69,14 +70,16 @@
   </target>
 
   <target name="testRecreateWithoutUpdateAdditionalFiles">
-    <jar destfile="${tmp.jar}"
+    <jar
+         destfile="${tmp.jar}"
          includes="*.xml"
          basedir="."
     />
   </target>
 
   <target name="testRecreateWithUpdateAdditionalFiles">
-    <jar destfile="${tmp.jar}"
+    <jar
+         destfile="${tmp.jar}"
          basedir="."
          includes="*.xml"
          update="true"
@@ -84,14 +87,16 @@
   </target>
 
   <target name="testRecreateWithoutUpdateNewerFile">
-    <jar destfile="${tmp.jar}"
+    <jar
+         destfile="${tmp.jar}"
          basedir="."
          includes="jar.xml"
     />
   </target>
 
   <target name="testRecreateWithUpdateNewerFile">
-    <jar destfile="${tmp.jar}"
+    <jar
+         destfile="${tmp.jar}"
          basedir="."
          includes="jar.xml"
          update="true"
@@ -112,7 +117,8 @@
   </target>    
 
   <target name="testNoRecreateBasedirExcludesWithUpdate">
-    <jar destfile="${tmp.jar}"
+    <jar
+         destfile="${tmp.jar}"
          basedir="."
          includes="j*.xml"
          excludes="java.xml"
@@ -121,7 +127,8 @@
   </target>
 
   <target name="testNoRecreateBasedirExcludesWithoutUpdate">
-    <jar destfile="${tmp.jar}"
+    <jar
+         destfile="${tmp.jar}"
          basedir="."
          includes="j*.xml"
          excludes="java.xml"
