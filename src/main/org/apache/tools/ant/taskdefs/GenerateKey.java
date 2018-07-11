@@ -181,6 +181,7 @@ public class GenerateKey extends Task {
 
     protected String sigalg;
     protected String keyalg;
+    protected String saname;
     protected String dname;
     protected DistinguishedName expandedDname;
     protected int keysize;
@@ -219,6 +220,20 @@ public class GenerateKey extends Task {
                                     + " both as attribute and element.");
         }
         this.dname = dname;
+    }
+
+    /**
+     * The subject alternative name for entity.
+     *
+     * @param saname subject alternative name
+     */
+    public void setSaname(final String saname) {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_7)) {
+            this.saname = saname;
+        } else {
+            log("The SubjectAlternativeName extension is not available for "
+               +"the Java Version being used.");
+        }
     }
 
     /**
@@ -400,7 +415,6 @@ public class GenerateKey extends Task {
             sb.append("\" ");
         }
 
-
         if (0 < keysize) {
             sb.append("-keysize \"");
             sb.append(keysize);
@@ -410,6 +424,13 @@ public class GenerateKey extends Task {
         if (0 < validity) {
             sb.append("-validity \"");
             sb.append(validity);
+            sb.append("\" ");
+        }
+
+        if (null != saname) {
+            sb.append("-ext ");
+            sb.append("\"san=");
+            sb.append(saname);
             sb.append("\" ");
         }
 
@@ -423,4 +444,3 @@ public class GenerateKey extends Task {
         cmd.execute();
     }
 }
-
