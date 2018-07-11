@@ -181,11 +181,13 @@ public class GenerateKey extends Task {
 
     protected String sigalg;
     protected String keyalg;
+    protected String saname;
     protected String dname;
     protected DistinguishedName expandedDname;
     protected int keysize;
     protected int validity;
     protected boolean verbose;
+    private boolean useExtension;
     // CheckStyle:VisibilityModifier ON
 
     /**
@@ -219,6 +221,21 @@ public class GenerateKey extends Task {
                                     + " both as attribute and element.");
         }
         this.dname = dname;
+    }
+
+    /**
+     * The subject alternative name for entity.
+     *
+     * @param saname subject alternative name
+     */
+    public void setSaname(final String saname) {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_7)) {
+            this.saname = saname;
+            this.useExtension = true;
+        } else {
+            log("The SubjectAlternativeName extension is not available for "
+               +"the Java Version being used.");
+        }
     }
 
     /**
@@ -400,7 +417,6 @@ public class GenerateKey extends Task {
             sb.append("\" ");
         }
 
-
         if (0 < keysize) {
             sb.append("-keysize \"");
             sb.append(keysize);
@@ -413,6 +429,16 @@ public class GenerateKey extends Task {
             sb.append("\" ");
         }
 
+        if (useExtension) {
+            sb.append("-ext ");
+
+            if (null != saname) {
+                sb.append("\"san=");
+                sb.append(saname);
+                sb.append("\" ");
+            }
+        }
+
         log("Generating Key for " + alias);
         final ExecTask cmd = new ExecTask(this);
         cmd.setExecutable(JavaEnvUtils.getJdkExecutable("keytool"));
@@ -423,4 +449,3 @@ public class GenerateKey extends Task {
         cmd.execute();
     }
 }
-
