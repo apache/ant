@@ -187,7 +187,6 @@ public class GenerateKey extends Task {
     protected int keysize;
     protected int validity;
     protected boolean verbose;
-    private boolean useExtension;
     // CheckStyle:VisibilityModifier ON
 
     /**
@@ -231,7 +230,6 @@ public class GenerateKey extends Task {
     public void setSaname(final String saname) {
         if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_7)) {
             this.saname = saname;
-            this.useExtension = true;
         } else {
             log("The SubjectAlternativeName extension is not available for "
                +"the Java Version being used.");
@@ -429,14 +427,11 @@ public class GenerateKey extends Task {
             sb.append("\" ");
         }
 
-        if (useExtension) {
+        if (null != saname) {
             sb.append("-ext ");
-
-            if (null != saname) {
-                sb.append("\"san=");
-                sb.append(saname);
-                sb.append("\" ");
-            }
+            sb.append("\"san=");
+            sb.append(saname);
+            sb.append("\" ");
         }
 
         log("Generating Key for " + alias);
