@@ -427,7 +427,6 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
     <target name="simpleSourceFile"
             description="Tests that the single source file programs, introduced in Java 11, works as expected">
         <mkdir dir="${output}/javasource"/>
-        <echo file="/tmp/foo.txt" message="${output}"/>
         <echo file="${output}/javasource/A.java">
             import java.nio.file.Files;
             import java.nio.file.Paths;
@@ -455,7 +454,6 @@ redirect.err=&quot;${redirect.err}&quot; should be empty</fail>
 
     <target name="generateDummyJavaSource">
         <mkdir dir="${output}/javasource"/>
-        <echo file="/tmp/foo.txt" message="${output}"/>
         <echo file="${output}/javasource/ThrowsException.java">
             public class ThrowsException {
                 public static void main(String[] args) throws Exception {
