@@ -150,6 +150,7 @@ public class GenerateKey extends Task {
 
     protected String sigalg;
     protected String keyalg;
+    protected String saname;
     protected String dname;
     protected DistinguishedName expandedDname;
     protected int keysize;
@@ -187,6 +188,21 @@ public class GenerateKey extends Task {
                 "It is not possible to specify dname  both as attribute and element.");
         }
         this.dname = dname;
+    }
+
+    /**
+     * The subject alternative name for entity.
+     *
+     * @param saname subject alternative name
+     * @since Ant 1.9.14
+     */
+    public void setSaname(final String saname) {
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_7)) {
+            this.saname = saname;
+        } else {
+            log("The SubjectAlternativeName extension is not available for "
+               +"the Java Version being used.");
+        }
     }
 
     /**
@@ -381,6 +397,13 @@ public class GenerateKey extends Task {
             sb.append("\" ");
         }
 
+        if (null != saname) {
+            sb.append("-ext ");
+            sb.append("\"san=");
+            sb.append(saname);
+            sb.append("\" ");
+        }
+
         log("Generating Key for " + alias);
         final ExecTask cmd = new ExecTask(this);
         cmd.setExecutable(JavaEnvUtils.getJdkExecutable("keytool"));
@@ -391,4 +414,3 @@ public class GenerateKey extends Task {
         cmd.execute();
     }
 }
-

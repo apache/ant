@@ -1,6 +1,12 @@
 Changes from Ant 1.10.5 TO Ant 1.10.6
 =====================================
 
+Other changes:
+--------------
+ * generatekey task now supports SubjectAlternativeName during key
+   generation.
+
+
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================
 
