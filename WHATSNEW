@@ -1,6 +1,12 @@
 Changes from Ant 1.9.13 TO Ant 1.9.14
 =====================================
 
+Other changes:
+--------------
+ * generatekey task now supports SubjectAlternativeName during key
+   generation.
+
+
 Changes from Ant 1.9.12 TO Ant 1.9.13
 =====================================
 
