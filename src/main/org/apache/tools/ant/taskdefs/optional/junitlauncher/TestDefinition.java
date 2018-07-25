@@ -1,8 +1,11 @@
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +14,7 @@ import java.util.List;
  * Represents the configuration details of a test that needs to be launched by the {@link JUnitLauncherTask}
  */
 abstract class TestDefinition {
+
     protected String ifProperty;
     protected String unlessProperty;
     protected Boolean haltOnFailure;
@@ -18,6 +22,7 @@ abstract class TestDefinition {
     protected String outputDir;
     protected String includeEngines;
     protected String excludeEngines;
+    protected ForkDefinition forkDefinition;
 
     protected List<ListenerDefinition> listeners = new ArrayList<>();
 
@@ -73,7 +78,19 @@ abstract class TestDefinition {
         return this.outputDir;
     }
 
-    abstract List<TestRequest> createTestRequests(final JUnitLauncherTask launcherTask);
+    public ForkDefinition createFork() {
+        if (this.forkDefinition != null) {
+            throw new BuildException("Test definition cannot have more than one fork elements");
+        }
+        this.forkDefinition = new ForkDefinition();
+        return this.forkDefinition;
+    }
+
+    ForkDefinition getForkDefinition() {
+        return this.forkDefinition;
+    }
+
+    abstract List<TestRequest> createTestRequests();
 
     protected boolean shouldRun(final Project project) {
         final PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
@@ -110,4 +127,7 @@ abstract class TestDefinition {
         }
         return parts.toArray(new String[parts.size()]);
     }
+
+    protected abstract void toForkedRepresentation(JUnitLauncherTask task, XMLStreamWriter writer) throws XMLStreamException;
+
 }

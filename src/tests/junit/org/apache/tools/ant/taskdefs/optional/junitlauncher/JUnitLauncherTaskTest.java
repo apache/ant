@@ -108,4 +108,13 @@ public class JUnitLauncherTaskTest {
     public void testTestClasses() {
         buildRule.executeTarget("test-batch");
     }
+
+    /**
+     * Tests the execution of a forked test
+     */
+    @Test
+    public void testBasicFork() {
+        buildRule.executeTarget("test-basic-fork");
+
+    }
 }
