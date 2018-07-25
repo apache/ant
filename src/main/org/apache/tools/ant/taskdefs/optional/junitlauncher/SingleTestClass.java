@@ -17,16 +17,27 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
-import org.apache.tools.ant.Project;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_CLASS_NAME;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_EXCLUDE_ENGINES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_INCLUDE_ENGINES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_METHODS;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST;
 
 /**
  * Represents the single {@code test} (class) that's configured to be launched by the {@link JUnitLauncherTask}
@@ -85,13 +96,7 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
     }
 
     @Override
-    List<TestRequest> createTestRequests(final JUnitLauncherTask launcherTask) {
-        final Project project = launcherTask.getProject();
-        if (!shouldRun(project)) {
-            launcherTask.log("Excluding test " + this.testClass + " since it's considered not to run " +
-                    "in context of project " + project, Project.MSG_DEBUG);
-            return Collections.emptyList();
-        }
+    List<TestRequest> createTestRequests() {
         final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
         if (!this.hasMethodsSpecified()) {
             requestBuilder.selectors(DiscoverySelectors.selectClass(this.testClass));
@@ -111,5 +116,84 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
             requestBuilder.filters(EngineFilter.excludeEngines(enginesToExclude));
         }
         return Collections.singletonList(new TestRequest(this, requestBuilder));
+    }
+
+    @Override
+    protected void toForkedRepresentation(final JUnitLauncherTask task, final XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeStartElement(LD_XML_ELM_TEST);
+        writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, testClass);
+        if (testMethods != null) {
+            final StringBuilder sb = new StringBuilder();
+            for (final String method : testMethods) {
+                if (sb.length() != 0) {
+                    sb.append(",");
+                }
+                sb.append(method);
+            }
+            writer.writeAttribute(LD_XML_ATTR_METHODS, sb.toString());
+        }
+        if (haltOnFailure != null) {
+            writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, haltOnFailure.toString());
+        }
+        if (outputDir != null) {
+            writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, outputDir);
+        }
+        if (includeEngines != null) {
+            writer.writeAttribute(LD_XML_ATTR_INCLUDE_ENGINES, includeEngines);
+        }
+        if (excludeEngines != null) {
+            writer.writeAttribute(LD_XML_ATTR_EXCLUDE_ENGINES, excludeEngines);
+        }
+        // listeners for this test
+        if (listeners != null) {
+            for (final ListenerDefinition listenerDef : getListeners()) {
+                if (!listenerDef.shouldUse(task.getProject())) {
+                    // not applicable
+                    continue;
+                }
+                listenerDef.toForkedRepresentation(writer);
+            }
+        }
+        writer.writeEndElement();
+    }
+
+    static TestDefinition fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
+        reader.require(XMLStreamConstants.START_ELEMENT, null, LD_XML_ELM_TEST);
+        final SingleTestClass testDefinition = new SingleTestClass();
+        final String testClassName = requireAttributeValue(reader, LD_XML_ATTR_CLASS_NAME);
+        testDefinition.setName(testClassName);
+        final String methodNames = reader.getAttributeValue(null, LD_XML_ATTR_METHODS);
+        if (methodNames != null) {
+            testDefinition.setMethods(methodNames);
+        }
+        final String halt = reader.getAttributeValue(null, LD_XML_ATTR_HALT_ON_FAILURE);
+        if (halt != null) {
+            testDefinition.setHaltOnFailure(Boolean.parseBoolean(halt));
+        }
+        final String outDir = reader.getAttributeValue(null, LD_XML_ATTR_OUTPUT_DIRECTORY);
+        if (outDir != null) {
+            testDefinition.setOutputDir(outDir);
+        }
+        final String includeEngs = reader.getAttributeValue(null, LD_XML_ATTR_INCLUDE_ENGINES);
+        if (includeEngs != null) {
+            testDefinition.setIncludeEngines(includeEngs);
+        }
+        final String excludeEngs = reader.getAttributeValue(null, LD_XML_ATTR_EXCLUDE_ENGINES);
+        if (excludeEngs != null) {
+            testDefinition.setExcludeEngines(excludeEngs);
+        }
+        while (reader.nextTag() != XMLStreamConstants.END_ELEMENT) {
+            reader.require(XMLStreamConstants.START_ELEMENT, null, Constants.LD_XML_ELM_LISTENER);
+            testDefinition.addConfiguredListener(ListenerDefinition.fromForkedRepresentation(reader));
+        }
+        return testDefinition;
+    }
+
+    private static String requireAttributeValue(final XMLStreamReader reader, final String attrName) throws XMLStreamException {
+        final String val = reader.getAttributeValue(null, attrName);
+        if (val != null) {
+            return val;
+        }
+        throw new XMLStreamException("Attribute " + attrName + " is missing at " + reader.getLocation());
     }
 }

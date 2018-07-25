@@ -23,7 +23,6 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 public interface NamedTest {
 
     /**
-     *
      * @return Returns the name of the test
      */
     String getName();

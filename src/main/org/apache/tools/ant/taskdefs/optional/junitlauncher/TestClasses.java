@@ -21,10 +21,16 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST_CLASSES;
 
 /**
  * Represents a {@code testclasses} that's configured to be launched by the {@link JUnitLauncherTask}
@@ -42,14 +48,14 @@ public class TestClasses extends TestDefinition {
     }
 
     @Override
-    List<TestRequest> createTestRequests(final JUnitLauncherTask launcherTask) {
+    List<TestRequest> createTestRequests() {
         final List<SingleTestClass> tests = this.getTests();
         if (tests.isEmpty()) {
             return Collections.emptyList();
         }
         final List<TestRequest> requests = new ArrayList<>();
         for (final SingleTestClass test : tests) {
-            requests.addAll(test.createTestRequests(launcherTask));
+            requests.addAll(test.createTestRequests());
         }
         return requests;
     }
@@ -125,5 +131,27 @@ public class TestClasses extends TestDefinition {
         String[] getExcludeEngines() {
             return TestClasses.this.getExcludeEngines();
         }
+    }
+
+    @Override
+    protected void toForkedRepresentation(final JUnitLauncherTask task, final XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeStartElement(LD_XML_ELM_TEST_CLASSES);
+        // write out as multiple SingleTestClass representations
+        for (final SingleTestClass singleTestClass : getTests()) {
+            singleTestClass.toForkedRepresentation(task, writer);
+        }
+        writer.writeEndElement();
+    }
+
+    static List<TestDefinition> fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
+        reader.require(XMLStreamConstants.START_ELEMENT, null, LD_XML_ELM_TEST_CLASSES);
+        final List<TestDefinition> testDefinitions = new ArrayList<>();
+        // read out as multiple SingleTestClass representations
+        while (reader.nextTag() != XMLStreamConstants.END_ELEMENT) {
+            reader.require(XMLStreamConstants.START_ELEMENT, null, Constants.LD_XML_ELM_TEST);
+            testDefinitions.add(SingleTestClass.fromForkedRepresentation(reader));
+        }
+        reader.require(XMLStreamConstants.END_ELEMENT, null, LD_XML_ELM_TEST_CLASSES);
+        return testDefinitions;
     }
 }
