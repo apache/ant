@@ -6,6 +6,8 @@ Other changes:
  * generatekey task now supports SubjectAlternativeName during key
    generation.
 
+ * the <modified> selector has a new built-in algorithm 'lastmodified'
+   which computes a value based upon the lastmodified time of the file.
 
 Changes from Ant 1.9.12 TO Ant 1.9.13
 =====================================
