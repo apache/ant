@@ -325,6 +325,8 @@ public class ModifiedSelector extends BaseExtendSelector
                 algorithm = new DigestAlgorithm();
             } else if ("checksum".equals(algoName.getValue())) {
                 algorithm = new ChecksumAlgorithm();
+            } else if ("lastmodified".equals(algoName.getValue())) {
+                algorithm = new LastModifiedAlgorithm();
             }
         } else if (algorithmClass != null) {
             // use Algorithm specified by classname
@@ -913,7 +915,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
     /**
      * The enumerated type for algorithm.
-     * The values are "hashValue", "digest" and "checksum".
+     * The values are "hashValue", "digest", "checksum" and "lastmodified".
      */
     public static class AlgorithmName extends EnumeratedAttribute {
         /**
@@ -922,7 +924,7 @@ public class ModifiedSelector extends BaseExtendSelector
          */
         @Override
         public String[] getValues() {
-            return new String[] {"hashvalue", "digest", "checksum"};
+            return new String[] {"hashvalue", "digest", "checksum", "lastmodified"};
         }
     }
 

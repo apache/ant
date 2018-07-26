@@ -6,6 +6,8 @@ Other changes:
  * generatekey task now supports SubjectAlternativeName during key
    generation.
 
+ * the <modified> selector has a new built-in algorithm 'lastmodified'
+   which computes a value based upon the lastmodified time of the file.
 
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================
@@ -62,7 +64,7 @@ Fixed bugs:
  * <cab> died with a NullPointerException since Ant 1.10.2.
    Bugzilla Report 62335
 
- * The <depend> task would fail with 
+ * The <depend> task would fail with
    "java.lang.ClassFormatError: Invalid Constant Pool entry Type 19" while
    parsing a module-info.class. The task is compatible with
    Java bytecode version 53 now.
