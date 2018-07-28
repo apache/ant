@@ -875,13 +875,13 @@ public final class IntrospectionHelper {
      * @since Ant 1.6.3
      */
     public Method getElementMethod(final String elementName) throws BuildException {
-        final Object creator = nestedCreators.get(elementName);
+        final NestedCreator creator = nestedCreators.get(elementName);
         if (creator == null) {
             throw new UnsupportedElementException("Class "
                     + bean.getName() + " doesn't support the nested \""
                     + elementName + "\" element.", elementName);
         }
-        return ((NestedCreator) creator).method;
+        return creator.method;
     }
 
     /**
@@ -896,13 +896,13 @@ public final class IntrospectionHelper {
      * @since Ant 1.6.3
      */
     public Method getAttributeMethod(final String attributeName) throws BuildException {
-        final Object setter = attributeSetters.get(attributeName);
+        final AttributeSetter setter = attributeSetters.get(attributeName);
         if (setter == null) {
             throw new UnsupportedAttributeException("Class "
                     + bean.getName() + " doesn't support the \""
                     + attributeName + "\" attribute.", attributeName);
         }
-        return ((AttributeSetter) setter).method;
+        return setter.method;
     }
 
     /**
