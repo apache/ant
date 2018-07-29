@@ -8,7 +8,7 @@
 #
 #   Making sure that the entered bug-id number is correct.
 #   Validating that the code that was reviewed is indeed the code being
-#       checked in (using the bug-id number or a seperate review
+#       checked in (using the bug-id number or a separate review
 #       number to identify this particular code set.).
 #
 # If any of the above test failed, then the commit would be aborted.
