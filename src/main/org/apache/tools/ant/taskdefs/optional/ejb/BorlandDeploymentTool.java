@@ -202,23 +202,17 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * @return the descriptor.
      */
     protected DescriptorHandler getBorlandDescriptorHandler(final File srcDir) {
-        DescriptorHandler handler =
-            new DescriptorHandler(getTask(), srcDir) {
-                    @Override
-                    protected void processElement() {
-                        if ("type-storage".equals(currentElement)) {
-                            // Get the filename of vendor specific descriptor
-                            String fileNameWithMETA = currentText;
-                            //trim the META_INF\ off of the file name
-                            String fileName
-                                = fileNameWithMETA.substring(META_DIR.length(),
-                                    fileNameWithMETA.length());
-                            File descriptorFile = new File(srcDir, fileName);
-
-                            ejbFiles.put(fileNameWithMETA, descriptorFile);
-                        }
-                    }
-                };
+        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir) {
+            @Override
+            protected void processElement() {
+                if ("type-storage".equals(currentElement)) {
+                    // Get the filename of vendor specific descriptor
+                    // trim the META_INF\ off of the file name
+                    ejbFiles.put(currentText, new File(srcDir,
+                            currentText.substring(META_DIR.length())));
+                }
+            }
+        };
         handler.registerDTD(PUBLICID_BORLAND_EJB,
                             borlandDTD == null ? DEFAULT_BAS_DTD_LOCATION : borlandDTD);
 

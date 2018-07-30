@@ -724,7 +724,7 @@ public class LayoutPreservingProperties extends Properties {
                 setValue(null);
             } else {
                 name = text.substring(0, pos);
-                setValue(text.substring(pos + 1, text.length()));
+                setValue(text.substring(pos + 1));
             }
             // trim leading whitespace only
             name = stripStart(name, " \t\f");

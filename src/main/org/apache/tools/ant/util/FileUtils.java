@@ -858,7 +858,7 @@ public class FileUtils {
         if (isDirectory) {
             directory = new StringBuilder(path.substring(index).replace(File.separatorChar, '.'));
         } else {
-            int dirEnd = path.lastIndexOf(File.separatorChar, path.length());
+            int dirEnd = path.lastIndexOf(File.separatorChar);
             if (dirEnd == -1 || dirEnd < index) {
                 file = path.substring(index);
             } else {

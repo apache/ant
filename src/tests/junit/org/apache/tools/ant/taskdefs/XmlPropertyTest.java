@@ -229,7 +229,7 @@ public class XmlPropertyTest {
                 assertNotEquals(assertMsg + " Object ID does not exist.", null, obj);
 
                 // What is the property supposed to be?
-                propertyValue = propertyValue.substring(3, propertyValue.length());
+                propertyValue = propertyValue.substring(3);
                 if (propertyValue.equals("path")) {
                     assertThat(assertMsg + " Path ID is a " + obj.getClass().getName(),
                             obj, instanceOf(Path.class));
@@ -243,8 +243,7 @@ public class XmlPropertyTest {
                     // The property is the name of a file.  We are testing
                     // a location attribute, so we need to resolve the given
                     // file name in the provided folder.
-                    String fileName =
-                        propertyValue.substring(5, propertyValue.length());
+                    String fileName = propertyValue.substring(5);
                     File f = new File(workingDir, fileName);
                     propertyValue = f.getAbsolutePath();
                 }

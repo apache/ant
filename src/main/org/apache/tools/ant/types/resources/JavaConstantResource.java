@@ -47,7 +47,7 @@ public class JavaConstantResource extends AbstractClasspathResource {
             throw new IOException("No class name in " + constant);
         }
         String classname = constant.substring(0, index);
-        String fieldname = constant.substring(index + 1, constant.length());
+        String fieldname = constant.substring(index + 1);
         try {
             Class<?> clazz =
                 cl != null

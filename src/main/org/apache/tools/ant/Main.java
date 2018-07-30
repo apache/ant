@@ -549,7 +549,7 @@ public class Main implements AntMain {
          * to help or not, so we simply look for the equals sign.
          */
         final String arg = args[argPos];
-        String name = arg.substring(2, arg.length());
+        String name = arg.substring(2);
         String value;
         final int posEq = name.indexOf('=');
         if (posEq > 0) {

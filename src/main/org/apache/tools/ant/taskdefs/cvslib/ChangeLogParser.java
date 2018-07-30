@@ -171,7 +171,7 @@ class ChangeLogParser {
     private void processFile(final String line) {
         if (!remote && line.startsWith("Working file:")) {
             // CheckStyle:MagicNumber OFF
-            file = line.substring(14, line.length());
+            file = line.substring(14);
             // CheckStyle:MagicNumber ON
             status = GET_REVISION;
         } else if (remote && line.startsWith("RCS file:")) {
