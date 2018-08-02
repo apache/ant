@@ -36,51 +36,51 @@
 
     <xsl:template match="testsuites">
         <!-- create the index.html -->
-        <xsl:result-document href="{$output.dir}/index.html">
+        <xsl:result-document href="file:///{$output.dir}/index.html">
             <xsl:call-template name="index.html"/>
         </xsl:result-document>
 
         <!-- create the stylesheet.css -->
-        <xsl:result-document href="{$output.dir}/stylesheet.css">
+        <xsl:result-document href="file:///{$output.dir}/stylesheet.css">
             <xsl:call-template name="stylesheet.css"/>
         </xsl:result-document>
 
         <!-- create the overview-packages.html at the root -->
-        <xsl:result-document href="{$output.dir}/overview-summary.html">
+        <xsl:result-document href="file:///{$output.dir}/overview-summary.html">
             <xsl:apply-templates select="." mode="overview.packages"/>
         </xsl:result-document>
 
         <!-- create the all-packages.html at the root -->
-        <xsl:result-document href="{$output.dir}/overview-frame.html">
+        <xsl:result-document href="file:///{$output.dir}/overview-frame.html">
             <xsl:apply-templates select="." mode="all.packages"/>
         </xsl:result-document>
 
         <!-- create the all-classes.html at the root -->
-        <xsl:result-document href="{$output.dir}/allclasses-frame.html">
+        <xsl:result-document href="file:///{$output.dir}/allclasses-frame.html">
             <xsl:apply-templates select="." mode="all.classes"/>
         </xsl:result-document>
 
         <!-- create the all-tests.html at the root -->
-        <xsl:result-document href="{$output.dir}/all-tests.html">
+        <xsl:result-document href="file:///{$output.dir}/all-tests.html">
             <xsl:apply-templates select="." mode="all.tests"/>
         </xsl:result-document>
 
         <!-- create the alltests-fails.html at the root -->
-        <xsl:result-document href="{$output.dir}/alltests-fails.html">
+        <xsl:result-document href="file:///{$output.dir}/alltests-fails.html">
             <xsl:apply-templates select="." mode="all.tests">
                 <xsl:with-param name="type" select="'fails'"/>
             </xsl:apply-templates>
         </xsl:result-document>
 
         <!-- create the alltests-errors.html at the root -->
-        <xsl:result-document href="{$output.dir}/alltests-errors.html">
+        <xsl:result-document href="file:///{$output.dir}/alltests-errors.html">
             <xsl:apply-templates select="." mode="all.tests">
                 <xsl:with-param name="type" select="'errors'"/>
             </xsl:apply-templates>
         </xsl:result-document>
 
         <!-- create the alltests-skipped.html at the root -->
-        <xsl:result-document href="{$output.dir}/alltests-skipped.html">
+        <xsl:result-document href="file:///{$output.dir}/alltests-skipped.html">
             <xsl:apply-templates select="." mode="all.tests">
                 <xsl:with-param name="type" select="'skipped'"/>
             </xsl:apply-templates>
@@ -103,14 +103,14 @@
         </xsl:variable>
         <!--Processing package <xsl:value-of select="@name"/> in <xsl:value-of select="$output.dir"/> -->
         <!-- create a classes-list.html in the package directory -->
-        <xsl:result-document href="{$output.dir}/{$package.dir}/package-frame.html">
+        <xsl:result-document href="file:///{$output.dir}/{$package.dir}/package-frame.html">
             <xsl:call-template name="classes.list">
                 <xsl:with-param name="name" select="$name"/>
             </xsl:call-template>
         </xsl:result-document>
 
         <!-- create a package-summary.html in the package directory -->
-        <xsl:result-document href="{$output.dir}/{$package.dir}/package-summary.html">
+        <xsl:result-document href="file:///{$output.dir}/{$package.dir}/package-summary.html">
             <xsl:call-template name="package.summary">
                 <xsl:with-param name="name" select="$name"/>
             </xsl:call-template>
@@ -119,11 +119,11 @@
         <!-- for each class, creates a @name.html -->
         <!-- @bug there will be a problem with inner classes having the same name, it will be overwritten -->
         <xsl:for-each select="/testsuites/testsuite[@package = $name]">
-            <xsl:result-document href="{$output.dir}/{$package.dir}/{@id}_{@name}.html">
+            <xsl:result-document href="file:///{$output.dir}/{$package.dir}/{@id}_{@name}.html">
                 <xsl:apply-templates select="." mode="class.details"/>
             </xsl:result-document>
             <xsl:if test="string-length(./system-out)!=0">
-                <xsl:result-document href="{$output.dir}/{$package.dir}/{@id}_{@name}-out.html">
+                <xsl:result-document href="file:///{$output.dir}/{$package.dir}/{@id}_{@name}-out.html">
                     <html>
                         <head>
                             <title>Standard Output from <xsl:value-of select="@name"/></title>
@@ -135,7 +135,7 @@
                 </xsl:result-document>
             </xsl:if>
             <xsl:if test="string-length(./system-err)!=0">
-                <xsl:result-document href="{$output.dir}/{$package.dir}/{@id}_{@name}-err.html">
+                <xsl:result-document href="file:///{$output.dir}/{$package.dir}/{@id}_{@name}-err.html">
                     <html>
                         <head>
                             <title>Standard Error from <xsl:value-of select="@name"/></title>
@@ -147,21 +147,21 @@
                 </xsl:result-document>
             </xsl:if>
             <xsl:if test="@failures != 0">
-                <xsl:result-document href="{$output.dir}/{$package.dir}/{@id}_{@name}-fails.html">
+                <xsl:result-document href="file:///{$output.dir}/{$package.dir}/{@id}_{@name}-fails.html">
                     <xsl:apply-templates select="." mode="class.details">
                         <xsl:with-param name="type" select="'fails'"/>
                     </xsl:apply-templates>
                 </xsl:result-document>
             </xsl:if>
             <xsl:if test="@errors != 0">
-                <xsl:result-document href="{$output.dir}/{$package.dir}/{@id}_{@name}-errors.html">
+                <xsl:result-document href="file:///{$output.dir}/{$package.dir}/{@id}_{@name}-errors.html">
                     <xsl:apply-templates select="." mode="class.details">
                         <xsl:with-param name="type" select="'errors'"/>
                     </xsl:apply-templates>
                 </xsl:result-document>
             </xsl:if>
             <xsl:if test="@skipped != 0">
-                <xsl:result-document href="{$output.dir}/{$package.dir}/{@id}_{@name}-skipped.html">
+                <xsl:result-document href="file:///{$output.dir}/{$package.dir}/{@id}_{@name}-skipped.html">
                     <xsl:apply-templates select="." mode="class.details">
                         <xsl:with-param name="type" select="'skipped'"/>
                     </xsl:apply-templates>
