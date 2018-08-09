@@ -21,11 +21,23 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_CLASS_NAME;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_LISTENER_RESULT_FILE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_SEND_SYS_ERR;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_SEND_SYS_OUT;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_LISTENER;
+
 /**
  * Represents the {@code &lt;listener&gt;} element within the {@code &lt;junitlauncher&gt;}
  * task
  */
 public class ListenerDefinition {
+
 
     private static final String LEGACY_PLAIN = "legacy-plain";
     private static final String LEGACY_BRIEF = "legacy-brief";
@@ -133,6 +145,47 @@ public class ListenerDefinition {
         public String[] getValues() {
             return new String[]{LEGACY_PLAIN, LEGACY_BRIEF, LEGACY_XML};
         }
+    }
+
+    void toForkedRepresentation(final XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeStartElement(LD_XML_ELM_LISTENER);
+        writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, this.className);
+        writer.writeAttribute(LD_XML_ATTR_SEND_SYS_ERR, Boolean.toString(this.sendSysErr));
+        writer.writeAttribute(LD_XML_ATTR_SEND_SYS_OUT, Boolean.toString(this.sendSysOut));
+        if (this.resultFile != null) {
+            writer.writeAttribute(LD_XML_ATTR_LISTENER_RESULT_FILE, this.resultFile);
+        }
+        writer.writeEndElement();
+    }
+
+    static ListenerDefinition fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
+        reader.require(XMLStreamConstants.START_ELEMENT, null, LD_XML_ELM_LISTENER);
+        final ListenerDefinition listenerDef = new ListenerDefinition();
+        final String className = requireAttributeValue(reader, LD_XML_ATTR_CLASS_NAME);
+        listenerDef.setClassName(className);
+        final String sendSysErr = reader.getAttributeValue(null, LD_XML_ATTR_SEND_SYS_ERR);
+        if (sendSysErr != null) {
+            listenerDef.setSendSysErr(Boolean.parseBoolean(sendSysErr));
+        }
+        final String sendSysOut = reader.getAttributeValue(null, LD_XML_ATTR_SEND_SYS_OUT);
+        if (sendSysOut != null) {
+            listenerDef.setSendSysOut(Boolean.parseBoolean(sendSysOut));
+        }
+        final String resultFile = reader.getAttributeValue(null, LD_XML_ATTR_LISTENER_RESULT_FILE);
+        if (resultFile != null) {
+            listenerDef.setResultFile(resultFile);
+        }
+        reader.nextTag();
+        reader.require(XMLStreamConstants.END_ELEMENT, null, LD_XML_ELM_LISTENER);
+        return listenerDef;
+    }
+
+    private static String requireAttributeValue(final XMLStreamReader reader, final String attrName) throws XMLStreamException {
+        final String val = reader.getAttributeValue(null, attrName);
+        if (val != null) {
+            return val;
+        }
+        throw new XMLStreamException("Attribute " + attrName + " is missing at " + reader.getLocation());
     }
 
 }

@@ -30,6 +30,8 @@
 
     <path id="junit.engine.vintage.classpath">
         <fileset dir="../../../../../lib/optional" includes="junit-vintage-engine*.jar"/>
+        <fileset dir="../../../../../lib/optional" includes="junit-*.jar"/>
+        <fileset dir="../../../../../lib/optional" includes="hamcrest*.jar"/>
     </path>
 
     <path id="junit.engine.jupiter.classpath">
@@ -107,6 +109,16 @@
                 <listener type="legacy-brief" sendSysOut="true"/>
                 <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
             </testclasses>
+        </junitlauncher>
+    </target>
+
+    <target name="test-basic-fork" depends="init">
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <test name="org.example.junitlauncher.vintage.JUnit4SampleTest" outputdir="${output.dir}">
+                <fork dir="${basedir}"/>
+                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
+            </test>
         </junitlauncher>
     </target>
 </project>
