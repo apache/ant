@@ -14,20 +14,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.DateUtils;
-
 
 /**
  * This class imports a dependency on the Ant runtime classes,
  * so tests that classpath setup include them
  */
 public class AntTimestamp implements RemoteTimestamp {
-
 
     /**
      * return the phase of the moon.

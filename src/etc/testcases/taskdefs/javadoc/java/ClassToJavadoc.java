@@ -25,15 +25,19 @@ public class ClassToJavadoc {
     /**
      * @param anArgument A String that is ignored
      */
-    public void methodToJavadoc(String anArgument) { }
+    public void methodToJavadoc(String anArgument) {}
 
     /**
      * @see java.lang.Object#toString()
      */
-    public String toString() { return this.getClass().getName(); }
+    public String toString() {
+        return this.getClass().getName();
+    }
 
     /**
      * @return An arbitrary string.
      */
-    public String anotherString() {return "An arbitrary string.";}
+    public String anotherString() {
+        return "An arbitrary string.";
+    }
 }
