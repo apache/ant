@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.types.optional.image;
+package org.apache.tools.ant.types.optional.imageio;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -23,11 +23,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import javax.media.jai.PlanarImage;
-
 /**
  *
- * @see org.apache.tools.ant.taskdefs.optional.image.Image
+ * @see org.apache.tools.ant.taskdefs.optional.image.ImageIOTask
  */
 public class Text extends ImageOperation implements DrawOperation {
     private static final int DEFAULT_POINT = 10;
@@ -92,7 +90,7 @@ public class Text extends ImageOperation implements DrawOperation {
      * @return the resultant image.
      */
     @Override
-    public PlanarImage executeDrawOperation() {
+    public BufferedImage executeDrawOperation() {
         log("\tCreating Text \"" + string + "\"");
 
         int width = 1;
@@ -120,7 +118,7 @@ public class Text extends ImageOperation implements DrawOperation {
         graphics.setFont(f);
         graphics.setColor(ColorMapper.getColorByName(color));
         graphics.drawString(string, 0, height - fmetrics.getMaxDescent());
-        return PlanarImage.wrapRenderedImage(bi);
+        return bi;
     }
 
     private Font createFont() {

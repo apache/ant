@@ -17,67 +17,53 @@
  */
 package org.apache.tools.ant.taskdefs.optional.image;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.util.Locale;
-import java.util.Vector;
-
-import javax.media.jai.JAI;
-import javax.media.jai.PlanarImage;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
-import org.apache.tools.ant.types.optional.image.Draw;
-import org.apache.tools.ant.types.optional.image.ImageOperation;
-import org.apache.tools.ant.types.optional.image.Rotate;
-import org.apache.tools.ant.types.optional.image.Scale;
-import org.apache.tools.ant.types.optional.image.TransformOperation;
+import org.apache.tools.ant.types.optional.imageio.Draw;
+import org.apache.tools.ant.types.optional.imageio.ImageOperation;
+import org.apache.tools.ant.types.optional.imageio.Rotate;
+import org.apache.tools.ant.types.optional.imageio.Scale;
+import org.apache.tools.ant.types.optional.imageio.TransformOperation;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.StringUtils;
 
-import com.sun.media.jai.codec.FileSeekableStream;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * A MatchingTask which relies on <a
- * href="http://java.sun.com/products/java-media/jai">JAI (Java
- * Advanced Imaging)</a> to perform image manipulation operations on
- * existing images.  The operations are represented as ImageOperation
- * DataType objects.  The operations are arranged to conform to the
- * Chaining Model of JAI.  Check out the <a
- * href="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/">
- * JAI Programming Guide</a>.
+ * A MatchingTask which relies on Java ImageIO to read existing image files
+ * and write the results of AWT image manipulation operations.
+ * The operations are represented as ImageOperation DataType objects.
+ * The task replaces a JAI-based Image task which no longer works with Java 9+.
  *
- * @deprecated JAI is not developed any more. Internal APIs that JAI depends on were
- * scheduled for removal in Java 7 and finally removed in Java 9.
- * @see org.apache.tools.ant.types.optional.image.ImageOperation
+ * @see ImageOperation
  * @see org.apache.tools.ant.types.DataType
  */
-@Deprecated
-public class Image extends MatchingTask {
-    // CheckStyle:VisibilityModifier OFF - bc
-    protected Vector<ImageOperation> instructions = new Vector<>();
-    protected boolean overwrite = false;
-    protected Vector<FileSet> filesets = new Vector<>();
-    protected File srcDir = null;
-    protected File destDir = null;
+public class ImageIOTask extends MatchingTask {
+    private final List<ImageOperation> instructions = new ArrayList<>();
+    private boolean overwrite = false;
+    private final List<FileSet> filesets = new ArrayList<>();
+    private File srcDir = null;
+    private File destDir = null;
 
-    // CheckStyle:MemberNameCheck OFF - bc
+    private String format;
 
-    //cannot remove underscores due to protected visibility >:(
-    protected String str_encoding = "JPEG";
-    protected boolean garbage_collect = false;
+    private boolean garbageCollect = false;
 
-    private boolean failonerror = true;
-
-    // CheckStyle:MemberNameCheck ON
-
-    // CheckStyle:VisibilityModifier ON
+    private boolean failOnError = true;
 
     private Mapper mapperElement = null;
 
@@ -92,10 +78,10 @@ public class Image extends MatchingTask {
     /**
      * Set whether to fail on error.
      * If false, note errors to the output but keep going.
-     * @param failonerror true or false.
+     * @param flag true or false.
      */
-    public void setFailOnError(boolean failonerror) {
-        this.failonerror = failonerror;
+    public void setFailOnError(boolean flag) {
+        failOnError = flag;
     }
 
     /**
@@ -107,13 +93,11 @@ public class Image extends MatchingTask {
     }
 
     /**
-     * Set the image encoding type.  <a
-     * href="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/Encode.doc.html#56610">
-     * See this table in the JAI Programming Guide</a>.
-     * @param encoding the String image encoding.
+     * Set the image format.
+     * @param encoding the String image format.
      */
     public void setEncoding(String encoding) {
-        str_encoding = encoding;
+        format = encoding;
     }
 
     /**
@@ -130,7 +114,7 @@ public class Image extends MatchingTask {
      * @param gc whether to invoke the garbage collector.
      */
     public void setGc(boolean gc) {
-        garbage_collect = gc;
+        garbageCollect = gc;
     }
 
     /**
@@ -152,7 +136,7 @@ public class Image extends MatchingTask {
     /**
      * Add a Rotate ImageOperation to the chain.
      * @param instr The Rotate operation to add to the chain.
-     * @see org.apache.tools.ant.types.optional.image.Rotate
+     * @see Rotate
      */
     public void addRotate(Rotate instr) {
         instructions.add(instr);
@@ -161,7 +145,7 @@ public class Image extends MatchingTask {
     /**
      * Add a Scale ImageOperation to the chain.
      * @param instr The Scale operation to add to the chain.
-     * @see org.apache.tools.ant.types.optional.image.Scale
+     * @see Scale
      */
     public void addScale(Scale instr) {
         instructions.add(instr);
@@ -171,7 +155,7 @@ public class Image extends MatchingTask {
      * Add a Draw ImageOperation to the chain.  DrawOperation
      * DataType objects can be nested inside the Draw object.
      * @param instr The Draw operation to add to the chain.
-     * @see org.apache.tools.ant.types.optional.image.Draw
+     * @see Draw
      * @see org.apache.tools.ant.types.optional.image.DrawOperation
      */
     public void addDraw(Draw instr) {
@@ -261,7 +245,7 @@ public class Image extends MatchingTask {
         }
 
         // run the garbage collector if wanted
-        if (garbage_collect) {
+        if (garbageCollect) {
             System.gc();
         }
 
@@ -288,19 +272,28 @@ public class Image extends MatchingTask {
      * @since Ant 1.8.0
      */
     public void processFile(File file, File newFile) {
-        try {
-            log("Processing File: " + file.getAbsolutePath());
+        log("Processing File: " + file.getAbsolutePath());
 
-            PlanarImage image = null;
-            try (FileSeekableStream input = new FileSeekableStream(file)) {
-                image = JAI.create("stream", input);
-                for (ImageOperation instr : instructions) {
-                    if (instr instanceof TransformOperation) {
-                        image = ((TransformOperation) instr)
-                            .executeTransformOperation(image);
-                    } else {
-                        log("Not a TransformOperation: " + instr);
-                    }
+        try (ImageInputStream input = ImageIO.createImageInputStream(file)) {
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(input);
+            if (!readers.hasNext()) {
+                log("No decoder available, skipping");
+                return;
+            }
+            ImageReader reader = readers.next();
+            if (format == null) {
+                format = reader.getFormatName();
+            }
+            reader.setInput(input);
+
+            BufferedImage image = reader.read(0);
+            reader.dispose();
+
+            for (ImageOperation instr : instructions) {
+                if (instr instanceof TransformOperation) {
+                    image = ((TransformOperation) instr).executeTransformOperation(image);
+                } else {
+                    log("Not a TransformOperation: " + instr);
                 }
             }
 
@@ -315,16 +308,14 @@ public class Image extends MatchingTask {
                 newFile.delete();
             }
 
-            try (OutputStream stream = Files.newOutputStream(newFile.toPath())) {
-                JAI.create("encode", image, stream,
-                    str_encoding.toUpperCase(Locale.ENGLISH), null);
-                stream.flush();
+            if (!ImageIO.write(image, format, newFile)) {
+                log("Failed to save the transformed file");
             }
         } catch (IOException | RuntimeException err) {
             if (!file.equals(newFile)) {
                 newFile.delete();
             }
-            if (!failonerror) {
+            if (!failOnError) {
                 log("Error processing file:  " + err);
             } else {
                 throw new BuildException(err);
@@ -387,10 +378,11 @@ public class Image extends MatchingTask {
         if (srcDir == null && destDir == null) {
             throw new BuildException("Specify the destDir, or the srcDir.");
         }
-        if ("jpg".equalsIgnoreCase(str_encoding)) {
-            str_encoding = "JPEG";
-        } else if ("tif".equalsIgnoreCase(str_encoding)) {
-            str_encoding = "TIFF";
+        if (format != null && !Arrays.asList(ImageIO.getReaderFormatNames()).contains(format)) {
+            throw new BuildException("Unknown image format '" + format + "'"
+                + System.lineSeparator() + "Use any of "
+                    + Arrays.stream(ImageIO.getReaderFormatNames()).sorted()
+                    .collect(Collectors.joining(", ")));
         }
     }
 }

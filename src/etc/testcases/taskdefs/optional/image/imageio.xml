@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="image-test" default="main" basedir=".">
+
+  <import file="../../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <property name="src.dir" location="${basedir}/src"/>
+  </target>
+
+  <target name="main" depends="testSimpleScale"/>
+
+  <!-- this should produce a single file in the dest dir -->
+  <target name="testSimpleScale" depends="setUp">
+    <imageio includes="*.jpg" srcdir="${src.dir}" destdir="${output}"
+             overwrite="no" failonerror="no">
+      <scale width="300" proportions="width"/>
+    </imageio>
+  </target>
+
+  <!-- this should put some text in the log -->
+  <target name="testEchoToLog" depends="setUp">
+    <imageio includes="*.jpg" srcdir="${src.dir}" destdir="${output}"
+             overwrite="no" failonerror="no">
+      <scale width="300" proportions="width"/>
+    </imageio>
+  </target>
+
+  <!-- this should produce a single file in the dest dir -->
+  <target name="testFailOnError" depends="setUp">
+    <imageio includes="*.jpg" srcdir="${src.dir}" destdir="${output}"
+             overwrite="no" failonerror="yes">
+      <scale width="300" proportions="width"/>
+    </imageio>
+  </target>
+
+  <!-- this should produce a single file in the dest dir, overwriting any existing file -->
+  <target name="testOverwriteTrue" depends="setUp">
+    <imageio includes="*.jpg" srcdir="${src.dir}" destdir="${output}"
+             overwrite="yes" failonerror="no">
+      <scale width="300" proportions="width"/>
+    </imageio>
+  </target>
+
+  <!-- this should produce a single file in the dest dir, overwriting any existing file -->
+  <target name="testDrawOverwriteTrue" depends="setUp">
+    <imageio includes="*.jpg" srcdir="${src.dir}" destdir="${output}"
+             overwrite="yes" failonerror="no">
+      <scale width="300" proportions="width"/>
+      <draw xloc="10" yloc="10">
+        <rectangle height="50" width="50" strokewidth="2"/>
+        <text string="Test"/>
+      </draw>
+    </imageio>
+  </target>
+
+  <!-- this should not overwrite the existing file -->
+  <target name="testOverwriteFalse" depends="setUp">
+    <imageio includes="*.jpg" srcdir="${src.dir}" destdir="${output}"
+             overwrite="no" failonerror="no">
+      <scale width="300" proportions="width"/>
+    </imageio>
+  </target>
+
+  <!-- this tests a special case of rotation -->
+  <target name="testFlip" depends="setUp">
+    <imageio includes="*.jpg" srcdir="${src.dir}" destdir="${output}"
+             overwrite="no" failonerror="no">
+      <rotate angle="-180"/>
+    </imageio>
+  </target>
+
+  <target name="testSimpleScaleWithMapper" depends="setUp">
+    <imageio includes="*.jpg" srcdir="${src.dir}" destdir="${output}"
+             overwrite="no" failonerror="no">
+      <scale width="300" proportions="width"/>
+      <globmapper from="*" to="scaled-*"/>
+    </imageio>
+  </target>
+</project>

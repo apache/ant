@@ -91,6 +91,12 @@
     <artifact name="ant-commons-net" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-commons-net" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-commons-net" type="source.asc" ext="jar.asc" e:classifier="sources"/>
+    <artifact name="ant-imageio" type="pom" ext="pom"/>
+    <artifact name="ant-imageio" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-imageio" type="jar" ext="jar"/>
+    <artifact name="ant-imageio" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-imageio" type="source" ext="jar" e:classifier="sources"/>
+    <artifact name="ant-imageio" type="source.asc" ext="jar.asc" e:classifier="sources"/>
     <artifact name="ant-jai" type="pom" ext="pom"/>
     <artifact name="ant-jai" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-jai" type="jar" ext="jar"/>

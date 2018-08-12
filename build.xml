@@ -277,13 +277,21 @@
     <filename name="${optional.package}/ANTLR*"/>
   </selector>
 
+  <selector id="needs.imageio">
+    <or>
+      <filename name="${optional.package}/image/ImageIO*"/>
+      <filename name="${optional.type.package}/imageio/"/>
+    </or>
+  </selector>
+
   <selector id="needs.jmf">
     <filename name="${optional.package}/sound/"/>
   </selector>
 
   <selector id="needs.jai">
     <or>
-      <filename name="${optional.package}/image/"/>
+      <filename name="${optional.package}/image/Image.*"/>
+      <filename name="${optional.package}/image/ImageTest.*"/>
       <filename name="${optional.type.package}/image/"/>
     </or>
   </selector>
@@ -329,6 +337,7 @@
         <selector refid="needs.apache-xalan2"/>
         <selector refid="needs.commons-logging"/>
         <selector refid="needs.commons-net"/>
+        <selector refid="needs.imageio"/>
         <selector refid="needs.jai"/>
         <selector refid="needs.javamail"/>
         <selector refid="needs.jdepend"/>
@@ -444,6 +453,9 @@
     <available property="apache.oro.present"
                classname="org.apache.oro.text.regex.Perl5Matcher"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
+    <available property="imageio.present"
+               classname="javax.imageio.ImageIO"
+               classpathref="classpath"/>
     <available property="jmf.present"
                classname="javax.sound.sampled.Clip"
                classpathref="classpath"/>
@@ -602,6 +614,7 @@
             <selector refid="needs.netrexx" unless="netrexx.present"/>
             <selector refid="needs.commons-net" unless="commons.net.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>
+            <selector refid="needs.imageio" unless="imageio.present"/>
             <selector refid="needs.jmf" unless="jmf.present"/>
             <selector refid="needs.jai" unless="jai.present"/>
             <selector refid="needs.jdepend" unless="jdepend.present"/>
@@ -770,6 +783,7 @@
     <optional-jar dep="netrexx"/>
     <optional-jar dep="commons-net"/>
     <optional-jar dep="antlr"/>
+    <optional-jar dep="imageio"/>
     <optional-jar dep="jmf"/>
     <optional-jar dep="jai"/>
     <optional-jar dep="swing"/>
@@ -864,6 +878,7 @@
     <optional-src-jar dep="netrexx"/>
     <optional-src-jar dep="commons-net"/>
     <optional-src-jar dep="antlr"/>
+    <optional-src-jar dep="imageio"/>
     <optional-src-jar dep="jmf"/>
     <optional-src-jar dep="jai"/>
     <optional-src-jar dep="swing"/>
