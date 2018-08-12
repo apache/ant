@@ -497,7 +497,7 @@ public class Files extends AbstractSelectorContainer
         String[] includePatterns = ps.getIncludePatterns(getProject());
         String[] excludePatterns = ps.getExcludePatterns(getProject());
         return (includePatterns != null && includePatterns.length > 0)
-            || (includePatterns != null && excludePatterns.length > 0);
+            || (excludePatterns != null && excludePatterns.length > 0);
     }
 
 }
