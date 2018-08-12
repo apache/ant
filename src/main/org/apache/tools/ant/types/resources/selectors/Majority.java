@@ -64,8 +64,8 @@ public class Majority extends ResourceSelectorContainer
         boolean even = count % 2 == 0;
         int threshold = count / 2;
 
-        for (Iterator<ResourceSelector> i = getSelectors(); i.hasNext();) {
-            if (i.next().isSelected(r)) {
+        for (ResourceSelector rs : getResourceSelectors()) {
+            if (rs.isSelected(r)) {
                 ++passed;
                 if (passed > threshold || (even && tie && passed == threshold)) {
                     return true;
