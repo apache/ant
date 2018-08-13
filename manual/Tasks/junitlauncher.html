@@ -109,7 +109,7 @@
         include all other relevant jars in the classpath by passing them as a <kbd>-lib</kbd>
         option, while invoking Ant</li>
     <li>OR Use the nested <code>&lt;classpath&gt;</code> element to specify the location of the
-        test engines. For more details about this approach, please read the 
+        test engines. For more details about this approach, please read the
         <a href=#test-engine-in-classpath>using classpath element to include test engines</a> section.
 </ul>
 
@@ -171,22 +171,22 @@
 <h5 id="test-engine-in-classpath">Using the classpath element to include test engines</h5>
 <p>
     The <code>&lt;classpath&gt;</code> can be used to include the test engines that you want to be
-    considered for execution of the tests. 
+    considered for execution of the tests.
 </p>
-<p>    
-    <strong>NOTE:</strong> An important aspect to remember is that 
-    whether or not you use this approach, the JUnit 5 platform libraries 
-    <a href="#junit-platform-libraries">listed earlier in this 
+<p>
+    <strong>NOTE:</strong> An important aspect to remember is that
+    whether or not you use this approach, the JUnit 5 platform libraries
+    <a href="#junit-platform-libraries">listed earlier in this
     document</a> and the <code>ant-junitlauncher.jar</code>, <i>shouldn't</i> be part of this classpath
-    and instead they must be included in Ant runtime's classpath either by placing them 
+    and instead they must be included in Ant runtime's classpath either by placing them
     in <code>ANT_HOME/lib</code> or by passing the <code>-lib</code> option.
 </p>
 <p>
     Below is an example of setting up the classpath to include the Jupiter test engine during the
-    execution of the tests. We assume that the JUnit 5 platform libraries and the 
+    execution of the tests. We assume that the JUnit 5 platform libraries and the
     <code>ant-junitlauncher.jar</code> have been setup as explained previously.
     <br/>
-    <pre> 
+    <pre>
 &lt;project&gt;
 
     &lt;property name="output.dir" value="${basedir}/build"/&gt;
@@ -206,35 +206,35 @@
         &lt;javac srcdir="${src.test.dir}"
            destdir="${build.classes.dir}"&gt;
            &lt;classpath refid="junit.engine.jupiter.classpath"/&gt;
-        &lt;/javac&gt;  
-    &lt;/target&gt; 
+        &lt;/javac&gt;
+    &lt;/target&gt;
 
     &lt;target name="test" depends="compile-test"&gt;
         &lt;junitlauncher&gt;
             &lt;classpath refid="junit.engine.jupiter.classpath"/&gt;
             &lt;classpath&gt;
                 &lt;pathelement location="${build.classes.dir}"/&gt;
-            &lt;/classpath&gt;  
+            &lt;/classpath&gt;
             &lt;testclasses outputdir="${output.dir}"&gt;
                 &lt;fileset dir="${build.classes.dir}"/&gt;
                 &lt;listener type="legacy-brief" sendSysOut="true"/&gt;
                 &lt;listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/&gt;
-         
+
             &lt;/testclasses&gt;
         &lt;/junitlauncher&gt;
-    &lt;/target&gt; 
+    &lt;/target&gt;
 &lt;/project&gt;
     </pre>
 
-    In the example above, the <code>src/lib/jupiter</code> directory is expected to contain 
-    the Jupiter test engine related jars (which have been 
+    In the example above, the <code>src/lib/jupiter</code> directory is expected to contain
+    the Jupiter test engine related jars (which have been
     <a href="#junit-jupiter-engine-libraries">listed in an earlier section of this
     document</a>). In the <code>test</code> target we use the <code>classpath</code> nested element
     to point to the <code>junit.engine.jupiter.classpath</code> containing those jars. In this
-    <code>test</code> target we also use another <code>classpath</code> element to point to 
-    the location containing our test classes. If required, both these classpath can be combined 
+    <code>test</code> target we also use another <code>classpath</code> element to point to
+    the location containing our test classes. If required, both these classpath can be combined
     into one.
-</p>    
+</p>
 
 <h4>listener</h4>
 

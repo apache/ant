@@ -28,6 +28,8 @@
 <h3>Description</h3>
 <p>Sets a property if a resource is available at run time. This resource can be a file, a directory,
 a class in the classpath, or a JVM system resource.</p>
+<p><strong>Note</strong>: a class is available in the classpath when it can be loaded; i.e., all
+classes it depends on must be in the classpath, too.</p>
 <p>If the resource is present, the property value is set to <q>true</q> by default; otherwise, the
 property is not set. You can set the value to something other than the default by specifying
 the <var>value</var> attribute.</p>
