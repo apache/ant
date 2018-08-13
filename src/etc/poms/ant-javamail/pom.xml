@@ -45,12 +45,14 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>javax.mail-api</artifactId>
+      <!-- This brings in the necessary dependencies.
+      See https://javaee.github.io/javamail/#Download_JavaMail_Release -->
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
       <version>1.6.1</version>
       <scope>compile</scope>
     </dependency>
-  </dependencies>
+  </dependencies> 
   <build>
     <plugins>
       <plugin>
