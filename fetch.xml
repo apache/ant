@@ -315,8 +315,11 @@ Set -Ddest=LOCATION on the command line
   <target name="javamail"
           description="load Java Mail"
           depends="init">
-    <f2 project="javax.mail" archive="javax.mail-api"/>
-    <f2 project="javax.activation" archive="activation"/>
+    <!-- We only need this one dependency as per
+      the project doc https://javaee.github.io/javamail/#Download_JavaMail_Release
+      This alone should bring in all necessary dependencies (including the API
+       jars and the activation jars -->
+    <f2 project="com.sun.mail" archive="javax.mail"/>
   </target>
 
   <target name="jspc"
