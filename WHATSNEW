@@ -1,6 +1,13 @@
 Changes from Ant 1.10.5 TO Ant 1.10.6
 =====================================
 
+Changes that could break older environments:
+-------------------------------------------
+
+ * image task no longer works on Java 9+ because internal classes
+   supporting Java Advanced Imaging are removed; imageio task (based on
+   ImageIO and AWT) is provided as a replacement.
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
@@ -8,6 +15,9 @@ Other changes:
 
  * the <modified> selector has a new built-in algorithm 'lastmodified'
    which computes a value based upon the lastmodified time of the file.
+
+ * junitlauncher task now supports forking and can be used with JaCoCo
+   (see https://github.com/jacoco/jacoco/issues/673).
 
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================
@@ -165,7 +175,7 @@ Other changes:
    Github Pull Request #57
 
  * when running on Java 11+ rmic will fail early if iiop or idl are
-   requested. Java11 removes support for CORBA and the switches have
+   requested. Java 11 removes support for CORBA and the switches have
    been removed from the rmic tool.
 
  * A new junitlauncher task which support JUnit 5 test framework.
