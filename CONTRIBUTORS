@@ -2,6 +2,7 @@ Amongst other, the following people contributed to ant:
 
 Adam Blinkinsop
 Adam Bryzak
+Adam Retter
 Adam Sotona
 Adrian Nistor
 Aleksandr Ishutin
@@ -35,9 +36,9 @@ Atsuhiko Yamanaka
 Avik Sengupta
 Balazs Fejes 2
 Bart Vanhaute
-Benjamin Burgess
 Ben Galbraith
 Ben Gertzfield
+Benjamin Burgess
 Benoit Moussaud
 Bernd Dutkowski
 Bernhard Rosenkraenzer
@@ -106,10 +107,10 @@ Diane Holt
 dIon Gillard
 Dmitry A. Kuminov
 Dominique Devienne
-Donal Quinlan
 Don Brown
 Don Ferguson
 Don Jeffery
+Donal Quinlan
 Drew Sudell
 Earl Hood
 Edison Guo
@@ -129,8 +130,8 @@ Francesco Steccanella
 Frank Harnack
 Frank Somers
 Frank Zeyda
-Frantisek Kucera
-Frederic Bothamy
+František Kučera
+Frédéric Bothamy
 Frederic Lavigne
 Gary S. Weaver
 Gautam Guliani
@@ -162,6 +163,7 @@ Isaac Shabtay
 Issa Gorissen
 Ivan Ivanov
 J Bleijenbergh
+JC Mann
 Jack J. Woehr
 Jaikiran Pai
 James Duncan Davidson
@@ -176,8 +178,6 @@ Jason Yip
 Jay Dickon Glanville
 Jay Peck
 Jay van der Meer
-JC Mann
-J D Glanville
 Jean-Francois Brousseau
 Jean-Louis Boudart
 Jeff Gettle
@@ -192,15 +192,15 @@ Jesse Glick
 Jesse Stockall
 Jim Allers
 Jimmy Casey
-Joerg Wassmer
 Joel Tucci
+Joerg Wassmer
 Joey Richey
 Johann Herunter
 John Elion
 John Sisson
 Jon Dickinson
-Jon S. Stevens
 Jon Skeet
+Jon S. Stevens
 Jose Alberto Fernandez
 Joseph Walton
 Josh Lucas
@@ -214,7 +214,7 @@ Kevin Connor Arpe
 Kevin Greiner
 Kevin Jackson
 Kevin Ross
-Kevin Z Grey
+Kevin Z. Grey
 Kim Hansen
 Kirk Wylie
 Kristian Rosenvold
@@ -232,7 +232,7 @@ Maarten Coene
 Magesh Umasankar
 Maneesh Sahu
 Marcel Schutte
-Marcus B&ouml;rger
+Marcus Börger
 Mario Frasca 
 Mariusz Nowostawski
 Mark A. Ziesemer
@@ -270,33 +270,31 @@ Michael J. Sikorsky
 Michael McCallum
 Michael Montuori
 Michael Newcomb
-Micheal Nygard
+Michael Nygard
 Michael Saunders
 Miha
 Mike Davis
 Mike Roberts
 Mike Williams
 Miroslav Zaťko
-mnowostawski
 Mounir El Hajj
 Nathan Beyer
 Nick Chalko
-Nick Fortescue
 Nick Crossley
+Nick Fortescue
 Nick Pellow
-Nicola Ken Barozzi
 Nico Seessle
+Nicola Ken Barozzi
 Nigel Magnay
 Oliver Merkel
 Oliver Rossmueller
 Olivier Parent
-Ondra Medek
 Omer Shapira
-Oystein Gisnas
+Ondra Medek
 Patrick Altaie
 Patrick C. Beard
 Patrick Chanezon
-Patrick G. Heck (Gus Heck)
+Patrick Gus Heck
 Patrick Martin
 Paul Austin
 Paul Christmann
@@ -305,7 +303,7 @@ Paul King
 Paulo Gaspar
 Pavan Bayyapu
 Pavel Jisl
-Pawel Zuzelski
+Paweł Zuzelski
 Peter B. West
 Peter Donald
 Peter Doornbosch
@@ -318,8 +316,6 @@ Philip Hourihane
 Phillip Wells
 Pierre Delisle
 Pierre Dittgen
-riasol
-R Handerson
 Ralf Hergert
 Rami Ojares
 Randy Watler
@@ -332,8 +328,11 @@ Reudismam Rolim
 Richard Evans
 Richard Steele
 Rick Beton
+Rob Oxspring
+Rob van Oostrum
+Rob Riasol
 Robbie Gibson
-Robert Anderson
+Robert H. Anderson
 Robert Clark
 Robert Flaherty
 Robert Shaw
@@ -343,8 +342,6 @@ Roberto Scaramuzzi
 Robin Green
 Robin Power
 Robin Verduijn
-Rob Oxspring
-Rob van Oostrum
 Rodrigo Schmidt
 Roger Vaughn
 Roman Ivashin
@@ -360,18 +357,18 @@ Scott Johnson
 Scott M. Stirling
 Sean Egan
 Sean P. Kane
+Sebastian Kantha
 Sebastien Arod
 Shiraz Kanga
-Sebastian Kantha
 Simon Law
 Simone Bordet
 Stefan Bodewig
 Stefan Heimann
 Stefano Mazzocchi
-Stephan Strittmatter
-Stephane Bailliez
 stephan
 Stephan Michels
+Stephan Strittmatter
+Stephane Bailliez
 Stephen Chin
 Stephen Goetze
 Steve Cohen
@@ -434,3 +431,4 @@ Yuji Yamano
 Yves Martin
 Zach Garner
 Zdenek Wagner
+Øystein Gisnås

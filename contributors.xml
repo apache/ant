@@ -83,6 +83,10 @@
     <last>Ames</last>
   </name>
   <name>
+    <first>Andreas</first>
+    <last>Mross</last>
+  </name>
+  <name>
     <first>Andrew</first>
     <last>Eisenberg</last>
   </name>
@@ -150,7 +154,7 @@
   </name>
   <name>
     <first>Aslak</first>
-    <last>Helles&#244;y</last>
+    <last>Hellesôy</last>
   </name>
   <name>
     <first>Atsuhiko</first>
@@ -220,6 +224,10 @@
   <name>
     <first>Bruce</first>
     <last>Atherton</last>
+  </name>
+  <name>
+    <first>Cedomir</first>
+    <last>Igaly</last>
   </name>
   <name>
     <first>Charles</first>
@@ -301,11 +309,11 @@
   </name>
   <name>
     <first>Craig</first>
-    <last>Ryan</last>
+    <last>Richardson</last>
   </name>
   <name>
     <first>Craig</first>
-    <last>Richardson</last>
+    <last>Ryan</last>
   </name>
   <name>
     <first>Craig</first>
@@ -385,7 +393,8 @@
   </name>
   <name>
     <first>David</first>
-    <last>A.</last>
+    <middle>A.</middle>
+    <last>Herman</last>
   </name>
   <name>
     <first>David</first>
@@ -393,7 +402,7 @@
   </name>
   <name>
     <first>David</first>
-    <last>G&#228;rtner</last>
+    <last>Gärtner</last>
   </name>
   <name>
     <first>David</first>
@@ -456,12 +465,8 @@
     <last>Devienne</last>
   </name>
   <name>
-    <first>Donal</first>
-    <last>Quinlan</last>
-  </name>
-  <name>
     <first>Don</first>
-    <last>Bnamen</last>
+    <last>Brown</last>
   </name>
   <name>
     <first>Don</first>
@@ -470,6 +475,10 @@
   <name>
     <first>Don</first>
     <last>Jeffery</last>
+  </name>
+  <name>
+    <first>Donal</first>
+    <last>Quinlan</last>
   </name>
   <name>
     <first>Drew</first>
@@ -677,6 +686,10 @@
     <last>Bleijenbergh</last>
   </name>
   <name>
+    <first>JC</first>
+    <last>Mann</last>
+  </name>
+  <name>
     <first>Jack</first>
     <middle>J.</middle>
     <last>Woehr</last>
@@ -696,7 +709,7 @@
   </name>
   <name>
     <first>Jan</first>
-    <last>Mat&#232;rne</last>
+    <last>Matèrne</last>
   </name>
   <name>
     <first>Jan</first>
@@ -736,16 +749,12 @@
     <last>van der Meer</last>
   </name>
   <name>
-    <first>JC</first>
-    <last>Mann</last>
-  </name>
-  <name>
-    <first>J</first>
-    <last>D</last>
-  </name>
-  <name>
     <first>Jean-Francois</first>
     <last>Brousseau</last>
+  </name>
+  <name>
+    <first>Jean-Louis</first>
+    <last>Boudart</last>
   </name>
   <name>
     <first>Jeff</first>
@@ -796,12 +805,12 @@
     <last>Casey</last>
   </name>
   <name>
-    <first>Joerg</first>
-    <last>Wassmer</last>
-  </name>
-  <name>
     <first>Joel</first>
     <last>Tucci</last>
+  </name>
+  <name>
+    <first>Joerg</first>
+    <last>Wassmer</last>
   </name>
   <name>
     <first>Joey</first>
@@ -838,12 +847,12 @@
     <last>Fernandez</last>
   </name>
   <name>
-    <first>Josh</first>
-    <last>Lucas</last>
-  </name>
-  <name>
     <first>Joseph</first>
     <last>Walton</last>
+  </name>
+  <name>
+    <first>Josh</first>
+    <last>Lucas</last>
   </name>
   <name>
     <first>Juerg</first>
@@ -856,6 +865,10 @@
   <name>
     <first>Justin</first>
     <last>Vallon</last>
+  </name>
+  <name>
+    <first>Karl</first>
+    <last>Jansen</last>
   </name>
   <name>
     <first>Keiron</first>
@@ -884,7 +897,7 @@
   </name>
   <name>
     <first>Kevin</first>
-    <middle>Z</middle>
+    <middle>Z.</middle>
     <last>Grey</last>
   </name>
   <name>
@@ -939,6 +952,10 @@
     <last>Claude</last>
   </name>
   <name>
+    <first>Maarten</first>
+    <last>Coene</last>
+  </name>
+  <name>
     <first>Magesh</first>
     <last>Umasankar</last>
   </name>
@@ -964,6 +981,11 @@
   </name>
   <name>
     <first>Mark</first>
+    <middle>A.</middle>
+    <last>Ziesemer</last>
+  </name>
+  <name>
+    <first>Mark</first>
     <last>DeLaFranier</last>
   </name>
   <name>
@@ -972,7 +994,7 @@
   </name>
   <name>
     <first>Mark</first>
-    <last>Salter</last>
+    <last>Niggemann</last>
   </name>
   <name>
     <first>Mark</first>
@@ -981,12 +1003,7 @@
   </name>
   <name>
     <first>Mark</first>
-    <last>Niggemann</last>
-  </name>
-  <name>
-    <first>Mark</first>
-    <middle>A.</middle>
-    <last>Ziesemer</last>
+    <last>Salter</last>
   </name>
   <name>
     <first>Markus</first>
@@ -1011,6 +1028,14 @@
   <name>
     <first>Martin</first>
     <last>von Gagern</last>
+  </name>
+  <name>
+    <first>Mathieu</first>
+    <last>Champlon</last>
+  </name>
+  <name>
+    <first>Mathieu</first>
+    <last>Peltier</last>
   </name>
   <name>
     <first>Matt</first>
@@ -1045,18 +1070,6 @@
     <last>Wildig</last>
   </name>
   <name>
-    <first>Mathieu</first>
-    <last>Champlon</last>
-  </name>
-  <name>
-    <first>Mathieu</first>
-    <last>Peltier</last>
-  </name>
-  <name>
-    <first>Matthias</first>
-    <last>Bhend</last>
-  </name>
-  <name>
     <first>Matthew</first>
     <last>Hawthorne</last>
   </name>
@@ -1078,6 +1091,10 @@
     <last>Yanos</last>
   </name>
   <name>
+    <first>Matthias</first>
+    <last>Bhend</last>
+  </name>
+  <name>
     <first>Michael</first>
     <last>Bayne</last>
   </name>
@@ -1097,6 +1114,10 @@
   <name>
     <first>Michael</first>
     <last>McCallum</last>
+  </name>
+  <name>
+    <first>Michael</first>
+    <last>Montuori</last>
   </name>
   <name>
     <first>Michael</first>
@@ -1130,9 +1151,6 @@
     <last>Zaťko</last>
   </name>
   <name>
-    <last>mnowostawski</last>
-  </name>
-  <name>
     <first>Mounir</first>
     <last>El Hajj</last>
   </name>
@@ -1157,12 +1175,13 @@
     <last>Pellow</last>
   </name>
   <name>
-    <first>Nicola</first>
-    <last>Ken</last>
-  </name>
-  <name>
     <first>Nico</first>
     <last>Seessle</last>
+  </name>
+  <name>
+    <first>Nicola</first>
+    <middle>Ken</middle>
+    <last>Barozzi</last>
   </name>
   <name>
     <first>Nigel</first>
@@ -1189,16 +1208,13 @@
     <last>Medek</last>
   </name>
   <name>
-    <first>&#216;ystein</first>
-    <last>Gisn&#229;s</last>
-  </name>
-  <name>
     <first>Patrick</first>
     <last>Altaie</last>
   </name>
   <name>
     <first>Patrick</first>
-    <last>C.</last>
+    <middle>C.</middle>
+    <last>Beard</last>
   </name>
   <name>
     <first>Patrick</first>
@@ -1206,7 +1222,12 @@
   </name>
   <name>
     <first>Patrick</first>
-    <last>Gus</last>
+    <middle>Gus</middle>
+    <last>Heck</last>
+  </name>
+  <name>
+    <first>Patrick</first>
+    <last>Martin</last>
   </name>
   <name>
     <first>Paul</first>
@@ -1290,10 +1311,6 @@
     <last>Dittgen</last>
   </name>
   <name>
-    <first>R</first>
-    <last>Handerson</last>
-  </name>
-  <name>
     <first>Ralf</first>
     <last>Hergert</last>
   </name>
@@ -1342,11 +1359,24 @@
     <last>Beton</last>
   </name>
   <name>
+    <first>Rob</first>
+    <last>Riasol</last>
+  </name>
+  <name>
+    <first>Rob</first>
+    <last>Oxspring</last>
+  </name>
+  <name>
+    <first>Rob</first>
+    <last>van Oostrum</last>
+  </name>
+  <name>
     <first>Robbie</first>
     <last>Gibson</last>
   </name>
   <name>
     <first>Robert</first>
+    <middle>H.</middle>
     <last>Anderson</last>
   </name>
   <name>
@@ -1384,14 +1414,6 @@
   <name>
     <first>Robin</first>
     <last>Verduijn</last>
-  </name>
-  <name>
-    <first>Rob</first>
-    <last>Oxspring</last>
-  </name>
-  <name>
-    <first>Rob</first>
-    <last>van Oostrum</last>
   </name>
   <name>
     <first>Rodrigo</first>
@@ -1456,6 +1478,10 @@
     <last>Kane</last>
   </name>
   <name>
+    <first>Sebastian</first>
+    <last>Kantha</last>
+  </name>
+  <name>
     <first>Sebastien</first>
     <last>Arod</last>
   </name>
@@ -1464,12 +1490,8 @@
     <last>Kanga</last>
   </name>
   <name>
-    <first>Sebastian</first>
-    <last>Kantha</last>
-  </name>
-  <name>
-      <first>Simon</first>
-      <last>Law</last>
+    <first>Simon</first>
+    <last>Law</last>
   </name>
   <name>
     <first>Simone</first>
@@ -1488,6 +1510,13 @@
     <last>Mazzocchi</last>
   </name>
   <name>
+    <last>stephan</last>
+  </name>
+  <name>
+    <first>Stephan</first>
+    <last>Michels</last>
+  </name>
+  <name>
     <first>Stephan</first>
     <last>Strittmatter</last>
   </name>
@@ -1496,15 +1525,12 @@
     <last>Bailliez</last>
   </name>
   <name>
-    <last>stephan</last>
-  </name>
-  <name>
-    <first>Stephan</first>
-    <last>Michels</last>
+    <first>Stephen</first>
+    <last>Chin</last>
   </name>
   <name>
     <first>Stephen</first>
-    <last>Chin</last>
+    <last>Goetze</last>
   </name>
   <name>
     <first>Steve</first>
@@ -1589,6 +1615,10 @@
   </name>
   <name>
     <first>Tim</first>
+    <last>Stephenson</last>
+  </name>
+  <name>
+    <first>Tim</first>
     <last>Whittington</last>
   </name>
   <name>
@@ -1601,12 +1631,12 @@
     <last>Endres</last>
   </name>
   <name>
-    <first>Tim</first>
-    <last>Stephenson</last>
+    <first>Tom</first>
+    <last>Ball</last>
   </name>
   <name>
     <first>Tom</first>
-    <last>Ball</last>
+    <last>Brus</last>
   </name>
   <name>
     <first>Tom</first>
@@ -1634,7 +1664,7 @@
   </name>
   <name>
     <first>Trejkaz</first>
-    <last>Xaoz</last>
+    <last>Xaoza</last>
   </name>
   <name>
     <first>Ulrich</first>
@@ -1653,6 +1683,10 @@
     <last>Toni</last>
   </name>
   <name>
+    <first>Vimil</first>
+    <last>Saju</last>
+  </name>
+  <name>
     <first>Vincent</first>
     <last>Legoll</last>
   </name>
@@ -1661,16 +1695,16 @@
     <last>Privat</last>
   </name>
   <name>
-    <first>Vimil</first>
-    <last>Saju</last>
-  </name>
-  <name>
     <first>Vitold</first>
     <last>Sedyshev</last>
   </name>
   <name>
     <first>Volker</first>
     <last>Leidl</last>
+  </name>
+  <name>
+    <first>Waldek</first>
+    <last>Herka</last>
   </name>
   <name>
     <first>Wang</first>
@@ -1741,7 +1775,7 @@
     <last>Wagner</last>
   </name>
   <name>
-    <first/>
-    <last>riasol</last>
+    <first>Øystein</first>
+    <last>Gisnås</last>
   </name>
 </contributors>
