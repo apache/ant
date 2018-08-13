@@ -1,6 +1,13 @@
 Changes from Ant 1.9.13 TO Ant 1.9.14
 =====================================
 
+Fixed bugs:
+-----------
+
+ * fetch.xml must retrieve runtime rather than compile dependencies for
+   mail task.
+   Bugzilla Report 62621
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
