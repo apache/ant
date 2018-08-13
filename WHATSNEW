@@ -8,6 +8,13 @@ Changes that could break older environments:
    supporting Java Advanced Imaging are removed; imageio task (based on
    ImageIO and AWT) is provided as a replacement.
 
+Fixed bugs:
+-----------
+
+ * fetch.xml must retrieve runtime rather than compile dependencies for
+   mail task.
+   Bugzilla Report 62621
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
