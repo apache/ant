@@ -20,6 +20,9 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
+import org.junit.platform.engine.Filter;
+import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -107,7 +110,47 @@ abstract class TestDefinition {
         return this.forkDefinition;
     }
 
-    abstract List<TestRequest> createTestRequests();
+    /**
+     * Create and return the {@link TestRequest TestRequests} for this test definition. This
+     * typically involves creating the JUnit test discovery request(s) and applying the necessary
+     * discovery selectors, filters and other necessary constructs.
+     *
+     * @return Returns the test requests
+     */
+    List<TestRequest> createTestRequests() {
+        // create a TestRequest and add necessary selectors, filters to it
+        final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
+        final TestRequest request = new TestRequest(this, requestBuilder);
+        addDiscoverySelectors(request);
+        addFilters(request);
+        return Collections.singletonList(request);
+    }
+
+    /**
+     * Add necessary {@link org.junit.platform.engine.DiscoverySelector JUnit discovery selectors} to
+     * the {@code testRequest}
+     *
+     * @param testRequest The test request
+     */
+    abstract void addDiscoverySelectors(final TestRequest testRequest);
+
+    /**
+     * Add necessary {@link Filter JUnit filters} to the {@code testRequest}
+     *
+     * @param testRequest The test request
+     */
+    void addFilters(final TestRequest testRequest) {
+        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
+        // add any engine filters
+        final String[] enginesToInclude = this.getIncludeEngines();
+        if (enginesToInclude != null && enginesToInclude.length > 0) {
+            requestBuilder.filters(EngineFilter.includeEngines(enginesToInclude));
+        }
+        final String[] enginesToExclude = this.getExcludeEngines();
+        if (enginesToExclude != null && enginesToExclude.length > 0) {
+            requestBuilder.filters(EngineFilter.excludeEngines(enginesToExclude));
+        }
+    }
 
     protected boolean shouldRun(final Project project) {
         final PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);

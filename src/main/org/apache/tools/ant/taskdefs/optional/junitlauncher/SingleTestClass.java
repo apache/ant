@@ -18,7 +18,6 @@
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import javax.xml.stream.XMLStreamConstants;
@@ -27,7 +26,6 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -96,8 +94,8 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
     }
 
     @Override
-    List<TestRequest> createTestRequests() {
-        final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
+    void addDiscoverySelectors(final TestRequest testRequest) {
+        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
         if (!this.hasMethodsSpecified()) {
             requestBuilder.selectors(DiscoverySelectors.selectClass(this.testClass));
         } else {
@@ -106,17 +104,8 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
                 requestBuilder.selectors(DiscoverySelectors.selectMethod(this.testClass, method));
             }
         }
-        // add any engine filters
-        final String[] enginesToInclude = this.getIncludeEngines();
-        if (enginesToInclude != null && enginesToInclude.length > 0) {
-            requestBuilder.filters(EngineFilter.includeEngines(enginesToInclude));
-        }
-        final String[] enginesToExclude = this.getExcludeEngines();
-        if (enginesToExclude != null && enginesToExclude.length > 0) {
-            requestBuilder.filters(EngineFilter.excludeEngines(enginesToExclude));
-        }
-        return Collections.singletonList(new TestRequest(this, requestBuilder));
     }
+
 
     @Override
     protected void toForkedRepresentation(final JUnitLauncherTask task, final XMLStreamWriter writer) throws XMLStreamException {

@@ -20,6 +20,9 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
+import org.apache.tools.ant.types.resources.StringResource;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -30,6 +33,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_CLASS_NAME;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_EXCLUDE_ENGINES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_INCLUDE_ENGINES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST_CLASSES;
 
 /**
@@ -48,23 +57,22 @@ public class TestClasses extends TestDefinition {
     }
 
     @Override
-    List<TestRequest> createTestRequests() {
-        final List<SingleTestClass> tests = this.getTests();
+    void addDiscoverySelectors(final TestRequest testRequest) {
+        final List<String> tests = getTestClassNames();
         if (tests.isEmpty()) {
-            return Collections.emptyList();
+            return;
         }
-        final List<TestRequest> requests = new ArrayList<>();
-        for (final SingleTestClass test : tests) {
-            requests.addAll(test.createTestRequests());
+        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
+        for (final String test : tests) {
+            requestBuilder.selectors(DiscoverySelectors.selectClass(test));
         }
-        return requests;
     }
 
-    private List<SingleTestClass> getTests() {
+    private List<String> getTestClassNames() {
         if (this.resources.isEmpty()) {
             return Collections.emptyList();
         }
-        final List<SingleTestClass> tests = new ArrayList<>();
+        final List<String> tests = new ArrayList<>();
         for (final Resource resource : resources) {
             if (!resource.isExists()) {
                 continue;
@@ -75,83 +83,84 @@ public class TestClasses extends TestDefinition {
                 continue;
             }
             final String className = name.substring(0, name.lastIndexOf('.'));
-            final BatchSourcedSingleTest test = new BatchSourcedSingleTest(className.replace(File.separatorChar, '.').replace('/', '.').replace('\\', '.'));
-            tests.add(test);
+            tests.add(className.replace(File.separatorChar, '.').replace('/', '.').replace('\\', '.'));
         }
         return tests;
-    }
-
-    /**
-     * A {@link BatchSourcedSingleTest} is similar to a {@link SingleTestClass} except that
-     * some of the characteristics of the test (like whether to halt on failure) are borrowed
-     * from the {@link TestClasses batch} to which this test belongs to
-     */
-    private final class BatchSourcedSingleTest extends SingleTestClass {
-
-        private BatchSourcedSingleTest(final String testClassName) {
-            this.setName(testClassName);
-        }
-
-        @Override
-        String getIfProperty() {
-            return TestClasses.this.getIfProperty();
-        }
-
-        @Override
-        String getUnlessProperty() {
-            return TestClasses.this.getUnlessProperty();
-        }
-
-        @Override
-        boolean isHaltOnFailure() {
-            return TestClasses.this.isHaltOnFailure();
-        }
-
-        @Override
-        String getFailureProperty() {
-            return TestClasses.this.getFailureProperty();
-        }
-
-        @Override
-        List<ListenerDefinition> getListeners() {
-            return TestClasses.this.getListeners();
-        }
-
-        @Override
-        String getOutputDir() {
-            return TestClasses.this.getOutputDir();
-        }
-
-        @Override
-        String[] getIncludeEngines() {
-            return TestClasses.this.getIncludeEngines();
-        }
-
-        @Override
-        String[] getExcludeEngines() {
-            return TestClasses.this.getExcludeEngines();
-        }
     }
 
     @Override
     protected void toForkedRepresentation(final JUnitLauncherTask task, final XMLStreamWriter writer) throws XMLStreamException {
         writer.writeStartElement(LD_XML_ELM_TEST_CLASSES);
-        // write out as multiple SingleTestClass representations
-        for (final SingleTestClass singleTestClass : getTests()) {
-            singleTestClass.toForkedRepresentation(task, writer);
+        // write out each test class
+        for (final String test : getTestClassNames()) {
+            writer.writeStartElement(LD_XML_ELM_TEST);
+            writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, test);
+            if (haltOnFailure != null) {
+                writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, haltOnFailure.toString());
+            }
+            if (outputDir != null) {
+                writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, outputDir);
+            }
+            if (includeEngines != null) {
+                writer.writeAttribute(LD_XML_ATTR_INCLUDE_ENGINES, includeEngines);
+            }
+            if (excludeEngines != null) {
+                writer.writeAttribute(LD_XML_ATTR_EXCLUDE_ENGINES, excludeEngines);
+            }
+            // listeners for this test
+            if (listeners != null) {
+                for (final ListenerDefinition listenerDef : getListeners()) {
+                    if (!listenerDef.shouldUse(task.getProject())) {
+                        // not applicable
+                        continue;
+                    }
+                    listenerDef.toForkedRepresentation(writer);
+                }
+            }
+            writer.writeEndElement();
         }
         writer.writeEndElement();
     }
 
     static List<TestDefinition> fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
         reader.require(XMLStreamConstants.START_ELEMENT, null, LD_XML_ELM_TEST_CLASSES);
-        final List<TestDefinition> testDefinitions = new ArrayList<>();
+        final TestClasses testDefinition = new TestClasses();
         // read out as multiple SingleTestClass representations
         while (reader.nextTag() != XMLStreamConstants.END_ELEMENT) {
             reader.require(XMLStreamConstants.START_ELEMENT, null, Constants.LD_XML_ELM_TEST);
-            testDefinitions.add(SingleTestClass.fromForkedRepresentation(reader));
+            final String testClassName = requireAttributeValue(reader, LD_XML_ATTR_CLASS_NAME);
+            testDefinition.add(new StringResource(testClassName + ".class"));
+            final String halt = reader.getAttributeValue(null, LD_XML_ATTR_HALT_ON_FAILURE);
+            if (halt != null) {
+                testDefinition.setHaltOnFailure(Boolean.parseBoolean(halt));
+            }
+            final String outDir = reader.getAttributeValue(null, LD_XML_ATTR_OUTPUT_DIRECTORY);
+            if (outDir != null) {
+                testDefinition.setOutputDir(outDir);
+            }
+            final String includeEngs = reader.getAttributeValue(null, LD_XML_ATTR_INCLUDE_ENGINES);
+            if (includeEngs != null) {
+                testDefinition.setIncludeEngines(includeEngs);
+            }
+            final String excludeEngs = reader.getAttributeValue(null, LD_XML_ATTR_EXCLUDE_ENGINES);
+            if (excludeEngs != null) {
+                testDefinition.setExcludeEngines(excludeEngs);
+            }
+            while (reader.nextTag() != XMLStreamConstants.END_ELEMENT) {
+                reader.require(XMLStreamConstants.START_ELEMENT, null, Constants.LD_XML_ELM_LISTENER);
+                testDefinition.addConfiguredListener(ListenerDefinition.fromForkedRepresentation(reader));
+            }
+            reader.require(XMLStreamConstants.END_ELEMENT, null, Constants.LD_XML_ELM_TEST);
         }
         reader.require(XMLStreamConstants.END_ELEMENT, null, LD_XML_ELM_TEST_CLASSES);
-        return testDefinitions;
+        return Collections.singletonList(testDefinition);
+    }
+
+    private static String requireAttributeValue(final XMLStreamReader reader, final String attrName) throws XMLStreamException {
+        final String val = reader.getAttributeValue(null, attrName);
+        if (val != null) {
+            return val;
+        }
+        throw new XMLStreamException("Attribute " + attrName + " is missing at " + reader.getLocation());
     }
 }
