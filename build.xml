@@ -1815,6 +1815,10 @@ ${antunit.reports}
           <exclude name="${optional.package}/JspcTest.java"
                    unless="jasper.present"/>
 
+          <!-- needs JavaMail -->
+          <exclude name="${taskdefs.package}/email/EmailTaskTest.java"
+                   unless="javamail.complete"/>
+
           <!--  These tests only passes if testcases and Ant classes have
                been loaded by the same classloader - will throw
                IllegalAccessExceptions otherwise.  -->
