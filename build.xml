@@ -1842,6 +1842,7 @@ ${antunit.reports}
           <exclude name="org/example/"/>
           <exclude name="${taskdefs.package}/TaskdefTest*Task.java"/>
           <exclude name="${optional.package}/junit/TestFormatter.java"/>
+          <exclude name="${ant.package}/TestHelper.java"/>
 
           <!-- JUnit 5 / junitlauncher tests that aren't meant to run by junit task -->
           <exclude name="${optional.package}/junitlauncher/"/>
@@ -1902,6 +1903,10 @@ ${antunit.reports}
           <!-- needs jasperc -->
           <exclude name="${optional.package}/JspcTest.java"
                    unless="jasper.present"/>
+
+          <!-- needs JavaMail -->
+          <exclude name="${taskdefs.package}/email/EmailTaskTest.java"
+                   unless="javamail.complete"/>
 
           <!--  These tests only passes if testcases and Ant classes have
                been loaded by the same classloader - will throw

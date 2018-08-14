@@ -20,6 +20,8 @@ package org.apache.tools.ant.taskdefs.email;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.DummyMailServer;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,19 +43,48 @@ public class EmailTaskTest {
     /**
      * Expected failure attempting SMTP auth without MIME
      */
-    @Test(expected = BuildException.class)
+    @Test
     public void test1() {
-        buildRule.executeTarget("test1");
-        // TODO Assert exception message
+        try {
+            buildRule.executeTarget("test1");
+        } catch (BuildException e) {
+            // assert it's the expected one
+            if (!e.getMessage().equals("SMTP auth only possible with MIME mail")) {
+                throw e;
+            }
+        }
     }
 
     /**
      * Expected failure attempting SSL without MIME
      */
-    @Test(expected = BuildException.class)
+    @Test
     public void test2() {
-        buildRule.executeTarget("test2");
-        // TODO Assert exception message
+        try {
+            buildRule.executeTarget("test2");
+        } catch (BuildException e) {
+            // assert it's the expected one
+            if (!e.getMessage().equals("SSL and STARTTLS only possible with MIME mail")) {
+                throw e;
+            }
+        }
     }
 
+    /**
+     * Tests that a basic email sending works
+     */
+    @Test
+    public void test3() {
+        final DummyMailServer mailServer = DummyMailServer.startMailServer();
+        try {
+            buildRule.getProject().setProperty("EmailTaskTest.test3.port", String.valueOf(mailServer.getPort()));
+            buildRule.executeTarget("test3");
+        } finally {
+            mailServer.disconnect();
+        }
+        final String smtpInteraction = mailServer.getResult();
+        Assert.assertNotNull("No mail received by mail server", smtpInteraction);
+        // just a basic check
+        Assert.assertTrue("Unexpected recipients on the sent mail", smtpInteraction.contains("RCPT TO:<whoami>"));
+    }
 }

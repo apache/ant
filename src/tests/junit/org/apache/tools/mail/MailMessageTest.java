@@ -21,22 +21,16 @@ package org.apache.tools.mail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Vector;
-
-import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DummyMailServer;
 import org.junit.AssumptionViolatedException;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.util.Vector;
 
 /**
  * JUnit testcases for org.apache.tools.mail.MailMessage.
@@ -44,9 +38,6 @@ import org.junit.Test;
  * @since Ant 1.6
  */
 public class MailMessageTest {
-
-    // 27224 = magic (a random port which is unlikely to be in use)
-    private static int TEST_PORT = 27224;
 
     private String local = null;
 
@@ -68,28 +59,27 @@ public class MailMessageTest {
      */
     @Test
     public void testAPIExample() throws InterruptedException {
-        final int port = TEST_PORT + 1;
-        ServerThread testMailServer = new ServerThread(port);
-        Thread server = new Thread(testMailServer);
-        server.start();
+        final DummyMailServer testMailServer = DummyMailServer.startMailServer(this.local);
+        final ClientThread testMailClient;
+        try {
+            testMailClient = new ClientThread(testMailServer.getPort());
 
-        ClientThread testMailClient = new ClientThread(port);
+            testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
+            testMailClient.to("to@you.com");
+            testMailClient.cc("cc1@you.com");
+            testMailClient.cc("cc2@you.com");
+            testMailClient.bcc("bcc@you.com");
+            testMailClient.setSubject("Test subject");
+            testMailClient.setMessage("test line 1\n"
+                    + "test line 2");
 
-        testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
-        testMailClient.to("to@you.com");
-        testMailClient.cc("cc1@you.com");
-        testMailClient.cc("cc2@you.com");
-        testMailClient.bcc("bcc@you.com");
-        testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("test line 1\n"
-            + "test line 2");
+            Thread client = new Thread(testMailClient);
+            client.start();
+            client.join(30 * 1000); // a further 30s
 
-        Thread client = new Thread(testMailClient);
-        client.start();
-
-        server.join(60 * 1000); // 60s
-        client.join(30 * 1000); // a further 30s
-
+        } finally {
+            testMailServer.disconnect();
+        }
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n"
                 + "HELO " + local + "\r\n"
@@ -128,23 +118,23 @@ public class MailMessageTest {
      */
     @Test
     public void testToOnly() throws InterruptedException {
-        final int port = TEST_PORT + 2;
-        ServerThread testMailServer = new ServerThread(port);
-        Thread server = new Thread(testMailServer);
-        server.start();
+        final DummyMailServer testMailServer = DummyMailServer.startMailServer(this.local);
+        final ClientThread testMailClient;
+        try {
+            testMailClient = new ClientThread(testMailServer.getPort());
 
-        ClientThread testMailClient = new ClientThread(port);
+            testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
+            testMailClient.to("to@you.com");
+            testMailClient.setSubject("Test subject");
+            testMailClient.setMessage("test line 1\n" + "test line 2");
 
-        testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
-        testMailClient.to("to@you.com");
-        testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("test line 1\n" + "test line 2");
+            Thread client = new Thread(testMailClient);
+            client.start();
 
-        Thread client = new Thread(testMailClient);
-        client.start();
-
-        server.join(60 * 1000); // 60s
-        client.join(30 * 1000); // a further 30s
+            client.join(30 * 1000); // a further 30s
+        } finally {
+            testMailServer.disconnect();
+        }
 
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n"
@@ -178,23 +168,22 @@ public class MailMessageTest {
      */
     @Test
     public void testCcOnly() throws InterruptedException {
-        final int port = TEST_PORT + 3;
-        ServerThread testMailServer = new ServerThread(port);
-        Thread server = new Thread(testMailServer);
-        server.start();
+        final DummyMailServer testMailServer = DummyMailServer.startMailServer(this.local);
+        final ClientThread testMailClient;
+        try {
+            testMailClient = new ClientThread(testMailServer.getPort());
+            testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
+            testMailClient.cc("cc@you.com");
+            testMailClient.setSubject("Test subject");
+            testMailClient.setMessage("test line 1\n" + "test line 2");
 
-        ClientThread testMailClient = new ClientThread(port);
+            Thread client = new Thread(testMailClient);
+            client.start();
 
-        testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
-        testMailClient.cc("cc@you.com");
-        testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("test line 1\n" + "test line 2");
-
-        Thread client = new Thread(testMailClient);
-        client.start();
-
-        server.join(60 * 1000); // 60s
-        client.join(30 * 1000); // a further 30s
+            client.join(30 * 1000); // a further 30s
+        } finally {
+            testMailServer.disconnect();
+        }
 
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n"
@@ -228,23 +217,21 @@ public class MailMessageTest {
      */
     @Test
     public void testBccOnly() throws InterruptedException {
-        final int port = TEST_PORT + 4;
-        ServerThread testMailServer = new ServerThread(port);
-        Thread server = new Thread(testMailServer);
-        server.start();
+        final DummyMailServer testMailServer = DummyMailServer.startMailServer(this.local);
+        final ClientThread testMailClient;
+        try {
+            testMailClient = new ClientThread(testMailServer.getPort());
+            testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
+            testMailClient.bcc("bcc@you.com");
+            testMailClient.setSubject("Test subject");
+            testMailClient.setMessage("test line 1\n" + "test line 2");
 
-        ClientThread testMailClient = new ClientThread(port);
-
-        testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
-        testMailClient.bcc("bcc@you.com");
-        testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("test line 1\n" + "test line 2");
-
-        Thread client = new Thread(testMailClient);
-        client.start();
-
-        server.join(60 * 1000); // 60s
-        client.join(30 * 1000); // a further 30s
+            Thread client = new Thread(testMailClient);
+            client.start();
+            client.join(30 * 1000); // a further 30s
+        } finally {
+            testMailServer.disconnect();
+        }
 
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n"
@@ -278,22 +265,22 @@ public class MailMessageTest {
      */
     @Test
     public void testNoSubject() throws InterruptedException {
-        final int port = TEST_PORT + 5;
-        ServerThread testMailServer = new ServerThread(port);
-        Thread server = new Thread(testMailServer);
-        server.start();
+        final DummyMailServer testMailServer = DummyMailServer.startMailServer(this.local);
+        final ClientThread testMailClient;
 
-        ClientThread testMailClient = new ClientThread(port);
+        try {
+            testMailClient = new ClientThread(testMailServer.getPort());
+            testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
+            testMailClient.to("to@you.com");
+            testMailClient.setMessage("test line 1\n" + "test line 2");
 
-        testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
-        testMailClient.to("to@you.com");
-        testMailClient.setMessage("test line 1\n" + "test line 2");
+            Thread client = new Thread(testMailClient);
+            client.start();
 
-        Thread client = new Thread(testMailClient);
-        client.start();
-
-        server.join(60 * 1000); // 60s
-        client.join(30 * 1000); // a further 30s
+            client.join(30 * 1000); // a further 30s
+        } finally {
+            testMailServer.disconnect();
+        }
 
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n"
@@ -326,23 +313,22 @@ public class MailMessageTest {
      */
     @Test
     public void testEmptyBody() throws InterruptedException {
-        final int port = TEST_PORT + 6;
-        ServerThread testMailServer = new ServerThread(port);
-        Thread server = new Thread(testMailServer);
-        server.start();
+        final DummyMailServer testMailServer = DummyMailServer.startMailServer(this.local);
+        final ClientThread testMailClient;
+        try {
+            testMailClient = new ClientThread(testMailServer.getPort());
+            testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
+            testMailClient.to("to@you.com");
+            testMailClient.setSubject("Test subject");
+            testMailClient.setMessage("");
 
-        ClientThread testMailClient = new ClientThread(port);
+            Thread client = new Thread(testMailClient);
+            client.start();
 
-        testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
-        testMailClient.to("to@you.com");
-        testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("");
-
-        Thread client = new Thread(testMailClient);
-        client.start();
-
-        server.join(60 * 1000); // 60s
-        client.join(30 * 1000); // a further 30s
+            client.join(30 * 1000); // a further 30s
+        } finally {
+            testMailServer.disconnect();
+        }
 
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n"
@@ -377,23 +363,23 @@ public class MailMessageTest {
      */
     @Test
     public void testAsciiCharset() throws InterruptedException {
-        final int port = TEST_PORT + 7;
-        ServerThread testMailServer = new ServerThread(port);
-        Thread server = new Thread(testMailServer);
-        server.start();
+        final DummyMailServer testMailServer = DummyMailServer.startMailServer(this.local);
+        final ClientThread testMailClient;
 
-        ClientThread testMailClient = new ClientThread(port);
+        try {
+            testMailClient = new ClientThread(testMailServer.getPort());
+            testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
+            testMailClient.to("Ceki G\u00fclc\u00fc <abuse@mail-abuse.org>");
+            testMailClient.setSubject("Test subject");
+            testMailClient.setMessage("");
 
-        testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
-        testMailClient.to("Ceki G\u00fclc\u00fc <abuse@mail-abuse.org>");
-        testMailClient.setSubject("Test subject");
-        testMailClient.setMessage("");
+            Thread client = new Thread(testMailClient);
+            client.start();
 
-        Thread client = new Thread(testMailClient);
-        client.start();
-
-        server.join(60 * 1000); // 60s
-        client.join(30 * 1000); // a further 30s
+            client.join(30 * 1000); // a further 30s
+        } finally {
+            testMailServer.disconnect();
+        }
 
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n"
@@ -427,127 +413,6 @@ public class MailMessageTest {
         assertEquals("baos1 and baos2 should be the same in testAsciiCharset()",
             baos1.toString(), baos2.toString()); // order of headers cannot be guaranteed
         assertFalse(testMailClient.getFailMessage(), testMailClient.isFailed());
-    }
-
-
-    /**
-     * A private test class that pretends to be a mail transfer agent
-     */
-    private class ServerThread implements Runnable {
-
-        private final int port;
-        private StringBuilder sb = null;
-        private boolean loop = false;
-        ServerSocket ssock = null;
-        Socket sock = null;
-        BufferedWriter out = null;
-        BufferedReader in = null;
-        private boolean data = false;  // state engine: false=envelope, true=message
-
-        ServerThread(int port) {
-            this.port = port;
-        }
-
-        public void run() {
-
-            try {
-                ssock = new ServerSocket(port);
-                sock = ssock.accept(); // wait for connection
-                in = new BufferedReader(new InputStreamReader(
-                    sock.getInputStream()));
-                out = new BufferedWriter(new OutputStreamWriter(
-                    sock.getOutputStream()));
-                sb = new StringBuilder();
-                send("220 test SMTP EmailTaskTest\r\n");
-                loop = true;
-                while (loop) {
-                    String response = in.readLine();
-                    if (response == null) {
-                        loop = false;
-                        break;
-                    }
-                    sb.append(response).append("\r\n");
-
-                    if (!data && response.startsWith("HELO")) {
-                        send("250 " + local + " Hello " + local + " "
-                        + "[127.0.0.1], pleased to meet you\r\n");
-                    } else if (!data && response.startsWith("MAIL")) {
-                        send("250\r\n");
-                    } else if (!data && response.startsWith("RCPT")) {
-                        send("250\r\n");
-                    } else if (!data && response.startsWith("DATA")) {
-                        send("354\r\n");
-                        data = true;
-                    } else if (data && response.equals(".")) {
-                        send("250\r\n");
-                        data = false;
-                    } else if (!data && response.startsWith("QUIT")) {
-                        send("221\r\n");
-                        loop = false;
-                    } else if (!data) {
-                        //throw new IllegalStateException("Command unrecognized: "
-                        //    + response);
-                        send("500 5.5.1 Command unrecognized: \""
-                            + response + "\"\r\n");
-                        loop = false;
-                    } else {
-                        // sb.append(response + "\r\n");
-                    }
-                } // while
-            } catch (IOException ioe) {
-                throw new BuildException(ioe);
-            } finally {
-                disconnect();
-            }
-        }
-
-        private void send(String retmsg) throws IOException {
-            out.write(retmsg);
-            out.flush();
-            sb.append(retmsg);
-        }
-
-        private void disconnect() {
-            if (out != null) {
-                try {
-                    out.flush();
-                    out.close();
-                    out = null;
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (in != null) {
-                try {
-                    in.close();
-                    in = null;
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (sock != null) {
-                try {
-                    sock.close();
-                    sock = null;
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (ssock != null) {
-                try {
-                    ssock.close();
-                    ssock = null;
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-        }
-
-        public synchronized String getResult() {
-            loop = false;
-            return sb.toString();
-        }
-
     }
 
     /**
