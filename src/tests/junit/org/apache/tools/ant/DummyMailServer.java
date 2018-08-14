@@ -63,12 +63,10 @@ public class DummyMailServer implements Runnable, Callable<Void> {
         return this.host;
     }
 
-    @Override
     public void run() {
         call();
     }
 
-    @Override
     public Void call() {
 
         try {
