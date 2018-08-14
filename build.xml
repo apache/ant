@@ -1755,6 +1755,7 @@ ${antunit.reports}
           <exclude name="org/example/"/>
           <exclude name="${taskdefs.package}/TaskdefTest*Task.java"/>
           <exclude name="${optional.package}/junit/TestFormatter.java"/>
+          <exclude name="${ant.package}/TestHelper.java"/>
 
           <!-- interactive tests -->
           <exclude name="${taskdefs.package}/TestProcess.java"/>
