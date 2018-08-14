@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * TODO : develop these testcases - the email task needs to have attributes allowing
@@ -34,6 +35,9 @@ public class EmailTaskTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
@@ -45,14 +49,9 @@ public class EmailTaskTest {
      */
     @Test
     public void test1() {
-        try {
-            buildRule.executeTarget("test1");
-        } catch (BuildException e) {
-            // assert it's the expected one
-            if (!e.getMessage().equals("SMTP auth only possible with MIME mail")) {
-                throw e;
-            }
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("SMTP auth only possible with MIME mail");
+        buildRule.executeTarget("test1");
     }
 
     /**
@@ -60,14 +59,9 @@ public class EmailTaskTest {
      */
     @Test
     public void test2() {
-        try {
-            buildRule.executeTarget("test2");
-        } catch (BuildException e) {
-            // assert it's the expected one
-            if (!e.getMessage().equals("SSL and STARTTLS only possible with MIME mail")) {
-                throw e;
-            }
-        }
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("SSL and STARTTLS only possible with MIME mail");
+        buildRule.executeTarget("test2");
     }
 
     /**

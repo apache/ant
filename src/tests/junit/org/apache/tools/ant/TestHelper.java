@@ -33,21 +33,11 @@ public class TestHelper {
      * after this method since the associated socket is released and some other process can now use it.
      */
     public static int getMaybeAvailablePort() {
-        final ServerSocket s;
-        try {
-            s = new ServerSocket(0);
+        try (ServerSocket s = new ServerSocket(0)) {
             s.setReuseAddress(true);
-            int port = s.getLocalPort();
-            try {
-                s.close();
-            } catch (IOException e) {
-                // ignore
-            }
-            return port;
+            return s.getLocalPort();
         } catch (IOException e) {
             // ignore
-        } finally {
-
         }
         throw new IllegalStateException("No TCP/IP port available");
     }
