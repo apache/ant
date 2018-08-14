@@ -20,7 +20,7 @@
 
   <target name="test1">
     <!-- this test is supposed to bring a build exception because user and password is not allowed with plain encoding -->
-    <mail host="localhost" port="25" from="joe@abc.com" to="laura@xyz.com" subject="hello" encoding="plain" user="joe" password="secret">
+    <mail mailhost="localhost" mailport="25" from="joe@abc.com" tolist="laura@xyz.com" subject="hello" encoding="plain" user="joe" password="secret">
         <message>
             Hi Laura, how are you doing ?
         </message>
@@ -28,7 +28,7 @@
   </target>
   <target name="test2">
       <!-- this test is supposed to bring a build exception because SSL is not allowed with plain encoding -->
-      <mail host="localhost" port="465" from="joe@abc.com" to="laura@xyz.com" subject="hello" encoding="plain" ssl="true">
+      <mail mailhost="localhost" mailport="465" from="joe@abc.com" tolist="laura@xyz.com" subject="hello" encoding="plain" ssl="true">
           <message>
               Hi Laura, how are you doing ?
           </message>
@@ -36,5 +36,9 @@
     </target>
 
 
-
+    <target name="test3">
+        <mail mailhost="localhost" mailport="${EmailTaskTest.test3.port}" from="test3" subject="just a test">
+            <to address="whoami" />
+        </mail>
+    </target>
 </project>
