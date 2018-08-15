@@ -213,13 +213,19 @@
   </selector>
 
   <selector id="needs.junit.engine.vintage">
-    <!-- we need JUnit vintage engine only in tests where we test the junitlauncher task -->
-    <filename name="${src.junit}/org/apache/tools/ant/taskdefs/optional/junitlauncher/**/*"/>
+    <or>
+      <!-- we need JUnit vintage engine only in tests where we test the junitlauncher task -->
+      <filename name="${optional.package}/junitlauncher/**/*"/>
+      <filename name="org/example/junitlauncher/vintage/**/*"/>
+    </or>
   </selector>
 
   <selector id="needs.junit.engine.jupiter">
-    <!-- we need JUnit jupiter engine only in tests where we test the junitlauncher task -->
-    <filename name="${src.junit}/org/apache/tools/ant/taskdefs/optional/junitlauncher/**/*"/>
+    <or>
+      <!-- we need JUnit jupiter engine only in tests where we test the junitlauncher task -->
+      <filename name="${optional.package}/junitlauncher/**/*"/>
+      <filename name="org/example/junitlauncher/jupiter/**/*"/>
+    </or>
   </selector>
 
   <selector id="needs.apache-regexp">

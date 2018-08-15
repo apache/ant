@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.junitlauncher.example.jupiter;
+package org.example.junitlauncher.jupiter;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;

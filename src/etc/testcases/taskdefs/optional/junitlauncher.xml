@@ -103,9 +103,6 @@
                 <fileset dir="${build.classes.dir}">
                     <include name="org/example/**/junitlauncher/**/"/>
                 </fileset>
-                <fileset dir="${build.classes.dir}">
-                    <include name="org/apache/tools/ant/taskdefs/optional/junitlauncher/example/**/"/>
-                </fileset>
                 <listener type="legacy-brief" sendSysOut="true"/>
                 <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
             </testclasses>
