@@ -4,6 +4,7 @@
 *.pif
 .ant.properties
 .classpath
+.DS_Store
 .project
 .settings
 bin
