@@ -47,6 +47,7 @@ public class EmailTaskTest {
     public void test1() {
         try {
             buildRule.executeTarget("test1");
+            Assert.fail("Execution of mail task was expected to fail");
         } catch (BuildException e) {
             // assert it's the expected one
             if (!e.getMessage().equals("SMTP auth only possible with MIME mail")) {
@@ -62,6 +63,7 @@ public class EmailTaskTest {
     public void test2() {
         try {
             buildRule.executeTarget("test2");
+            Assert.fail("Execution of mail task was expected to fail");
         } catch (BuildException e) {
             // assert it's the expected one
             if (!e.getMessage().equals("SSL and STARTTLS only possible with MIME mail")) {
