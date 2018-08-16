@@ -438,6 +438,11 @@
     Tests can define their own listeners via nested <code>listener</code> elements.
 </p>
 
+<p>
+    The <a href="#fork">fork</a> nested element can be used to run the test in a newly forked
+    JVM.
+</p>
+
 <h4>testclasses</h4>
 
 <p>Define a number of tests based on pattern matching.</p>
@@ -513,6 +518,115 @@
     <code>testclasses</code> can define their own listeners via nested <code>listener</code>
     elements.
 </p>
+
+<p>
+    The <a href="#fork">fork</a> nested element can be used to run the tests in a newly forked
+    JVM. All tests that are part of this <code>testclasses</code> element will run in one single
+    instance of the newly forked JVM.
+</p>
+
+<h4 id="fork">fork</h4>
+
+<p><em>Since Ant 1.10.6</em></p>
+
+Tests launched using the <code>junitlauncher</code> task, by default, run in the same JVM that
+initiates the task. This behaviour can be changed using the <code>fork</code> element.
+The <code>fork</code> element and its attributes define the characteristics of
+the new JVM instance that will be created to launch the tests.
+
+<table class="attr">
+    <tr>
+        <th scope="col">Attribute</th>
+        <th scope="col">Description</th>
+        <th scope="col">Required</th>
+    </tr>
+    <tr>
+        <td>dir</td>
+        <td>The user working directory that will be used for the forked JVM</td>
+        <td>No</td>
+    </tr>
+    <tr>
+        <td>timeout</td>
+        <td>A value in milliseconds, specifying a maximum duration, the test
+            running in this forked JVM is allowed to run. If the test runs longer
+            than this configured value, then the JVM is killed</td>
+        <td>No</td>
+    </tr>
+</table>
+
+The <code>fork</code> element allows the following nested elements:
+
+<h5>jvmarg</h5>
+<p>
+    Additional JVM arguments may be passed to the forked JVM via the <code>jvmarg</code> elements.
+    For example:
+    <pre>
+    &lt;fork ...&gt;
+      &lt;jvmarg value="-Djava.compiler=NONE"/&gt;
+      ...
+    &lt;/fork&gt;
+    </pre>
+</p>
+
+<p>
+    <code>jvmarg</code> allows all attributes described in <a href="../using.html#arg">Command-line Arguments</a>
+</p>
+
+<h5>sysproperty</h5>
+<p>
+    The <code>sysproperty</code> elements allow passing Java system properties to the forked JVM:
+    <pre>
+    &lt;fork&gt;
+        &lt;sysproperty key="greeting" value="hello world"/&gt;
+    ...
+    &lt;/fork&gt;
+    </pre>
+</p>
+<p>
+    The attributes for this element are the same as for <a href="../Tasks/exec.html#env">environment variables</a>
+</p>
+
+<h5>syspropertyset</h5>
+
+<p>
+    You can specify a set of properties to be used as system properties with
+    <a href="../Types/propertyset.html">syspropertyset</a>(s)
+</p>
+
+
+<h5>env</h5>
+
+<p>
+    It is possible to specify environment variables to pass to the forked JVM via
+    nested <code>env</code> elements. For a description of the <code>env</code>
+    element's attributes, see the description in the <a href="../Tasks/exec.html#env">exec</a> task.
+</p>
+
+<h5>modulepath</h5>
+
+<p>
+    The location of Java modules can be specified using the <code>modulepath</code> element,
+    which is a <a href="../using.html#path">path-like structure</a>.
+</p>
+For example:
+<pre>
+&lt;fork&gt;
+  &lt;modulepath&gt;
+    &lt;pathelement location="lib"/&gt;
+    &lt;pathelement location="dist/test.jar"/&gt;
+  &lt;/modulepath&gt;
+  ...
+&lt;/fork&gt;
+</pre>
+
+<h5>upgrademodulepath</h5>
+
+<p>
+    The location of Java modules, that replace upgradeable modules in the runtime, can be specified
+    using the <code>upgrademodulepath</code> element, which is a <a href="../using.html#path">path-like
+    structure</a>.
+</p>
+
 
 <h3>Examples</h3>
 
