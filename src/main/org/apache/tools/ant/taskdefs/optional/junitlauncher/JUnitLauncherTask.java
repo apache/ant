@@ -62,8 +62,7 @@ import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_
  * platform for test execution. It however, is solely the JUnit 5 platform, backed by test engines that
  * decide and execute the tests.
  *
- * @see <a href="https://junit.org/junit5/">JUnit 5 documentation</a> for more details
- * on how JUnit manages the platform and the test engines.
+ * @see <a href="https://junit.org/junit5/">JUnit 5 documentation</a>
  */
 public class JUnitLauncherTask extends Task {
 

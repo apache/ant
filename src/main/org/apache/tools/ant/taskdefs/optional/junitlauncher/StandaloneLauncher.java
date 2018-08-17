@@ -59,7 +59,7 @@ public class StandaloneLauncher {
      * Entry point to launching the forked test.
      *
      * @param args The arguments passed to this program for launching the tests
-     * @throws Exception
+     * @throws Exception If any exception occurs during the execution
      */
     public static void main(final String[] args) throws Exception {
         // The main responsibility of this entry point is to create a LaunchDefinition,
