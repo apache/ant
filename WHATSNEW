@@ -15,6 +15,10 @@ Fixed bugs:
    mail task.
    Bugzilla Report 62621
 
+ * Fixes an issue in junitreport task, which used to throw a
+   java.net.MalformedURLException when saxon was used on Windows OS.
+   Bugzilla Report 62594
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
