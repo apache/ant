@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.parsers.SAXParser;
@@ -404,7 +403,7 @@ public class IPlanetEjbc {
         command += "ejbc ";
 
         /* Concatenate all of the command line arguments into a single String */
-        String args = Stream.of(arguments).collect(Collectors.joining(" "));
+        String args = String.join(" ", arguments);
 
         log(command + args);
 

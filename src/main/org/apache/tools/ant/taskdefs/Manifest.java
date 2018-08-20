@@ -35,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Vector;
-import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
@@ -264,7 +263,7 @@ public class Manifest {
          */
         public String getValue() {
             return values.isEmpty() ? null
-                : values.stream().collect(Collectors.joining(" "));
+                : String.join(" ", values);
         }
 
         /**

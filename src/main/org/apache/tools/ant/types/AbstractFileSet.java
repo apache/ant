@@ -24,7 +24,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -903,7 +902,7 @@ public abstract class AbstractFileSet extends DataType
         }
         dieOnCircularReference();
         DirectoryScanner ds = getDirectoryScanner(getProject());
-        return Stream.of(ds.getIncludedFiles()).collect(Collectors.joining(";"));
+        return String.join(";", ds.getIncludedFiles());
     }
 
     /**

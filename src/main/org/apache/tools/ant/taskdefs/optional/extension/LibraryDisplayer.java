@@ -20,8 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.extension;
 import java.io.File;
 import java.text.ParseException;
 import java.util.jar.Manifest;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 
@@ -138,7 +136,7 @@ class LibraryDisplayer {
         if (null != sections) {
             System.out.print("Sections:  ");
             System.out
-                .println(Stream.of(sections).collect(Collectors.joining(" ")));
+                .println(String.join(" ", sections));
         }
         System.out.println(specification.toString());
     }

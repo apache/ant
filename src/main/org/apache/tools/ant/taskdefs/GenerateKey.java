@@ -22,7 +22,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -128,8 +127,7 @@ public class GenerateKey extends Task {
          * @return the encoded value.
          */
         public String encode(final String string) {
-            return Stream.of(string.split(","))
-                .collect(Collectors.joining("\\,"));
+            return String.join("\\,", string.split(","));
         }
     }
 

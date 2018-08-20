@@ -900,7 +900,7 @@ public class Main implements AntMain {
         // Setting it here allows top-level tasks to access the
         // property.
         project.setUserProperty(MagicNames.PROJECT_INVOKED_TARGETS,
-                targets.stream().collect(Collectors.joining(",")));
+                String.join(",", targets));
     }
 
     /**

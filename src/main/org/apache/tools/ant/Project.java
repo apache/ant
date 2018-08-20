@@ -1247,7 +1247,7 @@ public class Project implements ResourceFactory {
      */
     public void executeTargets(final Vector<String> names) throws BuildException {
         setUserProperty(MagicNames.PROJECT_INVOKED_TARGETS,
-                names.stream().collect(Collectors.joining(",")));
+                String.join(",", names));
         getExecutor().executeTargets(this, names.toArray(new String[names.size()]));
     }
 

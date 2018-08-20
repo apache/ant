@@ -35,7 +35,6 @@ import java.net.Socket;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
-import java.util.stream.Collectors;
 
 /**
  * A class to help send SMTP email.
@@ -312,7 +311,7 @@ public class MailMessage {
     }
 
     String vectorToList(Vector<String> v) {
-        return v.stream().collect(Collectors.joining(", "));
+        return String.join(", ", v);
     }
 
     void flushHeaders() throws IOException {

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
@@ -551,7 +550,7 @@ public class Scp extends SSHBase {
 
     private BuildException exactlyOne(final String[] attrs, final String alt) {
         return new BuildException("Exactly one of [%s]%s is required",
-            Stream.of(attrs).collect(Collectors.joining("|")),
+                String.join("|", attrs),
             alt == null ? "" : " or " + alt);
     }
 }

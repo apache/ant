@@ -19,8 +19,6 @@
 package org.apache.tools.ant.types;
 
 import java.util.Iterator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
@@ -105,8 +103,7 @@ public class DirSet extends AbstractFileSet implements ResourceCollection {
      */
     @Override
     public String toString() {
-        DirectoryScanner ds = getDirectoryScanner(getProject());
-        return Stream.of(ds.getIncludedDirectories()).collect(Collectors.joining(";"));
+        return String.join(";", getDirectoryScanner(getProject()).getIncludedDirectories());
     }
 
 }

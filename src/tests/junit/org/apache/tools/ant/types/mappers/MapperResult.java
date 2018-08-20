@@ -23,9 +23,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 /**
  * This is a test task to show the result of a mapper
  * on a specific input.
@@ -83,7 +80,7 @@ public class MapperResult extends Task {
         if (result == null) {
             flattened = NULL_MAPPER_RESULT;
         } else {
-            flattened = Arrays.stream(result).collect(Collectors.joining("|"));
+            flattened = String.join("|", result);
         }
         if (!flattened.equals(output)) {
             throw new BuildException(failMessage + " got " + flattened + " expected " + output);
