@@ -19,12 +19,9 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -43,7 +40,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Creates a partial DTD for Ant from the currently known tasks.

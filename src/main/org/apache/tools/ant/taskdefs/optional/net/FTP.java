@@ -244,11 +244,7 @@ public class FTP extends Task implements FTPTaskConfig {
          */
         @Override
         public String getParent() {
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < parts.length - 1; i++) {
-                result.append(File.separatorChar).append(parts[i]);
-            }
-            return result.toString();
+            return File.separator + String.join(File.separator, parts);
         }
 
 

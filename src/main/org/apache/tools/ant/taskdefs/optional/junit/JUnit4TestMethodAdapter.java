@@ -111,18 +111,7 @@ public class JUnit4TestMethodAdapter implements Test {
 
     @Override
     public String toString() {
-        String testClassName = testClass.getName();
-        StringBuilder buf = new StringBuilder(testClassName.length()
-                                              + 12 * methodNames.length)
-                            .append(':');
-        if (methodNames.length != 0) {
-            buf.append(methodNames[0]);
-            for (int i = 1; i < methodNames.length; i++) {
-                buf.append(',')
-                   .append(methodNames[i]);
-            }
-        }
-        return buf.toString();
+        return ":" + String.join(",", methodNames);
     }
 
     private static final class MultipleMethodsFilter extends Filter {
@@ -166,10 +155,7 @@ public class JUnit4TestMethodAdapter implements Test {
                 buf.append("No methods");
             } else {
                 buf.append(methodNames.length == 1 ? "Method " : "Methods ");
-                for (String methodName : methodNames) {
-                    buf.append(methodName).append(',');
-                }
-                buf.setLength(buf.length() - 1);
+                buf.append(String.join(",", methodNames));
             }
             buf.append('(').append(testClass.getName()).append(')');
             return buf.toString();

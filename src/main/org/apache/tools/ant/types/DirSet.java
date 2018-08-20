@@ -20,7 +20,6 @@ package org.apache.tools.ant.types;
 
 import java.util.Iterator;
 
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
 
 /**

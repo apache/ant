@@ -222,18 +222,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      */
     String getMethodsString() {
         if (methodsList == null && methodsSpecified) {
-            if (methods.length == 0) {
-                methodsList = "";
-            } else if (methods.length == 1) {
-                methodsList = methods[0];
-            } else {
-                StringBuilder buf = new StringBuilder(methods.length * 16);
-                buf.append(methods[0]);
-                for (int i = 1; i < methods.length; i++) {
-                    buf.append(',').append(methods[i]);
-                }
-                methodsList = buf.toString();
-            }
+            methodsList = methods.length == 0 ? "" : String.join(",", methods);
         }
         return methodsList;
     }
