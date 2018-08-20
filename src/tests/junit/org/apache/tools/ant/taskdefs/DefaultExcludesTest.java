@@ -161,7 +161,7 @@ public class DefaultExcludesTest {
         assertEquals("current default excludes: string array length match", expected.length, actual.length);
         for (String element : expected) {
             assertTrue("current default excludes: didn't find element " + element + " in array match",
-                    Arrays.stream(actual).anyMatch(member -> member.equals(element)));
+                    Arrays.asList(actual).contains(element));
         }
     }
 }

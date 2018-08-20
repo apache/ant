@@ -181,10 +181,8 @@ public class ProjectHelperRepository {
         try {
             // This code is needed by EBCDIC and other strange systems.
             // It's a fix for bugs reported in xerces
-            InputStreamReader isr;
-            isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-            BufferedReader rd = new BufferedReader(isr);
-
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is,
+                    StandardCharsets.UTF_8));
             String helperClassName = rd.readLine();
             rd.close();
 

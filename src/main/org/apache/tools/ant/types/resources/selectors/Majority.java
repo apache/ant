@@ -17,8 +17,6 @@
  */
 package org.apache.tools.ant.types.resources.selectors;
 
-import java.util.Iterator;
-
 import org.apache.tools.ant.types.Resource;
 
 /**

@@ -442,11 +442,11 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             return in instanceof SimpleFilterReader && ((SimpleFilterReader) in).editsBlocked();
         }
 
-        public int read() throws java.io.IOException {
+        public int read() throws IOException {
             return preemptIndex > 0 ? preempt[--preemptIndex] : in.read();
         }
 
-        public void close() throws java.io.IOException {
+        public void close() throws IOException {
             in.close();
         }
 
@@ -458,23 +458,23 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             return in.markSupported();
         }
 
-        public boolean ready() throws java.io.IOException {
+        public boolean ready() throws IOException {
             return in.ready();
         }
 
-        public void mark(int i) throws java.io.IOException {
+        public void mark(int i) throws IOException {
             in.mark(i);
         }
 
-        public long skip(long i) throws java.io.IOException {
+        public long skip(long i) throws IOException {
             return in.skip(i);
         }
 
-        public int read(char[] buf) throws java.io.IOException {
+        public int read(char[] buf) throws IOException {
             return read(buf, 0, buf.length);
         }
 
-        public int read(char[] buf, int start, int length) throws java.io.IOException {
+        public int read(char[] buf, int start, int length) throws IOException {
             int count = 0;
             int c = 0;
 

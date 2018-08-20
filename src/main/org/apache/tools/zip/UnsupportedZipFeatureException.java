@@ -18,6 +18,7 @@
 
 package org.apache.tools.zip;
 
+import java.io.Serializable;
 import java.util.zip.ZipException;
 
 /**
@@ -66,7 +67,7 @@ public class UnsupportedZipFeatureException extends ZipException {
      * ZIP Features that may or may not be supported.
      */
     @SuppressWarnings("serial")
-    public static class Feature implements java.io.Serializable {
+    public static class Feature implements Serializable {
         /**
          * The entry is encrypted.
          */

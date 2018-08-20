@@ -58,7 +58,7 @@ public class MethodHandleCPInfo extends ConstantPoolEntry {
      *
      * @param cpStream the DataInputStream which contains the constant pool
      *      entry to be read.
-     * @exception java.io.IOException if there is a problem reading the entry from
+     * @exception IOException if there is a problem reading the entry from
      *      the stream.
      */
     @Override

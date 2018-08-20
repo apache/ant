@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.util;
 
+import java.io.File;
+
 /**
  * Implementation of FileNameMapper that always returns the source
  * file name without any leading directory information.
@@ -53,6 +55,6 @@ public class FlatFileNameMapper implements FileNameMapper {
     @Override
     public String[] mapFileName(String sourceFileName) {
         return sourceFileName == null ? null
-            : new String[] {new java.io.File(sourceFileName).getName()};
+            : new String[] {new File(sourceFileName).getName()};
     }
 }

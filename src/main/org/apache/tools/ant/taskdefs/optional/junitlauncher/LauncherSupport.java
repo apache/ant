@@ -238,7 +238,7 @@ class LauncherSupport {
             throw new BuildException("Listener class " + className + " is not of type " + TestExecutionListener.class.getName());
         }
         try {
-            return TestExecutionListener.class.cast(klass.newInstance());
+            return (TestExecutionListener) klass.newInstance();
         } catch (Exception e) {
             throw new BuildException("Failed to create an instance of listener " + className, e);
         }

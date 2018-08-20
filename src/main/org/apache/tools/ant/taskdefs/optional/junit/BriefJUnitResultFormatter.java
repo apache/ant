@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.text.NumberFormat;
 
@@ -91,7 +92,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     @Override
     public void setOutput(OutputStream out) {
         this.out = out;
-        output = new BufferedWriter(new java.io.OutputStreamWriter(out));
+        output = new BufferedWriter(new OutputStreamWriter(out));
     }
 
     /**

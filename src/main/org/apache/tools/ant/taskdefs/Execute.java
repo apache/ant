@@ -428,7 +428,7 @@ public class Execute {
      * Runs a process defined by the command line and returns its exit status.
      *
      * @return the exit status of the subprocess or <code>INVALID</code>.
-     * @exception java.io.IOException The exception is thrown, if launching
+     * @exception IOException The exception is thrown, if launching
      *            of the subprocess failed.
      */
     public int execute() throws IOException {
@@ -484,7 +484,7 @@ public class Execute {
      * Starts a process defined by the command line.
      * Ant will not wait for this process, nor log its output.
      *
-     * @throws java.io.IOException The exception is thrown, if launching
+     * @throws IOException The exception is thrown, if launching
      *            of the subprocess failed.
      * @since Ant 1.6
      */

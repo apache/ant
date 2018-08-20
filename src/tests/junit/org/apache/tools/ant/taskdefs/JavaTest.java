@@ -418,7 +418,7 @@ public class JavaTest {
      * @throws Exception
      */
     @Test
-    public void testSimpleSourceFile() throws Exception {
+    public void testSimpleSourceFile() {
         requireJava11();
         buildRule.executeTarget("simpleSourceFile");
     }
@@ -429,7 +429,7 @@ public class JavaTest {
      * @throws Exception
      */
     @Test
-    public void testSourceFileRequiresFork() throws Exception {
+    public void testSourceFileRequiresFork() {
         requireJava11();
         thrown.expect(BuildException.class);
         thrown.expectMessage("Cannot execute sourcefile in non-forked mode. Please set fork='true'");
@@ -443,7 +443,7 @@ public class JavaTest {
      * @throws Exception
      */
     @Test
-    public void testSourceFileCantUseClassname() throws Exception {
+    public void testSourceFileCantUseClassname() {
         requireJava11();
         thrown.expect(BuildException.class);
         thrown.expectMessage("Cannot use 'sourcefile' in combination with");
@@ -457,7 +457,7 @@ public class JavaTest {
      * @throws Exception
      */
     @Test
-    public void testSourceFileCantUseJar() throws Exception {
+    public void testSourceFileCantUseJar() {
         requireJava11();
         thrown.expect(BuildException.class);
         thrown.expectMessage("Cannot use 'sourcefile' in combination with");
@@ -471,7 +471,7 @@ public class JavaTest {
      * @throws Exception
      */
     @Test
-    public void testSourceFileCantUseModule() throws Exception {
+    public void testSourceFileCantUseModule() {
         requireJava11();
         thrown.expect(BuildException.class);
         thrown.expectMessage("Cannot use 'sourcefile' in combination with");

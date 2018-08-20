@@ -87,22 +87,8 @@ public class AntStructure extends Task {
             throw new BuildException("output attribute is required", getLocation());
         }
 
-        PrintWriter out = null;
-        try {
-            OutputStream fos = null;
-            try {
-                fos = Files.newOutputStream(output.toPath());
-                out = new PrintWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
-            } catch (final UnsupportedEncodingException ue) {
-                FileUtils.close(fos);
-                /*
-                 * Plain impossible with UTF8, see
-                 * http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html
-                 *
-                 * fallback to platform specific anyway.
-                 */
-                out = new PrintWriter(new FileWriter(output));
-            }
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(
+                Files.newOutputStream(output.toPath()), StandardCharsets.UTF_8))) {
 
             printer.printHead(out, getProject(),
                     new Hashtable<>(getProject().getTaskDefinitions()),
@@ -110,31 +96,24 @@ public class AntStructure extends Task {
 
             printer.printTargetDecl(out);
 
-            for (final String typeName : getProject().getCopyOfDataTypeDefinitions()
-                .keySet()) {
-                printer.printElementDecl(
-                                     out, getProject(), typeName,
-                                     getProject().getDataTypeDefinitions().get(typeName));
+            for (final String typeName : getProject().getCopyOfDataTypeDefinitions().keySet()) {
+                printer.printElementDecl(out, getProject(), typeName,
+                        getProject().getDataTypeDefinitions().get(typeName));
             }
 
             for (final String tName : getProject().getCopyOfTaskDefinitions().keySet()) {
                 printer.printElementDecl(out, getProject(), tName,
-                                         getProject().getTaskDefinitions().get(tName));
+                        getProject().getTaskDefinitions().get(tName));
             }
 
             printer.printTail(out);
 
             if (out.checkError()) {
-                throw new IOException(
-                    "Encountered an error writing Ant structure");
+                throw new IOException("Encountered an error writing Ant structure");
             }
         } catch (final IOException ioe) {
             throw new BuildException("Error writing "
-                                     + output.getAbsolutePath(), ioe, getLocation());
-        } finally {
-            if (out != null) {
-                out.close();
-            }
+                    + output.getAbsolutePath(), ioe, getLocation());
         }
     }
 

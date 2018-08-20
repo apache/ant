@@ -218,7 +218,7 @@ public class PatternSet extends DataType implements Cloneable {
         public String toString() {
             String baseString = super.toString();
             return encoding == null ? baseString
-                : new StringBuilder(baseString).append(";encoding->").append(encoding).toString();
+                : baseString + ";encoding->" + encoding;
         }
     }
 

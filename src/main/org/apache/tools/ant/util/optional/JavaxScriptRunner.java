@@ -110,7 +110,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
                             "Unable to create javax script engine for %s",
                             getLanguage());
                     }
-                    if (Compilable.class.isInstance(engine)) {
+                    if (engine instanceof Compilable) {
                         getProject().log("compile script " + execName,
                             Project.MSG_VERBOSE);
 
