@@ -29,6 +29,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -330,7 +331,8 @@ public class Jar extends Zip {
             if (ze == null) {
                 return null;
             }
-            try (InputStreamReader isr = new InputStreamReader(zf.getInputStream(ze), "UTF-8")) {
+            try (InputStreamReader isr = new InputStreamReader(zf.getInputStream(ze),
+                    StandardCharsets.UTF_8)) {
                 return getManifest(isr);
             }
         }
@@ -581,8 +583,7 @@ public class Jar extends Zip {
     private void createIndexList(ZipOutputStream zOut) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // encoding must be UTF8 as specified in the specs.
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(baos,
-                                                                    "UTF8"));
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8));
 
         // version-info blankline
         writer.println("JarIndex-Version: 1.0");

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
@@ -39,7 +40,6 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.JavaResource;
-import org.apache.tools.ant.util.ResourceUtils;
 
 /**
  * Load a file's contents as Ant properties.
@@ -188,7 +188,7 @@ public class LoadProperties extends Task {
                     text += "\n";
                 }
                 ByteArrayInputStream tis = new ByteArrayInputStream(
-                    text.getBytes(ResourceUtils.ISO_8859_1));
+                    text.getBytes(StandardCharsets.ISO_8859_1));
                 final Properties props = new Properties();
                 props.load(tis);
 

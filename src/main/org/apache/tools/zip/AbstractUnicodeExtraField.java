@@ -18,7 +18,7 @@
 
 package org.apache.tools.zip;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.CRC32;
 import java.util.zip.ZipException;
 
@@ -51,12 +51,7 @@ public abstract class AbstractUnicodeExtraField implements ZipExtraField {
         crc32.update(bytes, off, len);
         nameCRC32 = crc32.getValue();
 
-        try {
-            unicodeName = text.getBytes("UTF-8");
-        } catch (final UnsupportedEncodingException e) {
-            throw new RuntimeException("FATAL: UTF-8 encoding not supported.", //NOSONAR
-                                       e);
-        }
+        unicodeName = text.getBytes(StandardCharsets.UTF_8);
     }
 
     /**

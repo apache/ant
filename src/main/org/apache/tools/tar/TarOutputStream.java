@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -500,7 +501,7 @@ public class TarOutputStream extends FilterOutputStream {
                 + 3 /* blank, equals and newline */
                 + 2 /* guess 9 < actual length < 100 */;
             String line = len + " " + key + "=" + value + "\n";
-            int actualLength = line.getBytes("UTF-8").length;
+            int actualLength = line.getBytes(StandardCharsets.UTF_8).length;
             while (len != actualLength) {
                 // Adjust for cases where length < 10 or > 100
                 // or where UTF-8 encoding isn't a single octet
@@ -509,11 +510,11 @@ public class TarOutputStream extends FilterOutputStream {
                 // first pass so we'd need a second.
                 len = actualLength;
                 line = len + " " + key + "=" + value + "\n";
-                actualLength = line.getBytes("UTF-8").length;
+                actualLength = line.getBytes(StandardCharsets.UTF_8).length;
             }
             w.write(line);
         }
-        byte[] data = w.toString().getBytes("UTF-8");
+        byte[] data = w.toString().getBytes(StandardCharsets.UTF_8);
         pex.setSize(data.length);
         putNextEntry(pex);
         write(data);

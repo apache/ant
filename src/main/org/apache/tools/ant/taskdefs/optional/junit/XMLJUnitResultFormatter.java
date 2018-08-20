@@ -25,6 +25,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
@@ -190,7 +191,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         if (out != null) {
             Writer wri = null;
             try {
-                wri = new BufferedWriter(new OutputStreamWriter(out, "UTF8"));
+                wri = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
                 wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
                 new DOMElementWriter().write(rootElement, wri, 0, "  ");
             } catch (final IOException exc) {

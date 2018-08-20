@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -421,7 +422,7 @@ public class ChangeLogTask extends AbstractCvsTask {
          throws BuildException {
 
         try (final PrintWriter writer = new PrintWriter(
-            new OutputStreamWriter(Files.newOutputStream(destFile.toPath()), "UTF-8"))) {
+            new OutputStreamWriter(Files.newOutputStream(destFile.toPath()), StandardCharsets.UTF_8))) {
 
             new ChangeLogWriter().printChangeLog(writer, entrySet);
 

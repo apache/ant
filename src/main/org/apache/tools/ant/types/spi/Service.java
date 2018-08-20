@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.spi;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,7 +84,7 @@ public class Service extends ProjectComponent {
     public InputStream getAsStream() throws IOException {
         return new ByteArrayInputStream(
             providerList.stream().map(Provider::getClassName)
-                .collect(Collectors.joining("\n")).getBytes("UTF-8"));
+                .collect(Collectors.joining("\n")).getBytes(StandardCharsets.UTF_8));
     }
 
     /**

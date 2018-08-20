@@ -28,6 +28,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -449,7 +450,7 @@ public class TarInputStream extends FilterInputStream {
                             }
                             // Drop trailing NL
                             String value = new String(rest, 0,
-                                                      restLen - 1, "UTF-8");
+                                                      restLen - 1, StandardCharsets.UTF_8);
                             headers.put(keyword, value);
                             break;
                         }

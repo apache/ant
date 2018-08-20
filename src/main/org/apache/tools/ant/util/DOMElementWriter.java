@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -170,7 +171,7 @@ public class DOMElementWriter {
      * @throws IOException if an error happens while writing to the stream.
      */
     public void write(Element root, OutputStream out) throws IOException {
-        Writer wri = new OutputStreamWriter(out, "UTF8");
+        Writer wri = new OutputStreamWriter(out, StandardCharsets.UTF_8);
         writeXMLDeclaration(wri);
         write(root, wri, 0, "  ");
         wri.flush();

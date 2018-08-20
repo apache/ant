@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import org.apache.tools.ant.util.JAXPUtils;
@@ -48,7 +49,7 @@ public class ChangeLogWriterTest {
         CVSEntry[] entries = {entry};
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        PrintWriter pwriter = new PrintWriter(new OutputStreamWriter(output, "UTF-8"));
+        PrintWriter pwriter = new PrintWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
         writer.printChangeLog(pwriter, entries);
 
         // make sure that the parsing does not break

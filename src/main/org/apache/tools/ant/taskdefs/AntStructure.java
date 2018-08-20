@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,7 +92,7 @@ public class AntStructure extends Task {
             OutputStream fos = null;
             try {
                 fos = Files.newOutputStream(output.toPath());
-                out = new PrintWriter(new OutputStreamWriter(fos, "UTF8"));
+                out = new PrintWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
             } catch (final UnsupportedEncodingException ue) {
                 FileUtils.close(fos);
                 /*

@@ -28,6 +28,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PushbackReader;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,7 +146,7 @@ public class LayoutPreservingProperties extends Properties {
     @Override
     public void load(final InputStream inStream) throws IOException {
         final String s = readLines(inStream);
-        final byte[] ba = s.getBytes(ResourceUtils.ISO_8859_1);
+        final byte[] ba = s.getBytes(StandardCharsets.ISO_8859_1);
         final ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         super.load(bais);
     }
@@ -260,7 +261,7 @@ public class LayoutPreservingProperties extends Properties {
 
     @Override
     public void store(final OutputStream out, final String header) throws IOException {
-        final OutputStreamWriter osw = new OutputStreamWriter(out, ResourceUtils.ISO_8859_1);
+        final OutputStreamWriter osw = new OutputStreamWriter(out, StandardCharsets.ISO_8859_1);
 
         int skipLines = 0;
         final int totalLines = logicalLines.size();
@@ -315,7 +316,7 @@ public class LayoutPreservingProperties extends Properties {
      * @param is the stream from which to read the data
      */
     private String readLines(final InputStream is) throws IOException {
-        final InputStreamReader isr = new InputStreamReader(is, ResourceUtils.ISO_8859_1);
+        final InputStreamReader isr = new InputStreamReader(is, StandardCharsets.ISO_8859_1);
         final PushbackReader pbr = new PushbackReader(isr, 1);
 
         if (!logicalLines.isEmpty()) {

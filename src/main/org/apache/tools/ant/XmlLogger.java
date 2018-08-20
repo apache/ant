@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Hashtable;
@@ -180,7 +181,7 @@ public class XmlLogger implements BuildLogger {
 
         try (OutputStream stream =
             outStream == null ? Files.newOutputStream(Paths.get(outFilename)) : outStream;
-                Writer out = new OutputStreamWriter(stream, "UTF8")) {
+                Writer out = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             if (!xslUri.isEmpty()) {
                 out.write("<?xml-stylesheet type=\"text/xsl\" href=\"" + xslUri

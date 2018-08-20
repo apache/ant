@@ -25,7 +25,7 @@ package org.apache.tools.tar;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Locale;
 
@@ -1072,13 +1072,7 @@ public class TarEntry implements TarConstants {
      */
     private static boolean matchAsciiBuffer(String expected, byte[] buffer,
                                             int offset, int length) {
-        byte[] buffer1;
-        try {
-            buffer1 = expected.getBytes("ASCII");
-        } catch (UnsupportedEncodingException e) {
-            // Should not happen
-            throw new RuntimeException(e); //NOSONAR
-        }
+        byte[] buffer1 = expected.getBytes(StandardCharsets.US_ASCII);
         return isEqual(buffer1, 0, buffer1.length, buffer, offset, length,
                        false);
     }

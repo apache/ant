@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
@@ -77,7 +78,7 @@ public class EchoTest {
         echo.setFile(removeThis);
         echo.setEncoding("UTF-8");
         echo.execute();
-        String x = FileUtils.readFully(new InputStreamReader(new FileInputStream(removeThis), "UTF-8"));
+        String x = FileUtils.readFully(new InputStreamReader(new FileInputStream(removeThis), StandardCharsets.UTF_8));
         assertEquals(x, "\u00e4\u00a9");
     }
 

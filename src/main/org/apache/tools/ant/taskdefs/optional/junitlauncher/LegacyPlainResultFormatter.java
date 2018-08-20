@@ -30,7 +30,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -242,11 +242,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
     @Override
     public void setDestination(final OutputStream os) {
         this.outputStream = os;
-        try {
-            this.writer = new BufferedWriter(new OutputStreamWriter(this.outputStream, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Failed to create a writer", e);
-        }
+        this.writer = new BufferedWriter(new OutputStreamWriter(this.outputStream, StandardCharsets.UTF_8));
     }
 
     protected boolean shouldReportExecutionFinished(final TestIdentifier testIdentifier, final TestExecutionResult testExecutionResult) {

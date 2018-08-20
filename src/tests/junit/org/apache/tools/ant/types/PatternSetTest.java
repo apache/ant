@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -227,7 +228,7 @@ public class PatternSetTest {
         Writer w = null;
         try {
             o = new FileOutputStream(testFile);
-            w = new OutputStreamWriter(o, "UTF-16LE");
+            w = new OutputStreamWriter(o, StandardCharsets.UTF_16LE);
             w.write("\u00e4\n");
         } finally {
             FileUtils.close(w);

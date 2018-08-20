@@ -69,8 +69,10 @@ public class ResourceUtils {
     /**
      * Name of charset "ISO Latin Alphabet No. 1, a.k.a. ISO-LATIN-1".
      *
+     * @deprecated use StandardCharsets.ISO_8859_1
      * @since Ant 1.8.1
      */
+    @Deprecated
     public static final String ISO_8859_1 = "ISO-8859-1";
 
     private static final long MAX_IO_CHUNK_SIZE = 16 * 1024 * 1024L; // 16 MB

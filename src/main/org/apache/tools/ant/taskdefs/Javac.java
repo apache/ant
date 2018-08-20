@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1480,7 +1481,7 @@ public class Javac extends MatchingTask {
             log("Creating empty " + pkgInfoClass);
             try (OutputStream os = Files.newOutputStream(pkgInfoClass.toPath())) {
                 os.write(PACKAGE_INFO_CLASS_HEADER);
-                final byte[] name = pkg.getBytes("UTF-8");
+                final byte[] name = pkg.getBytes(StandardCharsets.UTF_8);
                 final int length = name.length + /* "/package-info" */ 13;
                 os.write((byte) length / 256);
                 os.write((byte) length % 256);

@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -759,7 +760,7 @@ public class Manifest {
                     defManifest);
             }
             try {
-                insr = new InputStreamReader(in, "UTF-8");
+                insr = new InputStreamReader(in, StandardCharsets.UTF_8);
                 Manifest defaultManifest = new Manifest(insr);
                 String version = System.getProperty("java.runtime.version");
                 if (version == null) {

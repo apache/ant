@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -2411,7 +2412,7 @@ public class Javadoc extends Task {
         try {
             fixData =
                 fixLineFeeds(FileUtils
-                             .readFully(new InputStreamReader(in, "US-ASCII")))
+                             .readFully(new InputStreamReader(in, StandardCharsets.US_ASCII)))
                 .trim();
         } finally {
             FileUtils.close(in);

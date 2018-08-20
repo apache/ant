@@ -20,9 +20,9 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Vector;
 import java.util.stream.Stream;
@@ -198,8 +198,9 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * @throws IOException thrown if there is an error while writing the content.
      */
     protected void writeDOMTree(Document doc, File file) throws IOException {
-        try (OutputStream os = Files.newOutputStream(file.toPath());
-             PrintWriter wri = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(os), "UTF8"))) {
+        try (PrintWriter wri = new PrintWriter(new OutputStreamWriter(
+                new BufferedOutputStream(Files.newOutputStream(file.toPath())),
+                StandardCharsets.UTF_8))) {
             wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
             new DOMElementWriter().write(doc.getDocumentElement(), wri, 0,
                 "  ");

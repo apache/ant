@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.zip.CRC32;
 import org.junit.Test;
@@ -146,7 +147,7 @@ public class UTF8ZipFilesTest {
             }
 
             zos.putNextEntry(ze);
-            zos.write("Hello, world!".getBytes("US-ASCII"));
+            zos.write("Hello, world!".getBytes(StandardCharsets.US_ASCII));
             zos.closeEntry();
 
             ze = new ZipEntry(EURO_FOR_DOLLAR_TXT);
@@ -162,7 +163,7 @@ public class UTF8ZipFilesTest {
             }
 
             zos.putNextEntry(ze);
-            zos.write("Give me your money!".getBytes("US-ASCII"));
+            zos.write("Give me your money!".getBytes(StandardCharsets.US_ASCII));
             zos.closeEntry();
 
             ze = new ZipEntry(ASCII_TXT);
@@ -179,7 +180,7 @@ public class UTF8ZipFilesTest {
             }
 
             zos.putNextEntry(ze);
-            zos.write("ascii".getBytes("US-ASCII"));
+            zos.write("ascii".getBytes(StandardCharsets.US_ASCII));
             zos.closeEntry();
         }
     }
@@ -225,8 +226,7 @@ public class UTF8ZipFilesTest {
             crc.update(ne.array(), ne.arrayOffset(), ne.limit());
 
             assertEquals(crc.getValue(), ucpf.getNameCRC32());
-            assertEquals(expectedName, new String(ucpf.getUnicodeName(),
-                                                  UTF_8));
+            assertEquals(expectedName, new String(ucpf.getUnicodeName(), StandardCharsets.UTF_8));
         }
     }
 

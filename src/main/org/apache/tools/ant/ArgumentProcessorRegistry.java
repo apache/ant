@@ -21,9 +21,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -148,11 +148,7 @@ public class ArgumentProcessorRegistry {
             throws IOException {
         InputStreamReader isr = null;
         try {
-            try {
-                isr = new InputStreamReader(is, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                isr = new InputStreamReader(is);
-            }
+            isr = new InputStreamReader(is, StandardCharsets.UTF_8);
             BufferedReader rd = new BufferedReader(isr);
             String processorClassName = rd.readLine();
             if (processorClassName != null && !processorClassName.isEmpty()) {

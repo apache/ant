@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.ResourceUtils;
 
 /**
  * Assembles the constants declared in a Java class in
@@ -97,7 +97,7 @@ public final class ClassConstants
             if (clazz == null || clazz.isEmpty()) {
                 ch = -1;
             } else {
-                final byte[] bytes = clazz.getBytes(ResourceUtils.ISO_8859_1);
+                final byte[] bytes = clazz.getBytes(StandardCharsets.ISO_8859_1);
                 try {
                     final Class<?> javaClassHelper = Class.forName(JAVA_CLASS_HELPER);
                     if (javaClassHelper != null) {

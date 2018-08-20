@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -251,7 +252,7 @@ public class JarTest {
         try (ZipFile archive = new ZipFile(new File(getOutputDir(), tempJar))) {
             ZipEntry ze = archive.getEntry("META-INF/INDEX.LIST");
             InputStream is = archive.getInputStream(ze);
-            BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF8"));
+            BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             boolean foundSub = false;
             boolean foundSubFoo = false;
             boolean foundFoo = false;

@@ -21,6 +21,7 @@ package org.apache.tools.zip;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
 
@@ -142,9 +143,9 @@ public class ZipEncodingTest {
         assertByteEquals(testBytes, encoded);
 
         assertFalse(enc.canEncode(UNENC_STRING));
-        assertByteEquals("%U2016".getBytes("US-ASCII"), enc.encode(UNENC_STRING));
+        assertByteEquals("%U2016".getBytes(StandardCharsets.US_ASCII), enc.encode(UNENC_STRING));
         assertFalse(enc.canEncode(BAD_STRING));
-        assertByteEquals(BAD_STRING_ENC.getBytes("US-ASCII"),
+        assertByteEquals(BAD_STRING_ENC.getBytes(StandardCharsets.US_ASCII),
                 enc.encode(BAD_STRING));
     }
 

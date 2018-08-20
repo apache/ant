@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -452,7 +453,7 @@ public class EchoProperties extends Task {
             rootElement.appendChild(propElement);
         }
 
-        try (Writer wri = new OutputStreamWriter(os, "UTF8")) {
+        try (Writer wri = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
             wri.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             new DOMElementWriter().write(rootElement, wri, 0, "\t");
             wri.flush();

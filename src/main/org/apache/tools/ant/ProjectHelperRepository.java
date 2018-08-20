@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -181,11 +182,7 @@ public class ProjectHelperRepository {
             // This code is needed by EBCDIC and other strange systems.
             // It's a fix for bugs reported in xerces
             InputStreamReader isr;
-            try {
-                isr = new InputStreamReader(is, "UTF-8");
-            } catch (java.io.UnsupportedEncodingException e) {
-                isr = new InputStreamReader(is);
-            }
+            isr = new InputStreamReader(is, StandardCharsets.UTF_8);
             BufferedReader rd = new BufferedReader(isr);
 
             String helperClassName = rd.readLine();

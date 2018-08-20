@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 
@@ -60,9 +61,9 @@ public class ReaderInputStreamTest {
             }
             bytes[pos++] = (byte) res;
         }
-        bytes = "abc".getBytes("utf-16");
+        bytes = "abc".getBytes(StandardCharsets.UTF_16);
         //        String n = new String(bytes, 0, pos, "utf-16");
-        new String(bytes, 0, bytes.length, "utf-16");
+        new String(bytes, 0, bytes.length, StandardCharsets.UTF_16);
     }
 
     @SuppressWarnings("resource")
@@ -81,7 +82,7 @@ public class ReaderInputStreamTest {
 
     @Test
     public void testPreample() throws Exception {
-        byte[] bytes = "".getBytes("utf-16");
+        byte[] bytes = "".getBytes(StandardCharsets.UTF_16);
         System.out.println("Preample len is " + bytes.length);
     }
 
