@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.KeepAliveOutputStream;
@@ -199,13 +200,7 @@ class LauncherSupport {
         // set the execution context
         resultFormatter.setContext(this.launchDefinition.getTestExecutionContext());
         // set the destination output stream for writing out the formatted result
-        final TestDefinition test = testRequest.getOwner();
-        final TestExecutionContext testExecutionContext = this.launchDefinition.getTestExecutionContext();
-        final Path baseDir = testExecutionContext.getProject().isPresent()
-                ? testExecutionContext.getProject().get().getBaseDir().toPath() : Paths.get(System.getProperty("user.dir"));
-        final java.nio.file.Path outputDir = test.getOutputDir() != null ? Paths.get(test.getOutputDir()) : baseDir;
-        final String filename = formatterDefinition.requireResultFile(test);
-        final java.nio.file.Path resultOutputFile = Paths.get(outputDir.toString(), filename);
+        final java.nio.file.Path resultOutputFile = getListenerOutputFile(testRequest, formatterDefinition);
         try {
             final OutputStream resultOutputStream = Files.newOutputStream(resultOutputFile);
             // enroll the output stream to be closed when the execution of the TestRequest completes
@@ -221,6 +216,23 @@ class LauncherSupport {
         if (formatterDefinition.shouldSendSysErr()) {
             testRequest.addSysErrInterest(resultFormatter);
         }
+    }
+
+    private Path getListenerOutputFile(final TestRequest testRequest, final ListenerDefinition listener) {
+        final TestDefinition test = testRequest.getOwner();
+        final String filename = listener.requireResultFile(test);
+        if (listener.getOutputDir() != null) {
+            // use the output dir defined on the listener
+            return Paths.get(listener.getOutputDir(), filename);
+        }
+        // check on the enclosing test definition, in context of which this listener is being run
+        if (test.getOutputDir() != null) {
+            return Paths.get(test.getOutputDir(), filename);
+        }
+        // neither listener nor the test define a output dir, so use basedir of the project
+        final TestExecutionContext testExecutionContext = this.launchDefinition.getTestExecutionContext();
+        final String baseDir = testExecutionContext.getProperties().getProperty(MagicNames.PROJECT_BASEDIR);
+        return Paths.get(baseDir, filename);
     }
 
     private TestExecutionListener requireTestExecutionListener(final ListenerDefinition listener, final ClassLoader classLoader) {

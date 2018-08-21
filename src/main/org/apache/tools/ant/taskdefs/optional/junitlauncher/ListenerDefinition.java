@@ -49,8 +49,7 @@ public class ListenerDefinition {
     private String resultFile;
     private boolean sendSysOut;
     private boolean sendSysErr;
-
-    private String defaultResultFileSuffix = "txt";
+    private String outputDir;
 
     public ListenerDefinition() {
 
@@ -84,17 +83,14 @@ public class ListenerDefinition {
         switch (type.getValue()) {
             case LEGACY_PLAIN: {
                 this.setClassName("org.apache.tools.ant.taskdefs.optional.junitlauncher.LegacyPlainResultFormatter");
-                this.defaultResultFileSuffix = "txt";
                 break;
             }
             case LEGACY_BRIEF: {
                 this.setClassName("org.apache.tools.ant.taskdefs.optional.junitlauncher.LegacyBriefResultFormatter");
-                this.defaultResultFileSuffix = "txt";
                 break;
             }
             case LEGACY_XML: {
                 this.setClassName("org.apache.tools.ant.taskdefs.optional.junitlauncher.LegacyXmlResultFormatter");
-                this.defaultResultFileSuffix = "xml";
                 break;
             }
         }
@@ -114,7 +110,14 @@ public class ListenerDefinition {
         } else {
             sb.append("unknown");
         }
-        sb.append(".").append(this.defaultResultFileSuffix);
+        sb.append(".");
+        final String suffix;
+        if ("org.apache.tools.ant.taskdefs.optional.junitlauncher.LegacyXmlResultFormatter".equals(this.className)) {
+            suffix = "xml";
+        } else {
+            suffix = "txt";
+        }
+        sb.append(suffix);
         return sb.toString();
     }
 
@@ -132,6 +135,20 @@ public class ListenerDefinition {
 
     boolean shouldSendSysErr() {
         return this.sendSysErr;
+    }
+
+    /**
+     * Sets the output directory for this listener
+     *
+     * @param dir Path to the output directory
+     * @since Ant 1.10.6
+     */
+    public void setOutputDir(final String dir) {
+        this.outputDir = dir;
+    }
+
+    String getOutputDir() {
+        return this.outputDir;
     }
 
     protected boolean shouldUse(final Project project) {

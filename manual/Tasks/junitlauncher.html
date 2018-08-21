@@ -324,6 +324,18 @@
                 (ex: <samp>TEST-org.myapp.SomeTest.xml</samp> for the <q>legacy-xml</q> type
                 formatter)
             </p>
+            <p>
+                This file is considered relative to the <code>outputDir</code> configured on the listener.
+                If no <code>outputDir</code> is set on the listener, then the file is considered relative to the
+                <code>outputDir</code> of the test in context of which this listener is being run.
+            </p>
+        </td>
+        <td>No</td>
+    </tr>
+    <tr>
+        <td>outputDir</td>
+        <td>Directory into which to create the output of the listener.
+            <p><em>Since Ant 1.10.6</em></p>
         </td>
         <td>No</td>
     </tr>
