@@ -209,7 +209,10 @@
   </selector>
 
   <selector id="needs.junitlauncher">
-    <filename name="${optional.package}/junitlauncher/"/>
+    <or>
+      <filename name="${optional.package}/junitlauncher/"/>
+      <filename name="org/example/junitlauncher/Tracker.java"/>
+    </or>
   </selector>
 
   <selector id="needs.junit.engine.vintage">
