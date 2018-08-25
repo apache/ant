@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Task;
@@ -48,7 +49,7 @@ public class AugmentReference extends Task implements TypeAdapter {
             log("project reference " + id + "=" + String.valueOf(result), Project.MSG_DEBUG);
             return result;
         }
-        throw new IllegalStateException("Unknown reference \"" + id + "\"");
+        throw new BuildException("Unknown reference \"" + id + "\"");
     }
 
     /**
@@ -63,7 +64,7 @@ public class AugmentReference extends Task implements TypeAdapter {
             RuntimeConfigurable wrapper = getWrapper();
             id = wrapper.getId();
             if (id == null) {
-                throw new IllegalStateException(getTaskName() + " attribute 'id' unset");
+                throw new BuildException(getTaskName() + " attribute 'id' unset");
             }
             wrapper.setAttribute("id", null);
             wrapper.removeAttribute("id");
