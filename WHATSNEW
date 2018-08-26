@@ -19,6 +19,10 @@ Fixed bugs:
    java.net.MalformedURLException when saxon was used on Windows OS.
    Bugzilla Report 62594
 
+ * augment task now throws a BuildException (as noted in its manual)
+   instead of a IllegalStateException in the absence of the "id" attribute.
+   Bugzilla Report 62655
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
