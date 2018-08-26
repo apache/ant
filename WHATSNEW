@@ -8,6 +8,10 @@ Fixed bugs:
    mail task.
    Bugzilla Report 62621
 
+ * augment task now throws a BuildException (as noted in its manual)
+   instead of a IllegalStateException in the absence of the "id" attribute.
+   Bugzilla Report 62655
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
