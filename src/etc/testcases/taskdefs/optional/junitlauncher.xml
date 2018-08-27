@@ -43,7 +43,6 @@
 
     <path id="test.classpath">
         <pathelement location="${build.classes.dir}"/>
-        <path refid="junit.platform.classpath"/>
         <path refid="junit.engine.vintage.classpath"/>
         <path refid="junit.engine.jupiter.classpath"/>
     </path>
@@ -163,6 +162,51 @@
                 </fork>
 
                 <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
+            </test>
+        </junitlauncher>
+    </target>
+
+    <target name="test-junit-platform-lib-excluded" depends="init">
+        <junitlauncher>
+            <classpath refid="junit.engine.jupiter.classpath"/>
+            <classpath>
+                <pathelement location="${build.classes.dir}"/>
+            </classpath>
+            <test name="org.example.junitlauncher.jupiter.JupiterSampleTest" outputdir="${output.dir}">
+                <!-- expect the test to not be launched due to CNFE on JUnit platform classes -->
+                <fork dir="${basedir}" includeJUnitPlatformLibraries="false"/>
+            </test>
+        </junitlauncher>
+    </target>
+
+    <target name="test-junit-ant-runtime-lib-excluded" depends="init">
+        <junitlauncher>
+            <classpath refid="junit.engine.jupiter.classpath"/>
+            <classpath>
+                <pathelement location="${build.classes.dir}"/>
+            </classpath>
+            <test name="org.example.junitlauncher.jupiter.JupiterSampleTest" outputdir="${output.dir}">
+                <!-- expect the test to not be launched due to CNFE on Ant runtime classes -->
+                <fork dir="${basedir}" includeAntRuntimeLibraries="false"/>
+            </test>
+        </junitlauncher>
+    </target>
+
+    <target name="test-junit-platform-lib-custom-location" depends="init">
+        <junitlauncher>
+            <classpath refid="junit.engine.jupiter.classpath"/>
+            <classpath>
+                <pathelement location="${build.classes.dir}"/>
+            </classpath>
+            <!-- we set includeJUnitPlatformLibraries=false on the fork element
+            and then explicitly specify a location of the JUnit platform libraries -->
+            <classpath refid="junit.platform.classpath"/>
+            <test name="org.example.junitlauncher.jupiter.JupiterSampleTest" outputdir="${output.dir}">
+                <listener classname="org.example.junitlauncher.Tracker"
+                          outputDir="${output.dir}"
+                          resultFile="${test-junit-platform-lib-custom-location.tracker}"
+                          if="test-junit-platform-lib-custom-location.tracker"/>
+                <fork dir="${basedir}" includeJUnitPlatformLibraries="false"/>
             </test>
         </junitlauncher>
     </target>

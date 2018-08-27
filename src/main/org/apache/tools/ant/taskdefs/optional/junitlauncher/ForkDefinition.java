@@ -41,7 +41,7 @@ import java.io.File;
 public class ForkDefinition {
 
     private boolean includeAntRuntimeLibraries = true;
-    private boolean includeJunitPlatformLibraries = true;
+    private boolean includeJUnitPlatformLibraries = true;
 
     private final CommandlineJava commandLineJava;
     private final Environment env = new Environment();
@@ -67,6 +67,14 @@ public class ForkDefinition {
 
     long getTimeout() {
         return this.timeout;
+    }
+
+    public void setIncludeJUnitPlatformLibraries(final boolean include) {
+        this.includeJUnitPlatformLibraries = include;
+    }
+
+    public void setIncludeAntRuntimeLibraries(final boolean include) {
+        this.includeAntRuntimeLibraries = include;
     }
 
     public Commandline.Argument createJvmArg() {
@@ -121,18 +129,22 @@ public class ForkDefinition {
             addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(AntMain.class));
             addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(Task.class));
             addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(JUnitLauncherTask.class));
+        } else {
+            task.log("Excluding Ant runtime libraries from forked JVM classpath", Project.MSG_DEBUG);
         }
-
-        if (this.includeJunitPlatformLibraries) {
+        if (this.includeJUnitPlatformLibraries) {
             // platform-engine
             addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(TestEngine.class));
             // platform-launcher
             addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(LauncherFactory.class));
             // platform-commons
             addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(Testable.class));
+        } else {
+            task.log("Excluding JUnit platform libraries from forked JVM classpath", Project.MSG_DEBUG);
         }
         final Path classPath = cmdLine.createClasspath(project);
         classPath.createPath().append(antRuntimeResourceSources);
+
 
         return cmdLine;
     }

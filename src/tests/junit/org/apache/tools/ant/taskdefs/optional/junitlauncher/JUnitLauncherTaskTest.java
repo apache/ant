@@ -187,6 +187,77 @@ public class JUnitLauncherTaskTest {
                 ForkedTest.class.getName(), "testSysProp"));
     }
 
+    /**
+     * Tests that in a forked mode execution of tests, when the {@code includeJUnitPlatformLibraries} attribute
+     * is set to false, then the execution of such tests fails with a classloading error for the JUnit platform
+     * classes
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testExcludeJUnitPlatformLibs() throws Exception {
+        final String targetName = "test-junit-platform-lib-excluded";
+        try {
+            buildRule.executeTarget(targetName);
+            Assert.fail(targetName + " was expected to fail since JUnit platform libraries " +
+                    "weren't included in the classpath of the forked JVM");
+        } catch (BuildException be) {
+            // expect a ClassNotFoundException for a JUnit platform class
+            final String cnfeMessage = ClassNotFoundException.class.getName() + ": org.junit.platform";
+            if (!buildRule.getFullLog().contains(cnfeMessage)) {
+                throw be;
+            }
+        }
+        final String exlusionLogMsg = "Excluding JUnit platform libraries";
+        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exlusionLogMsg));
+    }
+
+    /**
+     * Tests that in a forked mode execution of tests, when the {@code includeAntRuntimeLibraries} attribute
+     * is set to false, then the execution of such tests fails with a classloading error for the Ant runtime
+     * classes
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testExcludeAntRuntimeLibs() throws Exception {
+        final String targetName = "test-junit-ant-runtime-lib-excluded";
+        try {
+            buildRule.executeTarget(targetName);
+            Assert.fail(targetName + " was expected to fail since JUnit platform libraries " +
+                    "weren't included in the classpath of the forked JVM");
+        } catch (BuildException be) {
+            // expect a Error due to missing main class (which is part of Ant runtime libraries
+            // that we excluded)
+            final String missingMainClass = "Could not find or load main class " + StandaloneLauncher.class.getName();
+            if (!buildRule.getFullLog().contains(missingMainClass)) {
+                throw be;
+            }
+        }
+        final String exlusionLogMsg = "Excluding Ant runtime libraries";
+        Assert.assertTrue("Ant runtime libraries weren't excluded from classpath", buildRule.getFullLog().contains(exlusionLogMsg));
+    }
+
+
+    /**
+     * Tests that in a forked mode execution, with {@code includeJUnitPlatformLibraries} attribute set to false
+     * and with the test classpath explicitly including JUnit platform library jars, the tests are executed successfully
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testJUnitPlatformLibsCustomLocation() throws Exception {
+        final String targetName = "test-junit-platform-lib-custom-location";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+        final String exlusionLogMsg = "Excluding JUnit platform libraries";
+        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exlusionLogMsg));
+        Assert.assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
+                JupiterSampleTest.class.getName(), "testSucceeds"));
+        Assert.assertTrue("JupiterSampleTest#testFails was expected to succeed", verifyFailed(trackerFile,
+                JupiterSampleTest.class.getName(), "testFails"));
+    }
+
     private Path setupTrackerProperty(final String targetName) {
         final String filename = targetName + "-tracker.txt";
         buildRule.getProject().setProperty(targetName + ".tracker", filename);

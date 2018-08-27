@@ -98,7 +98,6 @@ public class StandaloneLauncher {
                 i = i + numArgsConsumed;
             }
 
-
             launchDefinition.setTestExecutionContext(forkedExecution);
             final LauncherSupport launcherSupport = new LauncherSupport(launchDefinition);
             try {
@@ -106,8 +105,8 @@ public class StandaloneLauncher {
             } catch (Throwable t) {
                 if (launcherSupport.hasTestFailures()) {
                     System.exit(Constants.FORK_EXIT_CODE_TESTS_FAILED);
-                    throw t;
                 }
+                throw t;
             }
             if (launcherSupport.hasTestFailures()) {
                 System.exit(Constants.FORK_EXIT_CODE_TESTS_FAILED);

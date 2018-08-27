@@ -110,27 +110,34 @@ public class Tracker implements TestResultFormatter {
     }
 
     public static boolean wasTestRun(final Path trackerFile, final String className) throws IOException {
-        final List<String> lines = Files.readAllLines(trackerFile);
+        final List<String> lines = readTrackerFile(trackerFile);
         return lines.contains(PREFIX_TEST_CLASS_STARTED + className);
     }
 
     public static boolean wasTestRun(final Path trackerFile, final String className, final String methodName) throws IOException {
-        final List<String> lines = Files.readAllLines(trackerFile);
+        final List<String> lines = readTrackerFile(trackerFile);
         return lines.contains(PREFIX_TEST_METHOD_STARTED + className + "#" + methodName);
     }
 
     public static boolean verifyFailed(final Path trackerFile, final String className, final String methodName) throws IOException {
-        final List<String> lines = Files.readAllLines(trackerFile);
+        final List<String> lines = readTrackerFile(trackerFile);
         return lines.contains(TestExecutionResult.Status.FAILED + ":test-method:" + className + "#" + methodName);
     }
 
     public static boolean verifySuccess(final Path trackerFile, final String className, final String methodName) throws IOException {
-        final List<String> lines = Files.readAllLines(trackerFile);
+        final List<String> lines = readTrackerFile(trackerFile);
         return lines.contains(TestExecutionResult.Status.SUCCESSFUL + ":test-method:" + className + "#" + methodName);
     }
 
     public static boolean verifySkipped(final Path trackerFile, final String className, final String methodName) throws IOException {
-        final List<String> lines = Files.readAllLines(trackerFile);
+        final List<String> lines = readTrackerFile(trackerFile);
         return lines.contains(PREFIX_TEST_METHOD_SKIPPED + className + "#" + methodName);
+    }
+
+    private static List<String> readTrackerFile(final Path trackerFile) throws IOException {
+        if (!Files.isRegularFile(trackerFile)) {
+            throw new RuntimeException(trackerFile + " is either missing or not a file");
+        }
+        return Files.readAllLines(trackerFile);
     }
 }
