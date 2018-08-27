@@ -19,6 +19,8 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.LoaderUtils;
 import org.example.junitlauncher.jupiter.JupiterSampleTest;
 import org.example.junitlauncher.vintage.AlwaysFailingJUnit4Test;
 import org.example.junitlauncher.vintage.ForkedTest;
@@ -28,6 +30,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -208,8 +211,8 @@ public class JUnitLauncherTaskTest {
                 throw be;
             }
         }
-        final String exlusionLogMsg = "Excluding JUnit platform libraries";
-        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exlusionLogMsg));
+        final String exclusionLogMsg = "Excluding JUnit platform libraries";
+        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
     }
 
     /**
@@ -234,8 +237,8 @@ public class JUnitLauncherTaskTest {
                 throw be;
             }
         }
-        final String exlusionLogMsg = "Excluding Ant runtime libraries";
-        Assert.assertTrue("Ant runtime libraries weren't excluded from classpath", buildRule.getFullLog().contains(exlusionLogMsg));
+        final String exclusionLogMsg = "Excluding Ant runtime libraries";
+        Assert.assertTrue("Ant runtime libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
     }
 
 
@@ -250,12 +253,73 @@ public class JUnitLauncherTaskTest {
         final String targetName = "test-junit-platform-lib-custom-location";
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
-        final String exlusionLogMsg = "Excluding JUnit platform libraries";
-        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exlusionLogMsg));
+        final String exclusionLogMsg = "Excluding JUnit platform libraries";
+        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
         Assert.assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
                 JupiterSampleTest.class.getName(), "testSucceeds"));
-        Assert.assertTrue("JupiterSampleTest#testFails was expected to succeed", verifyFailed(trackerFile,
+        Assert.assertTrue("JupiterSampleTest#testFails was expected to fail", verifyFailed(trackerFile,
                 JupiterSampleTest.class.getName(), "testFails"));
+    }
+
+    /**
+     * Tests that in a forked mode execution, with {@code includeAntRuntimeLibraries} attribute set to false
+     * and with the test classpath explicitly including Ant runtime library jars, the tests are executed successfully
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testAntRuntimeLibsCustomLocation() throws Exception {
+        final String targetName = "test-ant-runtime-lib-custom-location";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        // setup a property that points to the locations of Ant runtime classes.
+        // this path will then be used in target to create a duplicate copied
+        // classes and then will be used as a custom location for Ant runtime libraries
+        final String projectResourceName = LoaderUtils.classNameToResource(Project.class.getName());
+        final File antClassesPath = LoaderUtils.getResourceSource(Project.class.getClassLoader(), projectResourceName);
+        buildRule.getProject().setProperty("ant.runtime.classes.original.path", antClassesPath.getAbsolutePath());
+        // run the target
+        buildRule.executeTarget(targetName);
+        final String exclusionLogMsg = "Excluding Ant runtime libraries";
+        Assert.assertTrue("Ant runtime libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
+        Assert.assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
+                JupiterSampleTest.class.getName(), "testSucceeds"));
+        Assert.assertTrue("JupiterSampleTest#testFails was expected to fail", verifyFailed(trackerFile,
+                JupiterSampleTest.class.getName(), "testFails"));
+        Assert.assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to fail", verifyFailed(trackerFile,
+                AlwaysFailingJUnit4Test.class.getName(), "testWillFail"));
+        Assert.assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
+                ForkedTest.class.getName(), "testSysProp"));
+
+
+    }
+
+    /**
+     * Tests that in a forked mode execution, with {@code includeAntRuntimeLibraries} and {@code includeJUnitPlatformLibraries}
+     * attributes set to false and with the test classpath explicitly including Ant runtime and JUnit platform library jars,
+     * the tests are executed successfully
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testAntAndJUnitPlatformLibsCustomLocation() throws Exception {
+        final String targetName = "test-ant-and-junit-platform-lib-custom-location";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        // setup a property that points to the locations of Ant runtime classes.
+        // this path will then be used in target to create a duplicate copied
+        // classes and then will be used as a custom location for Ant runtime libraries
+        final String projectResourceName = LoaderUtils.classNameToResource(Project.class.getName());
+        final File antClassesPath = LoaderUtils.getResourceSource(Project.class.getClassLoader(), projectResourceName);
+        buildRule.getProject().setProperty("ant.runtime.classes.original.path", antClassesPath.getAbsolutePath());
+        // run the target
+        buildRule.executeTarget(targetName);
+
+        Assert.assertTrue("Ant runtime libraries weren't excluded from classpath",
+                buildRule.getFullLog().contains("Excluding Ant runtime libraries"));
+        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath",
+                buildRule.getFullLog().contains("Excluding JUnit platform libraries"));
+
+        Assert.assertTrue("JUnit4SampleTest#testBar was expected to pass", verifySuccess(trackerFile,
+                JUnit4SampleTest.class.getName(), "testBar"));
     }
 
     private Path setupTrackerProperty(final String targetName) {

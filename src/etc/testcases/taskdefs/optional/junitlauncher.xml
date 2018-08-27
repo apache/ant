@@ -32,6 +32,7 @@
         <fileset dir="../../../../../lib/optional" includes="junit-vintage-engine*.jar"/>
         <fileset dir="../../../../../lib/optional" includes="junit-*.jar"/>
         <fileset dir="../../../../../lib/optional" includes="hamcrest*.jar"/>
+        <fileset dir="../../../../../lib/optional" includes="opentest4j*.jar"/>
     </path>
 
     <path id="junit.engine.jupiter.classpath">
@@ -208,6 +209,65 @@
                           if="test-junit-platform-lib-custom-location.tracker"/>
                 <fork dir="${basedir}" includeJUnitPlatformLibraries="false"/>
             </test>
+        </junitlauncher>
+    </target>
+
+    <target name="test-ant-runtime-lib-custom-location" depends="init">
+        <!-- duplicate the Ant classes into a jar -->
+        <jar destfile="${output.dir}/ant-runtime-duplicated.jar" basedir="${ant.runtime.classes.original.path}"/>
+
+        <junitlauncher>
+            <classpath>
+                <path refid="junit.engine.jupiter.classpath"/>
+                <path refid="junit.engine.vintage.classpath"/>
+                <pathelement location="${build.classes.dir}"/>
+                <!-- our duplicated Ant runtime classes jar, since we
+                exclude the original Ant runtime classes on the fork element
+                by setting includeAntRuntimeLibraries=false -->
+                <pathelement location="${output.dir}/ant-runtime-duplicated.jar"/>
+            </classpath>
+            <testclasses outputdir="${output.dir}">
+                <fileset dir="${build.classes.dir}">
+                    <include name="org/example/**/junitlauncher/**/"/>
+                </fileset>
+                <listener classname="org.example.junitlauncher.Tracker"
+                          outputDir="${output.dir}"
+                          resultFile="${test-ant-runtime-lib-custom-location.tracker}"
+                          if="test-ant-runtime-lib-custom-location.tracker"/>
+                <fork dir="${basedir}" includeAntRuntimeLibraries="false">
+                    <sysproperty key="junitlauncher.test.sysprop.one" value="forked"/>
+                </fork>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+
+    <target name="test-ant-and-junit-platform-lib-custom-location" depends="init">
+        <!-- duplicate the Ant classes into a jar -->
+        <jar destfile="${output.dir}/ant-runtime-duplicated.jar" basedir="${ant.runtime.classes.original.path}"/>
+
+        <junitlauncher>
+            <classpath>
+                <path refid="junit.engine.vintage.classpath"/>
+                <pathelement location="${build.classes.dir}"/>
+                <!-- our duplicated Ant runtime classes jar, since we
+                exclude the original Ant runtime classes on the fork element
+                by setting includeAntRuntimeLibraries=false -->
+                <pathelement location="${output.dir}/ant-runtime-duplicated.jar"/>
+                <!-- we set includeJUnitPlatformLibraries=false on the fork element
+                    and then explicitly specify a location of the JUnit platform libraries -->
+                <path refid="junit.platform.classpath"/>
+            </classpath>
+            <testclasses outputdir="${output.dir}">
+                <fileset dir="${build.classes.dir}">
+                    <include name="org/example/**/junitlauncher/**/JUnit4SampleTest.class"/>
+                </fileset>
+                <listener classname="org.example.junitlauncher.Tracker"
+                          outputDir="${output.dir}"
+                          resultFile="${test-ant-and-junit-platform-lib-custom-location.tracker}"
+                          if="test-ant-and-junit-platform-lib-custom-location.tracker"/>
+                <fork dir="${basedir}" includeAntRuntimeLibraries="false" includeJUnitPlatformLibraries="false"/>
+            </testclasses>
         </junitlauncher>
     </target>
 </project>
