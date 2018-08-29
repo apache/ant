@@ -15,14 +15,11 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.junitlauncher;
+package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
-import org.junit.platform.engine.Filter;
-import org.junit.platform.launcher.EngineFilter;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -33,7 +30,7 @@ import java.util.List;
 /**
  * Represents the configuration details of a test that needs to be launched by the {@link JUnitLauncherTask}
  */
-abstract class TestDefinition {
+public abstract class TestDefinition {
 
     protected String ifProperty;
     protected String unlessProperty;
@@ -62,7 +59,7 @@ abstract class TestDefinition {
         this.unlessProperty = unlessProperty;
     }
 
-    boolean isHaltOnFailure() {
+    public boolean isHaltOnFailure() {
         return this.haltOnFailure != null && this.haltOnFailure;
     }
 
@@ -74,7 +71,7 @@ abstract class TestDefinition {
         this.haltOnFailure = haltonfailure;
     }
 
-    String getFailureProperty() {
+    public String getFailureProperty() {
         return failureProperty;
     }
 
@@ -86,7 +83,7 @@ abstract class TestDefinition {
         this.listeners.add(listener);
     }
 
-    List<ListenerDefinition> getListeners() {
+    public List<ListenerDefinition> getListeners() {
         return Collections.unmodifiableList(this.listeners);
     }
 
@@ -94,7 +91,7 @@ abstract class TestDefinition {
         this.outputDir = dir;
     }
 
-    String getOutputDir() {
+    public String getOutputDir() {
         return this.outputDir;
     }
 
@@ -110,54 +107,12 @@ abstract class TestDefinition {
         return this.forkDefinition;
     }
 
-    /**
-     * Create and return the {@link TestRequest TestRequests} for this test definition. This
-     * typically involves creating the JUnit test discovery request(s) and applying the necessary
-     * discovery selectors, filters and other necessary constructs.
-     *
-     * @return Returns the test requests
-     */
-    List<TestRequest> createTestRequests() {
-        // create a TestRequest and add necessary selectors, filters to it
-        final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
-        final TestRequest request = new TestRequest(this, requestBuilder);
-        addDiscoverySelectors(request);
-        addFilters(request);
-        return Collections.singletonList(request);
-    }
-
-    /**
-     * Add necessary {@link org.junit.platform.engine.DiscoverySelector JUnit discovery selectors} to
-     * the {@code testRequest}
-     *
-     * @param testRequest The test request
-     */
-    abstract void addDiscoverySelectors(final TestRequest testRequest);
-
-    /**
-     * Add necessary {@link Filter JUnit filters} to the {@code testRequest}
-     *
-     * @param testRequest The test request
-     */
-    void addFilters(final TestRequest testRequest) {
-        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
-        // add any engine filters
-        final String[] enginesToInclude = this.getIncludeEngines();
-        if (enginesToInclude != null && enginesToInclude.length > 0) {
-            requestBuilder.filters(EngineFilter.includeEngines(enginesToInclude));
-        }
-        final String[] enginesToExclude = this.getExcludeEngines();
-        if (enginesToExclude != null && enginesToExclude.length > 0) {
-            requestBuilder.filters(EngineFilter.excludeEngines(enginesToExclude));
-        }
-    }
-
     protected boolean shouldRun(final Project project) {
         final PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
         return propertyHelper.testIfCondition(this.ifProperty) && propertyHelper.testUnlessCondition(this.unlessProperty);
     }
 
-    String[] getIncludeEngines() {
+    public String[] getIncludeEngines() {
         return includeEngines == null ? new String[0] : split(this.includeEngines, ",");
     }
 
@@ -165,7 +120,7 @@ abstract class TestDefinition {
         this.includeEngines = includeEngines;
     }
 
-    String[] getExcludeEngines() {
+    public String[] getExcludeEngines() {
         return excludeEngines == null ? new String[0] : split(this.excludeEngines, ",");
     }
 

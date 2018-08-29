@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.example.junitlauncher.jupiter.JupiterSampleTest;
 import org.example.junitlauncher.vintage.AlwaysFailingJUnit4Test;

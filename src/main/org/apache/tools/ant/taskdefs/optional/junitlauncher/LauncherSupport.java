@@ -21,12 +21,22 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.LaunchDefinition;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.ListenerDefinition;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.NamedTest;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.SingleTestClass;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestClasses;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestDefinition;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.KeepAliveOutputStream;
+import org.junit.platform.engine.Filter;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -67,23 +77,33 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * This class is not thread-safe and isn't expected to be used for launching from
  * multiple different threads simultaneously.
+ * <p>This class is an internal implementation detail of the Ant project and although
+ * it's a public class, it isn't meant to be used outside of this project. This class
+ * can be changed, across releases, without any backward compatible guarantees and hence
+ * shouldn't be used or relied upon outside of this project.
  */
-class LauncherSupport {
+public class LauncherSupport {
 
     private final LaunchDefinition launchDefinition;
+    private final TestExecutionContext testExecutionContext;
 
     private boolean testsFailed;
 
     /**
      * Create a {@link LauncherSupport} for the passed {@link LaunchDefinition}
      *
-     * @param definition The launch definition which will be used for launching the tests
+     * @param definition           The launch definition which will be used for launching the tests
+     * @param testExecutionContext The {@link TestExecutionContext} to use for the tests
      */
-    LauncherSupport(final LaunchDefinition definition) {
+    public LauncherSupport(final LaunchDefinition definition, final TestExecutionContext testExecutionContext) {
         if (definition == null) {
             throw new IllegalArgumentException("Launch definition cannot be null");
         }
+        if (testExecutionContext == null) {
+            throw new IllegalArgumentException("Test execution context cannot be null");
+        }
         this.launchDefinition = definition;
+        this.testExecutionContext = testExecutionContext;
     }
 
     /**
@@ -93,7 +113,7 @@ class LauncherSupport {
      *                        an exception, or if any other exception occurred before or after launching
      *                        the tests
      */
-    void launch() throws BuildException {
+    public void launch() throws BuildException {
         final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(this.launchDefinition.getClassLoader());
@@ -162,7 +182,14 @@ class LauncherSupport {
         }
         final List<TestRequest> requests = new ArrayList<>();
         for (final TestDefinition test : tests) {
-            final List<TestRequest> testRequests = test.createTestRequests();
+            final List<TestRequest> testRequests;
+            if (test instanceof SingleTestClass) {
+                testRequests = createTestRequests((SingleTestClass) test);
+            } else if (test instanceof TestClasses) {
+                testRequests = createTestRequests((TestClasses) test);
+            } else {
+                throw new BuildException("Unexpected test definition type " + test.getClass().getName());
+            }
             if (testRequests == null || testRequests.isEmpty()) {
                 continue;
             }
@@ -176,7 +203,7 @@ class LauncherSupport {
         final List<ListenerDefinition> applicableListenerElements = test.getListeners().isEmpty()
                 ? this.launchDefinition.getListeners() : test.getListeners();
         final List<TestExecutionListener> listeners = new ArrayList<>();
-        final Optional<Project> project = this.launchDefinition.getTestExecutionContext().getProject();
+        final Optional<Project> project = this.testExecutionContext.getProject();
         for (final ListenerDefinition applicableListener : applicableListenerElements) {
             if (project.isPresent() && !applicableListener.shouldUse(project.get())) {
                 log("Excluding listener " + applicableListener.getClassName() + " since it's not applicable" +
@@ -198,7 +225,7 @@ class LauncherSupport {
 
         testRequest.closeUponCompletion(resultFormatter);
         // set the execution context
-        resultFormatter.setContext(this.launchDefinition.getTestExecutionContext());
+        resultFormatter.setContext(this.testExecutionContext);
         // set the destination output stream for writing out the formatted result
         final java.nio.file.Path resultOutputFile = getListenerOutputFile(testRequest, formatterDefinition);
         try {
@@ -230,7 +257,7 @@ class LauncherSupport {
             return Paths.get(test.getOutputDir(), filename);
         }
         // neither listener nor the test define a output dir, so use basedir of the project
-        final TestExecutionContext testExecutionContext = this.launchDefinition.getTestExecutionContext();
+        final TestExecutionContext testExecutionContext = this.testExecutionContext;
         final String baseDir = testExecutionContext.getProperties().getProperty(MagicNames.PROJECT_BASEDIR);
         return Paths.get(baseDir, filename);
     }
@@ -270,7 +297,7 @@ class LauncherSupport {
             if (hasTestFailures && test.getFailureProperty() != null) {
                 // if there are test failures and the test is configured to set a property in case
                 // of failure, then set the property to true
-                final TestExecutionContext testExecutionContext = this.launchDefinition.getTestExecutionContext();
+                final TestExecutionContext testExecutionContext = this.testExecutionContext;
                 if (testExecutionContext.getProject().isPresent()) {
                     final Project project = testExecutionContext.getProject().get();
                     project.setNewProperty(test.getFailureProperty(), "true");
@@ -351,7 +378,7 @@ class LauncherSupport {
     }
 
     private void log(final String message, final Throwable t, final int level) {
-        final TestExecutionContext testExecutionContext = this.launchDefinition.getTestExecutionContext();
+        final TestExecutionContext testExecutionContext = this.testExecutionContext;
         if (testExecutionContext.getProject().isPresent()) {
             testExecutionContext.getProject().get().log(message, t, level);
             return;
@@ -361,6 +388,63 @@ class LauncherSupport {
         } else {
             System.err.println(message);
             t.printStackTrace();
+        }
+    }
+
+
+    private List<TestRequest> createTestRequests(final TestDefinition test) {
+        // create a TestRequest and add necessary selectors, filters to it
+        final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
+        final TestRequest request = new TestRequest(test, requestBuilder);
+        addDiscoverySelectors(request);
+        addFilters(request);
+        return Collections.singletonList(request);
+    }
+
+    private void addDiscoverySelectors(final TestRequest testRequest) {
+        final TestDefinition test = testRequest.getOwner();
+        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
+        if (test instanceof SingleTestClass) {
+            final SingleTestClass singleTestClass = (SingleTestClass) test;
+            final String[] methods = singleTestClass.getMethods();
+            if (methods == null) {
+                requestBuilder.selectors(DiscoverySelectors.selectClass(singleTestClass.getName()));
+            } else {
+                // add specific methods
+                for (final String method : methods) {
+                    requestBuilder.selectors(DiscoverySelectors.selectMethod(singleTestClass.getName(), method));
+                }
+            }
+            return;
+        }
+        if (test instanceof TestClasses) {
+            final TestClasses testClasses = (TestClasses) test;
+            final List<String> testClassNames = testClasses.getTestClassNames();
+            if (testClassNames.isEmpty()) {
+                return;
+            }
+            for (final String testClass : testClassNames) {
+                requestBuilder.selectors(DiscoverySelectors.selectClass(testClass));
+            }
+            return;
+        }
+    }
+
+    /**
+     * Add necessary {@link Filter JUnit filters} to the {@code testRequest}
+     *
+     * @param testRequest The test request
+     */
+    private void addFilters(final TestRequest testRequest) {
+        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
+        // add any engine filters
+        final String[] enginesToInclude = testRequest.getOwner().getIncludeEngines();
+        if (enginesToInclude != null && enginesToInclude.length > 0) {
+            requestBuilder.filters(EngineFilter.includeEngines(enginesToInclude));
+        }
+        final String[] enginesToExclude = testRequest.getOwner().getExcludeEngines();
+        if (enginesToExclude != null && enginesToExclude.length > 0) {
+            requestBuilder.filters(EngineFilter.excludeEngines(enginesToExclude));
         }
     }
 

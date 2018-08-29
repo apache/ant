@@ -15,10 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.junitlauncher;
-
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -29,13 +26,13 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_CLASS_NAME;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_EXCLUDE_ENGINES;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_INCLUDE_ENGINES;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_METHODS;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_CLASS_NAME;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_EXCLUDE_ENGINES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_INCLUDE_ENGINES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_METHODS;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST;
 
 /**
  * Represents the single {@code test} (class) that's configured to be launched by the {@link JUnitLauncherTask}
@@ -86,26 +83,12 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
         return this.testMethods != null && !this.testMethods.isEmpty();
     }
 
-    String[] getMethods() {
+    public String[] getMethods() {
         if (!hasMethodsSpecified()) {
             return null;
         }
         return this.testMethods.toArray(new String[this.testMethods.size()]);
     }
-
-    @Override
-    void addDiscoverySelectors(final TestRequest testRequest) {
-        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
-        if (!this.hasMethodsSpecified()) {
-            requestBuilder.selectors(DiscoverySelectors.selectClass(this.testClass));
-        } else {
-            // add specific methods
-            for (final String method : this.getMethods()) {
-                requestBuilder.selectors(DiscoverySelectors.selectMethod(this.testClass, method));
-            }
-        }
-    }
-
 
     @Override
     protected void toForkedRepresentation(final JUnitLauncherTask task, final XMLStreamWriter writer) throws XMLStreamException {
@@ -146,7 +129,7 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
         writer.writeEndElement();
     }
 
-    static TestDefinition fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
+    public static TestDefinition fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
         reader.require(XMLStreamConstants.START_ELEMENT, null, LD_XML_ELM_TEST);
         final SingleTestClass testDefinition = new SingleTestClass();
         final String testClassName = requireAttributeValue(reader, LD_XML_ATTR_CLASS_NAME);

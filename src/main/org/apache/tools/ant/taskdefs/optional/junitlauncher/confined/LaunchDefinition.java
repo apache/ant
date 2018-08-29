@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.tools.ant.taskdefs.optional.junitlauncher;
+package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
 import java.util.List;
 
@@ -28,42 +28,31 @@ public interface LaunchDefinition {
 
     /**
      * @return Returns the {@link TestDefinition tests} that have to be launched
-     *
      */
     List<TestDefinition> getTests();
 
     /**
      * @return Returns the default {@link ListenerDefinition listeners} that will be used
      * for the tests, if the {@link #getTests() tests} themselves don't specify any
-     *
      */
     List<ListenerDefinition> getListeners();
 
     /**
      * @return Returns true if a summary needs to be printed out after the execution of the
      * tests. False otherwise.
-     *
      */
     boolean isPrintSummary();
 
     /**
      * @return Returns true if any remaining tests launch need to be stopped if any test execution
      * failed. False otherwise.
-     *
      */
     boolean isHaltOnFailure();
 
     /**
      * @return Returns the {@link ClassLoader} that has to be used for launching and execution of the
      * tests
-     *
      */
     ClassLoader getClassLoader();
 
-    /**
-     * @return Returns the {@link TestExecutionContext} that will be passed to {@link TestResultFormatter#setContext(TestExecutionContext)
-     * result formatters} which are applicable during the execution of the tests.
-     *
-     */
-    TestExecutionContext getTestExecutionContext();
 }

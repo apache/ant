@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.junitlauncher;
+package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
@@ -26,11 +26,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_CLASS_NAME;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_LISTENER_RESULT_FILE;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_SEND_SYS_ERR;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_SEND_SYS_OUT;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_LISTENER;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_CLASS_NAME;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_LISTENER_RESULT_FILE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_SEND_SYS_ERR;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_SEND_SYS_OUT;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LISTENER;
 
 /**
  * Represents the {@code &lt;listener&gt;} element within the {@code &lt;junitlauncher&gt;}
@@ -59,7 +59,7 @@ public class ListenerDefinition {
         this.className = className;
     }
 
-    String getClassName() {
+    public String getClassName() {
         return this.className;
     }
 
@@ -100,7 +100,7 @@ public class ListenerDefinition {
         this.resultFile = filename;
     }
 
-    String requireResultFile(final TestDefinition test) {
+    public String requireResultFile(final TestDefinition test) {
         if (this.resultFile != null) {
             return this.resultFile;
         }
@@ -125,7 +125,7 @@ public class ListenerDefinition {
         this.sendSysOut = sendSysOut;
     }
 
-    boolean shouldSendSysOut() {
+    public boolean shouldSendSysOut() {
         return this.sendSysOut;
     }
 
@@ -133,7 +133,7 @@ public class ListenerDefinition {
         this.sendSysErr = sendSysErr;
     }
 
-    boolean shouldSendSysErr() {
+    public boolean shouldSendSysErr() {
         return this.sendSysErr;
     }
 
@@ -147,11 +147,11 @@ public class ListenerDefinition {
         this.outputDir = dir;
     }
 
-    String getOutputDir() {
+    public String getOutputDir() {
         return this.outputDir;
     }
 
-    protected boolean shouldUse(final Project project) {
+    public boolean shouldUse(final Project project) {
         final PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
         return propertyHelper.testIfCondition(this.ifProperty) && propertyHelper.testUnlessCondition(this.unlessProperty);
     }
@@ -175,7 +175,7 @@ public class ListenerDefinition {
         writer.writeEndElement();
     }
 
-    static ListenerDefinition fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
+    public static ListenerDefinition fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
         reader.require(XMLStreamConstants.START_ELEMENT, null, LD_XML_ELM_LISTENER);
         final ListenerDefinition listenerDef = new ListenerDefinition();
         final String className = requireAttributeValue(reader, LD_XML_ATTR_CLASS_NAME);

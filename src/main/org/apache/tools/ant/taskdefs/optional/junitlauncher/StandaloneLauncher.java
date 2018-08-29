@@ -20,6 +20,13 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.LaunchDefinition;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.ListenerDefinition;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.SingleTestClass;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestClasses;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestDefinition;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -37,12 +44,12 @@ import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_PRINT_SUMMARY;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_LAUNCH_DEF;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_LISTENER;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST_CLASSES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_PRINT_SUMMARY;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LAUNCH_DEF;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LISTENER;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST_CLASSES;
 
 /**
  * Used for launching forked tests from the {@link JUnitLauncherTask}.
@@ -98,8 +105,7 @@ public class StandaloneLauncher {
                 i = i + numArgsConsumed;
             }
 
-            launchDefinition.setTestExecutionContext(forkedExecution);
-            final LauncherSupport launcherSupport = new LauncherSupport(launchDefinition);
+            final LauncherSupport launcherSupport = new LauncherSupport(launchDefinition, forkedExecution);
             try {
                 launcherSupport.launch();
             } catch (Throwable t) {
@@ -240,19 +246,9 @@ public class StandaloneLauncher {
             return this;
         }
 
-        public ForkedLaunch setTestExecutionContext(final TestExecutionContext testExecutionContext) {
-            this.testExecutionContext = testExecutionContext;
-            return this;
-        }
-
         @Override
         public ClassLoader getClassLoader() {
             return this.getClass().getClassLoader();
-        }
-
-        @Override
-        public TestExecutionContext getTestExecutionContext() {
-            return this.testExecutionContext;
         }
     }
 }

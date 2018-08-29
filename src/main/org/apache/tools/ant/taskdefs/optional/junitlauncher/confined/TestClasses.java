@@ -15,14 +15,12 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.junitlauncher;
+package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.StringResource;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -33,13 +31,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_CLASS_NAME;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_EXCLUDE_ENGINES;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_INCLUDE_ENGINES;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_TEST_CLASSES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_CLASS_NAME;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_EXCLUDE_ENGINES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_INCLUDE_ENGINES;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST_CLASSES;
 
 /**
  * Represents a {@code testclasses} that's configured to be launched by the {@link JUnitLauncherTask}
@@ -56,19 +54,7 @@ public class TestClasses extends TestDefinition {
         this.resources.add(resourceCollection);
     }
 
-    @Override
-    void addDiscoverySelectors(final TestRequest testRequest) {
-        final List<String> tests = getTestClassNames();
-        if (tests.isEmpty()) {
-            return;
-        }
-        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
-        for (final String test : tests) {
-            requestBuilder.selectors(DiscoverySelectors.selectClass(test));
-        }
-    }
-
-    private List<String> getTestClassNames() {
+    public List<String> getTestClassNames() {
         if (this.resources.isEmpty()) {
             return Collections.emptyList();
         }
@@ -122,7 +108,7 @@ public class TestClasses extends TestDefinition {
         writer.writeEndElement();
     }
 
-    static List<TestDefinition> fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
+    public static List<TestDefinition> fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
         reader.require(XMLStreamConstants.START_ELEMENT, null, LD_XML_ELM_TEST_CLASSES);
         final TestClasses testDefinition = new TestClasses();
         // read out as multiple SingleTestClass representations
