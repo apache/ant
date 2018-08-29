@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.junitlauncher;
+package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -40,13 +40,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ATTR_PRINT_SUMMARY;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_XML_ELM_LAUNCH_DEF;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_PRINT_SUMMARY;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LAUNCH_DEF;
 
 /**
  * An Ant {@link Task} responsible for launching the JUnit platform for running tests.
@@ -65,6 +64,10 @@ import static org.apache.tools.ant.taskdefs.optional.junitlauncher.Constants.LD_
  * @see <a href="https://junit.org/junit5/">JUnit 5 documentation</a>
  */
 public class JUnitLauncherTask extends Task {
+
+    private static final String LAUNCHER_SUPPORT_CLASS_NAME = "org.apache.tools.ant.taskdefs.optional.junitlauncher.LauncherSupport";
+    private static final String IN_VM_TEST_EXECUTION_CONTEXT_CLASS_NAME = "org.apache.tools.ant.taskdefs.optional.junitlauncher.InVMExecution";
+    private static final String TEST_EXECUTION_CONTEXT_CLASS_NAME = "org.apache.tools.ant.taskdefs.optional.junitlauncher.TestExecutionContext";
 
     private Path classPath;
     private boolean haltOnFailure;
@@ -91,8 +94,7 @@ public class JUnitLauncherTask extends Task {
             if (test.getForkDefinition() != null) {
                 forkTest(test);
             } else {
-                final LauncherSupport launcherSupport = new LauncherSupport(new InVMLaunch(Collections.singletonList(test)));
-                launcherSupport.launch();
+                launchViaReflection(new InVMLaunch(Collections.singletonList(test)));
             }
         }
     }
@@ -165,13 +167,28 @@ public class JUnitLauncherTask extends Task {
         }
     }
 
-    private ClassLoader createClassLoaderForTestExecution() {
-        if (this.classPath == null) {
-            return this.getClass().getClassLoader();
+    private void launchViaReflection(final InVMLaunch launchDefinition) {
+        final ClassLoader cl = launchDefinition.getClassLoader();
+        // instantiate a new TestExecutionContext instance using the launch definition's classloader
+        final Class<?> testExecutionCtxClass;
+        final Object testExecutionCtx;
+        try {
+            testExecutionCtxClass = Class.forName(TEST_EXECUTION_CONTEXT_CLASS_NAME, false, cl);
+            final Class<?> klass = Class.forName(IN_VM_TEST_EXECUTION_CONTEXT_CLASS_NAME, false, cl);
+            testExecutionCtx = klass.getConstructor(JUnitLauncherTask.class).newInstance(this);
+        } catch (Exception e) {
+            throw new BuildException("Failed to create a test execution context for in-vm tests", e);
         }
-        return new AntClassLoader(this.getClass().getClassLoader(), getProject(), this.classPath, true);
+        // instantiate a new LauncherSupport instance using the launch definition's ClassLoader
+        try {
+            final Class<?> klass = Class.forName(LAUNCHER_SUPPORT_CLASS_NAME, false, cl);
+            final Object launcherSupport = klass.getConstructor(LaunchDefinition.class, testExecutionCtxClass)
+                    .newInstance(launchDefinition, testExecutionCtx);
+            klass.getMethod("launch").invoke(launcherSupport);
+        } catch (Exception e) {
+            throw new BuildException("Failed to launch in-vm tests", e);
+        }
     }
-
 
     private java.nio.file.Path dumpProjectProperties() throws IOException {
         final java.nio.file.Path propsPath = Files.createTempFile(null, "properties");
@@ -312,35 +329,14 @@ public class JUnitLauncherTask extends Task {
         return xmlFilePath;
     }
 
-    private final class InVMExecution implements TestExecutionContext {
-
-        private final Properties props;
-
-        InVMExecution() {
-            this.props = new Properties();
-            this.props.putAll(JUnitLauncherTask.this.getProject().getProperties());
-        }
-
-        @Override
-        public Properties getProperties() {
-            return this.props;
-        }
-
-        @Override
-        public Optional<Project> getProject() {
-            return Optional.of(JUnitLauncherTask.this.getProject());
-        }
-    }
-
     private final class InVMLaunch implements LaunchDefinition {
 
-        private final TestExecutionContext testExecutionContext = new InVMExecution();
         private final List<TestDefinition> inVMTests;
         private final ClassLoader executionCL;
 
         private InVMLaunch(final List<TestDefinition> inVMTests) {
             this.inVMTests = inVMTests;
-            this.executionCL = createClassLoaderForTestExecution();
+            this.executionCL = createInVMExecutionClassLoader();
         }
 
         @Override
@@ -368,9 +364,73 @@ public class JUnitLauncherTask extends Task {
             return this.executionCL;
         }
 
+        private ClassLoader createInVMExecutionClassLoader() {
+            final Path taskConfiguredClassPath = JUnitLauncherTask.this.classPath;
+            if (taskConfiguredClassPath == null) {
+                // no specific classpath configured for the task, so use the classloader
+                // of this task
+                return JUnitLauncherTask.class.getClassLoader();
+            }
+            // there's a classpath configured for the task.
+            // we first check if the Ant runtime classpath has JUnit platform classes.
+            // - if it does, then we use the Ant runtime classpath plus the task's configured classpath
+            // with the traditional parent first loading.
+            // - else (i.e. Ant runtime classpath doesn't have JUnit platform classes), then we
+            // expect/assume the task's configured classpath to have the JUnit platform classes and we
+            // then create a "overriding" classloader which prefers certain resources (specifically the classes
+            // from org.apache.tools.ant.taskdefs.optional.junitlauncher package), from the task's
+            // classpath, even if the Ant's runtime classpath has those resources.
+            if (JUnitLauncherClassPathUtil.hasJUnitPlatformResources(JUnitLauncherTask.class.getClassLoader())) {
+                return new AntClassLoader(JUnitLauncherTask.class.getClassLoader(), getProject(), taskConfiguredClassPath, true);
+            }
+            final Path cp = new Path(getProject());
+            cp.add(taskConfiguredClassPath);
+            // add the Ant runtime resources to this path
+            JUnitLauncherClassPathUtil.addLauncherSupportResourceLocation(cp, JUnitLauncherTask.class.getClassLoader());
+            return new TaskConfiguredPathClassLoader(JUnitLauncherTask.class.getClassLoader(), cp, getProject());
+        }
+    }
+
+    /**
+     * A {@link ClassLoader}, very similar to the {@link org.apache.tools.ant.util.SplitClassLoader},
+     * which uses the {@link #TaskConfiguredPathClassLoader(ClassLoader, Path, Project) configured Path}
+     * to load a class, if the class belongs to the {@code org.apache.tools.ant.taskdefs.optional.junitlauncher}
+     * package.
+     * <p>
+     * While looking for classes belonging to the {@code org.apache.tools.ant.taskdefs.optional.junitlauncher}
+     * package, this classloader completely ignores Ant runtime classpath, even if that classpath has
+     * those classes. This allows the users of this classloader to use a custom location and thus more control over
+     * where these classes reside, when running the {@code junitlauncher} task
+     */
+    private final class TaskConfiguredPathClassLoader extends AntClassLoader {
+
+        /**
+         * @param parent  ClassLoader
+         * @param path    Path
+         * @param project Project
+         */
+        private TaskConfiguredPathClassLoader(ClassLoader parent, Path path, Project project) {
+            super(parent, project, path, true);
+        }
+
+        // forceLoadClass is not convenient here since it would not
+        // properly deal with inner classes of these classes.
         @Override
-        public TestExecutionContext getTestExecutionContext() {
-            return this.testExecutionContext;
+        protected synchronized Class<?> loadClass(String classname, boolean resolve)
+                throws ClassNotFoundException {
+            Class<?> theClass = findLoadedClass(classname);
+            if (theClass != null) {
+                return theClass;
+            }
+            final String packageName = classname.substring(0, classname.lastIndexOf('.'));
+            if (packageName.equals("org.apache.tools.ant.taskdefs.optional.junitlauncher")) {
+                theClass = findClass(classname);
+                if (resolve) {
+                    resolveClass(theClass);
+                }
+                return theClass;
+            }
+            return super.loadClass(classname, resolve);
         }
     }
 }

@@ -16,23 +16,16 @@
  *
  */
 
-package org.apache.tools.ant.taskdefs.optional.junitlauncher;
+package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.launch.AntMain;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.StandaloneLauncher;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PropertySet;
-import org.apache.tools.ant.util.LoaderUtils;
-import org.junit.platform.commons.annotation.Testable;
-import org.junit.platform.engine.TestEngine;
-import org.junit.platform.launcher.core.LauncherFactory;
-
-import java.io.File;
 
 /**
  * Represents the {@code fork} element within test definitions of the
@@ -124,45 +117,26 @@ public class ForkDefinition {
         cmdLine.setClassname(StandaloneLauncher.class.getName());
         // VM arguments
         final Project project = task.getProject();
-        final Path antRuntimeResourceSources = new Path(project);
+        final ClassLoader taskClassLoader = task.getClass().getClassLoader();
+        // Ant runtime classes
         if (this.includeAntRuntimeLibraries) {
-            addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(AntMain.class));
-            addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(Task.class));
-            addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(JUnitLauncherTask.class));
+            final Path antRuntimeResources = new Path(project);
+            JUnitLauncherClassPathUtil.addAntRuntimeResourceLocations(antRuntimeResources, taskClassLoader);
+            final Path classPath = cmdLine.createClasspath(project);
+            classPath.createPath().append(antRuntimeResources);
         } else {
             task.log("Excluding Ant runtime libraries from forked JVM classpath", Project.MSG_DEBUG);
         }
+        // JUnit platform classes
         if (this.includeJUnitPlatformLibraries) {
-            // platform-engine
-            addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(TestEngine.class));
-            // platform-launcher
-            addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(LauncherFactory.class));
-            // platform-commons
-            addAntRuntimeResourceSource(antRuntimeResourceSources, task, toResourceName(Testable.class));
+            final Path junitPlatformResources = new Path(project);
+            JUnitLauncherClassPathUtil.addJUnitPlatformResourceLocations(junitPlatformResources, taskClassLoader);
+            final Path classPath = cmdLine.createClasspath(project);
+            classPath.createPath().append(junitPlatformResources);
         } else {
             task.log("Excluding JUnit platform libraries from forked JVM classpath", Project.MSG_DEBUG);
         }
-        final Path classPath = cmdLine.createClasspath(project);
-        classPath.createPath().append(antRuntimeResourceSources);
-
-
         return cmdLine;
-    }
-
-    private static boolean addAntRuntimeResourceSource(final Path path, final JUnitLauncherTask task, final String resource) {
-        final File f = LoaderUtils.getResourceSource(task.getClass().getClassLoader(), resource);
-        if (f == null) {
-            task.log("Could not locate source of resource " + resource);
-            return false;
-        }
-        task.log("Found source " + f + " of resource " + resource);
-        path.createPath().setLocation(f);
-        return true;
-    }
-
-    private static String toResourceName(final Class klass) {
-        final String name = klass.getName();
-        return name.replaceAll("\\.", "/") + ".class";
     }
 
 }

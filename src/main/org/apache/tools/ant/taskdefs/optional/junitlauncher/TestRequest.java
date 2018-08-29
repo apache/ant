@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestDefinition;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 import java.io.Closeable;

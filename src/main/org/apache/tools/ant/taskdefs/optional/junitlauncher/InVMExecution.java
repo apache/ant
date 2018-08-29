@@ -15,6 +15,7 @@
  *  limitations under the License.
  *
  */
+
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.Project;
@@ -24,23 +25,26 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * A {@link TestExecutionContext} represents the execution context for a test
- * that has been launched by the {@link JUnitLauncherTask} and provides any necessary
- * contextual information about such tests.
+ * Used during in-vm (non-forked mode) launching of tests
  */
-public interface TestExecutionContext {
+public class InVMExecution implements TestExecutionContext {
 
-    /**
-     * @return Returns the properties that were used for the execution of the test
-     */
-    Properties getProperties();
+    private final JUnitLauncherTask task;
+    private final Properties props;
 
+    public InVMExecution(final JUnitLauncherTask task) {
+        this.task = task;
+        this.props = new Properties();
+        this.props.putAll(task.getProject().getProperties());
+    }
 
-    /**
-     * @return Returns the {@link Project} in whose context the test is being executed.
-     * The {@code Project} is sometimes not available, like in the case where
-     * the test is being run in a forked mode, in such cases this method returns
-     * {@link Optional#empty() an empty value}
-     */
-    Optional<Project> getProject();
+    @Override
+    public Properties getProperties() {
+        return this.props;
+    }
+
+    @Override
+    public Optional<Project> getProject() {
+        return Optional.of(this.task.getProject());
+    }
 }
