@@ -867,7 +867,10 @@ public class ZipOutputStream extends FilterOutputStream {
             throw new IllegalArgumentException("Invalid compression level: "
                                                + level);
         }
-        hasCompressionLevelChanged = (this.level != level);
+        if (this.level == level) {
+            return;
+        }
+        hasCompressionLevelChanged = true;
         this.level = level;
     }
 

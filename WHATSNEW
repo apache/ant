@@ -23,6 +23,10 @@ Fixed bugs:
    instead of a IllegalStateException in the absence of the "id" attribute.
    Bugzilla Report 62655
 
+ * org.apache.tools.zip.ZipOutputStream would sometimes potentially use
+   an incorrect compression level for a zip entry. This is now fixed.
+   Bugzilla Report 62686
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
