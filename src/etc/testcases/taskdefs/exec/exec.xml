@@ -20,9 +20,9 @@
 
   <target name="setUp">
     <mkdir dir="${output}"/>
-     <!-- this property can be overriden programatically in the Java test case -->
+     <!-- this property can be overridden programmatically in the Java test case -->
     <property name="timeToWait" value="10"/>
-    <!-- this property can be overriden programatically in the Java test case -->
+    <!-- this property can be overridden programmatically in the Java test case -->
     <property name="logFile" value="${output}/spawn.log"/>
     <property environment="env"/>
     <!-- UNIX -->

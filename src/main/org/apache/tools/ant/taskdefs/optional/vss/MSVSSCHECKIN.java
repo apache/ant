@@ -95,7 +95,7 @@ public class MSVSSCHECKIN extends MSVSS {
     }
 
     /**
-     * Autoresponce behaviour. Valid options are Y and N.
+     * Autoresponse behaviour. Valid options are Y and N.
      *
      * @param response The auto response value.
      */

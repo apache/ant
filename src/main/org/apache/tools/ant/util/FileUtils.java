@@ -1228,7 +1228,7 @@ public class FileUtils {
      * @return true if path starts with leading; false otherwise.
      * @since Ant 1.10.5
      * @throws IOException if resolveSymlinks is true and invoking
-     * getCanonicaPath on either argument throws an exception
+     * getCanonicalPath on either argument throws an exception
      */
     public boolean isLeadingPath(File leading, File path, boolean resolveSymlinks)
         throws IOException {

@@ -772,7 +772,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     }
 
     /**
-     * Extension of EnumeratedAttribute to hold the values for writable filess.
+     * Extension of EnumeratedAttribute to hold the values for writable files.
      */
     public static class WritableFiles extends EnumeratedAttribute {
         /**

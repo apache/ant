@@ -729,7 +729,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                         if (!this.client.changeWorkingDirectory(currentPathElement)) {
                             if (!isCaseSensitive() && (remoteSystemCaseSensitive
                                     || !remoteSensitivityChecked)) {
-                                currentPathElement = findPathElementCaseUnsensitive(this.curpwd,
+                                currentPathElement = findPathElementCaseInsensitive(this.curpwd,
                                         currentPathElement);
                                 if (currentPathElement == null) {
                                     return;
@@ -752,7 +752,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
              * @param soughtPathElement what is being sought
              * @return                  the first file found or null if not found
              */
-            private String findPathElementCaseUnsensitive(String parentPath,
+            private String findPathElementCaseInsensitive(String parentPath,
                                                           String soughtPathElement) {
                 // we are already in the right path, so the second parameter
                 // is false

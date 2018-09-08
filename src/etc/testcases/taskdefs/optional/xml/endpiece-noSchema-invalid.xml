@@ -16,15 +16,14 @@
   limitations under the License.
 -->
 
-<!-- 
-    Invalid test XML file without any schema refeferences 
+<!--
+    Invalid test XML file without any schema references
 -->
 <doc>
     <section title="endpiece">
-        With a little luck, the network will pick me up. 
+        With a little luck, the network will pick me up.
         This is Ripley - last survivor of The Nostromo - signing off.
     </section>
-    
+
     <invalidelement/>
-    
 </doc>

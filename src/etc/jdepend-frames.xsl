@@ -19,7 +19,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 -->
 <!--
 
@@ -271,7 +271,7 @@
             </xsl:if>
             <xsl:for-each select="UsedBy/Package">
               <a>
-                        <xsl:attribute name="href">overview-packages.html#PK<xsl:value-of select="node()"/></xsl:attribute>
+                <xsl:attribute name="href">overview-packages.html#PK<xsl:value-of select="node()"/></xsl:attribute>
                 <xsl:value-of select="node()"/>
               </a><br/>
             </xsl:for-each>
@@ -282,7 +282,7 @@
             </xsl:if>
             <xsl:for-each select="DependsUpon/Package">
               <a>
-                        <xsl:attribute name="href">overview-packages.html#PK<xsl:value-of select="node()"/></xsl:attribute>
+                <xsl:attribute name="href">overview-packages.html#PK<xsl:value-of select="node()"/></xsl:attribute>
                 <xsl:value-of select="node()"/>
               </a><br/>
             </xsl:for-each>
@@ -325,7 +325,7 @@
   </td></tr></table> -->
 
   <xsl:if test="count(Cycles/Package) = 0">
-    <p>There are no cyclic dependancies.</p>
+    <p>There are no cyclic dependencies.</p>
   </xsl:if>
   <xsl:for-each select="Cycles/Package">
      <h3><a><xsl:attribute name="name">#CY<xsl:value-of select="@Name"/></xsl:attribute><xsl:value-of select="@Name"/></a></h3><p>
@@ -373,10 +373,10 @@
     <p>The range for this metric is 0 to 1, with A=0 indicating a completely concrete package and A=1 indicating a completely abstract package. </p>
   <h3><a name="EXinstability">Instability</a></h3>
     <p>The ratio of efferent coupling (Ce) to total coupling (Ce / (Ce + Ca)). This metric is an indicator of the package's resilience to change. </p>
-    <p>The range for this metric is 0 to 1, with I=0 indicating a completely stable package and I=1 indicating a completely instable package. </p>
+    <p>The range for this metric is 0 to 1, with I=0 indicating a completely stable package and I=1 indicating a completely unstable package. </p>
   <h3><a name="EXdistance">Distance</a></h3>
     <p>The perpendicular distance of a package from the idealized line A + I = 1. This metric is an indicator of the package's balance between abstractness and stability. </p>
-    <p>A package squarely on the main sequence is optimally balanced with respect to its abstractness and stability. Ideal packages are either completely abstract and stable (x=0, y=1) or completely concrete and instable (x=1, y=0). </p>
+    <p>A package squarely on the main sequence is optimally balanced with respect to its abstractness and stability. Ideal packages are either completely abstract and stable (x=0, y=1) or completely concrete and unstable (x=1, y=0). </p>
     <p>The range for this metric is 0 to 1, with D=0 indicating a package that is coincident with the main sequence and D=1 indicating a package that is as far from the main sequence as possible. </p>
 
       </body>
@@ -416,7 +416,7 @@ Creates an html file that contains a link to all package links in overview-packa
 <xsl:template match="JDepend/Packages/Package" mode="all.packages.link">
   <tr>
     <td nowrap="nowrap">
-         <a href="overview-packages.html#PK{@name}" target="classFrame">
+      <a href="overview-packages.html#PK{@name}" target="classFrame">
         <xsl:value-of select="@name"/>
       </a>
     </td>
@@ -465,7 +465,7 @@ Creates an html file that contains a link to all package links in overview-cycle
 <xsl:template match="JDepend/Cycles/Package" mode="all.cycles">
   <tr>
     <td nowrap="nowrap">
-         <a href="overview-cycles.html#CY{@Name}" target="classFrame"><xsl:value-of select="@Name"/></a>
+      <a href="overview-cycles.html#CY{@Name}" target="classFrame"><xsl:value-of select="@Name"/></a>
     </td>
   </tr>
 </xsl:template>
@@ -476,7 +476,7 @@ Creates an html file that contains a link to all package links in overview-cycle
   <table width="100%">
   <tr>
     <td align="left"></td>
-      <td align="right">Designed for use with <a href="http://www.clarkware.com/software/JDepend.html">JDepend</a> and <a href="http://jakarta.apache.org">Ant</a>.</td>
+    <td align="right">Designed for use with <a href="http://www.clarkware.com/software/JDepend.html">JDepend</a> and <a href="http://jakarta.apache.org">Ant</a>.</td>
   </tr>
   </table>
   <hr size="1"/>

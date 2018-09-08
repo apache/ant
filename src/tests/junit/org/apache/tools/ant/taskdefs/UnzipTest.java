@@ -197,7 +197,7 @@ public class UnzipTest {
 
     /**
      * assert that a file exists, relative to the project
-     * @param message message if there is no mpatch
+     * @param message message if there is no match
      * @param filename filename to resolve against the project
      */
     private void assertFileExists(String message, String filename) {
