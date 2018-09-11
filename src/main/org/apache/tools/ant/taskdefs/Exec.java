@@ -217,7 +217,7 @@ public class Exec extends Task {
 
     /**
      * Log an output message.
-     * @param line the line to output
+     * @param line the line to putput
      * @param messageLevel the level of logging - ignored
      *                     if output is going to a file
      */

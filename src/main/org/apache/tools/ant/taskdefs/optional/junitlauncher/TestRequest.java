@@ -31,7 +31,7 @@ import java.util.List;
 final class TestRequest implements AutoCloseable {
     private final TestDefinition ownerTest;
     private final LauncherDiscoveryRequestBuilder discoveryRequest;
-    private final List<Closeable> closeables = new ArrayList<>();
+    private final List<Closeable> closables = new ArrayList<>();
     private final List<TestResultFormatter> interestedInSysOut = new ArrayList<>();
     private final List<TestResultFormatter> interestedInSysErr = new ArrayList<>();
 
@@ -53,7 +53,7 @@ final class TestRequest implements AutoCloseable {
         if (closeable == null) {
             return;
         }
-        this.closeables.add(closeable);
+        this.closables.add(closeable);
     }
 
     void addSysOutInterest(final TestResultFormatter out) {
@@ -81,10 +81,10 @@ final class TestRequest implements AutoCloseable {
     }
 
     public void close() throws Exception {
-        if (this.closeables.isEmpty()) {
+        if (this.closables.isEmpty()) {
             return;
         }
-        for (final Closeable closeable : closeables) {
+        for (final Closeable closeable : closables) {
             closeable.close();
         }
     }

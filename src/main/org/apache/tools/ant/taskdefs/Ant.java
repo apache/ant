@@ -574,7 +574,7 @@ public class Ant extends Task {
                 log("Adding clone of reference " + oldKey, Project.MSG_DEBUG);
             }
         } catch (Exception e) {
-            // not Cloneable
+            // not Clonable
         }
 
         if (copy instanceof ProjectComponent) {

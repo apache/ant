@@ -602,7 +602,7 @@ public class SignJar extends AbstractJarSignerTask {
      * either file doesn't exist, or the destfile has an out of date timestamp,
      * then the return value is false.</p>
      *
-     * <p>If we are signing ourselves, the check {@link #isSigned(File)} is used to
+     * <p>If we are signing ourself, the check {@link #isSigned(File)} is used to
      * trigger the process.</p>
      *
      * @param jarFile       the unsigned jar file

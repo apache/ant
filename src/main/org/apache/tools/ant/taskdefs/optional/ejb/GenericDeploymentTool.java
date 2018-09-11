@@ -389,7 +389,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         try {
             handler = getDescriptorHandler(config.srcDir);
 
-            // Retrieve the files to be added to JAR from EJB descriptor
+            // Retreive the files to be added to JAR from EJB descriptor
             Hashtable<String, File> ejbFiles = parseEjbFiles(descriptorFileName, saxParser);
 
             // Add any support classes specified in the build file
@@ -688,7 +688,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * If the file does not exist the global manifest from the config is used
      * otherwise the default Ant manifest will be used.
      *
-     * @param prefix the prefix where to look for the manifest file based on
+     * @param prefix the prefix where to llook for the manifest file based on
      *        the naming convention.
      *
      * @return the manifest file or null if the manifest file does not exist

@@ -118,7 +118,7 @@ import org.xml.sax.XMLReader;
 public class XMLCatalog extends DataType
     implements EntityResolver, URIResolver {
 
-    /** helper for some File.toURL conversions */
+    /** helper for some File.toURL connversions */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     //-- Fields ----------------------------------------------------------------

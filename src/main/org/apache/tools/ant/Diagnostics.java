@@ -588,7 +588,7 @@ public final class Diagnostics {
             long drift = filetime - now;
             tempFile.delete();
 
-            out.print("Temp dir is writable");
+            out.print("Temp dir is writeable");
             if (total != TEST_FILE_SIZE * KILOBYTE) {
                 out.println(", but seems to be full.  Wrote "
                             + (TEST_FILE_SIZE * KILOBYTE)

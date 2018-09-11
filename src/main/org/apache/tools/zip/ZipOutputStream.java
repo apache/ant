@@ -660,10 +660,10 @@ public class ZipOutputStream extends FilterOutputStream {
     }
 
     private boolean isZip64Required(ZipEntry entry1, Zip64Mode requestedMode) {
-        return requestedMode == Zip64Mode.Always || isTooLargeForZip32(entry1);
+        return requestedMode == Zip64Mode.Always || isTooLageForZip32(entry1);
     }
 
-    private boolean isTooLargeForZip32(ZipEntry zipArchiveEntry) {
+    private boolean isTooLageForZip32(ZipEntry zipArchiveEntry) {
         return zipArchiveEntry.getSize() >= ZIP64_MAGIC
             || zipArchiveEntry.getCompressedSize() >= ZIP64_MAGIC;
     }

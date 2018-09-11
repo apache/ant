@@ -827,7 +827,7 @@ public class FTP extends Task implements FTPTaskConfig {
                             if (!isCaseSensitive() && (remoteSystemCaseSensitive
                                 || !remoteSensitivityChecked)) {
                                 currentPathElement =
-                                    findPathElementCaseInsensitive(this.curpwd,
+                                    findPathElementCaseUnsensitive(this.curpwd,
                                         currentPathElement);
                                 if (currentPathElement == null) {
                                     return;
@@ -854,7 +854,7 @@ public class FTP extends Task implements FTPTaskConfig {
              * @param soughtPathElement what is being sought
              * @return                  the first file found or null if not found
              */
-            private String findPathElementCaseInsensitive(String parentPath,
+            private String findPathElementCaseUnsensitive(String parentPath,
                                                           String soughtPathElement) {
                 // we are already in the right path, so the second parameter
                 // is false

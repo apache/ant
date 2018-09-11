@@ -105,7 +105,7 @@ public class ProxySetup {
                 owner.log(message, Project.MSG_DEBUG);
                 System.setProperty(USE_SYSTEM_PROXIES, proxies);
             } catch (SecurityException e) {
-                //log security exceptions and continue; it ain't that
+                //log security exceptions and continue; it aint that
                 //important and may be quite common running Ant embedded.
                 owner.log("Security Exception when " + message);
             }

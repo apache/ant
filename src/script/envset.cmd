@@ -37,7 +37,7 @@ not interpreted
 the parameters are changed to name=expanded_name
 
 Other options have optional equal sign. If it is found, only the part after
-the equal sign will be optionally expanded.
+the equal sign will be oprionally expanded.
 
 If the parameter is the minus sign, the next parameter will not be expanded.
 If the parameter is a single dot, it will be replaced with the value of the

@@ -663,7 +663,7 @@ public class Checksum extends MatchingTask implements Condition {
 
         /**
          * Get the default value - CHECKSUM.
-         * @return the default value.
+         * @return the defaul value.
          */
         public static FormatElement getDefault() {
             FormatElement e = new FormatElement();

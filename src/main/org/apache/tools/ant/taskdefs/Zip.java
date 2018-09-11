@@ -2136,7 +2136,7 @@ public class Zip extends MatchingTask {
 
     /**
      * Policy for creation of Unicode extra fields: never, always or
-     * not-encodable.
+     * not-encodeable.
      *
      * @since Ant 1.8.0
      */

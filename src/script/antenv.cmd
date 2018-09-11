@@ -61,7 +61,7 @@ if classes \= '' then classpath = prepend(classpath classes)
 classpath = prepend(classpath ANT_HOME || '\lib\ant-launcher.jar')
 'SET CLASSPATH=' || classpath
 
-/* Setting classpaths, options and arguments */
+/* Setting classpathes, options and arguments */
 envset = _getenv_('envset')
 if cp\=''   then interpret 'call "' || envset || '"' '"; CLASSPATH"' '"' || cp || '"'
 if lcp\=''  then interpret 'call "' || envset || '"' '"; LOCALCLASSPATH"' '"' || lcp || '"'

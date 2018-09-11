@@ -106,7 +106,7 @@ public class JUnitLauncherTask extends Task {
         if (this.classPath == null) {
             // create a "wrapper" path which can hold on to multiple
             // paths that get passed to this method (if at all the task in the build is
-            // configured with multiple classpath elements)
+            // configured with multiple classpaht elements)
             this.classPath = new Path(getProject());
         }
         this.classPath.add(path);

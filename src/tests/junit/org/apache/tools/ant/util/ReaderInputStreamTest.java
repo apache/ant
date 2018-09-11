@@ -81,9 +81,9 @@ public class ReaderInputStreamTest {
     }
 
     @Test
-    public void testPreamble() {
+    public void testPreample() {
         byte[] bytes = "".getBytes(StandardCharsets.UTF_16);
-        System.out.println("Preamble len is " + bytes.length);
+        System.out.println("Preample len is " + bytes.length);
     }
 
     @Test

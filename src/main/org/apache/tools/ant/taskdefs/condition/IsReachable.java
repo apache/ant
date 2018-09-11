@@ -78,7 +78,7 @@ public class IsReachable extends ProjectComponent implements Condition {
     /** Error message when url and host are specified. */
     public static final String ERROR_BOTH_TARGETS
         = "Both url and host have been specified";
-    /** Error message when no reachability test avail. */
+    /** Error message when no reachably test avail. */
     public static final String MSG_NO_REACHABLE_TEST
         = "cannot do a proper reachability test on this Java version";
     /** Error message when an invalid url is used. */
@@ -121,7 +121,7 @@ public class IsReachable extends ProjectComponent implements Condition {
     }
 
     /**
-     * emptiness test
+     * emptyness test
      *
      * @param string param to check
      *
