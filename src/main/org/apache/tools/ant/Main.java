@@ -1046,10 +1046,10 @@ public class Main implements AntMain {
         System.out.println("  -inputhandler <class>  the class which will handle input requests");
         System.out.println("  -find <file>           (s)earch for buildfile towards the root of");
         System.out.println("    -s  <file>           the filesystem and use it");
-        System.out.println("  -nice  number          A niceness value for the main thread:"
-                + "                         1 (lowest) to 10 (highest); 5 is the default");
-        System.out.println("  -nouserlib             Run ant without using the jar files from"
-                + "                         ${user.home}/.ant/lib");
+        System.out.println("  -nice  number          A niceness value for the main thread:");
+        System.out.println("                         1 (lowest) to 10 (highest); 5 is the default");
+        System.out.println("  -nouserlib             Run ant without using the jar files from");
+        System.out.println("                         ${user.home}/.ant/lib");
         System.out.println("  -noclasspath           Run ant without using CLASSPATH");
         System.out.println("  -autoproxy             Java1.5+: use the OS proxy settings");
         System.out.println("  -main <class>          override Ant's normal entry point");
