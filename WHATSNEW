@@ -24,6 +24,10 @@ Other changes:
  * the <modified> selector has a new built-in algorithm 'lastmodified'
    which computes a value based upon the lastmodified time of the file.
 
+ * signjar and verifyjar now support the -providerName, -providerClass
+   and -providerArg command line options of keytool via new attributes.
+   Bugzilla Report 65234
+
 Changes from Ant 1.9.12 TO Ant 1.9.13
 =====================================
 

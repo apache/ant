@@ -117,6 +117,13 @@ public abstract class AbstractJarSignerTask extends Task {
     private String executable;
 
     /**
+     * Values for the providerName, providerClass, and providerArg options.
+     *
+     * @since Ant 1.9.14
+     */
+    private String providerName, providerClass, providerArg;
+
+    /**
      * Set the maximum memory to be used by the jarsigner process
      *
      * @param max a string indicating the maximum memory according to the JVM
@@ -228,6 +235,39 @@ public abstract class AbstractJarSignerTask extends Task {
             path = new Path(getProject());
         }
         return path.createPath();
+    }
+
+    /**
+     * Sets the value for the -providerName command line argument.
+     *
+     * @param providerName the value for the -providerName command line argument
+     *
+     * @since Ant 1.9.14
+     */
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    /**
+     * Sets the value for the -providerClass command line argument.
+     *
+     * @param providerClass the value for the -providerClass command line argument
+     *
+     * @since Ant 1.9.14
+     */
+    public void setProviderClass(String providerClass) {
+        this.providerClass = providerClass;
+    }
+
+    /**
+     * Sets the value for the -providerArg command line argument.
+     *
+     * @param providerArg the value for the -providerArg command line argument
+     *
+     * @since Ant 1.9.14
+     */
+    public void setProviderArg(String providerArg) {
+        this.providerArg = providerArg;
     }
 
     /**
@@ -346,6 +386,20 @@ public abstract class AbstractJarSignerTask extends Task {
         if (null != storetype) {
             addValue(cmd, "-storetype");
             addValue(cmd, storetype);
+        }
+        if (null != providerName) {
+            addValue(cmd, "-providerName");
+            addValue(cmd, providerName);
+        }
+        if (null != providerClass) {
+            addValue(cmd, "-providerClass");
+            addValue(cmd, providerClass);
+            if (null != providerArg) {
+                addValue(cmd, "-providerArg");
+                addValue(cmd, providerArg);
+            }
+        } else if (null != providerArg) {
+            log("Ignoring providerArg as providerClass has not been set");
         }
     }
 
