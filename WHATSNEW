@@ -32,6 +32,9 @@ Other changes:
    command line arguments that are not supported explicitly by the
    tasks via attributes.
 
+ * added several attributes to <javadoc> that support modules.
+   Bugzilla Report 62424
+
 Changes from Ant 1.9.12 TO Ant 1.9.13
 =====================================
 

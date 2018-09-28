@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -447,11 +448,14 @@ public class Javadoc extends Task {
     private final Vector<SourceFile> sourceFiles = new Vector<SourceFile>();
     private final Vector<PackageName> packageNames = new Vector<PackageName>();
     private final Vector<PackageName> excludePackageNames = new Vector<PackageName>(1);
+    private final List<PackageName> moduleNames = new ArrayList<PackageName>();
     private boolean author = true;
     private boolean version = true;
     private DocletInfo doclet = null;
     private Path classpath = null;
     private Path bootclasspath = null;
+    private Path modulePath = null;
+    private Path moduleSourcePath = null;
     private String group = null;
     private String packageList = null;
     private final Vector<LinkArgument> links = new Vector<LinkArgument>();
@@ -563,6 +567,88 @@ public class Javadoc extends Task {
     }
 
     /**
+     * Specify where to find modules
+     *
+     * @param src a Path instance containing the modules.
+     *
+     * @since Ant 1.9.14
+     */
+    public void setModulePath(final Path mp) {
+        if (modulePath == null) {
+            modulePath = mp;
+        } else {
+            modulePath.append(mp);
+        }
+    }
+
+    /**
+     * Create a path to be configured with the locations of the module
+     * files.
+     *
+     * @return a new Path instance to be configured by the Ant core.
+     *
+     * @since Ant 1.9.14
+     */
+    public Path createModulePath() {
+        if (modulePath == null) {
+            modulePath = new Path(getProject());
+        }
+        return modulePath.createPath();
+    }
+
+    /**
+     * Adds a reference to a path defined elsewhere that defines the module path.
+     *
+     * @param r the reference containing the module path definition.
+     *
+     * @since Ant 1.9.14
+     */
+    public void setModulePathref(final Reference r) {
+        createModulePath().setRefid(r);
+    }
+
+    /**
+     * Specify where to find sources for modules
+     *
+     * @param src a Path instance containing the sources for modules.
+     *
+     * @since Ant 1.9.14
+     */
+    public void setModuleSourcePath(final Path mp) {
+        if (moduleSourcePath == null) {
+            moduleSourcePath = mp;
+        } else {
+            moduleSourcePath.append(mp);
+        }
+    }
+
+    /**
+     * Create a path to be configured with the locations of the module
+     * source files.
+     *
+     * @return a new Path instance to be configured by the Ant core.
+     *
+     * @since Ant 1.9.14
+     */
+    public Path createModuleSourcePath() {
+        if (moduleSourcePath == null) {
+            moduleSourcePath = new Path(getProject());
+        }
+        return moduleSourcePath.createPath();
+    }
+
+    /**
+     * Adds a reference to a path defined elsewhere that defines the module source path.
+     *
+     * @param r the reference containing the module source path definition.
+     *
+     * @since Ant 1.9.14
+     */
+    public void setModuleSourcePathref(final Reference r) {
+        createModuleSourcePath().setRefid(r);
+    }
+
+    /**
      * Set the directory where the Javadoc output will be generated.
      *
      * @param dir the destination directory.
@@ -616,6 +702,23 @@ public class Javadoc extends Task {
     }
 
     /**
+     * Set the module names to be processed.
+     *
+     * @param modules a comma separated list of module names
+     *
+     * @since Ant 1.9.14
+     */
+    public void setModulenames(final String modules) {
+        final StringTokenizer tok = new StringTokenizer(modules, ",");
+        while (tok.hasMoreTokens()) {
+            final String m = tok.nextToken();
+            final PackageName mn = new PackageName();
+            mn.setName(m);
+            addModule(mn);
+        }
+    }
+
+    /**
      * Add a single package to be processed.
      *
      * If the package name ends with &quot;.*&quot; the Javadoc task
@@ -625,6 +728,17 @@ public class Javadoc extends Task {
      */
     public void addPackage(final PackageName pn) {
         packageNames.addElement(pn);
+    }
+
+    /**
+     * Add a single module to be processed.
+     *
+     * @param mn the module name
+     *
+     * @since Ant 1.9.14
+     */
+    public void addModule(final PackageName mn) {
+        moduleNames.add(mn);
     }
 
     /**
@@ -1746,6 +1860,7 @@ public class Javadoc extends Task {
         doGroup(toExecute);    // group attribute
         doGroups(toExecute);  // groups attribute
         doDocFilesSubDirs(toExecute); // docfilessubdir attribute
+        doModuleArguments(toExecute);
 
         doJava14(toExecute);
         if (breakiterator && (doclet == null || JAVADOC_5)) {
@@ -1862,8 +1977,8 @@ public class Javadoc extends Task {
     private void checkPackagesToDoc(
         final Vector<String> packagesToDoc, final Vector<SourceFile> sourceFilesToDoc) {
         if (packageList == null && packagesToDoc.size() == 0
-            && sourceFilesToDoc.size() == 0) {
-            throw new BuildException("No source files and no packages have "
+            && sourceFilesToDoc.size() == 0 && moduleNames.isEmpty()) {
+            throw new BuildException("No source files, no packages and no modules have "
                                      + "been specified.");
         }
     }
@@ -2547,6 +2662,29 @@ public class Javadoc extends Task {
                 + fileContents.substring(start + LOAD_FRAME_LEN);
         }
         return fileContents;
+    }
+
+    private void doModuleArguments(Commandline toExecute) {
+        if (!moduleNames.isEmpty()) {
+            StringBuilder sb = null;
+            for (PackageName mn : moduleNames) {
+                if (sb == null) {
+                    sb = new StringBuilder(mn.getName());
+                } else {
+                    sb.append(",").append(mn.getName());
+                }
+            }
+            toExecute.createArgument().setValue("--module");
+            toExecute.createArgument().setValue(sb.toString());
+        }
+        if (modulePath != null) {
+            toExecute.createArgument().setValue("--module-path");
+            toExecute.createArgument().setPath(modulePath);
+        }
+        if (moduleSourcePath != null) {
+            toExecute.createArgument().setValue("--module-source-path");
+            toExecute.createArgument().setPath(moduleSourcePath);
+        }
     }
 
     private class JavadocOutputStream extends LogOutputStream {

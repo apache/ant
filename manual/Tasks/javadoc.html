@@ -92,9 +92,9 @@ to &lt;javadoc&gt; using <tt>classpath</tt>, <tt>classpathref</tt> attributes or
     <td valign="top">sourcepath</td>
     <td valign="top">Specify where to find source files</td>
     <td align="center" valign="top">all</td>
-    <td align="center" rowspan="3">At least one of the three or nested
-    <code>&lt;sourcepath&gt;</code>, <code>&lt;fileset&gt;</code> or
-    <code>&lt;packageset&gt;</code></td>
+    <td align="center" rowspan="3">At least one of the four or nested
+      <code>&lt;sourcepath&gt;</code>, <code>&lt;fileset&gt;</code>.
+      <code>module</code> or <code>&lt;packageset&gt;</code></td>
   </tr>
   <tr>
     <td valign="top">sourcepathref</td>
@@ -106,6 +106,12 @@ to &lt;javadoc&gt; using <tt>classpath</tt>, <tt>classpathref</tt> attributes or
     <td valign="top">sourcefiles</td>
     <td valign="top">Comma separated list of source files -- see also
     the nested <code>source</code> element.</td>
+    <td align="center" valign="top">all</td>
+  </tr>
+  <tr>
+    <td valign="top">modulenames</td>
+    <td valign="top">Comma separated list of module names -- see also
+    the nested <code>module</code> element. <em>since Ant 1.9.14</em></td>
     <td align="center" valign="top">all</td>
   </tr>
   <tr>
@@ -530,6 +536,36 @@ to &lt;javadoc&gt; using <tt>classpath</tt>, <tt>classpathref</tt> attributes or
     <td align="center" valign="top">1.4</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">modulesourcepath</td>
+    <td valign="top">Specify where to find module source files
+      <em>since Ant 1.9.14</em></td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">modulesourcepathref</td>
+    <td valign="top">Specify where to find module source files by <a
+      href="../using.html#references">reference</a> to a PATH defined elsewhere.
+      <em>since Ant 1.9.14</em></td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">modulepath</td>
+    <td valign="top">Specify where to find module files
+      <em>since Ant 1.9.14</em></td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">modulepathref</td>
+    <td valign="top">Specify where to find module files by <a
+      href="../using.html#references">reference</a> to a PATH defined elsewhere.
+      <em>since Ant 1.9.14</em></td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <h4><a name="groupattribute">Format of the group attribute</a></h4>
@@ -606,6 +642,24 @@ javadoc as source files.</p>
 
 <h5>Parameters</h5>
 Same as for <code>package</code>.
+
+<h4>module</h4>
+<p><em>since Ant 1.9.14</em></p>
+<p>Same as one entry in the list given by <code>modulenames</code>.</p>
+
+<h5>Parameters</h5>
+<table width="90%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The module name</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
 
 <h4>source</h4>
 <p>Same as one entry in the list given by <code>sourcefiles</code>.</p>
@@ -830,12 +884,13 @@ the javadoc program.
   </tr>
 </table>
 
-<h4>sourcepath, classpath and bootclasspath</h4>
-<p><code>Javadoc</code>'s <i>sourcepath</i>, <i>classpath</i> and
-<i>bootclasspath</i> attributes are <a href="../using.html#path">PATH like
-structure</a> and can also be set via nested <i>sourcepath</i>,
-<i>classpath</i> and <i>bootclasspath</i> elements
-respectively.</p>
+<h4>sourcepath, classpath, bootclasspath, modulepath, modulesourcepath</h4>
+<p><code>Javadoc</code>'s <i>sourcepath</i>, <i>classpath</i>,
+<i>bootclasspath</i>, <i>modulepath</i>, and <i>modulesourcepath</i>
+attributes are <a href="../using.html#path">PATH like structure</a>
+and can also be set via nested <i>sourcepath</i>,
+<i>classpath</i>, <i>bootclasspath</i>, <i>modulepath</i>,
+and <i>modulesourcepath</i> elements respectively.</p>
 
 <h4>arg</h4>
 
