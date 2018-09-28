@@ -1,4 +1,4 @@
-/*
+g/*
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements.  See the NOTICE file distributed with
  *  this work for additional information regarding copyright ownership.
@@ -19,11 +19,14 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.LineContainsRegExp;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -115,6 +118,15 @@ public abstract class AbstractJarSignerTask extends Task {
      * @since Ant 1.8.0
      */
     private String executable;
+
+    /**
+     * Values for the providerName, providerClass, and providerArg options.
+     *
+     * @since Ant 1.10.6
+     */
+    private String providerName, providerClass, providerArg;
+
+    private List<Commandline.Argument> additionalArgs = new ArrayList();
 
     /**
      * Set the maximum memory to be used by the jarsigner process
@@ -231,6 +243,49 @@ public abstract class AbstractJarSignerTask extends Task {
     }
 
     /**
+     * Sets the value for the -providerName command line argument.
+     *
+     * @param providerName the value for the -providerName command line argument
+     *
+     * @since Ant 1.10.6
+     */
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    /**
+     * Sets the value for the -providerClass command line argument.
+     *
+     * @param providerClass the value for the -providerClass command line argument
+     *
+     * @since Ant 1.10.6
+     */
+    public void setProviderClass(String providerClass) {
+        this.providerClass = providerClass;
+    }
+
+    /**
+     * Sets the value for the -providerArg command line argument.
+     *
+     * @param providerArg the value for the -providerArg command line argument
+     *
+     * @since Ant 1.10.6
+     */
+    public void setProviderArg(String providerArg) {
+        this.providerArg = providerArg;
+    }
+
+    /**
+     * Adds a nested &lt;arg&gt; element that can be used to specify
+     * command line arguments not supported via specific attributes.
+     *
+     * @since Ant 1.10.6
+     */
+    public void addArg(Commandline.Argument arg) {
+        additionalArgs.add(arg);
+    }
+
+    /**
      * init processing logic; this is retained through our execution(s)
      */
     protected void beginExecution() {
@@ -311,6 +366,10 @@ public abstract class AbstractJarSignerTask extends Task {
         for (Environment.Variable variable : sysProperties.getVariablesVector()) {
             declareSysProperty(cmd, variable);
         }
+
+        for (Commandline.Argument arg : additionalArgs) {
+            addArgument(cmd, arg);
+        }
     }
 
     /**
@@ -345,6 +404,20 @@ public abstract class AbstractJarSignerTask extends Task {
         if (null != storetype) {
             addValue(cmd, "-storetype");
             addValue(cmd, storetype);
+        }
+        if (null != providerName) {
+            addValue(cmd, "-providerName");
+            addValue(cmd, providerName);
+        }
+        if (null != providerClass) {
+            addValue(cmd, "-providerClass");
+            addValue(cmd, providerClass);
+            if (null != providerArg) {
+                addValue(cmd, "-providerArg");
+                addValue(cmd, providerArg);
+            }
+        } else if (null != providerArg) {
+            log("Ignoring providerArg as providerClass has not been set");
         }
     }
 
@@ -416,5 +489,14 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     protected void addValue(final ExecTask cmd, String value) {
         cmd.createArg().setValue(value);
+    }
+
+    /**
+     * add an argument to a command
+     * @param cmd command to manipulate
+     * @param arg argument to add
+     */
+    protected void addArgument(final ExecTask cmd, Commandline.Argument arg) {
+        cmd.createArg().copyFrom(arg);
     }
 }

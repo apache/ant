@@ -100,6 +100,29 @@ the <var>jar</var> attribute. Nested paths are also supported.</p>
       options as the Sun JDK <kbd>jarsigner</kbd> command.  <em>since Ant 1.8.0</em>.</td>
     <td>No</td>
   </tr>
+  <tr>
+    <td>providername</td>
+    <td>name of a cryptographic service provider's name
+      when listed in the security properties file.
+      <em>since Ant 1.10.6</em>.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>providerclass</td>
+    <td>name of a cryptographic service provider's master
+      class file when the service provider is not listed in the security
+      properties file.
+      <em>since Ant 1.10.6</em>.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>providerarg</td>
+    <td>Represents an optional string input argument for
+      the constructor of provider_class_name. Ignored
+      if <code>providerclass</code> is not set.
+      <em>since Ant 1.10.6</em>.</td>
+    <td>No</td>
+  </tr>
 </table>
 <h3>Parameters as nested elements</h3>
 <table class="attr">
@@ -123,6 +146,14 @@ the <var>jar</var> attribute. Nested paths are also supported.</p>
     <td>JVM system properties, with the syntax of Ant <a href="exec.html#env">environment
       variables</a></td>
     <td>No, and only one can be supplied</td>
+  </tr>
+  <tr>
+    <td>arg</td>
+    <td>Use this to specify a <kbd>keytool</kbd>
+    <a href="../using.html#arg">command line argument</a> not
+    explicitly supported via an attribute.
+    <em>since Ant 1.10.6</em>.</td>
+    <td>No</td>
   </tr>
 </table>
 
