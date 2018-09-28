@@ -19,11 +19,14 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.LineContainsRegExp;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -122,6 +125,8 @@ public abstract class AbstractJarSignerTask extends Task {
      * @since Ant 1.9.14
      */
     private String providerName, providerClass, providerArg;
+
+    private List<Commandline.Argument> additionalArgs = new ArrayList();
 
     /**
      * Set the maximum memory to be used by the jarsigner process
@@ -271,6 +276,16 @@ public abstract class AbstractJarSignerTask extends Task {
     }
 
     /**
+     * Adds a nested &lt;arg&gt; element that can be used to specify
+     * command line arguments not supported via specific attributes.
+     *
+     * @since Ant 1.9.14
+     */
+    public void addArg(Commandline.Argument arg) {
+        additionalArgs.add(arg);
+    }
+
+    /**
      * init processing logic; this is retained through our execution(s)
      */
     protected void beginExecution() {
@@ -350,6 +365,10 @@ public abstract class AbstractJarSignerTask extends Task {
         //now patch in all system properties
         for (Environment.Variable variable : sysProperties.getVariablesVector()) {
             declareSysProperty(cmd, variable);
+        }
+
+        for (Commandline.Argument arg : additionalArgs) {
+            addArgument(cmd, arg);
         }
     }
 
@@ -472,5 +491,14 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     protected void addValue(final ExecTask cmd, String value) {
         cmd.createArg().setValue(value);
+    }
+
+    /**
+     * add an argument to a command
+     * @param cmd command to manipulate
+     * @param arg argument to add
+     */
+    protected void addArgument(final ExecTask cmd, Commandline.Argument arg) {
+        cmd.createArg().copyFrom(arg);
     }
 }

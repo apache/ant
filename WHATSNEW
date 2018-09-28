@@ -28,6 +28,10 @@ Other changes:
    and -providerArg command line options of keytool via new attributes.
    Bugzilla Report 65234
 
+ * signjar and verifyjar now supported nested <arg> elements for
+   command line arguments that are not supported explicitly by the
+   tasks via attributes.
+
 Changes from Ant 1.9.12 TO Ant 1.9.13
 =====================================
 
