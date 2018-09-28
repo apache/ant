@@ -89,8 +89,9 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>sourcepath</td>
     <td>Specify where to find source files</td>
     <td>all</td>
-    <td rowspan="3">At least one of the three or
-      nested <code>&lt;sourcepath&gt;</code>, <code>&lt;fileset&gt;</code>
+    <td rowspan="4">At least one of the three or
+      nested <code>&lt;sourcepath&gt;</code>, <code>&lt;fileset&gt;</code>,
+      <code>module</code> or <code>&lt;packageset&gt;</code></td>
       or <code>&lt;packageset&gt;</code></td>
   </tr>
   <tr>
@@ -104,6 +105,12 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>Comma separated list of source files&mdash;see also the nested <code>source</code>
       element.</td>
     <td class="left">all</td>
+  </tr>
+  <tr>
+    <td>modulenames</td>
+    <td>Comma separated list of module names -- see also
+    the nested <code>module</code> element. <em>since Ant 1.10.6</em></td>
+    <td>all</td>
   </tr>
   <tr>
     <td>destdir</td>
@@ -500,6 +507,36 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>1.4</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
+  <tr>
+    <td>modulesourcepath</td>
+    <td>Specify where to find module source files
+      <em>since Ant 1.10.6</em></td>
+    <td>all</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>modulesourcepathref</td>
+    <td>Specify where to find module source files by <a
+      href="../using.html#references">reference</a> to a PATH defined elsewhere.
+      <em>since Ant 1.10.6</em></td>
+    <td>all</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>modulepath</td>
+    <td>Specify where to find module files
+      <em>since Ant 1.10.6</em></td>
+    <td>all</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>modulepathref</td>
+    <td>Specify where to find module files by <a
+      href="../using.html#references">reference</a> to a PATH defined elsewhere.
+      <em>since Ant 1.10.6</em></td>
+    <td>all</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h4 id="groupattribute">Format of the group attribute</h4>
@@ -566,6 +603,24 @@ filesets, filelists or paths) will be passed to javadoc as source files.</p>
 
 <h5>Parameters</h5>
 Same as for <code>package</code>.
+
+<h4>module</h4>
+<p><em>since Ant 1.10.6</em></p>
+<p>Same as one entry in the list given by <code>modulenames</code>.</p>
+
+<h5>Parameters</h5>
+<table width="90%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td scope="col"><b>Attribute</b></td>
+    <td scope="col"><b>Description</b></td>
+    <td scope="col"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>The module name</td>
+    <td>Yes</td>
+  </tr>
+</table>
 
 <h4>source</h4>
 <p>Same as one entry in the list given by <var>sourcefiles</var>.</p>
@@ -786,11 +841,13 @@ target="_top">the default taglets</a>.</p>
   </tr>
 </table>
 
-<h4>sourcepath, classpath and bootclasspath</h4>
-<p><code>Javadoc</code>'s <var>sourcepath</var>, <var>classpath</var> and <var>bootclasspath</var>
-attributes are <a href="../using.html#path">path-like structure</a> and can also be set via
-nested <code>sourcepath</code>, <code>classpath</code> and <code>bootclasspath</code> elements
-respectively.</p>
+<h4>sourcepath, classpath, bootclasspath, modulepath, modulesourcepath</h4>
+<p><code>Javadoc</code>'s <i>sourcepath</i>, <i>classpath</i>,
+<i>bootclasspath</i>, <i>modulepath</i>, and <i>modulesourcepath</i>
+attributes are <a href="../using.html#path">PATH like structure</a>
+and can also be set via nested <i>sourcepath</i>,
+<i>classpath</i>, <i>bootclasspath</i>, <i>modulepath</i>,
+and <i>modulesourcepath</i> elements respectively.</p>
 
 <h4>arg</h4>
 <p><em>Since Ant 1.6</em></p>
