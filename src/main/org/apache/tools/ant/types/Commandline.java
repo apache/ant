@@ -185,6 +185,8 @@ public class Commandline implements Cloneable {
         /**
          * Copies settings from a different argument.
          *
+         * @param other the argument to copy setting from
+         *
          * @since Ant 1.9.14
          */
         public void copyFrom(Argument other) {

@@ -279,6 +279,8 @@ public abstract class AbstractJarSignerTask extends Task {
      * Adds a nested &lt;arg&gt; element that can be used to specify
      * command line arguments not supported via specific attributes.
      *
+     * @param arg the argument to add
+     *
      * @since Ant 1.9.14
      */
     public void addArg(Commandline.Argument arg) {
