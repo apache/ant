@@ -572,7 +572,7 @@ public class Javadoc extends Task {
     /**
      * Specify where to find modules
      *
-     * @param src a Path instance containing the modules.
+     * @param mp a Path instance containing the modules.
      *
      * @since Ant 1.10.6
      */
@@ -613,7 +613,7 @@ public class Javadoc extends Task {
     /**
      * Specify where to find sources for modules
      *
-     * @param src a Path instance containing the sources for modules.
+     * @param mp a Path instance containing the sources for modules.
      *
      * @since Ant 1.10.6
      */
