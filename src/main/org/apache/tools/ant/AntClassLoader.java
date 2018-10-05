@@ -369,6 +369,8 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
                 } catch (final BuildException e) {
                     // ignore path elements which are invalid
                     // relative to the project
+                    log("Ignoring path element " + pathElement + " from " +
+                            "classpath due to exception " + e, Project.MSG_DEBUG);
                 }
             }
         }
