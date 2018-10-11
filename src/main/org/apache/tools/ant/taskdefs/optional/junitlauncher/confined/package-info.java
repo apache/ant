@@ -20,7 +20,7 @@
  * have any compile time dependency on any of JUnit platform or
  * engine classes/interfaces. They <em>must not</em> even have any
  * compile time dependency on any classes/interfaces that belong to the
- * {@link org.apache.tools.ant.taskdefs.optional.junitlauncher} package.
+ * {@code org.apache.tools.ant.taskdefs.optional.junitlauncher} package.
  *
  * @since Ant 1.10.6
  */

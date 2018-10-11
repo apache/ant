@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.optional.junitlauncher.StandaloneLauncher;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
@@ -32,6 +31,8 @@ import org.apache.tools.ant.types.PropertySet;
  * {@code junitlauncher} task
  */
 public class ForkDefinition {
+
+    private static final String STANDALONE_LAUNCHER_CLASS_NAME = "org.apache.tools.ant.taskdefs.optional.junitlauncher.StandaloneLauncher";
 
     private boolean includeAntRuntimeLibraries = true;
     private boolean includeJUnitPlatformLibraries = true;
@@ -114,7 +115,7 @@ public class ForkDefinition {
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);
         }
-        cmdLine.setClassname(StandaloneLauncher.class.getName());
+        cmdLine.setClassname(STANDALONE_LAUNCHER_CLASS_NAME);
         // VM arguments
         final Project project = task.getProject();
         final ClassLoader taskClassLoader = task.getClass().getClassLoader();
