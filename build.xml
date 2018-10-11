@@ -600,6 +600,7 @@
            destdir="${build.classes}"
            debug="${debug}"
            deprecation="${deprecation}"
+           excludes="${optional.package}/junitlauncher/confined/**"
            target="${javac.target}"
            source="${javac.source}"
            optimize="${optimize}">
@@ -637,6 +638,33 @@
           </or>
         </not>
       </selector>
+    </javac>
+
+    <!-- Builds and verifies that the classes belonging in the confined package of
+    junitlauncher task do not depend on classes they aren't meant to -->
+    <!-- first wipe out the "confined" package that might have been built already
+     due to the javac above -->
+    <delete dir="${build.classes}/${optional.package}/junitlauncher/confined/"/>
+    <javac srcdir="${java.dir}"
+           includeantruntime="false"
+           destdir="${build.classes}"
+           debug="${debug}"
+           deprecation="${deprecation}"
+           includes="${optional.package}/junitlauncher/confined/**"
+           target="${javac.target}"
+           source="${javac.source}"
+           optimize="${optimize}">
+      <classpath>
+        <!-- A very limited classpath which only doesn't include optional libraries,
+         which the classes in confined package aren't meant to depend on -->
+        <fileset dir="${build.classes}">
+          <!-- exclude the org/apache/tools/ant/taskdefs/optional/junitlauncher package
+          from the classpath, since the confined package isn't meant to depend on
+          classes in this package -->
+          <exclude name="org/apache/tools/ant/taskdefs/optional/junitlauncher/*"/>
+        </fileset>
+      </classpath>
+
     </javac>
 
     <copy todir="${build.classes}">
