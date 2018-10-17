@@ -126,7 +126,7 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     private String providerName, providerClass, providerArg;
 
-    private List<Commandline.Argument> additionalArgs = new ArrayList();
+    private List<Commandline.Argument> additionalArgs = new ArrayList<>();
 
     /**
      * Set the maximum memory to be used by the jarsigner process
