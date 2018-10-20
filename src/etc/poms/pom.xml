@@ -57,8 +57,8 @@
     <url>https://git-wip-us.apache.org/repos/asf/ant.git</url>
   </scm>
   <ciManagement>
-    <system>hudson</system>
-    <url>https://builds.apache.org/job/Ant_BuildFromPOMs/</url>
+    <system>jenkins</system>
+    <url>https://builds.apache.org/job/Ant-Build-from-POMs/</url>
   </ciManagement>
   <mailingLists>
     <mailingList>
@@ -114,6 +114,12 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <version>1.3</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>../../../src/main</sourceDirectory>
@@ -125,7 +131,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.8.0</version>
           <configuration>
             <source>1.8</source>
             <target>1.8</target>
@@ -139,12 +145,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.21.0</version>
+          <version>2.22.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-report-plugin</artifactId>
-          <version>2.21.0</version>
+          <version>2.22.1</version>
         </plugin>
       </plugins>
     </pluginManagement>

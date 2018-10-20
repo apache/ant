@@ -43,21 +43,9 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
-      <version>1.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant-antunit</artifactId>
-      <version>1.3</version>
+      <version>1.4</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -120,37 +108,37 @@
         <configuration>
           <excludes>
             <exclude>org/apache/tools/ant/filters/util/JavaClassHelper*</exclude>
-            <exclude>org/apache/tools/ant/filters/util/JavaClassHelper*</exclude>
-            <exclude>org/apache/tools/ant/launch/**</exclude>
+            <exclude>org/apache/tools/ant/launch/</exclude>
             <exclude>org/apache/tools/ant/listener/CommonsLoggingListener*</exclude>
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/NetRexxC*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Script*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Xalan2TraceSupport*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/image/*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/jdepend/*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/junit/*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/junitlauncher/*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/image/</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/jdepend/</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/junit/</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/junitlauncher/</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/FTP*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/RExec*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/TelnetTask*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/script/**</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/ssh/*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/xz/*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/script/</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/ssh/</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/xz/</exclude>
             <exclude>org/apache/tools/ant/types/optional/*Script*</exclude>
-            <exclude>org/apache/tools/ant/types/optional/image/*</exclude>
-            <exclude>org/apache/tools/ant/types/optional/xz/*</exclude>
-            <exclude>org/apache/tools/ant/types/resolver/**</exclude>
+            <exclude>org/apache/tools/ant/types/optional/image/</exclude>
+            <exclude>org/apache/tools/ant/types/optional/imageio/</exclude>
+            <exclude>org/apache/tools/ant/types/optional/xz/</exclude>
+            <exclude>org/apache/tools/ant/types/resolver/</exclude>
             <exclude>org/apache/tools/ant/util/ScriptRunner.java</exclude>
-            <exclude>org/apache/tools/ant/util/depend/bcel/*</exclude>
+            <exclude>org/apache/tools/ant/util/depend/bcel/</exclude>
             <exclude>org/apache/tools/ant/util/optional/ScriptRunner.java</exclude>
             <exclude>org/apache/tools/ant/util/regexp/JakartaOro*</exclude>
             <exclude>org/apache/tools/ant/util/regexp/JakartaRegexp*</exclude>
           </excludes>
           <testExcludes>
             <exclude>org/apache/tools/ant/filters/util/JavaClassHelper*</exclude>
-            <exclude>org/apache/tools/ant/launch/**</exclude>
+            <exclude>org/apache/tools/ant/launch/</exclude>
             <exclude>org/apache/tools/ant/listener/CommonsLoggingListener*</exclude>
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/StyleTest*</exclude>
@@ -158,12 +146,13 @@
             <exclude>org/apache/tools/ant/taskdefs/optional/junit/</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/junitlauncher/</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/FTP*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/ssh/*</exclude>
-            <exclude>org/apache/tools/ant/types/resolver/**</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/ssh/</exclude>
+            <exclude>org/apache/tools/ant/types/resolver/</exclude>
             <exclude>org/apache/tools/ant/util/Script*</exclude>
             <exclude>org/apache/tools/ant/util/regexp/JakartaOro*</exclude>
             <exclude>org/apache/tools/ant/util/regexp/JakartaRegexp*</exclude>
             <exclude>org/apache/tools/ant/util/regexp/Jdk14Regexp*</exclude>
+            <exclude>org/example/junitlauncher/</exclude>
           </testExcludes>
         </configuration>
       </plugin>
@@ -202,9 +191,10 @@
         <directory>../../../../src/main</directory>
         <filtering>true</filtering>
         <includes>
-          <include>org/apache/tools/ant/taskdefs/default.properties</include>
-          <include>org/apache/tools/ant/types/default.properties</include>
-          <include>org/apache/tools/ant/taskdefs/default.properties</include>
+          <include>org/apache/tools/ant/listener/defaults.properties</include>
+          <include>org/apache/tools/ant/taskdefs/defaults.properties</include>
+          <include>org/apache/tools/ant/types/defaults.properties</include>
+          <include>org/apache/tools/ant/antlib.xml</include>
           <include>org/apache/tools/ant/types/conditions/antlib.xml</include>
           <include>org/apache/tools/ant/defaultManifest.mf</include>
           <include>org/apache/tools/ant/version.txt</include>
