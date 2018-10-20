@@ -92,6 +92,7 @@
     <module>ant-apache-xalan2</module>
     <module>ant-commons-logging</module>
     <module>ant-commons-net</module>
+    <module>ant-imageio</module>
     <module>ant-jai</module>
     <module>ant-javamail</module>
     <module>ant-jdepend</module>
