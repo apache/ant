@@ -84,6 +84,7 @@
         <configuration>
           <basedir>../../../..</basedir>
           <workingDirectory>../../../..</workingDirectory>
+          <skipTests>true</skipTests>
         </configuration>
       </plugin>
     </plugins>
