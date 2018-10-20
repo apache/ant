@@ -39,6 +39,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeNotNull;
 
 /**
  * This is a unit test for the Scp task in Ant.  It must be
@@ -82,6 +83,7 @@ public class ScpTest {
 
     @Test
     public void testSingleFileUploadAndDownload() throws IOException {
+        assumeNotNull("system property scp.host must be set", sshHostUri);
         assertNotNull("system property scp.tmp must be set", tempDir);
         File uploadFile = createTemporaryFile();
 
@@ -107,6 +109,7 @@ public class ScpTest {
 
     @Test
     public void testMultiUploadAndDownload() throws IOException {
+        assumeNotNull("system property scp.host must be set", sshHostUri);
         assertNotNull("system property scp.tmp must be set", tempDir);
         List<File> uploadList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -143,6 +146,7 @@ public class ScpTest {
 
     @Test
     public void testMultiResourceCollectionUpload() throws IOException {
+        assumeNotNull("system property scp.host must be set", sshHostUri);
         assertNotNull("system property scp.tmp must be set", tempDir);
         List<File> uploadList = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

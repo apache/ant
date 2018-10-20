@@ -161,6 +161,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <basedir>../../../..</basedir>
+          <workingDirectory>../../../..</workingDirectory>
+          <skipTests>true</skipTests>
           <systemProperties>
             <property>
               <name>ant.home</name>

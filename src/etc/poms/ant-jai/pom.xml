@@ -57,11 +57,11 @@
   </dependencies>
   <!-- Central has javax.media:jai-core:1.1.3 but only com.sun.media:jai-codec:1.1.2_01 -->
   <repositories>
-      <repository>
-          <id>jboss</id>
-          <name>JBoss</name>
-          <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-      </repository>
+    <repository>
+      <id>jboss</id>
+      <name>JBoss</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+    </repository>
   </repositories>
   <build>
     <plugins>
@@ -73,11 +73,22 @@
             <include>org/apache/tools/ant/taskdefs/optional/image/Image.java</include>
             <include>org/apache/tools/ant/types/optional/image/*</include>
           </includes>
+          <testIncludes>
+            <include>org/apache/tools/ant/taskdefs/optional/image/ImageTest.java</include>
+          </testIncludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <basedir>../../../..</basedir>
+          <workingDirectory>../../../..</workingDirectory>
         </configuration>
       </plugin>
     </plugins>
     <sourceDirectory>../../../../src/main</sourceDirectory>
-    <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
+    <testSourceDirectory>../../../../src/tests/junit</testSourceDirectory>
     <outputDirectory>../../../../target/${project.artifactId}/classes</outputDirectory>
     <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>
     <directory>../../../../target/${project.artifactId}</directory>
