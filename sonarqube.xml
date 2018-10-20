@@ -9,7 +9,7 @@
   <property name="downloads" location="build/downloads"/>
   <property name="sonarqube-ant-task-jar" location="${downloads}/sonarqube-ant-task.jar"/>
   <property name="sonarqube-ant-task-url"
-            value="https://sonarsource.bintray.com/Distribution/sonarqube-ant-task/sonarqube-ant-task-2.5.jar"/>
+            value="https://binaries.sonarsource.com/Distribution/sonarqube-ant-task/sonarqube-ant-task-2.5.jar"/>
 
   <target name="download">
     <mkdir dir="${downloads}"/>
