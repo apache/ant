@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.util;
 
+import org.apache.tools.ant.MagicNames;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -33,7 +34,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class ReaderInputStreamTest {
 
-    private static final String ROOT = System.getProperty("root");
+    private static final String ROOT = System.getProperty(MagicNames.TEST_ROOT_DIRECTORY);
 
     @Test
     public void testSimple() throws Exception {

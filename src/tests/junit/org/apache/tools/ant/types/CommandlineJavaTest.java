@@ -49,8 +49,8 @@ public class CommandlineJavaTest {
     @Before
     public void setUp() {
         project = new Project();
-        if (System.getProperty("root") != null) {
-            project.setBasedir(System.getProperty("root"));
+        if (System.getProperty(MagicNames.TEST_ROOT_DIRECTORY) != null) {
+            project.setBasedir(System.getProperty(MagicNames.TEST_ROOT_DIRECTORY));
         }
         project.setProperty("build.sysclasspath", "ignore");
         cloneVm = System.getProperty("ant.build.clonevm");
@@ -74,7 +74,7 @@ public class CommandlineJavaTest {
      */
     @Test
     public void testGetCommandline() throws CloneNotSupportedException {
-        assertNotNull("Ant home not set", System.getProperty("ant.home"));
+        assertNotNull("Ant home not set", System.getProperty(MagicNames.ANT_HOME));
         c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
         c.setClassname("junit.textui.TestRunner");
         c.createVmArgument().setValue("-Djava.compiler=NONE");

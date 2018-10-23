@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import org.apache.tools.ant.MagicNames;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ import static org.junit.Assert.assertThat;
 
 public class LayoutPreservingPropertiesTest {
 
-    private static final String ROOT = System.getProperty("root");
+    private static final String ROOT = System.getProperty(MagicNames.TEST_ROOT_DIRECTORY);
 
     private LayoutPreservingProperties lpf;
 

@@ -153,11 +153,14 @@ public class BuildFileRule extends ExternalResource {
         logBuffer = new StringBuffer();
         fullLogBuffer = new StringBuffer();
         project = new Project();
+        if (Boolean.getBoolean(MagicNames.TEST_BASEDIR_IGNORE)) {
+            System.clearProperty(MagicNames.PROJECT_BASEDIR);
+        }
         project.init();
-        File antFile = new File(System.getProperty("root"), filename);
-        project.setProperty("ant.processid", ProcessUtil.getProcessId("<Process>"));
-        project.setProperty("ant.threadname", Thread.currentThread().getName());
-        project.setUserProperty("ant.file", antFile.getAbsolutePath());
+        File antFile = new File(System.getProperty(MagicNames.TEST_ROOT_DIRECTORY), filename);
+        project.setProperty(MagicNames.TEST_PROCESS_ID, ProcessUtil.getProcessId("<Process>"));
+        project.setProperty(MagicNames.TEST_THREAD_NAME, Thread.currentThread().getName());
+        project.setUserProperty(MagicNames.ANT_FILE, antFile.getAbsolutePath());
         project.addBuildListener(new AntTestListener(logLevel));
         ProjectHelper.configureProject(project, antFile);
     }

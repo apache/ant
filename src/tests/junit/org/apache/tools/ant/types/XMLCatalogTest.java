@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.junit.Before;
@@ -68,8 +69,8 @@ public class XMLCatalogTest {
     @Before
     public void setUp() {
         project = new Project();
-        if (System.getProperty("root") != null) {
-            project.setBasedir(System.getProperty("root"));
+        if (System.getProperty(MagicNames.TEST_ROOT_DIRECTORY) != null) {
+            project.setBasedir(System.getProperty(MagicNames.TEST_ROOT_DIRECTORY));
         }
         // This causes XMLCatalog to print out detailed logging
         // messages for debugging

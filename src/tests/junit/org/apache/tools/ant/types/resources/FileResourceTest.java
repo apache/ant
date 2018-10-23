@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.resources;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,8 +37,9 @@ public class FileResourceTest {
 
     @Before
     public void setUp() throws IOException {
-        root = (System.getProperty("root") == null) ? new File(".").getCanonicalFile()
-                : new File(System.getProperty("root"));
+        root = (System.getProperty(MagicNames.TEST_ROOT_DIRECTORY) == null)
+                ? new File(".").getCanonicalFile()
+                : new File(System.getProperty(MagicNames.TEST_ROOT_DIRECTORY));
     }
 
     @Test

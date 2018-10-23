@@ -28,6 +28,7 @@ import java.util.GregorianCalendar;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.util.FileUtils;
@@ -66,7 +67,7 @@ public class ExecTaskTest {
         buildRule.getProject().executeTarget("setUp");
         assumeNotNull(buildRule.getProject().getProperty("test.can.run"));
         MonitoredBuild myBuild = new MonitoredBuild(new File(
-                buildRule.getProject().getProperty("ant.file")), "spawn");
+                buildRule.getProject().getProperty(MagicNames.ANT_FILE)), "spawn");
         File logFile = FILE_UTILS.createTempFile("spawn", "log",
                 new File(buildRule.getProject().getProperty("output")), false, false);
         // this is guaranteed by FileUtils#createTempFile
@@ -131,7 +132,7 @@ public class ExecTaskTest {
             this.target = target;
             project = new Project();
             project.init();
-            project.setUserProperty("ant.file", myBuildFile.getAbsolutePath());
+            project.setUserProperty(MagicNames.ANT_FILE, myBuildFile.getAbsolutePath());
             ProjectHelper.configureProject(project, myBuildFile);
         }
 

@@ -19,6 +19,8 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
@@ -215,13 +217,13 @@ public class JavacTest {
 
     @Test
     public void testSourceWithDefault() {
-        project.setNewProperty("ant.build.javac.source", "1.4");
+        project.setNewProperty(MagicNames.BUILD_JAVAC_SOURCE, "1.4");
         assertEquals("1.4", javac.getSource());
     }
 
     @Test
     public void testSourceOverridesDefault() {
-        project.setNewProperty("ant.build.javac.source", "1.4");
+        project.setNewProperty(MagicNames.BUILD_JAVAC_SOURCE, "1.4");
         javac.setSource("1.5");
         assertEquals("1.5", javac.getSource());
     }
@@ -233,13 +235,13 @@ public class JavacTest {
 
     @Test
     public void testTargetWithDefault() {
-        project.setNewProperty("ant.build.javac.target", "1.4");
+        project.setNewProperty(MagicNames.BUILD_JAVAC_TARGET, "1.4");
         assertEquals("1.4", javac.getTarget());
     }
 
     @Test
     public void testTargetOverridesDefault() {
-        project.setNewProperty("ant.build.javac.target", "1.4");
+        project.setNewProperty(MagicNames.BUILD_JAVAC_TARGET, "1.4");
         javac.setTarget("1.5");
         assertEquals("1.5", javac.getTarget());
     }

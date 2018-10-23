@@ -21,6 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.PropertySet;
 
@@ -99,7 +100,7 @@ public class CallTarget extends Task {
                 "Attribute target or at least one nested target is required.",
                  getLocation());
         }
-        callee.setAntfile(getProject().getProperty("ant.file"));
+        callee.setAntfile(getProject().getProperty(MagicNames.ANT_FILE));
         callee.setInheritAll(inheritAll);
         callee.setInheritRefs(inheritRefs);
         callee.execute();

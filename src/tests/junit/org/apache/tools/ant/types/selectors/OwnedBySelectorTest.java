@@ -45,7 +45,7 @@ public class OwnedBySelectorTest {
 
     private final String SELF = System.getProperty("user.name");
 
-    private final String ROOT = "root";
+    private final String ROOT_USER = "root";
 
     private OwnedBySelector s;
 
@@ -73,7 +73,7 @@ public class OwnedBySelectorTest {
         Path symbolicLink = Files.createSymbolicLink(target.toPath(), TEST_FILE.toPath());
 
         UserPrincipal root = Files.getOwner(symbolicLink);
-        assertEquals(ROOT, root.getName());
+        assertEquals(ROOT_USER, root.getName());
 
         UserPrincipal user = Files.getOwner(symbolicLink, LinkOption.NOFOLLOW_LINKS);
         assertEquals(SELF, user.getName());

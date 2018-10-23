@@ -73,7 +73,12 @@
         <configuration>
           <basedir>../../../..</basedir>
           <workingDirectory>../../../..</workingDirectory>
-          <skipTests>true</skipTests>
+          <systemProperties>
+            <property>
+              <name>ant.test.basedir.ignore</name>
+              <value>true</value>
+            </property>
+          </systemProperties>
         </configuration>
       </plugin>
     </plugins>
