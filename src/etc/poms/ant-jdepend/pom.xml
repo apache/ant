@@ -62,7 +62,7 @@
           </includes>
           <testIncludes>
             <include>org/apache/tools/ant/taskdefs/optional/jdepend/</include>
-            <include>/org/apache/tools/ant/util/facade/</include>
+            <include>org/apache/tools/ant/util/facade/</include>
           </testIncludes>
         </configuration>
       </plugin>

@@ -59,11 +59,28 @@
             <include>org/apache/tools/ant/filters/util/JavaClassHelper*</include>
             <include>org/apache/tools/ant/util/depend/bcel/*</include>
           </includes>
+          <testIncludes>
+            <exclude>org/apache/tools/ant/types/optional/depend/ClassFileSet*</exclude>
+          </testIncludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <basedir>../../../..</basedir>
+          <workingDirectory>../../../..</workingDirectory>
+          <systemProperties>
+            <property>
+              <name>ant.test.basedir.ignore</name>
+              <value>true</value>
+            </property>
+          </systemProperties>
         </configuration>
       </plugin>
     </plugins>
     <sourceDirectory>../../../../src/main</sourceDirectory>
-    <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
+    <testSourceDirectory>../../../../src/tests/junit</testSourceDirectory>
     <outputDirectory>../../../../target/${project.artifactId}/classes</outputDirectory>
     <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>
     <directory>../../../../target/${project.artifactId}</directory>

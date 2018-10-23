@@ -58,6 +58,24 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.12.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <version>1.6.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.beanshell</groupId>
+      <artifactId>bsh</artifactId>
+      <version>2.0b5</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <filters>
@@ -113,7 +131,6 @@
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/NetRexxC*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/Script*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Xalan2TraceSupport*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/image/</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/jdepend/</exclude>
@@ -122,36 +139,70 @@
             <exclude>org/apache/tools/ant/taskdefs/optional/net/FTP*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/RExec*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/TelnetTask*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/script/</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/ssh/</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/xz/</exclude>
-            <exclude>org/apache/tools/ant/types/optional/*Script*</exclude>
             <exclude>org/apache/tools/ant/types/optional/image/</exclude>
             <exclude>org/apache/tools/ant/types/optional/imageio/</exclude>
             <exclude>org/apache/tools/ant/types/optional/xz/</exclude>
             <exclude>org/apache/tools/ant/types/resolver/</exclude>
-            <exclude>org/apache/tools/ant/util/ScriptRunner.java</exclude>
             <exclude>org/apache/tools/ant/util/depend/bcel/</exclude>
+            <exclude>org/apache/tools/ant/util/ScriptRunner.java</exclude>
             <exclude>org/apache/tools/ant/util/optional/ScriptRunner.java</exclude>
             <exclude>org/apache/tools/ant/util/regexp/JakartaOro*</exclude>
             <exclude>org/apache/tools/ant/util/regexp/JakartaRegexp*</exclude>
           </excludes>
           <testExcludes>
-            <exclude>org/apache/tools/ant/filters/util/JavaClassHelper*</exclude>
+            <!-- launcher -->
             <exclude>org/apache/tools/ant/launch/</exclude>
+            <!-- commons-logging -->
             <exclude>org/apache/tools/ant/listener/CommonsLoggingListener*</exclude>
+            <!-- log4j -->
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
+            <!-- obsolete -->
+            <exclude>org/apache/tools/ant/taskdefs/AbstractCvs*</exclude>
+            <!-- investigate -->
+            <exclude>org/apache/tools/ant/taskdefs/Ant*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/Available*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/ExecuteJava*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/ExecuteWatchdog*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/Javac*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/email/EmailTask*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/XmlValidateCatalog*</exclude>
+            <!-- see XsltTest -->
             <exclude>org/apache/tools/ant/taskdefs/StyleTest*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
+            <!-- antlr -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/ANTLR*</exclude>
+            <!-- obsolete -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/Jspc*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/Pvcs*</exclude>
+            <!-- image/imageio -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/image/</exclude>
+            <!-- jdepend -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/jdepend/</exclude>
+            <!-- junit -->
             <exclude>org/apache/tools/ant/taskdefs/optional/junit/</exclude>
+            <!-- junitlauncher -->
             <exclude>org/apache/tools/ant/taskdefs/optional/junitlauncher/</exclude>
+            <!-- net -->
             <exclude>org/apache/tools/ant/taskdefs/optional/net/FTP*</exclude>
+            <!-- jsch -->
             <exclude>org/apache/tools/ant/taskdefs/optional/ssh/</exclude>
-            <exclude>org/apache/tools/ant/types/resolver/</exclude>
-            <exclude>org/apache/tools/ant/util/Script*</exclude>
+            <!-- dependent on junit -->
+            <exclude>org/apache/tools/ant/types/Assertions*</exclude>
+            <!-- bcel -->
+            <exclude>org/apache/tools/ant/types/optional/depend/ClassFileSet*</exclude>
+            <!-- oro -->
             <exclude>org/apache/tools/ant/util/regexp/JakartaOro*</exclude>
+            <!-- regexp -->
             <exclude>org/apache/tools/ant/util/regexp/JakartaRegexp*</exclude>
-            <exclude>org/apache/tools/ant/util/regexp/Jdk14Regexp*</exclude>
+            <!-- investigate -->
+            <exclude>org/apache/tools/ant/types/CommandlineJava*</exclude>
+            <exclude>org/apache/tools/ant/types/selectors/ModifiedSelector*</exclude>
+            <exclude>org/apache/tools/ant/util/ClasspathUtils*</exclude>
+            <exclude>org/apache/tools/ant/util/LoaderUtils*</exclude>
+            <exclude>org/apache/tools/ant/AntClassLoaderDelegation*</exclude>
+            <exclude>org/apache/tools/ant/Include*</exclude>
             <exclude>org/example/junitlauncher/</exclude>
           </testExcludes>
         </configuration>
@@ -162,7 +213,6 @@
         <configuration>
           <basedir>../../../..</basedir>
           <workingDirectory>../../../..</workingDirectory>
-          <skipTests>true</skipTests>
           <systemProperties>
             <property>
               <name>ant.home</name>
@@ -178,6 +228,10 @@
             </property>
             <property>
               <name>offline</name>
+              <value>true</value>
+            </property>
+            <property>
+              <name>ant.test.basedir.ignore</name>
               <value>true</value>
             </property>
           </systemProperties>
@@ -207,6 +261,7 @@
         <filtering>true</filtering>
         <includes>
           <include>**/antlib.xml</include>
+          <include>**/javadoc-frame-injections-fix.txt</include>
         </includes>
       </resource>
       <resource>
