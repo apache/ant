@@ -71,6 +71,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
         <configuration>
           <basedir>../../../..</basedir>
           <workingDirectory>../../../..</workingDirectory>
+          <!-- tests assume an FTP server listening on localhost -->
           <skipTests>true</skipTests>
         </configuration>
       </plugin>

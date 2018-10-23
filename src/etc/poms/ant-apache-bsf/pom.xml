@@ -56,9 +56,6 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <includes>
-            <include>org/apache/tools/ant/taskdefs/optional/Script*</include>
-            <include>org/apache/tools/ant/taskdefs/optional/script/**</include>
-            <include>org/apache/tools/ant/types/optional/*Script*</include>
             <include>org/apache/tools/ant/util/Script*</include>
             <include>org/apache/tools/ant/util/optional/Script*</include>
           </includes>

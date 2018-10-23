@@ -44,13 +44,17 @@
           <includes>
             <include>org/apache/tools/ant/launch/*.java</include>
           </includes>
+          <testIncludes>
+            <include>org/apache/tools/ant/launch/*.java</include>
+          </testIncludes>
         </configuration>
       </plugin>
     </plugins>
     <sourceDirectory>../../../../src/main</sourceDirectory>
+    <!-- tests depend on Ant (Os) -->
     <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
-    <outputDirectory>../../../../target/ant-launcher/classes</outputDirectory>
-    <testOutputDirectory>../../../../target/ant-launcher/testcases</testOutputDirectory>
-    <directory>../../../../target/ant-launcher</directory>
+    <outputDirectory>../../../../target/${project.artifactId}/classes</outputDirectory>
+    <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>
+    <directory>../../../../target/${project.artifactId}</directory>
   </build>
 </project>
