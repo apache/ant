@@ -820,8 +820,8 @@ public class ProjectHelper2 extends ProjectHelper {
                 return;
             }
             // set explicitly before starting ?
-            if (project.getProperty("basedir") != null) {
-                project.setBasedir(project.getProperty("basedir"));
+            if (project.getProperty(MagicNames.PROJECT_BASEDIR) != null) {
+                project.setBasedir(project.getProperty(MagicNames.PROJECT_BASEDIR));
             } else {
                 // Default for baseDir is the location of the build file.
                 if (baseDir == null) {

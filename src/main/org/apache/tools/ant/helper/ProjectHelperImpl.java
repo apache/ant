@@ -28,6 +28,7 @@ import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.IntrospectionHelper;
 import org.apache.tools.ant.Location;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.RuntimeConfigurable;
@@ -423,8 +424,8 @@ public class ProjectHelperImpl extends ProjectHelper {
                 helperImpl.project.addReference(id, helperImpl.project);
             }
 
-            if (helperImpl.project.getProperty("basedir") != null) {
-                helperImpl.project.setBasedir(helperImpl.project.getProperty("basedir"));
+            if (helperImpl.project.getProperty(MagicNames.PROJECT_BASEDIR) != null) {
+                helperImpl.project.setBasedir(helperImpl.project.getProperty(MagicNames.PROJECT_BASEDIR));
             } else {
                 if (baseDir == null) {
                     helperImpl.project.setBasedir(helperImpl.buildFileParent.getAbsolutePath());

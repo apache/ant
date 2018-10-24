@@ -26,6 +26,7 @@ import static org.junit.Assume.assumeNoException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -83,7 +84,7 @@ public class PropertyTest {
 
     @Test
     public void test5() {
-        String baseDir = buildRule.getProject().getProperty("basedir");
+        String baseDir = buildRule.getProject().getProperty(MagicNames.PROJECT_BASEDIR);
         String uri = FILE_UTILS.toURI(baseDir + "/property3.properties");
         buildRule.getProject().setNewProperty("test5.url", uri);
 
