@@ -49,6 +49,11 @@ Other changes:
  * added several attributes to <javadoc> that support modules.
    Bugzilla Report 62424
 
+ * properties used or set by BuildFileTask/BuildFileRule are documented
+   in MagicNames. A new magic property, ant.test.basedir.ignore, is
+   introduced for cases where Ant projects set up for test purposes
+   must ignore basedir set externally by test harness.
+
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================
 
