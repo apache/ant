@@ -374,7 +374,8 @@ public class AntTest {
         // Cf. #42263
         buildRule.executeTarget("sub-show-ant.core.lib");
         String realLog = buildRule.getLog();
-        assertTrue("found ant.core.lib in: " + realLog, realLog.matches(".*(ant[.]jar|build.classes).*"));
+        assertTrue("found ant.core.lib in: " + realLog,
+                realLog.matches(".*(ant[.]jar|ant.classes|build.classes).*"));
     }
 
     private class BasedirChecker implements BuildListener {
