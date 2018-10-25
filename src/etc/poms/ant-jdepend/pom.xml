@@ -74,6 +74,10 @@
           <workingDirectory>../../../..</workingDirectory>
           <systemProperties>
             <property>
+              <name>build.tests.value</name>
+              <value>${project.basedir}/../../../../target/${project.artifactId}/testcases</value>
+            </property>
+            <property>
               <name>ant.test.basedir.ignore</name>
               <value>true</value>
             </property>

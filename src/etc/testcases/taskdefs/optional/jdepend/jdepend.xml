@@ -16,19 +16,17 @@
   limitations under the License.
 -->
 <project>
-  <property name="testclasses" location="../../../../../../build/testcases"/>
-  
   <path id="all-test-classes.id">
-    <pathelement location="../../../../build/testcases" />
-    <pathelement path="${java.class.path}" />
+    <pathelement location="${build.tests.value}"/>
+    <pathelement path="${java.class.path}"/>
   </path>
 
   <path id="example-classes.id">
-    <pathelement location="${testclasses}/org/apache/tools/ant/util/facade" />
+    <pathelement location="${build.tests.value}/org/apache/tools/ant/util/facade"/>
   </path>
 
   <path id="test-classes.id">
-    <pathelement location="${testclasses}" />
+    <pathelement location="${build.tests.value}"/>
   </path>
 
   <target name="simple">
@@ -66,5 +64,4 @@
       <classespath refid="example-classes.id"/>
     </jdepend>
   </target>
-
 </project>

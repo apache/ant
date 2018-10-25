@@ -162,8 +162,6 @@
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
             <!-- obsolete -->
             <exclude>org/apache/tools/ant/taskdefs/AbstractCvs*</exclude>
-            <!-- ERROR: failed to create task2 -->
-            <exclude>org/apache/tools/ant/taskdefs/Antlib*</exclude>
             <!-- ERROR: "default value" when javac cannot cross-compile to Java 5 -->
             <exclude>org/apache/tools/ant/taskdefs/Javac*</exclude>
             <!-- see XsltTest -->

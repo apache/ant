@@ -22,10 +22,9 @@
   <target name="forked">
     <java fork="true" output="forkedout" failonerror="true"
           className="org.apache.tools.ant.taskdefs.dir1.B">
-
       <classpath>
-        <pathelement path="../../../../build/testcases"/>
-        <pathelement location="${java.home}/lib/classes.zip" />
+        <pathelement path="${build.tests.value}"/>
+        <pathelement location="${java.home}/lib/classes.zip"/>
       </classpath>
     </java>
   </target>
@@ -33,8 +32,8 @@
   <target name="unforked">
     <java className="org.apache.tools.ant.taskdefs.dir1.B">
       <classpath>
-        <pathelement path="../../../../build/testcases"/>
-        <pathelement location="${java.home}/lib/classes.zip" />
+        <pathelement path="${build.tests.value}"/>
+        <pathelement location="${java.home}/lib/classes.zip"/>
       </classpath>
     </java>
   </target>
