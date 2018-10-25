@@ -229,11 +229,11 @@
             </property>
             <property>
               <name>build.tests</name>
-              <value>target/build/testcases</value>
+              <value>target/${project.artifactId}/testcases</value>
             </property>
             <property>
               <name>build.tests.value</name>
-              <value>${project.basedir}/target/build/testcases</value>
+              <value>${project.basedir}/target/${project.artifactId}/testcases</value>
             </property>
             <property>
               <name>offline</name>
