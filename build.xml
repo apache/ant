@@ -84,13 +84,14 @@
   <property name="build.junit.xml" location="${build.tests}/xml"/>
   <property name="build.junit.tmpdir" location="${build.tests}/tmp"/>
   <property name="build.junit.reports" location="${build.tests}/reports"/>
+  <property name="build.pkg.dir" value="${build.dir}/pkg"/>
   <property name="antunit.xml" location="${build.dir}/antunit/xml"/>
   <property name="antunit.tmpdir" location="${build.dir}/antunit/tmp"/>
   <property name="antunit.reports" location="${build.dir}/antunit/reports"/>
   <property name="antunit.loglevel" value="none"/>
   <!-- the absolute path -->
+  <property name="build.classes.value" location="${build.classes}"/>
   <property name="build.tests.value" location="${build.tests}"/>
-  <property name="build.pkg.dir" value="${build.dir}/pkg"/>
 
   <!--
        ===================================================================
@@ -1704,7 +1705,7 @@ ${antunit.reports}
                errorproperty="junit.failed"
                filtertrace="${junit.filtertrace}">
           <sysproperty key="ant.home" value="${ant.home}"/>
-          <sysproperty key="build.tests" file="${build.tests}"/>
+          <sysproperty key="build.classes.value" value="${build.classes.value}"/>
           <sysproperty key="build.tests.value" value="${build.tests.value}"/>
           <sysproperty key="offline" value="${offline}"/>
           <sysproperty key="tests-classpath.value"

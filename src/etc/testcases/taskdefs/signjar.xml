@@ -20,42 +20,38 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
-    <property name="subdir" location="${output}/subdir" />
-    <property name="classes.dir" value="../../../build/classes"/>
-    <property name="test.jar" location="${output}/signtest.jar" />
-    <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
-
+    <mkdir dir="${output}"/>
+    <property name="subdir" location="${output}/subdir"/>
+    <property name="test.jar" location="${output}/signtest.jar"/>
+    <property name="subdirtest.jar" location="${subdir}/signtest.jar"/>
   </target>
 
 
   <macrodef name="assertSigned">
-    <attribute name="jar" default="${test.jar}" />
+    <attribute name="jar" default="${test.jar}"/>
     <sequential>
-      <fail message="not signed: @{jar}" >
+      <fail message="not signed: @{jar}">
         <condition>
-          <not><issigned file="@{jar}" /></not>
+          <not><issigned file="@{jar}"/></not>
         </condition>
       </fail>
     </sequential>
   </macrodef>
 
   <presetdef name="sign-base">
-    <signjar alias="testonly" keystore="testkeystore"
-           storepass="apacheant"/>
+    <signjar alias="testonly" keystore="testkeystore" storepass="apacheant"/>
   </presetdef>
 
   <presetdef name="verify-base">
-    <verifyjar keystore="testkeystore"
-           storepass="apacheant"/>
+    <verifyjar keystore="testkeystore" storepass="apacheant"/>
   </presetdef>
 
   <presetdef name="sign">
-    <sign-base jar="${test.jar}" />
+    <sign-base jar="${test.jar}"/>
   </presetdef>
 
   <target name="jar" depends="setUp">
-    <jar jarfile="${test.jar}" basedir="${classes.dir}" includes="**/Task.class"/>
+    <jar jarfile="${test.jar}" basedir="${build.classes.value}" includes="**/Task.class"/>
   </target>
 
   <target name="help">
@@ -63,7 +59,7 @@
   </target>
 
   <target name="basic" depends="jar">
-    <sign />
+    <sign/>
     <assertSigned/>
   </target>
 
@@ -84,14 +80,12 @@
   </target>
 
   <target name="urlKeystoreHTTP" depends="jar">
-    <sign
-      keystore="http://ant.apache.org/webtest/testkeystore"
-      />
+    <sign keystore="http://ant.apache.org/webtest/testkeystore"/>
     <assertSigned/>
   </target>
 
   <target name="testTsaLocalhost" depends="jar">
-    <sign tsaurl="http://localhost:0/" />
+    <sign tsaurl="http://localhost:0/"/>
   </target>
 
 </project>

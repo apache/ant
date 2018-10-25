@@ -102,7 +102,7 @@ import org.apache.tools.ant.util.StringUtils;
  *   &lt;junit printsummary="no" haltonfailure="yes" fork="${junit.fork}"&gt;
  *     &lt;jvmarg value="-classic"/&gt;
  *     &lt;classpath refid="tests-classpath"/&gt;
- *     &lt;sysproperty key="build.tests" value="${build.tests}"/&gt;
+ *     &lt;sysproperty key="build.tests.value" value="${build.tests.value}"/&gt;
  *     &lt;formatter type="brief" usefile="false" /&gt;
  *     &lt;batchtest&gt;
  *       &lt;fileset dir="${tests.dir}"&gt;

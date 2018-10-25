@@ -228,12 +228,12 @@
               <value>${env.ANT_HOME}</value>
             </property>
             <property>
-              <name>build.tests</name>
-              <value>target/${project.artifactId}/testcases</value>
+              <name>build.classes.value</name>
+              <value>${project.basedir}/../../../../target/${project.artifactId}/classes</value>
             </property>
             <property>
               <name>build.tests.value</name>
-              <value>${project.basedir}/target/${project.artifactId}/testcases</value>
+              <value>${project.basedir}/../../../../target/${project.artifactId}/testcases</value>
             </property>
             <property>
               <name>offline</name>

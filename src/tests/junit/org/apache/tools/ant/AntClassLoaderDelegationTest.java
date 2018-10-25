@@ -58,8 +58,8 @@ public class AntClassLoaderDelegationTest {
     @Test
     public void testFindResources() throws Exception {
         // This path should contain the class files for these testcases:
-        String buildTestcases = System.getProperty("build.tests");
-        assertNotNull("defined ${build.tests}", buildTestcases);
+        String buildTestcases = System.getProperty("build.tests.value");
+        assertNotNull("defined ${build.tests.value}", buildTestcases);
         assertTrue("have a dir " + buildTestcases,
                    new File(buildTestcases).isDirectory());
         Path path = new Path(p, buildTestcases + "/org");
@@ -84,8 +84,8 @@ public class AntClassLoaderDelegationTest {
     @SuppressWarnings("resource")
     @Test
     public void testFindIsolateResources() throws Exception {
-        String buildTestcases = System.getProperty("build.tests");
-        assertNotNull("defined ${build.tests}", buildTestcases);
+        String buildTestcases = System.getProperty("build.tests.value");
+        assertNotNull("defined ${build.tests.value}", buildTestcases);
         assertTrue("have a dir " + buildTestcases,
                    new File(buildTestcases).isDirectory());
         Path path = new Path(p, buildTestcases + "/org");

@@ -56,9 +56,9 @@ public class ExecuteWatchdogTest {
      * severely tied to the build.xml properties.
      */
     private static String getTestClassPath() {
-        String classpath = System.getProperty("build.tests");
+        String classpath = System.getProperty("build.tests.value");
         if (classpath == null) {
-            System.err.println("WARNING: 'build.tests' property is not available!");
+            System.err.println("WARNING: 'build.tests.value' property is not available!");
             classpath = System.getProperty("java.class.path");
         }
 
