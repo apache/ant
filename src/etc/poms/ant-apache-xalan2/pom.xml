@@ -52,40 +52,52 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>create-timestamp-file</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <mkdir dir="${project.build.outputDirectory}"/>
-                <copy todir="${project.build.outputDirectory}/org/apache/tools/ant/taskdefs/optional/junit/xsl">
-                  <fileset dir="${project.build.sourceDirectory}/../etc">
-                    <include name="junit-frames.xsl"/>
-                    <include name="junit-noframes.xsl"/>
-                  </fileset>
-                </copy>              
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <includes>
             <include>org/apache/tools/ant/taskdefs/optional/Xalan2TraceSupport*</include>
           </includes>
+          <testIncludes>
+            <include>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</include>
+          </testIncludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <basedir>../../../..</basedir>
+          <workingDirectory>../../../..</workingDirectory>
+          <systemProperties>
+            <property>
+              <name>ant.test.basedir.ignore</name>
+              <value>true</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <encoding>ISO-8859-1</encoding>
         </configuration>
       </plugin>
     </plugins>
+    <testResources>
+      <testResource>
+        <directory>../../../../src/etc/testcases</directory>
+        <includes>
+          <include>taskdefs/optional/xalan*</include>
+          <include>taskdefs/optional/xsltliaison*</include>
+        </includes>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
     <sourceDirectory>../../../../src/main</sourceDirectory>
-    <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
+    <testSourceDirectory>../../../../src/tests/junit</testSourceDirectory>
     <outputDirectory>../../../../target/${project.artifactId}/classes</outputDirectory>
     <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>
     <directory>../../../../target/${project.artifactId}</directory>

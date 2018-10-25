@@ -139,6 +139,8 @@
             <exclude>org/apache/tools/ant/taskdefs/optional/net/FTP*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/RExec*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/net/TelnetTask*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/sound/</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/splash/</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/ssh/</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/xz/</exclude>
             <exclude>org/apache/tools/ant/types/optional/image/</exclude>
@@ -160,22 +162,23 @@
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
             <!-- obsolete -->
             <exclude>org/apache/tools/ant/taskdefs/AbstractCvs*</exclude>
-            <!-- investigate -->
-            <exclude>org/apache/tools/ant/taskdefs/Ant*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/Available*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/ExecuteJava*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/ExecuteWatchdog*</exclude>
+            <!-- ERROR: failed to create task2 -->
+            <exclude>org/apache/tools/ant/taskdefs/Antlib*</exclude>
+            <!-- ERROR: "default value" when javac cannot cross-compile to Java 5 -->
             <exclude>org/apache/tools/ant/taskdefs/Javac*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/email/EmailTask*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/XmlValidateCatalog*</exclude>
             <!-- see XsltTest -->
             <exclude>org/apache/tools/ant/taskdefs/StyleTest*</exclude>
+            <!-- ERROR: Unexpected recipients -->
+            <exclude>org/apache/tools/ant/taskdefs/email/EmailTask*</exclude>
             <!-- antlr -->
             <exclude>org/apache/tools/ant/taskdefs/optional/ANTLR*</exclude>
             <!-- obsolete -->
             <exclude>org/apache/tools/ant/taskdefs/optional/Jspc*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Pvcs*</exclude>
+            <!-- xalan: workaround for diferent resource encoding -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</exclude>
+            <!-- ERROR: UnknownHostException: chemical -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/XmlValidateCatalog*</exclude>
             <!-- image/imageio -->
             <exclude>org/apache/tools/ant/taskdefs/optional/image/</exclude>
             <!-- jdepend -->
@@ -186,23 +189,29 @@
             <exclude>org/apache/tools/ant/taskdefs/optional/junitlauncher/</exclude>
             <!-- net -->
             <exclude>org/apache/tools/ant/taskdefs/optional/net/FTP*</exclude>
+            <!-- swing -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/splash/</exclude>
             <!-- jsch -->
             <exclude>org/apache/tools/ant/taskdefs/optional/ssh/</exclude>
             <!-- dependent on junit -->
             <exclude>org/apache/tools/ant/types/Assertions*</exclude>
             <!-- bcel -->
             <exclude>org/apache/tools/ant/types/optional/depend/ClassFileSet*</exclude>
+            <!-- dependent on ANT_HOME containing full distribution with bin and lib -->
+            <exclude>org/apache/tools/ant/types/selectors/ModifiedSelector*</exclude>
+            <!-- ERROR: defaults.properties are in both compile and test file tree -->
+            <exclude>org/apache/tools/ant/util/ClasspathUtils*</exclude>
+            <exclude>org/apache/tools/ant/util/LoaderUtils*</exclude>
             <!-- oro -->
             <exclude>org/apache/tools/ant/util/regexp/JakartaOro*</exclude>
             <!-- regexp -->
             <exclude>org/apache/tools/ant/util/regexp/JakartaRegexp*</exclude>
-            <!-- investigate -->
-            <exclude>org/apache/tools/ant/types/CommandlineJava*</exclude>
-            <exclude>org/apache/tools/ant/types/selectors/ModifiedSelector*</exclude>
-            <exclude>org/apache/tools/ant/util/ClasspathUtils*</exclude>
-            <exclude>org/apache/tools/ant/util/LoaderUtils*</exclude>
+            <!-- dependent on IncludeTest.class: checks presence -->
             <exclude>org/apache/tools/ant/AntClassLoaderDelegation*</exclude>
+            <!-- ERROR:  More pseudo attributes are expected (encoding="UTF-8");
+             failure mode is JRE-dependent (see to do for failures in IDE) -->
             <exclude>org/apache/tools/ant/Include*</exclude>
+            <!-- dependent on JUnit 5 -->
             <exclude>org/example/junitlauncher/</exclude>
           </testExcludes>
         </configuration>
@@ -220,11 +229,11 @@
             </property>
             <property>
               <name>build.tests</name>
-              <value>../../../../target/ant/testcases</value>
+              <value>target/build/testcases</value>
             </property>
             <property>
               <name>build.tests.value</name>
-              <value>../../../../target/ant/testcases</value>
+              <value>${project.basedir}/target/build/testcases</value>
             </property>
             <property>
               <name>offline</name>
@@ -265,7 +274,7 @@
         </includes>
       </resource>
       <resource>
-        <directory>../../../../docs</directory>
+        <directory>../../../../manual</directory>
         <filtering>false</filtering>
         <includes>
           <include>images/ant_logo_large.gif</include>
@@ -287,8 +296,9 @@
     </testResources>
     <sourceDirectory>../../../../src/main</sourceDirectory>
     <testSourceDirectory>../../../../src/tests/junit</testSourceDirectory>
-    <outputDirectory>../../../../target/ant/classes</outputDirectory>
-    <testOutputDirectory>../../../../target/ant/testcases</testOutputDirectory>
-    <directory>../../../../target/ant</directory>
+    <!-- directory name hardcoded in AntTest -->
+    <outputDirectory>../../../../target/build/classes</outputDirectory>
+    <testOutputDirectory>../../../../target/build/testcases</testOutputDirectory>
+    <directory>../../../../target/build</directory>
   </build>
 </project>

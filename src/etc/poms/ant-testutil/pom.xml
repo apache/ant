@@ -57,7 +57,9 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <includes>
-            <include>org/apache/tools/ant/BuildFileTest*</include>
+            <include>org/apache/tools/ant/AntAssert*</include>
+            <include>org/apache/tools/ant/BuildFile*</include>
+            <include>org/apache/tools/ant/FileUtilities*</include>
             <include>org/apache/tools/ant/util/regexp/RegexpMatcherTest*</include>
             <include>org/apache/tools/ant/util/regexp/RegexpTest*</include>
             <include>org/apache/tools/ant/taskdefs/optional/AbstractXSLTLiaisonTest*</include>
