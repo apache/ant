@@ -19,6 +19,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
@@ -39,6 +40,7 @@ public class XmlnsTest {
 
     @Before
     public void setUp() {
+        assertNotNull("build.tests.value not set", System.getProperty("build.tests.value"));
         buildRule.configureProject("src/etc/testcases/taskdefs/xmlns.xml");
     }
 

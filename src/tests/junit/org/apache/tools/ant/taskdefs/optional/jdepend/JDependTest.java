@@ -24,6 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -37,6 +38,7 @@ public class JDependTest {
 
     @Before
     public void setUp() {
+        assertNotNull("build.tests.value not set", System.getProperty("build.tests.value"));
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/jdepend/jdepend.xml");
     }
 

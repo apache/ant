@@ -19,8 +19,6 @@
 
   <import file="../../../buildfiletest-base.xml"/>
 
-  <property name="root" location="../../../../../.."/>
-
   <target name="def">
     <fail>This build-file is intended to be run from the test cases</fail>
   </target>
@@ -30,11 +28,9 @@
       <attribute name="attr1"/>
       <element name="fileset" type="fileset"/>
       <![CDATA[
-        
         project.log("Attribute attr1 = " + attributes.get("attr1"));
         project.log("Fileset basedir = "
           + elements.get("fileset").get(0).getDir(project));
-        
       ]]>
     </scriptdef>
     
@@ -65,11 +61,9 @@
       <attribute name="attr1"/>
       <element name="fileset" classname="org.apache.tools.ant.types.FileSet"/>
       <![CDATA[
-        
         project.log("Attribute attr1 = " + attributes.get("attr1"));
         project.log("Fileset basedir = "
           + elements.get("fileset").get(0).getDir(project));
-        
       ]]>
     </scriptdef>
     
@@ -97,11 +91,9 @@
       <attribute name="attr1"/>
       <element name="fileset" classname="org.apache.tools.ant.types.FileSet"/>
       <![CDATA[
-        
         java.lang.System.out.println("Attribute attr1 = " + attributes.get("attr1"));
         java.lang.System.out.println("Fileset basedir = "
           + elements.get("fileset").get(0).getDir(project));
-        
       ]]>
     </scriptdef>
     
@@ -135,7 +127,6 @@
     <scriptdef name="scripttest" language="javascript">
       <attribute name="attr1"/>
       <![CDATA[
-        
         project.log("Attribute value = " + attributes.get("attr1"));
       ]]>
     </scriptdef>
@@ -152,78 +143,74 @@
   </target>
 
   <target name="useSrcAndEncoding">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
     <property name="useSrcAndEncoding.encoding" value="UTF-8"/>
     <property name="useSrcAndEncoding.reader.encoding" value="${useSrcAndEncoding.encoding}"
-      description="Set a different encoding to raise a failure (ex. ISO-8859-1)" />
+              description="Set a different encoding to raise a failure (ex. ISO-8859-1)"/>
     <property name="useSrcAndEncoding.file" location="${output}/script.useSrcAndEncoding.js"/>
-    <property name="useSrcAndEncoding.expectedProp" value="eacute [&#233;]" />
+    <property name="useSrcAndEncoding.expectedProp" value="eacute [&#233;]"/>
 
     <echo file="${useSrcAndEncoding.file}" encoding="${useSrcAndEncoding.encoding}"
-      message="project.setNewProperty('useSrcAndEncoding.prop', '${useSrcAndEncoding.expectedProp}');"/>
+          message="project.setNewProperty('useSrcAndEncoding.prop', '${useSrcAndEncoding.expectedProp}');"/>
 
     <scriptdef name="useSrcAndEncoding" language="javascript" src="${useSrcAndEncoding.file}" encoding="${useSrcAndEncoding.reader.encoding}"/>
     <useSrcAndEncoding/>
 
     <condition property="useSrcAndEncoding.testOK" >
-      <equals arg1="${useSrcAndEncoding.expectedProp}" arg2="${useSrcAndEncoding.prop}" />
+      <equals arg1="${useSrcAndEncoding.expectedProp}" arg2="${useSrcAndEncoding.prop}"/>
     </condition>
-    <fail message="expected &lt;${useSrcAndEncoding.expectedProp}&gt; but was &lt;${useSrcAndEncoding.prop}&gt;" unless="useSrcAndEncoding.testOK" />
+    <fail message="expected &lt;${useSrcAndEncoding.expectedProp}&gt; but was &lt;${useSrcAndEncoding.prop}&gt;" unless="useSrcAndEncoding.testOK"/>
   </target>
 
   <target name="useCompiled">
-
     <!-- Test with 'javax' manager, 'bsf' manager already compiles the script. -->
-    <scriptdef manager="javax" name="heavyscript" language="javascript" src="heavy-script.js" encoding="UTF-8" compiled="true" />
+    <scriptdef manager="javax" name="heavyscript" language="javascript" src="heavy-script.js" encoding="UTF-8" compiled="true"/>
 
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-    <heavyscript />
-
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
+    <heavyscript/>
   </target>
 
   <target name="useNotCompiled">
+    <scriptdef manager="javax" name="heavyscriptNotCompiled" language="javascript" src="heavy-script.js" encoding="UTF-8" compiled="false"/>
 
-    <scriptdef manager="javax" name="heavyscriptNotCompiled" language="javascript" src="heavy-script.js" encoding="UTF-8" compiled="false" />
-
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-    <heavyscriptNotCompiled />
-
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
+    <heavyscriptNotCompiled/>
   </target>
 
 </project>

@@ -31,6 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Test to see if static initializers are invoked the same way
@@ -47,6 +48,7 @@ public class InitializeClassTest {
 
     @Before
     public void setUp() {
+        assertNotNull("build.tests.value not set", System.getProperty("build.tests.value"));
         buildRule.configureProject("src/etc/testcases/taskdefs/initializeclass.xml");
         f1 = buildRule.getProject().resolveFile("forkedout");
         f2 = buildRule.getProject().resolveFile("unforkedout");

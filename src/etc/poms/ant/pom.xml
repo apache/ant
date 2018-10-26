@@ -173,7 +173,7 @@
             <!-- obsolete -->
             <exclude>org/apache/tools/ant/taskdefs/optional/Jspc*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Pvcs*</exclude>
-            <!-- xalan: workaround for diferent resource encoding -->
+            <!-- xalan: workaround for different resource encoding -->
             <exclude>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</exclude>
             <!-- ERROR: UnknownHostException: chemical -->
             <exclude>org/apache/tools/ant/taskdefs/optional/XmlValidateCatalog*</exclude>
