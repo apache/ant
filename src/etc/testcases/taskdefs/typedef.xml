@@ -23,16 +23,16 @@
   </target>
 
   <target name="empty">
-    <typedef />
+    <typedef/>
   </target>
 
   <target name="noClassname">
-    <typedef name="dummy" />
+    <typedef name="dummy"/>
   </target>
 
   <target name="noName">
     <typedef classname="org.example.types.TypedefTestType">
-      <classpath refid="testclasses" />
+      <classpath refid="testclasses"/>
     </typedef>
   </target>
 
@@ -41,25 +41,24 @@
   </target>
 
   <path id="testclasses">
-    <pathelement location="../../../../build/testcases" />
-    <pathelement path="${java.class.path}" />
+    <pathelement path="${java.class.path}"/>
   </path>
 
   <typedef name="global"
            classname="org.example.types.TypedefTestType">
-    <classpath refid="testclasses" />
+    <classpath refid="testclasses"/>
   </typedef>
 
   <target name="testGlobal">
-    <global id="global" />
+    <global id="global"/>
   </target>
 
   <target name="testLocal">
     <typedef name="localtype"
              classname="org.example.types.TypedefTestType">
-      <classpath refid="testclasses" />
+      <classpath refid="testclasses"/>
     </typedef>
-    <localtype id="local" />
+    <localtype id="local"/>
   </target>
 
   <target name="double-notpresent">
@@ -79,6 +78,7 @@
   </target>
   
   <target name="noresourcenotfail">
-  	<typedef resource="somenotpresentfile.properties" />
+  	<typedef resource="somenotpresentfile.properties"/>
   </target>
+
 </project>

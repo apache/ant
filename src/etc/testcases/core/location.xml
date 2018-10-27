@@ -36,12 +36,9 @@
   </target>
 
   <target name="define">
-    <property name="testclasses"
-      location="../../../../build/testcases" />
     <taskdef name="echoloc"
-      classname="org.apache.tools.ant.LocationTest$EchoLocation">
+             classname="org.apache.tools.ant.LocationTest$EchoLocation">
       <classpath>
-        <pathelement location="${testclasses}" />
         <pathelement path="${java.class.path}"/>
       </classpath>
     </taskdef>
@@ -70,5 +67,4 @@
     <echo id="echo4">Hello</echo>
     <echoloc3/>
   </target>
-
 </project>

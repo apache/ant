@@ -23,8 +23,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.assertNotNull;
-
 public class DispatchTaskTest {
 
     @Rule
@@ -35,7 +33,6 @@ public class DispatchTaskTest {
 
     @Before
     public void setUp() {
-        assertNotNull("build.tests.value not set", System.getProperty("build.tests.value"));
         buildRule.configureProject("src/etc/testcases/core/dispatch/dispatch.xml");
     }
 

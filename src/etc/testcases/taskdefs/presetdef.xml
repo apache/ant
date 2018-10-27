@@ -17,8 +17,7 @@
 -->
 <project>
   <path id="test-classes">
-    <pathelement location="../../../../build/testcases" />
-    <pathelement path="${java.class.path}" />
+    <pathelement path="${java.class.path}"/>
   </path>
   
   <target name="simple">
@@ -119,7 +118,7 @@
 
   <target name="correct_taskname_badattr">
     <presetdef name="mytask">
-       <javac srcdir="whatever"/>
+      <javac srcdir="whatever"/>
     </presetdef>
 
     <javac srcdir="whatever" badattr="whatever"/>
@@ -127,7 +126,7 @@
 
   <target name="correct_taskname_badel">
     <presetdef name="mytask">
-       <javac srcdir="whatever"/>
+      <javac srcdir="whatever"/>
     </presetdef>
 
     <javac srcdir="whatever">
@@ -135,13 +134,12 @@
     </javac>
   </target>
 
-    <target name="presetdef-with-nested-element-twice">
-        <copy todir=".">
-            <fileset dir="." includes="nonexistent"/>
-        </copy>
-        <presetdef name="copy">
-            <copy verbose="true"/>
-        </presetdef>
-    </target>
-
+  <target name="presetdef-with-nested-element-twice">
+    <copy todir=".">
+      <fileset dir="." includes="nonexistent"/>
+    </copy>
+    <presetdef name="copy">
+      <copy verbose="true"/>
+    </presetdef>
+  </target>
 </project>

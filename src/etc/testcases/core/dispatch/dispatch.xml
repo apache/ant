@@ -19,7 +19,6 @@
 <project name="dispatch-test" default="disp">
 
   <path id="testclasses">
-    <pathelement location="${build.tests.value}"/>
     <pathelement path="${java.class.path}"/>
   </path>
 

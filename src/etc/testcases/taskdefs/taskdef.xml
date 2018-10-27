@@ -19,13 +19,11 @@
 <project name="xxx-test" basedir="." default="test1">
 
   <path id="testclasses">
-    <pathelement location="../../../../build/testcases" />
-    <pathelement path="${java.class.path}" />
+    <pathelement path="${java.class.path}"/>
   </path>
 
-  <taskdef name="global"
-           classname="org.example.tasks.TaskdefTestContainerTask">
-    <classpath refid="testclasses" />
+  <taskdef name="global" classname="org.example.tasks.TaskdefTestContainerTask">
+    <classpath refid="testclasses"/>
   </taskdef>
 
   <target name="test1">
@@ -45,41 +43,39 @@
   </target>
 
   <target name="test5">
-    <taskdef name="test" classname="org.apache.tools.ant.Project" />
+    <taskdef name="test" classname="org.apache.tools.ant.Project"/>
   </target>
 
   <target name="test5a">
-    <taskdef name="test" classname="org.apache.tools.ant.taskdefs.Copy" />
+    <taskdef name="test" classname="org.apache.tools.ant.taskdefs.Copy"/>
   </target>
 
   <target name="test6">
-    <taskdef name="test6"
-             classname="org.example.tasks.TaskdefTestSimpleTask">
-      <classpath refid="testclasses" />
+    <taskdef name="test6" classname="org.example.tasks.TaskdefTestSimpleTask">
+      <classpath refid="testclasses"/>
     </taskdef>
     <test6>
-      <echo message="worked" />
+      <echo message="worked"/>
     </test6>
   </target>
 
   <target name="test7">
-    <taskdef name="test7"
-             classname="org.example.tasks.TaskdefTestContainerTask">
-      <classpath refid="testclasses" />
+    <taskdef name="test7" classname="org.example.tasks.TaskdefTestContainerTask">
+      <classpath refid="testclasses"/>
     </taskdef>
     <test7>
-      <echo message="worked" />
+      <echo message="worked"/>
     </test7>
   </target>
 
   <target name="testGlobal">
     <global>
-      <echo message="worked" />
+      <echo message="worked"/>
     </global>
   </target>
 
   <target name="testOverride">
-    <taskdef name="copy" classname="org.apache.tools.ant.taskdefs.Echo" />
+    <taskdef name="copy" classname="org.apache.tools.ant.taskdefs.Echo"/>
     <copy>In target</copy>
     <sequential>
       <copy>In TaskContainer</copy>

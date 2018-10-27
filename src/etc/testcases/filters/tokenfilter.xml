@@ -20,7 +20,7 @@
   <import file="../buildfiletest-base.xml"/>
 
   <target name="setUp">
-    <mkdir dir="${output}" />
+    <mkdir dir="${output}"/>
   </target>
 
   <target name="tokenfilter">
@@ -314,14 +314,11 @@
 
   <target name="customtokenfilter">
     <path id="test-classes">
-      <pathelement location="../../../../build/testcases" />
-      <pathelement path="${java.class.path}" />
+      <pathelement path="${java.class.path}"/>
     </path>
 
-
-    <typedef 
-      name="capitalize" 
-      classname="org.apache.tools.ant.filters.TokenFilterTest$Capitalize">
+    <typedef name="capitalize"
+             classname="org.apache.tools.ant.filters.TokenFilterTest$Capitalize">
       <classpath refid="test-classes"/>
     </typedef>
     

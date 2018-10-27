@@ -17,11 +17,8 @@
 -->
 <project name="test">
 
-  <property name="testcases.dir" location="../../../../build/testcases"/>
-
   <path id="testclasses">
-    <pathelement location="${testcases.dir}" />
-    <pathelement path="${java.class.path}" />
+    <pathelement path="${java.class.path}"/>
   </path>
 
   <target name="antlib.file">
@@ -32,14 +29,14 @@
 
   <target name="antlib.resource">
     <typedef resource="taskdefs/test.antlib.xml">
-        <classpath>
-            <!-- To load the task classes: -->
-            <path refid="testclasses"/>
-            <!-- For test.antlib.xml: -->
-            <pathelement location=".."/>
-            <!-- For test2.antlib.xml: -->
-            <pathelement location="${testcases.dir}/org/apache/tools/ant/taskdefs/test2-antlib.jar"/>
-        </classpath>
+      <classpath>
+        <!-- To load the task classes: -->
+        <path refid="testclasses"/>
+        <!-- For test.antlib.xml: -->
+        <pathelement location=".."/>
+        <!-- For test2.antlib.xml: -->
+        <pathelement location="${build.tests.value}/org/apache/tools/ant/taskdefs/test2-antlib.jar"/>
+      </classpath>
     </typedef>
     <mytask/>
     <echo>-and-then-</echo>
@@ -59,7 +56,7 @@
 
   <target name="antlib_uri_auto" xmlns:ex="antlib:org.example.tasks">
     <ex:simple>
-      <echo message="inside simple" />
+      <echo message="inside simple"/>
     </ex:simple>
   </target>
 

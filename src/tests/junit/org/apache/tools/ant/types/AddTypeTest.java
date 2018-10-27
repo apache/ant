@@ -73,7 +73,7 @@ public class AddTypeTest {
     @Test
     public void testNestedB() {
         buildRule.executeTarget("nested.b");
-         assertThat(buildRule.getLog(), containsString("add B called"));
+        assertThat(buildRule.getLog(), containsString("add B called"));
     }
 
     @Test

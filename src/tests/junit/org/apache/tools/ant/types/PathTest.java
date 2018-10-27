@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
@@ -32,6 +33,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -573,11 +575,14 @@ public class PathTest {
         DirSet d = new DirSet();
         d.setProject(project);
         d.setDir(project.resolveFile("."));
-        d.setIncludes("build");
+        String s = System.getProperty("build.tests.value");
+        assertNotNull("build.tests.value not set", s);
+        String n = Paths.get(s).getParent().equals("ant") ? "ant" : "build";
+        d.setIncludes(n);
         p.addDirset(d);
         String[] l = p.list();
         assertEquals(1, l.length);
-        assertEquals(project.resolveFile("build").getAbsolutePath(), l[0]);
+        assertEquals(project.resolveFile(n).getAbsolutePath(), l[0]);
     }
 
     @Test

@@ -17,7 +17,7 @@
 -->
 <project>
   <typedef name="mapperresult"
-           classpath="../../../../../build/testcases"
+           classpath="${build.tests.value}"
            classname="org.apache.tools.ant.types.mappers.MapperResult"/>
 
   <!-- this is what you get with no result -->           

@@ -107,6 +107,38 @@
             </configuration>
           </execution>
           <execution>
+            <id>create-antlib-test-jar</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <jar jarfile="${project.build.testOutputDirectory}/org/apache/tools/ant/taskdefs/test2-antlib.jar">
+                  <manifest>
+                    <attribute name="Extension-name"
+                               value="org.apache.tools.ant"/>
+                    <attribute name="Specification-Title"
+                               value="Apache Ant"/>
+                    <attribute name="Specification-Version"
+                               value="${project.version}"/>
+                    <attribute name="Specification-Vendor"
+                               value="Apache Software Foundation"/>
+                    <attribute name="Implementation-Title"
+                               value="org.apache.tools.ant"/>
+                    <attribute name="Implementation-Version"
+                               value="${project.version}"/>
+                    <attribute name="Implementation-Vendor"
+                               value="Apache Software Foundation"/>
+                  </manifest>
+                  <zipfileset dir="${project.build.scriptSourceDirectory}/testcases" fullpath="taskdefs/test.antlib.xml">
+                    <include name="taskdefs/test2.antlib.xml"/>
+                  </zipfileset>
+                </jar>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
             <id>delete-timestamp-file</id>
             <phase>clean</phase>
             <goals>
@@ -317,6 +349,7 @@
     </testResources>
     <sourceDirectory>../../../../src/main</sourceDirectory>
     <testSourceDirectory>../../../../src/tests/junit</testSourceDirectory>
+    <scriptSourceDirectory>../../../../src/etc</scriptSourceDirectory>
     <!-- directory name is hardcoded in AntTest -->
     <outputDirectory>../../../../target/${project.artifactId}/classes</outputDirectory>
     <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>

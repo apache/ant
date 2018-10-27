@@ -21,7 +21,6 @@
              classname="org.apache.tools.ant.UnknownElementTest$Parent"
              loaderref="unknown.id">
       <classpath>
-        <pathelement location="../../../../build/testcases"/>
         <pathelement path="${java.class.path}"/>
       </classpath>
     </taskdef>
@@ -33,6 +32,7 @@
       <child/>
     </parent>
   </target>
+
   <target name="echo">
     <echo message="Hello, world!"/>
   </target>

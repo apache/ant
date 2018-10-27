@@ -57,38 +57,37 @@
   <target name="init">
     <property name="nested.package" value="org.apache.tools.ant.types."/>
     <path id="test-classes">
-      <pathelement location="../../../../build/testcases" />
-      <pathelement path="${java.class.path}" />
+      <pathelement path="${java.class.path}"/>
     </path>
     <typedef loaderref="nested.loader" classpathref="test-classes"
-             name = "nested.a"
+             name="nested.a"
              classname="${nested.package}AddTypeTest$AImpl"/>
     <typedef loaderref="nested.loader"
-             name = "nested.b"
+             name="nested.b"
              classname="${nested.package}AddTypeTest$BImpl"/>
     <typedef loaderref="nested.loader"
-             name = "nested.c"
+             name="nested.c"
              classname="${nested.package}AddTypeTest$CImpl"/>
     <typedef loaderref="nested.loader"
-             name = "nested.ab"
+             name="nested.ab"
              classname="${nested.package}AddTypeTest$ABImpl"/>
     <taskdef loaderref="nested.loader"
-             name = "nested.container" 
+             name="nested.container"
              classname="${nested.package}AddTypeTest$NestedContainer"/>
     <taskdef loaderref="nested.loader"
-             name = "nested.condition.task" 
+             name="nested.condition.task"
              classname="${nested.package}AddTypeTest$MyCondition"/>
     <typedef loaderref="nested.loader"
-             name = "nested.condition.type" 
+             name="nested.condition.type"
              classname="${nested.package}AddTypeTest$MyCondition"/>
     <typedef loaderref="nested.loader"
-             name = "myaddconfigured" 
+             name="myaddconfigured"
              classname="${nested.package}AddTypeTest$MyAddConfigured"/>
     <typedef loaderref="nested.loader"
-             name = "myaddconfiguredvalue" 
+             name="myaddconfiguredvalue"
              classname="${nested.package}AddTypeTest$MyAddConfiguredValue"/>
     <typedef loaderref="nested.loader"
-             name = "myvalue" 
+             name="myvalue"
              classname="${nested.package}AddTypeTest$MyValue"/>
   </target>
 
@@ -160,4 +159,5 @@
       <prefix:eq arg1="a" arg2="b"/>
     </condition>
   </target>
+
 </project>

@@ -47,10 +47,10 @@ public class FlexIntegerTest {
     // This class acts as a custom Ant task also
     // and uses these variables/methods in that mode
     private Project taskProject;
+
     String propName;
+
     private FlexInteger value;
-
-
 
     public void setPropName(String propName) {
         this.propName = propName;

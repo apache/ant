@@ -26,6 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -62,6 +63,7 @@ public class AntlibTest {
      */
     @Test
     public void testAntlibResource() {
+        assertNotNull("build.tests.value not set", System.getProperty("build.tests.value"));
         buildRule.executeTarget("antlib.resource");
         assertEquals("MyTask called-and-then-MyTask2 called", buildRule.getLog());
     }

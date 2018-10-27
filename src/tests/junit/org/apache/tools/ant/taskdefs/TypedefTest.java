@@ -51,10 +51,11 @@ public class TypedefTest {
         // TODO assert value
     }
 
-    @Test(expected = BuildException.class)
+    @Test
     public void testNoName() {
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("Only antlib URIs can be located from the URI alone, not the URI ''");
         buildRule.executeTarget("noName");
-        // TODO assert value
     }
 
     @Test(expected = BuildException.class)

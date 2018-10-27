@@ -17,10 +17,8 @@
 -->
 <project name="test" xmlns:other="this is the other uri"
          other:attr="this should be ignored by ant">
-  <property name="testcases.dir" location="${build.tests.value}"/>
 
   <path id="testclasses">
-    <pathelement location="${testcases.dir}"/>
     <pathelement path="${java.class.path}"/>
   </path>
 
