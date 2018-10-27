@@ -65,12 +65,30 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <includes>
-                        <include>**/*JUnit4*</include>
-                    </includes>
+                    <excludes>
+                        <exclude>**/*Ignored*</exclude>
+                    </excludes>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addExtensions>true</addExtensions>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>../../../..</directory>
+                <targetPath>META-INF</targetPath>
+                <includes>
+                    <include>LICENSE</include>
+                    <include>NOTICE</include>
+                </includes>
+            </resource>
+        </resources>
         <sourceDirectory>../../../../src/main</sourceDirectory>
         <testSourceDirectory>../../../../src/testcases</testSourceDirectory>
         <outputDirectory>../../../../target/${project.artifactId}/classes</outputDirectory>
