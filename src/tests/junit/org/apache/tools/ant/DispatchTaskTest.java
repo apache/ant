@@ -21,19 +21,28 @@ package org.apache.tools.ant;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import static org.junit.Assert.assertNotNull;
 
 public class DispatchTaskTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
+        assertNotNull("build.tests.value not set", System.getProperty("build.tests.value"));
         buildRule.configureProject("src/etc/testcases/core/dispatch/dispatch.xml");
     }
 
-    @Test(expected = BuildException.class)
+    @Test
     public void testDisp() {
-            buildRule.executeTarget("disp");
+        thrown.expect(BuildException.class);
+        thrown.expectMessage("list");
+        buildRule.executeTarget("disp");
     }
 }
