@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="testNestedText">
+    <property name="foo">bar</property>
+    <au:assertPropertyEquals name="foo" value="bar"/>
+  </target>
+
+  <target name="testNoNestedTextButValueAttribute">
+    <property name="foo" value="bar">
+    </property>
+    <au:assertPropertyEquals name="foo" value="bar"/>
+  </target>
+
+  <target name="testNestedTextAndValueAttribute">
+    <au:expectfailure>
+      <property name="foo" value="bar">
+        hello
+      </property>
+    </au:expectfailure>
+  </target>
+  
+  <!-- Ensure we have platform dependent path separator -->
+  <property name="base" location="${basedir}"/>
+  <!-- an existing file as anchor for calculating paths -->
+  <property name="testfile" value="condition${file.separator}antversion-test.xml"/>
+
+  <target name="testLocation">
+    <property name="foo" location="${testfile}"/>
+    <au:assertPropertyEquals name="foo" value="${base}${file.separator}${testfile}"/>
+  </target>
+  
+  <target name="testLocationWithRecursive">
+    <property name="foo" location="${testfile}" relative="false"/>
+    <au:assertPropertyEquals name="foo" value="${base}${file.separator}${testfile}"/>
+  </target>
+
+  <target name="testRelative">
+    <property name="foo" location="${testfile}" relative="true"/>
+    <au:assertPropertyEquals name="foo" value="${testfile}"/>
+  </target>
+
+  <target name="testRelativeBase">
+    <property name="foo" location="${testfile}" relative="true" basedir="${base}"/>
+    <au:assertPropertyEquals name="foo" value="${testfile}"/>
+  </target>
+  
+  <target name="testRelativeUnderBase">
+    <property name="foo" location="${testfile}" relative="true" basedir="condition"/>
+    <au:assertPropertyEquals name="foo" value="antversion-test.xml"/>
+  </target>
+
+  <target name="testRelativeUnderBase2">
+    <property name="foo" location="${testfile}" relative="true" basedir="cvs"/>
+    <au:assertPropertyEquals name="foo" value="..${file.separator}condition${file.separator}antversion-test.xml"/>
+  </target>
+
+  <target name="testRelativeOverBase">
+    <property name="foo" location="${testfile}" relative="true" basedir=".."/>
+    <au:assertPropertyEquals name="foo" value="taskdefs${file.separator}${testfile}"/>
+  </target>
+
+  <target name="testNestedExpansionHonorsImmutability">
+    <mkdir dir="${input}"/>
+    <property name="x" value="x"/>
+    <echo file="${input}/x.properties"><![CDATA[
+x=y
+y=$${x}
+]]></echo>
+    <property file="${input}/x.properties"/>
+    <au:assertPropertyEquals name="y" value="x"/>
+    <echo file="${input}/y.properties"><![CDATA[
+x=y
+y=$${x}
+]]></echo>
+    <property file="${input}/y.properties" prefix="foo"/>
+    <!-- passes in Ant 1.8.0 and 1.7.1, fails in 1.8.1 -->
+    <au:assertPropertyEquals name="foo.y" value="x"/>
+    <echo file="${input}/z.properties"><![CDATA[
+x=y
+y=$${bar.x}
+]]></echo>
+    <property file="${input}/z.properties" prefix="bar"/>
+    <!-- passes in Ant 1.7.1 and 1.8.1, fails in 1.8.0 -->
+    <!--echo>bar.y is ${bar.y}</echo>
+    <au:assertLogContains text="bar.y is y"/>
+    <au:assertPropertyEquals name="bar.y" value="y"/-->
+  </target>
+
+  <!-- passes in Ant 1.7.1 and 1.8.1, fails in 1.8.0 -->
+  <target name="testMultiplePrefixes"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=48768">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/x.properties"><![CDATA[
+x=1
+y=2
+]]></echo>
+    <property file="${input}/x.properties"/>
+    <au:assertPropertyEquals name="x" value="1"/>
+    <au:assertPropertyEquals name="y" value="2"/>
+    <echo file="${input}/y.properties"><![CDATA[
+x=3
+]]></echo>
+    <property file="${input}/y.properties" prefix="foo"/>
+    <au:assertPropertyEquals name="foo.x" value="3"/>
+  </target>
+
+  <!-- passes in Ant 1.7.1 and 1.8.0, fails in 1.8.1 -->
+  <target name="testNestedExpansionDoesntUsePrefix"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49373">
+    <mkdir dir="${input}"/>
+    <property name="x" value="x"/>
+    <echo file="${input}/x.properties"><![CDATA[
+x=y
+y=$${x}
+]]></echo>
+    <property file="${input}/x.properties" prefix="foo"/>
+    <au:assertPropertyEquals name="foo.y" value="x"/>
+  </target>
+
+  <target name="testInternalExpansionWithPrefixOnlyExpandsWhenPrefixValuesIsTrue"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54769">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/x.properties"><![CDATA[
+a=A
+b=$${a}
+]]></echo>
+    <property file="${input}/x.properties" prefix="foo" prefixValues="true"/>
+    <au:assertPropertyEquals name="foo.b" value="A"/>
+    <property file="${input}/x.properties" prefix="bar" prefixValues="false"/>
+    <au:assertPropertyEquals name="bar.b" value="$${a}"/>
+    <property file="${input}/x.properties" prefix="baz"/>
+    <au:assertPropertyEquals name="baz.b" value="$${a}"/>
+  </target>
+
+  <!-- 
+  Problems with @-sign discussed on the mailinglist.
+  Seems to work.
+  http://mail-archives.apache.org/mod_mbox/ant-user/201412.mbox/%3CCAPxjwW%2BQKFFj45O-ZbCGOnAkJXe9KJ5qKtVQCvS2x7hObRJmkQ%40mail.gmail.com%3E
+  -->
+  <target name="testAtSign">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/x.properties"><![CDATA[
+once=@
+double=@@
+triple=@@@
+]]></echo>
+    <property file="${input}/x.properties"/>
+    <au:assertPropertyEquals name="once" value="@"/>
+    <au:assertPropertyEquals name="double" value="@@"/>
+    <au:assertPropertyEquals name="triple" value="@@@"/>
+  </target>
+</project>

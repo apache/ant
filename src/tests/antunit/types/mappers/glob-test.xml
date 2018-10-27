@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- A test for bugzilla 44731 -->
+<project xmlns:au="antlib:org.apache.ant.antunit"
+         name="glob-test"
+         default="antunit">
+
+  <import file="../../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+  </target>
+
+  <target name="test-overlapping-patterns" depends="setUp">
+    <!-- shouldn't be moved because pre- and postfix of from pattern
+         overlap -->
+    <touch file="${input}/foobar-1.2.3.jar"/>
+
+    <touch file="${input}/foobar-janfu-1.2.3.jar"/>
+    <touch file="${input}/foobar--1.2.3.jar"/>
+    <touch file="${input}/foobar-x-1.2.3.jar"/>
+    <move todir="${output}">
+      <fileset dir="${input}">
+        <include name="**/*.jar"/>
+      </fileset>
+      <mapper type="glob" from="foobar-*-1.2.3.jar" to="*.jar"/>
+    </move>
+    <au:assertFileExists file="${input}/foobar-1.2.3.jar"/>
+    <au:assertFileExists file="${output}/janfu.jar"/>
+    <au:assertFileExists file="${output}/.jar"/>
+    <au:assertFileExists file="${output}/x.jar"/>
+  </target>
+
+  <target name="test-no-*-in-to" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=46506">
+    <touch file="${input}/a-b.jar"/>
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+      <mapper type="glob" from="a*.jar" to="c.jar"/>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/c.jar-b"/>
+    <au:assertFileExists file="${output}/c.jar"/>
+  </target>
+
+  <target name="test-*-at-end-of-to" depends="setUp">
+    <touch file="${input}/a-b.jar"/>
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+      <mapper type="glob" from="a*.jar" to="c.jar*"/>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/c.jar"/>
+    <au:assertFileExists file="${output}/c.jar-b"/>
+  </target>
+
+  <target name="test-no-*-in-from" depends="setUp">
+    <touch file="${input}/a-b.jar"/>
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+      <mapper type="glob" from="a-b" to="c.jar"/>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/c.jar"/>
+  </target>
+
+</project>

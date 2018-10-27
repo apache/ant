@@ -1,0 +1,354 @@
+Instructions for making a Release:
+
+Authors: Conor MacNeill
+         Stefan Bodewig
+         Magesh Umasankar
+         Antoine Levy-Lambert
+
+Note: This document was adapted from the one created in the context of
+      releasing Ant 1.9.7. It assumes the first release created from
+      master will be 1.10.
+      Please interpret the branch names, tags, etc. according to
+      your context.
+
+      It reflects the way Stefan prefers to cut the release, parts of
+      this process haven't even been discussed on the dev list and may
+      change with later releases.
+
+1.  Propose a release plan for vote.  This should set out the timetable for
+    the release under ideal circumstances.  
+
+    In reality, you send a note to the list that you intend to cut the
+    release and wait for a few days whether anybody objects.
+
+    We haven't created extra branches for releases in a long time and
+    with out new 1.9.x LTS policy there is a permanent branch for
+    Java5 compatible releases anyway. So no extra branch for the
+    releases is needed.
+
+    This document assumes you are familiar with git
+    http://git-scm.com/book/en/v2/
+    may be a good guide if you are not.
+
+2.  Ensure you have all the external libraries that Ant uses in your
+    lib/optional directory.  All dependencies are either provided by
+    JDK 1.8.0 or downloadable using
+    ant -f fetch.xml -Ddest=optional
+    To find out whether you have all the libraries you need, execute
+    the build with -verbose option and scan for lines beginning with
+    "Unable to load...". 
+
+3.  We don't want tags for failed votes to end up on out branches so
+    the release is first created from a detached head.
+
+    Checkout the HEAD of the master branch as a detached head:
+
+    $ git checkout master^0
+
+4.  Make sure that your directory tree is clean by running git status.
+    Some tests leave behind leftovers which end up in the source
+    distribution otherwise.
+
+5.  Set the version number in several files to the required new
+    versions. These are:
+
+    * manual/cover.html (version should already be correct here)
+    * manual/credits.html  (version should already be correct here)
+    * build.xml properties : project.version,manifest-version,pom.version
+    * POM files under src/etc/poms and subdirectories
+      if you've got mvn installed
+
+      $ mvn versions:set -DnewVersion=1.10.0 -DgenerateBackupPoms=false
+
+      inside src/etc/poms should do the trick.
+
+    * ivy.xml in release subdirectory (version should already be correct here)
+    * WHATSNEW (version should already be correct here)
+    * src/etc/testcases/taskdefs/conditions/antversion.xml (version should already be correct here)
+
+6.  Next bootstrap, build and run the tests.
+
+    $ ./bootstrap.sh
+    $ ./build.sh
+    $ ./build.sh test
+    # if you've got maven installed
+    $ mvn -f src/etc/poms/pom.xml -DskipTests  package
+
+7.  Then build the distribution. It is important that this be a clean
+    build.
+
+    # clean
+    $ rm -rf bootstrap build dist distribution java-repository target
+    $ ./build.sh dist-lite
+    $ ./dist/bin/ant -nouserlib -lib lib/optional distribution
+
+    build.xml specifies that the code should be compiled with
+    source=1.8 and target=1.8.
+
+8.  Commit your changes, tag them, push them.
+
+    $ git tag -s -m "Tagging RC1 for version 1.10.0 of Ant" ANT_1.10.0_RC1
+    $ git push --tags
+
+9.  Ensure that the GPG key you use is inside the KEYS file in Ant's
+    git repository
+    <https://git-wip-us.apache.org/repos/asf?p=ant-antlibs-common.git;a=blob;f=KEYS;h=dc62b011b1b429bd6de913f8f2bce79b715f96db;hb=HEAD>
+    - and that you copy the KEYS file to /www/www.apache.org/dist/ant
+
+    Also make sure you have sent the key that you use to a public
+    keyserver.
+
+10. Sign the distribution files
+
+    There are two aproaches, one uses Ant and a few libraries, the
+    other requires you to run gnupg manually. The first version didn't
+    work for Stefan when he built the first release candidate for
+    1.9.7.
+
+    a. Using the script release/signit.xml
+
+    This script requires using commons-openpgp to sign the artefacts,
+
+    This tool can be checked out from 
+    http://svn.apache.org/repos/asf/commons/sandbox/openpgp/trunk
+    You have to build it using maven.
+
+    $ mvn install
+
+    The script assumes commons-openpgp (and bouncycastle) are in your
+    local maven repository.
+
+    You can create a property file gnupg.properties in your home directory 
+    with your key id - like
+
+    keyid=5F6B8B72
+
+    or use -Dkeyid
+
+    and pass your key passphrase on the command line with -Dpassword=****
+
+    $ ./build.sh -f release/signit.xml -Dpassword=****
+
+    b. Using gpg
+
+    $ for i in distribution/*/*.zip distribution/*/*.gz distribution/*/*.bz2; do gpg --use-agent --detach-sign --armor $i; done
+    $ for i in java-repository/org/apache/ant/ant*/*/*.jar java-repository/org/apache/ant/ant*/*/*.pom; do gpg --use-agent --detach-sign --armor $i; done
+
+11. Convert the part of the WHATSNEW file covering the changes
+    since the last release into HTML for the README file on the
+    website. See the previous release directories for examples of these files.
+
+    Use the target txt2html of docs.xml
+
+    $ ./build.sh -f docs.xml txt2html
+
+    This target generates a file build/html/WHATSNEW.html
+
+    Add an html head element with a title like "Release Notes of Apache Ant
+    1.10.0" (from the default txt2html)
+
+    Cut all sections about previous releases to keep only the current release,
+    and save as  RELEASE-NOTES-1.10.0.html inside the distribution folder.
+
+    Copy the contents of RELEASE-NOTES-1.10.0.html also into README.html
+
+12. The distribution is now ready to go.
+    Create a SVN sandbox on your computer with https://dist.apache.org/repos/dist/dev/ant in it
+    Copy the distribution folder to the location of the sandbox.
+    svn add the files and commit into https://dist.apache.org/repos/dist/dev/ant
+
+13. Upload the maven artifacts located under java-repository/org/apache/ant
+    these artifacts comprise currently for each ant jar of one POM
+    file, the corresponding jar file and the corresponding GPG
+    signatures (x.pom, x.jar, x.pom.asc, x.jar.asc) MD5 and SHA1 are
+    generated by ivy during the upload
+
+    to
+
+      https://repository.apache.org (nexus repository)
+
+    using the build file release/upload.xml - this requires Ivy
+
+      $ ./build.sh -Dupload.user=foo -Dupload.password=secret -lib location_of_ivy_jar -f release/upload.xml
+
+    After the upload, you need to access the web interface of nexus
+    under https://repository.apache.org login using your Apache
+    credentials in the left pane, below "build promotion", click on
+    the "Stagings Repositories" links expand org.apache.ant select the
+    checkbox next to the upload that you just did click the button
+    "Close" on the top of the table listing the uploads make a note of
+    the location of the staging repository for the vote email
+
+14. Once this is committed send a release vote email on dev@ant.
+    The email will typically mention :
+       - the git tag for the release including commit hash,
+       - the location of the tarballs, including revision number in
+         dist.apache.org repository
+       - the URL for the maven artifacts
+
+    The vote will only pass if at least three PMC members have voted +1
+    and more +1s than -1s have been cast.  The vote will run for 3 days.
+
+15. If the vote fails, address the problems and recreate the next RC
+    build.
+
+16. Once the vote has passed, tag the last RC created with the final tag
+
+    $ git tag -s -m "Tagging version 1.10.0 of Ant" rel/1.10.0 HASH_OF_LAST_RC
+    $ git push --tags
+
+17. The distrib artifacts should be published the apache dist. It is
+    managed via svnpubsub so the release should be committed to the
+    subversion repository
+    https://dist.apache.org/repos/dist/release/ant/.
+
+    * commit the new release files to
+
+      https://dist.apache.org/repos/dist/release/ant/[source|binaries|manual].
+
+    * Make https://dist.apache.org/repos/dist/release/ant/README.html
+      point to the new RELEASE-NOTES or a copy of it.
+
+    * release the maven artifacts using the web interface of nexus under https://repository.apache.org
+      login using your Apache credentials
+      in the left pane, below "build promotion", click on the "Stagings Repositories" links
+      expand org.apache.ant 
+      select the checkbox next to the upload that you just did
+      and click the button "Release".
+      4 hours later, the artifacts will be in the maven central repository.
+      
+18. Update the Apache Reporter System
+
+    https://reporter.apache.org/addrelease.html?ant
+
+19. Address the available version tags in BugZilla. Create new
+    milestone 1.10.1 and version 1.10.0.
+
+20. Add a new release tag to doap_Ant.rdf in Ant's site.
+
+21. checkout the master branch, merge the tag but don't push the
+    commit
+
+    [if a release of Ant 1.9.x happened at the same time, deal with
+    the 1.9.x tag on the 1.9.x branch first and merge the 1.9.x branch
+    to master before proceeding here]
+
+    $ git checkout master
+    $ git merge rel/1.10.0
+
+    Set the version number in several files to the required version of
+    the next 1.10.x release. These are:
+
+    * manual/cover.html
+    * manual/credits.html
+    * build.xml properties : project.version,manifest-version,pom.version
+
+      project.version property in build.xml gets bumped to
+      [newversion]alpha, for example 1.10.1alpha
+
+      manifest-version gets bumped to the exact next release number
+      for example 1.10.1.
+
+      pom.version gets bumped to [newversion]-SNAPSHOT
+      for example 1.10.1-SNAPSHOT.
+
+    * POM files under src/etc/poms and subdirectories
+      if you've got mvn installed
+
+      $ mvn versions:set -DnewVersion=1.10.1-SNAPSHOT -DgenerateBackupPoms=false
+
+      inside src/etc/poms should do the trick.
+
+    * ivy.xml in release subdirectory
+    * WHATSNEW (add a new section)
+    * src/etc/testcases/taskdefs/conditions/antversion.xml
+
+    Amend the merge commit
+
+    $ git add -u
+    $ git commit -a --amend
+    $ git push
+
+22. wait a few hours for the mirrors to catch up
+
+23. Update the ant.apache.org site :
+
+    The website is managed here: https://svn.apache.org/repos/asf/ant/site/ant/
+
+    Copy the manual of the release into the production folder - since
+    the site still uses svn and Ant proper uses git there currently is
+    no way to use the scm for this.
+
+    [TODO once there is the first release of 1.10.0, we'll likely need
+    to restructure the site to allow two versions of the manual to
+    exist in parallel]
+
+    Update the following files for version number:
+
+    * source/antnews.xml (Announcement)
+    * source/faq.xml (Ant's history details - not for betas)
+    * source/index.xml (Announcement, latest release details, link to
+    manual under "Documentation")
+    * source/srcdownload.xml
+    * source/bindownload.xml
+    * source/manualdownload.xml
+
+    Generate the html files by invoking 'ant'
+    Commit the modified/generated files in the 'production' folder, it will go
+    live on ant.apache.org in a matter on seconds.
+
+24. At this point in time, the release is done and announcements are made.
+    PGP-sign your announcement posts.
+
+    Apache mailing lists that should get the announcements:
+    announce@apache.org, dev@ant and user@ant.
+
+25. You can now reacquaint yourself with your family and friends.
+
+26. After a few days "svn rm" the older release artifacts and release
+    notes from https://dist.apache.org/repos/dist/release/ant/
+
+    "older" here means any older 1.10.x release but not the latest
+    1.9.x release.
+
+Related Information
+
+http://www.apache.org/dev/#releases
+http://commons.apache.org/releases/index.html
+http://wiki.apache.org/commons/SigningReleases
+
+Files containing version information
+------------------------------------
+
+   * manual/cover.html
+   * manual/credits.html
+   * build.xml properties : project.version,manifest-version,pom.version
+   * POM files under src/etc/poms and subdirectories
+   * ivy.xml in release subdirectory
+   * WHATSNEW
+   * src/etc/testcases/taskdefs/conditions/antversion.xml
+
+cover.html, credits.html, POM files, antversion.xml should be 
+adjusted for the [newversion] right after the build and tagging 
+of the release
+
+build.xml
+---------
+
+  right before a release :
+
+    the project.version gets bumped to the exact release
+    number, for instance 1.9.5
+
+  right after a release :
+ 
+    project.version property in build.xml gets bumped to
+    [newversion]alpha, for example 1.9.6alpha
+
+    manifest-version gets bumped to the exact next release number
+    for example 1.9.6
+
+    pom.version gets bumped to [newversion]-SNAPSHOT
+
+
+

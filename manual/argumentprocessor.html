@@ -1,0 +1,76 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+<title>The Command Line Processor Plugin: ArgumentProcessor</title>
+</head>
+
+<body>
+<h1>The Command Line Processor Plugin: ArgumentProcessor</h1>
+
+<h2><a name="definition">What is an ArgumentProcessor?</a></h2>
+
+<p>
+An <code>ArgumentProcessor</code> is a parser of command line argument which is
+then call before and after the build file is being parsed. Third party
+libraries may then be able to have custom argument line argument which modify
+Ant behaviour.
+</p>
+
+<p>
+An <code>ArgumentProcessor</code> is called each time Ant parse an unknown
+argument, an <code>ArgumentProcessor</code> doesn't take precedence over Ant to
+parse already suported options. It is then recommended to third party
+<code>ArgumentProcessor</code> implementation to chose specific 'enough'
+argument name, avoiding for instance one letter arguments.
+</p>
+
+<p>
+It is also called at the different phases so different behaviour can be
+implemented. It is called just after every arguments are parsed, just
+before the project is being configured (the build file being parsed),
+and just after. Some of the methods to be implemented return a boolean:
+if <code>true</code> is returned, Ant will terminate immediately, without
+error.
+</p>
+
+<p>
+Being called during all these phases, an <code>ArgumentProcessor</code>
+can just print some specific system properties and quit (like
+<code>-diagnose</code>), or print some specific properties of a project after
+being parsed and quit (like <code>-projectHelp</code>), or just set some
+custom properties on the project and let it run.
+</p>
+
+<h2><a name="repository">How to register it's own ArgumentProcessor</a></h2>
+
+<p>First, the <code>ArgumentProcessor</code> must be an implementation of
+<code>org.apache.tools.ant.ArgumentProcessor</code>.
+</p>
+
+<p>Then to decare it: create a file
+<code>META-INF/services/org.apache.tools.ant.ArgumentProcessor</code> which
+contains only one line the fully qualified name of the class of the
+implementation. This file together with the implementation class need then to
+be found in Ant's classpath.
+</p>
+</body>
+</html>
+

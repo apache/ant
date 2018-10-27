@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="unzip-test" default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+  <target name="testFailureOnBrokenCentralDirectoryStructure">
+    <au:expectfailure
+       expectedmessage="central directory is empty, can't expand corrupt archive.">
+      <unzip src="broken_cd.zip" dest="${output}"/>
+    </au:expectfailure>
+  </target>
+
+  <!-- Issue 28911 -->
+  <target name="testStrippingOfPathsep">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/file"/>
+    <zip destfile="${output}/a.zip">
+      <zipfileset dir="${input}" prefix="/foo"/>
+    </zip>
+    <unzip src="${output}/a.zip" stripAbsolutePathSpec="true"
+           dest="${output}"/>
+    <au:assertFileExists file="${output}/foo/file"/>
+  </target>
+
+  <target name="testTwoByteExtraFieldInLFH"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=42940"
+          >
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <copy file="zip/Bugzilla-42940.zip" tofile="${input}/test.zip"/>
+    <unzip src="${input}/test.zip" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
+  <target name="testArchiveIsClosedForInvalidZips"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=46559"
+          >
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <copy file="broken_cd.zip" tofile="${input}/test.zip"/>
+    <au:expectfailure>
+      <unzip src="${input}/test.zip" dest="${output}"/>
+    </au:expectfailure>
+    <delete file="${input}/test.zip" quiet="true"/>
+    <!-- failed on Windows and other OSes with implicit file locking -->
+    <au:assertFileDoesntExist file="${input}/test.zip"/>
+  </target>
+</project>

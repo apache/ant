@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="dependset-test" xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
+  </target>
+
+  <target name="testNoSourcesOrTargets">
+    <au:expectfailure expectedMessage="At least one set of source resources must be specified">
+      <dependset />
+    </au:expectfailure>
+  </target>
+
+  <target name="testNoTargets">
+    <au:expectfailure expectedMessage="At least one set of target files must be specified">
+      <dependset>
+        <srcfilelist dir="." files="test2.tmp" />
+      </dependset>
+    </au:expectfailure>
+  </target>
+
+  <target name="testNoSources">
+    <au:expectfailure expectedMessage="At least one set of source resources must be specified">
+      <dependset>
+        <targetfileset dir="." includes="test3.tmp" />
+      </dependset>
+    </au:expectfailure>
+  </target>
+
+  <target name="testMissingTargets" depends="setUp">
+    <touch file="${input}/test4.tmp" />
+    <dependset>
+      <srcfilelist dir="${input}" files="test4.tmp" />
+      <targetfileset id="targetfs" dir="${output}" includes="i-do-not-exist" />
+    </dependset>
+    <au:assertLogDoesntContain text="Deleting all target files." level="verbose" />
+  </target>
+
+  <target name="testMoreRecentSourceFile" depends="setUp">
+    <touch file="${output}/older.tmp" />
+    <sleep seconds="3" />
+    <touch file="${input}/newer.tmp" />
+    <dependset>
+      <srcfilelist dir="${input}" files="newer.tmp" />
+      <targetfilelist dir="${output}" files="older.tmp" />
+    </dependset>
+    <au:assertLogContains text="older.tmp&quot; is oldest target file" level="verbose" />
+    <au:assertLogContains text="newer.tmp&quot; is newest source" level="verbose" />
+    <au:assertLogContains text="Deleting all target files." level="verbose" />
+    <au:assertLogDoesntContain text="Deleting" level="info" />
+    <au:assertFileDoesntExist file="${output}/older.tmp" />
+  </target>
+
+  <target name="testMoreRecentSourceFileVerbose" depends="setUp">
+    <touch file="${output}/older.tmp" />
+    <sleep seconds="3" />
+    <touch file="${input}/newer.tmp" />
+    <dependset verbose="true">
+      <srcfilelist dir="${input}" files="newer.tmp" />
+      <targetfilelist dir="${output}" files="older.tmp" />
+    </dependset>
+    <au:assertLogContains text="older.tmp&quot; is oldest target file" level="info" />
+    <au:assertLogContains text="newer.tmp&quot; is newest source" level="info" />
+    <au:assertLogContains text="Deleting all target files." level="verbose" />
+    <au:assertLogContains text="Deleting" level="info" />
+    <au:assertFileDoesntExist file="${output}/older.tmp" />
+  </target>
+
+  <target name="testMultipleFiles" depends="setUp">
+    <touch file="${input}/sourceset_1.tmp" />
+    <touch file="${output}/targetset_1.tmp" />
+    <sleep seconds="3" />
+    <touch file="${input}/sourceset_2.tmp" />
+    <touch file="${output}/targetset_2.tmp" />
+    <sleep seconds="2" />
+    <dependset>
+      <sources>
+        <filelist dir="${input}" files="sourceset_1.tmp,sourceset_2.tmp" />
+      </sources>
+      <targets>
+        <filelist dir="${output}/" files="targetset_1.tmp,targetset_2.tmp" />
+      </targets>
+    </dependset>
+    <au:assertLogContains text="targetset_1.tmp&quot; is oldest target file" level="verbose" />
+    <au:assertLogContains text="sourceset_2.tmp&quot; is newest source" level="verbose" />
+    <au:assertLogContains text="Deleting all target files." level="verbose" />
+    <au:assertLogDoesntContain text="Deleting" level="info" />
+    <au:assertFileDoesntExist file="${output}/targetset_1.tmp" />
+    <au:assertFileDoesntExist file="${output}/targetset_2.tmp" />
+  </target>
+
+  <target name="testMultipleFilesVerbose" depends="setUp">
+    <touch file="${input}/sourceset_1.tmp" />
+    <touch file="${output}/targetset_1.tmp" />
+    <sleep seconds="3" />
+    <touch file="${input}/sourceset_2.tmp" />
+    <touch file="${output}/targetset_2.tmp" />
+    <sleep seconds="2" />
+    <dependset verbose="true">
+      <sources>
+        <filelist dir="${input}" files="sourceset_1.tmp,sourceset_2.tmp" />
+      </sources>
+      <targets>
+        <filelist dir="${output}/" files="targetset_1.tmp,targetset_2.tmp" />
+      </targets>
+    </dependset>
+    <au:assertLogContains text="targetset_1.tmp&quot; is oldest target file" level="info" />
+    <au:assertLogContains text="sourceset_2.tmp&quot; is newest source" level="info" />
+    <au:assertLogContains text="Deleting all target files." level="verbose" />
+    <au:assertLogContains text="Deleting" level="info" />
+    <au:assertFileDoesntExist file="${output}/targetset_1.tmp" />
+    <au:assertFileDoesntExist file="${output}/targetset_2.tmp" />
+  </target>
+
+  <target name="testMissingSourceResource" depends="setUp">
+    <touch file="${output}/older.tmp" />
+    <dependset>
+      <sources>
+        <propertyresource name="thereisnosuchproperty" />
+      </sources>
+      <targets>
+        <filelist dir="${output}" files="older.tmp" />
+      </targets>
+    </dependset>
+    <au:assertLogContains text="1 nonexistent sources" level="verbose" />
+    <au:assertLogContains text="Deleting all target files." level="verbose" />
+    <au:assertLogDoesntContain text="Deleting" level="info" />
+    <au:assertLogDoesntContain text="Expected source propertyresource &quot;null&quot; is missing." level="info" />
+    <au:assertFileDoesntExist file="${output}/older.tmp" />
+  </target>
+
+  <target name="testMissingSourceResourceVerbose" depends="setUp">
+    <touch file="${output}/older.tmp" />
+    <dependset verbose="true">
+      <sources>
+        <propertyresource name="thereisnosuchproperty" />
+      </sources>
+      <targets>
+        <filelist dir="${output}" files="older.tmp" />
+      </targets>
+    </dependset>
+    <au:assertLogContains text="1 nonexistent sources" level="verbose" />
+    <au:assertLogContains text="Deleting all target files." level="verbose" />
+    <au:assertLogContains text="Deleting" level="info" />
+    <au:assertLogContains text="Expected source propertyresource &quot;null&quot; is missing." level="info" />
+    <au:assertFileDoesntExist file="${output}/older.tmp" />
+  </target>
+
+  <target name="testExistingSourceResource" depends="setUp">
+    <touch file="${output}/older.tmp" />
+    <property name="foo" value="bar" />
+    <dependset>
+      <sources>
+        <propertyresource name="foo" />
+      </sources>
+      <targets>
+        <filelist dir="${output}" files="older.tmp" />
+      </targets>
+    </dependset>
+    <au:assertLogDoesntContain text="Deleting all target files." level="verbose" />
+    <au:assertFileExists file="${output}/older.tmp" />
+  </target>
+
+  <target name="testMissingTargetDirectory" depends="setUp">
+    <au:assertFalse>
+      <available file="${output}/test9dir" type="dir" />
+    </au:assertFalse>
+    <touch file="${input}/test9.tmp" />
+    <dependset>
+      <srcfileset dir="." includes="test9.tmp" />
+      <targetfileset dir="${output}/test9dir" />
+    </dependset>
+    <au:assertLogDoesntContain text="Deleting all target files." level="verbose" />
+  </target>
+
+</project>

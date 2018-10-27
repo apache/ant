@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="all">
+
+<!-- 
+  Xor semantics
+  
+  in  out
+  ==  ===
+  00   0
+  01   1
+  10   1
+  00   0
+
+-->
+
+  <target name="testEmpty" >
+    <fail message="empty test">
+      <condition>
+          <xor/>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="test1" >
+    <fail message="testTrue">
+      <condition>
+        <not>
+          <xor>
+            <istrue value="true" />
+          </xor>
+        </not>
+      </condition>
+    </fail>
+  </target>
+  
+  <target name="test0" >
+    <fail message="testFalse">
+      <condition>
+          <xor>
+            <istrue value="" />
+          </xor>
+      </condition>
+    </fail>
+  </target>
+
+  
+  <target name="test10" >
+    <fail message="test10">
+      <condition>
+        <not>
+          <xor>
+            <istrue value="true" />
+            <istrue value="" />
+          </xor>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="test01" >
+    <fail message="test01">
+      <condition>
+        <not>
+          <xor>
+            <istrue value="" />
+            <istrue value="true" />
+          </xor>
+        </not>
+      </condition>
+    </fail>
+  </target>
+  
+  <target name="test00" >
+    <fail message="test10">
+      <condition>
+        <xor>
+            <istrue value="" />
+            <istrue value="" />
+        </xor>
+      </condition>
+    </fail>
+  </target>
+  
+  <target name="test11" >
+    <fail message="test11">
+      <condition>
+          <xor>
+            <istrue value="" />
+            <istrue value="" />
+          </xor>
+      </condition>
+    </fail>
+  </target>
+
+  
+</project>

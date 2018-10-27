@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+  <!--
+/*
+ *   Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+-->
+<antlib>
+  <!--
+       This is the ant lib definition for ant.
+       Currently it only contains componentdefinitions (restricted
+       types that are not allowed at the top level)
+       - conditions, selectors and comparators
+       (those that are not top-level types (taskdefs or typedefs).
+       defined in defaults.properties of taskdefs and types
+       packages).
+
+       This is currently experimental and it is most
+       likely that these definitions will be placed
+       in a Java Ant definition class.
+  -->
+  <!-- conditions -->
+  <componentdef name="and" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.And"/>
+  <componentdef name="contains" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.Contains"/>
+  <componentdef name="equals" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.Equals"/>
+  <componentdef name="filesmatch" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.FilesMatch"/>
+  <componentdef name="hasfreespace" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.HasFreeSpace"/>
+  <componentdef name="hasmethod" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.HasMethod"/>
+  <componentdef name="http" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.Http"/>
+  <componentdef name="isfailure" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsFailure"/>
+  <componentdef name="isfalse" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsFalse"/>
+  <componentdef name="islastmodified" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsLastModified"/>
+  <componentdef name="isreachable" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsReachable"/>
+  <componentdef name="isreference" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsReference"/>
+  <componentdef name="isset" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsSet"/>
+  <componentdef name="issigned" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsSigned"/>
+  <componentdef name="istrue" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.IsTrue"/>
+  <componentdef name="matches" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.Matches"/>
+  <componentdef name="not" onerror="ignore"
+       classname="org.apache.tools.ant.types.resources.selectors.Not"/>
+  <componentdef name="or" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.Or"/>
+  <componentdef name="os" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.Os"/>
+  <componentdef name="parsersupports" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.ParserSupports"/>
+  <componentdef name="resourcecontains" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.ResourceContains"/>
+  <componentdef name="resourceexists" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.ResourceExists"/>
+  <componentdef name="resourcesmatch" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.ResourcesMatch"/>
+  <componentdef name="socket" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.Socket"/>
+  <componentdef name="typefound" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.TypeFound"/>
+  <componentdef name="xor" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.Xor"/>
+
+  <!-- selectors -->
+  <componentdef name="and" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.And" />
+  <componentdef name="compare" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Compare" />
+  <componentdef name="contains" onerror="ignore"
+    classname="org.apache.tools.ant.types.selectors.ContainsSelector" />
+  <componentdef name="containsregexp" onerror="ignore"
+    classname="org.apache.tools.ant.types.selectors.ContainsRegexpSelector" />
+  <componentdef name="date" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Date" />
+  <componentdef name="exists" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Exists" />
+  <componentdef name="instanceof" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.InstanceOf" />
+  <componentdef name="majority" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Majority" />
+  <componentdef name="modified" onerror="ignore"
+    classname="org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector" />
+  <componentdef name="name" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Name" />
+  <componentdef name="none" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.None" />
+  <componentdef name="not" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Not" />
+  <componentdef name="or" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Or" />
+  <componentdef name="size" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Size" />
+  <componentdef name="type" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.selectors.Type" />
+
+
+  <!-- comparators -->
+  <componentdef name="name" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.comparators.Name" />
+  <componentdef name="size" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.comparators.Size" />
+  <componentdef name="date" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.comparators.Date" />
+  <componentdef name="exists" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.comparators.Exists" />
+  <componentdef name="type" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.comparators.Type" />
+  <componentdef name="content" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.comparators.Content" />
+  <componentdef name="reverse" onerror="ignore"
+    classname="org.apache.tools.ant.types.resources.comparators.Reverse" />
+
+  <!-- filters -->
+  <componentdef name="sortfilter" onerror="ignore"
+                classname="org.apache.tools.ant.filters.SortFilter"/>
+  <componentdef name="uniqfilter" onerror="ignore"
+                classname="org.apache.tools.ant.filters.UniqFilter"/>
+  <componentdef name="native2asciifilter" onerror="ignore"
+                classname="org.apache.tools.ant.filters.Native2AsciiFilter"/>
+</antlib>
+

@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="test-tokens" default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <property name="eol" value="${line.separator}" />
+
+  <target name="antunit">
+    <au:antunit>
+      <au:plainlistener />
+      <file file="${ant.file}" />
+    </au:antunit>
+  </target>
+
+  <target name="testLines">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <tokens>
+            <string value="foo${eol}bar${eol}baz" />
+          </tokens>
+          <resources>
+            <string value="foo" />
+            <string value="bar" />
+            <string value="baz" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testExplicitLines">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <tokens>
+            <string value="foo${eol}bar${eol}baz" />
+            <linetokenizer />
+          </tokens>
+          <resources>
+            <string value="foo" />
+            <string value="bar" />
+            <string value="baz" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFileTokenizer">
+    <au:assertTrue>
+      <resourcecount count="1">
+        <tokens>
+          <resources>
+            <string value="foo${eol}bar${eol}baz" />
+            <file file="${ant.file}" />
+          </resources>
+          <filetokenizer />
+        </tokens>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testStringTokenizer">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <tokens>
+            <string value="foo bar baz " />
+            <stringtokenizer />
+          </tokens>
+          <resources>
+            <string value="foo" />
+            <string value="bar" />
+            <string value="baz" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testEncoding">
+    <au:assertTrue>
+      <resourcecount count="0">
+        <difference>
+          <tokens encoding="utf-16">
+            <file file="utf-16.in" />
+          </tokens>
+          <resources>
+            <string value="foo" />
+            <string value="bar" />
+            <string value="baz" />
+          </resources>
+        </difference>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testSort">
+    <pathconvert property="sorted" pathsep="${eol}">
+      <sort>
+        <tokens>
+          <string value="foo bar etc baz" />
+          <stringtokenizer />
+        </tokens>
+    </sort>
+    </pathconvert>
+    <au:assertTrue>
+      <equals arg1="bar${eol}baz${eol}etc${eol}foo" arg2="${sorted}" />
+    </au:assertTrue>
+  </target>
+
+</project>

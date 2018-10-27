@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="zip-test" basedir="." default="test1">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
+
+  <target name="test1">
+    <zip/>
+  </target>
+
+  <target name="test2">
+    <zip destFile="${output}/zip.tmp"/>
+  </target>
+
+  <!-- Test when the zip file includes itself
+  when target file exists before the zip task is run -->
+  <target name="test3">
+    <touch file="${output}/test3.zip"/>
+    <zip destFile="${output}/test3.zip"
+         basedir="${output}/"/>
+  </target>
+
+  <!-- Test when the zip file includes itself
+  when target file does not exist before the zip task is run
+  <target name="test4">
+     <zip destFile="${output}/test4.zip"
+         basedir="."/>
+  </target>
+  -->
+
+  <target name="test5">
+    <zip zipfile="${output}/test5.zip" basedir="." >
+      <exclude name="test5.zip" />
+    </zip>
+  </target>
+
+  <target name="test6">
+    <zip destFile="${output}/test6.zip" basedir=".">
+      <include name="*.xml" />
+      <exclude name="zip.*" />
+    </zip>
+  </target>
+
+  <target name="test7">
+    <copy todir="${output}">
+      <fileset dir="."/>
+    </copy>
+    <zip destFile="${output}/inner7.zip" basedir="${output}" >
+      <exclude name="inner7.zip" />
+    </zip>
+    <zip destFile="${output}/test7.zip" basedir=".">
+      <exclude name="**/*.*" />
+      <zipfileset src="${output}/inner7.zip" />
+    </zip>
+  </target>
+
+  <target name="feather">
+    <zip destFile="${output}/asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif" />
+  </target>
+
+  <target name="uncompressed-feather">
+    <zip destFile="${output}/asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif" compress="false"/>
+  </target>
+
+  <!-- legacy attribute support -->
+  <target name="test8">
+    <zip zipfile="${output}/test8.zip" basedir="." >
+      <exclude name="test8.zip" />
+    </zip>
+  </target>
+
+  <target name="testZipgroupfileset">
+
+    <zip zipfile="${output}/zipgroupfileset.zip" basedir=".">
+      <zipgroupfileset dir="zip" 
+        includes="zipgroupfileset*.zip" 
+        excludes="zipgroupfileset3.zip" />
+      <include name="zip/zipgroupfileset3.zip" />
+    </zip>
+  </target>
+
+  <target name="testDuplicateFail">
+
+    <zip zipfile="${output}/duplicateFail.zip" basedir="." duplicate="fail">
+      <zipgroupfileset dir="duplicate" includes="duplicate*.zip" />
+    </zip>
+  </target>
+
+  <target name="testUpdateNotNecessary" depends="feather">
+    <zip destFile="${output}/asf-logo.gif.zip"
+         basedir=".."
+         includes="asf-logo.gif"
+         update="true" />
+  </target>
+
+  <target name="testUpdateIsNecessary" depends="feather">
+    <touch file="${output}/dummyfile" />
+    <copy file="../asf-logo.gif" todir="${output}"/>
+    <zip destFile="${output}/asf-logo.gif.zip"
+         basedir="${output}"
+         includes="asf-logo.gif,dummyfile"
+         update="true" />
+  </target>
+
+  <!-- Bugzilla Report 18403 -->
+  <target name="testPrefixAddsDir">
+    <zip destFile="${output}/test3.zip" filesonly="false">
+      <zipfileset dir="." prefix="test" includes="zip.xml"/>
+    </zip>
+  </target>
+
+  <!-- Bugzilla Report 19449 -->
+  <target name="testFilesOnlyDoesntCauseRecreateSetup">
+    <mkdir dir="${output}/ziptest"/>
+    <touch file="${output}/ziptest/ziptest"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}"
+         includes="ziptest/**" filesonly="true"/>
+  </target>
+
+  <!-- Bugzilla Report 19449 -->
+  <target name="testFilesOnlyDoesntCauseRecreate">
+    <zip destFile="${output}/test3.zip" basedir="."
+         includes="ziptest/**" filesonly="true"/>
+  </target>
+
+  <!-- Bugzilla Report 22865 -->
+  <target name="testEmptySkip">
+    <mkdir dir="${output}/ziptest"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/ziptest" whenempty="skip"/>
+    <fail message="archive should get skipped">
+      <condition>
+        <available file="${output}/test3.zip" />
+      </condition>
+    </fail>
+  </target>
+
+  <!-- Bugzilla Report 30365 -->
+  <target name="zipEmptyDir">
+    <mkdir dir="${output}/empty/empty2"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/empty" update="true"/>
+    <fail message="single-directory archive should be created">
+      <condition>
+        <or>
+          <not>
+            <available file="${output}/test3.zip" />
+          </not>
+          <resourcecount when="gt" count="0">
+            <zipfileset src="${output}/test3.zip" />
+          </resourcecount>
+          <resourcecount when="ne" count="1">
+            <restrict>
+              <exists xmlns="antlib:org.apache.tools.ant.types.resources.selectors" />
+              <zipentry zipfile="${output}/test3.zip" name="empty2/" />
+            </restrict>
+          </resourcecount>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
+  <!-- Bugzilla Report 40258 -->
+  <target name="zipEmptyDirFilesOnly">
+    <mkdir dir="${output}/empty/empty2" />
+    <zip destFile="${output}/test3.zip" basedir="${output}/empty" update="true" filesonly="true" />
+    <fail message="archive should get skipped">
+      <condition>
+        <available file="${output}/test3.zip" />
+      </condition>
+    </fail>
+  </target>
+
+  <target name="zipEmptyCreate">
+    <mkdir dir="${output}/empty"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/empty" whenempty="create" includes="*.xyz"/>
+    <fail message="empty archive should be created">
+      <condition>
+        <or>
+          <not>
+           <available file="${output}/test3.zip" />
+          </not>
+          <resourcecount when="gt" count="0">
+            <zipfileset src="${output}/test3.zip" />
+          </resourcecount>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testCompressionLevel" depends="test6">
+    <length property="test6.length" file="${output}/test6.zip" />
+    <copy todir="${output}">
+      <fileset dir=".">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <zip destFile="${output}/testLevel.zip" basedir="${output}" level="9">
+      <include name="*.xml" />
+      <exclude name="zip.*" />
+    </zip>
+    <fail>
+      <condition>
+        <not>
+          <isfileselected file="${output}/testLevel.zip">
+            <size when="less" value="${test6.length}" />
+          </isfileselected>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <!-- Bugzilla Report 33412 -->
+  <target name="testDefaultExcludesAndUpdate">
+    <mkdir dir="${output}/ziptest"/>
+    <touch file="${output}/ziptest/ziptest~"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/ziptest"
+         defaultexcludes="false"/>
+    <touch file="${output}/ziptest/ziptest2"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/ziptest"
+      defaultexcludes="false"
+      update="true"/>
+  </target>
+
+  <target name="testFileResource">
+    <zip destFile="${output}/test3.zip">
+      <file file="zip.xml"/>
+    </zip>
+  </target>
+
+  <target name="testNonFileResource">
+    <zip destFile="${output}/test3.zip">
+      <javaresource name="META-INF/MANIFEST.MF"/>
+    </zip>
+  </target>
+
+  <target name="testTarFileSet">
+    <ant antfile="tar.xml" target="feather"/>
+    <zip destFile="${output}/test3.zip">
+      <tarfileset src="${output}/asf-logo.gif.tar" filemode="446"/>
+    </zip>
+  </target>
+
+  <target name="rewriteZeroPermissions">
+    <zip destFile="${output}/test3.zip">
+      <zipfileset src="nopermissions.zip"/>
+    </zip>
+  </target>
+
+  <target name="acceptZeroPermissions">
+    <zip destFile="${output}/test3.zip" preserve0permissions="true">
+      <zipfileset src="nopermissions.zip"/>
+    </zip>
+  </target>
+
+  <target name="testForBugzilla34764">
+    <mkdir dir="${output}/ziptest"/>
+    <touch file="${output}/ziptest/file1"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/ziptest"/>
+    <touch file="${output}/ziptest/file2"/>
+    <zip destFile="${output}/test3.zip" basedir="${output}/ziptest" update="true"/>
+  </target>
+
+  <target name="testRegexpMapper1">
+    <mkdir dir="${output}/regexp.src"/>
+    <touch file="${output}/regexp.src/file1"/>
+    <zip destFile="${output}/regexp.zip">
+      <mappedresources>
+       <fileset dir="${output}/regexp.src" includes="file1" />
+       <regexpmapper from="^(([a-z][a-z]).*)" to="\2/\1.r" />
+      </mappedresources>
+    </zip>
+  </target>
+  <target name="testRegexpMapper2">
+    <sleep seconds="3" />
+    <zip destFile="${output}/regexp.zip">
+      <mappedresources>
+       <fileset dir="${output}/regexp.src" includes="file1" />
+       <regexpmapper from="^(([a-z][a-z]).*)" to="\2/\1.r" />
+      </mappedresources>
+    </zip>
+  </target>
+
+</project>

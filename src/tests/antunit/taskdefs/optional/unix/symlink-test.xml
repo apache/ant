@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project name="symlink-test"
+    default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../../antunit-base.xml"/>
+
+  <target name="setUp">
+    <condition property="isUnix">
+      <os family="unix" />
+    </condition>
+  </target>
+
+  <target name="tearDown" depends="antunit-base.tearDown"
+          if="chmod.tmp">
+    <chmod dir="${chmod.tmp}" perm="755"/>
+    <delete dir="${chmod.tmp}"/>
+  </target>
+
+  <target name="os">
+
+    <mkdir dir="${output}" />
+    <condition property="unix">
+      <os family="unix" />
+    </condition>
+    <property name="file_ref"
+      location="${output}/file"/>
+    <property name="hanging_ref"
+        location="${output}/hanging_ref"/>
+  </target>
+
+  <target name="init" depends="os" if="unix">
+    <touch file="${file_ref}" />
+  </target>
+
+  <target name="testCreateDouble" depends="init" if="unix">
+    <symlink overwrite="true" link="${output}/link"
+        resource="${file_ref}"/>
+    <symlink overwrite="true" link="${output}/link"
+        resource="${file_ref}"/>
+  </target>
+
+
+  <target name="testCreateDoubleHanging" depends="init" if="unix">
+    <symlink overwrite="true" link="${output}/link2"
+        resource="${hanging_ref}"/>
+    <symlink overwrite="true" link="${output}/link2"
+        resource="${hanging_ref}"/>
+  </target>
+
+  <target name="testCreateOverFile" depends="init" if="unix">
+    <touch file="${output}/link3" />
+    <symlink overwrite="true" link="${output}/link3"
+        resource="${file_ref}"/>
+  </target>
+
+  <target name="testDeleteOfBrokenLink" depends="init" if="unix">
+    <symlink link="${output}/link" resource="${file_ref}"/>
+    <delete file="${file_ref}"/>
+    <symlink link="${output}/link" action="delete"/>
+    <au:assertFileDoesntExist file="${output}/link"/>
+  </target>
+
+  <target name="testDeleteLinkToParent" depends="init" if="unix">
+    <symlink link="${output}/link" resource="${output}"/>
+    <symlink link="${output}/link" action="delete"/>
+    <au:assertFileDoesntExist file="${output}/link"/>
+  </target>
+
+  <target name="testDeleteWithNoPermissionToRenameTarget"
+          depends="init" if="unix">
+    <!-- must be outside of ${output} or "base" tearDown will fail -->
+    <property name="chmod.tmp" location="${output}/../ant-symlink-test"/>
+    <mkdir dir="${chmod.tmp}/A"/>
+    <chmod perm="555" dir="${chmod.tmp}"/>
+    <symlink link="${output}/link" resource="${chmod.tmp}/A"/>
+    <symlink link="${output}/link" action="delete"/>
+    <au:assertFileDoesntExist file="${output}/link"/>
+  </target>
+
+  <target name="testDeleteLinkInSameDirAsBuildFile" depends="setUp" if="isUnix"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49137">
+    <mkdir dir="${output}/Templates"/>
+    <mkdir dir="${output}/project1"/>
+    <symlink action="single" link="${output}/project1/Templates"
+             resource="../Templates"/>
+    <echo file="${output}/project1/build.xml"><![CDATA[
+<project name="project1" default="build" basedir=".">
+    <target name="build">
+        <symlink action="delete" link="Templates"/>
+    </target>
+</project>]]></echo>
+    <ant antfile="${output}/project1/build.xml"/>
+  </target>
+</project>

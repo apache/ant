@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="recorder-test" default="all" basedir=".">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
+
+  <property name="recin" location="recorder"/>
+
+  <target name="all" depends="noappend,append,restart,deleterestart"/>
+
+  <target name="noappend">
+    <copy file="${recin}/rectest2.result" tofile="${output}/rectest1.log"/>
+    <record name="${output}/rectest1.log" action="start"/>
+    <echo message="some message1"/>
+    <record name="${output}/rectest1.log" action="stop"/>
+  </target>
+
+  <target name="append">
+    <copy file="${recin}/rectest1.result" tofile="${output}/rectest2.log"/>
+    <record name="${output}/rectest2.log" append="true" action="start"/>
+    <echo message="some message2"/>
+    <record name="${output}/rectest2.log" action="stop"/>
+  </target>
+
+  <target name="restart">
+    <record name="${output}/rectest3.log" action="start"/>
+    <echo message="some message1"/>
+    <record name="${output}/rectest3.log" action="stop"/>
+    <echo message="some message2"/>
+    <record name="${output}/rectest3.log" action="start"/>
+    <echo message="some message3"/>
+    <record name="${output}/rectest3.log" action="stop"/>
+  </target>
+
+  <target name="deleterestart">
+    <record name="${output}/rectest4.log" action="start"/>
+    <echo message="some message1"/>
+    <record name="${output}/rectest4.log" action="stop"/>
+    <delete file="${output}/rectest4.log"/>
+    <echo message="some message2"/>
+    <record name="${output}/rectest4.log" action="start"/>
+    <echo message="some message3"/>
+    <record name="${output}/rectest4.log" action="stop"/>
+  </target>
+
+  <target name="subbuild">
+    <record name="${output}/rectest5.log" action="start"/>
+    <echo message="some message5"/>
+    <ant antfile="recorder2.xml"/>
+    <record name="${output}/rectest5.log" action="stop"/>
+  </target>
+
+
+</project>

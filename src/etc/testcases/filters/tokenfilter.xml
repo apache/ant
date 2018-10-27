@@ -1,0 +1,357 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project default="tearDown" basedir=".">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+  <target name="tokenfilter">
+    <copy file="input/linecontains.test" tofile="${output}/file1">
+      <filterchain>
+        <tokenfilter/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="trimignore">
+    <concat destfile="${output}/input">
+      Hello
+      
+      World
+    </concat>
+    <copy file="${output}/input" tofile="${output}/output" overwrite="yes">
+      <filterchain>
+        <tokenfilter delimoutput="-">
+          <trim/>
+          <ignoreblank/>
+        </tokenfilter>
+      </filterchain>
+    </copy>
+    <concat>
+      <filelist dir="${output}" files="output"/>
+    </concat>
+  </target>
+
+  <target name="trimfile">
+    <concat destfile="${output}/trimfile">
+      This is the contents of the trimmed file.
+      This is the second line.
+      <filterchain>
+        <trim byline="no"/>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="trimfilebyline">
+    <concat destfile="${output}/trimfilebyline">
+      This is the contents of the trimmed file.
+      This is the second line.
+      <filterchain>
+        <trim/>
+        <tokenfilter delimoutput="\n"/>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="filterreplacestring">
+    <concat destfile="${output}/filterreplacestring">
+      This is foo bar
+      <filterchain>
+        <replacestring from="foo" to="the"/>
+        <replacestring from="bar" to="moon"/>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="filterreplacestrings">
+    <concat>
+      foo foo foo
+      <filterchain>
+        <replacestring from="foo" to="bar"/>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="stringtokenizer">
+    <concat destfile="${output}/input">
+      This is a number
+      of words
+    </concat>
+    <copy file="${output}/input" tofile="${output}/output" overwrite="yes">
+      <filterchain>
+        <tokenfilter delimoutput="#">
+          <stringtokenizer/>
+        </tokenfilter>
+      </filterchain>
+    </copy>
+    <concat>
+      <filelist dir="${output}" files="output"/>
+    </concat>
+  </target>
+
+  <target name="unixlineoutput">
+    <concat destfile="${output}/unixlineoutput">
+      This is a number
+      of words
+      <filterchain>
+        <tokenfilter delimoutput="\n">
+          <stringtokenizer/>
+        </tokenfilter>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="doslineoutput">
+    <concat destfile="${output}/doslineoutput">
+      This is a number
+      of words
+      <filterchain>
+        <tokenfilter delimoutput="\r\n">
+          <stringtokenizer/>
+        </tokenfilter>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="filetokenizer">
+    <concat destfile="${output}/input">
+      This is a number
+      of words
+    </concat>
+    <copy file="${output}/input" tofile="${output}/filetokenizer">
+      <filterchain>
+        <tokenfilter>
+          <filetokenizer/>
+          <trim/>
+        </tokenfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="replacestring">
+    <concat destfile="${output}/replacestring">
+      this is the sun
+      <filterchain>
+        <tokenfilter>
+            <replacestring from="sun" to="moon"/>
+        </tokenfilter>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="replacestrings">
+    <concat>
+      foo foo foo
+      <filterchain>
+        <tokenfilter>
+          <replacestring from="foo" to="bar"/>
+        </tokenfilter>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="containsstring">
+    <concat destfile="${output}/input">
+      this is a line contains foo
+      this line does not
+    </concat>
+    <copy file="${output}/input" tofile="${output}/containsstring">
+      <filterchain>
+        <tokenfilter>
+          <containsstring contains="foo"/>
+        </tokenfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <!-- need to check for existence of regex -->
+  <target name="replaceregex">
+    <concat destfile="${output}/input">
+      hello Hello HELLO hello
+      cat Cat cat
+      Sun Sun Sun
+      WhiteSpace 	tab
+      This is a line with digits - 1234 -- there
+    </concat>
+    <copy file="${output}/input" tofile="${output}/replaceregex">
+      <filterchain>
+        <tokenfilter>
+          <replaceregex pattern="hello" replace="world" flags="gi"/>
+          <replaceregex pattern="cat" replace="dog" flags="g"/>
+          <replaceregex pattern="sun" replace="moon" flags="i"/>
+          <replaceregex pattern="WhiteSpace[ \t]+tab"
+                        replace="found WhiteSpace"/>
+          <replaceregex pattern="This is a line with dig.* ([0-9]+).*"
+                        replace="Found digits [\1]"/>
+        </tokenfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="filterreplaceregex">
+    <concat destfile="${output}/filterreplaceregex">
+      hello Hello HELLO hello
+      <filterchain>
+        <replaceregex pattern="hello" replace="world" flags="gi"/>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="dollermatch">
+    <concat>
+      @hello@
+      <filterchain>
+        <replaceregex pattern="@([^@]*)@" replace="${\1}"/>
+      </filterchain>
+    </concat>
+  </target>
+
+  <!-- need to check for existence of regex -->
+  <target name="containsregex">
+    <concat destfile="${output}/input">
+      hello world
+      this is the moon
+      World here
+    </concat>
+    <copy file="${output}/input" tofile="${output}/containsregex">
+      <filterchain>
+        <tokenfilter>
+          <containsregex pattern="(hello|world)" flags="i"/>
+        </tokenfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="filtercontainsregex">
+    <concat destfile="${output}/filtercontainsregex">
+      hello world
+      this is the moon
+      World here
+      <filterchain>
+        <tokenfilter>
+          <containsregex pattern="(hello|world)" flags="i"/>
+        </tokenfilter>
+      </filterchain>
+    </concat>
+  </target>
+
+
+  <!-- need to check for existence of regex -->
+  <target name="containsregex2">
+    <concat destfile="${output}/input">
+      SUITE(TestSuite, bits);
+      here
+    </concat>
+    <copy file="${output}/input" tofile="${output}/containsregex2">
+      <filterchain>
+        <tokenfilter>
+          <containsregex
+            pattern="^ *SUITE\(.*,\s*(.*)\s*\).*"
+            replace="void register_\1();"/>
+        </tokenfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="deletecharacters">
+    <concat destfile="${output}/deletechars">
+      This is some ### s
+      some ****
+      <filterchain>
+        <tokenfilter>
+          <deletecharacters chars="#"/>
+        </tokenfilter>
+        <deletecharacters chars="*"/>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="scriptfilter">
+    <concat destfile="${output}/input">
+      hello world
+    </concat>
+    <copy file="${output}/input" tofile="${output}/scriptfilter">
+      <filterchain>
+        <tokenfilter>
+          <scriptfilter language="javascript">
+            self.setToken(self.getToken().toUpperCase());
+          </scriptfilter>
+       </tokenfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="scriptfilter2">
+    <concat destfile="${output}/input">
+      hello moon
+    </concat>
+    <copy file="${output}/input" tofile="${output}/scriptfilter2">
+      <filterchain>
+        <scriptfilter language="javascript">
+          self.setToken(self.getToken().toUpperCase());
+        </scriptfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="customtokenfilter">
+    <path id="test-classes">
+      <pathelement location="../../../../build/testcases" />
+      <pathelement path="${java.class.path}" />
+    </path>
+
+
+    <typedef 
+      name="capitalize" 
+      classname="org.apache.tools.ant.filters.TokenFilterTest$Capitalize">
+      <classpath refid="test-classes"/>
+    </typedef>
+    
+    <concat destfile="${output}/input">
+      hello world
+    </concat>
+
+    <copy file="${output}/input" tofile="${output}/custom">
+      <filterchain>
+        <tokenfilter>
+          <stringtokenizer/>
+          <capitalize/>
+       </tokenfilter>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="hasscript">
+    <script language="javascript">
+      i = 1;
+    </script>
+  </target>
+  
+  <target name="hasregex">
+    <concat destfile="${output}/replaceregexp">
+      hello world
+    </concat>
+    <replaceregexp file="${output}/replaceregexp"
+                  match="hello( )world"
+                  replace="bye\1world"/>
+  </target>
+
+</project>

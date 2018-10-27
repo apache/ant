@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project default="cleanup" basedir=".">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+    <echo file="${output}/prepend.txt" message="this-should-be-the-first-line${line.separator}"/>
+    <echo file="${output}/append.txt" message="this-should-be-the-last-line${line.separator}"/>
+    <copy file="input/head-tail.test" tofile="${output}/concatfilter.test"/>
+    <fixcrlf srcDir="${output}" includes="concatfilter.test"/>
+    <!-- to be consistent on MacOS X.  fixcrlf uses CR while line.sep is LF -->
+    <fixcrlf srcDir="${output}" includes="append.txt,prepend.txt"/>
+  </target>
+
+
+
+  <target name="testFilterReaderNoArgs" depends="setUp">
+    <copy file="${output}/concatfilter.test"
+          tofile="${output}/concat.FilterReaderNoArgs.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.ConcatFilter"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderPrepend" depends="setUp">
+    <copy file="${output}/concatfilter.test"
+          tofile="${output}/concat.FilterReaderPrepend.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
+          <param name="prepend" value="${output}/prepend.txt"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderAppend" depends="setUp">
+    <copy file="${output}/concatfilter.test"
+          tofile="${output}/concat.FilterReaderAppend.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
+          <param name="append" value="${output}/append.txt"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderPrependAppend" depends="setUp">
+    <copy file="${output}/concatfilter.test"
+          tofile="${output}/concat.FilterReaderPrependAppend.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
+          <param name="prepend" value="${output}/prepend.txt"/>
+          <param name="append"  value="${output}/append.txt"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testConcatFilter" depends="setUp">
+    <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
+    <copy file="${output}/concatfilter.test"
+          tofile="${output}/concat.ConcatFilter.test">
+      <filterchain>
+        <concatfilter/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testConcatFilterPrepend" depends="setUp">
+    <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
+    <copy file="${output}/concatfilter.test"
+          tofile="${output}/concat.ConcatFilterPrepend.test">
+      <filterchain>
+        <concatfilter prepend="${output}/prepend.txt"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testConcatFilterAppend" depends="setUp">
+    <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
+    <copy file="${output}/concatfilter.test"
+          tofile="${output}/concat.ConcatFilterAppend.test">
+      <filterchain>
+        <concatfilter append="${output}/append.txt"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testConcatFilterPrependAppend" depends="setUp">
+    <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
+    <copy file="${output}/concatfilter.test"
+          tofile="${output}/concat.ConcatFilterPrependAppend.test">
+      <filterchain>
+        <concatfilter prepend="${output}/prepend.txt" append="${output}/append.txt"/>
+      </filterchain>
+    </copy>
+  </target>
+
+</project>

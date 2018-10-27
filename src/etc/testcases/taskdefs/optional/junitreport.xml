@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="junitreport-test" basedir="." default="reports1">
+
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+
+  <property name="jrdir" location="junitreport"/>
+
+    <!-- reports1 take care of transformation of 2 test result files and
+         produce reports according to the default format (frames)
+         needed for testNoFileJUnitNoFrames -->
+    <target name="reports1">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testEmptyFile">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="ZEROBYTES-*.xml"/>
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testIncompleteFile">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="INCOMPLETE-*.xml"/>
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testWrongElement">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="WRONGELEMENT-*.xml"/>
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testNamespace">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="NAMESPACE-*.xml"/>
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testStackTraceLineBreaks">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testSpecialSignsInSrcPath">
+        <mkdir dir="${output}/html"/>
+        <mkdir dir="${output}/test# $$%§&amp;-!cases"/>
+        <copy todir="${output}/test# $$%§&amp;-!cases">
+            <fileset dir="junitreport" includes="TEST-*.xml"/>
+        </copy>
+        <junitreport todir="${output}/html">
+            <fileset dir="${output}/test# $$%§&amp;-!cases">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testSpecialSignsInHtmlPath">
+        <mkdir dir="${output}/html# $$%§&amp;-!report"/>
+        <mkdir dir="${output}/test"/>
+        <copy todir="${output}/test">
+            <fileset dir="junitreport" includes="TEST-*.xml"/>
+        </copy>
+        <junitreport todir="${output}/html# $$%§&amp;-!report">
+            <fileset dir="${output}/test">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html# $$%§&amp;-!report"/>
+        </junitreport>
+    </target>
+
+    <target name="testWithStyleFromClasspath">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"/>
+        </junitreport>
+    </target>
+
+    <target name="testNoFrames">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html" format="noframes"/>
+        </junitreport>
+    </target>
+
+    <target name="testWithStyleFromDir">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"
+                styledir="junitreport"
+                format="frames"/>
+        </junitreport>
+    </target>
+
+    <!-- bug report 40022 -->
+    <target name="testWithStyleFromDirAndXslImport">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"
+                styledir="junitreport-with-include"
+                format="frames"/>
+        </junitreport>
+    </target>
+
+    <target name="testWithParams">
+        <mkdir dir="${output}/html"/>
+        <junitreport todir="${output}">
+            <fileset dir="${jrdir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="${output}/html"
+                styledir="junitreport"
+                format="frames">
+                <param name="key1" expression="value1"/>
+                <param name="key2" expression="value2"/>
+            </report>
+        </junitreport>
+        <concat>
+            <fileset file="${output}/html/index.html"/>
+        </concat>        
+    </target>
+
+</project>
+        

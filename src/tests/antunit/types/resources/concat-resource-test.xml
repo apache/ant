@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="test-concat" basedir="." default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../../antunit-base.xml" />
+
+  <property name="br" value="${line.separator}" />
+  <property name="world" value="World" />
+
+  <target name="testCountEquals1">
+    <au:assertTrue>
+      <resourcecount count="1">
+        <concat>Hello, ${world}!</concat>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testReplacement">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>Hello, ${world}!</string>
+        <concat>Hello, ${world}!</concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testResources">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>foobarbaz</string>
+        <concat>
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFixLastLineResources">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>foo${line.separator}bar${line.separator}baz${line.separator}</string>
+        <concat fixlastline="true">
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testEncoding">
+    <mkdir dir="${output}"/>
+    <copy file="utf-16.in" toDir="${output}" encoding="utf-16">
+      <filterchain>
+        <fixcrlf/>
+      </filterchain>
+    </copy>
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <file file="${output}/utf-16.in" />
+        <concat outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+        <concat outputEncoding="utf-16" fixlastline="true">
+          <string value="foo" />
+          <string value="bar" />
+          <string value="baz" />
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFiltering">
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <concat>foo${br}bar${br}baz${br}</concat>
+        <concat>
+foo
+#comment 1
+bar
+#comment 2
+baz
+#comment 3
+          <filterchain>
+            <striplinecomments>
+              <comment value="#" />
+            </striplinecomments>
+            <ignoreblank />
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testReference">
+    <resources id="concat">
+      <concat>foo</concat>
+    </resources>
+    <au:assertTrue>
+      <and>
+        <resourcecount count="1" refid="concat" />
+        <resourcesmatch>
+          <string>foo</string>
+          <resources refid="concat" />
+          <!-- purposely hit it twice to see what happens -->
+          <resources refid="concat" />
+        </resourcesmatch>
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testNonexistent">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>foobar</string>
+        <concat>
+          <string>foo</string>
+          <propertyresource name="someunsetproperty" />
+          <string>bar</string>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testResourceName">
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict>
+          <name name="snicklefritz" />
+          <resources>
+            <concat resourceName="snicklefritz">
+              whatever
+            </concat>
+            <concat>
+              whatever
+            </concat>
+          </resources>
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+</project>

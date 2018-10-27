@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="jspc-test" default="main" basedir=".">
+
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <property name="jsp.dir" location="jsp"/>
+    <property name="jsp.output.dir" location="${output}"/>
+    <property name="jsp.verbosity" value="3"/>
+    <property name="jsp.compiler" value="jasper41"/>
+    <mkdir dir="${jsp.output.dir}"/>
+  </target>
+
+  <target name="main" depends="testSimple">
+  </target>
+
+
+  <!-- this should fail -->
+  <!-- it should not create an output file, but it does, which needs
+       cleanup -->
+  <target name="testNoTld" depends="setUp">
+    <jspc
+        destdir="${jsp.output.dir}"
+        srcdir="${jsp.dir}"
+        compiler="${jsp.compiler}"
+        verbose="${jsp.verbosity}">
+      <include
+          name="missing_tld.jsp"/>
+    </jspc>
+  </target>
+
+  <!-- this should compile to simple.java -->
+  <!-- also, stick to the default compiler here to ensure it still works-->
+  <target name="testSimple" depends="setUp">
+    <jspc
+        destdir="${jsp.output.dir}"
+        srcdir="${jsp.dir}"
+        verbose="${jsp.verbosity}">
+      <include
+          name="simple.jsp"/>
+    </jspc>
+  </target>
+
+  <!-- this should compile to uriroot.java -->
+  <target name="testUriroot" depends="setUp">
+    <jspc
+        destdir="${jsp.output.dir}"
+        uriroot="${jsp.dir}"
+        srcdir="${jsp.dir}"
+        compiler="${jsp.compiler}"
+        verbose="${jsp.verbosity}">
+      <include
+          name="uriroot.jsp"/>
+    </jspc>
+  </target>
+
+  <!-- this should compile an xml format jsp page to xml.java -->
+  <target name="testXml" depends="setUp">
+    <jspc
+        destdir="${jsp.output.dir}"
+        uriroot="${jsp.dir}"
+        srcdir="${jsp.dir}"
+        compiler="${jsp.compiler}"
+        verbose="${jsp.verbosity}">
+      <include name="xml.jsp"/>
+    </jspc>
+  </target>
+
+  <!-- this should compile default.jsp to mangled(%default).java -->
+  <target name="testKeyword" depends="setUp">
+    <jspc
+        destdir="${jsp.output.dir}"
+        srcdir="${jsp.dir}"
+        compiler="${jsp.compiler}"
+        verbose="${jsp.verbosity}">
+      <include
+          name="default.jsp"/>
+    </jspc>
+  </target>
+
+  <!-- this should compile default.jsp to mangled(%default).java -->
+  <target name="testInvalidClassname" depends="setUp">
+    <jspc
+        destdir="${jsp.output.dir}"
+        srcdir="${jsp.dir}"
+        compiler="${jsp.compiler}"
+        verbose="${jsp.verbosity}">
+      <include
+          name="1nvalid-classname.jsp"/>
+    </jspc>
+  </target>
+
+  <!-- non jsp pages should be ignored -->
+  <target name="testNotAJspFile" depends="setUp">
+    <jspc
+        destdir="${jsp.output.dir}"
+        srcdir="${jsp.dir}"
+        compiler="${jsp.compiler}"
+        verbose="${jsp.verbosity}">
+      <include
+          name="wrong_type.txt"/>
+    </jspc>
+  </target>
+
+  <!-- test for webapp compilation -->
+  <target name="testWebapp" depends="setUp">
+    <jspc
+        destdir="${jsp.output.dir}"
+        compiler="${jsp.compiler}"
+        verbose="${jsp.verbosity}">
+      <webapp basedir="${jsp.dir}"/>
+    </jspc>
+  </target>
+
+</project>

@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <description/>
+
+  <import file="../antunit-base.xml" />
+
+  <target name="test-empty">
+    <xmlproperty file="xmlproperty-test.xml"/>
+    <au:assertTrue>
+      <equals arg1="" arg2="${project.description}"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-multi">
+    <property name="root.element.value" value="original"/>
+    <xmlproperty file="xmlproperty.multi.xml" collapseAttributes="yes"/>
+    <au:assertTrue>
+      <equals arg1="original" arg2="${root.element.value}"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="load">
+    <xmlproperty
+        file="xmlproperty.inline-expansion.xml"
+        collapseAttributes="true"
+        keepRoot="false"
+        semanticAttributes="true"/>
+    <echo>
+ element      expected    actual
+    p         $${app.n}    ${app.p}
+    n            n        ${app.n}
+    o            n        ${app.o}
+    m            n        ${app.m}
+    </echo>
+  </target>
+
+  <target name="NotestInlineExpansion" depends="load">
+    <au:assertPropertyEquals name="app.m" value="n"/>
+    <au:assertPropertyEquals name="app.n" value="n"/>
+    <au:assertPropertyEquals name="app.o" value="n"/>
+    <au:assertPropertyEquals name="app.p" value="$${app.n}"/>
+    <property name="sequence" value="${app.m}${app.n}${app.o}${app.p}"/>
+    <fail>
+      xml attributes are not expanding correctly
+      expected: mnop=nnn$${app.n}
+      actual    mnop=${sequence}
+      <condition>
+        <not>
+          <equals arg1="${sequence}" arg2="nnn${app.n}"/>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="createDocExample">
+    <mkdir dir="${input}"/>
+    <echoxml file="${input}/example.xml">
+      <root-tag>
+        <version value="0.0.1"/>
+        <build folder="build">
+          <classes id="build.classes" location="${build.folder}/classes"/>
+          <reference refid="build.classes"/>
+        </build>
+        <compile>
+          <classpath pathid="compile.classpath">
+            <pathelement location="${build.classes}"/>
+          </classpath>
+        </compile>
+        <run-time>
+          <jars>*.jar</jars>
+          <classpath pathid="run-time.classpath">
+            <path refid="compile.classpath"/>
+            <pathelement path="${run-time.jars}"/>
+          </classpath>
+        </run-time>
+      </root-tag>
+    </echoxml>
+  </target>
+
+  <target name="testSemanticLoadingDocExample" depends="createDocExample">
+    <xmlproperty file="${input}/example.xml" semanticAttributes="true"
+                 keepRoot="false"/>
+
+    <au:assertPropertyEquals name="version" value="0.0.1"/>
+    <au:assertPropertyEquals name="build.folder" value="build"/>
+    <property name="b.c" location="${build.folder}/classes"/>
+    <au:assertPropertyEquals name="build.classes" value="${b.c}"/>
+    <au:assertReferenceSet refid="build.classes"/>
+    <property name="b.c.r" refid="build.classes"/>
+    <au:assertPropertyEquals name="b.c.r" value="${b.c}"/>
+    <au:assertPropertyEquals name="build.reference" value="${b.c}"/>
+    <au:assertPropertyEquals name="run-time.jars" value="*.jar"/>
+    <au:assertReferenceIsType refid="compile.classpath" type="path"/>
+    <au:assertReferenceIsType refid="run-time.classpath" type="path"/>
+    <property name="c.c" refid="compile.classpath"/>
+    <au:assertPropertyEquals name="c.c" value="${b.c}"/>
+    <property name="rt.c" refid="run-time.classpath"/>
+    <property name="glob.dot.jar" location="*.jar"/>
+    <au:assertPropertyEquals name="rt.c"
+                             value="${b.c}${path.separator}${glob.dot.jar}"/>
+  </target>
+
+  <target name="testIncludeSemanticDocExample" depends="createDocExample">
+    <xmlproperty file="${input}/example.xml" semanticAttributes="true"
+                 keepRoot="false" includeSemanticAttribute="true"/>
+
+    <au:assertPropertyEquals name="version.value" value="0.0.1"/>
+    <au:assertPropertyEquals name="build.folder" value="build"/>
+    <property name="b.c" location="${build.folder}/classes"/>
+    <au:assertPropertyEquals name="build.classes.location" value="${b.c}"/>
+    <au:assertReferenceSet refid="build.classes"/>
+    <property name="b.c.r" refid="build.classes"/>
+    <au:assertPropertyEquals name="b.c.r" value="${b.c}"/>
+    <au:assertPropertyEquals name="build.reference" value="${b.c}"/>
+    <au:assertPropertyEquals name="run-time.jars" value="*.jar"/>
+    <au:assertReferenceIsType refid="compile.classpath" type="path"/>
+    <au:assertReferenceIsType refid="run-time.classpath" type="path"/>
+    <property name="c.c" refid="compile.classpath"/>
+    <!-- not set at all because property's name is build.classes.refid now -->
+    <property name="b.c.loc" location="${build.classes}"/>
+    <au:assertPropertyEquals name="c.c" value="${b.c.loc}"/>
+    <property name="rt.c" refid="run-time.classpath"/>
+    <property name="glob.dot.jar" location="*.jar"/>
+    <au:assertPropertyEquals name="rt.c"
+                             value="${b.c.loc}${path.separator}${glob.dot.jar}"/>
+  </target>
+</project>
+

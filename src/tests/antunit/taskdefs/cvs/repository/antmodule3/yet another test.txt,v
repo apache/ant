@@ -1,0 +1,60 @@
+head	1.2;
+access;
+symbols
+	testtag2:1.2
+	testtag1:1.1.1.1
+	start:1.1.1.1
+	ant:1.1.1;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2008.10.17.15.23.03;	author stefan;	state Exp;
+branches;
+next	1.1;
+commitid	7ddc48f8add74567;
+
+1.1
+date	2008.10.16.14.51.11;	author stefan;	state Exp;
+branches
+	1.1.1.1;
+next	;
+commitid	7f8d48f754df4567;
+
+1.1.1.1
+date	2008.10.16.14.51.11;	author stefan;	state Exp;
+branches;
+next	;
+commitid	7f8d48f754df4567;
+
+
+desc
+@@
+
+
+1.2
+log
+@update weather report
+@
+text
+@dark and cloudy.
+a bit brighter today.
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@d2 1
+@
+
+
+1.1.1.1
+log
+@three times is a charm
+@
+text
+@@

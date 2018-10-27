@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../../antunit-base.xml"/>
+
+  <path id="junit">
+    <fileset dir="../../../../../../lib/optional" includes="junit*"/>
+  </path>
+
+  <target name="test0Character">
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/A.java"><![CDATA[
+package org.example;
+import junit.framework.TestCase;
+public class A extends TestCase {
+    public void testX() {
+        System.err.println("Here comes the zero: \u0000");
+    }
+}
+]]></echo>
+    <mkdir dir="${output}"/>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <junit fork="true">
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
+      <batchtest todir="${output}">
+        <fileset dir="${output}">
+          <include name="**/A.class" />
+        </fileset>
+      </batchtest>
+      <formatter type="xml"/>
+    </junit>
+    <xmlvalidate file="${output}/TEST-org.example.A.xml"
+                 lenient="true"/>
+  </target>
+
+  <target name="testEntities"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49404">
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/A.java"><![CDATA[
+package org.example;
+import junit.framework.TestCase;
+public class A extends TestCase {
+    public void testX() {
+       assertTrue("&amp;&", false);
+    }
+}
+]]></echo>
+    <mkdir dir="${output}"/>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <junit fork="true">
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
+      <batchtest todir="${output}">
+        <fileset dir="${output}">
+          <include name="**/A.class" />
+        </fileset>
+      </batchtest>
+      <formatter type="xml"/>
+    </junit>
+    <xmlvalidate file="${output}/TEST-org.example.A.xml"
+                 lenient="true"/>
+    <au:assertResourceContains
+        resource="${output}/TEST-org.example.A.xml"
+        value="message=&quot;&amp;amp;amp;&amp;amp;"/>
+    <au:assertResourceContains
+        resource="${output}/TEST-org.example.A.xml"
+        value="AssertionFailedError: &amp;amp;amp;&amp;"/>
+  </target>
+
+  <target name="testMessageWithTheWordMore">
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/A.java"><![CDATA[
+package org.example;
+import junit.framework.TestCase;
+public class A extends TestCase {
+    public void testX() {
+        assertTrue("Expected more than one result", 0 > 1);
+    }
+    public void testY() {
+        assertTrue("Expected less than one result", 2 < 1);
+    }
+}
+]]></echo>
+    <mkdir dir="${output}"/>
+    <javac srcdir="${input}" destdir="${output}">
+      <classpath refid="junit"/>
+    </javac>
+    <junit fork="true">
+      <classpath refid="junit"/>
+      <classpath location="${output}"/>
+      <batchtest todir="${output}">
+        <fileset dir="${output}">
+          <include name="**/A.class" />
+        </fileset>
+      </batchtest>
+      <formatter type="xml"/>
+    </junit>
+    <au:assertResourceContains
+        resource="${output}/TEST-org.example.A.xml"
+        value="junit.framework.AssertionFailedError: Expected less than one result"/>
+    <au:assertResourceContains
+        resource="${output}/TEST-org.example.A.xml"
+        value="junit.framework.AssertionFailedError: Expected more than one result"/>
+  </target>
+
+</project>

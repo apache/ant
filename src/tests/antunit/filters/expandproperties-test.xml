@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <property name="foo" value="FOO" />
+  <property name="bar" value="BAR" />
+  <property name="baz" value="BAZ" />
+
+  <target name="testClassic">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string value="FOO BAR BAZ" />
+        <concat>
+          <string value="$${foo} $${bar} $${baz}" />
+          <filterchain>
+            <expandproperties />
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testSubset">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string value="FOO $${bar} BAZ" />
+        <concat>
+          <string value="$${foo} $${bar} $${baz}" />
+          <filterchain>
+            <expandproperties>
+              <propertyset>
+                <propertyref name="foo" />
+                <propertyref name="baz" />
+              </propertyset>
+            </expandproperties>
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testMappedPropertySet">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string value="FOO BAR BAZ" />
+        <concat>
+          <string value="$${food} $${bard} $${bazd}" />
+          <filterchain>
+            <expandproperties>
+              <propertyset>
+                <propertyref builtin="all" />
+                <globmapper from="*" to="*d" />
+              </propertyset>
+            </expandproperties>
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testEmptyResource"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53626">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string value="" />
+        <concat>
+          <string value="" />
+          <filterchain>
+            <expandproperties />
+          </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+</project>

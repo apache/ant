@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../antunit-base.xml"/>
+
+  <!-- three presets for state-->
+  <presetdef name="p1">
+    <property name="p1" value="true"/>
+  </presetdef>
+  <presetdef name="p2">
+    <property name="p2" value="true"/>
+  </presetdef>
+  <presetdef name="p3">
+    <property name="p3" value="true"/>
+  </presetdef>
+  <presetdef name="p4">
+    <property name="p4" value="true"/>
+  </presetdef>
+  <presetdef name="p5">
+    <property name="p5" value="true"/>
+  </presetdef>
+
+  <presetdef name="assertP1">
+    <au:assertPropertySet name="p1"/>
+  </presetdef>
+  <presetdef name="assertP2">
+    <au:assertPropertySet name="p2"/>
+  </presetdef>
+  <presetdef name="assertP3">
+    <au:assertPropertySet name="p3"/>
+  </presetdef>
+  <presetdef name="assertP4">
+    <au:assertPropertySet name="p4"/>
+  </presetdef>
+  <presetdef name="assertP5">
+    <au:assertPropertySet name="p5"/>
+  </presetdef>
+
+  <target name="setUp">
+    <taskdef name="funtest"
+             classname="org.apache.tools.ant.taskdefs.optional.testing.Funtest"/>
+  </target>
+
+  <target name="testPresets"
+          description="test the presets behave">
+    <p1/>
+    <assertP1/>
+    <p2/>
+    <assertP2/>
+    <p3/>
+    <assertP3/>
+    <p4/>
+    <assertP4/>
+    <p5/>
+    <assertP5/>
+  </target>
+
+  <target name="testToSuccess">
+    <funtest>
+      <setup>
+        <p1/>
+      </setup>
+      <application>
+        <assertP1/>
+        <p2/>
+      </application>
+      <block>
+        <isset property="p2"/>
+      </block>
+      <tests>
+        <assertP1/>
+        <assertP2/>
+        <p3/>
+      </tests>
+      <reporting>
+        <assertP3/>
+        <p4/>
+      </reporting>
+      <teardown>
+        <assertP4/>
+        <p5/>
+      </teardown>
+    </funtest>
+    <assertP5/>
+  </target>
+
+  <target name="testCondition">
+    <funtest >
+      <condition>
+         <isset property="unset"/>
+      </condition>
+      <setup>
+        <fail>should not be reached</fail>
+      </setup>
+    </funtest>
+  </target>
+
+  <target name="testSetupFailureSkipsTeardown">
+    <au:expectfailure message="setup failed">
+      <funtest>
+        <setup>
+          <p1/>
+          <fail>setup failed</fail>
+        </setup>
+        <teardown>
+          <p5/>
+        </teardown>
+      </funtest>
+    </au:expectfailure>
+    <assertP1/>
+  </target>
+
+</project>

@@ -1,0 +1,480 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="rmic" default="tearDown" basedir=".">
+
+  <property name="rmic.dir" location="." />
+  <property name="src.dir" location="${rmic.dir}/src"/>
+
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+    <property name="build.dir" location="${output}/build"/>
+    <property name="dest.dir" location="${output}/dest"/>
+  </target>
+
+
+
+  <!-- init builds the java source -->
+  <target name="init" depends="probe-rmic,setUp">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${dest.dir}"/>
+
+    <javac
+      destdir="${build.dir}"
+      srcdir="${src.dir}"
+      includes="Remote*.java">
+    </javac>
+
+    <presetdef name="base-rmic">
+      <rmic
+        base="${build.dir}"
+        verify="true"
+        includes="**/*.class"/>
+    </presetdef>
+
+    <presetdef name="rmic-bad-class">
+      <rmic
+        base="${build.dir}"
+        verify="false"
+        classname="unimplemented.class"
+        />
+    </presetdef>
+
+    <presetdef name="dest-rmic">
+      <rmic
+        base="${build.dir}"
+        destdir="${dest.dir}"
+        verify="true"
+        includes="**/*.class"/>
+    </presetdef>
+
+    <macrodef name="assertFileCreated">
+      <attribute name="file" />
+      <sequential>
+        <fail>Not found : ${build.dir}/@{file}
+          <condition>
+            <not><available file="${build.dir}/@{file}"/></not>
+          </condition>
+        </fail>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertFileCreatedInDest">
+      <attribute name="file" />
+      <sequential>
+        <fail>Not found : ${dest.dir}/@{file}
+          <condition>
+            <not><available file="${dest.dir}/@{file}"/></not>
+          </condition>
+        </fail>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertFileAbsent">
+      <attribute name="file" />
+      <sequential>
+        <fail>Expected to be missing : ${build.dir}/@{file}
+          <condition>
+            <available file="${build.dir}/@{file}"/>
+          </condition>
+        </fail>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertFileAbsentInDest">
+      <attribute name="file" />
+      <sequential>
+        <fail>Expected to be missing : ${dest.dir}/@{file}
+          <condition>
+            <available file="${dest.dir}/@{file}"/>
+          </condition>
+        </fail>
+      </sequential>
+    </macrodef>
+    
+    <macrodef name="assertStubCompiled">
+      <sequential>
+        <assertFileCreated file="RemoteTimestampImpl_Stub.class"  />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertStubCompiledInDest">
+      <sequential>
+        <assertFileCreatedInDest file="RemoteTimestampImpl_Stub.class"  />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertSkelCompiled">
+      <sequential>
+        <assertFileCreated file="RemoteTimestampImpl_Skel.class"  />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertSkelCompiledInDest">
+      <sequential>
+        <assertFileCreatedInDest file="RemoteTimestampImpl_Skel.class"  />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertSkelAbsent">
+      <sequential>
+        <assertFileAbsent file="RemoteTimestampImpl_Skel.class"  />
+      </sequential>
+    </macrodef>
+    
+    <macrodef name="assertSkelAbsentInDest">
+      <sequential>
+        <assertFileAbsentInDest file="RemoteTimestampImpl_Skel.class"  />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertBaseCompiled">
+      <sequential>
+        <assertStubCompiled />
+        <assertSkelCompiled />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertBaseCompiledInDest">
+      <sequential>
+        <assertStubCompiledInDest />
+        <assertSkelCompiledInDest />
+      </sequential>
+    </macrodef>
+    
+    <macrodef name="assertAntStubCompiled">
+      <sequential>
+        <assertFileCreated file="AntTimestamp_Stub.class"/>
+      </sequential>
+    </macrodef>
+    
+    <macrodef name="assertAntStubCompiledInDest">
+      <sequential>
+        <assertFileCreatedInDest file="AntTimestamp_Stub.class"/>
+      </sequential>
+    </macrodef>
+    
+    <macrodef name="assertAntSkelCompiled">
+      <sequential>
+        <assertFileCreated file="AntTimestamp_Skel.class"/>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertAntSkelCompiledInDest">
+      <sequential>
+        <assertFileCreatedInDest file="AntTimestamp_Skel.class"/>
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertAntCompiled">
+      <sequential>
+        <assertAntStubCompiled />
+        <assertAntSkelCompiled />
+      </sequential>
+    </macrodef>
+
+    <macrodef name="assertAntCompiledInDest">
+      <sequential>
+        <assertAntStubCompiledInDest />
+        <assertAntSkelCompiledInDest />
+      </sequential>
+    </macrodef>
+
+  </target>
+  
+  <target name="probe-rmic">
+    <available property="kaffe.present" classname="jkaffe.rmi.rmic.RMIC"/>
+    <condition property="rmic.present">
+      <or>
+        <available classname="sun.rmi.rmic.Main"/>
+        <!-- we'll use forking as default for Java9 -->
+        <available classname="java.lang.module.ModuleDescriptor"/>
+      </or>
+    </condition>
+    <condition property="rmic.compiler" value="forking">
+      <available classname="java.lang.module.ModuleDescriptor"/>
+    </condition>
+    <property name="rmic.compiler" value="sun"/>
+    <available property="wlrmic.present" classname="weblogic.rmic"/>
+  </target>
+
+  <target name="testDefault" depends="init">
+    <base-rmic compiler="default" listfiles="true"/>
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testDefaultDest" depends="init">
+    <dest-rmic compiler="default"/>
+    <assertBaseCompiledInDest/>
+  </target>
+
+  <target name="testEmpty" depends="init">
+    <base-rmic compiler=""/>
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testEmptyDest" depends="init">
+    <dest-rmic compiler=""/>
+    <assertBaseCompiledInDest/>
+  </target>
+
+  <target name="testVersion11" depends="init">
+    <base-rmic compiler="default" stubversion="1.1" />
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testVersion11Dest" depends="init">
+    <dest-rmic compiler="default" stubversion="1.1" />
+    <assertBaseCompiledInDest/>
+  </target>
+
+  <target name="testVersion12" depends="init">
+    <base-rmic compiler="default" stubversion="1.2" />
+    <assertStubCompiled/>
+    <assertSkelAbsent/>
+  </target>
+  
+  <target name="testVersion12Dest" depends="init">
+    <dest-rmic compiler="default" stubversion="1.2" />
+    <assertStubCompiledInDest/>
+    <assertSkelAbsentInDest/>
+  </target>
+  
+  <target name="testVersionCompat" depends="init">
+    <base-rmic compiler="default" stubversion="compat" />
+    <assertBaseCompiled/>
+  </target>
+  
+  <target name="testVersionCompatDest" depends="init">
+    <dest-rmic compiler="default" stubversion="compat" />
+    <assertBaseCompiledInDest/>
+  </target>
+  
+  <target name="testRmic" if="rmic.present" depends="init">
+    <base-rmic compiler="${rmic.compiler}"/>
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testRmicDest" if="rmic.present" depends="init">
+    <dest-rmic compiler="${rmic.compiler}"/>
+    <assertBaseCompiledInDest/>
+  </target>
+
+  <target name="testRmicJArg" if="rmic.present" depends="init">
+    <base-rmic compiler="${rmic.compiler}">
+      <compilerarg value="-J-mx256m" />
+    </base-rmic>
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testRmicJArgDest" if="rmic.present" depends="init">
+    <dest-rmic compiler="${rmic.compiler}">
+      <compilerarg value="-J-mx256m" />
+    </dest-rmic>
+    <assertBaseCompiledInDest/>
+  </target>
+
+  <target name="testKaffe" if="kaffe.present" depends="init">
+    <base-rmic
+      compiler="kaffe"
+      />
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testKaffeDest" if="kaffe.present" depends="init">
+    <dest-rmic
+      compiler="kaffe"
+      />
+    <assertBaseCompiledInDest/>
+  </target>
+	
+<!-- weblogic.rmic doesn't work without a global CLASSPATH
+  <target name="testWlrmic" if="wlrmic.present" depends="init">
+    <base-rmic
+      compiler="weblogic"
+      />
+  </target>
+
+  <target name="testWlrmicJArg" if="wlrmic.present" depends="init">
+    <base-rmic
+        compiler="weblogic"
+        >
+      <compilerarg value="-J-mx256m" />
+    </base-rmic>
+  </target>
+-->
+  <target name="testForking" if="rmic.present" depends="init">
+    <base-rmic
+      compiler="forking"
+      />
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testBadName" depends="init">
+    <base-rmic
+      compiler="no-such-compiler"
+      />
+  </target>
+
+  <target name="testExplicitClass" if="rmic.present" depends="init">
+    <base-rmic
+        compiler="org.apache.tools.ant.taskdefs.rmic.ForkingSunRmic"
+        />
+    <assertBaseCompiled/>
+  </target>
+  
+  <target name="testWrongClass" depends="init">
+    <base-rmic
+      compiler="org.apache.tools.ant.BuildException"
+      />
+  </target>
+
+  <target name="testNoBase" depends="init">
+    <rmic
+      verify="true"
+      includes="**/*.class"/>
+  </target>
+
+  <target name="testBaseDoesntExist" depends="init">
+    <rmic
+      base="${build.dir}/classes"
+      verify="true"
+      includes="**/*.class"/>
+  </target>
+
+  <target name="testBaseIsntDir" depends="init">
+    <rmic
+      base="${ant.file}"
+      verify="true"
+      includes="**/*.class"/>
+  </target>
+
+  <target name="testFailingAdapter" depends="init">
+    <base-rmic
+      compiler="org.apache.tools.ant.taskdefs.rmic.RmicAdvancedTest$FailingRmicAdapter"
+      />
+  </target>
+  
+  <target name="compileAntTimestamp" depends="init">
+    <javac
+      destdir="${build.dir}"
+      srcdir="${src.dir}"
+      includes="Ant*.java">
+    </javac>
+  </target>
+
+  <target name="testAntClasspath" depends="compileAntTimestamp">
+    <base-rmic
+      compiler="default"
+      />
+    <assertAntCompiled/>
+  </target>
+
+  <target name="testAntClasspathDest" depends="compileAntTimestamp">
+    <dest-rmic
+      compiler="default"
+      />
+    <assertAntCompiledInDest/>
+  </target>
+
+  <target name="testForkingAntClasspath" depends="compileAntTimestamp">
+    <base-rmic
+      compiler="forking"
+      />
+    <assertAntCompiled />
+  </target>
+
+  <target name="testForkingAntClasspathDest" depends="compileAntTimestamp">
+    <dest-rmic
+      compiler="forking"
+      />
+    <assertAntCompiledInDest />
+  </target>
+
+  <target name="testDefaultBadClass" depends="init">
+    <rmic-bad-class compiler="default"/>
+  </target>
+
+  <target name="testMagicProperty" depends="init">
+    <property name="build.rmic" value="no-such-adapter"/>
+    <base-rmic
+      />
+  </target>
+
+  <target name="testMagicPropertyOverridesEmptyString" depends="init">
+    <property name="build.rmic" value="no-such-adapter"/>
+    <base-rmic compiler=""
+      />
+  </target>
+
+  <target name="testMagicPropertyIsEmptyString" depends="init">
+    <property name="build.rmic" value=""/>
+    <base-rmic />
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testXnewForked" if="rmic.present" depends="init">
+    <base-rmic compiler="forking">
+      <compilerarg value="-Xnew"/>
+    </base-rmic>
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testXnewForkedDest" if="rmic.present" depends="init">
+    <dest-rmic compiler="forking">
+      <compilerarg value="-Xnew"/>
+    </dest-rmic>
+    <assertBaseCompiledInDest/>
+  </target>
+
+  <target name="testXnewCompiler" if="rmic.present" depends="init">
+    <base-rmic compiler="xnew">
+    </base-rmic>
+    <assertBaseCompiled/>
+  </target>
+
+  <target name="testXnewCompilerDest" if="rmic.present" depends="init">
+    <dest-rmic compiler="xnew">
+    </dest-rmic>
+    <assertBaseCompiledInDest/>
+  </target>
+
+  <target name="testIDL" depends="init">
+    <base-rmic compiler="default" idl="true"/>
+    <assertFileCreated file="RemoteTimestamp.idl"/>
+  </target>
+
+  <target name="testIDLDest" depends="init">
+    <dest-rmic compiler="default" idl="true"/>
+    <assertFileCreatedInDest file="RemoteTimestamp.idl"/>
+  </target>
+
+  <target name="testIIOP" depends="init">
+    <base-rmic compiler="default" iiop="true"/>
+    <assertFileCreated file="_RemoteTimestamp_Stub.class"/>
+    <assertFileCreated file="_RemoteTimestampImpl_Tie.class"/>
+  </target>
+
+  <target name="testIIOPDest" depends="init">
+    <dest-rmic compiler="default" iiop="true"/>
+    <assertFileCreatedInDest file="_RemoteTimestamp_Stub.class"/>
+    <assertFileCreatedInDest file="_RemoteTimestampImpl_Tie.class"/>
+  </target>
+
+</project>

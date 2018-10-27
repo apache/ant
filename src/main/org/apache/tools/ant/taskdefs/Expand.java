@@ -1,117 +1,371 @@
 /*
- * The Apache Software License, Version 1.1
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
- * reserved.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
- *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
- *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
  */
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-import java.io.*;
-import java.util.zip.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.Union;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
+import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.IdentityMapper;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
+
 /**
- * Unzip a file. 
+ * Unzip a file.
  *
- * @author costin@dnt.ro
+ * @since Ant 1.1
+ *
+ * @ant.task category="packaging"
+ *           name="unzip"
+ *           name="unjar"
+ *           name="unwar"
  */
 public class Expand extends Task {
-    private String dest; // req
-    private String source; // req
+    public static final String NATIVE_ENCODING = "native-encoding";
     
+    /** Error message when more that one mapper is defined */
+    public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
+    
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    
+    private static final int BUFFER_SIZE = 1024;
+    private File dest; //req
+    private File source; // req
+    private boolean overwrite = true;
+    private Mapper mapperElement = null;
+    private List<PatternSet> patternsets = new Vector<>();
+    private Union resources = new Union();
+    private boolean resourcesSpecified = false;
+    private boolean failOnEmptyArchive = false;
+    private boolean stripAbsolutePathSpec = false;
+    private boolean scanForUnicodeExtraFields = true;
+
+    private String encoding;
+
+    /**
+     * Creates an Expand instance and sets encoding to UTF-8.
+     */
+    public Expand() {
+        this("UTF8");
+    }
+
+    /**
+     * Creates an Expand instance and sets the given encoding.
+     *
+     * @since Ant 1.9.5
+     */
+    protected Expand(String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
+     * Whether try ing to expand an empty archive would be an error.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setFailOnEmptyArchive(boolean b) {
+        failOnEmptyArchive = b;
+    }
+
+    /**
+     * Whether try ing to expand an empty archive would be an error.
+     *
+     * @since Ant 1.8.0
+     */
+    public boolean getFailOnEmptyArchive() {
+        return failOnEmptyArchive;
+    }
+
     /**
      * Do the work.
      *
      * @exception BuildException Thrown in unrecoverable error.
      */
-    // XXX move it to util or tools
+    @Override
     public void execute() throws BuildException {
-	try {
-	    File srcF=project.resolveFile(source);
-	    File dir=project.resolveFile(dest);
-	    
-	    project.log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
-	    // code from WarExpand
-	    ZipInputStream zis = new ZipInputStream(new FileInputStream(srcF));
-	    ZipEntry ze = null;
-	    
-	    while ((ze = zis.getNextEntry()) != null) {
-		try {
-		    File f = new File(dir, project.translatePath(ze.getName()));
-		    project.log("expand-file " + ze.getName() , "expand", Project.MSG_VERBOSE );
-		    // create intermediary directories - sometimes zip don't add them
-		    File dirF=new File(f.getParent());
-		    dirF.mkdirs();
-		    
-		    if (ze.isDirectory()) {
-			f.mkdirs(); 
-		    } else {
-			byte[] buffer = new byte[1024];
-			int length = 0;
-			FileOutputStream fos = new FileOutputStream(f);
-			
-			while ((length = zis.read(buffer)) >= 0) {
-			    fos.write(buffer, 0, length);
-			}
-			
-			fos.close();
-		    }
-		} catch( FileNotFoundException ex ) {
-		    System.out.println("FileNotFoundException: " +  ze.getName()  );
-		}
-	    }
-	    project.log("</log:expand>", Project.MSG_VERBOSE );
-	} catch (IOException ioe) {
-	    ioe.printStackTrace();
-	}
+        if ("expand".equals(getTaskType())) {
+            log("!! expand is deprecated. Use unzip instead. !!");
+        }
+
+        if (source == null && !resourcesSpecified) {
+            throw new BuildException(
+                "src attribute and/or resources must be specified");
+        }
+
+        if (dest == null) {
+            throw new BuildException(
+                "Dest attribute must be specified");
+        }
+
+        if (dest.exists() && !dest.isDirectory()) {
+            throw new BuildException("Dest must be a directory.", getLocation());
+        }
+
+        if (source != null) {
+            if (source.isDirectory()) {
+                throw new BuildException("Src must not be a directory."
+                    + " Use nested filesets instead.", getLocation());
+            }
+            if (!source.exists()) {
+                throw new BuildException("src '" + source + "' doesn't exist.");
+            }
+            if (!source.canRead()) {
+                throw new BuildException("src '" + source + "' cannot be read.");
+            }
+            expandFile(FILE_UTILS, source, dest);
+        }
+        for (Resource r : resources) {
+            if (!r.isExists()) {
+                log("Skipping '" + r.getName() + "' because it doesn't exist.");
+                continue;
+            }
+
+            FileProvider fp = r.as(FileProvider.class);
+            if (fp != null) {
+                expandFile(FILE_UTILS, fp.getFile(), dest);
+            } else {
+                expandResource(r, dest);
+            }
+        }
     }
+
+    /**
+     * This method is to be overridden by extending unarchival tasks.
+     *
+     * @param fileUtils the fileUtils
+     * @param srcF      the source file
+     * @param dir       the destination directory
+     */
+    protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
+        log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
+        FileNameMapper mapper = getMapper();
+        if (!srcF.exists()) {
+            throw new BuildException("Unable to expand "
+                    + srcF
+                    + " as the file does not exist",
+                    getLocation());
+        }
+        try (
+            ZipFile 
+            zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields)){
+            boolean empty = true;
+            Enumeration<ZipEntry> e = zf.getEntries();
+            while (e.hasMoreElements()) {
+                empty = false;
+                ZipEntry ze = e.nextElement();
+                InputStream is = null;
+                log("extracting " + ze.getName(), Project.MSG_DEBUG);
+                try {
+                    extractFile(fileUtils, srcF, dir,
+                                is = zf.getInputStream(ze), //NOSONAR
+                                ze.getName(), new Date(ze.getTime()),
+                                ze.isDirectory(), mapper);
+                } finally {
+                    FileUtils.close(is);
+                }
+            }
+            if (empty && getFailOnEmptyArchive()) {
+                throw new BuildException("archive '%s' is empty", srcF);
+            }
+            log("expand complete", Project.MSG_VERBOSE);
+        } catch (IOException ioe) {
+            throw new BuildException(
+                "Error while expanding " + srcF.getPath()
+                + "\n" + ioe.toString(),
+                ioe);
+        }
+    }
+
+    /**
+     * This method is to be overridden by extending unarchival tasks.
+     *
+     * @param srcR      the source resource
+     * @param dir       the destination directory
+     */
+    protected void expandResource(Resource srcR, File dir) {
+        throw new BuildException(
+            "only filesystem based resources are supported by this task.");
+    }
+
+    /**
+     * get a mapper for a file
+     * @return a filenamemapper for a file
+     */
+    protected FileNameMapper getMapper() {
+        if (mapperElement != null) {
+            return mapperElement.getImplementation();
+        }
+        return new IdentityMapper();
+    }
+
+    // CheckStyle:ParameterNumberCheck OFF - bc
+    /**
+     * extract a file to a directory
+     * @param fileUtils             a fileUtils object
+     * @param srcF                  the source file
+     * @param dir                   the destination directory
+     * @param compressedInputStream the input stream
+     * @param entryName             the name of the entry
+     * @param entryDate             the date of the entry
+     * @param isDirectory           if this is true the entry is a directory
+     * @param mapper                the filename mapper to use
+     * @throws IOException on error
+     */
+    protected void extractFile(FileUtils fileUtils, File srcF, File dir,
+                               InputStream compressedInputStream,
+                               String entryName, Date entryDate,
+                               boolean isDirectory, FileNameMapper mapper)
+                               throws IOException {
+
+        if (stripAbsolutePathSpec && !entryName.isEmpty()
+            && (entryName.charAt(0) == File.separatorChar
+                || entryName.charAt(0) == '/'
+                || entryName.charAt(0) == '\\')) {
+            log("stripped absolute path spec from " + entryName,
+                Project.MSG_VERBOSE);
+            entryName = entryName.substring(1);
+        }
+
+        if (!(patternsets == null || patternsets.isEmpty())) {
+            String name = entryName.replace('/', File.separatorChar)
+                .replace('\\', File.separatorChar);
+
+            boolean included = false;
+            Set<String> includePatterns = new HashSet<>();
+            Set<String> excludePatterns = new HashSet<>();
+            final int size = patternsets.size();
+            for (int v = 0; v < size; v++) {
+                PatternSet p = patternsets.get(v);
+                String[] incls = p.getIncludePatterns(getProject());
+                if (incls == null || incls.length == 0) {
+                    // no include pattern implicitly means includes="**"
+                    incls = new String[] {"**"};
+                }
+
+                for (int w = 0; w < incls.length; w++) {
+                    String pattern = incls[w].replace('/', File.separatorChar)
+                        .replace('\\', File.separatorChar);
+                    if (pattern.endsWith(File.separator)) {
+                        pattern += "**";
+                    }
+                    includePatterns.add(pattern);
+                }
+
+                String[] excls = p.getExcludePatterns(getProject());
+                if (excls != null) {
+                    for (int w = 0; w < excls.length; w++) {
+                        String pattern = excls[w]
+                            .replace('/', File.separatorChar)
+                            .replace('\\', File.separatorChar);
+                        if (pattern.endsWith(File.separator)) {
+                            pattern += "**";
+                        }
+                        excludePatterns.add(pattern);
+                    }
+                }
+            }
+
+            for (Iterator<String> iter = includePatterns.iterator();
+                 !included && iter.hasNext();) {
+                String pattern = iter.next();
+                included = SelectorUtils.matchPath(pattern, name);
+            }
+
+            for (Iterator<String> iter = excludePatterns.iterator();
+                 included && iter.hasNext();) {
+                String pattern = iter.next();
+                included = !SelectorUtils.matchPath(pattern, name);
+            }
+
+            if (!included) {
+                //Do not process this file
+                log("skipping " + entryName
+                    + " as it is excluded or not included.",
+                    Project.MSG_VERBOSE);
+                return;
+            }
+        }
+        String[] mappedNames = mapper.mapFileName(entryName);
+        if (mappedNames == null || mappedNames.length == 0) {
+            mappedNames = new String[] {entryName};
+        }
+        File f = fileUtils.resolveFile(dir, mappedNames[0]);
+        try {
+            if (!overwrite && f.exists()
+                && f.lastModified() >= entryDate.getTime()) {
+                log("Skipping " + f + " as it is up-to-date",
+                    Project.MSG_DEBUG);
+                return;
+            }
+
+            log("expanding " + entryName + " to " + f,
+                Project.MSG_VERBOSE);
+            // create intermediary directories - sometimes zip don't add them
+            File dirF = f.getParentFile();
+            if (dirF != null) {
+                dirF.mkdirs();
+            }
+
+            if (isDirectory) {
+                f.mkdirs();
+            } else {
+                byte[] buffer = new byte[BUFFER_SIZE];
+                try (OutputStream fos = Files.newOutputStream(f.toPath())) {
+                    int length;
+                    while ((length = compressedInputStream.read(buffer)) >= 0) {
+                        fos.write(buffer, 0, length);
+                    }
+                }
+            }
+
+            fileUtils.setFileLastModified(f, entryDate.getTime());
+        } catch (FileNotFoundException ex) {
+            log("Unable to expand to file " + f.getPath(),
+                    ex,
+                    Project.MSG_WARN);
+        }
+
+    }
+    // CheckStyle:ParameterNumberCheck ON
 
     /**
      * Set the destination directory. File will be unzipped into the
@@ -119,8 +373,8 @@ public class Expand extends Task {
      *
      * @param d Path to the directory.
      */
-    public void setDest(String d) {
-	this.dest=d;
+    public void setDest(File d) {
+        this.dest = d;
     }
 
     /**
@@ -128,7 +382,137 @@ public class Expand extends Task {
      *
      * @param s Path to zip-file.
      */
-    public void setSrc(String s) {
-	this.source = s;
+    public void setSrc(File s) {
+        this.source = s;
     }
+
+    /**
+     * Should we overwrite files in dest, even if they are newer than
+     * the corresponding entries in the archive?
+     * @param b a <code>boolean</code> value
+     */
+    public void setOverwrite(boolean b) {
+        overwrite = b;
+    }
+
+    /**
+     * Add a patternset.
+     * @param set a pattern set
+     */
+    public void addPatternset(PatternSet set) {
+        patternsets.add(set);
+    }
+
+    /**
+     * Add a fileset
+     * @param set a file set
+     */
+    public void addFileset(FileSet set) {
+        add(set);
+    }
+
+    /**
+     * Add a resource collection.
+     * @param rc a resource collection.
+     * @since Ant 1.7
+     */
+    public void add(ResourceCollection rc) {
+        resourcesSpecified = true;
+        resources.add(rc);
+    }
+
+    /**
+     * Defines the mapper to map source entries to destination files.
+     * @return a mapper to be configured
+     * @exception BuildException if more than one mapper is defined
+     * @since Ant1.7
+     */
+    public Mapper createMapper() throws BuildException {
+        if (mapperElement != null) {
+            throw new BuildException(ERROR_MULTIPLE_MAPPERS,
+                                     getLocation());
+        }
+        mapperElement = new Mapper(getProject());
+        return mapperElement;
+    }
+
+    /**
+     * A nested filenamemapper
+     * @param fileNameMapper the mapper to add
+     * @since Ant 1.6.3
+     */
+    public void add(FileNameMapper fileNameMapper) {
+        createMapper().add(fileNameMapper);
+    }
+
+
+    /**
+     * Sets the encoding to assume for file names and comments.
+     *
+     * <p>Set to <code>native-encoding</code> if you want your
+     * platform's native encoding, defaults to UTF8.</p>
+     * @param encoding the name of the character encoding
+     * @since Ant 1.6
+     */
+    public void setEncoding(String encoding) {
+        internalSetEncoding(encoding);
+    }
+
+    /**
+     * Supports grand-children that want to support the attribute
+     * where the child-class doesn't (i.e. Unzip in the compress
+     * Antlib).
+     *
+     * @since Ant 1.8.0
+     */
+    protected void internalSetEncoding(String encoding) {
+        if (NATIVE_ENCODING.equals(encoding)) {
+            encoding = null;
+        }
+        this.encoding = encoding;
+    }
+
+    /**
+     * @since Ant 1.8.0
+     */
+    public String getEncoding() {
+        return encoding;
+    }
+
+    /**
+     * Whether leading path separators should be stripped.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setStripAbsolutePathSpec(boolean b) {
+        stripAbsolutePathSpec = b;
+    }
+
+    /**
+     * Whether unicode extra fields will be used if present.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setScanForUnicodeExtraFields(boolean b) {
+        internalSetScanForUnicodeExtraFields(b);
+    }
+
+    /**
+     * Supports grand-children that want to support the attribute
+     * where the child-class doesn't (i.e. Unzip in the compress
+     * Antlib).
+     *
+     * @since Ant 1.8.0
+     */
+    protected void internalSetScanForUnicodeExtraFields(boolean b) {
+        scanForUnicodeExtraFields = b;
+    }
+
+    /**
+     * @since Ant 1.8.0
+     */
+    public boolean getScanForUnicodeExtraFields() {
+        return scanForUnicodeExtraFields;
+    }
+
 }

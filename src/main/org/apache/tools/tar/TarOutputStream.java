@@ -1,93 +1,154 @@
 /*
- * The Apache Software License, Version 1.1
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
- * reserved.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
- *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
- *    permission, please contact apache@apache.org.
- *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
  */
 
 /*
- * This package is based on the work done by Timothy Gerard Endres 
+ * This package is based on the work done by Timothy Gerard Endres
  * (time@ice.com) to whom the Ant project is very grateful for his great code.
  */
 
 package org.apache.tools.tar;
 
-import java.io.*;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.nio.ByteBuffer;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.tools.zip.ZipEncoding;
+import org.apache.tools.zip.ZipEncodingHelper;
 
 /**
  * The TarOutputStream writes a UNIX tar archive as an OutputStream.
  * Methods are provided to put entries, and then write their contents
  * by writing to this stream using write().
- * 
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
+ *
  */
 public class TarOutputStream extends FilterOutputStream {
+    /** Fail if a long file name is required in the archive. */
+    public static final int LONGFILE_ERROR = 0;
+
+    /** Long paths will be truncated in the archive. */
+    public static final int LONGFILE_TRUNCATE = 1;
+
+    /** GNU tar extensions are used to store long file names in the archive. */
+    public static final int LONGFILE_GNU = 2;
+
+    /** POSIX/PAX extensions are used to store long file names in the archive. */
+    public static final int LONGFILE_POSIX = 3;
+
+    /** Fail if a big number (e.g. size &gt; 8GiB) is required in the archive. */
+    public static final int BIGNUMBER_ERROR = 0;
+
+    /** star/GNU tar/BSD tar extensions are used to store big number in the archive. */
+    public static final int BIGNUMBER_STAR = 1;
+
+    /** POSIX/PAX extensions are used to store big numbers in the archive. */
+    public static final int BIGNUMBER_POSIX = 2;
+
+    // CheckStyle:VisibilityModifier OFF - bc
     protected boolean   debug;
-    protected int       currSize;
-    protected int       currBytes;
+    protected long      currSize;
+    protected String    currName;
+    protected long      currBytes;
     protected byte[]    oneBuf;
     protected byte[]    recordBuf;
     protected int       assemLen;
     protected byte[]    assemBuf;
     protected TarBuffer buffer;
+    protected int       longFileMode = LONGFILE_ERROR;
+    // CheckStyle:VisibilityModifier ON
 
+    private int       bigNumberMode = BIGNUMBER_ERROR;
+
+    private boolean closed = false;
+
+    /** Indicates if putNextEntry has been called without closeEntry */
+    private boolean haveUnclosedEntry = false;
+
+    /** indicates if this archive is finished */
+    private boolean finished = false;
+
+    private final ZipEncoding encoding;
+
+    private boolean addPaxHeadersForNonAsciiNames = false;
+    private static final ZipEncoding ASCII =
+        ZipEncodingHelper.getZipEncoding("ASCII");
+
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     */
     public TarOutputStream(OutputStream os) {
         this(os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
     }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarOutputStream(OutputStream os, String encoding) {
+        this(os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE, encoding);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     * @param blockSize the block size to use
+     */
     public TarOutputStream(OutputStream os, int blockSize) {
         this(os, blockSize, TarBuffer.DEFAULT_RCDSIZE);
     }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     * @param blockSize the block size to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarOutputStream(OutputStream os, int blockSize, String encoding) {
+        this(os, blockSize, TarBuffer.DEFAULT_RCDSIZE, encoding);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     */
     public TarOutputStream(OutputStream os, int blockSize, int recordSize) {
+        this(os, blockSize, recordSize, null);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarOutputStream(OutputStream os, int blockSize, int recordSize,
+                           String encoding) {
         super(os);
+        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
 
         this.buffer = new TarBuffer(os, blockSize, recordSize);
         this.debug = false;
@@ -98,49 +159,102 @@ public class TarOutputStream extends FilterOutputStream {
     }
 
     /**
+     * Set the long file mode.
+     * This can be LONGFILE_ERROR(0), LONGFILE_TRUNCATE(1) or LONGFILE_GNU(2).
+     * This specifies the treatment of long file names (names &gt;= TarConstants.NAMELEN).
+     * Default is LONGFILE_ERROR.
+     * @param longFileMode the mode to use
+     */
+    public void setLongFileMode(int longFileMode) {
+        this.longFileMode = longFileMode;
+    }
+
+    /**
+     * Set the big number mode.
+     * This can be BIGNUMBER_ERROR(0), BIGNUMBER_POSIX(1) or BIGNUMBER_STAR(2).
+     * This specifies the treatment of big files (sizes &gt; TarConstants.MAXSIZE) and other numeric values to big to fit into a traditional tar header.
+     * Default is BIGNUMBER_ERROR.
+     * @param bigNumberMode the mode to use
+     */
+    public void setBigNumberMode(int bigNumberMode) {
+        this.bigNumberMode = bigNumberMode;
+    }
+
+    /**
+     * Whether to add a PAX extension header for non-ASCII file names.
+     */
+    public void setAddPaxHeadersForNonAsciiNames(boolean b) {
+        addPaxHeadersForNonAsciiNames = b;
+    }
+
+    /**
      * Sets the debugging flag.
-     * 
+     *
      * @param debugF True to turn on debugging.
      */
     public void setDebug(boolean debugF) {
         this.debug = debugF;
-    } 
+    }
 
     /**
      * Sets the debugging flag in this stream's TarBuffer.
-     * 
-     * @param debugF True to turn on debugging.
+     *
+     * @param debug True to turn on debugging.
      */
     public void setBufferDebug(boolean debug) {
-        this.buffer.setDebug(debug);
-    } 
+        buffer.setDebug(debug);
+    }
 
     /**
      * Ends the TAR archive without closing the underlying OutputStream.
-     * The result is that the EOF record of nulls is written.
+     *
+     * An archive consists of a series of file entries terminated by an
+     * end-of-archive entry, which consists of two 512 blocks of zero bytes.
+     * POSIX.1 requires two EOF records, like some other implementations.
+     *
+     * @throws IOException on error
      */
     public void finish() throws IOException {
-        this.writeEOFRecord();
-    } 
+        if (finished) {
+            throw new IOException("This archive has already been finished");
+        }
+
+        if (haveUnclosedEntry) {
+            throw new IOException("This archives contains unclosed entries.");
+        }
+        writeEOFRecord();
+        writeEOFRecord();
+        buffer.flushBlock();
+        finished = true;
+    }
 
     /**
      * Ends the TAR archive and closes the underlying OutputStream.
      * This means that finish() is called followed by calling the
      * TarBuffer's close().
+     * @throws IOException on error
      */
+    @Override
     public void close() throws IOException {
-        this.finish();
-        this.buffer.close();
-    } 
+        if(!finished) {
+            finish();
+        }
+
+        if (!closed) {
+            buffer.close();
+            out.close();
+            closed = true;
+        }
+    }
 
     /**
      * Get the record size being used by this stream's TarBuffer.
-     * 
+     *
      * @return The TarBuffer record size.
      */
     public int getRecordSize() {
-        return this.buffer.getRecordSize();
-    } 
+        return buffer.getRecordSize();
+    }
 
     /**
      * Put an entry on the output stream. This writes the entry's
@@ -150,21 +264,59 @@ public class TarOutputStream extends FilterOutputStream {
      * contents. Once the contents are written, closeEntry()
      * <B>MUST</B> be called to ensure that all buffered data
      * is completely written to the output stream.
-     * 
+     *
      * @param entry The TarEntry to be written to the archive.
+     * @throws IOException on error
      */
     public void putNextEntry(TarEntry entry) throws IOException {
-        entry.writeEntryHeader(this.recordBuf);
-        this.buffer.writeRecord(this.recordBuf);
+        if(finished) {
+            throw new IOException("Stream has already been finished");
+        }
+        Map<String, String> paxHeaders = new HashMap<String, String>();
+        final String entryName = entry.getName();
+        boolean paxHeaderContainsPath = handleLongName(entry, entryName, paxHeaders, "path",
+                                                       TarConstants.LF_GNUTYPE_LONGNAME, "file name");
 
-        this.currBytes = 0;
+        final String linkName = entry.getLinkName();
+        boolean paxHeaderContainsLinkPath = linkName != null && linkName.length() > 0
+            && handleLongName(entry, linkName, paxHeaders, "linkpath",
+                              TarConstants.LF_GNUTYPE_LONGLINK, "link name");
+
+        if (bigNumberMode == BIGNUMBER_POSIX) {
+            addPaxHeadersForBigNumbers(paxHeaders, entry);
+        } else if (bigNumberMode != BIGNUMBER_STAR) {
+            failForBigNumbers(entry);
+        }
+
+        if (addPaxHeadersForNonAsciiNames && !paxHeaderContainsPath
+            && !ASCII.canEncode(entryName)) {
+            paxHeaders.put("path", entryName);
+        }
+
+        if (addPaxHeadersForNonAsciiNames && !paxHeaderContainsLinkPath
+            && (entry.isLink() || entry.isSymbolicLink())
+            && !ASCII.canEncode(linkName)) {
+            paxHeaders.put("linkpath", linkName);
+        }
+
+        if (paxHeaders.size() > 0) {
+            writePaxHeaders(entry, entryName, paxHeaders);
+        }
+
+        entry.writeEntryHeader(recordBuf, encoding,
+                               bigNumberMode == BIGNUMBER_STAR);
+        buffer.writeRecord(recordBuf);
+
+        currBytes = 0;
 
         if (entry.isDirectory()) {
-            this.currSize = 0;
+            currSize = 0;
         } else {
-            this.currSize = (int) entry.getSize();
+            currSize = entry.getSize();
         }
-    } 
+        currName = entryName;
+        haveUnclosedEntry = true;
+    }
 
     /**
      * Close an entry. This method MUST be called for all file
@@ -174,50 +326,62 @@ public class TarOutputStream extends FilterOutputStream {
      * data fragments still being assembled that must be written
      * to the output stream before this entry is closed and the
      * next entry written.
+     * @throws IOException on error
      */
     public void closeEntry() throws IOException {
-        if (this.assemLen > 0) {
-            for (int i = this.assemLen; i < this.assemBuf.length; ++i) {
-                this.assemBuf[i] = 0;
+        if (finished) {
+            throw new IOException("Stream has already been finished");
+        }
+        if (!haveUnclosedEntry){
+            throw new IOException("No current entry to close");
+        }
+        if (assemLen > 0) {
+            for (int i = assemLen; i < assemBuf.length; ++i) {
+                assemBuf[i] = 0;
             }
 
-            this.buffer.writeRecord(this.assemBuf);
+            buffer.writeRecord(assemBuf);
 
-            this.currBytes += this.assemLen;
-            this.assemLen = 0;
-        } 
+            currBytes += assemLen;
+            assemLen = 0;
+        }
 
-        if (this.currBytes < this.currSize) {
-            throw new IOException("entry closed at '" + this.currBytes 
-                                  + "' before the '" + this.currSize 
+        if (currBytes < currSize) {
+            throw new IOException("entry '" + currName + "' closed at '"
+                                  + currBytes
+                                  + "' before the '" + currSize
                                   + "' bytes specified in the header were written");
-        } 
-    } 
+        }
+        haveUnclosedEntry = false;
+    }
 
     /**
      * Writes a byte to the current tar archive entry.
-     * 
+     *
      * This method simply calls read( byte[], int, int ).
-     * 
+     *
      * @param b The byte written.
+     * @throws IOException on error
      */
+    @Override
     public void write(int b) throws IOException {
-        this.oneBuf[0] = (byte) b;
+        oneBuf[0] = (byte) b;
 
-        this.write(this.oneBuf, 0, 1);
-    } 
+        write(oneBuf, 0, 1);
+    }
 
     /**
      * Writes bytes to the current tar archive entry.
-     * 
-     * This method simply calls read( byte[], int, int ).
-     * 
+     *
+     * This method simply calls write( byte[], int, int ).
+     *
      * @param wBuf The buffer to write to the archive.
-     * @return The number of bytes read, or -1 at EOF.
+     * @throws IOException on error
      */
+    @Override
     public void write(byte[] wBuf) throws IOException {
-        this.write(wBuf, 0, wBuf.length);
-    } 
+        write(wBuf, 0, wBuf.length);
+    }
 
     /**
      * Writes bytes to the current tar archive entry. This method
@@ -227,88 +391,267 @@ public class TarOutputStream extends FilterOutputStream {
      * record buffering required by TarBuffer, and manages buffers
      * that are not a multiple of recordsize in length, including
      * assembling records from small buffers.
-     * 
-     * This method simply calls read( byte[], int, int ).
-     * 
+     *
      * @param wBuf The buffer to write to the archive.
      * @param wOffset The offset in the buffer from which to get bytes.
      * @param numToWrite The number of bytes to write.
+     * @throws IOException on error
      */
+    @Override
     public void write(byte[] wBuf, int wOffset, int numToWrite) throws IOException {
-        if ((this.currBytes + numToWrite) > this.currSize) {
-            throw new IOException("request to write '" + numToWrite 
-                                  + "' bytes exceeds size in header of '" 
-                                  + this.currSize + "' bytes");
+        if ((currBytes + numToWrite) > currSize) {
+            throw new IOException("request to write '" + numToWrite
+                                  + "' bytes exceeds size in header of '"
+                                  + currSize + "' bytes for entry '"
+                                  + currName + "'");
 
-            // 
+            //
             // We have to deal with assembly!!!
             // The programmer can be writing little 32 byte chunks for all
             // we know, and we must assemble complete records for writing.
             // REVIEW Maybe this should be in TarBuffer? Could that help to
             // eliminate some of the buffer copying.
-            // 
-        } 
+            //
+        }
 
-        if (this.assemLen > 0) {
-            if ((this.assemLen + numToWrite) >= this.recordBuf.length) {
-                int aLen = this.recordBuf.length - this.assemLen;
+        if (assemLen > 0) {
+            if ((assemLen + numToWrite) >= recordBuf.length) {
+                int aLen = recordBuf.length - assemLen;
 
-                System.arraycopy(this.assemBuf, 0, this.recordBuf, 0, 
-                                 this.assemLen);
-                System.arraycopy(wBuf, wOffset, this.recordBuf, 
-                                 this.assemLen, aLen);
-                this.buffer.writeRecord(this.recordBuf);
+                System.arraycopy(assemBuf, 0, recordBuf, 0,
+                                 assemLen);
+                System.arraycopy(wBuf, wOffset, recordBuf,
+                                 assemLen, aLen);
+                buffer.writeRecord(recordBuf);
 
-                this.currBytes += this.recordBuf.length;
+                currBytes += recordBuf.length;
                 wOffset += aLen;
                 numToWrite -= aLen;
-                this.assemLen = 0;
+                assemLen = 0;
             } else {
-                System.arraycopy(wBuf, wOffset, this.assemBuf, this.assemLen, 
+                System.arraycopy(wBuf, wOffset, assemBuf, assemLen,
                                  numToWrite);
 
                 wOffset += numToWrite;
-                this.assemLen += numToWrite;
-                numToWrite -= numToWrite;
-            } 
-        } 
+                assemLen += numToWrite;
+                numToWrite = 0;
+            }
+        }
 
-        // 
+        //
         // When we get here we have EITHER:
         // o An empty "assemble" buffer.
         // o No bytes to write (numToWrite == 0)
-        // 
+        //
         while (numToWrite > 0) {
-            if (numToWrite < this.recordBuf.length) {
-                System.arraycopy(wBuf, wOffset, this.assemBuf, this.assemLen, 
+            if (numToWrite < recordBuf.length) {
+                System.arraycopy(wBuf, wOffset, assemBuf, assemLen,
                                  numToWrite);
 
-                this.assemLen += numToWrite;
+                assemLen += numToWrite;
 
                 break;
-            } 
+            }
 
-            this.buffer.writeRecord(wBuf, wOffset);
+            buffer.writeRecord(wBuf, wOffset);
 
-            int num = this.recordBuf.length;
+            int num = recordBuf.length;
 
-            this.currBytes += num;
+            currBytes += num;
             numToWrite -= num;
             wOffset += num;
-        } 
-    } 
+        }
+    }
+
+    /**
+     * Writes a PAX extended header with the given map as contents.
+     */
+    void writePaxHeaders(TarEntry entry,
+                         String entryName,
+                         Map<String, String> headers) throws IOException {
+        String name = "./PaxHeaders.X/" + stripTo7Bits(entryName);
+        if (name.length() >= TarConstants.NAMELEN) {
+            name = name.substring(0, TarConstants.NAMELEN - 1);
+        }
+        while (name.endsWith("/")) {
+            // TarEntry's constructor would think this is a directory
+            // and not allow any data to be written
+            name = name.substring(0, name.length() - 1);
+        }
+        TarEntry pex = new TarEntry(name,
+                                    TarConstants.LF_PAX_EXTENDED_HEADER_LC);
+        transferModTime(entry, pex);
+
+        StringWriter w = new StringWriter();
+        for (Map.Entry<String, String> h : headers.entrySet()) {
+            String key = h.getKey();
+            String value = h.getValue();
+            int len = key.length() + value.length()
+                + 3 /* blank, equals and newline */
+                + 2 /* guess 9 < actual length < 100 */;
+            String line = len + " " + key + "=" + value + "\n";
+            int actualLength = line.getBytes("UTF-8").length;
+            while (len != actualLength) {
+                // Adjust for cases where length < 10 or > 100
+                // or where UTF-8 encoding isn't a single octet
+                // per character.
+                // Must be in loop as size may go from 99 to 100 in
+                // first pass so we'd need a second.
+                len = actualLength;
+                line = len + " " + key + "=" + value + "\n";
+                actualLength = line.getBytes("UTF-8").length;
+            }
+            w.write(line);
+        }
+        byte[] data = w.toString().getBytes("UTF-8");
+        pex.setSize(data.length);
+        putNextEntry(pex);
+        write(data);
+        closeEntry();
+    }
+
+    private String stripTo7Bits(String name) {
+        final int length = name.length();
+        StringBuilder result = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            char stripped = (char) (name.charAt(i) & 0x7F);
+            if (stripped != 0) { // would be read as Trailing null
+                result.append(stripped);
+            }
+        }
+        return result.toString();
+    }
 
     /**
      * Write an EOF (end of archive) record to the tar archive.
      * An EOF record consists of a record of all zeros.
      */
     private void writeEOFRecord() throws IOException {
-        for (int i = 0; i < this.recordBuf.length; ++i) {
-            this.recordBuf[i] = 0;
+        for (int i = 0; i < recordBuf.length; ++i) {
+            recordBuf[i] = 0;
         }
 
-        this.buffer.writeRecord(this.recordBuf);
-    } 
+        buffer.writeRecord(recordBuf);
+    }
+
+    private void addPaxHeadersForBigNumbers(Map<String, String> paxHeaders,
+                                            TarEntry entry) {
+        addPaxHeaderForBigNumber(paxHeaders, "size", entry.getSize(),
+                                 TarConstants.MAXSIZE);
+        addPaxHeaderForBigNumber(paxHeaders, "gid", entry.getLongGroupId(),
+                                 TarConstants.MAXID);
+        addPaxHeaderForBigNumber(paxHeaders, "mtime",
+                                 entry.getModTime().getTime() / 1000,
+                                 TarConstants.MAXSIZE);
+        addPaxHeaderForBigNumber(paxHeaders, "uid", entry.getLongUserId(),
+                                 TarConstants.MAXID);
+        // star extensions by J\u00f6rg Schilling
+        addPaxHeaderForBigNumber(paxHeaders, "SCHILY.devmajor",
+                                 entry.getDevMajor(), TarConstants.MAXID);
+        addPaxHeaderForBigNumber(paxHeaders, "SCHILY.devminor",
+                                 entry.getDevMinor(), TarConstants.MAXID);
+        // there is no PAX header for file mode
+        failForBigNumber("mode", entry.getMode(), TarConstants.MAXID);
+    }
+
+    private void addPaxHeaderForBigNumber(Map<String, String> paxHeaders,
+                                          String header, long value,
+                                          long maxValue) {
+        if (value < 0 || value > maxValue) {
+            paxHeaders.put(header, String.valueOf(value));
+        }
+    }
+
+    private void failForBigNumbers(TarEntry entry) {
+        failForBigNumber("entry size", entry.getSize(), TarConstants.MAXSIZE);
+        failForBigNumberWithPosixMessage("group id", entry.getLongGroupId(), TarConstants.MAXID);
+        failForBigNumber("last modification time",
+                         entry.getModTime().getTime() / 1000,
+                         TarConstants.MAXSIZE);
+        failForBigNumber("user id", entry.getLongUserId(), TarConstants.MAXID);
+        failForBigNumber("mode", entry.getMode(), TarConstants.MAXID);
+        failForBigNumber("major device number", entry.getDevMajor(),
+                         TarConstants.MAXID);
+        failForBigNumber("minor device number", entry.getDevMinor(),
+                         TarConstants.MAXID);
+    }
+
+    private void failForBigNumber(String field, long value, long maxValue) {
+        failForBigNumber(field, value, maxValue, "");
+    }
+
+    private void failForBigNumberWithPosixMessage(String field, long value, long maxValue) {
+        failForBigNumber(field, value, maxValue, " Use STAR or POSIX extensions to overcome this limit");
+    }
+
+    private void failForBigNumber(String field, long value, long maxValue, String additionalMsg) {
+        if (value < 0 || value > maxValue) {
+            throw new RuntimeException(field + " '" + value //NOSONAR
+                                       + "' is too big ( > "
+                                       + maxValue + " )");
+        }
+    }
+
+    /**
+     * Handles long file or link names according to the longFileMode setting.
+     *
+     * <p>I.e. if the given name is too long to be written to a plain
+     * tar header then
+     * <ul>
+     *   <li>it creates a pax header who's name is given by the
+     *   paxHeaderName parameter if longFileMode is POSIX</li>
+     *   <li>it creates a GNU longlink entry who's type is given by
+     *   the linkType parameter if longFileMode is GNU</li>
+     *   <li>it throws an exception if longFileMode is ERROR</li>
+     *   <li>it truncates the name if longFileMode is TRUNCATE</li>
+     * </ul></p>
+     *
+     * @param entry entry the name belongs to
+     * @param name the name to write
+     * @param paxHeaders current map of pax headers
+     * @param paxHeaderName name of the pax header to write
+     * @param linkType type of the GNU entry to write
+     * @param fieldName the name of the field
+     * @return whether a pax header has been written.
+     */
+    private boolean handleLongName(TarEntry entry , String name,
+                                   Map<String, String> paxHeaders,
+                                   String paxHeaderName, byte linkType, String fieldName)
+        throws IOException {
+        final ByteBuffer encodedName = encoding.encode(name);
+        final int len = encodedName.limit() - encodedName.position();
+        if (len >= TarConstants.NAMELEN) {
+
+            if (longFileMode == LONGFILE_POSIX) {
+                paxHeaders.put(paxHeaderName, name);
+                return true;
+            } else if (longFileMode == LONGFILE_GNU) {
+                // create a TarEntry for the LongLink, the contents
+                // of which are the link's name
+                TarEntry longLinkEntry =
+                    new TarEntry(TarConstants.GNU_LONGLINK, linkType);
+
+                longLinkEntry.setSize(len + 1); // +1 for NUL
+                transferModTime(entry, longLinkEntry);
+                putNextEntry(longLinkEntry);
+                write(encodedName.array(), encodedName.arrayOffset(), len);
+                write(0); // NUL terminator
+                closeEntry();
+            } else if (longFileMode != LONGFILE_TRUNCATE) {
+                throw new RuntimeException(fieldName + " '" + name //NOSONAR
+                                           + "' is too long ( > "
+                                           + TarConstants.NAMELEN + " bytes)");
+            }
+        }
+        return false;
+    }
+
+    private void transferModTime(TarEntry from, TarEntry to) {
+        Date fromModTime = from.getModTime();
+        long fromModTimeSeconds = fromModTime.getTime() / 1000;
+        if (fromModTimeSeconds < 0 || fromModTimeSeconds > TarConstants.MAXSIZE) {
+            fromModTime = new Date(0);
+        }
+        to.setModTime(fromModTime);
+    }
 }
-
-

@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="setup">
+    <property name="javac-dir" location="${output}/javac-dir" />
+    <property name="build-dir" location="${javac-dir}/build" />
+    <presetdef name="testJavac">
+      <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes"
+             includeantruntime="false"/>
+    </presetdef>
+  </target>
+
+  <target name="test-includeDestClasses" depends="setup">
+    <property name="DATE" value="09/10/1999 4:30 pm" />
+    <delete dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/src" />
+    <echo file="${javac-dir}/src/A.java">
+      public class A { B b;}
+    </echo>
+    <echo file="${javac-dir}/src/B.java">
+      public class B { }
+    </echo>
+    <delete dir="${javac-dir}/classes" quiet="yes" />
+    <mkdir dir="${javac-dir}/classes" />
+    <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes" />
+    <touch file="${javac-dir}/src/B.java" datetime="${DATE}" />
+    <touch file="${javac-dir}/classes/B.class" datetime="${DATE}" />
+    <!-- following should not update B.class -->
+    <delete quiet="yes" file="${javac-dir}/classes/A.class" />
+    <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes" />
+    <au:assertTrue>
+      <isfileselected file="${javac-dir}/classes/B.class">
+        <date datetime="${DATE}" when="equal" />
+      </isfileselected>
+    </au:assertTrue>
+    <!-- following should update B.class -->
+    <delete quiet="yes" file="${javac-dir}/classes/A.class" />
+    <javac srcdir="${javac-dir}/src" destdir="${javac-dir}/classes" includeDestClasses="no" />
+    <au:assertFalse>
+      <isfileselected file="${javac-dir}/classes/B.class">
+        <date datetime="${DATE}" when="equal" />
+      </isfileselected>
+    </au:assertFalse>
+  </target>
+
+  <target name="test-updated-property" depends="setup">
+    <delete quiet="yes" dir="${build-dir}" />
+    <mkdir dir="${build-dir}" />
+    <javac srcdir="javac-dir/good-src" destdir="${build-dir}" updatedProperty="classes-updated" />
+    <au:assertTrue>
+      <equals arg1="${classes-updated}" arg2="true" />
+    </au:assertTrue>
+    <javac srcdir="javac-dir/good-src" destdir="${build-dir}" updatedProperty="classes-updated-2" />
+    <au:assertFalse>
+      <isset property="classes-updated-2" />
+    </au:assertFalse>
+  </target>
+
+  <target name="test-error-property" depends="setup">
+    <delete quiet="yes" dir="${build-dir}" />
+    <mkdir dir="${build-dir}" />
+    <javac srcdir="javac-dir/good-src" destdir="${build-dir}" failOnError="false" errorProperty="compile-failed" />
+    <au:assertTrue>
+      <equals arg1="${compile-failed}" arg2="${compile-failed}" />
+    </au:assertTrue>
+    <javac srcdir="javac-dir/bad-src" destdir="${build-dir}" failOnError="false" errorProperty="compile-failed" />
+    <au:assertTrue>
+      <equals arg1="${compile-failed}" arg2="true" />
+    </au:assertTrue>
+  </target>
+
+  <target name="setUpForPackageInfoJava" depends="setup">
+    <mkdir dir="${javac-dir}/src/a" />
+    <mkdir dir="${build-dir}" />
+    <echo file="${javac-dir}/src/a/package-info.java">
+      <![CDATA[
+/**
+ * Some test javadocs at the package level.
+ */
+]]>
+    </echo>
+    <javac srcdir="${javac-dir}/src" destdir="${build-dir}" updatedProperty="first-pass" />
+    <au:assertPropertyEquals name="first-pass" value="true" />
+  </target>
+
+  <target name="testPackageInfoJava"
+          depends="setUpForPackageInfoJava"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">
+    <!-- no changes, shouldn't recompile, the initial bug -->
+    <javac srcdir="${javac-dir}/src" destdir="${build-dir}" updatedProperty="second-pass" />
+    <au:assertFalse>
+      <isset property="second-pass" />
+    </au:assertFalse>
+    <sleep seconds="2" />
+
+    <!-- change package-info.java but make containing target dir even
+         more recent - the regression in Ant 1.7.1 -->
+    <touch file="${javac-dir}/src/a/package-info.java" />
+    <sleep seconds="2" />
+    <touch>
+      <file file="${build-dir}/a" />
+    </touch>
+    <javac srcdir="${javac-dir}/src" destdir="${build-dir}" updatedProperty="third-pass" />
+    <au:assertPropertyEquals name="third-pass" value="true" />
+  </target>
+
+  <target name="testPackageInfoJavaNoDest"
+          depends="setUpForPackageInfoJava"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=51947">
+    <javac srcdir="${javac-dir}/src" updatedProperty="first-pass" />
+    <au:assertPropertyEquals name="first-pass" value="true" />
+
+    <!-- no changes, shouldn't recompile, the initial bug -->
+    <javac srcdir="${javac-dir}/src" updatedProperty="second-pass" />
+    <au:assertFalse>
+      <isset property="second-pass" />
+    </au:assertFalse>
+    <sleep seconds="2" />
+
+    <!-- change package-info.java but make containing target dir even
+         more recent - the regression in Ant 1.7.1 -->
+    <touch file="${javac-dir}/src/a/package-info.java" />
+    <sleep seconds="2" />
+    <touch>
+      <file file="${javac-dir}/src/a" />
+    </touch>
+    <javac srcdir="${javac-dir}/src" updatedProperty="third-pass" />
+    <au:assertPropertyEquals name="third-pass" value="true" />
+  </target>
+
+  <target name="testSuppressPackageInfoClass"
+          depends="setUpForPackageInfoJava"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=52096">
+    <au:assertFileExists file="${build-dir}/a/package-info.class"/>
+    <delete file="${build-dir}/a/package-info.class"/>
+    <javac srcdir="${javac-dir}/src" destdir="${build-dir}"
+           createMissingPackageInfoClass="false"
+           updatedProperty="second-pass" />
+    <au:assertPropertyEquals name="second-pass" value="true" />
+    <au:assertFileDoesntExist file="${build-dir}/a/package-info.class"/>
+  </target>
+
+  <target name="-create-javac-adapter" depends="setup">
+    <property name="adapter.dir" location="${output}/adapter" />
+    <mkdir dir="${input}/org/example" />
+    <echo file="${input}/org/example/Adapter.java">
+      <![CDATA[
+package org.example;
+import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
+import org.apache.tools.ant.taskdefs.Javac;
+
+public class Adapter implements CompilerAdapter {
+    public void setJavac(Javac attributes) {}
+    public boolean execute() {
+        System.err.println("adapter called");
+        return true;
+    }
+}]]>
+    </echo>
+    <mkdir dir="${resources}" />
+    <javac srcdir="${input}" destdir="${resources}" />
+  </target>
+
+  <target name="testCompilerNotFound" depends="-create-javac-adapter">
+    <au:expectfailure>
+      <javac srcdir="${input}" destdir="${output}" compiler="org.example.Adapter" />
+    </au:expectfailure>
+    <au:assertLogDoesntContain text="adapter called" />
+  </target>
+
+  <target name="testCompilerClasspath" depends="-create-javac-adapter" description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
+    <mkdir dir="${output}" />
+    <javac srcdir="${input}" destdir="${output}" compiler="org.example.Adapter">
+      <compilerclasspath location="${resources}" />
+    </javac>
+    <au:assertLogContains text="adapter called" />
+  </target>
+
+  <target name="testCompilerAsNestedElement" depends="-create-javac-adapter">
+    <componentdef classname="org.example.Adapter" name="myjavac">
+      <classpath location="${resources}" />
+    </componentdef>
+    <mkdir dir="${output}" />
+    <javac srcdir="${input}" destdir="${output}">
+      <myjavac />
+    </javac>
+    <au:assertLogContains text="adapter called" />
+  </target>
+
+  <target name="testSourceAttributes" depends="setup"
+          xmlns:if="ant:if" xmlns:unless="ant:unless">
+    <delete dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/classes" />
+    <echo file="${javac-dir}/src/A.java">
+      public class A { }
+    </echo>
+
+    <au:expectfailure>
+      <testJavac source="notValid"/>
+    </au:expectfailure>
+
+    <sequential unless:set="jdk9+">
+      <echo>JDK 1.4+</echo>
+      <testJavac source="1.4"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+    
+    <sequential unless:set="jdk1.9+">
+      <echo>JDK 1.8+</echo>
+      <testJavac source="1.8"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+            
+    <sequential if:set="jdk9+">
+      <echo>JDK 9+</echo>
+      <testJavac source="9"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+  </target>	
+	
+  <target name="testTargetAttributes" depends="setup"
+          xmlns:if="ant:if" xmlns:unless="ant:unless">
+    <delete dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/classes" />
+    <echo file="${javac-dir}/src/A.java">
+      public class A { }
+    </echo>
+
+    <au:expectfailure>
+      <testJavac target="notValid"/>
+    </au:expectfailure>
+
+    <sequential unless:set="jdk9+">
+      <echo>JDK 1.8+</echo>
+      <testJavac source="1.8" target="1.8"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+            
+    <sequential if:set="jdk9+">
+      <echo>JDK 9+</echo>
+      <testJavac source="9" target="9"/>
+      <delete dir="${javac-dir}/classes"/>
+      <mkdir dir="${javac-dir}/classes"/>
+    </sequential>
+  </target> 
+
+  <target name="testJavacWithNativeHeaderGeneration" depends="setup">
+    <mkdir dir="${javac-dir}/src/org/example" />
+    <mkdir dir="${javac-dir}/classes"/>
+    <mkdir dir="${javac-dir}/headers"/>
+    <echo file="${javac-dir}/src/org/example/Foo.java">
+      <![CDATA[
+package org.example;
+public class Foo {
+    public Foo() {}
+    public native String bar(Object baz);
+}
+]]></echo>
+    <echo file="${javac-dir}/src/org/example/Bar.java">
+      <![CDATA[
+package org.example;
+public class Bar {
+    public Bar() {}
+    public String xyzzy(Object baz) {
+        return new Foo().bar(baz);
+    }
+}
+]]></echo>
+      <testJavac nativeheaderdir="${javac-dir}/headers"/>
+      <au:assertFileExists file="${javac-dir}/headers/org_example_Foo.h"/>
+      <au:assertFileDoesntExist file="${javac-dir}/headers/org_example_Bar.h"/>
+  </target>
+</project>

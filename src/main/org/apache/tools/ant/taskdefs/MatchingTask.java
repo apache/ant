@@ -1,124 +1,111 @@
 /*
- * The Apache Software License, Version 1.1
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
- * reserved.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
- *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
- *    permission, please contact apache@apache.org.
- *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
  */
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import java.io.File;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
 
-import java.io.*;
-import java.util.*;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.selectors.AndSelector;
+import org.apache.tools.ant.types.selectors.ContainsRegexpSelector;
+import org.apache.tools.ant.types.selectors.ContainsSelector;
+import org.apache.tools.ant.types.selectors.DateSelector;
+import org.apache.tools.ant.types.selectors.DependSelector;
+import org.apache.tools.ant.types.selectors.DepthSelector;
+import org.apache.tools.ant.types.selectors.DifferentSelector;
+import org.apache.tools.ant.types.selectors.ExtendSelector;
+import org.apache.tools.ant.types.selectors.FileSelector;
+import org.apache.tools.ant.types.selectors.FilenameSelector;
+import org.apache.tools.ant.types.selectors.MajoritySelector;
+import org.apache.tools.ant.types.selectors.NoneSelector;
+import org.apache.tools.ant.types.selectors.NotSelector;
+import org.apache.tools.ant.types.selectors.OrSelector;
+import org.apache.tools.ant.types.selectors.PresentSelector;
+import org.apache.tools.ant.types.selectors.SelectSelector;
+import org.apache.tools.ant.types.selectors.SelectorContainer;
+import org.apache.tools.ant.types.selectors.SizeSelector;
+import org.apache.tools.ant.types.selectors.TypeSelector;
+import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
- * This is an abstract task that should be used by all those tasks that 
+ * This is an abstract task that should be used by all those tasks that
  * require to include or exclude files based on pattern matching.
  *
- * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a> 
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
+ * @since Ant 1.1
  */
 
-public abstract class MatchingTask extends Task {
+public abstract class MatchingTask extends Task implements SelectorContainer {
 
-    protected Vector includeList = new Vector();
-    protected Vector excludeList = new Vector();
-    protected boolean useDefaultExcludes = true;
+    // CheckStyle:VisibilityModifier OFF - bc
+    protected FileSet fileset = new FileSet();
+    // CheckStyle:VisibilityModifier ON
 
-    /**
-     * provide access to properties from within the inner class
-     */
-    protected String getProperty(String name) { 
-        return project.getProperty(name);
-    }
-
-    /**
-     * inner class to hold a name on list.  "If" and "Unless" attributes
-     * may be used to invalidate the entry based on the existence of a 
-     * property (typically set thru the use of the Available task).
-     */
-    public class NameEntry {
-        private boolean valid = true;
-        private String name;
-
-        public String getName() { return valid ? name : null; }
-        public void setName(String name) { this.name = name; }
-
-        public void setIf(String name) {
-            if (getProperty(name) == null) valid = false;
-        }
-
-        public void setUnless(String name) {
-            if (getProperty(name) != null) valid = false;
-        }
+    /** {@inheritDoc}. */
+    @Override
+    public void setProject(Project project) {
+        super.setProject(project);
+        fileset.setProject(project);
     }
 
     /**
      * add a name entry on the include list
+     * @return a NameEntry object to be configured
      */
-    public NameEntry createInclude() {
-        NameEntry result = new NameEntry();
-        includeList.addElement(result);
-        return result;
+    public PatternSet.NameEntry createInclude() {
+        return fileset.createInclude();
     }
-    
+
+    /**
+     * add a name entry on the include files list
+     * @return an NameEntry object to be configured
+     */
+    public PatternSet.NameEntry createIncludesFile() {
+        return fileset.createIncludesFile();
+    }
+
     /**
      * add a name entry on the exclude list
+     * @return an NameEntry object to be configured
      */
-    public NameEntry createExclude() {
-        NameEntry result = new NameEntry();
-        excludeList.addElement(result);
-        return result;
+    public PatternSet.NameEntry createExclude() {
+        return fileset.createExclude();
+    }
+
+    /**
+     * add a name entry on the include files list
+     * @return an NameEntry object to be configured
+     */
+    public PatternSet.NameEntry createExcludesFile() {
+        return fileset.createExcludesFile();
+    }
+
+    /**
+     * add a set of patterns
+     * @return PatternSet object to be configured
+     */
+    public PatternSet createPatternSet() {
+        return fileset.createPatternSet();
     }
 
     /**
@@ -128,36 +115,34 @@ public abstract class MatchingTask extends Task {
      * @param includes the string containing the include patterns
      */
     public void setIncludes(String includes) {
-        if (includes != null && includes.length() > 0) {
-            createInclude().setName(includes);
-        }
+        fileset.setIncludes(includes);
     }
 
+    // CheckStyle:MethodNameCheck OFF - bc
     /**
      * Set this to be the items in the base directory that you want to be
-     * included. You can also specify "*" for the items (ie: items="*") 
+     * included. You can also specify "*" for the items (ie: items="*")
      * and it will include all the items in the base directory.
      *
      * @param itemString the string containing the files to include.
      */
-    public void setItems(String itemString) {
-        project.log("The items attribute is deprecated. " +
-                    "Please use the includes attribute.",
-                    Project.MSG_WARN);
-        if (itemString == null || itemString.equals("*") 
-				               || itemString.equals(".")) {
+    public void XsetItems(String itemString) {
+        log("The items attribute is deprecated. "
+            + "Please use the includes attribute.", Project.MSG_WARN);
+        if (itemString == null || "*".equals(itemString)
+            || ".".equals(itemString)) {
             createInclude().setName("**");
         } else {
             StringTokenizer tok = new StringTokenizer(itemString, ", ");
             while (tok.hasMoreTokens()) {
                 String pattern = tok.nextToken().trim();
                 if (pattern.length() > 0) {
-                    createInclude().setName(pattern+"/**");
+                    createInclude().setName(pattern + "/**");
                 }
             }
         }
     }
-    
+
     /**
      * Sets the set of exclude patterns. Patterns may be separated by a comma
      * or a space.
@@ -165,78 +150,322 @@ public abstract class MatchingTask extends Task {
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes(String excludes) {
-        if (excludes != null && excludes.length() > 0) {
-            createExclude().setName(excludes);
-        }
+        fileset.setExcludes(excludes);
     }
 
     /**
-     * List of filenames and directory names to not include. They should be 
+     * List of filenames and directory names to not include. They should be
      * either , or " " (space) separated. The ignored files will be logged.
      *
      * @param ignoreString the string containing the files to ignore.
      */
-    public void setIgnore(String ignoreString) {
-        project.log("The ignore attribute is deprecated." + 
-                    "Please use the excludes attribute.",
-                    Project.MSG_WARN);
-        if (ignoreString != null && ignoreString.length() > 0) {
-            Vector tmpExcludes = new Vector();
-            StringTokenizer tok = new StringTokenizer(ignoreString, ", ", false);
+    public void XsetIgnore(String ignoreString) {
+        log("The ignore attribute is deprecated."
+            + "Please use the excludes attribute.", Project.MSG_WARN);
+        if (!(ignoreString == null || ignoreString.isEmpty())) {
+            StringTokenizer tok = new StringTokenizer(ignoreString, ", ",
+                                                      false);
             while (tok.hasMoreTokens()) {
-                createExclude().setName("**/"+tok.nextToken().trim()+"/**");
+                createExclude().setName("**/" + tok.nextToken().trim() + "/**");
             }
         }
     }
-    
+
+    // CheckStyle:VisibilityModifier ON
+
     /**
      * Sets whether default exclusions should be used or not.
      *
-     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
      *                           should be used, "false"|"off"|"no" when they
      *                           shouldn't be used.
      */
-    public void setDefaultexcludes(String useDefaultExcludes) {
-        this.useDefaultExcludes = Project.toBoolean(useDefaultExcludes);
+    public void setDefaultexcludes(boolean useDefaultExcludes) {
+        fileset.setDefaultexcludes(useDefaultExcludes);
     }
-    
-    /**
-     * Convert a vector of NameEntry elements into an array of Strings.
-     */
-    private String[] makeArray(Vector list) {
-        if (list.size() == 0) return null;
 
-        Vector tmpNames = new Vector();
-        for (Enumeration e = list.elements() ; e.hasMoreElements() ;) {
-            String includes = ((NameEntry)e.nextElement()).getName();
-            if (includes == null) continue;
-            StringTokenizer tok = new StringTokenizer(includes, ", ", false);
-            while (tok.hasMoreTokens()) {
-                String pattern = tok.nextToken().trim();
-                if (pattern.length() > 0) {
-                    tmpNames.addElement(pattern);
-                }
-            }
-        }
-
-        String result[] = new String[tmpNames.size()];
-        for (int i = 0; i < tmpNames.size(); i++) {
-            result[i] = (String)tmpNames.elementAt(i);
-        }
-
-        return result;
-    }
-        
     /**
      * Returns the directory scanner needed to access the files to process.
+     * @param baseDir the base directory to use with the fileset
+     * @return a directory scanner
      */
     protected DirectoryScanner getDirectoryScanner(File baseDir) {
-        DirectoryScanner ds = new DirectoryScanner();
-        ds.setBasedir(baseDir);
-        ds.setIncludes(makeArray(includeList));
-        ds.setExcludes(makeArray(excludeList));
-        if (useDefaultExcludes) ds.addDefaultExcludes();
-        ds.scan();
-        return ds;
+        fileset.setDir(baseDir);
+        return fileset.getDirectoryScanner(getProject());
+    }
+
+    /**
+     * Sets the name of the file containing the includes patterns.
+     *
+     * @param includesfile A string containing the filename to fetch
+     * the include patterns from.
+     */
+    public void setIncludesfile(File includesfile) {
+        fileset.setIncludesfile(includesfile);
+    }
+
+    /**
+     * Sets the name of the file containing the includes patterns.
+     *
+     * @param excludesfile A string containing the filename to fetch
+     * the include patterns from.
+     */
+    public void setExcludesfile(File excludesfile) {
+        fileset.setExcludesfile(excludesfile);
+    }
+
+    /**
+     * Sets case sensitivity of the file system
+     *
+     * @param isCaseSensitive "true"|"on"|"yes" if file system is case
+     *                           sensitive, "false"|"off"|"no" when not.
+     */
+    public void setCaseSensitive(boolean isCaseSensitive) {
+        fileset.setCaseSensitive(isCaseSensitive);
+    }
+
+    /**
+     * Sets whether or not symbolic links should be followed.
+     *
+     * @param followSymlinks whether or not symbolic links should be followed
+     */
+    public void setFollowSymlinks(boolean followSymlinks) {
+        fileset.setFollowSymlinks(followSymlinks);
+    }
+
+    /**
+     * Indicates whether there are any selectors here.
+     *
+     * @return whether any selectors are in this container
+     */
+    @Override
+    public boolean hasSelectors() {
+        return fileset.hasSelectors();
+    }
+
+    /**
+     * Gives the count of the number of selectors in this container
+     *
+     * @return the number of selectors in this container
+     */
+    @Override
+    public int selectorCount() {
+        return fileset.selectorCount();
+    }
+
+    /**
+     * Returns the set of selectors as an array.
+     * @param p the current project
+     * @return an array of selectors in this container
+     */
+    @Override
+    public FileSelector[] getSelectors(Project p) {
+        return fileset.getSelectors(p);
+    }
+
+    /**
+     * Returns an enumerator for accessing the set of selectors.
+     *
+     * @return an enumerator that goes through each of the selectors
+     */
+    @Override
+    public Enumeration<FileSelector> selectorElements() {
+        return fileset.selectorElements();
+    }
+
+    /**
+     * Add a new selector into this container.
+     *
+     * @param selector the new selector to add
+     */
+    @Override
+    public void appendSelector(FileSelector selector) {
+        fileset.appendSelector(selector);
+    }
+
+    /* Methods below all add specific selectors */
+
+    /**
+     * add a "Select" selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addSelector(SelectSelector selector) {
+        fileset.addSelector(selector);
+    }
+
+    /**
+     * add an "And" selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addAnd(AndSelector selector) {
+        fileset.addAnd(selector);
+    }
+
+    /**
+     * add an "Or" selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addOr(OrSelector selector) {
+        fileset.addOr(selector);
+    }
+
+    /**
+     * add a "Not" selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addNot(NotSelector selector) {
+        fileset.addNot(selector);
+    }
+
+    /**
+     * add a "None" selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addNone(NoneSelector selector) {
+        fileset.addNone(selector);
+    }
+
+    /**
+     * add a majority selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addMajority(MajoritySelector selector) {
+        fileset.addMajority(selector);
+    }
+
+    /**
+     * add a selector date entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addDate(DateSelector selector) {
+        fileset.addDate(selector);
+    }
+
+    /**
+     * add a selector size entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addSize(SizeSelector selector) {
+        fileset.addSize(selector);
+    }
+
+    /**
+     * add a selector filename entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addFilename(FilenameSelector selector) {
+        fileset.addFilename(selector);
+    }
+
+    /**
+     * add an extended selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addCustom(ExtendSelector selector) {
+        fileset.addCustom(selector);
+    }
+
+    /**
+     * add a contains selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addContains(ContainsSelector selector) {
+        fileset.addContains(selector);
+    }
+
+    /**
+     * add a present selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addPresent(PresentSelector selector) {
+        fileset.addPresent(selector);
+    }
+
+    /**
+     * add a depth selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addDepth(DepthSelector selector) {
+        fileset.addDepth(selector);
+    }
+
+    /**
+     * add a depends selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addDepend(DependSelector selector) {
+        fileset.addDepend(selector);
+    }
+
+    /**
+     * add a regular expression selector entry on the selector list
+     * @param selector the selector to add
+     */
+    @Override
+    public void addContainsRegexp(ContainsRegexpSelector selector) {
+        fileset.addContainsRegexp(selector);
+    }
+
+    /**
+     * add a type selector entry on the type list
+     * @param selector the selector to add
+     * @since ant 1.6
+     */
+    @Override
+    public void addDifferent(DifferentSelector selector) {
+        fileset.addDifferent(selector);
+    }
+
+    /**
+     * add a type selector entry on the type list
+     * @param selector the selector to add
+     * @since ant 1.6
+     */
+    @Override
+    public void addType(TypeSelector selector) {
+        fileset.addType(selector);
+    }
+
+    /**
+     * add the modified selector
+     * @param selector the selector to add
+     * @since ant 1.6
+     */
+    @Override
+    public void addModified(ModifiedSelector selector) {
+        fileset.addModified(selector);
+    }
+
+    /**
+     * add an arbitrary selector
+     * @param selector the selector to add
+     * @since Ant 1.6
+     */
+    @Override
+    public void add(FileSelector selector) {
+        fileset.add(selector);
+    }
+
+    /**
+     * Accessor for the implicit fileset.
+     * @return the implicit fileset
+     * @since Ant 1.5.2
+     */
+    protected final FileSet getImplicitFileSet() {
+        return fileset;
     }
 }

@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <import file="../propertyhelpers.xml" as="ph"/>
+
+  <target name="tearDown" depends="antunit-base.tearDown">
+    <delete dir="foo"/>
+  </target>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <echo file="${output}/text.txt"><![CDATA[
+Hello, world!
+]]></echo>
+  </target>
+
+  <target name="testRCSupport" depends="setUp">
+    <replace token="world" value="Ant">
+      <file file="${output}/text.txt"/>
+    </replace>
+    <au:assertResourceContains
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
+  <target name="testNestedElementsOfFilter" depends="setUp">
+    <replace>
+      <file file="${output}/text.txt"/>
+      <replacefilter>
+        <replacetoken>world</replacetoken>
+        <replacevalue>Ant</replacevalue>
+      </replacefilter>
+    </replace>
+    <au:assertResourceContains
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
+  <target name="testNoPropertyExpansion" depends="setUp">
+    <property name="ant" value="Ant"/>
+    <replace>
+      <file file="${output}/text.txt"/>
+      <replacetoken>world</replacetoken>
+      <replacevalue>${ant}</replacevalue>
+    </replace>
+    <au:assertResourceDoesntContain
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
+  <target name="testPropertyExpansion" depends="setUp">
+    <property name="ant" value="Ant"/>
+    <replace>
+      <file file="${output}/text.txt"/>
+      <replacetoken>world</replacetoken>
+      <replacevalue expandproperties="true">${ant}</replacevalue>
+    </replace>
+    <au:assertResourceContains
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
+  <target name="testNoReplace" depends="setUp">
+    <replace token="ant" value="ant" summary="true">
+      <file file="${output}/text.txt"/>
+    </replace>
+    <au:assertLogContains text="Replaced 0 occurrences in 0 files."/>
+  </target>
+
+  <target name="testFailOnNoReplace" depends="setUp">
+    <au:expectfailure expectedMessage="didn't replace anything">
+      <replace token="ant" value="ant" failOnNoReplacements="true">
+        <file file="${output}/text.txt"/>
+      </replace>
+    </au:expectfailure>
+  </target>
+
+  <target name="testPropertyFilterResource" depends="setUp,ph.defineHelpers">
+    <mkdir dir="foo"/>
+    <echo file="foo/foo.properties"><![CDATA[
+world=Ant
+]]></echo>
+    <replace replacefilterresource="${java:foo!foo.properties}">
+      <file file="${output}/text.txt"/>
+    </replace>
+    <au:assertResourceContains
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
+  <target name="testLongestFilterWins" depends="setUp,ph.defineHelpers">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/filter.properties"><![CDATA[
+a=1
+ab=2
+abc=3
+abcd=4
+abcde=5
+abcdef=6
+abcdefg=7
+abcdefgh=8
+abcdefghi=9
+abcdefghij=10
+abcdefghijk=11
+abcdefghijkl=12
+abcdefghijklm=13
+abcdefghijklmn=14
+abcdefghijklmno=15
+abcdefghijklmnop=16
+abcdefghijklmnopq=17
+abcdefghijklmnopqr=18
+abcdefghijklmnopqrs=19
+abcdefghijklmnopqrst=20
+abcdefghijklmnopqrstu=21
+abcdefghijklmnopqrstuv=22
+abcdefghijklmnopqrstuvw=23
+abcdefghijklmnopqrstuvwx=24
+abcdefghijklmnopqrstuvwxy=25
+abcdefghijklmnopqrstuvwxyz=26
+A=27
+AB=28
+ABC=29
+ABCD=30
+ABCDE=31
+ABCDEF=32
+ABCDEFG=33
+ABCDEFGH=34
+ABCDEFGHI=35
+ABCDEFGHIJ=36
+ABCDEFGHIJK=37
+ABCDEFGHIJKL=38
+ABCDEFGHIJKLM=39
+ABCDEFGHIJKLMN=40
+ABCDEFGHIJKLMNO=41
+ABCDEFGHIJKLMNOP=42
+ABCDEFGHIJKLMNOPQ=43
+ABCDEFGHIJKLMNOPQR=44
+ABCDEFGHIJKLMNOPQRS=45
+ABCDEFGHIJKLMNOPQRST=46
+ABCDEFGHIJKLMNOPQRSTU=47
+ABCDEFGHIJKLMNOPQRSTUV=48
+ABCDEFGHIJKLMNOPQRSTUVW=49
+ABCDEFGHIJKLMNOPQRSTUVWX=50
+ABCDEFGHIJKLMNOPQRSTUVWXY=51
+ABCDEFGHIJKLMNOPQRSTUVWXYZ=52
+    ]]></echo>
+    <echo file="${output}/text.txt"><![CDATA[
+a
+ab
+abc
+abcd
+abcde
+abcdef
+abcdefg
+abcdefgh
+abcdefghi
+abcdefghij
+abcdefghijk
+abcdefghijkl
+abcdefghijklm
+abcdefghijklmn
+abcdefghijklmno
+abcdefghijklmnop
+abcdefghijklmnopq
+abcdefghijklmnopqr
+abcdefghijklmnopqrs
+abcdefghijklmnopqrst
+abcdefghijklmnopqrstu
+abcdefghijklmnopqrstuv
+abcdefghijklmnopqrstuvw
+abcdefghijklmnopqrstuvwx
+abcdefghijklmnopqrstuvwxy
+abcdefghijklmnopqrstuvwxyz
+A
+AB
+ABC
+ABCD
+ABCDE
+ABCDEF
+ABCDEFG
+ABCDEFGH
+ABCDEFGHI
+ABCDEFGHIJ
+ABCDEFGHIJK
+ABCDEFGHIJKL
+ABCDEFGHIJKLM
+ABCDEFGHIJKLMN
+ABCDEFGHIJKLMNO
+ABCDEFGHIJKLMNOP
+ABCDEFGHIJKLMNOPQ
+ABCDEFGHIJKLMNOPQR
+ABCDEFGHIJKLMNOPQRS
+ABCDEFGHIJKLMNOPQRST
+ABCDEFGHIJKLMNOPQRSTU
+ABCDEFGHIJKLMNOPQRSTUV
+ABCDEFGHIJKLMNOPQRSTUVW
+ABCDEFGHIJKLMNOPQRSTUVWX
+ABCDEFGHIJKLMNOPQRSTUVWXY
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    ]]></echo>
+    <echo file="${output}/expected.txt"><![CDATA[
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+    ]]></echo>
+    <replace replacefilterresource="${input}/filter.properties">
+      <file file="${output}/text.txt"/>
+    </replace>
+    <au:assertFilesMatch expected="${output}/expected.txt"
+                         actual="${output}/text.txt"/>
+  </target>
+
+</project>

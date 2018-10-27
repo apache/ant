@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="exec-test" default="spawn" basedir=".">
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+     <!-- this property can be overriden programatically in the Java test case -->
+    <property name="timeToWait" value="10"/>
+    <!-- this property can be overriden programatically in the Java test case -->
+    <property name="logFile" value="${output}/spawn.log"/>
+    <property environment="env"/>
+    <!-- UNIX -->
+    <available file="sh" filepath="${env.PATH}" property="sh.executable"/>
+    <!-- CYGWIN -->
+    <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable"/>
+    <!-- WINDOWS + CYGWIN -->
+    <available file="sh.exe" filepath="${env.Path}" property="sh.exe.executable"/>
+    <condition property="test.can.run">
+      <or>
+        <isset property="sh.executable"/>
+        <isset property="sh.exe.executable"/>
+      </or>
+    </condition>
+  </target>
+
+  <target name="spawn" depends="setUp" if="test.can.run">
+    <exec executable="sh" spawn="true">
+      <arg value="spawn.sh"/>
+      <arg value="${timeToWait}"/>
+      <arg value="${logFile}"/>
+    </exec>
+  </target>
+
+  <target name="test-out-and-err" description="see https://issues.apache.org/bugzilla/show_bug.cgi?id=50507"
+          depends="setUp" if="test.can.run">
+    <mkdir dir="${output}"/>
+    <ant antfile="blabla.xml" output="${output}/test-out-and-err.txt">
+    </ant>
+    <loadfile srcfile="${output}/test-out-and-err.txt" property="test-out-and-err">
+      <filterchain>
+        <replaceregex pattern="^\s*\[exec\] some blablablablablablablablablablablabla error message err$" flags="m"/>
+        <replaceregex pattern="^\s*\[exec\] some blablablablablablablablablablablabla info message out$" flags="m"/>
+      </filterchain>
+    </loadfile>
+    <fail message="output indicates a mixup of out and err: '${test-out-and-err}'">
+      <condition>
+        <contains string="${test-out-and-err}" substring="[exec]"/>
+      </condition>
+    </fail>
+
+  </target>
+
+</project>

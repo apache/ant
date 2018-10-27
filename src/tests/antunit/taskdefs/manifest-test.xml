@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <property name="file" location="${output}/test.mf"/>
+  </target>
+
+  <target name="test8IsAllowed"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=45675"
+          depends="setUp">
+    <manifest file="${file}">
+      <attribute name="attrib8" value="test attribute"/>
+    </manifest>
+  </target>
+
+  <target name="testMergeOverrides" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="foo" value="value1"/>
+      <attribute name="bar" value="value1"/>
+      <section name="bar">
+        <attribute name="foo" value="value2"/>
+      </section>
+    </manifest>
+    <manifest file="${file}" mode="update">
+      <attribute name="foo" value="value3"/>
+      <section name="bar">
+        <attribute name="foo" value="value5"/>
+      </section>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="foo: value3&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="bar: value1&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="foo: value5&#13;&#10;"/>
+    <au:assertResourceDoesntContain
+       resource="${file}"
+       value="foo: value1&#13;&#10;"/>
+    <au:assertResourceDoesntContain
+       resource="${file}"
+       value="foo: value2&#13;&#10;"/>
+  </target>
+
+  <target name="testMergeOverridesClassPath" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="Class-Path" value="foo"/>
+    </manifest>
+    <manifest file="${file}" mode="update">
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: bar&#13;&#10;"/>
+    <au:assertResourceDoesntContain
+       resource="${file}"
+       value="Class-Path: foo&#13;&#10;"/>
+  </target>
+
+  <target name="testMultipleClassPathAttributes" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="Class-Path" value="foo"/>
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: foo&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: bar&#13;&#10;"/>
+  </target>
+
+  <target name="testMergeClassPathAttributes" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="Class-Path" value="foo"/>
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <manifest file="${file}" mergeClassPathAttributes="true" mode="update">
+      <attribute name="Class-Path" value="baz"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: foo&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: bar&#13;&#10;"/>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: baz&#13;&#10;"/>
+  </target>
+
+  <target name="testFlattenMultipleClassPathAttributes" depends="setUp">
+    <manifest file="${file}" flattenAttributes="true">
+      <attribute name="Class-Path" value="foo"/>
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: foo bar&#13;&#10;"/>
+  </target>
+
+  <target name="testMergeAndFlattenClassPathAttributes" depends="setUp">
+    <manifest file="${file}">
+      <attribute name="Class-Path" value="foo"/>
+      <attribute name="Class-Path" value="bar"/>
+    </manifest>
+    <manifest file="${file}"
+              mergeClassPathAttributes="true"
+              flattenAttributes="true"
+              mode="update">
+      <attribute name="Class-Path" value="baz"/>
+    </manifest>
+    <au:assertResourceContains
+       resource="${file}"
+       value="Class-Path: baz foo bar&#13;&#10;"/>
+  </target>
+
+  <target name="-prepareJava5JarTest" depends="setUp">
+    <mkdir dir="${output}/bin"/>
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/AntFail.java"><![CDATA[
+package org.example;
+
+public class AntFail {
+    public static
+        void main(String[] args) {
+            System.out.println(System.getProperty("java.version"));
+        }
+    }
+]]></echo>
+    <javac srcdir="${input}" destdir="${output}/bin" includeantruntime="no" />
+  </target>
+
+  <target name="testJava5JarProblemManifestInSeparateTask"
+          depends="-prepareJava5JarTest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54762">
+    <manifest file="${output}/MANIFEST.MF">
+      <attribute name="Main-Class" value="org.example.AntFail" />
+    </manifest>
+    
+    <jar manifest="${output}/MANIFEST.MF" destfile="${output}/antfail.jar"
+         basedir="${output}/bin" />
+    <java jar="${output}/antfail.jar" fork="true" failonerror="true"/>
+  </target>
+
+  <target name="testJava5JarProblemManifestAsNestedElement"
+          depends="-prepareJava5JarTest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54762">
+
+    <jar destfile="${output}/antfail.jar"
+         basedir="${output}/bin">
+      <manifest>
+        <attribute name="Main-Class" value="org.example.AntFail" />
+      </manifest>
+    </jar>
+    <java jar="${output}/antfail.jar" fork="true" failonerror="true"/>
+  </target>
+</project>

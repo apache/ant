@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="resourcecontains-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../../antunit-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <property name="file" location="${output}/test-resource.txt"/>
+    <echo file="${file}" message="loads of text!"/>
+  </target>
+
+  <target name="testcontains">
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains resource="${file}" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testContainsLowerNonCS">
+    <echo file="${file}" message="LOADS OF TEXT!"/>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains resource="${file}" substring="text"
+                        casesensitive="false"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testContainsUpperNonCS">
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains resource="${file}" substring="TEXT"
+                        casesensitive="false"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testContainsEmptyString">
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains resource="${file}" substring="" />
+    </au:assertTrue>
+  </target>
+
+  <target name="testContainsEmptyProperty">
+    <property name="testContainsEmptyProperty" value="" />
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains resource="${file}"
+                        substring="${testContainsEmptyProperty}" />
+    </au:assertTrue>
+  </target>
+
+  <target name="testwithemptyfile">
+    <truncate file="${file}"/>
+    <au:assertFalse message="Should have found nothing as file is empty">
+      <resourcecontains resource="${file}" substring="text"/>
+    </au:assertFalse>
+  </target>
+
+  <target name="testWithEmptyFileAndSubstring">
+    <truncate file="${file}"/>
+    <au:assertTrue message="Empty resource should contain empty string">
+      <resourcecontains resource="${file}" substring=""/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testdoesntcontain">
+    <au:assertFalse message="Should have found nothing as file is empty">
+      <resourcecontains resource="${file}" substring="futurama"/>
+    </au:assertFalse>
+  </target>
+
+  <target name="testFileRefContains">
+    <file id="file" file="${file}" />
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="file" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testStringRefContains">
+    <string id="string">loads of text!</string>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="string" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testTextConcatRefContains">
+    <resources id="concat">
+      <concat>loads of text!</concat>
+    </resources>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="concat" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFileConcatRefContains">
+    <resources id="concat">
+      <concat><file file="${file}" /></concat>
+    </resources>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="concat" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testMultiConcatRefContains">
+    <resources id="concat">
+      <concat>
+        <header>HEADER</header>
+        <footer>FOOTER</footer>
+        <string>foo</string>
+        <file file="${file}" />
+        <string>bar</string>
+      </concat>
+    </resources>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="concat" substring="text"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFirstRefContains">
+    <first id="first">
+      <fileset dir="${basedir}" includes="*-test.xml" />
+    </first>
+    <au:assertTrue message="Should have found the text in the resource">
+      <resourcecontains refid="first" substring="project"/>
+    </au:assertTrue>
+  </target>
+
+</project>

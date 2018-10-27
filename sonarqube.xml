@@ -1,0 +1,26 @@
+<project default="sonar" basedir=".">
+
+  <!-- gets overridden by the jenkins job -->
+  <property name="sonar.host.url" value="http://localhost:9000" />
+
+  <!-- source SonarQube project properties -->
+  <property file="sonar-project.properties"/>
+
+  <property name="downloads" location="build/downloads"/>
+  <property name="sonarqube-ant-task-jar" location="${downloads}/sonarqube-ant-task.jar"/>
+  <property name="sonarqube-ant-task-url"
+            value="https://sonarsource.bintray.com/Distribution/sonarqube-ant-task/sonarqube-ant-task-2.5.jar"/>
+
+  <target name="download">
+    <mkdir dir="${downloads}"/>
+    <get dest="${sonarqube-ant-task-jar}" src="${sonarqube-ant-task-url}"/>
+  </target>
+
+  <target name="sonar" depends="download">
+    <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
+        <classpath path="${sonarqube-ant-task-jar}" />
+    </taskdef>
+
+    <sonar:sonar xmlns:sonar="antlib:org.sonar.ant"/>
+  </target>
+</project>

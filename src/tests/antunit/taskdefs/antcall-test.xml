@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="checkB">
+    <au:assertPropertyEquals name="b" value="${expected}"/>
+  </target>
+
+  <target name="testLastParamWins">
+    <antcall target="checkB">
+      <param name="b" value="1"/>
+      <param name="b" value="2"/>
+      <param name="expected" value="2"/>
+    </antcall>
+  </target>
+
+  <target name="makePropertiesFile">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/ant.properties"><![CDATA[
+a=2
+b=$${a}
+]]></echo>
+  </target>
+
+  <target name="testPropertiesLoadedFromFile" depends="makePropertiesFile">
+    <antcall target="checkB">
+      <param name="expected" value="2"/>
+      <param file="${input}/ant.properties"/>
+    </antcall>
+  </target>
+
+  <target name="testFileSeesExternalProperty" depends="makePropertiesFile">
+    <property name="a" value="x"/>
+    <antcall target="checkB">
+      <param name="expected" value="x"/>
+      <param file="${input}/ant.properties"/>
+    </antcall>
+  </target>
+
+  <target name="testFileSeesInternalParam" depends="makePropertiesFile">
+    <antcall target="checkB">
+      <param name="a" value="y"/>
+      <param name="expected" value="y"/>
+      <param file="${input}/ant.properties"/>
+    </antcall>
+  </target>
+</project>

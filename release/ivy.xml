@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<ivy-module version="2.0" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation=
+	    "http://ant.apache.org/ivy/schemas/ivy.xsd">
+  <info organisation="org/apache"
+        module="ant" revision="1.10.2"/>
+  <publications xmlns:e="urn:ant.apache.org:ivy-extras">  
+    <artifact name="ant-parent" type="pom" ext="pom"/>
+    <artifact name="ant-parent" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant" type="pom" ext="pom"/>
+    <artifact name="ant" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant" type="jar" ext="jar"/>
+    <artifact name="ant" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant" type="javadoc" ext="jar" e:classifier="javadoc" />
+    <artifact name="ant" type="javadoc.asc" ext="jar.asc" e:classifier="javadoc" />
+    <artifact name="ant-antlr" type="pom" ext="pom"/>
+    <artifact name="ant-antlr" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-antlr" type="jar" ext="jar"/>
+    <artifact name="ant-antlr" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-antlr" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-antlr" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-apache-bcel" type="pom" ext="pom"/>
+    <artifact name="ant-apache-bcel" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-apache-bcel" type="jar" ext="jar"/>
+    <artifact name="ant-apache-bcel" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-apache-bcel" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-apache-bcel" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-apache-bsf" type="pom" ext="pom"/>
+    <artifact name="ant-apache-bsf" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-apache-bsf" type="jar" ext="jar"/>
+    <artifact name="ant-apache-bsf" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-apache-bsf" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-apache-bsf" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-apache-log4j" type="pom" ext="pom"/>
+    <artifact name="ant-apache-log4j" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-apache-log4j" type="jar" ext="jar"/>
+    <artifact name="ant-apache-log4j" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-apache-log4j" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-apache-log4j" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-apache-oro" type="pom" ext="pom"/>
+    <artifact name="ant-apache-oro" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-apache-oro" type="jar" ext="jar"/>
+    <artifact name="ant-apache-oro" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-apache-oro" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-apache-oro" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-apache-regexp" type="pom" ext="pom"/>
+    <artifact name="ant-apache-regexp" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-apache-regexp" type="jar" ext="jar"/>
+    <artifact name="ant-apache-regexp" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-apache-regexp" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-apache-regexp" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-apache-resolver" type="pom" ext="pom"/>
+    <artifact name="ant-apache-resolver" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-apache-resolver" type="jar" ext="jar"/>
+    <artifact name="ant-apache-resolver" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-apache-resolver" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-apache-resolver" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-apache-xalan2" type="pom" ext="pom"/>
+    <artifact name="ant-apache-xalan2" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-apache-xalan2" type="jar" ext="jar"/>
+    <artifact name="ant-apache-xalan2" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-apache-xalan2" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-apache-xalan2" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-commons-logging" type="pom" ext="pom"/>
+    <artifact name="ant-commons-logging" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-commons-logging" type="jar" ext="jar"/>
+    <artifact name="ant-commons-logging" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-commons-logging" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-commons-logging" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-commons-net" type="pom" ext="pom"/>
+    <artifact name="ant-commons-net" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-commons-net" type="jar" ext="jar"/>
+    <artifact name="ant-commons-net" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-commons-net" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-commons-net" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-jai" type="pom" ext="pom"/>
+    <artifact name="ant-jai" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-jai" type="jar" ext="jar"/>
+    <artifact name="ant-jai" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-jai" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-jai" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-javamail" type="pom" ext="pom"/>
+    <artifact name="ant-javamail" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-javamail" type="jar" ext="jar"/>
+    <artifact name="ant-javamail" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-javamail" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-javamail" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-jdepend" type="pom" ext="pom"/>
+    <artifact name="ant-jdepend" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-jdepend" type="jar" ext="jar"/>
+    <artifact name="ant-jdepend" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-jdepend" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-jdepend" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-jmf" type="pom" ext="pom"/>
+    <artifact name="ant-jmf" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-jmf" type="jar" ext="jar"/>
+    <artifact name="ant-jmf" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-jmf" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-jmf" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-jsch" type="pom" ext="pom"/>
+    <artifact name="ant-jsch" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-jsch" type="jar" ext="jar"/>
+    <artifact name="ant-jsch" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-jsch" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-jsch" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-junit" type="pom" ext="pom"/>
+    <artifact name="ant-junit" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-junit" type="jar" ext="jar"/>
+    <artifact name="ant-junit" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-junit" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-junit" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-junit4" type="pom" ext="pom"/>
+    <artifact name="ant-junit4" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-junit4" type="jar" ext="jar"/>
+    <artifact name="ant-junit4" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-junit4" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-junit4" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-launcher" type="pom" ext="pom"/>
+    <artifact name="ant-launcher" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-launcher" type="jar" ext="jar"/>
+    <artifact name="ant-launcher" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-launcher" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-launcher" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-netrexx" type="pom" ext="pom"/>
+    <artifact name="ant-netrexx" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-netrexx" type="jar" ext="jar"/>
+    <artifact name="ant-netrexx" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-netrexx" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-netrexx" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-swing" type="pom" ext="pom"/>
+    <artifact name="ant-swing" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-swing" type="jar" ext="jar"/>
+    <artifact name="ant-swing" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-swing" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-swing" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-testutil" type="pom" ext="pom"/>
+    <artifact name="ant-testutil" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-testutil" type="jar" ext="jar"/>
+    <artifact name="ant-testutil" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-testutil" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-testutil" type="source.asc" ext="jar.asc" e:classifier="sources" />
+    <artifact name="ant-xz" type="pom" ext="pom"/>
+    <artifact name="ant-xz" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-xz" type="jar" ext="jar"/>
+    <artifact name="ant-xz" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-xz" type="source" ext="jar" e:classifier="sources" />
+    <artifact name="ant-xz" type="source.asc" ext="jar.asc" e:classifier="sources" />
+  </publications>
+  <dependencies/> 
+</ivy-module>

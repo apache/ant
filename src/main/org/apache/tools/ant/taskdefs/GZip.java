@@ -1,120 +1,66 @@
 /*
- * The Apache Software License, Version 1.1
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
- * reserved.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
- *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
- *    permission, please contact apache@apache.org.
- *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
  */
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.zip.GZIPOutputStream;
 
-import java.io.*;
-import java.util.zip.*;
+import org.apache.tools.ant.BuildException;
 
 /**
- * Compresses a file with the GZIP algorightm. Normally used to compress
+ * Compresses a file with the GZIP algorithm. Normally used to compress
  * non-compressed archives such as TAR files.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
+ * @since Ant 1.1
+ *
+ * @ant.task category="packaging"
  */
- 
-public class GZip extends Task {
 
-    private File zipFile;
-    private File source;
-    
-    public void setZipfile(String zipFilename) {
-        zipFile = project.resolveFile(zipFilename);
-    }
-
-    public void setSrc(String src) {
-        source = project.resolveFile(src);
-    }
-
-    public void execute() throws BuildException {
-        project.log("Building gzip: " + zipFile.getAbsolutePath());
-    
-        try {
-            GZIPOutputStream zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
-        
-            if (source.isDirectory()) {
-                project.log ("Cannot Gzip a directory!");
-            } else {
-                zipFile(source, zOut);
-            }
-            // close up
-            zOut.close();
+public class GZip extends Pack {
+    /**
+     * perform the GZip compression operation.
+     */
+    @Override
+    protected void pack() {
+        try (GZIPOutputStream zOut =
+            new GZIPOutputStream(Files.newOutputStream(zipFile.toPath()))) {
+            zipResource(getSrcResource(), zOut);
         } catch (IOException ioe) {
             String msg = "Problem creating gzip " + ioe.getMessage();
-            throw new BuildException(msg);
+            throw new BuildException(msg, ioe, getLocation());
         }
     }
 
-    private void zipFile(InputStream in, GZIPOutputStream zOut)
-        throws IOException
-    {        
-        byte[] buffer = new byte[8 * 1024];
-        int count = 0;
-        do {
-            zOut.write(buffer, 0, count);
-            count = in.read(buffer, 0, buffer.length);
-        } while (count != -1);
-    }
-    
-    private void zipFile(File file, GZIPOutputStream zOut)
-        throws IOException
-    {
-        FileInputStream fIn = new FileInputStream(file);
-        zipFile(fIn, zOut);
-        fIn.close();
+    /**
+     * Whether this task can deal with non-file resources.
+     *
+     * <p>This implementation returns true only if this task is
+     * &lt;gzip&gt;.  Any subclass of this class that also wants to
+     * support non-file resources needs to override this method.  We
+     * need to do so for backwards compatibility reasons since we
+     * can't expect subclasses to support resources.</p>
+     * @return true if this case supports non file resources.
+     * @since Ant 1.7
+     */
+    @Override
+    protected boolean supportsNonFileResources() {
+        return getClass().equals(GZip.class);
     }
 }

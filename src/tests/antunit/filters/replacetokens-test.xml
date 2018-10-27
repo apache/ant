@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <import file="../propertyhelpers.xml" as="ph"/>
+
+  <target name="tearDown" depends="antunit-base.tearDown">
+    <delete dir="foo"/>
+  </target>
+
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/text.txt"><![CDATA[
+Hello, @world@!
+]]></echo>
+  </target>
+
+  <target name="testPropertiesResource" depends="setUp,ph.defineHelpers">
+    <mkdir dir="${output}"/>
+    <mkdir dir="foo"/>
+    <echo file="foo/foo.properties"><![CDATA[
+world=Ant
+]]></echo>
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+      <filterchain>
+        <replacetokens propertiesResource="${java:foo!foo.properties}"/>
+      </filterchain>
+    </copy>
+    <au:assertResourceContains
+       resource="${output}/text.txt" value="Hello, Ant!"/>
+  </target>
+
+  <target name="testFileEndsWithToken"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47306"
+          depends="setUp">
+    <mkdir dir="${output}"/>
+    <echo file="${input}/test47306.txt">Hello@</echo>
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+      <filterchain>
+        <replacetokens>
+          <token key="foo" value="bar"/>
+        </replacetokens>
+      </filterchain>
+    </copy>
+    <au:assertFilesMatch
+       expected="${input}/test47306.txt"
+       actual="${output}/test47306.txt"/>
+  </target>
+
+</project>

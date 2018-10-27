@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="testIndexOnlyUpdate">
+    <mkdir dir="${output}"/>
+    <property name="index.jar" location="${output}/index.jar" />
+
+    <jar destfile="${index.jar}" index="false">
+      <fileset dir="${basedir}" includes="*-test.xml" />
+    </jar>
+    <au:assertTrue>
+      <resourcecount count="0">
+        <restrict>
+          <zipentry zipfile="${index.jar}" name="META-INF/INDEX.LIST" />
+          <exists />
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+    <jar destfile="${index.jar}" index="true" update="true">
+      <fileset dir="${basedir}" includes="*-test.xml" />
+    </jar>
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict>
+          <zipentry zipfile="${index.jar}" name="META-INF/INDEX.LIST" />
+          <exists />
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testResourcesOnly"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47470">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/foo"/>
+    <touch file="${output}/bar"/>
+    <jar destfile="${output}/foo.jar">
+      <union>
+        <fileset dir="${input}"/>
+        <fileset dir="${output}" excludes="foo.jar"/>
+      </union>
+    </jar>
+    <au:assertLogDoesntContain text="skipping jar archive"/>
+  </target>
+
+  <target name="-metainf-setup">
+    <mkdir dir="${input}/services"/>
+    <touch file="${input}/services/foo"/>
+    <mkdir dir="${output}"/>
+  </target>
+
+  <target name="testIndexNoMetaInf" depends="-metainf-setup">
+    <jar index="true" destfile="${output}/test.jar">
+      <metainf dir="${input}"/>
+    </jar>
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/INDEX.LIST"/>
+    <au:assertResourceDoesntContain value="META-INF"
+                                    resource="${output}/META-INF/INDEX.LIST"/>
+  </target>
+
+  <target name="testIndexMetaInf" depends="-metainf-setup">
+    <jar index="true" destfile="${output}/test.jar" indexMetaInf="true">
+      <metainf dir="${input}"/>
+    </jar>
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/INDEX.LIST"/>
+    <au:assertResourceContains value="META-INF"
+                               resource="${output}/META-INF/INDEX.LIST"/>
+  </target>
+
+  <target name="testMergeWithoutMain"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=29731">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <jar destfile="${input}/first.jar">
+      <manifest>
+        <attribute name="First" value="Main Section"/>
+        <section name="Nested">
+          <attribute name="First" value="Nested Section"/>
+        </section>
+      </manifest>
+    </jar>
+    <jar destfile="${output}/second.jar" filesetmanifest="mergewithoutmain">
+      <manifest>
+        <attribute name="Second" value="Main Section"/>
+        <section name="Nested">
+          <attribute name="Second" value="Nested Section"/>
+        </section>
+      </manifest>
+      <zipgroupfileset dir="${input}" includes="first.jar"/>
+    </jar>
+    <unjar src="${output}/second.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="First: Nested Section"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="Second: Nested Section"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceDoesntContain
+       value="First: Main Section"
+       resource="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="Second: Main Section"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
+  <target name="testWhenManifestOnly"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43946">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <jar destfile="${output}/first.jar">
+      <fileset dir="${input}"/>
+    </jar>
+    <au:assertFileExists file="${output}/first.jar"/>
+    <au:assertLogDoesntContain text="skipping jar archive"/>
+    <jar destfile="${output}/second.jar" whenmanifestonly="create">
+      <fileset dir="${input}"/>
+    </jar>
+    <au:assertFileExists file="${output}/second.jar"/>
+    <au:assertLogDoesntContain text="skipping jar archive"/>
+    <jar destfile="${output}/third.jar" whenmanifestonly="skip">
+      <fileset dir="${input}"/>
+    </jar>
+    <au:assertFileDoesntExist file="${output}/third.jar"/>
+    <au:assertLogContains text="skipping jar archive"/>
+    <au:expectfailure>
+      <jar destfile="${output}/forth.jar" whenmanifestonly="fail">
+        <fileset dir="${input}"/>
+      </jar>
+    </au:expectfailure>
+  </target>
+
+  <target name="test-update-and-filesetmanifest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=30751">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <jar destfile="${input}/manifest.jar">
+      <manifest>
+        <attribute name="Origin" value="manifest.jar"/>
+      </manifest>
+    </jar>
+
+    <touch file="${input}/foo"/>
+    <jar destfile="${output}/test.jar">
+      <fileset dir="${input}" excludes="*.jar"/>
+      <manifest>
+        <attribute name="Second-Origin" value="test.jar"/>
+      </manifest>
+    </jar>
+
+    <touch file="${input}/bar"/>
+    <jar destfile="${output}/test.jar" update="true" filesetmanifest="merge">
+      <fileset dir="${input}" excludes="*.jar"/>
+      <zipgroupfileset dir="${input}" includes="*.jar"/>
+    </jar>
+
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/foo"/>
+    <au:assertFileExists file="${output}/bar"/>
+    <au:assertResourceContains value="Origin: manifest.jar"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="Second-Origin: test.jar"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
+  <target name="testDuplicateFail">
+    <mkdir dir="${input}/1"/>
+    <mkdir dir="${input}/2"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/1/a.txt"/>
+    <touch file="${input}/2/a.txt"/>
+    <au:expectfailure message="Duplicate file">
+      <jar destfile="${output}/test.jar" duplicate="fail">
+        <fileset dir="${input}/1"/>
+        <fileset dir="${input}/2"/>
+      </jar>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFileSetMerge"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49090">
+    <mkdir dir="${input}/META-INF"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/META-INF/MANIFEST.MF"><![CDATA[Test: Header
+]]></echo>
+    <jar destfile="${output}/test.jar" filesetmanifest="merge">
+      <fileset dir="${input}"/>
+    </jar>
+    <unjar src="${output}/test.jar" dest="${output}"/>
+    <au:assertResourceContains value="Test: Header"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
+  <target name="testZipfilesetMerge"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49605">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/MANIFEST.MF">Manifest-Version: 1.0
+Main-Class: MyClass
+
+</echo>
+    <jar destfile="${input}/manifesttest.jar"
+         filesetmanifest="merge">
+      <zipfileset file="${input}/MANIFEST.MF" prefix="META-INF"/>
+    </jar>
+    <unjar src="${input}/manifesttest.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceContains value="Main-Class: MyClass"
+                               resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
+  <target name="testMergeWithoutMainWithoutExplicitManifest"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54171">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <jar destfile="${input}/input.jar">
+      <manifest>
+        <attribute name="Foo" value="Main Section"/>
+      </manifest>
+      <fileset dir="."/>
+    </jar>
+    <jar destfile="${input}/test.jar"
+         filesetmanifest="mergewithoutmain">
+      <zipgroupfileset dir="${input}">
+        <include name="input.jar"/>
+      </zipgroupfileset>
+    </jar>
+    <unjar src="${input}/test.jar" dest="${output}"/>
+    <au:assertFileExists file="${output}/META-INF/MANIFEST.MF"/>
+    <au:assertResourceDoesntContain
+        value="Foo: Main Section"
+        resource="${output}/META-INF/MANIFEST.MF"/>
+  </target>
+
+  <target name="multiReleaseJarPart1" description="http://openjdk.java.net/jeps/238">
+    <!-- Preparation of the 'MultiRelease-Project' -->
+    <property name="java8.src"  value="${input}/src/java"/>
+    <property name="java9.src"  value="${input}/src/java9"/>
+    <property name="java10.src" value="${input}/src/java10"/>
+    <property name="java8.classes"  value="${input}/build/classes"/>
+    <property name="java9.classes"  value="${input}/build/classes9"/>
+    <property name="java10.classes" value="${input}/build/classes10"/>
+    <macrodef name="create">
+      <attribute name="version" />
+      <sequential>
+        <local name="src"/>
+        <local name="classes"/>
+        <property name="src" value="${java@{version}.src}"/>
+        <property name="classes" value="${java@{version}.classes}"/>
+        <mkdir dir="${src}/org/apache/ant/test"/>
+        <echo file="${src}/org/apache/ant/test/MRJarTest.java">
+          package org.apache.ant.test;
+          public class MRJarTest {
+            public static final String VERSION = "Java@{version}";
+          }
+        </echo>
+        <mkdir dir="${classes}"/>
+        <javac srcdir="${src}" destdir="${classes}" debug="on" includeantruntime="false"/>
+      </sequential>
+    </macrodef>
+    <create version="8"/>
+    <create version="9"/>
+    <create version="10"/>
+    
+    <!-- Now create the MultiReleaseJar -->
+    <jar destfile="${antunit.tmpdir}/mrjar.jar">
+      <manifest>
+        <!-- special mf-entry according to the spec -->
+        <attribute name="Multi-Release" value="true"/>
+      </manifest>
+      <!-- directory structure according to the spec ... -->
+      <!-- ... default classes loadable by old (<Java9) versions -->
+      <fileset dir="${java8.classes}"/>
+      <!-- ... per release classes, require Java9+ for loadable via standard ClassLoader -->
+      <zipfileset prefix="META-INF/versions/9/" dir="${java9.classes}"/>
+      <zipfileset prefix="META-INF/versions/10/" dir="${java10.classes}"/>
+    </jar>
+    
+    <!-- Now some tests -->
+    <au:assertNestedResourceExists>
+      <zipentry zipfile="${antunit.tmpdir}/mrjar.jar" name="META-INF/versions/9/org/apache/ant/test/MRJarTest.class"/>
+    </au:assertNestedResourceExists>
+    <au:assertNestedResourceExists>
+      <zipentry zipfile="${antunit.tmpdir}/mrjar.jar" name="META-INF/versions/10/org/apache/ant/test/MRJarTest.class"/>
+    </au:assertNestedResourceExists>
+  </target>
+
+  <target name="testMultiReleaseJar" depends="multiReleaseJarPart1"
+          unless="build.sysclasspath.only"
+          description="most of the tests happen in , this target contains the part that cannot be tested insid Gump">
+    <loadresource property="valueFrom8">
+      <javaconstant name="org.apache.ant.test.MRJarTest.VERSION">
+        <classpath>
+          <pathelement location="${antunit.tmpdir}/mrjar.jar"/>
+        </classpath>
+      </javaconstant>
+    </loadresource>
+    <au:assertTrue>
+      <or>
+    	<equals arg1="Java8" arg2="${valueFrom8}"/>
+        <!-- maybe we are running on an early version of Java9 -->
+    	<equals arg1="Java9" arg2="${valueFrom8}"/>
+      </or>
+    </au:assertTrue>
+  </target>
+
+</project>

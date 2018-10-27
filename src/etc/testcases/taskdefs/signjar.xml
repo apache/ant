@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="signjartest" default="help" basedir="..">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+    <property name="subdir" location="${output}/subdir" />
+    <property name="classes.dir" value="../../../build/classes"/>
+    <property name="test.jar" location="${output}/signtest.jar" />
+    <property name="subdirtest.jar" location="${subdir}/signtest.jar" />
+
+  </target>
+
+
+  <macrodef name="assertSigned">
+    <attribute name="jar" default="${test.jar}" />
+    <sequential>
+      <fail message="not signed: @{jar}" >
+        <condition>
+          <not><issigned file="@{jar}" /></not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <presetdef name="sign-base">
+    <signjar alias="testonly" keystore="testkeystore"
+           storepass="apacheant"/>
+  </presetdef>
+
+  <presetdef name="verify-base">
+    <verifyjar keystore="testkeystore"
+           storepass="apacheant"/>
+  </presetdef>
+
+  <presetdef name="sign">
+    <sign-base jar="${test.jar}" />
+  </presetdef>
+
+  <target name="jar" depends="setUp">
+    <jar jarfile="${test.jar}" basedir="${classes.dir}" includes="**/Task.class"/>
+  </target>
+
+  <target name="help">
+    <echo>This build is for use with Ant's test cases</echo>
+  </target>
+
+  <target name="basic" depends="jar">
+    <sign />
+    <assertSigned/>
+  </target>
+
+  <target name="sigfile" depends="jar">
+    <sign sigfile="TEST"/>
+    <assertSigned/>
+  </target>
+
+  <target name="invalidchars" depends="jar">
+    <sign alias="test@nly"/>
+    <assertSigned/>
+  </target>
+
+  <target name="urlKeystoreFile" depends="jar">
+    <sign keystore="file://../testkeystore"
+       maxmemory="128m"/>
+    <assertSigned/>
+  </target>
+
+  <target name="urlKeystoreHTTP" depends="jar">
+    <sign
+      keystore="http://ant.apache.org/webtest/testkeystore"
+      />
+    <assertSigned/>
+  </target>
+
+  <target name="testTsaLocalhost" depends="jar">
+    <sign tsaurl="http://localhost:0/" />
+  </target>
+
+</project>

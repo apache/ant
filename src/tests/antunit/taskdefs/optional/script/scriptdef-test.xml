@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../../../antunit-base.xml" />
+
+  <description>
+    In which we test interesting aspects of scripting.
+    The targeted language is javascript; this lets us run without
+    additions on Java6+.
+  </description>
+
+  <condition property="prereqs-ok">
+    <or>
+      <and>
+        <available classname="org.apache.bsf.BSFManager" />
+        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine" />
+      </and>
+      <available classname="javax.script.ScriptEngineManager" />
+    </or>
+  </condition>
+
+  <!-- auto doesn't verify the language is supported and selects BSF
+       even if the JavaScriptEngine is not there -->
+  <condition property="script.manager" value="javax">
+    <and>
+      <not>
+        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine" />
+      </not>
+      <isset property="prereqs-ok"/>
+    </and>
+  </condition>
+  <property name="script.manager" value="auto" />
+
+  <string id="script.code">
+    self.log("Ant version =${ant.version}");
+    project.setNewProperty("property","live");
+  </string>
+
+  <presetdef name="js">
+    <scriptdef language="javascript" name="scripttest" manager="${script.manager}">
+      <!-- optional property attribute-->
+      <attribute name="property" />
+    </scriptdef>
+  </presetdef>
+
+  <property name="prop" value='self.log("Ant version =${ant.version}");project.setNewProperty("property","live");' />
+
+  <presetdef name="assertPropSet">
+    <au:assertPropertyEquals name="property" value="live" />
+  </presetdef>
+
+
+  <!--purely to test that everything works -->
+  <target name="testInline" if="prereqs-ok">
+    <js>self.log("Hello");</js>
+    <scripttest />
+  </target>
+
+  <target name="testStringResource" if="prereqs-ok">
+    <js>
+      <string value='self.log("Ant version =${ant.version}");' />
+    </js>
+    <scripttest />
+  </target>
+
+  <target name="testStringResourceRef" if="prereqs-ok">
+    <js>
+      <string refid="script.code" />
+    </js>
+    <scripttest />
+    <assertPropSet />
+  </target>
+
+  <target name="testStringResourceInline" if="prereqs-ok">
+    <js>
+      <string>
+        self.log("Ant version =${ant.version}");
+        project.setNewProperty("property","live");
+      </string>
+    </js>
+    <scripttest />
+    <assertPropSet />
+  </target>
+
+  <target name="testPropertyResource" if="prereqs-ok">
+    <js>
+      <propertyresource name="prop" />
+    </js>
+    <scripttest />
+    <assertPropSet />
+  </target>
+
+  <target name="testMixedResources" if="prereqs-ok">
+    <js>
+      <string refid="script.code" />
+      <propertyresource name="prop" />
+      <string>
+        project.setNewProperty("property2","live");
+      </string>
+    </js>
+    <scripttest />
+    <assertPropSet name="property2" />
+  </target>
+
+  <target name="testExceptionNesting" description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47509" if="prereqs-ok">
+    <scriptdef name="quickfail" language="javascript">
+      <![CDATA[
+            self.fail("I failed!");
+      ]]>
+    </scriptdef>
+    <au:expectfailure message="I failed!">
+      <quickfail />
+    </au:expectfailure>
+  </target>
+</project>

@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="get-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <property name="location" value="http://ant.apache.org/webtest/gettest" />
+    
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+  <target name="testSeeOtherRedirect">
+    <get  src="${location}/other.txt" dest="${output}/other.tmp"/>
+      <au:assertTrue>
+            <resourcecount count="1">
+              <restrict>
+                <file file="${output}/other.tmp" />
+                <contains text="seeother redirect succeeded" />
+              </restrict>
+            </resourcecount>
+          </au:assertTrue>
+    <au:assertLogContains text="other.txt moved to http" />  
+  </target>
+    
+    <target name="testPermanentRedirect">
+      <get  src="${location}/permanent.txt" dest="${output}/permanent.tmp"/>
+        <au:assertTrue>
+          <resourcecount count="1">
+            <restrict>
+              <file file="${output}/permanent.tmp" />
+              <contains text="permanent redirect succeeded" />
+            </restrict>
+          </resourcecount>
+        </au:assertTrue>
+        <au:assertLogContains text="permanent.txt permanently moved to http" />
+    </target>
+    
+    <target name="testTemporaryRedirect">
+      <get  src="${location}/temp.txt" dest="${output}/temp.txt"/>
+        <au:assertTrue>
+          <resourcecount count="1">
+            <restrict>
+              <file file="${output}/temp.txt" />
+              <contains text="temporary redirect succeeded" />
+            </restrict>
+          </resourcecount>
+        </au:assertTrue>
+        <au:assertLogContains text="temp.txt moved to http" />
+    </target>
+    
+    <target name="testStatusCode307Redirect">
+      <get  src="${location}/307.txt" dest="${output}/307.txt"/>
+        <au:assertTrue>
+          <resourcecount count="1">
+            <restrict>
+              <file file="${output}/307.txt" />
+              <contains text="307 status code redirect succeeded" />
+            </restrict>
+          </resourcecount>
+        </au:assertTrue>
+        <au:assertLogContains text="307.txt moved to http" />
+    </target>
+    
+    <target name="test5LevelsOfRedirect">
+      <get  src="${location}/redir5.txt" dest="${output}/redir5.tmp"/>
+        <au:assertTrue>
+          <resourcecount count="1">
+            <restrict>
+              <file file="${output}/redir5.tmp" />
+              <contains text="5 levels of redirect succeeded" />
+            </restrict>
+          </resourcecount>
+        </au:assertTrue>
+
+        <au:assertLogContains text="redir5.txt moved to http" />
+
+        <au:assertLogContains text="redir5-4.txt moved to http" />
+    </target>
+    
+    
+    <target name="testInfiniteRedirect">
+        <au:expectfailure expectedmessage="More than 25 times redirected, giving up">
+      <get  src="${location}/infinite.txt" dest="${output}/infinite.tmp"/>
+        </au:expectfailure>
+    </target>
+
+
+    <target name="testNestedResources">
+      <get dest="${output}/downloads">
+        <url url="http://ant.apache.org/index.html"/> 
+        <url url="http://ant.apache.org/faq.html"/>
+      </get>
+      <au:assertFileExists file="${output}/downloads/index.html"/>
+      <au:assertFileExists file="${output}/downloads/faq.html"/>
+    </target>
+
+  <target name="XtestRelativeRedirect">
+    <get  src="${location}/local.cgi" dest="${output}/other.tmp"/>
+    <au:assertTrue>
+      <resourcecount count="1">
+        <restrict>
+          <file file="${output}/other.tmp" />
+          <contains text="local redirect succeeded"/>
+        </restrict>
+      </resourcecount>
+    </au:assertTrue>
+    <au:assertLogContains text="local.cgi moved to http" />  
+  </target>
+</project>

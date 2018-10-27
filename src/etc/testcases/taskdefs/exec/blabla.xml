@@ -1,0 +1,19 @@
+<project name="blabla" default="doit">
+   <target name="blabla">
+        <exec executable="sh">
+            <arg value="blabla.sh" />
+        </exec>
+   </target>
+   <target name="doit">
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   <antcall target="blabla"/>
+   </target>
+</project>

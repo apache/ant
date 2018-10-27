@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit">
+  <!-- NB: ant's interface to JDK14 regex enables UNIX_LINES -->
+  <property name="NL" value="&#10;"/>
+  <regexp id="myid" pattern="^[a-z]{3,4}$"/>
+
+  <available property="jdk1.4+" classname="java.lang.CharSequence"/>  
+  <condition property="some.regexp.support">
+    <or>
+      <isset property="jdk1.4+"/>
+      <isset property="apache.regexp.present"/>
+      <isset property="apache.oro.present"/>
+    </or>
+  </condition>
+    
+  <target name="test-refid" if="some.regexp.support">
+    <au:assertTrue>
+      <matches string="abc">
+        <regexp refid="myid"/>
+      </matches>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-simple" if="some.regexp.support">
+    <au:assertTrue>
+      <matches string="abc" pattern="^[a-z]{3,4}$"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-nomatch" if="some.regexp.support">
+    <au:assertFalse>
+      <matches string="abc" pattern="^b.*" />
+    </au:assertFalse>
+  </target>
+
+  <target name="test-date" if="some.regexp.support">
+    <tstamp>
+      <format property="today" pattern="dd-MM-yyyy" locale="en"/>
+    </tstamp>
+    <au:assertTrue>
+      <matches string="${today}">
+        <regexp pattern="^[0123]\d-[01]\d-[12]\d\d\d$" />
+      </matches>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-abc" if="some.regexp.support">
+    <au:assertTrue>
+      <matches string="abc" pattern="ab?"/>
+    </au:assertTrue>
+    <au:assertTrue>
+      <matches string="abc" pattern="ab."/>
+    </au:assertTrue>
+    <au:assertTrue>
+      <matches string="ab" pattern="ab?"/>
+    </au:assertTrue>
+    <au:assertTrue>
+      <matches string="ab" pattern="ab"/>
+    </au:assertTrue>
+    <au:assertTrue>
+      <matches string="acb" pattern="ab?"/>
+    </au:assertTrue>
+    <au:assertFalse>
+      <matches string="acb" pattern="ab."/>
+    </au:assertFalse>
+  </target>
+
+  <target name="test-caseinsensitive" if="some.regexp.support">
+    <au:assertTrue>
+      <matches string="ABC" pattern="ab?" casesensitive="false"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-singleline" if="some.regexp.support">
+    <au:assertTrue>
+      <matches string="AB${line.separator}C" pattern="^ab.*C$"
+               casesensitive="false"
+               singleline="true"/>
+    </au:assertTrue>
+    <au:assertFalse>
+      <matches string="AB${line.separator}C" pattern="^ab.*C$"
+               casesensitive="false"
+               singleline="false"/>
+    </au:assertFalse>
+  </target>
+
+  <target name="test-multiline" if="some.regexp.support">
+    <au:assertTrue>
+      <matches string="AB${NL}C" pattern="^C$"
+               multiline="true"/>
+    </au:assertTrue>
+    <au:assertTrue>
+      <matches string="AB${NL}C" pattern="^AB$"
+               multiline="true"/>
+    </au:assertTrue>
+  </target>
+
+</project>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+    <import file="../antunit-base.xml" />
+
+    <target name="-fileResourceSetup">
+      <mkdir dir="${output}"/>
+    </target>
+
+    <target name="testInternationalText" depends="-fileResourceSetup"
+        description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50515">
+        <property name="line1" value="萬 利 食 品 批 發 公 司" />
+        <property name="line2" value="TEL: (123)123-1234" />
+        <propertyfile file="${output}/test.properties">
+            <entry key="line1" value="${line1}" />
+            <entry key="line2" value="${line2}" />
+        </propertyfile>
+        <loadproperties prefix="rereading" srcfile="${output}/test.properties"/>
+        <au:assertTrue message="${line2}">
+            <equals arg1="${line2}" arg2="${rereading.line2}" />
+        </au:assertTrue>
+        <au:assertTrue message="${line1}">
+            <equals arg1="${line1}" arg2="${rereading.line1}" />
+        </au:assertTrue>
+
+    </target>
+
+</project>

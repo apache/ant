@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../antunit-base.xml" />
+
+  <target name="-create-native2ascii-adapter">
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/Adapter.java"><![CDATA[
+package org.example;
+import java.io.File;
+import org.apache.tools.ant.taskdefs.optional.native2ascii.Native2AsciiAdapter;
+import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
+
+public class Adapter implements Native2AsciiAdapter {
+    public boolean convert(Native2Ascii native2ascii, File f1, File f2) {
+        System.err.println("adapter called");
+        return true;
+    }
+}]]></echo>
+    <mkdir dir="${resources}"/>
+    <javac srcdir="${input}" destdir="${resources}"/>
+  </target>
+
+  <target name="testAdapterNotFound" depends="-create-native2ascii-adapter" unless="build.sysclasspath.only">
+    <!-- under gump the failure will not happen because the ${resources} directory is systematically on the classpath 
+         what would be cool would be a task which removes a path element from the classpath. Do we have that ? -->
+    <au:expectfailure>
+      <native2ascii src="${input}" dest="${output}" includes="**/*.java"
+                    implementation="org.example.Adapter"/>
+    </au:expectfailure>
+    <au:assertLogDoesntContain text="adapter called"/>
+  </target>
+
+  <target name="testImplementationClasspath" depends="-create-native2ascii-adapter"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
+    <native2ascii src="${input}" dest="${output}" includes="**/*.java"
+                  implementation="org.example.Adapter">
+      <implementationclasspath location="${resources}"/>
+    </native2ascii>
+    <au:assertLogContains text="adapter called"/>
+  </target>
+
+  <target name="testImplementationAsNestedElement"
+          depends="-create-native2ascii-adapter">
+    <componentdef classname="org.example.Adapter" name="myjavac">
+      <classpath location="${resources}"/>
+    </componentdef>
+    <native2ascii src="${input}" dest="${output}" includes="**/*.java">
+      <myjavac/>
+    </native2ascii>
+    <au:assertLogContains text="adapter called"/>
+  </target>
+
+  <target name="-real-test-macros">
+    <macrodef name="assertTranslatedOutput">
+      <attribute name="file"/>
+      <attribute name="expected"/>
+      <attribute name="encoding"/>
+      <sequential>
+        <loadfile srcFile="${output}/@{file}" encoding="@{encoding}"
+                  property="@{file}.actual">
+          <filterchain>
+            <striplinebreaks/>
+          </filterchain>
+        </loadfile>
+        <au:assertEquals expected="@{expected}" actual="${@{file}.actual}"/>
+      </sequential>
+    </macrodef>
+    <presetdef name="native2ascii-def">
+      <native2ascii src="${input}" dest="${output}" encoding="UTF-8"
+                    includes="**/*.properties"/>
+    </presetdef>
+  </target>
+
+  <target name="-setup-UTF8-To-ASCII" depends="-real-test-macros">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/umlauts.properties" encoding="UTF-8">äöü=ÄÖÜ</echo>
+    <property name="umlauts.expected"
+              value="\u00e4\u00f6\u00fc=\u00c4\u00d6\u00dc"/>
+  </target>
+
+  <target name="testUTF8-To-ASCII-sun" depends="-setup-UTF8-To-ASCII"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
+          unless="jdk9+">
+    <native2ascii-def implementation="sun"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
+                            expected="${umlauts.expected}"/>
+  </target>
+
+  <target name="testUTF8-To-ASCII-builtin" depends="-setup-UTF8-To-ASCII"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855">
+    <native2ascii-def implementation="builtin"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="ASCII"
+                            expected="${umlauts.expected}"/>
+  </target>
+
+  <target name="-setup-ASCII-To-UTF8" depends="-real-test-macros">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/umlauts.properties" encoding="ASCII">\u00e4\u00f6\u00fc=\u00c4\u00d6\u00dc</echo>
+    <property name="umlauts.expected" value="äöü=ÄÖÜ"/>
+  </target>
+
+  <target name="testASCII-To-UTF8-sun" depends="-setup-ASCII-To-UTF8"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855"
+          unless="jdk9+">
+    <native2ascii-def implementation="sun" reverse="true"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="UTF-8"
+                            expected="${umlauts.expected}"/>
+  </target>
+
+  <target name="testASCII-To-UTF8-builtin" depends="-setup-ASCII-To-UTF8"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=59855">
+    <native2ascii-def implementation="builtin" reverse="true"/>
+    <assertTranslatedOutput file="umlauts.properties" encoding="UTF-8"
+                            expected="${umlauts.expected}"/>
+  </target>
+
+</project>

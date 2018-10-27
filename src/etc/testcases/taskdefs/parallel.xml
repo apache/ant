@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="parallel-test" basedir="." default="help">
+  <target name="testBasic">
+    <parallel>
+      <sequential>
+        <sleep seconds="1"/>
+        <echo message="${test.delayed}"/>
+      </sequential>
+      <echo message="${test.direct}"/>
+    </parallel>
+  </target>
+
+  <target name="testFail">
+    <parallel>
+      <sequential>
+        <sleep seconds="1"/>
+        <echo message="${test.delayed}"/>
+      </sequential>
+      <fail message="${test.failure}"/>
+    </parallel>
+  </target>
+
+  <target name="testThreadCount">
+    <echo>|1/</echo>
+    <parallel threadCount='1' pollInterval="60">
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="30"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="60"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="90"/>
+        <echo message="-"/>
+      </sequential>
+    </parallel>
+    <echo>|2/</echo>
+    <parallel threadCount='2' pollInterval="30">
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="30"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="60"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="90"/>
+        <echo message="-"/>
+      </sequential>
+    </parallel>
+    <echo>|3/</echo>
+    <parallel threadCount='3' pollInterval="30">
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="30"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="60"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="90"/>
+        <echo message="-"/>
+      </sequential>
+    </parallel>
+    <echo>|4/</echo>
+    <parallel threadCount='4' pollInterval="30">
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="30"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="60"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="90"/>
+        <echo message="-"/>
+      </sequential>
+    </parallel>
+    <echo>|4/</echo>
+    <parallel threadsPerProcessor='1' threadcount='4' pollInterval="30">
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="30"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="60"/>
+        <echo message="-"/>
+      </sequential>
+      <sequential>
+        <echo message="+"/>
+        <sleep milliseconds="90"/>
+        <echo message="-"/>
+      </sequential>
+    </parallel>
+    <echo>|</echo>
+    
+  </target>
+
+  <target name="testDemux">
+    <parallel>
+      <demuxtest/>
+      <demuxtest/>
+      <demuxtest/>
+      <demuxtest/>
+      <demuxtest/>
+    </parallel>
+  </target>
+  
+  <target name="testSingleExit">
+    <parallel>
+      <echo message="all is well"/>
+      <fail message="no it isn't" status="42"/>
+    </parallel>
+  </target>
+
+  <target name="testExitAndOtherException">
+    <parallel>
+      <fail message="no it isn't"/>
+      <fail message="no it isn't" status="42"/>
+    </parallel>
+  </target>
+
+  <target name="help">
+    <echo>Test build file for the &lt;parallel&gt; task.</echo> 
+    <echo>Use the various targets to run the tests.</echo>
+  </target>
+</project>

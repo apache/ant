@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="property-test" basedir="." default="test1">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+  <available property="java5+" classname="java.lang.Iterable"/>
+
+  <target name="test1">
+    <property environment="testenv"/>
+  </target>
+
+  <target name="test2">
+    <property name="testprop1" value="aa"/>
+    <property file="property1.properties"/>
+    <echo message="testprop1=${testprop1}, testprop3=${testprop3}, testprop4=${testprop4}"/>
+  </target>
+
+  <target name="test3">
+    <property file="property2.properties"/>
+  </target>
+
+  <target name="test4">
+    <property name="http.port" value="999" />
+    <property file="property3.properties"/>
+    <echo message="http.url is ${http.url}"/>
+  </target>
+
+  <target name="test5">
+    <property name="http.port" value="999" />
+    <property url="${test5.url}"/>
+    <echo message="http.url is ${http.url}"/>
+  </target>
+
+  <target name="prefix.success">
+    <property file="property3.properties" prefix="server1"/>
+  </target>
+
+  <target name="prefix.fail">
+    <property name="someprop" value="value" prefix="prefix"/>
+  </target>
+
+  <!-- caused an endless loop, PR 21825 -->
+  <target name="testCircularReference">
+    <property file="property4.properties"/>
+  </target>
+
+  <target name="thisIsNotACircularReference">
+    <property file="property5.properties"/>
+    <echo>b is ${b}</echo>
+  </target>
+
+  <target name="genXmlPropFile">
+    <echo file="${output}/props.xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE properties SYSTEM &quot;http://java.sun.com/dtd/properties.dtd&quot;&gt;
+&lt;properties version=&quot;1.0&quot;&gt;
+    &lt;comment&gt;
+        Example of property definition according to Suns DTD as
+        specified in the Java5 docs and http://java.sun.com/dtd/properties.dtd.
+    &lt;/comment&gt;
+    &lt;entry key=&quot;xml.one&quot;&gt;ONE&lt;/entry&gt;
+    &lt;entry key=&quot;xml.two&quot;&gt;TWO&lt;/entry&gt;
+&lt;/properties&gt;
+    </echo>  
+  </target>      
+
+  <target name="testXmlProperty.internal" depends="genXmlPropFile" if="java5+">
+      <property file="${output}/props.xml"/>
+  </target>    
+  <target name="testXmlProperty" depends="testXmlProperty.internal"/>  
+
+</project>

@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
+
+  <target name="testSortFilterNoArgs" depends="setUp">
+    <copy file="input/sort.sortDefault.test"
+          tofile="${output}/sort.sortDefault.test">
+      <filterchain>
+        <sortfilter/>
+      </filterchain>
+    </copy>
+    <au:assertFilesMatch
+       expected="expected/sort.sortDefault.test"
+       actual="${output}/sort.sortDefault.test"/>
+  </target>
+
+  <target name="testSortFilterNoArgsLong" depends="setUp">
+    <copy file="input/sort.sortDefault.test"
+          tofile="${output}/sort.sortDefault.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.SortFilter"/>
+      </filterchain>
+    </copy>
+    <au:assertFilesMatch
+       expected="expected/sort.sortDefault.test"
+       actual="${output}/sort.sortDefault.test"/>
+  </target>
+
+  <target name="testSortFilterReverse" depends="setUp">
+    <copy file="input/sort.sortDefault.test"
+          tofile="${output}/sort.sortReverse.test">
+      <filterchain>
+        <sortfilter reverse="true"/>
+      </filterchain>
+    </copy>
+    <au:assertFilesMatch
+       expected="expected/sort.sortReverse.test"
+       actual="${output}/sort.sortReverse.test"/>
+  </target>
+
+  <target name="testSortFilterReverseLong" depends="setUp">
+    <copy file="input/sort.sortDefault.test"
+          tofile="${output}/sort.sortReverse.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.SortFilter">
+          <param name="reverse" value="true"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+    <au:assertFilesMatch
+       expected="expected/sort.sortReverse.test"
+       actual="${output}/sort.sortReverse.test"/>
+  </target>
+
+  <target name="-setUpEvenFirst" depends="setUp">
+    <mkdir dir="${input}/src/org/apache/tools/ant/filters"/>
+    <echo file="${input}/src/org/apache/tools/ant/filters/EvenFirstCmp.java"><![CDATA[
+package org.apache.tools.ant.filters;
+
+import java.util.Comparator;
+
+public final class EvenFirstCmp implements Comparator {
+
+    public int compare(Object o1, Object o2) {
+        String s1 = ((String) o1).substring(5).trim();
+        String s2 = ((String) o2).substring(5).trim();
+        int n1 = Integer.parseInt(s1);
+        int n2 = Integer.parseInt(s2);
+        if (n1 % 2 == 0) {
+            if (n2 % 2 == 0) {
+                return n1 - n2;
+            } else {
+                return -1;
+            }
+        } else {
+            if (n2 % 2 == 0) {
+                return 1;
+            } else {
+                return n1 - n2;
+            }
+        }
+    }
+}
+]]></echo>
+    <mkdir dir="${input}/build"/>
+    <javac srcdir="${input}/src" destdir="${input}/build"/>
+    <typedef classname="org.apache.tools.ant.filters.EvenFirstCmp"
+             name="evenfirst">
+      <classpath location="${input}/build"/>
+    </typedef>
+  </target>
+
+  <target name="testSortFilterComparator" depends="-setUpEvenFirst">
+    <copy file="input/sort.sortDefault.test"
+          tofile="${output}/sort.sortComparator.test">
+      <filterchain>
+        <sortfilter>
+          <evenfirst/>
+        </sortfilter>
+      </filterchain>
+    </copy>
+    <au:assertFilesMatch
+       expected="expected/sort.sortComparator.test"
+       actual="${output}/sort.sortComparator.test"/>
+  </target>
+</project>

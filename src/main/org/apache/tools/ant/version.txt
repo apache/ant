@@ -1,0 +1,2 @@
+VERSION=${project.version}
+DATE=${TODAY}

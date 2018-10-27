@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project default="tearDown" basedir=".">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+
+  <!-- Testcases for HeadFilter -->
+
+  <target name="testHead" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.head.test">
+      <filterchain>
+        <headfilter/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testHeadLines" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.headLines.test">
+      <filterchain>
+        <headfilter lines="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testHeadSkip" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.headSkip.test">
+      <filterchain>
+        <headfilter skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testHeadLinesSkip" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.headLinesSkip.test">
+      <filterchain>
+        <headfilter lines="2" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderHeadLinesSkip" depends="setUp">
+    <copy file="input/head-tail.test" 
+          tofile="${output}/head-tail.filterReaderHeadLinesSkip.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.HeadFilter">
+          <param name="lines" value="2"/>
+          <param name="skip" value="2"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testHeadAllSkip" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.headAllSkip.test">
+      <filterchain>
+        <headfilter lines="-1" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <!-- Testcases for TailFilter -->
+
+  <target name="testTail" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.tail.test">
+      <filterchain>
+        <tailfilter/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testTailLines" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.tailLines.test">
+      <filterchain>
+        <tailfilter lines="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testTailSkip" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.tailSkip.test">
+      <filterchain>
+        <tailfilter skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testTailLinesSkip" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.tailLinesSkip.test">
+      <filterchain>
+        <tailfilter lines="2" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testFilterReaderTailLinesSkip" depends="setUp">
+    <copy file="input/head-tail.test" 
+          tofile="${output}/head-tail.filterReaderTailLinesSkip.test">
+      <filterchain>
+        <filterreader classname="org.apache.tools.ant.filters.TailFilter">
+          <param name="lines" value="2"/>
+          <param name="skip" value="2"/>
+        </filterreader>
+      </filterchain>
+    </copy>
+  </target>
+
+  <target name="testTailAllSkip" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.tailAllSkip.test">
+      <filterchain>
+        <tailfilter lines="-1" skip="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+  <!-- Testcases for combined scenarios -->
+
+  <target name="testHeadTail" depends="setUp">
+    <copy file="input/head-tail.test" tofile="${output}/head-tail.headtail.test">
+      <filterchain>
+        <headfilter lines="4"/>
+        <tailfilter lines="2"/>
+      </filterchain>
+    </copy>
+  </target>
+
+</project>

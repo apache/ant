@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="delete-test" basedir="." default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+  
+  <import file="../antunit-base.xml" />
+
+  <property name="existing.dir" location="${output}/exists"/>
+  <property name="nonexistent.dir" location="${output}/nonexists"/>
+
+  <target name="init">
+    <delete dir="${output}"/>
+    <mkdir dir="${output}"/>
+    <mkdir dir="${existing.dir}"/>
+  </target>
+
+  <!--test that you can delete a fileset with a nonexistent dir without failure-->
+  <target name="testdelfileset" depends="init">
+    <delete quiet="true" includeEmptyDirs="true">
+       <fileset dir="${nonexistent.dir}"/>
+    </delete>
+
+    <au:assertFileExists file="${existing.dir}" />
+      
+    <delete quiet="true" includeEmptyDirs="true">
+       <fileset dir="${existing.dir}"/>
+    </delete>
+
+    <au:assertFileDoesntExist file="${existing.dir}" />
+
+
+    <mkdir dir="${existing.dir}"/>
+
+    <delete quiet="true" includeEmptyDirs="true">
+       <fileset dir="${nonexistent.dir}"/>
+       <fileset dir="${existing.dir}"/>
+    </delete>
+
+
+    <au:assertFileDoesntExist file="${existing.dir}" />
+
+    <mkdir dir="${existing.dir}"/>
+
+    <delete quiet="true" includeEmptyDirs="true">
+       <fileset dir="${existing.dir}"/>
+       <fileset dir="${nonexistent.dir}"/>
+    </delete>
+
+
+    <au:assertFileDoesntExist file="${existing.dir}" />
+
+  </target>
+
+  <target name="checkOs">
+    <condition property="unix">
+      <os family="unix" />
+    </condition>
+  </target>
+
+  <target name="testDanglingSymlinkInDir" if="unix" depends="checkOs,init">
+    <touch file="${output}/foo"/>
+    <symlink link="${existing.dir}/link"
+             resource="${output}/foo"/>
+    <delete file="${output}/foo"/>
+    <delete dir="${existing.dir}"/>
+    <au:assertFileDoesntExist file="${existing.dir}" />
+  </target>
+
+  <target name="testDanglingSymlink" if="unix" depends="checkOs,init">
+    <touch file="${output}/foo"/>
+    <symlink link="${output}/link"
+             resource="${output}/foo"/>
+    <delete file="${output}/foo"/>
+    <delete file="${output}/link"/>
+
+    <!-- since File.exists returns false for dangling links, recreate
+         the file so that assertFileDoesntExist can actually work -->
+    <touch file="${output}/foo"/>
+    <au:assertFileDoesntExist file="${output}/link" />
+  </target>
+
+  <target name="testNotModifiedSelector"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574"
+          >
+    <mkdir dir="${input}/images"/>
+    <mkdir dir="${input}/cache"/>
+    <touch file="${input}/images/foo.jpg"/>
+    <selector id="cache.selector">
+      <not>
+        <modified update="true"
+                  seldirs="false"
+                  cache="propertyfile"
+                  algorithm="digest"
+                  comparator="equal">
+          <param name="cache.cachefile"
+                 value="${input}/cache/cache.properties"/>
+          <param name="algorithm.algorithm" value="MD5"/>
+        </modified>
+      </not>
+    </selector>
+    <au:assertFileDoesntExist file="${input}/cache/cache.properties"/>
+    <delete>
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </delete>
+    <au:assertFileExists file="${input}/cache/cache.properties"/>
+    <au:assertFileExists file="${input}/images/foo.jpg"/>
+    <delete>
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </delete>
+    <au:assertFileDoesntExist file="${input}/images/foo.jpg"/>
+  </target>
+
+  <target name="testFilesetWithMissingButIgnoredDir"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50124">
+    <delete>
+      <fileset dir="${input}/not-there" errorOnMissingDir="false"/>
+    </delete>
+  </target>
+</project>

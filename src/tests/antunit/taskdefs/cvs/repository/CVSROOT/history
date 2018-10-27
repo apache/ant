@@ -1,0 +1,65 @@
+O48f739fd|stefan|~/ASF/ant/ant-HEAD/src/tests/antunit/taskdefs/cvs/*0|antmodule1||antmodule1
+O48f747b5|stefan|~/ASF/ant/ant-HEAD/src/tests/antunit/taskdefs/cvs/*0|antmodule1||antmodule1
+M48f747fb|stefan|~/ASF/ant/ant-HEAD/src/tests/antunit/taskdefs/cvs/*0|antmodule1|1.2|foo.txt
+M48f7480b|stefan|~/ASF/ant/ant-HEAD/src/tests/antunit/taskdefs/cvs/*0|antmodule1|1.3|foo.txt
+O48f748cb|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f74940|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f749a9|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f74a02|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+M48f74a39|stefan|/tmp/testoutput/*0|antmodule1|1.4|foo.txt
+O48f74a62|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f75161|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f75185|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f75186|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f75196|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f75279|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f75282|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f75d32|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f75d34|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f80394|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f80395|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f80ad6|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f80ad7|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8a1d1|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f8a1d2|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8a6a4|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f8a6a6|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8a764|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f8a766|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8abf0|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f8abf2|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8ad8b|stefan|~/ASF/ant/ant-HEAD/*0|antmodule3||antmodule3
+M48f8add7|stefan|~/ASF/ant/ant-HEAD/*0|antmodule3|1.2|yet another test.txt
+O48f8ae09|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f8ae0a|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8b07c|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b07d|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b07e|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8b07f|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b082|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f8b141|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b14c|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b1c3|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b1cd|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b20c|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b217|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b301|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b302|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8b303|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b307|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f8b308|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b328|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48f8b329|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48f8b32b|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48f8b32c|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48fc5e01|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O48fc5e03|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O48fc5e05|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O48fc5e06|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O4936994c|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+M493699c6|stefan|/tmp/testoutput/*0|antmodule1|1.5|foo.txt
+O49369a09|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O49369b73|stefan|/tmp/testoutput/*0|antmodule3||antmodule3
+O49369b74|stefan|/tmp/testoutput/*0|antmodule1||antmodule1
+O49369b76|stefan|/tmp/testoutput/*0|ant module 2||ant module 2
+O49369b77|stefan|/tmp/testoutput/*0|antmodule3||antmodule3

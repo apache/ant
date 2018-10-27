@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project>
+  <import file="antunit-base.xml"/>
+
+  <target name="compileHelpers">
+    <mkdir dir="${input}/org/apache/ant/propertyhelper"/>
+    <mkdir dir="${output}/org/apache/ant/propertyhelper"/>
+
+    <echo file="${input}/org/apache/ant/propertyhelper/URLHelper.java"><![CDATA[
+package org.apache.ant.propertyhelper;
+
+import org.apache.tools.ant.PropertyHelper;
+import org.apache.tools.ant.types.resources.URLResource;
+
+public class URLHelper implements PropertyHelper.PropertyEvaluator {
+    private String prefix = "url:";
+    public Object evaluate(String property, PropertyHelper propertyHelper) {
+        if (property.startsWith(prefix)) {
+            String s = property.substring(prefix.length());
+            return new URLResource(s);
+        }
+        return null;
+    }
+}
+]]></echo>
+    <echo file="${input}/org/apache/ant/propertyhelper/JavaHelper.java"><![CDATA[
+package org.apache.ant.propertyhelper;
+
+import java.io.File;
+import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.PropertyHelper;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.resources.JavaResource;
+
+public class JavaHelper extends ProjectComponent
+    implements PropertyHelper.PropertyEvaluator {
+
+    private String prefix = "java:";
+    public Object evaluate(String property, PropertyHelper propertyHelper) {
+        if (property.startsWith(prefix)) {
+            String s = property.substring(prefix.length());
+            int index = s.indexOf("!");
+
+            Path p = new Path(getProject());
+            p.setPath(s.substring(0, index));
+
+            JavaResource r = new JavaResource(s.substring(index + 1), p);
+            r.setProject(getProject());
+            return r;
+        }
+        return null;
+    }
+}
+]]></echo>
+    <javac srcdir="${input}" destdir="${output}"/>
+  </target>
+
+  <target name="defineHelpers" depends="compileHelpers">
+    <componentdef name="urlhelper"
+             classname="org.apache.ant.propertyhelper.URLHelper">
+      <classpath location="${output}"/>
+    </componentdef>
+    <componentdef name="javahelper"
+             classname="org.apache.ant.propertyhelper.JavaHelper">
+      <classpath location="${output}"/>
+    </componentdef>
+    <propertyhelper>
+      <urlhelper/>
+      <javahelper/>
+    </propertyhelper>
+  </target>
+</project>

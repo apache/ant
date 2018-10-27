@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}/a"/>
+    <mkdir dir="${input}/d"/>
+    <mkdir dir="${output}/a"/>
+    <mkdir dir="${output}/d"/>
+    <mkdir dir="${output}/b/c"/>
+    <touch file="${input}/a/foo.txt"/>
+    <touch file="${output}/a/bar.txt"/>
+    <touch file="${output}/b/baz.txt"/>
+  </target>
+
+  <target name="testIncludeEmptyPreservesEmptyDirs" depends="setUp">
+
+    <sync todir="${output}" includeemptydirs="true">
+      <fileset dir="${input}"/>
+      <preserveintarget>
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileExists file="${output}/b/c"/>
+    <au:assertFileExists file="${output}/d"/>
+  </target>
+
+  <target name="testDefaultDoesntPreserveEmptyDirs" depends="setUp">
+
+    <sync todir="${output}">
+      <fileset dir="${input}"/>
+      <preserveintarget>
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileDoesntExist file="${output}/b/c"/>
+    <au:assertFileDoesntExist file="${output}/d"/>
+  </target>
+
+  <target name="testPreserveEmptyOverridesDefault" depends="setUp">
+
+    <sync todir="${output}">
+      <fileset dir="${input}"/>
+      <preserveintarget preserveEmptyDirs="true">
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileExists file="${output}/b/c"/>
+    <au:assertFileDoesntExist file="${output}/d"/>
+  </target>
+
+  <target name="testPreserveEmptyOverrulesIncludeEmpty" depends="setUp">
+
+    <sync todir="${output}" includeEmptyDirs="true">
+      <fileset dir="${input}"/>
+      <preserveintarget preserveEmptyDirs="false">
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileDoesntExist file="${output}/b/c"/>
+    <au:assertFileExists file="${output}/d"/>
+  </target>
+
+  <target name="testPreserveEmptyAndIncludeEmptyFalse" depends="setUp">
+
+    <sync todir="${output}" includeEmptyDirs="false">
+      <fileset dir="${input}"/>
+      <preserveintarget preserveEmptyDirs="false">
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileDoesntExist file="${output}/b/c"/>
+    <au:assertFileDoesntExist file="${output}/d"/>
+  </target>
+
+  <target name="testPreserveEmptyAndIncludeEmptyTrue" depends="setUp">
+
+    <sync todir="${output}" includeEmptyDirs="true">
+      <fileset dir="${input}"/>
+      <preserveintarget preserveEmptyDirs="true">
+        <include name="**/b/**"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b/baz.txt"/>
+    <au:assertFileExists file="${output}/b/c"/>
+    <au:assertFileExists file="${output}/d"/>
+  </target>
+
+  <target name="testPreserveEmptyDirsWithNonRecursiveExclude" depends="setUp">
+
+    <sync todir="${output}">
+      <fileset dir="${input}"/>
+      <preserveintarget preserveEmptyDirs="true">
+        <include name="**/b"/>
+      </preserveintarget>
+    </sync>
+
+    <au:assertFileDoesntExist file="${output}/a/bar.txt"/>
+    <au:assertFileExists file="${output}/a/foo.txt"/>
+    <au:assertFileExists file="${output}/b"/>
+    <au:assertFileDoesntExist file="${output}/b/baz.txt"/>
+    <au:assertFileDoesntExist file="${output}/b/c"/>
+    <au:assertFileDoesntExist file="${output}/d"/>
+  </target>
+
+  <!-- really only tests no exception is thrown -->
+  <target name="testCanAddMultipleResources" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=51462">
+    <sync todir="${output}">
+      <file file="${input}/x"/>
+      <file file="${input}/y"/>
+    </sync>
+  </target>
+
+  <target name="testSyncWithResources" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=51462">
+    <sync todir="${output}">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="*" to="test/*"/>
+      </mappedresources>
+    </sync>
+    <au:assertFileDoesntExist file="${output}/bar.txt"/>
+    <au:assertFileExists file="${output}/test/a/foo.txt"/>
+
+    <sync todir="${output}">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="*" to="test/*"/>
+      </mappedresources>
+    </sync>
+    <au:assertFileDoesntExist file="${output}/bar.txt"/>
+    <au:assertFileExists file="${output}/test/a/foo.txt"/>
+  </target>
+
+</project>

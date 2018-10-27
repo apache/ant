@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <description>
+    Test that subant properly sets various properties
+  </description>
+  <import file="../antunit-base.xml" />
+
+  <target name="assertProperties">
+    <au:assertPropertySet name="ant.version" />
+    <au:assertPropertySet name="java.home" />
+    <au:assertPropertySet name="java.class.path" />
+  </target>
+
+  <target name="testAntVersion">
+    <subant inheritall="false" target="assertProperties">
+      <fileset file="${ant.file}" />
+    </subant>
+  </target>
+
+  <!-- four testcases for bug 30542, the last one failed -->
+  <target name="testSubAntDoesntSetBasedir">
+    <subant antfile="echo.xml">
+      <dirset dir="." includes="subant-helper"/>
+    </subant>
+  </target>
+
+  <target name="testSubAntDoesntSetBasedirAfterAntCall">
+    <antcall target="testSubAntDoesntSetBasedir"/>
+  </target>
+
+  <target name="testSubAntDoesntSetBasedirAfterAnt">
+    <ant antfile="${ant.file}" target="testSubAntDoesntSetBasedir"/>
+  </target>
+
+  <target name="testSubAntDoesntSetBasedirAfterAntWithDir">
+    <ant antfile="${ant.file}" dir="${basedir}"
+         target="testSubAntDoesntSetBasedir"/>
+  </target>
+
+  <target name="testSubAntDoesntSetBasedirAfterAntWithDirWhenNativeDir">
+    <ant antfile="${ant.file}" dir="${basedir}"
+         target="testSubAntDoesntSetBasedir"
+         useNativeBaseDir="true"/>
+  </target>
+
+  <target name="testLastPropertyWins">
+    <subant target="checkB">
+      <file file="antcall-test.xml"/>
+      <property name="b" value="1"/>
+      <property name="b" value="2"/>
+      <property name="expected" value="2"/>
+    </subant>
+  </target>
+
+  <target name="makePropertiesFile">
+    <ant antfile="antcall-test.xml" target="makePropertiesFile"/>
+  </target>
+
+  <target name="testPropertiesLoadedFromFile" depends="makePropertiesFile">
+    <subant target="checkB">
+      <file file="antcall-test.xml"/>
+      <property name="expected" value="2"/>
+      <property file="${input}/ant.properties"/>
+    </subant>
+  </target>
+
+  <target name="testFileDoesntSeeExternalProperty" depends="makePropertiesFile">
+    <property name="a" value="x"/>
+    <subant target="checkB">
+      <file file="antcall-test.xml"/>
+      <property name="expected" value="2"/>
+      <property file="${input}/ant.properties"/>
+    </subant>
+  </target>
+
+  <target name="testFileSeesExternalPropertyWhenInheritAll"
+          depends="makePropertiesFile">
+    <property name="a" value="x"/>
+    <subant target="checkB" inheritall="true">
+      <file file="antcall-test.xml"/>
+      <property name="expected" value="x"/>
+      <property file="${input}/ant.properties"/>
+    </subant>
+  </target>
+
+  <target name="testFileSeesInternalProperty" depends="makePropertiesFile">
+    <subant target="checkB">
+      <file file="antcall-test.xml"/>
+      <property name="a" value="y"/>
+      <property name="expected" value="y"/>
+      <property file="${input}/ant.properties"/>
+    </subant>
+  </target>
+</project>

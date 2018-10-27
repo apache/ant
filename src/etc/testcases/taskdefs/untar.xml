@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project basedir="." default="tearDown">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${output}/untar"/>
+  </target>
+
+  <target name="testTarTask">
+    <ant antfile="tar.xml" target="feather" />
+    <untar src="${output}/asf-logo.gif.tar" dest="${output}/untar" />
+  </target>
+
+  <target name="testGzipTarTask">
+    <ant antfile="tar.xml" target="feather" />
+    <untar src="${output}/asf-logo.gif.tar.gz" dest="${output}/untar" compression="gzip" />
+  </target>
+
+  <target name="testBzip2TarTask">
+    <ant antfile="tar.xml" target="feather" />
+    <untar src="${output}/asf-logo.gif.tar.bz2" dest="${output}/untar" compression="bzip2"/>
+  </target>
+
+  <target name="realTest">
+    <untar src="expected/asf-logo.gif.tar" dest="${output}/untar" />
+  </target>
+
+  <target name="realGzipTest">
+    <untar src="expected/asf-logo.gif.tar.gz" dest="${output}/untar" compression="gzip" />
+  </target>
+
+  <target name="realBzip2Test">
+    <untar src="expected/asf-logo.gif.tar.bz2" dest="${output}/untar" compression="bzip2"/>
+  </target>
+
+
+  <target name="srcDirTest">
+    <untar src="." dest="${output}/untar" />
+  </target>
+
+  <target name="encodingTest">
+    <mkdir dir="${output}/untartestin"/>
+    <touch file="${output}/untartestin/foo"/>
+    <tar tarfile="${output}/untartest.tar" basedir="${output}/untartestin" encoding="UnicodeBig"/>
+    <mkdir dir="${output}/untartestout"/>
+    <untar src="${output}/untartest.tar" dest="${output}/untartestout" encoding="UnicodeBig"/>
+  </target>
+
+  <target name="resourceCollection">
+    <mkdir dir="${output}/untartestout"/>
+    <zip destfile="${output}/untartestout/test.zip">
+      <fileset dir="expected">
+        <include name="asf-logo.gif.tar"/>
+      </fileset>
+    </zip>
+    <untar dest="${output}/untar">
+      <zipfileset src="${output}/untartestout/test.zip">
+        <include name="*.tar"/>
+      </zipfileset>
+    </untar>
+  </target>
+
+  <target name="prepareTestTar">
+    <mkdir dir="${output}/untartestin/1"/>
+    <mkdir dir="${output}/untartestin/2"/>
+    <touch file="${output}/untartestin/1/foo"/>
+    <touch file="${output}/untartestin/2/bar"/>
+    <copy todir="${output}/untartestin/2">
+      <fileset dir="expected" includes="*md5*"/>
+    </copy>
+    <tar destfile="${output}/untartest.tar" basedir="${output}/untartestin"/>
+  </target>
+
+  <target name="testDocumentationClaimsOnCopy" depends="prepareTestTar">
+    <copy todir="${output}/untar" preservelastmodified="true">
+      <tarfileset src="${output}/untartest.tar">
+        <patternset>
+          <include name="2/"/>
+        </patternset>
+      </tarfileset>
+    </copy>
+  </target>
+  
+</project>

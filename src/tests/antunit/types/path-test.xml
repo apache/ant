@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <property name="existingFile" value="${basedir}/build.xml" />
+
+  <files id="files">
+    <include name="${existingFile}" />
+  </files>
+    
+  <target name="test-directUse" description="Bug 42397 - works fine">
+    <path id="path">
+      <files>
+        <include name="${existingFile}" />
+      </files>
+    </path>
+  </target>
+
+  <target name="test-refid" description="Bug 42397">
+    <path id="path">
+      <files refid="files" />
+    </path>
+  </target>
+
+  <target name="test-wildcard"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=46842">
+    <path id="with-wildcard">
+      <pathelement location="*"/>
+    </path>
+    <au:assertEquals expected="${basedir}${file.separator}*"
+                     actual="${toString:with-wildcard}"/>
+  </target>
+
+</project>

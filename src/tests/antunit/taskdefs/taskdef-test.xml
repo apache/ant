@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}/org/example"/>
+    <property name="tmpdir" location="../../../../build/ant-unit/taskdef"/>
+    <mkdir dir="${tmpdir}"/>
+    <echoxml file="${input}/org/example/antlib.xml">
+      <antlib>
+        <taskdef name="echooo"
+                 classname="org.apache.tools.ant.taskdefs.Echo"/>
+      </antlib>
+    </echoxml>
+  </target>
+
+  <target name="testPlainDir" depends="setUp">
+    <jar destfile="${test1.jar}">
+      <fileset dir="${input}"/>
+    </jar>
+    <taskdef resource="org/example/antlib.xml"
+             classpath="${test1.jar}"
+             uri="urn:test:plain"/>
+    <echooo xmlns="urn:test:plain">Hello</echooo>
+    <au:assertLogContains text="Hello"/>
+  </target>
+
+  <target name="testDirWithPling" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50007">
+    <property name="dir" location="${tmpdir}/pl!ng"/>
+    <mkdir dir="${dir}"/>
+    <jar destfile="${test2.jar}">
+      <fileset dir="${input}"/>
+    </jar>
+    <taskdef resource="org/example/antlib.xml"
+             classpath="${test2.jar}"
+             uri="urn:test:indir"/>
+    <echooo xmlns="urn:test:indir">Hello</echooo>
+    <au:assertLogContains text="Hello"/>
+  </target>
+
+  <!-- fails because URLConnection.connect() fails on the JAR URL returned
+       by ClassLoader.getResources() -->
+  <target name="NOtestDirWithPlingAtEnd" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50007">
+    <property name="dir" location="${tmpdir}/pling!"/>
+    <mkdir dir="${dir}"/>
+     <jar destfile="${test3.jar}">
+      <fileset dir="${input}"/>
+    </jar>
+    <taskdef resource="org/example/antlib.xml"
+             classpath="${test3.jar}"
+             uri="urn:test:atend"/>
+    <echooo xmlns="urn:test:atend">Hello</echooo>
+    <au:assertLogContains text="Hello"/>
+  </target>
+
+  <target name="testPlingInJar" depends="setUp">
+    <move file="${input}/org/example/antlib.xml"
+          tofile="${input}/org/examp!e/antlib.xml"/>
+    <jar destfile="${test4.jar}">
+      <fileset dir="${input}"/>
+    </jar>
+    <taskdef resource="org/examp!e/antlib.xml"
+             classpath="${test4.jar}"
+             uri="urn:test:injar"/>
+    <echooo xmlns="urn:test:injar">Hello</echooo>
+    <au:assertLogContains text="Hello"/>
+  </target>
+
+  <target name="testPlingInJarAtEnd" depends="setUp">
+     <move file="${input}/org/example/antlib.xml"
+          tofile="${input}/org/example!/antlib.xml"/>
+    <jar destfile="${test5.jar}">
+      <fileset dir="${input}"/>
+    </jar>
+    <taskdef resource="org/example!/antlib.xml"
+             classpath="${test5.jar}"
+             uri="urn:test:injaratend"/>
+    <echooo xmlns="urn:test:injaratend">Hello</echooo>
+    <au:assertLogContains text="Hello"/>
+  </target>
+</project>

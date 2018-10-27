@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project name="antclassloader-test" basedir=".">
+    <import file="../buildfiletest-base.xml"/>
+    <property name="tmp.dir" location="${output}/tmp space"/>
+    <!-- ant for germans -->
+    <property name="tmp.dir.nonascii" value="${output}/&#0227;nt"/>
+    <property name="ext.dir.relative" value="ext"/>
+    <property name="main.jar" location="${tmp.dir}/main.jar"/>
+    <property name="ext.jar.relative" value="${ext.dir.relative}/ext.jar"/>
+    <property name="ext.jar" location="${tmp.dir}/${ext.jar.relative}"/>
+    <property name="build.sysclasspath" value="first"/>
+    <property name="main.jar.nonascii" location="${tmp.dir.nonascii}/main.jar"/>
+    <property name="ext.jar.nonascii" location="${tmp.dir.nonascii}/${ext.jar.relative}"/>
+    <target name="setUp" depends="setup.withspace,setup.nonascii"/>
+
+    <target name="setup.withspace">
+        <mkdir dir="${tmp.dir}/${ext.dir.relative}"/>
+        <jar destfile="${main.jar}" whenempty="create">
+          <manifest>
+            <attribute name="Class-Path" value="${ext.jar.relative}"/>
+          </manifest>
+        </jar>
+        <jar destfile="${ext.jar}"/>
+    </target>
+    <target name="setup.nonascii">
+      <mkdir dir="${tmp.dir.nonascii}/${ext.dir.relative}"/>
+      <jar destfile="${main.jar.nonascii}" whenempty="create">
+        <manifest>
+          <attribute name="Class-Path" value="${ext.jar.relative}"/>
+        </manifest>
+      </jar>
+      <jar destfile="${ext.jar.nonascii}"/>
+
+    </target>
+
+
+    <target name="prepareGetPackageTest" depends="setUp">
+      <mkdir dir="${tmp.dir.nonascii}/org/example"/>
+      <echo file="${tmp.dir.nonascii}/org/example/Foo.java"><![CDATA[
+package org.example;
+public class Foo {}
+]]></echo>
+      <property name="source" value="8"/>
+      <javac srcdir="${tmp.dir.nonascii}"
+             destdir="${tmp.dir.nonascii}" source="${source}"/>
+      <tempfile property="test.jar" destdir="${tmp.dir}" suffix="test" prefix=".jar" deleteonexit="true"/>
+      <jar destfile="${test.jar}">
+        <fileset dir="${tmp.dir.nonascii}" includes="**/*.class"/>
+      </jar>
+    </target>
+
+    <target name="signTestJar" depends="prepareGetPackageTest">
+      <signjar alias="testonly" keystore="../testkeystore"
+               storepass="apacheant" jar="${test.jar}"/>
+    </target>
+
+    <target name="createNonJar">
+      <touch file="${tmp.dir}/foo.jar"/>
+    </target>
+</project>

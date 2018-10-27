@@ -1,129 +1,167 @@
 /*
- * The Apache Software License, Version 1.1
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
- * reserved.
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowlegement may appear in the software itself,
- *    if and wherever such third-party acknowlegements normally appear.
- *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
- *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
- *    permission, please contact apache@apache.org.
- *
- * 5. Products derived from this software may not be called "Apache"
- *    nor may "Apache" appear in their names without prior written
- *    permission of the Apache Group.
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- *
- * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
  */
 
 /*
- * This package is based on the work done by Timothy Gerard Endres 
+ * This package is based on the work done by Timothy Gerard Endres
  * (time@ice.com) to whom the Ant project is very grateful for his great code.
  */
 
 package org.apache.tools.tar;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.tools.zip.ZipEncoding;
+import org.apache.tools.zip.ZipEncodingHelper;
 
 /**
  * The TarInputStream reads a UNIX tar archive as an InputStream.
  * methods are provided to position at each successive entry in
  * the archive, and the read each entry as a normal input stream
  * using read().
- * 
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ *
  */
 public class TarInputStream extends FilterInputStream {
-    
-    protected boolean      debug;
-    protected boolean      hasHitEOF;
-    protected int          entrySize;
-    protected int          entryOffset;
-    protected byte[]       oneBuf;
-    protected byte[]       readBuf;
-    protected TarBuffer    buffer;
-    protected TarEntry     currEntry;
+    private static final int SMALL_BUFFER_SIZE = 256;
+    private static final int BUFFER_SIZE = 8 * 1024;
+    private static final int LARGE_BUFFER_SIZE = 32 * 1024;
+    private static final int BYTE_MASK = 0xFF;
 
+    private final byte[] SKIP_BUF = new byte[BUFFER_SIZE];
+    private final byte[] SMALL_BUF = new byte[SMALL_BUFFER_SIZE];
+
+    // CheckStyle:VisibilityModifier OFF - bc
+    protected boolean debug;
+    protected boolean hasHitEOF;
+    protected long entrySize;
+    protected long entryOffset;
+    protected byte[] readBuf;
+    protected TarBuffer buffer;
+    protected TarEntry currEntry;
+
+    /**
+     * This contents of this array is not used at all in this class,
+     * it is only here to avoid repreated object creation during calls
+     * to the no-arg read method.
+     */
+    protected byte[] oneBuf;
+
+    // CheckStyle:VisibilityModifier ON
+
+    private final ZipEncoding encoding;
+
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     */
     public TarInputStream(InputStream is) {
         this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
     }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarInputStream(InputStream is, String encoding) {
+        this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE, encoding);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
+     */
     public TarInputStream(InputStream is, int blockSize) {
         this(is, blockSize, TarBuffer.DEFAULT_RCDSIZE);
     }
 
-    public TarInputStream(InputStream is, int blockSize, int recordSize) {
-        super(is);
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarInputStream(InputStream is, int blockSize, String encoding) {
+        this(is, blockSize, TarBuffer.DEFAULT_RCDSIZE, encoding);
+    }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     */
+    public TarInputStream(InputStream is, int blockSize, int recordSize) {
+        this(is, blockSize, recordSize, null);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     * @param encoding name of the encoding to use for file names
+     */
+    public TarInputStream(InputStream is, int blockSize, int recordSize,
+                          String encoding) {
+        super(is);
         this.buffer = new TarBuffer(is, blockSize, recordSize);
         this.readBuf = null;
         this.oneBuf = new byte[1];
         this.debug = false;
         this.hasHitEOF = false;
+        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
     }
 
     /**
      * Sets the debugging flag.
-     * 
-     * @param debugF True to turn on debugging.
+     *
+     * @param debug True to turn on debugging.
      */
     public void setDebug(boolean debug) {
         this.debug = debug;
-        this.buffer.setDebug(debug);
-    } 
+        buffer.setDebug(debug);
+    }
 
     /**
      * Closes this stream. Calls the TarBuffer's close() method.
+     * @throws IOException on error
      */
+    @Override
     public void close() throws IOException {
-        this.buffer.close();
-    } 
+        buffer.close();
+    }
 
     /**
      * Get the record size being used by this stream's TarBuffer.
-     * 
+     *
      * @return The TarBuffer record size.
      */
     public int getRecordSize() {
-        return this.buffer.getRecordSize();
-    } 
+        return buffer.getRecordSize();
+    }
 
     /**
      * Get the available data that can be read from the current
@@ -131,63 +169,80 @@ public class TarInputStream extends FilterInputStream {
      * is left in the entire archive, only in the current entry.
      * This value is determined from the entry's size header field
      * and the amount of data already read from the current entry.
-     * 
-     * 
+     * Integer.MAX_VALUE is returned in case more than Integer.MAX_VALUE
+     * bytes are left in the current entry in the archive.
+     *
      * @return The number of available bytes for the current entry.
+     * @throws IOException for signature
      */
+    @Override
     public int available() throws IOException {
-        return this.entrySize - this.entryOffset;
-    } 
+        if (isDirectory()) {
+            return 0;
+        }
+        if (entrySize - entryOffset > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        }
+        return (int) (entrySize - entryOffset);
+    }
 
     /**
      * Skip bytes in the input buffer. This skips bytes in the
      * current entry's data, not the entire archive, and will
      * stop at the end of the current entry's data if the number
      * to skip extends beyond that point.
-     * 
+     *
      * @param numToSkip The number of bytes to skip.
+     * @return the number actually skipped
+     * @throws IOException on error
      */
-    public void skip(int numToSkip) throws IOException {
-
+    @Override
+    public long skip(long numToSkip) throws IOException {
+        if (numToSkip <= 0 || isDirectory()) {
+            return 0;
+        }
         // REVIEW
         // This is horribly inefficient, but it ensures that we
         // properly skip over bytes via the TarBuffer...
-        // 
-        byte[] skipBuf = new byte[8 * 1024];
-
-        for (int num = numToSkip; num > 0; ) {
-            int numRead = this.read(skipBuf, 0, 
-                                    (num > skipBuf.length ? skipBuf.length 
-                                     : num));
-
+        //
+        long skip = numToSkip;
+        while (skip > 0) {
+            int realSkip = (int) (skip > SKIP_BUF.length
+                                  ? SKIP_BUF.length : skip);
+            int numRead = read(SKIP_BUF, 0, realSkip);
             if (numRead == -1) {
                 break;
-            } 
-
-            num -= numRead;
-        } 
-    } 
+            }
+            skip -= numRead;
+        }
+        return (numToSkip - skip);
+    }
 
     /**
      * Since we do not support marking just yet, we return false.
-     * 
+     *
      * @return False.
      */
+    @Override
     public boolean markSupported() {
         return false;
-    } 
+    }
 
     /**
      * Since we do not support marking just yet, we do nothing.
-     * 
+     *
      * @param markLimit The limit to mark.
      */
-    public void mark(int markLimit) {}
+    @Override
+    public void mark(int markLimit) {
+    }
 
     /**
      * Since we do not support marking just yet, we do nothing.
      */
-    public void reset() {}
+    @Override
+    public void reset() {
+    }
 
     /**
      * Get the next entry in this tar archive. This will skip
@@ -198,179 +253,360 @@ public class TarInputStream extends FilterInputStream {
      * If there are no more entries in the archive, null will
      * be returned to indicate that the end of the archive has
      * been reached.
-     * 
+     *
      * @return The next TarEntry in the archive, or null.
+     * @throws IOException on error
      */
     public TarEntry getNextEntry() throws IOException {
-        if (this.hasHitEOF) {
+        if (hasHitEOF) {
             return null;
-        } 
+        }
 
-        if (this.currEntry != null) {
-            int numToSkip = this.entrySize - this.entryOffset;
+        if (currEntry != null) {
+            long numToSkip = entrySize - entryOffset;
 
-            if (this.debug) {
-                System.err.println("TarInputStream: SKIP currENTRY '" 
-                                   + this.currEntry.getName() + "' SZ " 
-                                   + this.entrySize + " OFF " 
-                                   + this.entryOffset + "  skipping " 
-                                   + numToSkip + " bytes");
-            } 
+            if (debug) {
+                System.err.println("TarInputStream: SKIP currENTRY '"
+                        + currEntry.getName() + "' SZ "
+                        + entrySize + " OFF "
+                        + entryOffset + "  skipping "
+                        + numToSkip + " bytes");
+            }
 
-            if (numToSkip > 0) {
-                this.skip(numToSkip);
-            } 
+            while (numToSkip > 0) {
+                long skipped = skip(numToSkip);
+                if (skipped <= 0) {
+                    throw new IOException("failed to skip current tar"
+                                               + " entry");
+                }
+                numToSkip -= skipped;
+            }
 
-            this.readBuf = null;
-        } 
+            readBuf = null;
+        }
 
-        byte[] headerBuf = this.buffer.readRecord();
+        byte[] headerBuf = getRecord();
+
+        if (hasHitEOF) {
+            currEntry = null;
+            return null;
+        }
+
+        try {
+            currEntry = new TarEntry(headerBuf, encoding);
+        } catch (IllegalArgumentException e) {
+            IOException ioe = new IOException("Error detected parsing the header");
+            ioe.initCause(e);
+            throw ioe;
+        }
+        if (debug) {
+            System.err.println("TarInputStream: SET CURRENTRY '"
+                               + currEntry.getName()
+                               + "' size = "
+                               + currEntry.getSize());
+        }
+
+        entryOffset = 0;
+        entrySize = currEntry.getSize();
+
+        if (currEntry.isGNULongLinkEntry()) {
+            byte[] longLinkData = getLongNameData();
+            if (longLinkData == null) {
+                // Bugzilla: 40334
+                // Malformed tar file - long link entry name not followed by
+                // entry
+                return null;
+            }
+            currEntry.setLinkName(encoding.decode(longLinkData));
+        }
+
+        if (currEntry.isGNULongNameEntry()) {
+            byte[] longNameData = getLongNameData();
+            if (longNameData == null) {
+                // Bugzilla: 40334
+                // Malformed tar file - long entry name not followed by
+                // entry
+                return null;
+            }
+            currEntry.setName(encoding.decode(longNameData));
+        }
+
+        if (currEntry.isPaxHeader()){ // Process Pax headers
+            paxHeaders();
+        }
+
+        if (currEntry.isGNUSparse()){ // Process sparse files
+            readGNUSparse();
+        }
+
+        // If the size of the next element in the archive has changed
+        // due to a new size being reported in the posix header
+        // information, we update entrySize here so that it contains
+        // the correct value.
+        entrySize = currEntry.getSize();
+        return currEntry;
+    }
+
+    /**
+     * Get the next entry in this tar archive as longname data.
+     *
+     * @return The next entry in the archive as longname data, or null.
+     * @throws IOException on error
+     */
+    protected byte[] getLongNameData() throws IOException {
+        // read in the name
+        ByteArrayOutputStream longName = new ByteArrayOutputStream();
+        int length = 0;
+        while ((length = read(SMALL_BUF)) >= 0) {
+            longName.write(SMALL_BUF, 0, length);
+        }
+        getNextEntry();
+        if (currEntry == null) {
+            // Bugzilla: 40334
+            // Malformed tar file - long entry name not followed by entry
+            return null;
+        }
+        byte[] longNameData = longName.toByteArray();
+        // remove trailing null terminator(s)
+        length = longNameData.length;
+        while (length > 0 && longNameData[length - 1] == 0) {
+            --length;
+        }
+        if (length != longNameData.length) {
+            byte[] l = new byte[length];
+            System.arraycopy(longNameData, 0, l, 0, length);
+            longNameData = l;
+        }
+        return longNameData;
+    }
+
+    /**
+     * Get the next record in this tar archive. This will skip
+     * over any remaining data in the current entry, if there
+     * is one, and place the input stream at the header of the
+     * next entry.
+     * If there are no more entries in the archive, null will
+     * be returned to indicate that the end of the archive has
+     * been reached.
+     *
+     * @return The next header in the archive, or null.
+     * @throws IOException on error
+     */
+    private byte[] getRecord() throws IOException {
+        if (hasHitEOF) {
+            return null;
+        }
+
+        byte[] headerBuf = buffer.readRecord();
 
         if (headerBuf == null) {
-            if (this.debug) {
+            if (debug) {
                 System.err.println("READ NULL RECORD");
-            } 
-            this.hasHitEOF = true;
-        } else if (this.buffer.isEOFRecord(headerBuf)) {
-            if (this.debug) {
+            }
+            hasHitEOF = true;
+        } else if (buffer.isEOFRecord(headerBuf)) {
+            if (debug) {
                 System.err.println("READ EOF RECORD");
-            } 
-            this.hasHitEOF = true;
-        } 
+            }
+            hasHitEOF = true;
+        }
 
-        if (this.hasHitEOF) {
-            this.currEntry = null;
-        } else {
-            this.currEntry = new TarEntry(headerBuf);
+        return hasHitEOF ? null : headerBuf;
+    }
 
-            if (!(headerBuf[257] == 'u' && headerBuf[258] == 's' 
-                    && headerBuf[259] == 't' && headerBuf[260] == 'a' 
-                    && headerBuf[261] == 'r')) {
-                this.entrySize = 0;
-                this.entryOffset = 0;
-                this.currEntry = null;
+    private void paxHeaders() throws IOException{
+        Map<String, String> headers = parsePaxHeaders(this);
+        getNextEntry(); // Get the actual file entry
+        applyPaxHeadersToCurrentEntry(headers);
+    }
 
-                throw new IOException("bad header in block " 
-                                                 + this.buffer.getCurrentBlockNum() 
-                                                 + " record " 
-                                                 + this.buffer.getCurrentRecordNum() 
-                                                 + ", " + 
-                                       "header magic is not 'ustar', but '" 
-                                                 + headerBuf[257] 
-                                                 + headerBuf[258] 
-                                                 + headerBuf[259] 
-                                                 + headerBuf[260] 
-                                                 + headerBuf[261] 
-                                                 + "', or (dec) " 
-                                                 + ((int) headerBuf[257]) 
-                                                 + ", " 
-                                                 + ((int) headerBuf[258]) 
-                                                 + ", " 
-                                                 + ((int) headerBuf[259]) 
-                                                 + ", " 
-                                                 + ((int) headerBuf[260]) 
-                                                 + ", " 
-                                                 + ((int) headerBuf[261]));
-            } 
+    Map<String, String> parsePaxHeaders(InputStream i) throws IOException {
+        Map<String, String> headers = new HashMap<String, String>();
+        // Format is "length keyword=value\n";
+        while(true){ // get length
+            int ch;
+            int len = 0;
+            int read = 0;
+            while((ch = i.read()) != -1) {
+                read++;
+                if (ch == ' '){ // End of length string
+                    // Get keyword
+                    ByteArrayOutputStream coll = new ByteArrayOutputStream();
+                    while((ch = i.read()) != -1) {
+                        read++;
+                        if (ch == '='){ // end of keyword
+                            String keyword = coll.toString("UTF-8");
+                            // Get rest of entry
+                            final int restLen = len - read;
+                            byte[] rest = new byte[restLen];
+                            int got = 0;
+                            while (got < restLen && (ch = i.read()) != -1) {
+                                rest[got++] = (byte) ch;
+                            }
+                            if (got != restLen) {
+                                throw new IOException("Failed to read "
+                                                      + "Paxheader. Expected "
+                                                      + restLen
+                                                      + " bytes, read "
+                                                      + got);
+                            }
+                            // Drop trailing NL
+                            String value = new String(rest, 0,
+                                                      restLen - 1, "UTF-8");
+                            headers.put(keyword, value);
+                            break;
+                        }
+                        coll.write((byte) ch);
+                    }
+                    break; // Processed single header
+                }
+                len *= 10;
+                len += ch - '0';
+            }
+            if (ch == -1){ // EOF
+                break;
+            }
+        }
+        return headers;
+    }
 
-            if (this.debug) {
-                System.err.println("TarInputStream: SET CURRENTRY '" 
-                                   + this.currEntry.getName() 
-                                   + "' size = " 
-                                   + this.currEntry.getSize());
-            } 
+    private void applyPaxHeadersToCurrentEntry(Map<String, String> headers) {
+        /*
+         * The following headers are defined for Pax.
+         * atime, ctime, charset: cannot use these without changing TarEntry fields
+         * mtime
+         * comment
+         * gid, gname
+         * linkpath
+         * size
+         * uid,uname
+         * SCHILY.devminor, SCHILY.devmajor: don't have setters/getters for those
+         */
+        for (Entry<String, String> ent : headers.entrySet()){
+            String key = ent.getKey();
+            String val = ent.getValue();
+            if ("path".equals(key)){
+                currEntry.setName(val);
+            } else if ("linkpath".equals(key)){
+                currEntry.setLinkName(val);
+            } else if ("gid".equals(key)){
+                currEntry.setGroupId(Long.parseLong(val));
+            } else if ("gname".equals(key)){
+                currEntry.setGroupName(val);
+            } else if ("uid".equals(key)){
+                currEntry.setUserId(Long.parseLong(val));
+            } else if ("uname".equals(key)){
+                currEntry.setUserName(val);
+            } else if ("size".equals(key)){
+                currEntry.setSize(Long.parseLong(val));
+            } else if ("mtime".equals(key)){
+                currEntry.setModTime((long) (Double.parseDouble(val) * 1000));
+            } else if ("SCHILY.devminor".equals(key)){
+                currEntry.setDevMinor(Integer.parseInt(val));
+            } else if ("SCHILY.devmajor".equals(key)){
+                currEntry.setDevMajor(Integer.parseInt(val));
+            }
+        }
+    }
 
-            this.entryOffset = 0;
-
-            // REVIEW How do we resolve this discrepancy?!
-            this.entrySize = (int) this.currEntry.getSize();
-        } 
-
-        return this.currEntry;
-    } 
+    /**
+     * Adds the sparse chunks from the current entry to the sparse chunks,
+     * including any additional sparse entries following the current entry.
+     *
+     * @throws IOException on error
+     *
+     * @todo Sparse files get not yet really processed.
+     */
+    private void readGNUSparse() throws IOException {
+        /* we do not really process sparse files yet
+        sparses = new ArrayList();
+        sparses.addAll(currEntry.getSparses());
+        */
+        if (currEntry.isExtended()) {
+            TarArchiveSparseEntry entry;
+            do {
+                byte[] headerBuf = getRecord();
+                if (hasHitEOF) {
+                    currEntry = null;
+                    break;
+                }
+                entry = new TarArchiveSparseEntry(headerBuf);
+                /* we do not really process sparse files yet
+                sparses.addAll(entry.getSparses());
+                */
+            } while (entry.isExtended());
+        }
+    }
 
     /**
      * Reads a byte from the current tar archive entry.
-     * 
+     *
      * This method simply calls read( byte[], int, int ).
-     * 
+     *
      * @return The byte read, or -1 at EOF.
+     * @throws IOException on error
      */
+    @Override
     public int read() throws IOException {
-        int num = this.read(this.oneBuf, 0, 1);
-
-        if (num == -1) {
-            return num;
-        } else {
-            return (int) this.oneBuf[0];
-        }
-    } 
+        int num = read(oneBuf, 0, 1);
+        return num == -1 ? -1 : (oneBuf[0]) & BYTE_MASK;
+    }
 
     /**
      * Reads bytes from the current tar archive entry.
-     * 
-     * This method simply calls read( byte[], int, int ).
-     * 
-     * @param buf The buffer into which to place bytes read.
-     * @return The number of bytes read, or -1 at EOF.
-     */
-    public int read(byte[] buf) throws IOException {
-        return this.read(buf, 0, buf.length);
-    } 
-
-    /**
-     * Reads bytes from the current tar archive entry.
-     * 
+     *
      * This method is aware of the boundaries of the current
      * entry in the archive and will deal with them as if they
      * were this stream's start and EOF.
-     * 
+     *
      * @param buf The buffer into which to place bytes read.
      * @param offset The offset at which to place bytes read.
      * @param numToRead The number of bytes to read.
      * @return The number of bytes read, or -1 at EOF.
+     * @throws IOException on error
      */
+    @Override
     public int read(byte[] buf, int offset, int numToRead) throws IOException {
         int totalRead = 0;
 
-        if (this.entryOffset >= this.entrySize) {
+        if (entryOffset >= entrySize || isDirectory()) {
             return -1;
-        } 
+        }
 
-        if ((numToRead + this.entryOffset) > this.entrySize) {
-            numToRead = (this.entrySize - this.entryOffset);
-        } 
+        if ((numToRead + entryOffset) > entrySize) {
+            numToRead = (int) (entrySize - entryOffset);
+        }
 
-        if (this.readBuf != null) {
-            int sz = (numToRead > this.readBuf.length) ? this.readBuf.length 
-                     : numToRead;
+        if (readBuf != null) {
+            int sz = (numToRead > readBuf.length) ? readBuf.length
+                    : numToRead;
 
-            System.arraycopy(this.readBuf, 0, buf, offset, sz);
+            System.arraycopy(readBuf, 0, buf, offset, sz);
 
-            if (sz >= this.readBuf.length) {
-                this.readBuf = null;
+            if (sz >= readBuf.length) {
+                readBuf = null;
             } else {
-                int    newLen = this.readBuf.length - sz;
+                int newLen = readBuf.length - sz;
                 byte[] newBuf = new byte[newLen];
 
-                System.arraycopy(this.readBuf, sz, newBuf, 0, newLen);
+                System.arraycopy(readBuf, sz, newBuf, 0, newLen);
 
-                this.readBuf = newBuf;
-            } 
+                readBuf = newBuf;
+            }
 
             totalRead += sz;
             numToRead -= sz;
             offset += sz;
-        } 
+        }
 
         while (numToRead > 0) {
-            byte[] rec = this.buffer.readRecord();
+            byte[] rec = buffer.readRecord();
 
             if (rec == null) {
                 // Unexpected EOF!
-                throw new IOException("unexpected EOF with " + numToRead 
-                                      + " bytes unread");
-            } 
+                throw new IOException("unexpected EOF with " + numToRead
+                        + " bytes unread");
+            }
 
             int sz = numToRead;
             int recLen = rec.length;
@@ -378,42 +614,57 @@ public class TarInputStream extends FilterInputStream {
             if (recLen > sz) {
                 System.arraycopy(rec, 0, buf, offset, sz);
 
-                this.readBuf = new byte[recLen - sz];
+                readBuf = new byte[recLen - sz];
 
-                System.arraycopy(rec, sz, this.readBuf, 0, recLen - sz);
+                System.arraycopy(rec, sz, readBuf, 0, recLen - sz);
             } else {
                 sz = recLen;
 
                 System.arraycopy(rec, 0, buf, offset, recLen);
-            } 
+            }
 
             totalRead += sz;
             numToRead -= sz;
             offset += sz;
-        } 
+        }
 
-        this.entryOffset += totalRead;
+        entryOffset += totalRead;
 
         return totalRead;
-    } 
+    }
 
     /**
      * Copies the contents of the current tar archive entry directly into
      * an output stream.
-     * 
+     *
      * @param out The OutputStream into which to write the entry's data.
+     * @throws IOException on error
      */
     public void copyEntryContents(OutputStream out) throws IOException {
-        byte[] buf = new byte[32 * 1024];
+        byte[] buf = new byte[LARGE_BUFFER_SIZE];
 
         while (true) {
-            int numRead = this.read(buf, 0, buf.length);
+            int numRead = read(buf, 0, buf.length);
 
             if (numRead == -1) {
                 break;
-            } 
+            }
 
             out.write(buf, 0, numRead);
-        } 
-    } 
+        }
+    }
+
+    /**
+     * Whether this class is able to read the given entry.
+     *
+     * <p>May return false if the current entry is a sparse file.</p>
+     */
+    public boolean canReadEntryData(TarEntry te) {
+        return !te.isGNUSparse();
+    }
+
+    private boolean isDirectory() {
+        return currEntry != null && currEntry.isDirectory();
+    }
 }
+

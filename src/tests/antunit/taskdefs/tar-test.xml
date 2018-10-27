@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="tar-test" default="antunit"
+         xmlns:cond="antlib:org.apache.tools.ant.types.conditions"
+         xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
+    <available property="xz.present" classname="org.tukaani.xz.XZOutputStream"/>
+  </target>
+
+  <target name="testTarFilesetHandlesFilesetReferences" depends="setUp">
+    <fileset id="xml.fileset" dir="." includes="*.xml" />
+    <tar  destfile="${output}/testtar.tar">
+      <tarfileset  prefix="pre" refid="xml.fileset" />
+    </tar>
+  </target>
+
+  <target name="testRemoveLeadingSlashes" depends="setUp">
+    <tar destfile="${output}/testtar.tar">
+      <tarfileset file="${ant.file}" fullpath="/foo.xml"/>
+    </tar>
+    <au:assertTrue>
+      <cond:resourceexists>
+        <tarentry name="foo.xml">
+          <file file="${output}/testtar.tar"/>
+        </tarentry>
+      </cond:resourceexists>
+    </au:assertTrue>
+    <au:assertFalse>
+      <cond:resourceexists>
+        <tarentry name="/foo.xml">
+          <file file="${output}/testtar.tar"/>
+        </tarentry>
+      </cond:resourceexists>
+    </au:assertFalse>
+  </target>
+
+  <target name="testPreserveLeadingSlashes" depends="setUp">
+    <tar destfile="${output}/testtar.tar">
+      <tarfileset file="${ant.file}" fullpath="/foo.xml"
+                  preserveleadingslashes="true"/>
+    </tar>
+    <au:assertTrue>
+      <cond:resourceexists>
+        <tarentry name="/foo.xml">
+          <file file="${output}/testtar.tar"/>
+        </tarentry>
+      </cond:resourceexists>
+    </au:assertTrue>
+    <au:assertFalse>
+      <cond:resourceexists>
+        <tarentry name="foo.xml">
+          <file file="${output}/testtar.tar"/>
+        </tarentry>
+      </cond:resourceexists>
+    </au:assertFalse>
+  </target>
+
+  <target name="testSingleFile" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=48035">
+    <touch file="${input}/foo.txt"/>
+    <tar destfile="${output}/foo.tar">
+      <file file="${input}/foo.txt"/>
+    </tar>
+    <au:assertFileExists file="${output}/foo.tar"/>
+    <copy file="${output}/foo.tar" tofile="${output}/bar.tar"
+          preservelastmodified="true"/>
+    <sleep seconds="2"/>
+    <touch file="${input}/foo.txt"/>
+    <tar destfile="${output}/foo.tar">
+      <file file="${input}/foo.txt"/>
+    </tar>
+    <au:assertDestIsOutofdate src="${output}/foo.tar" dest="${output}/bar.tar"/>
+  </target>
+
+  <target name="-longfileSetup" depends="setUp">
+    <property name="longfile.dir.name"
+              value="this/path/name/contains/more/than/one/hundred/characters/in/order/to/test/the/GNU/and/POSIX/long/file/name/capability/round"/>
+    <property name="longfile.file.name"
+              value="${longfile.dir.name}/tripped"/>
+    <mkdir dir="${input}/${longfile.dir.name}"/>
+    <touch file="${input}/${longfile.file.name}"/>
+  </target>
+
+  <target name="testLongfileGNU" depends="-longfileSetup">
+    <tar destfile="${output}/x.tar" longfile="gnu">
+      <fileset dir="${input}"/>
+    </tar>
+    <untar dest="${output}" src="${output}/x.tar"/>
+    <au:assertFileExists file="${output}/${longfile.file.name}"/>
+  </target>
+
+  <target name="testLongfilePOSIX" depends="-longfileSetup">
+    <tar destfile="${output}/x.tar" longfile="posix">
+      <fileset dir="${input}"/>
+    </tar>
+    <untar dest="${output}" src="${output}/x.tar"/>
+    <au:assertFileExists file="${output}/${longfile.file.name}"/>
+  </target>
+
+  <target name="testGzipCompression" depends="setUp">
+    <au:assertFileExists file="../../../etc/testcases/asf-logo.gif"/>
+    <tar destfile="${input}/asf-logo.gif.tar.gz" compression="gzip">
+      <file file="../../../etc/testcases/asf-logo.gif"/>
+    </tar>
+    <gunzip dest="${input}/asf-logo.gif.tar">
+      <file file="${input}/asf-logo.gif.tar.gz"/>
+    </gunzip>
+    <untar src="${input}/asf-logo.gif.tar" dest="${output}"/>
+    <au:assertFilesMatch
+        expected="../../../etc/testcases/asf-logo.gif"
+        actual="${output}/asf-logo.gif"/>
+  </target>
+
+  <target name="testBzip2Compression" depends="setUp">
+    <au:assertFileExists file="../../../etc/testcases/asf-logo.gif"/>
+    <tar destfile="${input}/asf-logo.gif.tar.bz2" compression="bzip2">
+      <file file="../../../etc/testcases/asf-logo.gif"/>
+    </tar>
+    <bunzip2 dest="${input}/asf-logo.gif.tar">
+      <file file="${input}/asf-logo.gif.tar.bz2"/>
+    </bunzip2>
+    <untar src="${input}/asf-logo.gif.tar" dest="${output}"/>
+    <au:assertFilesMatch
+        expected="../../../etc/testcases/asf-logo.gif"
+        actual="${output}/asf-logo.gif"/>
+  </target>
+
+  <target name="testXzCompression" depends="setUp" if="xz.present">
+    <au:assertFileExists file="../../../etc/testcases/asf-logo.gif"/>
+    <tar destfile="${input}/asf-logo.gif.tar.xz" compression="xz">
+      <file file="../../../etc/testcases/asf-logo.gif"/>
+    </tar>
+    <unxz dest="${input}/asf-logo.gif.tar">
+      <file file="${input}/asf-logo.gif.tar.xz"/>
+    </unxz>
+    <untar src="${input}/asf-logo.gif.tar" dest="${output}"/>
+    <au:assertFilesMatch
+        expected="../../../etc/testcases/asf-logo.gif"
+        actual="${output}/asf-logo.gif"/>
+  </target>
+
+</project>

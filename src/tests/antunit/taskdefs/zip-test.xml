@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="testEmptyDirs">
+    <mkdir dir="${input}/foo"/>
+    <mkdir dir="${output}/bar"/>
+    <zip destfile="${output}/test.zip">
+      <fileset dir="${input}"/>
+    </zip>
+    <unzip src="${output}/test.zip" dest="${output}/bar"/>
+    <au:assertFileExists file="${output}/bar/foo"/>
+  </target>
+
+  <target name="testMappedResources">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}/out"/>
+    <echo file="${input}/foo.txt">Hello, world!</echo>
+    <zip destfile="${output}/test.zip">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="foo.*" to="bar.*"/>
+      </mappedresources>
+    </zip>
+    <unzip src="${output}/test.zip" dest="${output}/out"/>
+    <au:assertFileDoesntExist file="${output}/out/foo.txt"/>
+    <au:assertFileExists file="${output}/out/bar.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/out/bar.txt"/>
+  </target>
+
+  <target name="test-54026">
+    <mkdir dir="${input}"/>
+    <touch file="${input}/test1"/>
+    <mkdir dir="${input}/subdir"/>
+    <touch file="${input}/subdir/test2"/>
+    <zip destfile="${output}/br54026-destzip.zip">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="subdir/*" to="subdir.orig/*"/>
+      </mappedresources>
+    </zip>
+
+    <au:assertFileExists file="${output}/br54026-destzip.zip"/>
+  </target>
+
+  <target name="testMappedClasspath">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}/out"/>
+    <zip destfile="${output}/test.zip">
+      <mappedresources>
+        <path path="${java.class.path}"/>
+        <chainedmapper>
+          <flattenmapper/>
+          <globmapper from="*" to="WEB-INF/lib/*"/>
+        </chainedmapper>
+      </mappedresources>
+    </zip>
+    <unzip src="${output}/test.zip" dest="${output}/out"/>
+    <au:assertFileExists file="${output}/out/WEB-INF/lib/ant.jar"/>
+  </target>
+
+    <target name="testIssue45902"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=45902">
+      <mkdir dir="${input}/src/p"/>
+      <mkdir dir="${output}"/>
+      <touch file="${input}/src/p/X.java"/>
+      <touch file="${input}/src/p/x.properties"/>
+      <mkdir dir="${input}/build"/>
+      <copy todir="${input}/build">
+        <fileset dir="${input}/src" includes="**/*.java"/>
+      </copy>
+
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}/build"/>
+        <fileset dir="${input}/src" excludes="**/*.java"/>
+      </jar>
+      <copy file="${output}/jar.jar" tofile="${output}/reference.jar"/>
+
+      <sleep seconds="1"/>
+      <touch file="${input}/src/p/y.properties"/>
+      <sleep seconds="1"/>
+      <delete file="${input}/src/p/y.properties"/>
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}/build"/>
+        <fileset dir="${input}/src" excludes="**/*.java"/>
+      </jar>
+      <au:assertDestIsUptodate src="${output}/jar.jar"
+                               dest="${output}/reference.jar"/>
+
+      <sleep seconds="1"/>
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}/build"/>
+        <fileset dir="${input}/src" excludes="**/*.java"/>
+      </jar>
+      <au:assertDestIsUptodate src="${output}/jar.jar"
+                               dest="${output}/reference.jar"/>
+
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}/build"/>
+        <fileset dir="${input}/src" excludes="**/*.java"/>
+      </jar>
+      <au:assertDestIsUptodate src="${output}/jar.jar"
+                               dest="${output}/reference.jar"/>
+    </target>
+
+    <target name="testNewEmptyDirUpdatesArchive">
+      <mkdir dir="${input}"/>
+      <touch file="${input}/x"/>
+      <mkdir dir="${output}"/>
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}"/>
+      </jar>
+      <copy file="${output}/jar.jar" tofile="${output}/reference.jar"/>
+
+      <mkdir dir="${input}/y"/>
+      <sleep seconds="2"/>
+      <jar jarfile="${output}/jar.jar">
+        <fileset dir="${input}"/>
+      </jar>
+      <au:assertDestIsOutofdate src="${output}/jar.jar"
+                               dest="${output}/reference.jar"/>
+    </target>
+
+    <target name="testFilesetInsideResources"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50115">
+      <mkdir dir="${input}/test2"/>
+      <touch file="${input}/test1.txt"/>
+      <mkdir dir="${output}"/>
+      <mkdir dir="${output}/expand"/>
+      <zip destfile="${output}/test.zip" whenempty="skip">
+        <resources>
+          <fileset dir="${input}" includes="test**"/>
+        </resources>
+      </zip>
+      <au:assertLogDoesntContain text="skipping zip archive"/>
+      <unzip src="${output}/test.zip" dest="${output}/expand"/>
+      <au:assertFileExists file="${output}/expand/test1.txt"/>
+      <!--au:assertFileExists file="${output}/expand/test2"/-->
+    </target>
+
+    <target name="testWhenEmptyChecksNonFileSets"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50115">
+      <mkdir dir="${input}/"/>
+      <touch file="${input}/test1.txt"/>
+      <mkdir dir="${output}"/>
+      <mkdir dir="${output}/expand"/>
+      <zip destfile="${output}/test.zip" whenempty="fail">
+        <resources>
+          <fileset dir="${input}" includes="test**"/>
+        </resources>
+      </zip>
+      <unzip src="${output}/test.zip" dest="${output}/expand"/>
+      <au:assertFileExists file="${output}/expand/test1.txt"/>
+    </target>
+
+    <target name="testUpdateZipWithDuplicateEntries"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54967">
+      <mkdir dir="${input}/"/>
+      <touch file="${input}/test1.txt"/>
+      <mkdir dir="${output}"/>
+      <zip destfile="${output}/test.zip" basedir="${input}">
+        <fileset dir="${input}"/>                                          
+      </zip>                                                                  
+      <zip destfile="${output}/test.zip" update="true">
+        <fileset dir="${basedir}" includes="zip-test.xml"/>
+      </zip>
+    </target>
+</project>

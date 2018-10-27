@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../../antunit-base.xml"/>
+
+  <target name="testExtractJars">
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <archives>
+        <zips>
+          <fileset dir="${ant.home}/lib"
+                   includes="ant-*.jar"/>
+        </zips>
+      </archives>
+    </copy>
+    <au:assertFileExists
+       file="${output}/org/apache/tools/ant/launch/Launcher.class"/>
+    <au:assertFileExists
+       file="${output}/org/apache/tools/ant/BuildFileTest.class"/>
+  </target>
+
+  <target name="testMixingZipsAndTars">
+    <mkdir dir="${output}"/>
+    <tar destfile="${output}/test.tar.gz" compression="gzip">
+      <fileset file="${ant.file}"/>
+    </tar>
+    <copy todir="${output}">
+      <archives>
+        <zips>
+          <fileset dir="${ant.home}/lib"
+                   includes="ant-launcher.jar"/>
+        </zips>
+        <tars>
+          <gzipresource>
+            <file file="${output}/test.tar.gz"/>
+          </gzipresource>
+        </tars>
+      </archives>
+    </copy>
+    <au:assertFileExists
+       file="${output}/org/apache/tools/ant/launch/Launcher.class"/>
+    <basename property="filename" file="${ant.file}"/>
+    <au:assertFileExists file="${output}/${filename}"/>
+  </target>
+
+  <target name="testReference">
+    <mkdir dir="${output}"/>
+    <archives id="ref">
+      <zips>
+        <fileset dir="${ant.home}/lib"
+                 includes="ant-launcher.jar"/>
+      </zips>
+    </archives>
+    <copy todir="${output}">
+      <archives refid="ref"/>
+    </copy>
+    <au:assertFileExists
+       file="${output}/org/apache/tools/ant/launch/Launcher.class"/>
+  </target>
+
+  <target name="testCircularReference">
+    <au:expectfailure
+       message="This data type contains a circular reference.">
+      <copy todir="${output}">
+        <archives id="ref">
+          <zips>
+            <archives refid="ref"/>
+          </zips>
+        </archives>
+      </copy>
+    </au:expectfailure>
+    <au:expectfailure
+       message="This data type contains a circular reference.">
+      <copy todir="${output}">
+        <archives refid="ref"/>
+      </copy>
+    </au:expectfailure>
+  </target>    
+
+  <!-- works but takes a veeeeeery long time -->
+  <target name="XtestResourcesManualExample">
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <archives>
+        <zips>
+          <restrict>
+            <path path="${java.class.path}"/>
+            <name name="*.jar"/>
+          </restrict>
+        </zips>
+      </archives>
+    </copy>
+    <au:assertFileExists
+       file="${output}/org/apache/tools/ant/launch/Launcher.class"/>
+  </target>
+
+  <target name="testZipManualExample">
+    <mkdir dir="${output}/control"/>
+    <mkdir dir="${input}/htdocs/manual"/>
+    <touch file="${input}/htdocs/manual/foo.txt"/>
+    <zip destfile="${input}/examples-a.zip">
+      <fileset dir="." includes="*.xml"/>
+    </zip>
+    <zip destfile="${output}/manual.zip">
+      <mappedresources>
+        <fileset dir="${input}/htdocs/manual"/>
+        <globmapper from="*" to="docs/user-guide/*"/>
+      </mappedresources>
+      <archives>
+        <zips>
+          <fileset dir="${input}" includes="examples*.zip"/>
+        </zips>
+      </archives>
+    </zip>
+    <unzip src="${output}/manual.zip" dest="${output}/control"/>
+    <au:assertFileExists file="${output}/control/archives-test.xml"/>
+    <au:assertFileExists file="${output}/control/docs/user-guide/foo.txt"/>
+  </target>
+
+</project>

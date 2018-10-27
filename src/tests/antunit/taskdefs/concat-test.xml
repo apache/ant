@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="tearDown" depends="antunit-base.tearDown">
+    <delete file="concat.resources" />
+  </target>
+
+  <property name="encodeStringDest" location="${output}/encodeStringDest" />
+
+  <target name="testBinaryAppend">
+    <property name="binaryAppendDest" location="${output}/binaryAppendDest" />
+    <mkdir dir="${output}" />
+    <au:assertTrue message="prerequisite conditions unmet">
+      <length length="0">
+        <!-- allow for nonexistent OR zero-length: -->
+        <fileset file="${binaryAppendDest}" />
+      </length>
+    </au:assertTrue>
+    <echo file="${binaryAppendDest}">x</echo>
+    <au:assertTrue message="destfile setup failed">
+      <length length="1" file="${binaryAppendDest}" />
+    </au:assertTrue>
+    <concat append="true" destfile="${binaryAppendDest}" binary="true">
+      <string value="x" />
+    </concat>
+    <au:assertTrue message="expected length 2">
+      <length file="${binaryAppendDest}" length="2" />
+    </au:assertTrue>
+  </target>
+
+  <target name="testStringEncoding" if="os.unix">
+    <property name="br" value="${line.separator}" />
+    <concat destfile="${encodeStringDest}" outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <file file="utf-16.expected" />
+        <file file="${encodeStringDest}" />
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testStringEncodingWindows" if="os.windows">
+    <property name="br" value="${line.separator}" />
+    <concat destfile="${encodeStringDest}" outputEncoding="utf-16">foo${br}bar${br}baz${br}</concat>
+    <au:assertTrue>
+      <resourcesmatch astext="true">
+        <file file="utf-16.expected.windows" />
+        <file file="${encodeStringDest}" />
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testDoNotFixNestedText" description="Bugzilla 42369">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>foo</string>
+        <concat fixlastline="true">foo</concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="-fixlastline-setup">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/1">1</echo>
+    <echo file="${input}/2">2</echo>
+  </target>
+
+  <target name="testFixLastLineActuallyFixes" depends="-fixlastline-setup">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>1${line.separator}2${line.separator}</string>
+        <concat fixlastline="true">
+          <filelist dir="${input}">
+            <file name="1"/>
+            <file name="2"/>
+          </filelist>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFixLastLineActuallyFixesWithFilterChain"
+          depends="-fixlastline-setup"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=54672">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>1${line.separator}2${line.separator}</string>
+        <concat fixlastline="true">
+          <filelist dir="${input}">
+            <file name="1"/>
+            <file name="2"/>
+          </filelist>
+          <filterchain>
+	    <tokenfilter>
+	      <ignoreblank/>
+	    </tokenfilter>
+	  </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testIgnoreEmptyFalseFileIsCreated">
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
+    <concat destfile="${output}/TESTDEST" append="true" ignoreEmpty="false">
+      <filelist dir="${input}" files="thisfiledoesnotexist" />
+    </concat>
+    <au:assertFileExists file="${output}/TESTDEST" />
+  </target>
+
+  <target name="testIgnoreEmptyTrueFileIsNotCreated">
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
+    <concat destfile="${output}/TESTDEST" append="true" ignoreEmpty="true">
+      <filelist dir="${input}" files="thisfiledoesnotexist" />
+    </concat>
+    <au:assertFileDoesntExist file="${output}/TESTDEST" />
+  </target>
+
+  <target name="testIgnoreEmptyFalseFileIsCreatedIncludesHeader">
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
+    <concat destfile="${output}/TESTDEST" ignoreEmpty="false">
+      <filelist dir="${input}" files="thisfiledoesnotexist" />
+      <header filtering="false" trim="yes">
+	header
+      </header>
+    </concat>
+    <au:assertFileExists file="${output}/TESTDEST" />
+    <au:assertResourceContains resource="${output}/TESTDEST" value="header" />
+  </target>
+
+  <target name="testIgnoreEmptyFalseFileIsCreatedIncludesFooter">
+    <mkdir dir="${input}" />
+    <mkdir dir="${output}" />
+    <concat destfile="${output}/TESTDEST" ignoreEmpty="false">
+      <filelist dir="${input}" files="thisfiledoesnotexist" />
+      <footer filtering="no">footer</footer>
+    </concat>
+    <au:assertFileExists file="${output}/TESTDEST" />
+    <au:assertResourceContains resource="${output}/TESTDEST" value="footer" />
+  </target>
+
+  <target name="testResources">
+    <string id="s1">The Quick Brown Fox</string>
+    <string id="s2">Jumped Over The Lazy Dog.</string>
+
+    <concat destfile="concat.resources" binary="true">
+      <resource refid="s1" />
+      <resource refid="s2" />
+    </concat>
+    <length property="expected">
+      <resources>
+        <resource refid="s1" />
+        <resource refid="s2" />
+      </resources>
+    </length>
+    <length property="actual">
+      <file file="concat.resources" />
+    </length>
+    <fail>
+      <condition>
+        <or>
+          <equals arg1="${actual}" arg2="0" />
+          <not>
+            <equals arg1="${actual}" arg2="${expected}" />
+          </not>
+        </or>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testBug48816">
+    <concat>
+      <resources id="48816" />
+      <string value="x" />
+    </concat>
+    <au:assertTrue>
+      <resourcecount refid="48816" count="0" />
+    </au:assertTrue>
+  </target>
+
+</project>

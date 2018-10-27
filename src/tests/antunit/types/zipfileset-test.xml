@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+  <import file="../antunit-base.xml"/>
+
+  <target name="test-refid-modify">
+    <fileset id="modify-refid-1"
+             dir="${basedir}"
+             includes="*.xml"
+             />
+    <zipfileset id="modify-refid-2"
+                refid="modify-refid-1"
+                prefix="WEB-INF/lib/"/>
+    <delete quiet="yes" dir="${build.dir}"/>
+    <mkdir dir="${output}"/>
+    <jar jarfile="${output}/jar.jar">
+      <zipfileset refid="modify-refid-2"/>
+    </jar>
+    <unjar src="${output}/jar.jar"
+           dest="${output}"/>
+    <au:assertTrue>
+      <available file="${output}/WEB-INF/lib/zipfileset-test.xml"/>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-refid-check-prefix">
+    <zipfileset id="test-refid"
+                dir="${basedir}"/>
+    <au:expectfailure>
+      <zipfileset id="ref2"
+                  refid="test-refid"
+                  prefix="WEB-INF/lib/"/>
+    </au:expectfailure>
+    <au:expectfailure>
+      <zipfileset id="ref3"
+                  prefix="WEB-INF/lib/"
+                  ReFiD="test-refid"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="test-refid-check-encoding">
+    <zipfileset id="test-refid2"
+                encoding="utf-8"
+                dir="${basedir}"/>
+    <au:expectfailure>
+      <zipfileset id="ref4"
+                  encoding="utf-8"
+                  refid="test-refid2"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="testMissingArchive">
+    <mkdir dir="${output}"/>
+    <au:expectfailure expectedMessage="The archive foo.zip doesn't exist">
+      <copy todir="${output}">
+        <zipfileset src="foo.zip"/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testMissingArchiveDoesntMatter">
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <zipfileset src="foo.zip" errorOnMissingArchive="false"/>
+    </copy>
+  </target>
+
+</project>

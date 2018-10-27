@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/initial.properties"><![CDATA[#my comment
+foo=bar
+#second comment
+x=1
+]]></echo>
+    <fixcrlf file="${input}/initial.properties"/>
+    <presetdef name="pf">
+      <propertyfile file="${output}/created.properties">
+        <entry key="foo" value="bar"/>
+        <entry key="x" value="1" type="int"/>
+      </propertyfile>
+    </presetdef>
+  </target>
+
+  <target name="testCreateWithoutComment" depends="setUp">
+    <pf/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <!-- skip comment -->
+    <loadfile srcfile="${input}/initial.properties" property="head.in">
+      <filterchain>
+        <headfilter lines="1" skip="1"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${input}/initial.properties" property="tail.in">
+      <filterchain>
+        <tailfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip date and blank line -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1" skip="2"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <tailfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+  <target name="testCreateWithComment" depends="setUp">
+    <pf comment="my comment"/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="middle.in"/>
+    <local name="middle.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <!-- just comment -->
+    <loadfile srcfile="${input}/initial.properties" property="head.in">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment -->
+    <loadfile srcfile="${input}/initial.properties" property="middle.in">
+      <filterchain>
+        <headfilter lines="1" skip="1"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${input}/initial.properties" property="tail.in">
+      <filterchain>
+        <tailfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- just comment -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment, date and blank line -->
+    <loadfile srcfile="${output}/created.properties" property="middle.out">
+      <filterchain>
+        <headfilter lines="1" skip="3"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <tailfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+    <au:assertPropertyEquals name="middle.out" value="${middle.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+  <target name="-updateSetUp" depends="setUp">
+    <copy file="${input}/initial.properties"
+          tofile="${output}/created.properties"/>
+  </target>
+
+  <target name="testUpdateWithoutComment" depends="-updateSetUp">
+    <pf/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <loadfile srcfile="${input}/initial.properties" property="head.in"/>
+    <!-- skip date -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter skip="1"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+  </target>
+
+  <target name="testUpdateWithNewComment" depends="-updateSetUp">
+    <pf comment="new comment"/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <property name="head.in" value="#new comment${line.separator}"/>
+    <!-- just comment -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <loadfile srcfile="${input}/initial.properties" property="tail.in"/>
+    <!-- skip new comment and date -->
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <headfilter skip="2"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+  <target name="testUpdateWithSameComment" depends="-updateSetUp">
+    <pf comment="my comment"/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <!-- just comment -->
+    <loadfile srcfile="${input}/initial.properties" property="head.in">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- just comment -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment -->
+    <loadfile srcfile="${input}/initial.properties" property="tail.in">
+      <filterchain>
+        <headfilter skip="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment and date -->
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <headfilter skip="2"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+  <target name="testRepeatedUpdateWithoutComment" depends="-updateSetUp">
+    <pf/>
+    <pf/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <loadfile srcfile="${input}/initial.properties" property="head.in"/>
+    <!-- skip date -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter skip="1"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+  </target>
+
+  <target name="testRepeatedUpdateWithSameComment" depends="-updateSetUp">
+    <pf comment="my comment"/>
+    <pf comment="my comment"/>
+    <local name="head.in"/>
+    <local name="head.out"/>
+    <local name="tail.in"/>
+    <local name="tail.out"/>
+    <!-- just comment -->
+    <loadfile srcfile="${input}/initial.properties" property="head.in">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- just comment -->
+    <loadfile srcfile="${output}/created.properties" property="head.out">
+      <filterchain>
+        <headfilter lines="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment -->
+    <loadfile srcfile="${input}/initial.properties" property="tail.in">
+      <filterchain>
+        <headfilter skip="1"/>
+      </filterchain>
+    </loadfile>
+    <!-- skip comment and date -->
+    <loadfile srcfile="${output}/created.properties" property="tail.out">
+      <filterchain>
+        <headfilter skip="2"/>
+      </filterchain>
+    </loadfile>
+    <au:assertPropertyEquals name="head.out" value="${head.in}"/>
+    <au:assertPropertyEquals name="tail.out" value="${tail.in}"/>
+  </target>
+
+
+  <target name="testPreservesDosLineEnds" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50049">
+    <property name="test.txt" location="${output}/test.txt"/>
+    <echo file="${test.txt}"><![CDATA[
+bbb=val2
+aaa=val1
+]]></echo>
+    <fixcrlf eol="dos" file="${test.txt}"/>
+    <propertyfile file="${test.txt}" comment="${header}"/>
+    <copy file="${test.txt}" tofile="${test.txt}.expected"/>
+    <fixcrlf eol="dos" file="${test.txt}.expected"/>
+    <au:assertFilesMatch expected="${test.txt}.expected"
+                         actual="${test.txt}"/>
+  </target>
+
+  <target name="testPreservesUnixLineEnds" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50049">
+    <property name="test.txt" location="${output}/test.txt"/>
+    <echo file="${test.txt}"><![CDATA[
+bbb=val2
+aaa=val1
+]]></echo>
+    <fixcrlf eol="unix" file="${test.txt}"/>
+    <propertyfile file="${test.txt}" comment="${header}"/>
+    <copy file="${test.txt}" tofile="${test.txt}.expected"/>
+    <fixcrlf eol="unix" file="${test.txt}.expected"/>
+    <au:assertFilesMatch expected="${test.txt}.expected"
+                         actual="${test.txt}"/>
+  </target>
+
+  <target name="testPreservesMacLineEnds" depends="setUp"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=50049">
+    <property name="test.txt" location="${output}/test.txt"/>
+    <echo file="${test.txt}"><![CDATA[
+bbb=val2
+aaa=val1
+]]></echo>
+    <fixcrlf eol="mac" file="${test.txt}"/>
+    <propertyfile file="${test.txt}" comment="${header}"/>
+    <copy file="${test.txt}" tofile="${test.txt}.expected"/>
+    <fixcrlf eol="mac" file="${test.txt}.expected"/>
+    <au:assertFilesMatch expected="${test.txt}.expected"
+                         actual="${test.txt}"/>
+  </target>
+</project>

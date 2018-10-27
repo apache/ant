@@ -1,0 +1,4 @@
+The file junit-3.8.2.jar is version 3.8.2 of JUnit, whereas junit-4.8.1.jar is
+version 4.8.1 with the junit.** classes removed (except for the 3.x -> 4.x
+adapter); see the file LICENSE.junit.html for the terms of distribution. For
+more information about JUnit or the latest release, see <http://www.junit.org/>.

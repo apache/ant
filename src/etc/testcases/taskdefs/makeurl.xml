@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="to-url" >
+
+
+  <target name="testEmpty">
+    <makeurl/>
+  </target>
+
+  <target name="testNoProperty">
+    <makeurl file="foo"/>
+  </target>
+
+  <target name="testNoFile">
+    <makeurl property="foo"/>
+  </target>
+    
+  <target name="testWorks">
+    <makeurl property="testWorks" file="foo" validate="false"/>
+    <fail unless="testWorks" />
+  </target>
+
+  <target name="testIllegalChars">
+    <makeurl property="testIllegalChars" file="fo o%" validate="false"/>
+  </target>
+  
+  <target name="testRoundTrip">
+    <makeurl property="testRoundTrip" file="${ant.file}"/>
+  </target>
+
+  <target name="testIllegalCombinations">
+    <makeurl property="testIllegalCombinations" file="foo" validate="false">
+      <fileset dir="." includes="*.xml" />
+    </makeurl>
+  </target>
+  
+  
+  <target name="testFileset">
+    <makeurl property="testFileset">
+      <fileset dir="." includes="*.xml" />
+    </makeurl>
+  </target>
+  
+  <target name="testFilesetSeparator">
+    <makeurl property="testFilesetSeparator" separator='","'>
+      <fileset dir="." includes="*.xml" />
+    </makeurl>
+  </target>
+
+  <target name="testValidation">
+    <makeurl property="testValidation" file="absent" validate="true"/>
+  </target>
+
+  <target name="testPath">
+    <path id="test.path">
+      <pathelement location="." />
+      <fileset dir="." includes="*.xml"/>
+    </path>
+    <makeurl property="testPath">
+      <path refid="test.path" />
+    </makeurl>
+  </target>
+
+</project>

@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="-create-rmic-adapter">
+    <mkdir dir="${input}/org/example"/>
+    <echo file="${input}/org/example/Adapter.java"><![CDATA[
+package org.example;
+import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
+import org.apache.tools.ant.taskdefs.Rmic;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.GlobPatternMapper;
+
+public class Adapter implements RmicAdapter {
+    public void setRmic(Rmic attributes) {}
+    public boolean execute() {
+        System.err.println("adapter called");
+        return true;
+    }
+    public FileNameMapper getMapper() {
+        GlobPatternMapper m = new GlobPatternMapper();
+        m.setFrom("*.class");
+        m.setTo("*_foo.class");
+        return m;
+    }
+
+    public Path getClasspath() {
+        return new Path(null);
+    }
+}]]></echo>
+    <mkdir dir="${resources}"/>
+    <javac srcdir="${input}" destdir="${resources}"/>
+  </target>
+
+  <target name="testCompilerNotFound" depends="-create-rmic-adapter" unless="build.sysclasspath.only">
+    <au:expectfailure>
+      <rmic base="${resources}" includes="**/*.class"
+            compiler="org.example.Adapter"/>
+    </au:expectfailure>
+    <au:assertLogDoesntContain text="adapter called"/>
+  </target>
+
+  <target name="testCompilerClasspath" depends="-create-rmic-adapter"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=11143">
+    <rmic base="${resources}" includes="**/*.class"
+          compiler="org.example.Adapter">
+      <compilerclasspath location="${resources}"/>
+    </rmic>
+    <au:assertLogContains text="adapter called"/>
+  </target>
+
+  <target name="testCompilerAsNestedElement" depends="-create-rmic-adapter">
+    <componentdef classname="org.example.Adapter" name="myjavac">
+      <classpath location="${resources}"/>
+    </componentdef>
+    <rmic base="${resources}" includes="**/*.class">
+      <myjavac/>
+    </rmic>
+    <au:assertLogContains text="adapter called"/>
+  </target>
+
+  <target name="testSourceBase"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=48970">
+    <mkdir dir="${input}/org/example"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/org/example/Foo.java"><![CDATA[
+package org.example;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+public interface Foo extends Remote {
+    long bar() throws RemoteException ;
+}]]></echo>
+    <echo file="${input}/org/example/FooImpl.java"><![CDATA[
+package org.example;
+import java.rmi.RemoteException;
+public class FooImpl implements Foo {
+    public long bar() throws RemoteException {
+        return 0;
+    }
+}]]></echo>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <rmic sourcebase="${input}" base="${output}">
+      <include name="**/*Impl.class"/>
+    </rmic>
+    <au:assertFileExists file="${input}/org/example/FooImpl_Stub.java"/>
+    <au:assertFileDoesntExist file="${output}/org/example/FooImpl_Stub.java"/>
+  </target>
+</project>

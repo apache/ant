@@ -1,0 +1,11 @@
+<project name="buildfiletest-base">
+  <property name="buildfiletest.tmpdir" location="${java.io.tmpdir}"/>
+  <property name="input" location="${buildfiletest.tmpdir}/testinput_${ant.processid}_${ant.threadname}"/>
+  <property name="output" location="${buildfiletest.tmpdir}/testoutput_${ant.processid}_${ant.threadname}"/>
+
+  <target name="tearDown">
+    <delete dir="${input}"/>
+    <delete dir="${output}"/>
+  </target>
+  
+</project>

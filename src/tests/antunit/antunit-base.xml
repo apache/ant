@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="antunit-base">
+
+  <property name="antunit.tmpdir" location="${java.io.tmpdir}"/>
+  <property name="input" location="${antunit.tmpdir}/testinput"/>
+  <property name="output" location="${antunit.tmpdir}/testoutput"/>
+  <property name="resources" location="${antunit.tmpdir}/resources"/>
+  <property name="test.jar" location="${antunit.tmpdir}/test.jar"/>
+  <property name="test1.jar" location="${antunit.tmpdir}/test1.jar"/>
+  <property name="test2.jar" location="${antunit.tmpdir}/test2.jar"/>
+  <property name="test3.jar" location="${antunit.tmpdir}/test3.jar"/>
+  <property name="test4.jar" location="${antunit.tmpdir}/test4.jar"/>
+  <property name="test5.jar" location="${antunit.tmpdir}/test5.jar"/>
+  <available property="jdk9+" classname="java.lang.module.ModuleDescriptor"/>
+  <condition property="build.sysclasspath.only">
+    <equals arg1="${build.sysclasspath}" arg2="only"/>
+  </condition>
+
+  <target name="tearDown">
+    <delete dir="${input}"/>
+    <delete dir="${output}"/>
+    <delete dir="${resources}"/>
+    <delete file="${test.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test1.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test2.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test3.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test4.jar}" failonerror="false" deleteonexit="true"/>
+    <delete file="${test5.jar}" failonerror="false" deleteonexit="true"/>
+  </target>
+
+  <target name="antunit">
+    <antunit xmlns="antlib:org.apache.ant.antunit">
+      <plainlistener />
+      <file file="${ant.file}" xmlns="antlib:org.apache.tools.ant" />
+    </antunit>
+  </target>
+
+</project>

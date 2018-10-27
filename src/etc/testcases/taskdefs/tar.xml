@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="tar-test" basedir="." default="test1">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${output}/untar"/>
+  </target>
+
+  <target name="test1">
+    <tar/>
+  </target>
+
+  <target name="test2">
+    <tar tarfile=""/>
+  </target>
+
+  <target name="test3">
+    <tar basedir=""/>
+  </target>
+
+  <target name="test4">
+    <touch file="${output}/test4.tar"/>
+    <tar destfile="${output}/test4.tar"
+         basedir="${output}"/>
+  </target>
+
+  <target name="test5">
+    <mkdir dir="${output}/test5dir"/>
+    <tar destfile="${output}/test5.tar"
+         basedir="${output}"
+         includes="test5dir"/>
+  </target>
+
+  <target name="test6">
+    <tar destfile="${output}/blah" longfile="Foo"/>
+  </target>
+
+  <target name="test7">
+    <copy todir="${output}">
+      <fileset dir="."/>
+    </copy>
+    <mkdir dir="${output}/test7dir"/>
+    <tar destfile="${output}/test7.tar">
+      <tarfileset dir="${output}" prefix="test7-prefix/">
+        <include name="test7dir"/>
+      </tarfileset>
+      <tarfileset dir="${output}" prefix="">
+        <include name="test7dir"/>
+      </tarfileset>
+    </tar>
+    <untar src="${output}/test7.tar" dest="${output}/untar"/>
+  </target>
+
+  <target name="test7UsingPlainFileSet">
+    <copy todir="${output}">
+      <fileset dir="."/>
+    </copy>
+    <mkdir dir="${output}/test7dir"/>
+    <tar destfile="${output}/test7.tar">
+      <tarfileset dir="${output}" prefix="test7-prefix/">
+        <include name="test7dir"/>
+      </tarfileset>
+      <fileset dir="${output}">
+        <include name="test7dir"/>
+      </fileset>
+    </tar>
+    <untar src="${output}/test7.tar" dest="${output}/untar"/>
+  </target>
+
+  <target name="test7UsingFileList">
+    <copy todir="${output}">
+      <fileset dir="."/>
+    </copy>
+    <mkdir dir="${output}/test7dir"/>
+    <tar destfile="${output}/test7.tar">
+      <tarfileset dir="${output}" prefix="test7-prefix/">
+        <include name="test7dir"/>
+      </tarfileset>
+      <filelist dir="${output}">
+        <file name="test7dir"/>
+      </filelist>
+    </tar>
+    <untar src="${output}/test7.tar" dest="${output}/untar"/>
+  </target>
+
+  <target name="test8">
+    <tar destfile="${output}/test8.tar">
+      <tarfileset dir="." fullpath="/test8.xml">
+        <include name="tar.xml"/>
+      </tarfileset>
+    </tar>
+    <untar src="${output}/test8.tar" dest="${output}/untar"/>
+  </target>
+
+  <target name="test8UsingZipFileset">
+    <tar destfile="${output}/test8.tar">
+      <zipfileset dir="." fullpath="/test8.xml">
+        <include name="tar.xml"/>
+      </zipfileset>
+    </tar>
+    <untar src="${output}/test8.tar" dest="${output}/untar"/>
+  </target>
+
+  <target name="test8UsingZipFilesetSrc">
+    <zip destfile="${output}/test7.tar" basedir="." includes="tar.xml"/>
+    <tar destfile="${output}/test8.tar">
+      <zipfileset src="${output}/test7.tar" fullpath="/test8.xml">
+        <include name="tar.xml"/>
+      </zipfileset>
+    </tar>
+    <untar src="${output}/test8.tar" dest="${output}/untar"/>
+  </target>
+
+  <target name="test8UsingTarFilesetSrc">
+    <tar destfile="${output}/test7.tar" basedir="." includes="tar.xml"/>
+    <tar destfile="${output}/test8.tar">
+      <tarfileset src="${output}/test7.tar" fullpath="/test8.xml">
+        <include name="tar.xml"/>
+      </tarfileset>
+    </tar>
+    <untar src="${output}/test8.tar" dest="${output}/untar"/>
+  </target>
+
+  <target name="test8UsingZipEntry">
+    <zip destfile="${output}/test7.tar">
+      <zipfileset dir="." includes="tar.xml" fullpath="/test8.xml"/>
+    </zip>
+    <tar destfile="${output}/test8.tar">
+      <zipentry archive="${output}/test7.tar" name="/test8.xml"/>
+    </tar>
+    <untar src="${output}/test8.tar" dest="${output}/untar"/>
+  </target>
+
+  <target name="test9">
+    <tar destfile="${output}/blah" compression="Foo"/>
+  </target>
+
+  <target name="test10">
+    <tar destfile="${output}/test10.tar.gz" compression="gzip">
+      <tarfileset dir="." fullpath="/test10.xml">
+        <include name="tar.xml"/>
+      </tarfileset>
+    </tar>
+    <untar src="${output}/test10.tar.gz" dest="${output}/untar" compression="gzip"/>
+  </target>
+
+  <target name="test11">
+    <tar destfile="${output}/test11.tar.bz2" compression="bzip2">
+      <tarfileset dir="." fullpath="/test11.xml">
+        <include name="tar.xml"/>
+      </tarfileset>
+    </tar>
+    <untar src="${output}/test11.tar.bz2" dest="${output}/untar" compression="bzip2"/>
+  </target>
+
+
+  <target name="feather">
+    <tar destfile="${output}/asf-logo.gif.tar"
+         basedir=".."
+         includes="asf-logo.gif" />
+    <tar destfile="${output}/asf-logo.gif.tar.gz"
+         basedir=".."
+         includes="asf-logo.gif" 
+         compression="gzip"/>
+    <tar destfile="${output}/asf-logo.gif.tar.bz2"
+         basedir=".."
+         includes="asf-logo.gif"
+         compression="bzip2" />
+  </target>
+
+  <target name="testGZipResource">
+    <mkdir dir="${output}/testout"/>
+    <tar destfile="${output}/testout/test.tar">
+      <gzipresource>
+        <file file="expected/asf-logo.gif.gz"/>
+      </gzipresource>
+    </tar>
+    <untar src="${output}/testout/test.tar" dest="${output}/untar"/>
+  </target>
+
+</project>

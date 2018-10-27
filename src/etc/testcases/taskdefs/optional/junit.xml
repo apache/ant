@@ -1,0 +1,357 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="junit-test" basedir="." default="outputTests">
+  <import file="../../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+  </target>
+
+  <property name="showoutput" value="false" />
+  <path id="test">
+    <pathelement path="${java.class.path}" />
+    <pathelement location="../../../../../build/testcases" />
+  </path>
+
+  <target name="testForkedOutput">
+    <junit fork="yes" haltonerror="true" haltonfailure="true" 
+           showoutput="${showoutput}">
+      <test name="org.example.junit.Output" />
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="testNonForkedOutput">
+    <junit fork="false" haltonerror="true" haltonfailure="true"
+           showoutput="${showoutput}">
+      <test name="org.example.junit.Output" />
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="testForkedThreadedOutput">
+    <junit fork="yes" haltonerror="true" haltonfailure="true"
+           showoutput="${showoutput}">
+      <test name="org.example.junit.ThreadedOutput" />
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="testNonForkedThreadedOutput">
+    <junit fork="false" haltonerror="true" haltonfailure="true"
+           showoutput="${showoutput}">
+      <test name="org.example.junit.ThreadedOutput" />
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="outputTests" 
+          depends="testForkedOutput,testNonForkedOutput,testForkedThreadedOutput,testNonForkedThreadedOutput" />
+
+  <target name="crash">
+    <junit fork="true" errorproperty="crashed">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.VmCrash"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="nocrash">
+    <junit fork="true" errorproperty="crashed">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.NoVmCrash"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="timeout">
+    <junit fork="true" errorproperty="timeout" timeout="1000">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.Sleeper"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="notimeout">
+    <junit fork="true" errorproperty="timeout" timeout="15000">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.Sleeper"/>
+      <classpath refid="test" />
+    </junit>
+  </target>
+
+  <target name="capture" depends="setUp">
+    <property name="fork" value="false"/>
+    <junit fork="${fork}">
+      <test
+        name="org.apache.tools.ant.taskdefs.optional.junit.Printer"
+        todir="${output}"
+        outfile="testlog"/>
+      <formatter type="plain"/>
+      <classpath refid="test"/>
+    </junit>
+  </target>
+
+  <target name="captureToSummary">
+    <property name="fork" value="true"/>
+    <property name="enableEvents" value="false"/>
+    <junit fork="${fork}" printSummary="withOutAndErr"
+           enableTestListenerEvents="${enableEvents}">
+      <test name="org.apache.tools.ant.taskdefs.optional.junit.Printer"/>
+      <classpath refid="test"/>
+    </junit>
+  </target>
+
+  <target name="testBatchTestForkOnceToDir" depends="setUp">
+    <junit fork="true" forkmode="once">
+      <formatter type="xml"/>
+      <classpath refid="test"/>
+      <batchtest todir="${output}">
+        <fileset dir="../../../../tests/junit">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <!-- tests remove out-dir on tearDown -->
+          <exclude name="**/JUnitTestListenerTest.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!-- Bugzilla Report 32973 -->
+  <target name="testBatchTestForkOnceExtension">
+    <mkdir dir="${output}"/>
+    <junit fork="true" forkmode="once">
+      <formatter type="xml" extension=".foo"/>
+      <classpath refid="test"/>
+      <batchtest todir="${output}">
+        <fileset dir="../../../../tests/junit">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <!-- tests remove out-dir on tearDown -->
+          <exclude name="**/JUnitTestListenerTest.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="testBatchTestForkOnceCustomFormatter">
+    <mkdir dir="${output}"/>
+    <junit fork="true" forkmode="once">
+      <formatter extension="foo"
+        classname="org.apache.tools.ant.taskdefs.optional.junit.TestFormatter"/>
+      <classpath refid="test"/>
+      <batchtest todir="${output}">
+        <fileset dir="../../../../tests/junit">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <!-- tests remove out-dir on tearDown -->
+          <exclude name="**/JUnitTestListenerTest.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="failureRecorder.prepare">
+    <property name="tmp.dir" value="${output}"/>
+    <mkdir dir="${tmp.dir}/org"/>
+    <echo file="${tmp.dir}/A.java">
+        import junit.framework.*;
+        public class A extends TestCase {
+            public A(String s) { super(s); }
+            public void test01() { System.out.println("A.test01"); }
+            public void test02() { System.out.println("A.test02"); fail(); }
+            public void test03() { System.out.println("A.test03"); fail(); }
+        }
+    </echo>
+    <echo file="${tmp.dir}/B.java">
+        import junit.framework.*;
+        public class B extends TestCase {
+            public B(String s) { super(s); }
+            public void test04() { System.out.println("B.test04"); fail(); }
+            public void test05() { System.out.println("B.test05"); }
+            public void test06() { System.out.println("B.test06"); }
+        }
+    </echo>
+    <echo file="${tmp.dir}/C.java">
+        import junit.framework.*;
+        public class C extends TestCase {
+            public C(String s) { super(s); }
+            public void test07() { System.out.println("C.test07"); }
+            public void test08() { System.out.println("C.test08"); }
+            public void test09() { System.out.println("C.test09"); }
+        }
+    </echo>
+    <echo file="${tmp.dir}/org/D.java">
+    	package org;
+        import junit.framework.*;
+        public class D extends TestCase {
+            public D(String s) { super(s); }
+            public void test10() { System.out.println("D.test10"); fail(); }
+        }
+    </echo>
+    <javac srcdir="${tmp.dir}" destdir="${tmp.dir}"/>
+  </target>
+
+  <target name="failureRecorder.internal">  
+    <property name="tmp.dir" value="${output}"/>
+    <delete>
+      <fileset dir="${tmp.dir}" includes="FailedTests*.class"/>
+    </delete>
+    <!-- compile the FailedTests class if present -->
+    <javac srcdir="${tmp.dir}" destdir="${tmp.dir}"/>
+    <available file="${tmp.dir}/FailedTests.class" property="hasFailingTests"/>
+    
+    <property name="ant.junit.failureCollector" value="${tmp.dir}/FailedTests"/>
+    <junit haltonerror="false" haltonfailure="false">
+      <classpath>
+        <pathelement location="${tmp.dir}"/>
+      </classpath>
+      <batchtest todir="${tmp.dir}" unless="hasFailingTests">
+        <fileset dir="${tmp.dir}" includes="**/*.java" excludes="**/FailedTests.*"/>
+        <!-- for initial creation of the FailingTests.java -->
+        <formatter type="failure"/>
+        <!-- I want to see something ... -->
+        <formatter type="plain" usefile="false"/>
+      </batchtest>
+      <test name="FailedTests" if="hasFailingTests" todir="${tmp.dir}">
+      	<!-- update the FailingTests.java -->
+        <formatter type="failure"/>
+        <!-- again, I want to see something -->
+        <formatter type="plain" usefile="false"/>
+      </test>
+    </junit>
+  </target>
+  
+  <target name="failureRecorder.runtest">
+    <ant target="failureRecorder.internal"
+         antfile="junit.xml" 
+         inheritAll="false"
+         inheritRefs="false" 
+    />
+  </target>
+  
+  <target name="failureRecorder.fixing">
+    <property name="tmp.dir" value="${output}"/>
+    <echo file="${tmp.dir}/A.java">
+        import junit.framework.*;
+        public class A extends TestCase {
+            public A(String s) { super(s); }
+            public void test01() { System.out.println("A.test01"); }
+            public void test02() { System.out.println("A.test02"); }
+            public void test03() { System.out.println("A.test03"); }
+        }
+    </echo>
+  </target>
+  
+  <!-- Bugzilla Issue 45411 -->
+  <target name="testMultilineAssertsNoFork">
+    <junit>
+      <test name="org.example.junit.MultilineAsserts"/>
+      <classpath refid="test"/>
+    </junit>
+  </target>
+
+  <!-- Bugzilla Issue 45411 -->
+  <target name="testMultilineAssertsFork">
+    <junit fork="true">
+      <test name="org.example.junit.MultilineAsserts"/>
+      <classpath refid="test"/>
+    </junit>
+  </target>
+
+  <!-- JUnit4 Ignore and Assume for skipping tests -->
+  <target name="testSkippableTests">
+    <mkdir dir="${output}"/>
+    <junit>
+            <formatter type="xml"/>
+            <classpath refid="test"/>
+            <batchtest todir="${output}">
+                <fileset dir="../../../../tests/junit">
+                    <include name="org/example/junit/JUnit4Skippable.java"/>
+                    <!-- tests remove out-dir on tearDown -->
+                </fileset>
+            </batchtest>
+    </junit>
+  </target>
+
+
+  <!-- Skipping classes that are not tests -->
+  <target name="testNonTests">
+    <mkdir dir="${output}"/>
+        <junit>
+            <formatter type="xml"/>
+            <classpath refid="test"/>
+            <batchtest todir="${output}" skipNonTests="true">
+                <fileset dir="../../../../tests/junit">
+                    <include name="org/example/junit/*Missed.java"/>
+                    <!-- tests remove out-dir on tearDown -->
+                </fileset>
+            </batchtest>
+    </junit>
+  </target>
+
+    <!-- Not skipping classes that are not tests -->
+    <target name="testNonTestsRun">
+        <mkdir dir="${output}"/>
+        <junit>
+            <formatter type="xml"/>
+            <classpath refid="test"/>
+            <batchtest todir="${output}" skipNonTests="false">
+                <fileset dir="../../../../tests/junit">
+                    <include name="org/example/junit/*Missed.java"/>
+                    <!-- tests remove out-dir on tearDown -->
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+  <target name="testTestMethods" >
+    <property name="tmp.dir" value="${output}"/>
+    <echo file="${tmp.dir}/T1.java">public class T1 extends
+      junit.framework.TestCase {
+      public void testOK() {}
+      public void testBad() {throw new RuntimeException("failed");}
+      }</echo>
+    <echo file="${tmp.dir}/T2.java">
+      import org.junit.Test;
+      public class T2 {
+      @Test
+      public void ok() {}
+      @Test
+      public void bad() {
+      throw new RuntimeException("failed");}
+      }</echo>
+    <property name="source" value="8"/>
+    <javac srcdir="${tmp.dir}" destdir="${tmp.dir}" includes="T1.java,T2.java"
+           source="${source}">
+
+    </javac>
+    <junit fork="false" printsummary="true" haltonerror="true">
+      <classpath>
+        <pathelement location="${tmp.dir}" />
+        <path refid="test" />
+      </classpath>
+      <test name="T1" methods="testOK" />
+      <test name="T2" methods="ok" />
+    </junit>
+  </target>
+
+</project>

@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="loadproperties-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}" />
+    <property name="properties.tmp" location="${input}/properties.tmp" />
+  </target>
+
+  <target name="test-basic">
+    <loadproperties>
+      <string>basic.foo=foo
+basic.bar=bar
+basic.baz=baz</string>
+    </loadproperties>
+    <au:assertPropertyEquals name="basic.foo" value="foo" />
+    <au:assertPropertyEquals name="basic.bar" value="bar" />
+    <au:assertPropertyEquals name="basic.baz" value="baz" />
+  </target>
+
+  <target name="test-xref">
+    <loadproperties>
+      <string>xref.foo=foo
+xref.bar=$${xref.foo}
+xref.baz=$${xref.bar}</string>
+    </loadproperties>
+    <au:assertPropertyEquals name="xref.foo" value="foo" />
+    <au:assertPropertyEquals name="xref.bar" value="foo" />
+    <au:assertPropertyEquals name="xref.baz" value="foo" />
+  </target>
+
+  <target name="test-xref-complex">
+    <loadproperties>
+      <string>xref-complex.a=$$
+xref-complex.b={
+xref-complex.c=}
+xref-complex.d=x
+xref-complex.e=$${xref-complex.a}$${xref-complex.b}xref-complex.d$${xref-complex.c}
+xref-complex.f=$${xref-complex.e}</string>
+    </loadproperties>
+    <au:assertPropertyEquals name="xref-complex.a" value="$$" />
+    <au:assertPropertyEquals name="xref-complex.b" value="{" />
+    <au:assertPropertyEquals name="xref-complex.c" value="}" />
+    <au:assertPropertyEquals name="xref-complex.d" value="x" />
+    <au:assertPropertyEquals name="xref-complex.e" value="$${xref-complex.d}" />
+    <au:assertPropertyEquals name="xref-complex.f" value="$${xref-complex.d}" />
+  </target>
+
+  <target name="testEncoding"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47382">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/ebcdic.properties" encoding="Cp1047">
+a=Hello world in EBCDIC
+    </echo>
+    <loadproperties srcfile="${input}/ebcdic.properties" encoding="Cp1047"/>
+    <au:assertPropertyEquals name="a" value="Hello world in EBCDIC"/>
+  </target>
+
+  <target name="testPrefixedProperties" depends="setUp">
+    <property name="server" value="localhost"/>
+    <echo file="${properties.tmp}">
+#http.@PORT@ = 90
+http.@PORT@ = 80
+http.@SERVER@ = ${server}
+    </echo>
+    <loadproperties srcFile="${properties.tmp}">
+      <filterchain>
+        <striplinecomments>
+          <comment value="#"/>
+        </striplinecomments>
+        <prefixlines prefix="server1."/>
+        <replacetokens>
+          <token key="PORT" value="port"/>
+          <token key="SERVER" value="server"/>
+        </replacetokens>
+        <expandproperties/>
+      </filterchain>
+    </loadproperties>
+    <property name="server1.http.url" 
+      value="http://${server1.http.server}:${server1.http.port}"/>
+  </target>
+
+  <target name="testLineCommentsWithoutFiltering">
+    <loadproperties>
+      <string value="#foo=bar" />
+    </loadproperties>
+    <au:assertFalse>
+      <isset property="foo" />
+    </au:assertFalse>
+  </target>
+
+  <target name="testPrefixAttributeProperties">
+    <loadproperties prefix="prefixFromAttribute.">
+      <string>foo=foo
+bar=bar
+baz=${foo} ${bar}
+      </string>
+    </loadproperties>
+    <au:assertTrue>
+      <and>
+        <equals arg1="foo" arg2="${prefixFromAttribute.foo}" />
+        <equals arg1="bar" arg2="${prefixFromAttribute.bar}" />
+        <equals arg1="foo bar" arg2="${prefixFromAttribute.baz}" />
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="testSelfContainedPrefixFilterFailure"
+          description="Show why the prefix attribute is needed">
+    <loadproperties>
+      <string>foo=foo
+bar=bar
+baz=${foo} ${bar}
+      </string>
+      <filterchain>
+        <prefixlines prefix="prefixFromFilter." />
+      </filterchain>
+    </loadproperties>
+    <au:assertTrue>
+      <and>
+        <equals arg1="$${foo} $${bar}" arg2="${prefixFromFilter.baz}" />
+        <isset property="prefixFromFilter." />
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="write properties.tmp" depends="setUp">
+    <echo file="${properties.tmp}">
+#tpfr.a=a
+tpfr.a=A
+tpfr.b=b\
+       e
+tpfr.c=@C@
+    </echo>
+  </target>
+
+  <presetdef name="assertPropertiesFromResourceOkay">
+    <au:assertTrue>
+      <equals arg1="Abesea" arg2="${tpfr.a}${tpfr.b}${tpfr.c}" />
+    </au:assertTrue>
+  </presetdef>
+
+  <target name="testPropertiesFromResource" depends="write properties.tmp">
+    <loadproperties resource="properties.tmp" classpath="${input}">
+      <filterchain>
+        <replacetokens>
+          <token key="C" value="sea"/>
+        </replacetokens>
+      </filterchain>
+    </loadproperties>
+  </target>
+
+  <target name="testPropertiesFromFileSet" depends="write properties.tmp">
+    <loadproperties>
+      <fileset file="${properties.tmp}" />
+      <filterchain>
+        <replacetokens>
+          <token key="C" value="sea"/>
+        </replacetokens>
+      </filterchain>
+    </loadproperties>
+    <assertPropertiesFromResourceOkay />
+  </target>
+
+  <target name="testLastPropertyWins">
+    <loadproperties>
+      <string>foo=foo
+foo=bar</string>
+    </loadproperties>
+    <au:assertTrue>
+      <equals arg1="bar" arg2="${foo}" />
+    </au:assertTrue>
+  </target>
+
+</project>

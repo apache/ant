@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml"/>
+
+  <target name="testConditionBaseAndTaskContainer">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/ConditionRun.java">
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.taskdefs.condition.*;
+import java.util.*;
+
+public class ConditionRun extends ConditionBase implements TaskContainer {
+    private List tasks = new ArrayList();
+
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    public void execute() {
+        for (Iterator iter = tasks.iterator(); iter.hasNext(); ) {
+            Task t = (Task) iter.next();
+            t.perform();
+        }
+    }
+}
+    </echo>
+    <javac destdir="${output}"
+           srcdir="${input}"/>
+    <taskdef name="conditionrun" classpath="${output}"
+             classname="ConditionRun"/>
+    <conditionrun>
+      <echo>Hello</echo>
+    </conditionrun>
+    <au:assertLogContains text="Hello"/>
+  </target>
+
+  <target name="testDynamicElementAndTaskContainer">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/Dynamic.java">
+import org.apache.tools.ant.*;
+import java.util.*;
+
+public class Dynamic implements TaskContainer, DynamicElement {
+    private List tasks = new ArrayList();
+
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    public void execute() {
+        for (Iterator iter = tasks.iterator(); iter.hasNext(); ) {
+            Task t = (Task) iter.next();
+            t.perform();
+        }
+    }
+    public Object createDynamicElement(String name) {
+        return null;
+    }
+}
+    </echo>
+    <javac destdir="${output}"
+           srcdir="${input}"/>
+    <taskdef name="dyn" classpath="${output}"
+             classname="Dynamic"/>
+    <dyn>
+      <echo>Hello</echo>
+    </dyn>
+    <au:assertLogContains text="Hello"/>
+  </target>
+
+  <target name="testDynamicElementNSAndTaskContainer">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/Dynamic.java">
+import org.apache.tools.ant.*;
+import java.util.*;
+
+public class Dynamic implements TaskContainer, DynamicElementNS {
+    private List tasks = new ArrayList();
+
+    public void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    public void execute() {
+        for (Iterator iter = tasks.iterator(); iter.hasNext(); ) {
+            Task t = (Task) iter.next();
+            t.perform();
+        }
+    }
+    public Object createDynamicElement(String uri, String localName,
+                                       String qName) {
+        return null;
+    }
+}
+    </echo>
+    <javac destdir="${output}"
+           srcdir="${input}"/>
+    <taskdef name="dyn" classpath="${output}"
+             classname="Dynamic"/>
+    <dyn>
+      <echo>Hello</echo>
+    </dyn>
+    <au:assertLogContains text="Hello"/>
+  </target>
+</project>

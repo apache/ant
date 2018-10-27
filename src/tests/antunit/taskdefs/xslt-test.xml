@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+    <property name="legacy.dir"
+              location="../../../etc/testcases/taskdefs/style/"/>
+  </target>
+
+  <target name="testParameterPropagation" depends="setUp">
+    <xslt in="${legacy.dir}/data.xml"
+          out="${output}/out.xml"
+          style="${legacy.dir}/printParams.xsl">
+      <param name="set" expression="myvalue"/>
+    </xslt>
+    <au:assertResourceContains
+       resource="${output}/out.xml"
+       value="set='myvalue'"/>
+  </target>
+  
+  <target name="testParameterTypes" depends="setUp" description="parameters of various data types and XPath expressions">
+
+    <property name="antProperty1" value="ANT_PROPERTY_1"/>
+    <property name="antProperty2" value="ANT_PROPERTY_2"/>
+    <property name="antProperty3" value="3"/>
+    <property name="antProperty4" value="substring-before"/>
+    
+    <xslt in="${legacy.dir}/data.xml"
+          out="${output}/out.xml">
+      <param name="p1" expression="123" type="INT"/>
+      <param name="p2" expression="64 * 64 div 128 + 10" type="XPATH_NUMBER"/>
+      <param name="p3" expression="${antProperty4}($antProperty2, '_')" type="XPATH_STRING"/>
+      
+      <style>
+        <string><![CDATA[<xsl:stylesheet
+  version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+
+<!-- get the xsl-parameter -->
+<xsl:param name="p1"/>
+<xsl:param name="p2"/>
+<xsl:param name="p3"/>
+
+<!-- use the xsl-parameter -->
+<xsl:template match="/">
+p1_result='<xsl:value-of select="$p1 + 321"/>'
+p2_result='<xsl:value-of select="$p2"/>'
+p3_result='<xsl:value-of select="$p3"/>'
+</xsl:template>
+
+</xsl:stylesheet>
+]]></string>
+      </style>
+    </xslt>
+    <au:assertResourceContains resource="${output}/out.xml" value="p1_result='444'"/>
+    <au:assertResourceContains resource="${output}/out.xml" value="p2_result='42'"/>
+    <au:assertResourceContains resource="${output}/out.xml" value="p3_result='ANT'"/>
+  </target>
+
+  <target name="testInlineStyleSheet" depends="setUp">
+    <xslt in="${legacy.dir}/data.xml"
+          out="${output}/out.xml">
+      <param name="set" expression="somevalue"/>
+      <style>
+        <string><![CDATA[<xsl:stylesheet
+  version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+
+<!-- get the xsl-parameter -->
+<xsl:param name="set">set default value</xsl:param>
+<xsl:param name="empty">empty default value</xsl:param>
+<xsl:param name="undefined">undefined default value</xsl:param>
+
+<!-- use the xsl-parameter -->
+<xsl:template match="/">
+set='<xsl:value-of select="$set"/>'
+empty='<xsl:value-of select="$empty"/>'
+undefined='<xsl:value-of select="$undefined"/>'
+</xsl:template>
+
+</xsl:stylesheet>
+]]></string>
+      </style>
+    </xslt>
+    <au:assertResourceContains
+       resource="${output}/out.xml"
+       value="set='somevalue'"/>
+  </target>
+
+  <target name="testStyleDoesntExist" depends="setUp">
+    <au:expectfailure expectedmessage="i-m-not-there.xslt doesn't exist.">
+      <xslt in="${legacy.dir}/data.xml"
+            out="${output}/out.xml"
+            style="i-m-not-there.xslt"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="testStyleDoesntExistNoError" depends="setUp">
+    <xslt in="${legacy.dir}/data.xml"
+          out="${output}/out.xml"
+          style="i-m-not-there.xslt"
+          failOnError="false"/>
+    <au:assertFileDoesntExist file="${output}/out.xml"/>
+  </target>
+
+  <target name="testStyleDoesntExistNoTransformationError" depends="setUp">
+    <au:expectfailure expectedmessage="i-m-not-there.xslt doesn't exist.">
+      <xslt in="${legacy.dir}/data.xml"
+            out="${output}/out.xml"
+            style="i-m-not-there.xslt"
+            failOnTransformationError="false"/>
+    </au:expectfailure>
+  </target>
+
+  <target name="testTransformationError" depends="setUp">
+    <au:expectfailure expectedmessage="Fatal error during transformation">
+      <xslt in="${legacy.dir}/data.xml"
+            out="${output}/out.xml"
+            style="xslt/printParams-invalid.xsl"
+            />
+    </au:expectfailure>
+  </target>
+
+  <target name="testTransformationErrorNoFail" depends="setUp">
+    <xslt in="${legacy.dir}/data.xml"
+          out="${output}/out.xml"
+          style="xslt/printParams-invalid.xsl"
+          failOnError="false"/>
+    <au:assertFileDoesntExist file="${output}/out.xml"/>
+  </target>
+
+  <target name="testTransformationErrorNoFailOnTransformation" depends="setUp">
+    <xslt in="${legacy.dir}/../input.stdin"
+          out="${output}/out.xml"
+          style="${legacy.dir}/printParams.xsl"
+          failOnTransformationError="false"/>
+    <au:assertFileDoesntExist file="${output}/out.xml"/>
+  </target>
+
+  <target name="testNoResources" depends="setUp">
+    <au:expectfailure expectedmessage="no resources specified">
+      <xslt destdir="${output}" style="${legacy.dir}/printParams.xsl"
+            useImplicitFileset="false">
+        <fileset dir=".">
+          <include name="I don't exist"/>
+        </fileset>
+      </xslt>
+    </au:expectfailure>
+  </target>
+
+  <target name="testNoResourcesNoFail" depends="setUp">
+    <xslt destdir="${output}" style="${legacy.dir}/printParams.xsl"
+          useImplicitFileset="false"
+          failOnNoResources="false">
+      <fileset dir=".">
+        <include name="I don't exist"/>
+      </fileset>
+    </xslt>
+  </target>
+
+  <target name="testNoResourcesNoError" depends="setUp">
+    <xslt destdir="${output}" style="${legacy.dir}/printParams.xsl"
+          useImplicitFileset="false"
+          failOnError="false">
+      <fileset dir=".">
+        <include name="I don't exist"/>
+      </fileset>
+    </xslt>
+  </target>
+
+  <target name="testTrace" depends="setUp">
+    <xslt in="${legacy.dir}/data.xml"
+          out="${output}/out.xml"
+          style="${legacy.dir}/printParams.xsl">
+      <param name="set" expression="myvalue"/>
+      <trace templates="true" elements="true" generation="true"
+             selection="true" extension="true"/>
+    </xslt>
+    <au:assertLogDoesntContain text="Failed to enable tracing"/>
+  </target>
+
+  <target name="setUpIfUnlessTests" depends="setUp">
+    <macrodef name="xs">
+      <sequential>
+        <xslt in="${legacy.dir}/data.xml" out="${output}/out.xml"
+              style="${legacy.dir}/printParams.xsl">
+          <param name="set" expression="if-value" if="${if}"/>
+          <param name="set" expression="unless-value" unless="${if}"/>
+          <param name="empty" expression="if-value" if="if"/>
+          <param name="empty" expression="unless-value" unless="if"/>
+        </xslt>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="testPropertiesNotSet" depends="setUpIfUnlessTests">
+    <xs/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="set='unless-value'"/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="empty='unless-value'"/>
+  </target>
+
+  <target name="testPropertiesSet" depends="setUpIfUnlessTests">
+    <property name="if" value="whatever"/>
+    <xs/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="set='unless-value'"/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="empty='if-value'"/>
+  </target>
+
+  <target name="testIfTrue" depends="setUpIfUnlessTests">
+    <property name="if" value="true"/>
+    <xs/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="set='if-value'"/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="empty='if-value'"/>
+  </target>
+
+  <target name="testIfFalse" depends="setUpIfUnlessTests">
+    <property name="if" value="false"/>
+    <xs/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="set='unless-value'"/>
+    <au:assertResourceContains resource="${output}/out.xml"
+                               value="empty='if-value'"/>
+  </target>
+</project>

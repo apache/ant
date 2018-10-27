@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- this file is not executed by the automated tests since it
+     requires a working CVS client. -->
+
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../antunit-base.xml" />
+
+  <property name="cvsrootloc" location="repository"/>
+  <property name="cvsroot" value=":local:${cvsrootloc}"/>
+
+  <target name="testVersion">
+    <cvsversion clientversionproperty="client" cvsroot="${cvsroot}"/>
+    <au:assertPropertySet name="client"/>
+  </target>
+
+  <target name="testBug38583">
+    <mkdir dir="${output}"/>
+    <cvs cvsroot="${cvsroot}" package="antmodule1" dest="${output}"/>
+    <cvschangelog dir="${output}/antmodule1"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+  </target>
+
+  <target name="testRemoteChangelog">
+    <mkdir dir="${output}"/>
+    <cvschangelog cvsroot="${cvsroot}" package="antmodule3"
+                  remote="true"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="testRemoteChangelogNestedModule">
+    <mkdir dir="${output}"/>
+    <cvschangelog cvsroot="${cvsroot}"
+                  remote="true"
+                  destfile="${output}/report.xml">
+      <module name="antmodule3"/>
+    </cvschangelog>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="xtestRemoteChangelogStartTag">
+    <mkdir dir="${output}"/>
+    <cvschangelog cvsroot="${cvsroot}"
+                  remote="true" startTag="testtag1"
+                  destfile="${output}/report.xml">
+      <module name="antmodule3"/>
+    </cvschangelog>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="testRemoteChangelogEndTag">
+    <mkdir dir="${output}"/>
+    <cvschangelog cvsroot="${cvsroot}"
+                  remote="true" endTag="testtag2"
+                  destfile="${output}/report.xml">
+      <module name="antmodule3"/>
+    </cvschangelog>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="testRemoteChangelogWithTags">
+    <mkdir dir="${output}"/>
+    <cvschangelog cvsroot="${cvsroot}"
+                  remote="true" endTag="testtag2" startTag="testtag1"
+                  destfile="${output}/report.xml">
+      <module name="antmodule3"/>
+    </cvschangelog>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="xtestLocalChangelogStartTag">
+    <mkdir dir="${output}"/>
+    <cvs cvsroot="${cvsroot}" package="antmodule3" dest="${output}"/>
+    <cvschangelog dir="${output}/antmodule3"
+                  remote="false" startTag="testtag1"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="testLocalChangelogEndTag">
+    <mkdir dir="${output}"/>
+    <cvs cvsroot="${cvsroot}" package="antmodule3" dest="${output}"/>
+    <cvschangelog dir="${output}/antmodule3"
+                  remote="false" endTag="testtag2"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="testLocalChangelogWithTags">
+    <mkdir dir="${output}"/>
+    <cvs cvsroot="${cvsroot}" package="antmodule3" dest="${output}"/>
+    <cvschangelog dir="${output}/antmodule3"
+                  remote="false" endTag="testtag2" startTag="testtag1"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+    <au:assertResourceContains resource="${output}/report.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+
+  <target name="testCvsWithSpaceInModule">
+    <mkdir dir="${output}"/>
+    <cvs cvsroot="${cvsroot}" dest="${output}">
+      <module name="ant module 2"/>
+    </cvs>
+    <au:assertFileExists file="${output}/ant module 2/test.txt"/>
+    <cvschangelog dir="${output}/ant module 2"
+                  destfile="${output}/report.xml"/>
+    <au:assertFileExists file="${output}/report.xml"/>
+  </target>
+
+  <target name="testCvsTagDiffWithSpaceInModule">
+    <mkdir dir="${output}"/>
+    <cvstagdiff cvsroot="${cvsroot}"
+                startDate="2008-01-01"
+                endDate="2009-01-01"
+                destfile="${output}/tagdiff.xml">
+      <module name="ant module 2"/>
+    </cvstagdiff>
+    <au:assertFileExists file="${output}/tagdiff.xml"/>
+    <au:assertResourceContains resource="${output}/tagdiff.xml"
+                               value="[test.txt]"/>
+  </target>
+
+  <target name="testCvsTagDiffWithMultipleModules">
+    <mkdir dir="${output}"/>
+    <cvstagdiff cvsroot="${cvsroot}"
+                startDate="2008-01-01"
+                endDate="2009-01-01"
+                destfile="${output}/tagdiff.xml"
+                package="antmodule1 antmodule3"/>
+    <au:assertFileExists file="${output}/tagdiff.xml"/>
+    <au:assertResourceContains resource="${output}/tagdiff.xml"
+                               value="[foo.txt]"/>
+    <au:assertResourceContains resource="${output}/tagdiff.xml"
+                               value="[yet another test.txt]"/>
+  </target>
+</project>

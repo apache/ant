@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="truncate-test" default="default"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <target name="default">
+    <au:antunit>
+      <file file="${ant.file}" />
+    </au:antunit>
+  </target>
+
+  <target name="tearDown">
+    <delete file="foo" />
+    <delete file="bar" />
+    <delete dir="baz" />
+  </target>
+
+  <target name="test-basic">
+    <truncate file="foo" />
+    <au:assertTrue>
+      <length file="foo" length="0" />
+    </au:assertTrue>
+  </target>
+
+  <target name="test-explicit">
+    <truncate file="foo" length="1034" />
+    <au:assertTrue>
+      <length file="foo" length="1034" />
+    </au:assertTrue>
+  </target>
+
+  <target name="test-extend">
+    <truncate file="foo" length="5" />
+    <au:assertTrue>
+      <length file="foo" length="5" />
+    </au:assertTrue>
+    <truncate file="foo" adjust="5" />
+    <au:assertTrue>
+      <length file="foo" length="10" />
+    </au:assertTrue>
+  </target>
+
+  <target name="test-truncate">
+    <truncate file="foo" length="5" />
+    <au:assertTrue>
+      <length file="foo" length="5" />
+    </au:assertTrue>
+    <truncate file="foo" adjust="-5" />
+    <au:assertTrue>
+      <length file="foo" length="0" />
+    </au:assertTrue>
+  </target>
+
+  <target name="test-bigger">
+    <truncate file="foo" length="1K" />
+    <au:assertTrue>
+      <and>
+        <length file="foo" length="1K" />
+        <length file="foo" length="1024" />
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="truncate-bigger">
+    <truncate file="foo" length="3K" />
+    <au:assertTrue>
+      <length file="foo" length="3K" />
+    </au:assertTrue>
+    <truncate file="foo" adjust="-2K" />
+    <au:assertTrue>
+      <length file="foo" length="1K" />
+    </au:assertTrue>
+  </target>
+
+  <target name="test-no-create">
+    <au:assertFileDoesntExist file="foo" />
+    <truncate file="foo" create="false" length="0" />
+    <au:assertFileDoesntExist file="foo" />
+  </target>
+
+  <target name="test-mkdirs">
+    <au:assertFileDoesntExist file="baz" />
+    <truncate file="baz/foo" mkdirs="true" length="0" />
+    <au:assertTrue>
+      <length file="baz/foo" length="0" />
+    </au:assertTrue>
+  </target>
+
+  <target name="test-rc">
+    <truncate length="10">
+      <resources>
+        <file file="foo" />
+        <file file="bar" />
+      </resources>
+    </truncate>
+    <au:assertTrue>
+      <and>
+        <length file="foo" length="10" />
+        <length file="bar" length="10" />
+      </and>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-bad-resource">
+    <au:expectfailure>
+      <truncate length="1P">
+        <string value="blah" />
+      </truncate>
+    </au:expectfailure>
+  </target>
+
+  <target name="test-invalid-attrs">
+    <au:expectfailure>
+      <truncate file="foo" length="0" adjust="0" />
+    </au:expectfailure>
+  </target>
+
+  <target name="test-bad-length">
+    <au:expectfailure>
+      <truncate file="foo" length="-1P" />
+    </au:expectfailure>
+  </target>
+
+  <target name="test-no-files">
+    <au:expectfailure>
+      <truncate length="0" />
+    </au:expectfailure>
+  </target>
+
+</project>

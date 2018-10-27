@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="test" default="def" basedir=".">
+  <import file="../../buildfiletest-base.xml"/>
+
+  <property name="root" location="../../../../.."/>
+
+  <target name="setUp">
+    <mkdir dir="${output}" />
+    <copy file="replaceregexp.properties" tofile="${output}/test.properties" />
+  </target>
+
+  <target name="def">
+    <fail>This build file should only be run from within the testcase</fail>
+  </target>
+
+  <target name="setUp-nl">
+    <mkdir dir="${output}" />
+    <copy file="replaceregexp2.properties" tofile="${output}/test.properties" />
+  </target>
+
+  <target name="testReplace" depends="setUp">
+    <replaceregexp file="${output}/test.properties" byline="true">
+      <regexp pattern="Old(.*)=(.*)" />
+      <substitution expression="NewProp=\1\2" />
+    </replaceregexp>
+  </target>
+  <!-- use in conjunction with testDirectoryDateDoesNotChange to make sure something will happen -->
+  <target name="touchDirectory">
+    <copy file="replaceregexp.properties" tofile="${output}/test.properties" />
+
+  </target>
+  <target name="testDirectoryDateDoesNotChange">
+    <replaceregexp file="${output}/test.properties" byline="true">
+      <regexp pattern="foo" />
+        <substitution expression="bar"/>
+      </replaceregexp>
+  </target>
+
+  <target name="testDontAddNewline1" depends="setUp-nl">
+    <replaceregexp file="${output}/test.properties" byline="false">
+      <regexp pattern="Old(.*)=(.*)" />
+      <substitution expression="NewProp=\1\2" />
+    </replaceregexp>
+  </target>
+
+  <target name="testDontAddNewline2" depends="setUp-nl">
+    <replaceregexp file="${output}/test.properties" byline="true">
+      <regexp pattern="Old(.*)=(.*)" />
+      <substitution expression="NewProp=\1\2" />
+    </replaceregexp>
+  </target>
+
+  <target name="lastModifiedSetup">
+    <echo file="${output}/test.txt">Hello, world!</echo>
+  </target>
+
+  <target name="testNoPreserve">
+    <replaceregexp match="world" replace="Ant" file="${output}/test.txt"/>
+  </target>
+
+  <target name="testPreserve">
+    <replaceregexp match="world" replace="Ant" file="${output}/test.txt"
+                   preserveLastModified="true"/>
+  </target>
+
+</project>
+

@@ -1,0 +1,41 @@
+head     1.1;
+branch   1.1.1;
+access   ;
+symbols  start:1.1.1.1 ant:1.1.1;
+locks    ; strict;
+comment  @# @;
+
+
+1.1
+date     2008.10.16.14.14.17;  author stefan;  state Exp;
+branches 1.1.1.1;
+next     ;
+commitid        cdf48f74c394567;
+
+1.1.1.1
+date     2008.10.16.14.14.17;  author stefan;  state Exp;
+branches ;
+next     ;
+commitid        cdf48f74c394567;
+
+
+desc
+@@
+
+
+
+1.1
+log
+@Initial revision
+@
+text
+@What a nice file.
+@
+
+
+1.1.1.1
+log
+@module with space in it's name
+@
+text
+@@

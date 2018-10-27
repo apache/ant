@@ -1,0 +1,316 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project name="dirscanner">
+  <description>
+    Contains tests that measure the relative performance of Ant's
+    directory scanner.  This is mainly used to compare performance
+    changes between Ant releases.
+
+    Before you run any tests, you need to set up the environment by
+    running the setup or big-setup target.  Note that this will create
+    a directory tree holding 10000 (setup) or 100000 (big-setup)
+    directories and about 22000 (setup) or 222000 (big-setup) files.
+
+    The setup/big-setup targets require Ant 1.7.0 or later.  It may be
+    a good idea to use the -logfile option.
+
+    Consider taking a nap if you run Ant 1.6.x or 1.7.0 against a
+    "big" setup.
+
+    If Ant 1.6.x is detected or the property ant16 has been specified
+    on the command line then the tests will use the pathconvert task
+    instead of resourcecount.  So if you want to compare Ant 1.6.x
+    with later versions of you must specify ant16 on the command line
+    during your 1.[78].x tests.
+
+    The tests will use the default settings of followsymlinks="true"
+    and casesensitive="true" unless those values get overwritten by
+    the properties symlinks and/or casesensitive on the command line.
+  </description>
+
+  <property name="test.dir" location="${java.io.tmpdir}/dirscan.prf"/>
+
+  <property name="symlinks" value="true"/>
+  <property name="casesensitive" value="true"/>
+
+  <condition property="ant16">
+    <contains string="${ant.version}" substring="1.6."/>
+  </condition>
+
+  <echo>This is ${ant.version}</echo>
+
+  <target name="prepare-setup">
+    <mkdir dir="${test.dir}/src/org/apache/tools/ant"/>
+    <mkdir dir="${test.dir}/dest"/>
+    <echo file="${test.dir}/src/org/apache/tools/ant/DirscannerSetup.java"
+          ><![CDATA[
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+package org.apache.tools.ant;
+
+import java.io.File;
+import org.apache.tools.ant.taskdefs.Mkdir;
+import org.apache.tools.ant.taskdefs.Touch;
+
+public class DirscannerSetup extends Task {
+    private boolean biggerSetup = false;
+
+    public void setBig(boolean b) {
+        biggerSetup = b;
+    }
+
+    public void execute() {
+        Mkdir mkdir = new Mkdir();
+        mkdir.bindToOwner(this);
+        Touch touch = new Touch();
+        touch.bindToOwner(this);
+        String tmp = getProject().getProperty("test.dir");
+        if (!biggerSetup) {
+            createTree(new File(tmp), mkdir, touch);
+        } else {
+            for (int i = 0; i < 10; i++) {
+                File f = new File(tmp, String.valueOf(i));
+                createTree(f, mkdir, touch);
+                mkfiles(touch, f);
+            }
+        }
+    }
+
+    private static void createTree(File root, Mkdir mkdir, Touch touch) {
+        for (int i1 = 0; i1 < 10; i1++) {
+            File f1 = new File(root, String.valueOf(i1));
+            for (int i2 = 0; i2 < 10; i2++) {
+                File f2 = new File(f1, String.valueOf(i2));
+                for (int i3 = 0; i3 < 10; i3++) {
+                    File f3 = new File(f2, String.valueOf(i3));
+                    for (int i4 = 0; i4 < 10; i4++) {
+                        File f4 = new File(f3, String.valueOf(i4));
+                        mkdir.setDir(f4);
+                        mkdir.execute();
+                        mkfiles(touch, f4);
+                    }
+                    mkfiles(touch, f3);
+                }
+                mkfiles(touch, f2);
+            }
+            mkfiles(touch, f1);
+        }
+    }
+
+    private static void mkfiles(Touch touch, File dir) {
+        touch.setFile(new File(dir, "A.txt"));
+        touch.execute();
+        touch.setFile(new File(dir, "B.xml"));
+        touch.execute();
+    }
+}]]></echo>
+   <javac srcdir="${test.dir}/src" destdir="${test.dir}/dest"/>
+   <taskdef name="setup"
+        classname="org.apache.tools.ant.DirscannerSetup">
+     <classpath>
+       <pathelement location="${test.dir}/dest"/>
+     </classpath>
+   </taskdef>
+  </target>
+
+  <target name="setup" description="Sets up the environment for tests"
+          depends="prepare-setup">
+   <setup/>
+  </target>
+
+  <target name="big-setup"
+          description="Sets up the &quot;big&quot; environment for tests"
+          depends="prepare-setup">
+   <setup big="true"/>
+  </target>
+
+  <target name="cleanup"
+          description="removes the tree generated by setup">
+    <delete dir="${test.dir}"/>
+  </target>
+
+  <target name="define-scan-16" if="ant16">
+    <macrodef name="scan">
+      <attribute name="test"/>
+      <element name="patterns" optional="true"/>
+      <sequential>
+        <pathconvert property="@{test}">
+          <path>
+            <fileset dir="${test.dir}" followSymlinks="${symlinks}"
+                     casesensitive="${casesensitive}">
+              <patterns/>
+            </fileset>
+          </path>
+        </pathconvert>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="define-scan-17+" unless="ant16">
+    <macrodef name="scan">
+      <attribute name="test"/>
+      <element name="patterns" optional="true"/>
+      <sequential>
+        <resourcecount property="@{test}">
+          <fileset dir="${test.dir}" followSymlinks="${symlinks}"
+                   casesensitive="${casesensitive}">
+            <patterns/>
+          </fileset>
+        </resourcecount>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="define-scan" depends="define-scan-16,define-scan-17+"/>
+
+  <target name="matchall"
+          depends="define-scan"
+          description="doesn't specify any patterns">
+    <scan test="matchall"/>
+  </target>
+
+  <target name="roots"
+          depends="define-scan"
+          description="only contains include patterns that match starts">
+    <scan test="roots">
+      <patterns>
+        <include name="1/2/3/**"/>
+        <include name="9/**"/>
+      </patterns>
+    </scan>
+  </target>
+
+  <target name="many-roots"
+          depends="define-scan"
+          description="only contains include patterns that match starts">
+    <scan test="many-roots">
+      <patterns>
+        <include name="0/"/>
+        <include name="0/0/"/>
+        <include name="0/0/0/"/>
+        <include name="0/0/0/0/"/>
+        <include name="1/"/>
+        <include name="1/1/"/>
+        <include name="1/1/1/"/>
+        <include name="1/1/1/1/"/>
+        <include name="2/"/>
+        <include name="2/2/"/>
+        <include name="2/2/2/"/>
+        <include name="2/2/2/2/"/>
+        <include name="3/"/>
+        <include name="3/3/"/>
+        <include name="3/3/3/"/>
+        <include name="3/3/3/3/"/>
+        <include name="4/"/>
+        <include name="4/4/"/>
+        <include name="4/4/4/"/>
+        <include name="4/4/4/4/"/>
+        <include name="5/"/>
+        <include name="5/5/"/>
+        <include name="5/5/5/"/>
+        <include name="5/5/5/5/"/>
+        <include name="6/"/>
+        <include name="6/6/"/>
+        <include name="6/6/6/"/>
+        <include name="6/6/6/6/"/>
+        <include name="7/"/>
+        <include name="7/7/"/>
+        <include name="7/7/7/"/>
+        <include name="7/7/7/7/"/>
+        <include name="8/"/>
+        <include name="8/8/"/>
+        <include name="8/8/8/"/>
+        <include name="8/8/8/8/"/>
+        <include name="9/"/>
+        <include name="9/9/"/>
+        <include name="9/9/9/"/>
+        <include name="9/9/9/9/"/>
+      </patterns>
+    </scan>
+  </target>
+
+  <target name="recursive-excludes"
+          depends="define-scan"
+          description="specifies include and exclude patterns with wildcards">
+    <scan test="recursive-excludes">
+      <patterns>
+        <include name="**/5/**"/>
+        <exclude name="**/6/**"/>
+      </patterns>
+    </scan>
+  </target>
+
+  <target name="name-matches"
+          depends="define-scan"
+          description="specifies include and exclude patterns matching on file names">
+    <scan test="names-matches">
+      <patterns>
+        <include name="**/*.txt"/>
+        <exclude name="**/4/**"/>
+      </patterns>
+    </scan>
+  </target>
+
+  <target name="many-patterns"
+          depends="define-scan"
+          description="specifies many include and exclude patterns">
+    <scan test="many-patterns">
+      <patterns>
+        <include name="*/1/**"/>
+        <include name="*/3/**/1/**"/>
+        <include name="6/**"/>
+        <include name="**/*.xml"/>
+        <include name="**/4/*"/>
+        <include name="**/2*/**"/>
+        <include name="**/X/**"/>
+        <include name="8/9/4/2/B.xml"/>
+        <include name="9/*"/>
+        <include name="0/*/**"/>
+        <exclude name="*/5/**"/>
+        <exclude name="*/7/**/0/**"/>
+        <exclude name="1/**"/>
+        <exclude name="**/*.txt"/>
+        <exclude name="**/0/*"/>
+        <exclude name="**/8*/**"/>
+        <exclude name="**/Y/**"/>
+        <exclude name="8/9/4/2/A.txt"/>
+        <exclude name="3/*"/>
+        <exclude name="7/*/**"/>
+      </patterns>
+    </scan>
+  </target>
+
+  <target name="all"
+          depends="define-scan,matchall, roots, recursive-excludes, name-matches, many-patterns, many-roots"/>
+</project>

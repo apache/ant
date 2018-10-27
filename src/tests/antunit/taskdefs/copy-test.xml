@@ -1,0 +1,463 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="-fileResourceSetup">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/file.txt"/>
+  </target>
+
+  <target name="testCopyFileFlatten" depends="-fileResourceSetup">
+    <au:assertFileDoesntExist file="${output}/file.txt"/>
+    <copy todir="${output}" flatten="true">
+      <file file="${input}/file.txt"/>
+    </copy>
+    <au:assertFileExists file="${output}/file.txt"/>
+  </target>
+
+  <target name="testCopyFileInResourcesFlatten" depends="-fileResourceSetup">
+    <au:assertFileDoesntExist file="${output}/file.txt"/>
+    <copy todir="${output}" flatten="true">
+      <resources>
+        <file file="${input}/file.txt"/>
+      </resources>
+    </copy>
+    <au:assertFileExists file="${output}/file.txt"/>
+  </target>
+
+  <target name="-setupNullByteStreamResource">
+    <mkdir dir="${input}"/>
+    <echo file="${input}/NullByteStreamResource.java"><![CDATA[
+import org.apache.tools.ant.types.Resource;
+import java.io.*;
+public class NullByteStreamResource extends Resource {
+    private long length = 1024;
+
+    public boolean isExists() {
+        return true;
+    }
+
+    public long getLastModified() {
+        return UNKNOWN_DATETIME;
+    }
+
+    public void setLength(long length) {
+        this.length = length;
+    }
+
+    public InputStream getInputStream() {
+        return new InputStream() {
+            int readSoFar = 0;
+
+            public int read() {
+                return readSoFar++ > length ? -1 : 0;
+            }
+        };
+    }
+}
+]]></echo>
+    <mkdir dir="${output}"/>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <typedef name="nullstream" classname="NullByteStreamResource">
+      <classpath>
+        <pathelement location="${output}"/>
+      </classpath>
+    </typedef>
+  </target>
+
+  <target name="testResourceWithoutName"
+          depends="-setupNullByteStreamResource">
+    <au:expectfailure>
+      <copy todir="${output}">
+        <nullstream/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testResourceWithoutNameWithMergeMapper"
+          depends="-setupNullByteStreamResource">
+    <copy todir="${output}">
+      <nullstream/>
+      <mergemapper to="foo"/>
+    </copy>
+    <au:assertFileExists file="${output}/foo"/>
+  </target>
+
+  <target name="testMappedResources">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/foo.txt">Hello, world!</echo>
+    <copy todir="${output}">
+      <mappedresources>
+        <fileset dir="${input}"/>
+        <globmapper from="foo.*" to="bar.*"/>
+      </mappedresources>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/foo.txt"/>
+    <au:assertFileExists file="${output}/bar.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/bar.txt"/>
+  </target>
+
+  <target name="testMappedResourcesMultipleTrue">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/foo.txt">Hello, world!</echo>
+    <copy todir="${output}">
+      <mappedresources enableMultipleMappings="true">
+        <fileset dir="${input}"/>
+        <compositemapper>
+          <globmapper from="foo.*" to="bar.*"/>
+          <globmapper from="foo.*" to="baz.*"/>
+        </compositemapper>
+      </mappedresources>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/foo.txt"/>
+    <au:assertFileExists file="${output}/bar.txt"/>
+    <au:assertFileExists file="${output}/baz.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/bar.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/baz.txt"/>
+  </target>
+
+  <target name="testMappedResourcesMultipleFalse">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/foo.txt">Hello, world!</echo>
+    <copy todir="${output}">
+      <mappedresources enableMultipleMappings="false">
+        <fileset dir="${input}"/>
+        <compositemapper>
+          <globmapper from="foo.*" to="bar.*"/>
+          <globmapper from="foo.*" to="baz.*"/>
+        </compositemapper>
+      </mappedresources>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/foo.txt"/>
+    <au:assertFileExists file="${output}/bar.txt"/>
+    <au:assertFileDoesntExist file="${output}/baz.txt"/>
+    <au:assertFilesMatch expected="${input}/foo.txt"
+                         actual="${output}/bar.txt"/>
+  </target>
+
+  <target name="testIncludeEmptyDirsDefaultsToTrue"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47168">
+    <mkdir dir="${input}/foo"/>
+    <mkdir dir="${output}"/>
+    <copy todir="${output}">
+      <fileset dir="${input}"/>
+    </copy>
+    <au:assertFileExists file="${output}/foo"/>
+  </target>
+
+  <target name="XtestIncludeEmptyDirsAndZipfileset"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47168">
+    <mkdir dir="${input}/foo"/>
+    <mkdir dir="${output}/final"/>
+    <zip destfile="${output}/zipfile.zip">
+      <fileset dir="${input}"/>
+    </zip>
+    <copy todir="${output}/final">
+      <zipfileset src="${output}/zipfile.zip"/>
+    </copy>
+    <au:assertFileExists file="${output}/final/foo"/>
+  </target>
+
+  <target name="testFailOnURLConnectionError"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47362">
+    <mkdir dir="${output}"/>
+    <au:expectfailure>
+      <copy todir="${output}" failonerror="true" flatten="true">
+        <resources>
+          <url url="http://i-do-not-exist/"/>
+        </resources>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testNotModifiedSelector"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43574"
+          >
+    <mkdir dir="${input}/images"/>
+    <mkdir dir="${input}/cache"/>
+    <touch file="${input}/images/foo.jpg"/>
+    <mkdir dir="${output}"/>
+    <selector id="cache.selector">
+      <not>
+        <modified update="true"
+                  seldirs="false"
+                  cache="propertyfile"
+                  algorithm="digest"
+                  comparator="equal">
+          <param name="cache.cachefile"
+                 value="${input}/cache/cache.properties"/>
+          <param name="algorithm.algorithm" value="MD5"/>
+        </modified>
+      </not>
+    </selector>
+    <au:assertFileDoesntExist file="${input}/cache/cache.properties"/>
+    <copy todir="${output}" overwrite="true">
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </copy>
+    <au:assertFileExists file="${input}/cache/cache.properties"/>
+    <au:assertFileDoesntExist file="${output}/foo.jpg"/>
+    <copy todir="${output}" overwrite="true">
+      <fileset dir="${input}/images">
+        <include name="*.jpg" />
+        <selector refid="cache.selector" />
+      </fileset>
+    </copy>
+    <au:assertFileExists file="${output}/foo.jpg"/>
+  </target>
+
+  <target name="testMissingFileUsingFileAttribute">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <au:expectfailure expectedMessage="Could not find file">
+      <copy file="${input}/not-there.txt" todir="${output}"/>
+    </au:expectfailure>
+    <copy file="${input}/not-there.txt" todir="${output}"
+          failonerror="false"/>
+  </target>
+
+  <target name="testQuiet">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <copy file="${input}/not-there.txt" todir="${output}" failonerror="false" quiet="true" />
+  	<au:assertLogDoesntContain text="Could not find file" />
+  </target>
+
+  <target name="testMissingFilesetRoot">
+    <mkdir dir="${output}"/>
+    <au:expectfailure expectedMessage="does not exist">
+      <copy todir="${output}">
+        <fileset dir="${input}">
+          <include name="not-there.txt"/>
+        </fileset>
+      </copy>
+    </au:expectfailure>
+    <copy todir="${output}" failonerror="false">
+      <fileset dir="${input}">
+        <include name="not-there.txt"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="testMissingFileUsingFilesetInclude"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49070">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <au:expectfailure
+       expectedMessage="Cannot perform operation from directory to file.">
+      <copy tofile="${output}/foo.txt">
+        <fileset dir="${input}">
+          <include name="not-there.txt"/>
+        </fileset>
+      </copy>
+    </au:expectfailure>
+    <copy tofile="${output}/foo.txt" failonerror="false">
+      <fileset dir="${input}">
+        <include name="not-there.txt"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="testMissingFileUsingFilesetFilename"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49070">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <au:expectfailure
+       expectedMessage="Cannot perform operation from directory to file.">
+      <copy tofile="${output}/foo.txt">
+        <fileset dir="${input}">
+          <filename name="not-there.txt"/>
+        </fileset>
+      </copy>
+    </au:expectfailure>
+    <copy  tofile="${output}/foo.txt" failonerror="false">
+      <fileset dir="${input}">
+        <filename name="not-there.txt"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <!-- stolen from ../types/readwrite-test.xml - create a read-only file -->
+  <property name="file" value="testfile"/>
+  <condition property="unix">
+    <os family="unix"/>
+  </condition>
+  <target name="createTestdir">
+    <mkdir dir="${output}"/>
+    <mkdir dir="${input}"/>
+    <touch file="${output}/${file}"/>
+  </target>
+  <target name="makeFileUnwritable" depends="createTestdir">
+    <setpermissions mode="444" nonPosixMode="tryDosOrFail">
+      <file file="${output}/${file}"/>
+    </setpermissions>
+  </target>
+
+  <target name="testCopyOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}">
+        <fileset dir="${input}"/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFilteredCopyOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}">
+        <fileset dir="${input}"/>
+        <filterset>
+          <filter token="foo" value="bar"/>
+        </filterset>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}" overwrite="true">
+        <fileset dir="${input}"/>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testFilteredCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <au:expectfailure
+        expectedMessage="can't write to read-only destination file ">
+      <copy toDir="${output}" overwrite="true">
+        <fileset dir="${input}"/>
+        <filterset>
+          <filter token="foo" value="bar"/>
+        </filterset>
+      </copy>
+    </au:expectfailure>
+  </target>
+
+  <target name="testForcedCopyOverReadOnlyFile" depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" force="true">
+      <fileset dir="${input}"/>
+    </copy>
+  </target>
+
+  <target name="testForcedFilteredCopyOverReadOnlyFile"
+          depends="makeFileUnwritable">
+    <sleep seconds="2"/>
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" force="true">
+      <fileset dir="${input}"/>
+      <filterset>
+        <filter token="foo" value="bar"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <target name="testForcedCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" overwrite="true" force="true">
+      <fileset dir="${input}"/>
+    </copy>
+  </target>
+
+  <target name="testForcedFilteredCopyOverReadOnlyFileWithOverwrite"
+          depends="makeFileUnwritable">
+    <touch file="${input}/${file}"/>
+    <copy toDir="${output}" overwrite="true" force="true">
+      <fileset dir="${input}"/>
+      <filterset>
+        <filter token="foo" value="bar"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <target name="testCopyWithResourceAndFile"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49756"
+          >
+    <mkdir dir="${input}"/>
+    <au:assertFileDoesntExist file="${input}/somefile"/>
+    <copy tofile="${input}/somefile">
+      <first>
+        <union>
+          <restrict>
+            <exists/>
+            <fileset file="${input}/somefile"/>
+          </restrict>
+          <string value="default contents"/>
+        </union>
+      </first>
+    </copy>
+    <au:assertFileExists file="${input}/somefile"/>
+    <au:assertResourceContains resource="${input}/somefile"
+                               value="default contents"/>
+    <delete file="${input}/somefile"/>
+    <touch file="${input}/somefile"/>
+    <copy tofile="${input}/somefile">
+      <first>
+        <union>
+          <restrict>
+            <exists/>
+            <fileset file="${input}/somefile"/>
+          </restrict>
+          <string value="default contents"/>
+        </union>
+      </first>
+    </copy>
+    <au:assertFileExists file="${input}/somefile"/>
+    <au:assertResourceDoesntContain resource="${input}/somefile"
+                                    value="default contents"/>
+  </target>
+
+  <target name="testCopyDoesntDeleteReadonlyTargetWhenCopyFails"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53095">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/somefile"/>
+    <touch file="${output}/somefile"/>
+    <setpermissions mode="444" nonPosixMode="tryDosOrFail">
+      <file file="${output}/somefile"/>
+    </setpermissions>
+    <au:expectfailure>
+      <copy todir="${output}" file="${input}/somefile"
+            overwrite="true"/>
+    </au:expectfailure>
+    <au:assertFileExists file="${input}/somefile"/>
+    <au:assertFileExists file="${output}/somefile"/>
+  </target>
+</project>

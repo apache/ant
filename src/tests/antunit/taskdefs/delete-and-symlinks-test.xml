@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="delete-test" basedir="." default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+  
+  <import file="../antunit-base.xml" />
+
+  <condition property="unix">
+    <os family="unix" />
+  </condition>
+
+  <target name="tearDown" depends="removelink, antunit-base.tearDown"/>
+
+  <target name="removelink" if="link">
+    <symlink action="delete" link="${link}"/>
+  </target>
+
+  <target name="setUp" if="unix">
+    <mkdir dir="${input}/A/B"/>
+    <mkdir dir="${input}/C"/>
+    <property name="link" location="${input}/A/B/C"/>
+    <symlink link="${link}" resource="${input}/C"/>
+  </target>
+
+  <target name="testNotFollowedLink" if="unix" depends="setUp">
+    <delete>
+      <fileset dir="${input}" followSymlinks="false"/>
+    </delete>
+    <au:assertFileExists file="${input}/A/B/C"/>
+  </target>
+
+  <target name="testRemoveNotFollowedLink" if="unix" depends="setUp">
+    <delete removeNotFollowedSymlinks="true">
+      <fileset dir="${input}/A" followSymlinks="false"/>
+    </delete>
+    <au:assertFileDoesntExist file="${input}/A/B/C"/>
+    <au:assertFileExists file="${input}/C"/>
+  </target>
+
+  <target name="testRemoveNotFollowedLinkHonorsIncludesOnFiles"
+          depends="setUp" if="unix"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53959">
+    <delete dir="${input}/C"/>
+    <touch file="${input}/C"/>
+    <delete removeNotFollowedSymlinks="true">
+      <fileset dir="${input}/A" followSymlinks="false" includes="**/D"/>
+    </delete>
+    <au:assertFileExists file="${input}/A/B/C"/>
+  </target>
+
+  <target name="testRemoveNotFollowedLinkDeletesNotIncludedDirs"
+          depends="setUp" if="unix"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53959">
+    <delete removeNotFollowedSymlinks="true">
+      <fileset dir="${input}/A" followSymlinks="false" includes="**/D"/>
+    </delete>
+    <au:assertFileDoesntExist file="${input}/A/B/C"/>
+    <au:assertFileExists file="${input}/C"/>
+  </target>
+
+  <target name="testRemoveNotFollowedLinkHonorsExcludes" if="unix"
+          depends="setUp">
+    <delete removeNotFollowedSymlinks="true">
+      <fileset dir="${input}/A" followSymlinks="false" excludes="**/C/**"/>
+    </delete>
+    <au:assertFileExists file="${input}/A/B/C"/>
+  </target>
+</project>

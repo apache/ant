@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="nice" basedir=".">
+
+<description>
+Test nicing. To make the test more complex we may be running in a nice mode
+to start with, and we want to restore that value at the end. So every test
+that succeeds must restore the saved value.
+</description>
+  <target name="noop">
+    <nice/>
+  </target>
+  
+  <target name="current">
+    <nice currentPriority="nice.now"/>
+    <fail unless="nice.now"/>
+  </target>
+
+  <target name="faster">
+    <nice newPriority="8" currentPriority="nice.old"/>
+    <nice currentPriority="nice.now"/>
+    <condition property="test.succeeded">
+      <equals arg1="${nice.now}" arg2="8" /> 
+    </condition>
+    <nice newPriority="${nice.old}"/>
+    <fail unless="test.succeeded"/>
+  </target>
+  
+  <target name="slower">
+    <nice newPriority="3" currentPriority="nice.old"/>
+    <nice currentPriority="nice.now"/>
+    <condition property="test.succeeded">
+      <equals arg1="${nice.now}" arg2="3" /> 
+    </condition>
+    <nice newPriority="${nice.old}"/>
+    <fail unless="test.succeeded"/>
+  </target>
+  
+  <target name="too_slow">
+    <nice currentPriority="nice.old"/>
+    <nice newPriority="0"/>
+    <nice newPriority="${nice.old}"/>
+  </target>
+
+  <target name="too_fast">
+    <nice currentPriority="nice.old"/>
+    <nice newPriority="20"/>
+    <nice newPriority="${nice.old}"/>
+  </target>
+  
+</project>

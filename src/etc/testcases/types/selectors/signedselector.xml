@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project>
+  <macrodef name="pass">
+    <element name="conditions" implicit="yes"/>
+    <attribute name="failmessage"/>
+    <sequential>
+      <fail message="@{failmessage}">
+        <condition>
+          <not>
+            <conditions/>
+          </not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <property name="issigned.dir" location="../../taskdefs/conditions/jars"/>
+  
+  <target name="selectsigned">
+    <pass failmessage="apassword.jar should be a signed file">
+      <isfileselected file="${issigned.dir}/apassword.jar">
+        <signedselector/>
+      </isfileselected>
+    </pass>
+  </target>
+
+  <target name="notselected">
+    <pass failmessage="nosign.jar should not be selected as a signed jar">
+      <not>
+        <isfileselected file="${issigned.dir}/nosign.jar">
+          <signedselector/>
+        </isfileselected>
+      </not>
+    </pass>
+  </target>
+
+  <target name="name">
+    <pass failmessage="apassword.jar should be a signed file with the name apassword">
+      <isfileselected file="${issigned.dir}/apassword.jar">
+        <signedselector name="apassword"/>
+      </isfileselected>
+    </pass>
+  </target>
+
+</project>

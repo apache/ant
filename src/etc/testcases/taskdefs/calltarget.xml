@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="calltarget-test" default="testinheritreffileset" basedir=".">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="setUp">
+    <mkdir dir="${output}"/>
+  </target>
+
+  <target name="mytarget">
+    <pathconvert property="myproperty" targetos="unix" refid="myfileset"/>
+    <echo message="myproperty=${myproperty}"/>
+  </target>
+
+  <target name="testinheritreffileset">
+    <!-- this testcase should show that the fileset defined here
+    can be read in the called target -->
+    <fileset dir="." id="myfileset">
+      <include name="calltarget.xml"/>
+    </fileset>
+    <antcall target="mytarget" inheritrefs="true"/>
+  </target>
+
+  <target name="copytest2">
+    <copy file="${output}/copytest.in" toFile="${output}/copytest1.out" overwrite="true">
+      <filterset refid="foo"/>
+    </copy>
+  </target>
+
+  <target name="testinheritreffilterset" depends="setUp">
+    <echo file="${output}/copytest.in">@@foo@@</echo>
+    <filterset id="foo" begintoken="@@" endtoken="@@">
+      <filter token="foo" value="bar"/>
+    </filterset>
+    <antcall target="copytest2" inheritrefs="true"/>
+    <copy file="${output}/copytest.in" toFile="${output}/copytest2.out" overwrite="true">
+      <filterset refid="foo"/>
+    </copy>
+    <loadfile srcFile="${output}/copytest2.out" property="copytest2"/>
+    <loadfile srcFile="${output}/copytest1.out" property="copytest1"/>
+    <condition property="success">
+      <equals arg1="${copytest1}" arg2="${copytest2}"/>
+    </condition>
+    <fail message="filterset not properly passed across by antcall" unless="success"/>
+  </target>
+
+  <property name="multi" value="DEFAULT"/>
+
+  <target name="multi">
+    <echo>multi is ${multi}</echo>
+  </target>
+
+  <target name="call-multi">
+    <antcall target="multi">
+      <param name="multi" value="SET"/>
+    </antcall>
+  </target>
+
+  <target name="blank-target">
+    <antcall>
+      <target name=""/>
+    </antcall>
+  </target>
+
+  <target name="multiple-targets">
+    <antcall>
+      <target name="ta"/>
+      <target name="tb"/>
+      <target name="tc"/>
+    </antcall>
+  </target>
+
+  <target name="multiple-targets-2">
+    <ant antfile="ant.xml">
+      <target name="tb"/>
+      <target name="da"/>
+    </ant>
+  </target>
+
+  <target name="ta">
+    <echo>ta</echo>
+  </target>
+
+  <target name="tb" depends="da,dc">
+    <echo>tb</echo>
+  </target>
+
+  <target name="tc" depends="db,dc">
+    <echo>tc</echo>
+  </target>
+
+  <target name="da">
+    <echo>da</echo>
+  </target>
+
+  <target name="db">
+    <echo>db</echo>
+  </target>
+
+  <target name="dc">
+    <echo>dc</echo>
+  </target>
+
+</project>

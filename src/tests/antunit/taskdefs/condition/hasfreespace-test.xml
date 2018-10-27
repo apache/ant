@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="hasfreespace-test" default="all" basedir="." xmlns:au="antlib:org.apache.ant.antunit">
+
+  <available property="jdk6.available" classname="java.util.ServiceLoader" />
+
+  <property name="partition" value="${user.home}" />
+
+
+  <target name="test-not-enough-space-human" if="jdk6.available">
+    <au:assertFalse>
+      <hasfreespace partition="${partition}" needed="1P" />
+    </au:assertFalse>
+  </target>
+
+  <target name="test-enough-space-human" if="jdk6.available">
+    <au:assertTrue>
+      <hasfreespace partition="${partition}" needed="1K" />
+    </au:assertTrue>
+  </target>
+
+  <target name="test-not-enough-space" if="jdk6.available">
+    <property name="long.max-value" value="9223372036854775807" />
+    <au:assertFalse>
+      <hasfreespace partition="${partition}" needed="${long.max-value}" />
+    </au:assertFalse>
+  </target>
+
+  <target name="test-enough-space" if="jdk6.available">
+    <au:assertTrue>
+      <hasfreespace partition="${partition}" needed="1" />
+    </au:assertTrue>
+  </target>
+
+  <target name="all">
+    <au:antunit>
+      <fileset file="${ant.file}" />
+      <au:plainlistener />
+    </au:antunit>
+  </target>
+
+</project>

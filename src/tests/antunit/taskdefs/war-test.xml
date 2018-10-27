@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="war-test" default="antunit"
+       xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <property name="warfile" location="${input}/test.war"/>
+    <property name="web.xml" location="web.xml"/>
+    <property name="webxml.generated" location="${input}/WEB-INF/web.xml"/>
+
+    <!--failing on duplicates is half our testing-->
+    <presetdef name="mkwar">
+      <war destfile="${warfile}" duplicate="fail"/>
+    </presetdef>
+    <presetdef name="expandwar">
+      <unzip src="${input}/test.war" dest="${input}"/>
+    </presetdef>
+  </target>
+
+  <!--test that you can patch a fileset reference into a lib element-->
+  <target name="testlibrefs" depends="setUp">
+    <mkwar webxml="${web.xml}">
+      <fileset id="test" dir="." includes="web.xml"/>
+      <lib refid="test"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
+  <!-- 
+  This checks that as of Java EE 5, the web.xml attr is optional.
+  Here there is a web.xml, in the webinf fileset, rather than a fileset
+  -->
+  <target name="testWebXmlInWebinf" depends="setUp">
+    <mkwar>
+      <webinf dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
+  <target name="testWebXmlMissingFromUpdate" depends="setUp">
+    <mkwar webxml="${web.xml}" />
+    <!-- there is no web.xml file, but that is ok, as
+      we are updating -->
+    <mkwar update="true">
+      <classes dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
+  <target name="testWebXmlInImplicitUpdate" depends="setUp">
+    <mkwar webxml="${web.xml}" />
+    <!-- when we are implicitly updating, the web.xml file does not get
+     pulled in, but the command still succeeds.-->
+    <mkwar webxml="${web.xml}" >
+      <classes dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
+  <target name="NotestWebXmlFilesetInImplicitUpdate" depends="setUp">
+    <mkwar webxml="${web.xml}" />
+    <!-- when we are implicitly updating, the web.xml file does not get
+     pulled in, but the command still succeeds.-->
+    <mkwar >
+      <webinf dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
+
+  <target name="testDuplicateWebXml" depends="setUp">
+    <mkwar webxml="${web.xml}" >
+      <webinf dir="." includes="web.xml"/>
+      <webinf file="${web.xml}"/>
+      <zipfileset file="${web.xml}" prefix="WEB-INF"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+  </target>
+
+  <target name="testDifferentDuplicateWebXml" depends="setUp">
+    <copy file="${web.xml}" todir="${input}" />
+    <mkwar webxml="${web.xml}" >
+      <webinf dir="${input}" includes="web.xml"/>
+      <webinf file="${web.xml}"/>
+      <zipfileset file="${web.xml}" prefix="WEB-INF"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${webxml.generated}" />
+    <au:assertLogContains text="The duplicate entry is"/>
+  </target>
+
+
+  <!--
+    this target does not have a web.xml file.
+    Instead it pulls in
+  -->
+  <target name="testWebXmlOptional" depends="setUp">
+    <mkwar needxmlfile="false">
+      <classes dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${input}/WEB-INF/classes/web.xml" />
+    <au:assertFalse>
+      <available file="${webxml.generated}" />
+    </au:assertFalse>
+  </target>
+
+  <target name="testWebXmlOptionalFailure" depends="setUp">
+    <au:expectfailure>
+      <mkwar >
+        <classes dir="." includes="web.xml"/>
+      </mkwar>
+    </au:expectfailure>
+  </target>
+
+  <target name="testWebXmlOptionalFailure2" depends="setUp">
+    <au:expectfailure>
+      <mkwar  needxmlfile="true">
+        <classes dir="." includes="web.xml"/>
+      </mkwar>
+    </au:expectfailure>
+  </target>
+
+  <target name="testClassesElement" depends="setUp">
+    <mkwar needxmlfile="false">
+      <classes dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${input}/WEB-INF/classes/web.xml" />
+  </target>
+
+  <target name="testLibElement" depends="setUp">
+    <mkwar needxmlfile="false">
+      <lib dir="." includes="web.xml"/>
+    </mkwar>
+    <expandwar/>
+    <au:assertFileExists file="${input}/WEB-INF/lib/web.xml" />
+  </target>
+
+  <target name="testMappedClasspathFromManual">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}/out"/>
+    <war destfile="${output}/test.war" webxml="${ant.file}">
+      <mappedresources>
+        <restrict>
+          <path path="${java.class.path}"/>
+          <type type="file"/>
+        </restrict>
+        <chainedmapper>
+          <flattenmapper/>
+          <globmapper from="*" to="WEB-INF/lib/*"/>
+        </chainedmapper>
+      </mappedresources>
+    </war>
+    <unzip src="${output}/test.war" dest="${output}/out"/>
+    <au:assertFileExists file="${output}/out/WEB-INF/lib/ant.jar"/>
+  </target>
+
+  <target name="testOnlyOneWebXml">
+    <mkdir dir="${input}/WEB-INF"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/WEB-INF/web.xml"/>
+    <touch file="${input}/x.xml"/>
+    <war destfile="${output}/test.war" webxml="${input}/x.xml">
+      <fileset dir="${input}"/>
+    </war>
+    <au:assertLogContains text="Warning: selected war files include a second WEB-INF/web.xml which will be ignored."/>
+  </target>
+</project>

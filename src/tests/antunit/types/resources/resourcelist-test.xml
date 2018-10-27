@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="test-concat" basedir="." default="antunit"
+         xmlns:au="antlib:org.apache.ant.antunit">
+
+  <import file="../../antunit-base.xml" />
+
+  <target name="setUp">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <touch file="${input}/b.txt"/>
+  </target>
+
+  <target name="testBasicOperation" depends="setUp">
+    <echo file="${input}/a.txt">${input}/b.txt
+${input}/c.txt</echo>
+    <property name="c" location="${input}/c.txt"/>
+    <au:expectfailure expectedmessage="Could not find resource file &quot;${c}&quot;">
+      <copy todir="${output}" flatten="true">
+        <resourcelist>
+          <file file="${input}/a.txt"/>
+        </resourcelist>
+      </copy>
+    </au:expectfailure>
+    <copy todir="${output}" flatten="true">
+      <restrict>
+        <resourcelist>
+          <file file="${input}/a.txt"/>
+        </resourcelist>
+        <exists/>
+      </restrict>
+    </copy>
+    <au:assertFileExists file="${output}/b.txt"/>
+    <au:assertFileDoesntExist file="${output}/c.txt"/>
+  </target>
+
+  <target name="testExpandsProperties" depends="setUp">
+    <echo file="${input}/a.txt">$${input}/b.txt</echo>
+    <copy todir="${output}" flatten="true">
+      <resourcelist>
+        <file file="${input}/a.txt"/>
+      </resourcelist>
+    </copy>
+    <au:assertFileExists file="${output}/b.txt"/>
+  </target>
+
+  <target name="testFilterChain" depends="setUp">
+    <echo file="${input}/a.txt">b.txt</echo>
+    <au:expectfailure expectedmessage="Could not find resource file">
+      <copy todir="${output}" flatten="true">
+        <resourcelist>
+          <file file="${input}/a.txt"/>
+        </resourcelist>
+      </copy>
+    </au:expectfailure>
+    <copy todir="${output}" flatten="true">
+      <resourcelist>
+        <file file="${input}/a.txt"/>
+        <filterchain>
+          <prefixlines prefix="${input}/"/>
+        </filterchain>
+      </resourcelist>
+    </copy>
+    <au:assertFileExists file="${output}/b.txt"/>
+  </target>
+
+  <target name="testPropertyExpandsToObject" depends="setUp">
+    <file file="${ant.file}" id="self"/>
+    <echo file="${input}/a.txt">$${ant.refid:self}</echo>
+    <copy todir="${output}" flatten="true">
+      <resourcelist>
+        <file file="${input}/a.txt"/>
+      </resourcelist>
+    </copy>
+    <au:assertFileExists file="${output}/resourcelist-test.xml"/>
+  </target>
+
+  <target name="testReadsURLs" depends="setUp">
+    <makeurl file="${ant.core.lib}" property="ant.jar"/>
+    <echo file="${input}/a.txt">jar:${ant.jar}!/org/apache/tools/ant/antlib.xml</echo>
+    <copy todir="${output}" flatten="true">
+      <resourcelist>
+        <file file="${input}/a.txt"/>
+      </resourcelist>
+    </copy>
+    <au:assertFileExists file="${output}/antlib.xml"/>
+  </target>
+</project>

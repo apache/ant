@@ -1,0 +1,710 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="exec-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+    <import file="../../antunit-base.xml" />
+
+    <macrodef name="assert-trimmed-resource-content">
+        <attribute name="content" />
+        <attribute name="astext" default="true" />
+        <element name="resource" implicit="true" />
+        <sequential>
+            <au:assertTrue>
+                <resourcesmatch astext="@{astext}">
+                    <string value="@{content}" />
+                    <concat>
+                        <resource />
+                        <filterchain>
+                            <trim />
+                        </filterchain>
+                    </concat>
+                </resourcesmatch>
+            </au:assertTrue>
+        </sequential>
+    </macrodef>
+
+    <target name="setUp">
+        <mkdir dir="${input}" />
+        <mkdir dir="${output}" />
+        <property environment="env" />
+        <!-- UNIX -->
+        <available file="sh" filepath="${env.PATH}" property="sh.executable" />
+        <!-- CYGWIN -->
+        <available file="sh.exe" filepath="${env.PATH}" property="sh.exe.executable" />
+        <condition property="test.can.run">
+            <or>
+                <isset property="sh.executable" />
+                <isset property="sh.exe.executable" />
+            </or>
+        </condition>
+        <!-- UNIX -->
+        <available file="wc" filepath="${env.PATH}" property="wc.executable" />
+        <!-- CYGWIN -->
+        <available file="wc.exe" filepath="${env.PATH}" property="wc.exe.executable" />
+        <condition property="wc.can.run">
+            <or>
+                <isset property="wc.executable" />
+                <isset property="wc.exe.executable" />
+            </or>
+        </condition>
+        <!-- UNIX -->
+        <available file="cat" filepath="${env.PATH}" property="cat.executable" />
+        <!-- CYGWIN -->
+        <available file="cat.exe" filepath="${env.PATH}" property="cat.exe.executable" />
+        <condition property="cat.can.run">
+            <or>
+                <isset property="cat.executable" />
+                <isset property="cat.exe.executable" />
+            </or>
+        </condition>
+    </target>
+
+    <target name="test-no-redirect" depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertLogContains text="${ant.file} out" />
+        <au:assertLogContains text="${ant.file} err" />
+    </target>
+
+    <target name="test-redirect-output" depends="setUp" if="test.can.run">
+        <exec executable="sh" output="${output}/redirect.out">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out${line.separator}${ant.file} err</string>
+                <file file="${output}/redirect.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirect-output-error" depends="setUp" if="test.can.run">
+        <exec executable="sh" output="${output}/redirect.out" error="${output}/redirect.err">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out</string>
+                <file file="${output}/redirect.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} err</string>
+                <file file="${output}/redirect.err" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirect-output-outputproperty-logerror" depends="setUp" if="test.can.run">
+        <exec executable="sh" logerror="true"
+              output="${output}/redirect.out" outputproperty="redirect.out">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out</string>
+                <file file="${output}/redirect.out" />
+                <propertyresource name="redirect.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertLogContains text="${ant.file} err" />
+    </target>
+
+    <target name="test-redirect-output-outputproperty-error-errorproperty"
+            depends="setUp" if="test.can.run">
+        <exec executable="sh"
+              error="${output}/redirect.err" errorproperty="redirect.err"
+              output="${output}/redirect.out" outputproperty="redirect.out">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out</string>
+                <file file="${output}/redirect.out" />
+                <propertyresource name="redirect.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} err</string>
+                <file file="${output}/redirect.err" />
+                <propertyresource name="redirect.err" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirect-inputstring-output-outputproperty-error-errorproperty"
+            depends="setUp" if="wc.can.run">
+        <exec executable="wc" inputstring="x y z"
+              error="${output}/redirect.err" errorproperty="redirect.err"
+              output="${output}/redirect.out" outputproperty="redirect.out">
+            <arg value="-w" />
+        </exec>
+        <au:assertTrue>
+            <length length="0">
+                <file file="${output}/redirect.err" />
+                <propertyresource name="redirect.err" />
+            </length>
+        </au:assertTrue>
+        <assert-trimmed-resource-content content="3">
+            <file file="${output}/redirect.out" />
+        </assert-trimmed-resource-content>
+        <assert-trimmed-resource-content content="3">
+            <propertyresource name="redirect.out" />
+        </assert-trimmed-resource-content>
+    </target>
+
+    <target name="test-redirect-input-output-outputproperty-error-errorproperty"
+            depends="setUp" if="wc.can.run">
+        <echo file="${input}/redirect.in">x y z</echo>
+        <exec executable="wc" input="${input}/redirect.in"
+              error="${output}/redirect.err" errorproperty="redirect.err"
+              output="${output}/redirect.out" outputproperty="redirect.out">
+            <arg value="-w" />
+        </exec>
+        <au:assertTrue>
+            <length length="0">
+                <file file="${output}/redirect.err" />
+                <propertyresource name="redirect.err" />
+            </length>
+        </au:assertTrue>
+        <assert-trimmed-resource-content content="3">
+            <file file="${output}/redirect.out" />
+        </assert-trimmed-resource-content>
+        <assert-trimmed-resource-content content="3">
+            <propertyresource name="redirect.out" />
+        </assert-trimmed-resource-content>
+    </target>
+
+    <target name="test-redirect-input-output-outputproperty-error"
+            depends="setUp" if="wc.can.run">
+        <exec executable="wc" inputstring="x y z"
+              error="${output}/redirect.err"
+              output="${output}/redirect.out" outputproperty="redirect.out">
+            <arg value="-w" />
+        </exec>
+        <au:assertTrue>
+            <length length="0">
+                <file file="${output}/redirect.err" />
+            </length>
+        </au:assertTrue>
+        <concat>
+            <file file="${output}/redirect.out" />
+            <propertyresource name="redirect.out" />
+        </concat>
+        <assert-trimmed-resource-content content="3">
+            <file file="${output}/redirect.out" />
+        </assert-trimmed-resource-content>
+        <assert-trimmed-resource-content content="3">
+            <propertyresource name="redirect.out" />
+        </assert-trimmed-resource-content>
+    </target>
+
+    <target name="test-multiple-redirectors" description="fail"
+            depends="setUp" if="test.can.run">
+        <au:expectfailure>
+            <exec executable="sh">
+                <arg value="parrot.sh" />
+                <arg value="${ant.file}" />
+                <redirector output="${output}/redirector.out" />
+                <redirector output="whocares" />
+            </exec>
+        </au:expectfailure>
+    </target>
+
+    <target name="test-redirector-output" depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+            <redirector output="${output}/redirector.out" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out${line.separator}${ant.file} err</string>
+                <file file="${output}/redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-output-error" depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+            <redirector output="${output}/redirector.out" error="${output}/redirector.err" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out</string>
+                <file file="${output}/redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} err</string>
+                <file file="${output}/redirector.err" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-output-outputproperty-logerror" depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+            <redirector output="${output}/redirector.out" logerror="true"
+                        outputproperty="redirector.out" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out</string>
+                <file file="${output}/redirector.out" />
+                <propertyresource name="redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertLogContains text="${ant.file} err" />
+    </target>
+
+    <target name="test-redirector-output-outputproperty-error-errorproperty"
+            depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <redirector error="${output}/redirector.err" errorproperty="redirector.err"
+              output="${output}/redirector.out" outputproperty="redirector.out" />
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out</string>
+                <file file="${output}/redirector.out" />
+                <propertyresource name="redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} err</string>
+                <file file="${output}/redirector.err" />
+                <propertyresource name="redirector.err" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-outputproperty-errorproperty-outputmapper-errormapper"
+            depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <outputmapper type="merge" to="${output}/redirector.out" />
+                <errormapper type="merge" to="${output}/redirector.err" />
+            </redirector>
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out</string>
+                <file file="${output}/redirector.out" />
+                <propertyresource name="redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} err</string>
+                <file file="${output}/redirector.err" />
+                <propertyresource name="redirector.err" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-outputproperty-errorproperty-outputmapper-errormapper-errorfilterchain"
+            depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <outputmapper type="merge" to="${output}/redirector.out" />
+                <errormapper type="merge" to="${output}/redirector.err" />
+                <errorfilterchain>
+                    <replacestring from="err" to="ERROR!!!" />
+                </errorfilterchain>
+            </redirector>
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} out</string>
+                <file file="${output}/redirector.out" />
+                <propertyresource name="redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string>${ant.file} ERROR!!!</string>
+                <file file="${output}/redirector.err" />
+                <propertyresource name="redirector.err" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-outputproperty-errorproperty-inputmapper-outputmapper-errormapper"
+            depends="setUp" if="wc.can.run">
+        <echo file="${input}/redirector.in">x y z</echo>
+        <exec executable="wc">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <inputmapper type="merge" to="${input}/redirector.in" />
+                <outputmapper type="merge" to="${output}/redirector.out" />
+                <errormapper type="merge" to="${output}/redirector.err" />
+            </redirector>
+            <arg value="-w" />
+        </exec>
+        <assert-trimmed-resource-content content="3">
+            <file file="${output}/redirector.out" />
+        </assert-trimmed-resource-content>
+        <assert-trimmed-resource-content content="3">
+            <propertyresource name="redirector.out" />
+        </assert-trimmed-resource-content>
+        <au:assertTrue>
+            <length length="0">
+                <file file="${output}/redirector.err" />
+                <propertyresource name="redirector.err" />
+            </length>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-outputproperty-errorproperty-inputfilterchain-inputmapper-outputmapper-errormapper"
+            depends="setUp" if="cat.can.run">
+        <echo file="${input}/redirector.in">blah before blah</echo>
+        <exec executable="cat">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <inputfilterchain>
+                    <replacestring from="before" to="after" />
+                </inputfilterchain>
+                <inputmapper type="merge" to="${input}/redirector.in" />
+                <outputmapper type="merge" to="${output}/redirector.out" />
+                <errormapper type="merge" to="${output}/redirector.err" />
+            </redirector>
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string value="blah after blah" />
+                <file file="${output}/redirector.out" />
+                <propertyresource name="redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <length length="0">
+                <file file="${output}/redirector.err" />
+                <propertyresource name="redirector.err" />
+            </length>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-outputproperty-errorproperty-outputfilterchain-outputmapper-errormapper"
+            depends="setUp" if="cat.can.run">
+        <echo file="${input}/redirector.in">blah before blah</echo>
+        <exec executable="cat">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <outputfilterchain>
+                    <replacestring from="before" to="after" />
+                </outputfilterchain>
+                <outputmapper type="merge" to="${output}/redirector.out" />
+                <errormapper type="merge" to="${output}/redirector.err" />
+            </redirector>
+            <arg value="${input}/redirector.in" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string value="blah after blah" />
+                <file file="${output}/redirector.out" />
+                <propertyresource name="redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <length length="0">
+                <file file="${output}/redirector.err" />
+                <propertyresource name="redirector.err" />
+            </length>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-outputproperty-errorproperty-inputstring-inputfilterchain-outputmapper-errormapper"
+            depends="setUp" if="cat.can.run">
+        <exec executable="cat">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err"
+                        inputstring="blah before blah">
+                <inputfilterchain>
+                    <replacestring from="before" to="after" />
+                </inputfilterchain>
+                <outputmapper type="merge" to="${output}/redirector.out" />
+                <errormapper type="merge" to="${output}/redirector.err" />
+            </redirector>
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string value="blah after blah" />
+                <file file="${output}/redirector.out" />
+                <propertyresource name="redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <length length="0">
+                <file file="${output}/redirector.err" />
+                <propertyresource name="redirector.err" />
+            </length>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirect-output-error-redirector-outputproperty-errorproperty-outputfilterchain-invalid-outputmapper-invalid-errormapper"
+            depends="setUp" if="cat.can.run">
+        <echo file="${input}/redirector.in">blah before blah</echo>
+        <exec executable="cat" output="${output}/redirector.out" error="${output}/redirector.err">
+            <redirector outputproperty="redirector.out"
+                        errorproperty="redirector.err">
+                <outputfilterchain>
+                    <replacestring from="before" to="after" />
+                </outputfilterchain>
+                <outputmapper type="glob" from="nomatch" to="${output}/nomatchout" />
+                <errormapper type="glob" from="nomatch" to="${output}/nomatcherr" />
+            </redirector>
+            <arg value="${input}/redirector.in" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <string value="blah after blah" />
+                <file file="${output}/redirector.out" />
+                <propertyresource name="redirector.out" />
+            </resourcesmatch>
+        </au:assertTrue>
+        <au:assertTrue>
+            <length length="0">
+                <file file="${output}/redirector.err" />
+                <propertyresource name="redirector.err" />
+            </length>
+        </au:assertTrue>
+        <au:assertTrue>
+            <resourcecount count="0">
+                <fileset dir="${output}" includes="nomatch???" />
+            </resourcecount>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-outputfilterchain-errorfilterchain"
+            depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <redirector>
+                <outputfilterchain>
+                    <replacestring from="out" to="OUTPUT???" />
+                </outputfilterchain>
+                <errorfilterchain>
+                    <replacestring from="err" to="ERROR!!!" />
+                </errorfilterchain>
+            </redirector>
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertLogContains text="${ant.file} OUTPUT???" />
+        <au:assertLogContains text="${ant.file} ERROR!!!" />
+    </target>
+
+    <target name="test-redirector-inputstring-outputfilterchain-outputmapper-errormapper"
+            depends="setUp" if="cat.can.run">
+        <exec executable="cat">
+            <redirector inputstring="blah before blah">
+                <outputfilterchain>
+                    <replacestring from="before" to="after" />
+                </outputfilterchain>
+                <outputmapper type="glob" from="nomatch" to="nomatchout" />
+                <errormapper type="glob" from="nomatch" to="nomatcherr" />
+            </redirector>
+        </exec>
+        <au:assertLogContains text="blah after blah" />
+    </target>
+
+    <target name="test-redirector-input-output-inputencoding-outputencoding"
+            depends="setUp" if="cat.can.run">
+        <exec executable="cat">
+            <redirector input="input/iso8859-1" output="${output}/redirector.out"
+                        inputencoding="ISO8859_1" outputencoding="UTF8" />
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <file file="${output}/redirector.out" />
+                <file file="expected/utf-8" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-inputstring-output-error" depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <redirector inputstring="exit"
+                        output="${output}/redirector.out" error="${output}/redirector.err" />
+        </exec>
+        <au:assertTrue>
+            <and>
+                <available file="${output}/redirector.out" type="file" />
+                <available file="${output}/redirector.err" type="file" />
+            </and>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-inputstring-nocreateempty-output-error"
+            depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <redirector inputstring="exit" createemptyfiles="false"
+                        output="${output}/redirector.out" error="${output}/redirector.err" />
+        </exec>
+        <au:assertTrue>
+            <not>
+                <or>
+                    <available file="${output}/redirector.out" type="file" />
+                    <available file="${output}/redirector.err" type="file" />
+                </or>
+            </not>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-redirector-alwayslog-outputproperty" depends="setUp" if="test.can.run">
+        <exec executable="sh">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+            <redirector alwayslog="true" logerror="true"
+                        outputproperty="redirector.out" />
+        </exec>
+        <au:assertTrue>
+            <equals arg1="${ant.file} out" arg2="${redirector.out}" />
+        </au:assertTrue>
+        <au:assertLogContains text="${ant.file} out" />
+    </target>
+
+    <!-- test will succeed as the OS wont match-->
+    <target name="testExecUnknownOS">
+      <exec executable="nonexistent-program-we-expect"
+            failonerror="true"
+            os="ZX81">
+      </exec>
+    </target>
+
+    <target name="testExecOSFamily">
+      <exec executable="uptime"
+            failonerror="true"
+            osFamily="unix">
+      </exec>
+      <exec executable="cmd.exe"
+            failonerror="true"
+            osFamily="winnt">
+            <arg value="/c" />
+            <arg value="time /t" />
+      </exec>
+    </target>
+    
+    <target name="testExecInconsistentSettings">
+      <exec executable="nonexistent-program-we-expect"
+            failonerror="true"
+            osFamily="WIN9X"
+            os="linux unix">
+      </exec>
+    </target>
+    
+    <target name="testDoesntWaitForChildren"
+            description="https://issues.apache.org/bugzilla/show_bug.cgi?id=5003">
+      <condition property="java"
+                 value="${java.home}/bin/java.exe"
+                 else="${java.home}/bin/java">
+        <os family="dos"/>
+      </condition>
+      <mkdir dir="${input}/org/example"/>
+      <pathconvert dirsep="/" property="out">
+        <path location="${output}"/>
+      </pathconvert>
+      <pathconvert dirsep="/" property="javaP">
+        <path location="${java}"/>
+      </pathconvert>
+      <echo file="${input}/org/example/CallHello.java"><![CDATA[
+package org.example;
+public class CallHello {
+    public static void main(String[] args)
+        throws Exception {
+        String[] cmd = new String[] {
+            "${javaP}", "-cp", "${out}", "org.example.Hello"
+        };
+        Runtime.getRuntime().exec(cmd);
+        Thread.sleep(1 * 1000);
+        System.out.println("finished");
+    }
+}]]></echo>
+      <echo file="${input}/org/example/Hello.java"><![CDATA[
+package org.example;
+public class Hello {
+    public static void main(String[] args)
+        throws Exception {
+        for (int i = 0; i < 20; ++i) {
+            System.out.println("Hello " + i);
+            System.out.flush();
+            Thread.sleep(1 * 1000);
+        }
+    }
+}]]></echo>
+      <mkdir dir="${output}"/>
+      <javac srcdir="${input}" destdir="${output}"/>
+      <exec executable="${java}" failonerror="true">
+        <arg value="-cp"/>
+        <arg value="${output}"/>
+        <arg value="org.example.CallHello"/>
+      </exec>
+      <au:assertLogContains text="finished"/>
+      <au:assertLogDoesntContain text="Hello 20"/>
+    </target>
+
+    <target name="test-output-is-split-into-lines" if="cat.can.run" depends="setUp">
+        <echo file="${input}/redirector.in">1&#xa;2&#xd;&#xa;3</echo>
+        <echo file="${output}/expected">1${line.separator}2${line.separator}3</echo>
+        <exec executable="cat">
+            <redirector output="${output}/redirector.out"
+                        input="${input}/redirector.in"/>
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <file file="${output}/redirector.out" />
+                <file file="${output}/expected" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+    <target name="test-binary-output-is-not-split-into-lines" if="cat.can.run" depends="setUp">
+        <echo file="${input}/redirector.in">1&#xa;2&#xd;&#xa;3</echo>
+        <exec executable="cat">
+            <redirector output="${output}/redirector.out" binaryOutput="true"
+                        input="${input}/redirector.in"/>
+        </exec>
+        <au:assertTrue>
+            <resourcesmatch astext="true">
+                <file file="${output}/redirector.out" />
+                <file file="${input}/redirector.in" />
+            </resourcesmatch>
+        </au:assertTrue>
+    </target>
+
+</project>

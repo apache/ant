@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project basedir="." default="tearDown">
+
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="prepare">
+    <mkdir dir="${output}"/>
+    <gunzip src="expected/asf-logo-huge.tar.gz"
+            dest="${output}/asf-logo-huge-from-gzip.tar"/>
+  </target>
+
+  <target name="realTest">
+    <bunzip2 src="expected/asf-logo-huge.tar.bz2" dest="${output}/asf-logo-huge.tar" />
+  </target>
+
+  <target name="realTestWithResource">
+    <bunzip2 dest="${output}/asf-logo-huge.tar">
+      <file file="expected/asf-logo-huge.tar.bz2"/>
+    </bunzip2>
+  </target>
+
+  <target name="testDocumentationClaimsOnCopy">
+    <copy todir="${output}">
+      <bzip2resource>
+        <file file="expected/asf-logo-huge.tar.bz2"/>
+      </bzip2resource>
+      <mapper type="glob" from="*.bz2" to="*"/>
+    </copy>
+  </target>
+</project>

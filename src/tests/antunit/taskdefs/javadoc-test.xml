@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../antunit-base.xml" />
+
+  <target name="-makeTestClass">
+    <macrodef name="mktest">
+      <attribute name="package"/>
+      <attribute name="class"/>
+      <sequential>
+        <mkdir dir="${input}/@{package}"/>
+        <echo file="${input}/@{package}/@{class}.java"><![CDATA[
+package @{package};
+
+/**
+ * This is a test class.
+ */
+public class @{class} {
+    /**
+     * With a test method.
+     */
+    public void foo(String bar) {}
+}
+]]></echo>
+      </sequential>
+    </macrodef>
+    <mktest package="test" class="A"/>
+  </target>
+
+  <target name="-makeTwoTestClasses" depends="-makeTestClass">
+    <mktest package="test2" class="B"/>
+  </target>
+
+  <target name="testBottomWithLineBreaksWithFile" depends="-makeTestClass">
+    <javadoc destdir="${output}" useexternalfile="true">
+      <fileset dir="${input}"/>
+      <bottom><![CDATA[
+<hr/>
+Hello World
+]]></bottom>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/A.html"/>
+  </target>
+
+  <target name="-setUpDocFilesTests" depends="-makeTestClass">
+    <mkdir dir="${input}/test/doc-files/a"/>
+    <mkdir dir="${input}/test/doc-files/b"/>
+    <macrodef name="mkfoo">
+      <attribute name="file"/>
+      <sequential>
+        <echo file="@{file}"><![CDATA[<p>Hello, world!</p>]]></echo>
+      </sequential>
+    </macrodef>
+    <mkfoo file="${input}/test/doc-files/foo.html"/>
+    <mkfoo file="${input}/test/doc-files/a/foo.html"/>
+    <mkfoo file="${input}/test/doc-files/b/foo.html"/>
+  </target>
+
+  <target name="-create-file-with-warning">
+    <mkdir dir="${input}/test"/>
+        <echo file="${input}/test/Foo.java"><![CDATA[
+package test;
+
+/**
+ * This is a test class.
+ */
+public class Foo {
+    /**
+     * With a test method.
+     * @param baz wrong parameter name should cause warning.
+     */
+    public void foo(String bar) {}
+}
+]]></echo>
+  </target>
+
+  <target name="testPackageSetNoExcludes" depends="-makeTwoTestClasses">
+    <javadoc destdir="${output}">
+      <packageset dir="${input}"/>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/A.html"/>
+    <au:assertFileExists file="${output}/test2/B.html"/>
+  </target>
+
+  <target name="testPackageSetWithExcludes"
+          depends="-makeTwoTestClasses"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=47196">
+    <javadoc destdir="${output}">
+      <packageset dir="${input}">
+        <exclude name="test2"/>
+      </packageset>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/A.html"/>
+    <au:assertFileDoesntExist file="${output}/test2/B.html"/>
+  </target>
+
+  <!-- basically tests no exception is thrown -->
+  <target name="testDontFailOnWarning"
+          depends="-create-file-with-warning">
+    <javadoc destdir="${output}">
+      <packageset dir="${input}"/>
+    </javadoc>
+  </target>
+
+  <target name="testFailOnWarning"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=55015"
+          depends="-create-file-with-warning">
+    <au:expectfailure>
+      <javadoc destdir="${output}" failonwarning="true">
+        <packageset dir="${input}"/>
+      </javadoc>
+    </au:expectfailure>
+  </target>
+
+  <target name="XtestNoDocFiles" depends="-setUpDocFilesTests">
+    <javadoc destdir="${output}">
+      <packageset dir="${input}"/>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/doc-files/foo.html"/>
+    <au:assertFileDoesntExist file="${output}/test/doc-files/a/foo.html"/>
+  </target>
+
+  <target name="XtestDocFiles" depends="-setUpDocFilesTests">
+    <javadoc destdir="${output}" docfilessubdirs="true">
+      <packageset dir="${input}"/>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/doc-files/foo.html"/>
+    <au:assertFileExists file="${output}/test/doc-files/a/foo.html"/>
+    <au:assertFileExists file="${output}/test/doc-files/b/foo.html"/>
+  </target>
+
+  <target name="XtestDocFilesWithExclude" depends="-setUpDocFilesTests">
+    <javadoc destdir="${output}" docfilessubdirs="true"
+             excludedocfilessubdir="a">
+      <packageset dir="${input}"/>
+    </javadoc>
+    <au:assertFileExists file="${output}/test/doc-files/foo.html"/>
+    <au:assertFileDoesntExist file="${output}/test/doc-files/a/foo.html"/>
+    <au:assertFileExists file="${output}/test/doc-files/b/foo.html"/>
+  </target>
+
+</project>

@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+  <import file="../antunit-base.xml"/>
+
+  <path id="foo" location="x.y"/>
+
+  <target name="testToString">
+    <echo message="${toString:foo}"/>
+    <au:assertLogContains
+       text="antunit${file.separator}core${file.separator}x.y"/>
+  </target>
+
+  <target name="testImplicitToString">
+    <echo message="${ant.refid:foo}"/>
+    <au:assertLogContains
+       text="antunit${file.separator}core${file.separator}x.y"/>
+  </target>
+
+  <target name="testPathObject">
+    <mkdir dir="${input}/org/example"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/org/example/Task.java"><![CDATA[
+package org.example;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Path;
+
+public class Task {
+    private Project project;
+    public void setProject(Project p) {
+        project = p;
+    }
+    private boolean set = false;
+    public void setPath(Path p) {
+        if (p != (Path) project.getReference("foo")) {
+            throw new BuildException("this is not my path");
+        }
+        set = true;
+    }
+    public void execute() {
+        if (!set) {
+            throw new BuildException("expected my path attribute to be set");
+        }
+    }
+}
+]]></echo>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <taskdef name="x" classname="org.example.Task"
+             classpath="${output}"/>
+    <x path="${ant.refid:foo}"/>
+  </target>
+
+  <target name="testManualExample">
+    <mkdir dir="${input}/org/example"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/org/example/Task.java"><![CDATA[
+package org.example;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.resources.URLResource;
+
+public class Task {
+    private Resource r;
+    private boolean set = false;
+    public void setAttr(Resource r) {
+        this.r = r;
+    }
+    public void execute() {
+        if (r instanceof URLResource) {
+            System.out.println("URL is: " + ((URLResource) r).getURL());
+        } else {
+            throw new BuildException("Expected an URLResource but got: "
+                                     + (r != null ? r.getClass().getName()
+                                        : "nothing"));
+        }
+    }
+}
+]]></echo>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <taskdef name="x" classname="org.example.Task"
+             classpath="${output}"/>
+    <url url="http://ant.apache.org/" id="anturl"/>
+    <x attr="${ant.refid:anturl}"/>
+    <au:assertLogContains text="URL is: http://ant.apache.org/"/>
+  </target>
+</project>
