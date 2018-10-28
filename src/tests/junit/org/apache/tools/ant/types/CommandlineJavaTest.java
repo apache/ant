@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.junit.After;
 import org.junit.Before;
@@ -49,8 +50,8 @@ public class CommandlineJavaTest {
     @Before
     public void setUp() {
         project = new Project();
-        if (System.getProperty(MagicNames.TEST_ROOT_DIRECTORY) != null) {
-            project.setBasedir(System.getProperty(MagicNames.TEST_ROOT_DIRECTORY));
+        if (System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY) != null) {
+            project.setBasedir(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY));
         }
         project.setProperty("build.sysclasspath", "ignore");
         cloneVm = System.getProperty("ant.build.clonevm");

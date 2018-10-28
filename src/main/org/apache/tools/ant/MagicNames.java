@@ -322,40 +322,5 @@ public final class MagicNames {
      */
     public static final String TSTAMP_NOW_ISO = "ant.tstamp.now.iso";
 
-    /**
-     * Magic property that makes unit tests based on BuildFileTest
-     * or BuildFileRule ignore externally set basedir
-     * (typically by Surefire/Failsafe)
-     *
-     * Value: {@value}
-     * @since Ant 1.10.6
-     */
-    public static final String TEST_BASEDIR_IGNORE = "ant.test.basedir.ignore";
-
-    /**
-     * Magic property that makes unit tests based on BuildFileTest
-     * or BuildFileRule use build files in alternative locations
-     * (relative to "root" directory)
-     *
-     * Value: {@value}
-     * @since Ant 1.10.6
-     */
-    public static final String TEST_ROOT_DIRECTORY = "root";
-
-    /**
-     * Property for ant process ID set in unit tests by BuildFileTest
-     * or BuildFileRule.
-     *
-     * Value: {@value}
-     */
-    public static final String TEST_PROCESS_ID = "ant.processid";
-
-    /**
-     * Property for ant thread name set in unit tests by BuildFileTest
-     * or BuildFileRule.
-     *
-     * Value: {@value}
-     */
-    public static final String TEST_THREAD_NAME = "ant.threadname";
 }
 

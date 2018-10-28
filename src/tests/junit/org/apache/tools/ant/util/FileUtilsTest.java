@@ -23,7 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.After;
 import org.junit.Before;
@@ -51,7 +51,7 @@ public class FileUtilsTest {
     public ExpectedException thrown = ExpectedException.none();
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final String ROOT = System.getProperty(MagicNames.TEST_ROOT_DIRECTORY);
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
     private File removeThis;
     private String root;
 
