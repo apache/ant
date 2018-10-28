@@ -68,10 +68,11 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <includes>
-                        <include>org/apache/tools/ant/taskdefs/optional/junitlauncher/*</include>
+                        <include>org/apache/tools/ant/taskdefs/optional/junitlauncher/</include>
                     </includes>
                     <testIncludes>
-                        <include>org/apache/tools/ant/taskdefs/optional/junitlauncher/*</include>
+                        <include>org/apache/tools/ant/taskdefs/optional/junitlauncher/</include>
+                        <include>org/example/junitlauncher/</include>
                     </testIncludes>
                 </configuration>
             </plugin>
@@ -95,7 +96,19 @@
                 <configuration>
                     <basedir>../../../..</basedir>
                     <workingDirectory>../../../..</workingDirectory>
-                    <skipTests>true</skipTests>
+                    <systemProperties>
+                        <property>
+                            <name>build.tests.value</name>
+                            <value>${project.basedir}/../../../../target/${project.artifactId}/testcases</value>
+                        </property>
+                        <property>
+                            <name>ant.test.basedir.ignore</name>
+                            <value>true</value>
+                        </property>
+                    </systemProperties>
+                    <excludes>
+                        <exclude>org/example/junitlauncher/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

@@ -18,15 +18,15 @@
 <project>
 
   <path id="test">
-    <pathelement path="${java.class.path}" />
-    <pathelement location="../../../../../../build/testcases" />
+    <pathelement path="${java.class.path}"/>
+    <pathelement location="${build.tests.value}"/>
   </path>
 
   <target name="testNoTeardown">
     <junit haltonerror="false" errorproperty="error" fork="true" timeout="1000">
       <formatter type="plain" usefile="false"/>
       <batchtest>
-        <fileset dir="../../../../../../build/testcases">
+        <fileset dir="${build.tests.value}">
           <include name="org/example/junit/Timeout*"/>
         </fileset>
       </batchtest>
@@ -40,11 +40,12 @@
       <formatter classname="org.apache.tools.ant.taskdefs.optional.junit.TearDownOnVmCrash"
                  usefile="false"/>
       <batchtest>
-        <fileset dir="../../../../../../build/testcases">
+        <fileset dir="${build.tests.value}">
           <include name="org/example/junit/Timeout*"/>
         </fileset>
       </batchtest>
       <classpath refid="test"/>
     </junit>
   </target>
+
 </project>

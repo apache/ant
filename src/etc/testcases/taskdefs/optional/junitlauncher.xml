@@ -19,7 +19,7 @@
 <project name="junitlauncher-test" basedir=".">
 
     <property name="output.dir" location="${java.io.tmpdir}"/>
-    <property name="build.classes.dir" value="../../../../../build/testcases"/>
+    <property name="build.classes.dir" value="${build.tests.value}"/>
     <target name="init">
         <mkdir dir="${output.dir}"/>
     </target>

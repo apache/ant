@@ -577,7 +577,8 @@ public class PathTest {
         d.setDir(project.resolveFile("."));
         String s = System.getProperty("build.tests.value");
         assertNotNull("build.tests.value not set", s);
-        String n = Paths.get(s).getParent().equals("ant") ? "ant" : "build";
+        String n = Paths.get(s).getParent().getFileName().toString().equals("ant")
+                ? "target" : "build";
         d.setIncludes(n);
         p.addDirset(d);
         String[] l = p.list();
