@@ -396,6 +396,7 @@
     <include name="${ant.package}/BuildFileTest*"/>
     <include name="${ant.package}/BuildFileRule*"/>
     <include name="${ant.package}/FileUtilities*"/>
+    <include name="${ant.package}/MagicTestNames*"/>
     <include name="${regexp.package}/RegexpMatcherTest*"/>
     <include name="${regexp.package}/RegexpTest*"/>
     <include name="${optional.package}/AbstractXSLTLiaisonTest*"/>
