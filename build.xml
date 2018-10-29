@@ -1843,6 +1843,7 @@ ${antunit.reports}
           <!-- abstract classes, not testcases -->
           <exclude name="${taskdefs.package}/TaskdefsTest.java"/>
           <exclude name="${ant.package}/BuildFileTest.java"/>
+          <exclude name="${ant.package}/MagicTestNames.java"/>
           <exclude name="${regexp.package}/RegexpMatcherTest.java"/>
           <exclude name="${regexp.package}/RegexpTest.java"/>
           <exclude name="${optional.package}/AbstractXSLTLiaisonTest.java"/>
