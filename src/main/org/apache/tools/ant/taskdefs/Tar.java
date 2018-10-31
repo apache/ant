@@ -700,8 +700,16 @@ public class Tar extends MatchingTask {
                 tarFile(f, tOut, f.getName(), tfs);
             }
         } else { // non-file resources
-            for (final Resource r : rc) {
-                tarResource(r, tOut, r.getName(), tfs);
+            if (rc instanceof ArchiveFileSet) {
+                try (final ArchiveFileSet.ArchiveEntries archiveEntries = ((ArchiveFileSet) rc).openArchive()) {
+                    for (final Resource r : archiveEntries) {
+                        tarResource(r, tOut, r.getName(), tfs);
+                    }
+                }
+            } else {
+                for (final Resource r : rc) {
+                    tarResource(r, tOut, r.getName(), tfs);
+                }
             }
         }
     }

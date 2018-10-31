@@ -17,7 +17,9 @@
  */
 package org.apache.tools.ant.types;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -299,6 +301,22 @@ public abstract class ArchiveFileSet extends FileSet {
     protected abstract ArchiveScanner newArchiveScanner();
 
     /**
+     * This method ignores the passed {@code mayKeepOpenResources} and just
+     * calls the {@link #newArchiveScanner()}. Subclasses of {@link ArchiveFileSet}
+     * are expected to override this method if they wish to take into account the
+     * {@code mayKeepOpenResources} while returning an archive scanner.
+     *
+     * @param mayKeepOpenResources {@code true} if the archive scanner being
+     *                             returned is allowed to hold onto open resources.
+     *                             {@code false} otherwise.
+     * @return Returns a new archive scanner for this {@code ArchiveFileSet}.
+     * @since Ant 1.10.6
+     */
+    ArchiveScanner newArchiveScanner(final boolean mayKeepOpenResources) {
+        return this.newArchiveScanner();
+    }
+
+    /**
      * Return the DirectoryScanner associated with this FileSet.
      * If the ArchiveFileSet defines a source Archive file, then an ArchiveScanner
      * is returned instead.
@@ -307,6 +325,20 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     @Override
     public DirectoryScanner getDirectoryScanner(Project p) {
+        return this.getDirectoryScanner(p, false);
+    }
+
+    /**
+     *
+     * @param p The project to use
+     * @param mayKeepOpenResources {@code true} if the archive scanner used for scanning
+     *                             this {@link ArchiveFileSet} is allowed to hold onto
+     *                             open resources. {@link false} otherwise.
+     * @return Return the DirectoryScanner associated with this FileSet.
+     *         If this ArchiveFileSet defines a source Archive file, then an ArchiveScanner
+     *         is returned instead.
+     */
+    private DirectoryScanner getDirectoryScanner(final Project p, final boolean mayKeepOpenResources) {
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
@@ -322,7 +354,7 @@ public abstract class ArchiveFileSet extends FileSet {
             throw new BuildException("The archive " + src.getName()
                                      + " can't be a directory");
         }
-        ArchiveScanner as = newArchiveScanner();
+        final ArchiveScanner as = newArchiveScanner(mayKeepOpenResources);
         as.setErrorOnMissingArchive(errorOnMissingArchive);
         as.setSrc(src);
         super.setDir(p.getBaseDir());
@@ -346,6 +378,32 @@ public abstract class ArchiveFileSet extends FileSet {
         }
         ArchiveScanner as = (ArchiveScanner) getDirectoryScanner(getProject());
         return as.getResourceFiles(getProject());
+    }
+
+    /**
+     * Similar to the {@link #iterator()} method, this method allows for iterating
+     * over the entries within this {@link ArchiveFileSet} through the use of the
+     * returned {@link ArchiveEntries}. Unlike the {@link #iterator()} method,
+     * this method is preferred when the caller needs more control over when and
+     * how long the resources are held open to the underlying archive. Callers are expected
+     * to {@link ArchiveEntries#close() close the ArchiveEntries} when they are done using it.
+     * <p>
+     * A typical use of this method looks as follows:
+     * <pre>{@code
+     *  ArchiveFileSet afs = ...
+     *  try (final ArchiveFileSet.ArchiveEntries archiveEntries = afs.openArchive()) {
+     *      for (final Resource r : archiveEntries) {
+     *          ... // do something with the Resource
+     *      }
+     *  }
+     * }</pre>
+     *
+     * @return Returns {@link ArchiveEntries} which allows for iterating over the entries
+     *          in the archive
+     * @since Ant 1.10.6
+     */
+    public ArchiveEntries openArchive() {
+        return new ArchiveEntriesImpl();
     }
 
     /**
@@ -598,6 +656,47 @@ public abstract class ArchiveFileSet extends FileSet {
                 pushAndInvokeCircularReferenceCheck(src, stk, p);
             }
             setChecked(true);
+        }
+    }
+
+    /**
+     * Allows for iterating over the entries, in the form of {@link Resource}s,
+     * of an archive. Implementations of this interface are allowed to keep
+     * resources open. This interface extends {@link AutoCloseable} to allow
+     * calling the {@link #close()} method to release any open resources
+     * that the implementations might be holding onto.
+     */
+    public interface ArchiveEntries extends Iterable<Resource>, AutoCloseable {
+        @Override
+        void close() throws IOException;
+    }
+
+    private final class ArchiveEntriesImpl implements ArchiveEntries {
+        private final ArchiveScanner scanner;
+
+        private ArchiveEntriesImpl() {
+            // create a scanner in way that it is allowed to keep
+            // open resources if it wants to
+            this.scanner = (ArchiveScanner) getDirectoryScanner(getProject(), true);
+        }
+
+        @Override
+        public void close() throws IOException {
+            // close the underlying scanner if it can be closed
+            if (this.scanner instanceof Closeable) {
+                ((Closeable) this.scanner).close();
+            }
+        }
+
+        @Override
+        public Iterator<Resource> iterator() {
+            if (isReference()) {
+                return ((ResourceCollection) (getRef(getProject()))).iterator();
+            }
+            if (src == null) {
+                return ArchiveFileSet.super.iterator();
+            }
+            return this.scanner.getResourceFiles(getProject());
         }
     }
 }

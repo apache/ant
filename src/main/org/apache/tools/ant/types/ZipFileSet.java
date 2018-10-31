@@ -19,6 +19,18 @@ package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.resources.FileProvider;
+import org.apache.tools.ant.types.resources.ZipResource;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StreamUtils;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
+
+import java.io.File;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
  * A ZipFileSet is a FileSet with extra attributes useful in the context of
@@ -60,7 +72,22 @@ public class ZipFileSet extends ArchiveFileSet {
      */
     @Override
     protected ArchiveScanner newArchiveScanner() {
-        ZipScanner zs = new ZipScanner();
+        return this.newArchiveScanner(false);
+    }
+
+    /**
+     * @return Returns a new archive scanner for this {@code ZipFileSet}. The
+     * returned archive scanner, may hold on to open resources, if the
+     * {@code mayKeepOpenResources} is {@code true}.
+     *
+     * @param mayKeepOpenResources {@code true} if the archive scanner being
+     *                              returned is allowed to hold onto open resources.
+     *                             {@code false} otherwise.
+     * @since Ant 1.10.6
+     */
+    @Override
+    ArchiveScanner newArchiveScanner(final boolean mayKeepOpenResources) {
+        final ZipScanner zs = mayKeepOpenResources ? new LiveZipScanner() : new ZipScanner();
         zs.setEncoding(getEncoding());
         return zs;
     }
@@ -100,4 +127,92 @@ public class ZipFileSet extends ArchiveFileSet {
         return super.clone();
     }
 
+    /**
+     * A {@link ZipScanner} which holds onto an open {@link ZipFile} and uses that
+     * {@code ZipFile} for iterating over its entries. The {@link #close()} method
+     * is expected to be explicitly called, to release the open {@code ZipFile}
+     * resource, when this scanner is no longer needed.
+     */
+    private static class LiveZipScanner extends ZipScanner implements AutoCloseable {
+        private ZipFile zipFile;
+
+        @Override
+        protected void fillMapsFromArchive(final Resource src, final String encoding,
+                                           final Map<String, Resource> fileEntries, final Map<String, Resource> matchFileEntries,
+                                           final Map<String, Resource> dirEntries, final Map<String, Resource> matchDirEntries) {
+
+            final File srcFile = src.asOptional(FileProvider.class)
+                    .map(FileProvider::getFile).orElseThrow(() -> new BuildException(
+                            "Only file provider resources are supported"));
+            // close any previously opened instance of the zip file
+            if (this.zipFile != null) {
+                FileUtils.close(this.zipFile);
+            }
+            try {
+                this.zipFile = new ZipFile(srcFile, encoding);
+            } catch (IOException e) {
+                throw new BuildException("Problem reading " + srcFile, e);
+            }
+            StreamUtils.enumerationAsStream(this.zipFile.getEntries()).forEach(entry -> {
+                final Resource r = new LiveZipResource(srcFile, zipFile, encoding, entry);
+                String name = entry.getName();
+                if (entry.isDirectory()) {
+                    name = trimSeparator(name);
+                    dirEntries.put(name, r);
+                    if (match(name)) {
+                        matchDirEntries.put(name, r);
+                    }
+                } else {
+                    fileEntries.put(name, r);
+                    if (match(name)) {
+                        matchFileEntries.put(name, r);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void close() {
+            FileUtils.close(this.zipFile);
+        }
+    }
+
+    /**
+     * A {@link ZipResource} which holds on to an open {@link ZipFile}. Unlike the
+     * {@link ZipResource#getInputStream()}, the {@link #getInputStream()} of this
+     * class does <em>not</em> create a new {@code ZipFile} instance and instead
+     * reuses the open {@code ZipFile} to return an {@link InputStream} for
+     * a particular entry in the zip file, which this {@code ZipResource} represents.
+     */
+    private static class LiveZipResource extends ZipResource {
+
+        private final ZipFile zipFile;
+        private final ZipEntry zipEntry;
+
+        private LiveZipResource(final File file, final ZipFile zipFile, final String encoding, final ZipEntry entry) {
+            super(file, encoding, entry);
+            this.zipFile = zipFile;
+            this.zipEntry = entry;
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            if (isReference()) {
+                return getCheckedRef().getInputStream();
+            }
+            return new FilterInputStream(this.zipFile.getInputStream(this.zipEntry)) {
+                public void close() {
+                    // close the inputstream
+                    FileUtils.close(in);
+                }
+                protected void finalize() throws Throwable {
+                    try {
+                        close();
+                    } finally {
+                        super.finalize();
+                    }
+                }
+            };
+        }
+    }
 }
