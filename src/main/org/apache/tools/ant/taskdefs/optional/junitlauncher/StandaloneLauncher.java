@@ -202,7 +202,6 @@ public class StandaloneLauncher {
 
         private boolean printSummary;
         private boolean haltOnFailure;
-        private TestExecutionContext testExecutionContext;
         private List<TestDefinition> tests = new ArrayList<>();
         private List<ListenerDefinition> listeners = new ArrayList<>();
 
