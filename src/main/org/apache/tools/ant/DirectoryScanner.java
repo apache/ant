@@ -1258,6 +1258,18 @@ public class DirectoryScanner
             final String name = vpath + newFile;
             final TokenizedPath newPath = new TokenizedPath(path, newFile);
             final File file = new File(dir, newFile);
+
+            try {
+                // check if it's a filesystem "loop" due to symbolic links
+                if (FileUtils.getFileUtils().isLeadingPath(file.getAbsoluteFile(),
+                    dir.getAbsoluteFile(), true)) {
+                    continue;
+                }
+            } catch (IOException e) {
+                System.err.println("Failed to determine if " + file + " causes a " +
+                        "filesystem loop due to symbolic link; continuing");
+            }
+
             final String[] children = file.list();
             if (children == null || (children.length == 0 && file.isFile())) {
                 if (isIncluded(newPath)) {

@@ -133,6 +133,20 @@ public class DirectoryScannerTest {
     }
 
     @Test
+    public void testAllowRecursiveSymlinks() {
+
+        assumeTrue("Current system does not support Symlinks", supportsSymlinks);
+
+        buildRule.getProject().executeTarget("symlink-nested-setup");
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(buildRule.getProject().getProperty("output")));
+        ds.setIncludes(new String[] {"alpha/beta/gamma/"});
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
+            new String[] {"alpha/beta/gamma"});
+    }
+
+    @Test
     public void testProhibitSymlinks() {
         assumeTrue("Current system does not support Symlinks", supportsSymlinks);
 
