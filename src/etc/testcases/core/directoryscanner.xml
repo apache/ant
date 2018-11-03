@@ -38,4 +38,9 @@
         <touch file="${output}/alpha/beta/gamma/gamma.xml"/>
     </target>
 
+    <target name="symlink-nested-setup" depends="setUp">
+        <symlink link="${output}/alpha/beta/gamma/beta-link" resource="${output}/alpha/beta"/>
+        <touch file="${output}/alpha/beta/gamma/gamma.xml"/>
+    </target>
+
 </project>
