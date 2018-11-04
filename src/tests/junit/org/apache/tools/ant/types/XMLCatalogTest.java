@@ -92,12 +92,12 @@ public class XMLCatalogTest {
 
     @Test
     public void testEmptyCatalogResolve() throws TransformerException, MalformedURLException {
-        String expected = toURLString(new File(project.getBaseDir() +
-                "/i/dont/exist.dtd"));
+        String expected = toURLString(new File(project.getBaseDir()
+                + "/i/dont/exist.dtd"));
         Source result = catalog.resolve("i/dont/exist.dtd", null);
         String resultStr = fileURLPartWithoutLeadingSlashes((SAXSource) result);
         assertThat("Empty catalog should return input with a system ID like "
-                        + expected + " but was " + resultStr, expected, endsWith(resultStr));
+                + expected + " but was " + resultStr, expected, endsWith(resultStr));
     }
 
     private static String fileURLPartWithoutLeadingSlashes(SAXSource result)
@@ -130,8 +130,7 @@ public class XMLCatalogTest {
                 + "/i/dont/exist.dtd"));
         String resultStr = fileURLPartWithoutLeadingSlashes((SAXSource) result);
         assertThat("Nonexistent Catalog entry return input with a system ID like "
-                   + expected + " but was " + resultStr,
-                   expected, endsWith(resultStr));
+                        + expected + " but was " + resultStr, expected, endsWith(resultStr));
     }
 
     @Test

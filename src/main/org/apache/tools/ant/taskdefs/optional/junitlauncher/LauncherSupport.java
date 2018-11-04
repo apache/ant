@@ -206,8 +206,8 @@ public class LauncherSupport {
         final Optional<Project> project = this.testExecutionContext.getProject();
         for (final ListenerDefinition applicableListener : applicableListenerElements) {
             if (project.isPresent() && !applicableListener.shouldUse(project.get())) {
-                log("Excluding listener " + applicableListener.getClassName() + " since it's not applicable" +
-                        " in the context of project", null, Project.MSG_DEBUG);
+                log("Excluding listener " + applicableListener.getClassName() + " since it's not applicable"
+                        + " in the context of project", null, Project.MSG_DEBUG);
                 continue;
             }
             final TestExecutionListener listener = requireTestExecutionListener(applicableListener, classLoader);
@@ -274,7 +274,8 @@ public class LauncherSupport {
             throw new BuildException("Failed to load listener class " + className, e);
         }
         if (!TestExecutionListener.class.isAssignableFrom(klass)) {
-            throw new BuildException("Listener class " + className + " is not of type " + TestExecutionListener.class.getName());
+            throw new BuildException("Listener class " + className + " is not of type "
+                    + TestExecutionListener.class.getName());
         }
         try {
             return (TestExecutionListener) klass.newInstance();
@@ -308,7 +309,8 @@ public class LauncherSupport {
                 // if the test is configured to halt on test failures, throw a build error
                 final String errorMessage;
                 if (test instanceof NamedTest) {
-                    errorMessage = "Test " + ((NamedTest) test).getName() + " has " + summary.getTestsFailedCount() + " failure(s)";
+                    errorMessage = "Test " + ((NamedTest) test).getName() + " has "
+                            + summary.getTestsFailedCount() + " failure(s)";
                 } else {
                     errorMessage = "Some test(s) have failure(s)";
                 }
@@ -366,7 +368,8 @@ public class LauncherSupport {
                 final Thread sysErrStreamer = new Thread(streamer);
                 sysErrStreamer.setDaemon(true);
                 sysErrStreamer.setName("junitlauncher-syserr-stream-reader");
-                sysErrStreamer.setUncaughtExceptionHandler((t, e) -> this.log("Failed in syserr streaming", e, Project.MSG_INFO));
+                sysErrStreamer.setUncaughtExceptionHandler((t, e) -> this.log("Failed in syserr streaming",
+                        e, Project.MSG_INFO));
                 sysErrStreamer.start();
                 break;
             }

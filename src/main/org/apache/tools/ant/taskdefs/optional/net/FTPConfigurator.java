@@ -72,8 +72,8 @@ class FTPConfigurator {
             if (!serverLanguageCodeConfig.isEmpty()
                 && !FTPClientConfig.getSupportedLanguageCodes()
                 .contains(serverLanguageCodeConfig)) {
-                throw new BuildException("unsupported language code" +
-                                         serverLanguageCodeConfig);
+                throw new BuildException("unsupported language code"
+                        + serverLanguageCodeConfig);
             }
             config.setServerLanguageCode(serverLanguageCodeConfig);
             task.log("custom config: server language code = "

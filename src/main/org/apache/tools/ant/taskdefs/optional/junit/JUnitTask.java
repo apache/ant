@@ -2067,8 +2067,7 @@ public class JUnitTask extends Task {
          */
         @Override
         public boolean equals(final Object other) {
-            if (other == null
-                || other.getClass() != ForkedTestConfiguration.class) {
+            if (other == null || other.getClass() != ForkedTestConfiguration.class) {
                 return false;
             }
             final ForkedTestConfiguration o = (ForkedTestConfiguration) other;
@@ -2076,13 +2075,9 @@ public class JUnitTask extends Task {
                 && haltOnError == o.haltOnError
                 && haltOnFailure == o.haltOnFailure
                 && ((errorProperty == null && o.errorProperty == null)
-                    ||
-                    (errorProperty != null
-                     && errorProperty.equals(o.errorProperty)))
+                    || (errorProperty != null && errorProperty.equals(o.errorProperty)))
                 && ((failureProperty == null && o.failureProperty == null)
-                    ||
-                    (failureProperty != null
-                     && failureProperty.equals(o.failureProperty)));
+                    || (failureProperty != null && failureProperty.equals(o.failureProperty)));
         }
 
         /**

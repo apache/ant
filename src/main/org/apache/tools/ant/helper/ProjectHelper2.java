@@ -1019,10 +1019,8 @@ public class ProjectHelper2 extends ProjectHelper {
                 project.addOrReplaceTarget(newName, newTarget);
             }
             if (extensionPointMissing != null && extensionPoint == null) {
-                throw new BuildException("onMissingExtensionPoint attribute cannot " +
-                                         "be specified unless extensionOf is specified",
-                                         target.getLocation());
-
+                throw new BuildException("onMissingExtensionPoint attribute cannot "
+                        + "be specified unless extensionOf is specified", target.getLocation());
             }
             if (extensionPoint != null) {
                 ProjectHelper helper =

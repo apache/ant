@@ -165,10 +165,10 @@ public abstract class RegexpMatcherTest {
 
     @Test
     public void testMultiVersusSingleLine() {
-        String text = "Line1" + UNIX_LINE +
-                "starttest Line2" + UNIX_LINE +
-                "Line3 endtest" + UNIX_LINE +
-                "Line4" + UNIX_LINE;
+        String text = "Line1" + UNIX_LINE
+                + "starttest Line2" + UNIX_LINE
+                + "Line3 endtest" + UNIX_LINE
+                + "Line4" + UNIX_LINE;
 
         doStartTest1(text);
         doStartTest2(text);

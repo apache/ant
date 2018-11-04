@@ -1066,10 +1066,8 @@ public class Main implements AntMain {
                 props.load(in);
                 in.close();
                 shortAntVersion = props.getProperty("VERSION");
-                antVersion = "Apache Ant(TM) version " +
-                        shortAntVersion +
-                        " compiled on " +
-                        props.getProperty("DATE");
+                antVersion = "Apache Ant(TM) version " + shortAntVersion
+                        + " compiled on " + props.getProperty("DATE");
             } catch (final IOException ioe) {
                 throw new BuildException("Could not load the version information:"
                                          + ioe.getMessage());

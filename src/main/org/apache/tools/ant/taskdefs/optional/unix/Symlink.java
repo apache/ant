@@ -198,16 +198,15 @@ public class Symlink extends DispatchTask {
     public void recreate() throws BuildException {
         try {
             if (fileSets.isEmpty()) {
-                handleError(
-                        "File set identifying link file(s) required for action recreate");
+                handleError("File set identifying link file(s) required for action recreate");
                 return;
             }
             final Properties links = loadLinks(fileSets);
             for (final String lnk : links.stringPropertyNames()) {
                 final String res = links.getProperty(lnk);
                 try {
-                    if (Files.isSymbolicLink(Paths.get(lnk)) &&
-                            new File(lnk).getCanonicalPath().equals(new File(res).getCanonicalPath())) {
+                    if (Files.isSymbolicLink(Paths.get(lnk))
+                            && new File(lnk).getCanonicalPath().equals(new File(res).getCanonicalPath())) {
                         // it's already a symlink and the symlink target is the same
                         // as the target noted in the properties file. So there's no
                         // need to recreate it
@@ -216,7 +215,8 @@ public class Symlink extends DispatchTask {
                         continue;
                     }
                 } catch (IOException e) {
-                    final String errMessage = "Failed to check if path " + lnk + " is a symbolic link, linking to " + res;
+                    final String errMessage = "Failed to check if path " + lnk
+                            + " is a symbolic link, linking to " + res;
                     if (failonerror) {
                         throw new BuildException(errMessage, e);
                     }

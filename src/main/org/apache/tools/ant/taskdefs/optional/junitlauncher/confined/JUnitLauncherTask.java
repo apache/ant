@@ -87,8 +87,8 @@ public class JUnitLauncherTask extends Task {
         final Project project = getProject();
         for (final TestDefinition test : this.tests) {
             if (!test.shouldRun(project)) {
-                log("Excluding test " + test + " since it's considered not to run " +
-                        "in context of project " + project, Project.MSG_DEBUG);
+                log("Excluding test " + test + " since it's considered not to run "
+                        + "in context of project " + project, Project.MSG_DEBUG);
                 continue;
             }
             if (test.getForkDefinition() != null) {
@@ -214,8 +214,8 @@ public class JUnitLauncherTask extends Task {
         try {
             projectPropsPath = dumpProjectProperties();
         } catch (IOException e) {
-            throw new BuildException("Could not create the necessary properties file while forking a process" +
-                    " for a test", e);
+            throw new BuildException("Could not create the necessary properties file while forking"
+                    + " a process for a test", e);
         }
         // --properties <path-to-properties-file>
         commandlineJava.createArgument().setValue(Constants.ARG_PROPERTIES);
