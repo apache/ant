@@ -60,8 +60,8 @@ public class ExecStreamRedirectorTest {
             if (dirListingOutput != null) {
                 // Compare the directory listing that was redirected to these files.
                 // All files should have the same content.
-                assertTrue("Redirected output in file " + redirectedOutputFile
-                                + " doesn't match content in other redirected output file(s)",
+                assertTrue("Redirected output in file " + redirectedOutputFile +
+                        " doesn't match content in other redirected output file(s)",
                         Arrays.equals(dirListingOutput, redirectedOutput));
             }
             dirListingOutput = redirectedOutput;

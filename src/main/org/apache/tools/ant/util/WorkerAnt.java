@@ -157,7 +157,6 @@ public class WorkerAnt extends Thread {
      * Run the task, which is skipped if null.
      * When invoked again, the task is re-run.
      */
-    @Override
     public void run() {
         try {
             if (task != null) {

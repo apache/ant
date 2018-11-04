@@ -53,9 +53,6 @@ public class Java extends Task {
     private static final String TIMEOUT_MESSAGE =
             "Timeout: killed the sub-process";
 
-    private static final String WRONG_ATTRIBUTES_MESSAGE =
-            "Cannot use combination of 'classname', 'jar', 'module', 'sourcefile' attributes in same command";
-
     private CommandlineJava cmdl = new CommandlineJava();
     private Environment env = new Environment();
     private boolean fork = false;
@@ -368,7 +365,8 @@ public class Java extends Task {
     public void setJar(File jarfile) throws BuildException {
         if (getCommandLine().getClassname() != null || getCommandLine().getModule() != null
                 || getCommandLine().getSourceFile() != null) {
-            throw new BuildException(WRONG_ATTRIBUTES_MESSAGE);
+            throw new BuildException(
+                    "Cannot use combination of 'jar', 'sourcefile', 'classname', 'module' attributes in same command");
         }
         getCommandLine().setJar(jarfile.getAbsolutePath());
     }
@@ -383,7 +381,7 @@ public class Java extends Task {
     public void setClassname(String s) throws BuildException {
         if (getCommandLine().getJar() != null || getCommandLine().getSourceFile() != null) {
             throw new BuildException(
-                    "Cannot use combination of 'classname', 'jar', 'sourcefile' attributes in same command");
+                "Cannot use combination of 'jar', 'classname', sourcefile attributes in same command");
         }
         getCommandLine().setClassname(s);
     }
@@ -399,7 +397,7 @@ public class Java extends Task {
     public void setModule(String module) throws BuildException {
         if (getCommandLine().getJar() != null || getCommandLine().getSourceFile() != null) {
             throw new BuildException(
-                    "Cannot use combination of 'jar', 'module', 'sourcefile' attributes in same command");
+                    "Cannot use combination of 'jar', 'module', sourcefile attributes in same command");
         }
         getCommandLine().setModule(module);
     }
@@ -414,9 +412,12 @@ public class Java extends Task {
      * @since Ant 1.10.5
      */
     public void setSourceFile(final String sourceFile) throws BuildException {
-        if (getCommandLine().getClassname() != null || getCommandLine().getJar() != null
-                || getCommandLine().getModule() != null) {
-            throw new BuildException(WRONG_ATTRIBUTES_MESSAGE);
+        final String jar = getCommandLine().getJar();
+        final String className = getCommandLine().getClassname();
+        final String module = getCommandLine().getModule();
+        if (jar != null || className != null || module != null) {
+            throw new BuildException("Cannot use 'sourcefile' in combination with 'jar' or " +
+                    "'module' or 'classname'");
         }
         getCommandLine().setSourceFile(sourceFile);
     }

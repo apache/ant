@@ -157,10 +157,12 @@ public class DescriptorHandler extends HandlerBase {
             return;
         }
 
-        if (getClass().getResource(location) != null && publicId != null) {
-            resourceDTDs.put(publicId, location);
-            owningTask.log("Mapped publicId " + publicId + " to resource "
+        if (getClass().getResource(location) != null) {
+            if (publicId != null) {
+                resourceDTDs.put(publicId, location);
+                owningTask.log("Mapped publicId " + publicId + " to resource "
                     + location, Project.MSG_VERBOSE);
+            }
         }
 
         try {
@@ -381,8 +383,10 @@ public class DescriptorHandler extends HandlerBase {
         }
 
         // Get the value of the <ejb-name> tag.  Only the first occurrence.
-        if (currentElement.equals(EJB_NAME) && ejbName == null) {
-            ejbName = currentText.trim();
+        if (currentElement.equals(EJB_NAME)) {
+            if (ejbName == null) {
+                ejbName = currentText.trim();
+            }
         }
     }
 }

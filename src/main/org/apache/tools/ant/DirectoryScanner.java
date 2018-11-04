@@ -1245,8 +1245,8 @@ public class DirectoryScanner
                     continue;
                 }
             } catch (IOException e) {
-                System.err.println("Failed to determine if " + file + " causes a "
-                        + "filesystem loop due to symbolic link; continuing");
+                System.err.println("Failed to determine if " + file + " causes a " +
+                        "filesystem loop due to symbolic link; continuing");
             }
 
             final String[] children = file.list();

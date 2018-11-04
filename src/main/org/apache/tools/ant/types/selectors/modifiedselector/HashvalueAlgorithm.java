@@ -73,7 +73,6 @@ public class HashvalueAlgorithm implements Algorithm {
      * Override Object.toString().
      * @return information about this comparator
      */
-    @Override
     public String toString() {
         return "HashvalueAlgorithm";
     }

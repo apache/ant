@@ -29,7 +29,6 @@ public interface Evaluable<T> extends Supplier<T> {
 
     T eval();
 
-    @Override
     default T get() {
         return eval();
     }

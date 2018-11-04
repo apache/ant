@@ -59,7 +59,6 @@ public class LinkedHashtable<K, V> extends Hashtable<K, V> {
         map = new LinkedHashMap<>(m);
     }
 
-    @Override
     public synchronized void clear() {
         map.clear();
     }

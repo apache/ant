@@ -123,8 +123,10 @@ public class Jikes {
                 throw new BuildException("Error running Jikes compiler", e);
             }
         } finally {
-            if (tmpFile != null && !tmpFile.delete()) {
-                tmpFile.deleteOnExit();
+            if (tmpFile != null) {
+                if (!tmpFile.delete()) {
+                    tmpFile.deleteOnExit();
+                }
             }
         }
     }

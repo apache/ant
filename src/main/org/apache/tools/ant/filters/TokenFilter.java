@@ -40,7 +40,8 @@ import org.apache.tools.ant.util.regexp.RegexpUtil;
  * @see ChainableReader
  * @see org.apache.tools.ant.DynamicConfigurator
  */
-public class TokenFilter extends BaseFilterReader implements ChainableReader {
+public class TokenFilter extends BaseFilterReader
+    implements ChainableReader {
     /**
      * string filters implement this interface
      */
@@ -365,7 +366,6 @@ public class TokenFilter extends BaseFilterReader implements ChainableReader {
          * @param line the string to be filtered
          * @return the filtered line
          */
-        @Override
         public String filter(String line) {
             if (from == null) {
                 throw new BuildException("Missing from in stringreplace");
@@ -420,7 +420,6 @@ public class TokenFilter extends BaseFilterReader implements ChainableReader {
          * @return null if the string does not contain "contains",
          *              string otherwise
          */
-        @Override
         public String filter(String string) {
             if (contains == null) {
                 throw new BuildException("Missing contains in containsstring");
@@ -489,7 +488,6 @@ public class TokenFilter extends BaseFilterReader implements ChainableReader {
          * @param line the string to modify
          * @return the modified string
          */
-        @Override
         public String filter(String line) {
             initialize();
 
@@ -559,7 +557,6 @@ public class TokenFilter extends BaseFilterReader implements ChainableReader {
          * @param string the string to apply filter on
          * @return the filtered string
          */
-        @Override
         public String filter(String string) {
             initialize();
             if (!regexp.matches(string, options)) {
@@ -579,7 +576,6 @@ public class TokenFilter extends BaseFilterReader implements ChainableReader {
          * @param line the string to be trimmed
          * @return the trimmed string
          */
-        @Override
         public String filter(String line) {
             return line.trim();
         }
@@ -593,7 +589,6 @@ public class TokenFilter extends BaseFilterReader implements ChainableReader {
          * @param line the line to modify
          * @return the trimmed line
          */
-        @Override
         public String filter(String line) {
             if (line.trim().isEmpty()) {
                 return null;
@@ -624,7 +619,6 @@ public class TokenFilter extends BaseFilterReader implements ChainableReader {
          * @param string the string to remove the characters from
          * @return the converted string
          */
-        @Override
         public String filter(String string) {
             StringBuffer output = new StringBuffer(string.length());
             for (int i = 0; i < string.length(); ++i) {

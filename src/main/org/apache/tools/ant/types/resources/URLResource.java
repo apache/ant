@@ -145,15 +145,17 @@ public class URLResource extends Resource implements URLProvider {
         if (isReference()) {
             return ((URLResource) getCheckedRef()).getURL();
         }
-        if (url == null && baseURL != null) {
-            if (relPath == null) {
-                throw new BuildException("must provide relativePath"
-                        + " attribute when using baseURL.");
-            }
-            try {
-                url = new URL(baseURL, relPath);
-            } catch (MalformedURLException e) {
-                throw new BuildException(e);
+        if (url == null) {
+            if (baseURL != null) {
+                if (relPath == null) {
+                    throw new BuildException("must provide relativePath"
+                                             + " attribute when using baseURL.");
+                }
+                try {
+                    url = new URL(baseURL, relPath);
+                } catch (MalformedURLException e) {
+                    throw new BuildException(e);
+                }
             }
         }
         return url;

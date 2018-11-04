@@ -203,13 +203,17 @@ public final class HeadFilter extends BaseParamFilterReader
      */
     private String headFilter(String line) {
         linesRead++;
-        if (skip > 0 && (linesRead - 1) < skip) {
-            return null;
+        if (skip > 0) {
+            if ((linesRead - 1) < skip) {
+                return null;
+            }
         }
 
-        if (lines > 0 && linesRead > (lines + skip)) {
-            eof = true;
-            return null;
+        if (lines > 0) {
+            if (linesRead > (lines + skip)) {
+                eof = true;
+                return null;
+            }
         }
         return line;
     }

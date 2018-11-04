@@ -468,27 +468,29 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
 
         String baseName = null;
 
-        // try to find JOnAS specific convention name
-        if (getConfig().namingScheme.getValue().equals(EjbJar.NamingScheme.DESCRIPTOR)
-                && !descriptorFileName.contains(getConfig().baseNameTerminator)) {
+        if (getConfig().namingScheme.getValue().equals(EjbJar.NamingScheme.DESCRIPTOR)) {
 
-            // baseNameTerminator not found: the descriptor use the
-            // JOnAS naming convention, ie [Foo.xml,jonas-Foo.xml] and
-            // not [Foo<baseNameTerminator>-ejb-jar.xml,
-            // Foo<baseNameTerminator>-jonas-ejb-jar.xml].
+            // try to find JOnAS specific convention name
+            if (!descriptorFileName.contains(getConfig().baseNameTerminator)) {
 
-            String aCanonicalDescriptor = descriptorFileName.replace('\\', '/');
-            int lastSeparatorIndex = aCanonicalDescriptor.lastIndexOf('/');
-            int endOfBaseName;
+                // baseNameTerminator not found: the descriptor use the
+                // JOnAS naming convention, ie [Foo.xml,jonas-Foo.xml] and
+                // not [Foo<baseNameTerminator>-ejb-jar.xml,
+                // Foo<baseNameTerminator>-jonas-ejb-jar.xml].
 
-            if (lastSeparatorIndex != -1) {
-                endOfBaseName = descriptorFileName.indexOf(".xml", lastSeparatorIndex);
-            } else {
-                endOfBaseName = descriptorFileName.indexOf(".xml");
-            }
+                String aCanonicalDescriptor = descriptorFileName.replace('\\', '/');
+                int lastSeparatorIndex = aCanonicalDescriptor.lastIndexOf('/');
+                int endOfBaseName;
 
-            if (endOfBaseName != -1) {
-                baseName = descriptorFileName.substring(0, endOfBaseName);
+                if (lastSeparatorIndex != -1) {
+                    endOfBaseName = descriptorFileName.indexOf(".xml", lastSeparatorIndex);
+                } else {
+                    endOfBaseName = descriptorFileName.indexOf(".xml");
+                }
+
+                if (endOfBaseName != -1) {
+                    baseName = descriptorFileName.substring(0, endOfBaseName);
+                }
             }
         }
 

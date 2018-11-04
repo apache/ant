@@ -103,7 +103,7 @@ public abstract class EnumeratedAttribute {
      * @return true if the value is valid
      */
     public final boolean containsValue(String value) {
-        return indexOfValue(value) != -1;
+        return (indexOfValue(value) != -1);
     }
 
     /**

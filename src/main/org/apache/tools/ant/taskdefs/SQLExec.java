@@ -619,14 +619,17 @@ public class SQLExec extends JDBCTask {
         sqlCommand = sqlCommand.trim();
 
         try {
-            if (srcFile == null && sqlCommand.isEmpty() && resources == null && transactions.isEmpty()) {
-                throw new BuildException(
+            if (srcFile == null && sqlCommand.isEmpty() && resources == null) {
+                if (transactions.isEmpty()) {
+                    throw new BuildException(
                         "Source file or resource collection, transactions or sql statement must be set!",
                         getLocation());
+                }
             }
 
             if (srcFile != null && !srcFile.isFile()) {
-                throw new BuildException("Source file " + srcFile + " is not a file!", getLocation());
+                throw new BuildException("Source file " + srcFile
+                        + " is not a file!", getLocation());
             }
 
             if (resources != null) {

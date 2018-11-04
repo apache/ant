@@ -108,28 +108,28 @@ public class JavaTest {
     @Test
     public void testJarAndClassName() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("Cannot use combination of 'classname', 'jar', 'sourcefile'");
+        thrown.expectMessage("Cannot use combination of ");
         buildRule.executeTarget("testJarAndClassName");
     }
 
     @Test
     public void testClassnameAndJar() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("Cannot use combination of 'classname', 'jar', 'module'");
+        thrown.expectMessage("Cannot use combination of ");
         buildRule.executeTarget("testClassnameAndJar");
     }
 
     @Test
     public void testJarAndModule() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("Cannot use combination of 'jar', 'module', 'sourcefile'");
+        thrown.expectMessage("Cannot use combination of ");
         buildRule.executeTarget("testJarAndModule");
     }
 
     @Test
     public void testModuleAndJar() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("Cannot use combination of 'classname', 'jar', 'module'");
+        thrown.expectMessage("Cannot use combination of ");
         buildRule.executeTarget("testModuleAndJar");
     }
 

@@ -342,7 +342,7 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        this.append = append ? Boolean.TRUE : Boolean.FALSE;
+        this.append = ((append) ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
@@ -356,7 +356,7 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        this.alwaysLog = alwaysLog ? Boolean.TRUE : Boolean.FALSE;
+        this.alwaysLog = ((alwaysLog) ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**
@@ -368,7 +368,8 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        this.createEmptyFiles = createEmptyFiles ? Boolean.TRUE : Boolean.FALSE;
+        this.createEmptyFiles = ((createEmptyFiles)
+            ? Boolean.TRUE : Boolean.FALSE);
     }
 
     /**

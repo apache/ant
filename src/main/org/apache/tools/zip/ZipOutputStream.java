@@ -1565,8 +1565,8 @@ public class ZipOutputStream extends FilterOutputStream {
         }
         // requires version 2 as we are going to store length info
         // in the data descriptor
-        return isDeflatedToOutputStream(zipMethod)
-                ? DATA_DESCRIPTOR_MIN_VERSION : INITIAL_VERSION;
+        return (isDeflatedToOutputStream(zipMethod))
+            ? DATA_DESCRIPTOR_MIN_VERSION : INITIAL_VERSION;
     }
 
     private boolean isDeflatedToOutputStream(int zipMethod) {
@@ -1613,7 +1613,9 @@ public class ZipOutputStream extends FilterOutputStream {
      * @return boolean
      */
     private boolean hasZip64Extra(ZipEntry ze) {
-        return ze.getExtraField(Zip64ExtendedInformationExtraField.HEADER_ID) != null;
+        return ze.getExtraField(Zip64ExtendedInformationExtraField
+                                .HEADER_ID)
+            != null;
     }
 
     /**

@@ -190,11 +190,12 @@ public final class Extension {
         if (null == manifest) {
             return new Extension[0];
         }
-        return Stream.concat(Optional.ofNullable(manifest.getMainAttributes())
-                        .map(Stream::of).orElse(Stream.empty()),
+        return Stream
+            .concat(Optional.ofNullable(manifest.getMainAttributes())
+                    .map(Stream::of).orElse(Stream.empty()),
                 manifest.getEntries().values().stream())
-                .map(attrs -> getExtension("", attrs)).filter(Objects::nonNull)
-                .toArray(Extension[]::new);
+            .map(attrs -> getExtension("", attrs)).filter(Objects::nonNull)
+            .toArray(Extension[]::new);
     }
 
     /**
@@ -254,13 +255,15 @@ public final class Extension {
                                  specificationVendor);
         }
 
-        final DeweyDecimal specificationVersion = extension.getSpecificationVersion();
+        final DeweyDecimal specificationVersion
+            = extension.getSpecificationVersion();
         if (null != specificationVersion) {
             attributes.putValue(prefix + SPECIFICATION_VERSION,
                                  specificationVersion.toString());
         }
 
-        final String implementationVendorID = extension.getImplementationVendorID();
+        final String implementationVendorID
+            = extension.getImplementationVendorID();
         if (null != implementationVendorID) {
             attributes.putValue(prefix + IMPLEMENTATION_VENDOR_ID,
                                  implementationVendorID);
@@ -272,7 +275,8 @@ public final class Extension {
                                  implementationVendor);
         }
 
-        final DeweyDecimal implementationVersion = extension.getImplementationVersion();
+        final DeweyDecimal implementationVersion
+            = extension.getImplementationVersion();
         if (null != implementationVersion) {
             attributes.putValue(prefix + IMPLEMENTATION_VERSION,
                                  implementationVersion.toString());
@@ -310,7 +314,8 @@ public final class Extension {
 
         if (null != specificationVersion) {
             try {
-                this.specificationVersion = new DeweyDecimal(specificationVersion);
+                this.specificationVersion
+                    = new DeweyDecimal(specificationVersion);
             } catch (final NumberFormatException nfe) {
                 final String error = "Bad specification version format '"
                     + specificationVersion + "' in '" + extensionName
@@ -418,24 +423,33 @@ public final class Extension {
         }
 
         // Available specification version must be >= required
-        final DeweyDecimal requiredSpecificationVersion = required.getSpecificationVersion();
-        if (null != requiredSpecificationVersion && (null == specificationVersion
-                || !isCompatible(specificationVersion, requiredSpecificationVersion))) {
-            return REQUIRE_SPECIFICATION_UPGRADE;
+        final DeweyDecimal requiredSpecificationVersion
+            = required.getSpecificationVersion();
+        if (null != requiredSpecificationVersion) {
+            if (null == specificationVersion
+                || !isCompatible(specificationVersion, requiredSpecificationVersion)) {
+                return REQUIRE_SPECIFICATION_UPGRADE;
+            }
         }
 
         // Implementation Vendor ID must match
-        final String requiredImplementationVendorID = required.getImplementationVendorID();
-        if (null != requiredImplementationVendorID && (null == implementationVendorID
-                || !implementationVendorID.equals(requiredImplementationVendorID))) {
-            return REQUIRE_VENDOR_SWITCH;
+        final String requiredImplementationVendorID
+            = required.getImplementationVendorID();
+        if (null != requiredImplementationVendorID) {
+            if (null == implementationVendorID
+                || !implementationVendorID.equals(requiredImplementationVendorID)) {
+                return REQUIRE_VENDOR_SWITCH;
+            }
         }
 
         // Implementation version must be >= required
-        final DeweyDecimal requiredImplementationVersion = required.getImplementationVersion();
-        if (null != requiredImplementationVersion && (null == implementationVersion
-                || !isCompatible(implementationVersion, requiredImplementationVersion))) {
-            return REQUIRE_IMPLEMENTATION_UPGRADE;
+        final DeweyDecimal requiredImplementationVersion
+            = required.getImplementationVersion();
+        if (null != requiredImplementationVersion) {
+            if (null == implementationVersion
+                || !isCompatible(implementationVersion, requiredImplementationVersion)) {
+                return REQUIRE_IMPLEMENTATION_UPGRADE;
+            }
         }
 
         // This available optional package satisfies the requirements
@@ -453,7 +467,7 @@ public final class Extension {
      * @return true if the specified extension is compatible with this extension
      */
     public boolean isCompatibleWith(final Extension required) {
-        return COMPATIBLE == getCompatibilityWith(required);
+        return (COMPATIBLE == getCompatibilityWith(required));
     }
 
     /**
@@ -502,7 +516,8 @@ public final class Extension {
      * @param first First version number (dotted decimal)
      * @param second Second version number (dotted decimal)
      */
-    private boolean isCompatible(final DeweyDecimal first, final DeweyDecimal second) {
+    private boolean isCompatible(final DeweyDecimal first,
+                                 final DeweyDecimal second) {
         return first.isGreaterThanOrEqual(second);
     }
 
@@ -515,7 +530,8 @@ public final class Extension {
      *        EXTENSION_LIST or OPTIONAL_EXTENSION_LIST)
      * @return the list of listed extensions
      */
-    private static Extension[] getListed(final Manifest manifest, final Attributes.Name listKey) {
+    private static Extension[] getListed(final Manifest manifest,
+                                          final Attributes.Name listKey) {
         final List<Extension> results = new ArrayList<>();
         final Attributes mainAttributes = manifest.getMainAttributes();
 
@@ -560,7 +576,8 @@ public final class Extension {
      * @param onToken the token
      * @return the resultant array
      */
-    private static String[] split(final String string, final String onToken) {
+    private static String[] split(final String string,
+                                        final String onToken) {
         final StringTokenizer tokenizer = new StringTokenizer(string, onToken);
         final String[] result = new String[tokenizer.countTokens()];
 
@@ -583,7 +600,8 @@ public final class Extension {
      * @param attributes Attributes to searched
      * @return the new Extension object, or null
      */
-    private static Extension getExtension(final String prefix, final Attributes attributes) {
+    private static Extension getExtension(final String prefix,
+                                          final Attributes attributes) {
         //WARNING: We trim the values of all the attributes because
         //Some extension declarations are badly defined (ie have spaces
         //after version or vendorID)

@@ -55,7 +55,6 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
      * Get a enumeration over the elements.
      * @return an enumeration.
      */
-    @Override
     public Enumeration<V> elements() {
         initAll();
         return super.elements();
@@ -65,7 +64,6 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
      * Check if the table is empty.
      * @return true if it is.
      */
-    @Override
     public boolean isEmpty() {
         initAll();
         return super.isEmpty();
@@ -75,7 +73,6 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
      * Get the size of the table.
      * @return the size.
      */
-    @Override
     public int size() {
         initAll();
         return super.size();
@@ -86,7 +83,6 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
      * @param value the value to look for.
      * @return true if the table contains the value.
      */
-    @Override
     public boolean contains(Object value) {
         initAll();
         return super.contains(value);
@@ -97,7 +93,6 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
      * @param value the key to look for.
      * @return true if the table contains key.
      */
-    @Override
     public boolean containsKey(Object value) {
         initAll();
         return super.containsKey(value);
@@ -108,7 +103,6 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
      * @param value the value to look for.
      * @return true if the table contains the value.
      */
-    @Override
     public boolean containsValue(Object value) {
         return contains(value);
     }
@@ -117,7 +111,6 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
      * Get an enumeration over the keys.
      * @return an enumeration.
      */
-    @Override
     public Enumeration<K> keys() {
         initAll();
         return super.keys();

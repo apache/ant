@@ -114,7 +114,7 @@ public class Recorder extends Task implements SubBuildListener {
      * @param append if true, append to a previous file.
      */
     public void setAppend(boolean append) {
-        this.append = append ? Boolean.TRUE : Boolean.FALSE;
+        this.append = (append ? Boolean.TRUE : Boolean.FALSE);
     }
 
 

@@ -770,7 +770,7 @@ public class ModifiedSelectorTest {
                 results);                                       // result
         } finally {
             // cleanup the environment
-            new File(cachefile).delete();
+            (new File(cachefile)).delete();
             bft.deletePropertiesfile();
         }
     }

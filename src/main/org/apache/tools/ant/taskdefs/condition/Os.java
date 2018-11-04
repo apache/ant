@@ -264,12 +264,12 @@ public class Os implements Condition {
                 boolean isNT = false;
                 if (isWindows) {
                     //there are only four 9x platforms that we look for
-                    //wince isn't really 9x, but crippled enough to
-                    //be a muchness. Ant doesn't run on CE, anyway.
-                    is9x = OS_NAME.contains("95")
+                    is9x = (OS_NAME.contains("95")
                             || OS_NAME.contains("98")
                             || OS_NAME.contains("me")
-                            || OS_NAME.contains("ce");
+                            //wince isn't really 9x, but crippled enough to
+                            //be a muchness. Ant doesn't run on CE, anyway.
+                            || OS_NAME.contains("ce"));
                     isNT = !is9x;
                 }
                 switch (family) {

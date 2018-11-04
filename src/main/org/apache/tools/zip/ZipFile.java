@@ -1003,7 +1003,8 @@ public class ZipFile implements Closeable {
         if (ent2 == null) {
             return -1;
         }
-        final long val = ent1.getOffsetEntry().headerOffset - ent2.getOffsetEntry().headerOffset;
+        final long val = (ent1.getOffsetEntry().headerOffset
+                    - ent2.getOffsetEntry().headerOffset);
         return val == 0 ? 0 : val < 0 ? -1 : +1;
     };
 

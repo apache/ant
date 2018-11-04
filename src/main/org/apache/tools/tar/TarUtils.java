@@ -493,8 +493,8 @@ public class TarUtils {
         final long max = 1L << bits;
         long val = Math.abs(value);
         if (val >= max) {
-            throw new IllegalArgumentException("Value " + value
-                    + " is too large for " + length + " byte field.");
+            throw new IllegalArgumentException("Value " + value +
+                " is too large for " + length + " byte field.");
         }
         if (negative) {
             val ^= max - 1;

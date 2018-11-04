@@ -254,7 +254,7 @@ public class Touch extends Task {
                 }
             }
             log("Setting millis to " + workmillis + " from datetime attribute",
-                    millis < 0 ? Project.MSG_DEBUG : Project.MSG_VERBOSE);
+                    ((millis < 0) ? Project.MSG_DEBUG : Project.MSG_VERBOSE));
             setMillis(workmillis);
             // only set if successful to this point:
             dateTimeConfigured = true;
@@ -352,7 +352,7 @@ public class Touch extends Task {
     private void touch(File file, long modTime) {
         if (!file.exists()) {
             log("Creating " + file,
-                    verbose ? Project.MSG_INFO : Project.MSG_VERBOSE);
+                ((verbose) ? Project.MSG_INFO : Project.MSG_VERBOSE));
             try {
                 FILE_UTILS.createNewFile(file, mkdirs);
             } catch (IOException ioe) {

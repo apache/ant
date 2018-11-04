@@ -737,8 +737,10 @@ public class Main implements AntMain {
 
         for (final ArgumentProcessor processor : processorRegistry.getProcessors()) {
             final List<String> extraArgs = extraArguments.get(processor.getClass());
-            if (extraArgs != null && processor.handleArg(extraArgs)) {
-                return;
+            if (extraArgs != null) {
+                if (processor.handleArg(extraArgs)) {
+                    return;
+                }
             }
         }
 
@@ -808,8 +810,10 @@ public class Main implements AntMain {
 
                 for (final ArgumentProcessor processor : processorRegistry.getProcessors()) {
                     final List<String> extraArgs = extraArguments.get(processor.getClass());
-                    if (extraArgs != null && processor.handleArg(project, extraArgs)) {
-                        return;
+                    if (extraArgs != null) {
+                        if (processor.handleArg(project, extraArgs)) {
+                            return;
+                        }
                     }
                 }
 
@@ -821,8 +825,10 @@ public class Main implements AntMain {
                 }
 
                 // make sure that we have a target to execute
-                if (targets.isEmpty() && project.getDefaultTarget() != null) {
-                    targets.addElement(project.getDefaultTarget());
+                if (targets.isEmpty()) {
+                    if (project.getDefaultTarget() != null) {
+                        targets.addElement(project.getDefaultTarget());
+                    }
                 }
 
                 project.executeTargets(targets);
@@ -1060,8 +1066,10 @@ public class Main implements AntMain {
                 props.load(in);
                 in.close();
                 shortAntVersion = props.getProperty("VERSION");
-                antVersion = "Apache Ant(TM) version " + shortAntVersion
-                        + " compiled on " + props.getProperty("DATE");
+                antVersion = "Apache Ant(TM) version " +
+                        shortAntVersion +
+                        " compiled on " +
+                        props.getProperty("DATE");
             } catch (final IOException ioe) {
                 throw new BuildException("Could not load the version information:"
                                          + ioe.getMessage());

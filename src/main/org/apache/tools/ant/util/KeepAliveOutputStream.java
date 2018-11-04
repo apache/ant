@@ -50,7 +50,6 @@ public class KeepAliveOutputStream extends FilterOutputStream {
      * This method does nothing.
      * @throws IOException as we are overriding FilterOutputStream.
      */
-    @Override
     public void close() throws IOException {
         // do not close the stream
     }

@@ -348,7 +348,7 @@ public class Permissions {
          */
         @Override
         public String toString() {
-            return String.format("Permission: %s (\"%s\", \"%s\")", className, name, actions);
+            return ("Permission: " + className + " (\"" + name + "\", \"" + actions + "\")");
         }
     }
 }

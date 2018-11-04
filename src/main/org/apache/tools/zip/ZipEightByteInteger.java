@@ -136,7 +136,7 @@ public final class ZipEightByteInteger {
     public static byte[] getBytes(BigInteger value) {
         byte[] result = new byte[8];
         long val = value.longValue();
-        result[0] = (byte) (val & BYTE_MASK);
+        result[0] = (byte) ((val & BYTE_MASK));
         result[BYTE_1] = (byte) ((val & BYTE_1_MASK) >> BYTE_1_SHIFT);
         result[BYTE_2] = (byte) ((val & BYTE_2_MASK) >> BYTE_2_SHIFT);
         result[BYTE_3] = (byte) ((val & BYTE_3_MASK) >> BYTE_3_SHIFT);

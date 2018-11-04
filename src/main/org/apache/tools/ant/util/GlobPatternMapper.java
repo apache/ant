@@ -198,8 +198,10 @@ public class GlobPatternMapper implements FileNameMapper {
         if (!caseSensitive) {
             name = name.toLowerCase();
         }
-        if (handleDirSep && name.contains("\\")) {
-            name = name.replace('\\', '/');
+        if (handleDirSep) {
+            if (name.contains("\\")) {
+                name = name.replace('\\', '/');
+            }
         }
         return name;
     }

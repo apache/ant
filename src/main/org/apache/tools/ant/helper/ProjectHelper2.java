@@ -728,8 +728,10 @@ public class ProjectHelper2 extends ProjectHelper {
                 String value = attrs.getValue(i);
                 switch (attrs.getLocalName(i)) {
                     case "default":
-                        if (value != null && !value.isEmpty() && !context.isIgnoringProjectTag()) {
-                            project.setDefault(value);
+                        if (value != null && !value.isEmpty()) {
+                            if (!context.isIgnoringProjectTag()) {
+                                project.setDefault(value);
+                            }
                         }
                         break;
                     case "name":
@@ -739,21 +741,22 @@ public class ProjectHelper2 extends ProjectHelper {
                             if (!context.isIgnoringProjectTag()) {
                                 project.setName(value);
                                 project.addReference(value, project);
-                            } else if (isInIncludeMode() && !value.isEmpty()
-                                    && getCurrentTargetPrefix() != null
-                                    && getCurrentTargetPrefix().endsWith(
-                                            ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX)) {
-                                String newTargetPrefix = getCurrentTargetPrefix().replace(
-                                        ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX, value);
-                                // help nested include tasks
-                                setCurrentTargetPrefix(newTargetPrefix);
+                            } else if (isInIncludeMode()) {
+                                if (!value.isEmpty() && getCurrentTargetPrefix() != null
+                                        && getCurrentTargetPrefix().endsWith(ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX)) {
+                                    String newTargetPrefix = getCurrentTargetPrefix().replace(ProjectHelper.USE_PROJECT_NAME_AS_TARGET_PREFIX, value);
+                                    // help nested include tasks
+                                    setCurrentTargetPrefix(newTargetPrefix);
+                                }
                             }
                         }
                         break;
                     case "id":
-                        // What's the difference between id and name ?
-                        if (value != null && !context.isIgnoringProjectTag()) {
-                            project.addReference(value, project);
+                        if (value != null) {
+                            // What's the difference between id and name ?
+                            if (!context.isIgnoringProjectTag()) {
+                                project.addReference(value, project);
+                            }
                         }
                         break;
                     case "basedir":
@@ -1016,8 +1019,10 @@ public class ProjectHelper2 extends ProjectHelper {
                 project.addOrReplaceTarget(newName, newTarget);
             }
             if (extensionPointMissing != null && extensionPoint == null) {
-                throw new BuildException("onMissingExtensionPoint attribute cannot "
-                        + "be specified unless extensionOf is specified", target.getLocation());
+                throw new BuildException("onMissingExtensionPoint attribute cannot " +
+                                         "be specified unless extensionOf is specified",
+                                         target.getLocation());
+
             }
             if (extensionPoint != null) {
                 ProjectHelper helper =

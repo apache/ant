@@ -761,9 +761,11 @@ public class Zip extends MatchingTask {
 
                 // If we've been successful on an update, delete the
                 // temporary file
-                if (doUpdate && !renamedFile.delete()) {
-                    log("Warning: unable to delete temporary file "
+                if (doUpdate) {
+                    if (!renamedFile.delete()) {
+                        log("Warning: unable to delete temporary file "
                             + renamedFile.getName(), Project.MSG_WARN);
+                    }
                 }
                 success = true;
             } finally {

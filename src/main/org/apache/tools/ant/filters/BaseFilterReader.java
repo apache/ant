@@ -78,7 +78,6 @@ public abstract class BaseFilterReader extends FilterReader {
      *
      * @exception  IOException  If an I/O error occurs
      */
-    @Override
     public final int read(final char[] cbuf, final int off,
                           final int len) throws IOException {
         for (int i = 0; i < len; i++) {
@@ -106,7 +105,6 @@ public abstract class BaseFilterReader extends FilterReader {
      * @exception  IllegalArgumentException  If <code>n</code> is negative.
      * @exception  IOException  If an I/O error occurs
      */
-    @Override
     public final long skip(final long n)
         throws IOException, IllegalArgumentException {
         if (n < 0L) {

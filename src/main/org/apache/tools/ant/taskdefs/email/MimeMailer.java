@@ -111,7 +111,8 @@ public class MimeMailer extends Mailer {
                 return type;
             }
             // Must be like "text/plain; charset=windows-1251"
-            return (type != null ? type : "text/plain") + "; charset=" + charset;
+            return (type != null ? type : "text/plain") +
+                    "; charset=" + charset;
         }
 
         @Override

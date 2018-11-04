@@ -143,13 +143,16 @@ public class MailLogger extends DefaultLogger {
             }
             Values values = new Values()
                 .mailhost(getValue(properties, "mailhost", "localhost"))
-                .port(Integer.parseInt(getValue(properties, "port",
-                        String.valueOf(MailMessage.DEFAULT_PORT))))
+                .port(Integer.parseInt(
+                          getValue(
+                              properties, "port",
+                              String.valueOf(MailMessage.DEFAULT_PORT))))
                 .user(getValue(properties, "user", ""))
                 .password(getValue(properties, "password", ""))
-                .ssl(Project.toBoolean(getValue(properties, "ssl", "off")))
+                .ssl(Project.toBoolean(getValue(properties,
+                                                "ssl", "off")))
                 .starttls(Project.toBoolean(getValue(properties,
-                        "starttls.enable", "off")))
+                                                     "starttls.enable", "off")))
                 .from(getValue(properties, "from", null))
                 .replytoList(getValue(properties, "replyto", ""))
                 .toList(getValue(properties, prefix + ".to", null))
@@ -158,8 +161,9 @@ public class MailLogger extends DefaultLogger {
                 .mimeType(getValue(properties, "mimeType", DEFAULT_MIME_TYPE))
                 .charset(getValue(properties, "charset", ""))
                 .body(getValue(properties, prefix + ".body", ""))
-                .subject(getValue(properties, prefix + ".subject",
-                        success ? "Build Success" : "Build Failure"));
+                .subject(getValue(
+                             properties, prefix + ".subject",
+                             (success) ? "Build Success" : "Build Failure"));
             if (values.user().isEmpty()
                 && values.password().isEmpty()
                 && !values.ssl() && !values.starttls()) {

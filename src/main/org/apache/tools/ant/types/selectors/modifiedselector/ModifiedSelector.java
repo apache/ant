@@ -459,7 +459,7 @@ public class ModifiedSelector extends BaseExtendSelector
               + resource.getName()
               + "' does not provide an InputStream, so it is not checked. "
               + "According to 'selres' attribute value it is "
-              + (selectResourcesWithoutInputStream ? "" : " not")
+              + ((selectResourcesWithoutInputStream) ? "" : " not")
               + "selected.", Project.MSG_INFO);
             return selectResourcesWithoutInputStream;
         } catch (Exception e) {

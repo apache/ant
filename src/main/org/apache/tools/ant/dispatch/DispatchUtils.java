@@ -104,7 +104,7 @@ public class DispatchUtils {
         } catch (InvocationTargetException ie) {
             Throwable t = ie.getTargetException();
             if (t instanceof BuildException) {
-                throw (BuildException) t;
+                throw ((BuildException) t);
             } else {
                 throw new BuildException(t);
             }

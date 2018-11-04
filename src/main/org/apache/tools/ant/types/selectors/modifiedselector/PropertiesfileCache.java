@@ -118,7 +118,7 @@ public class PropertiesfileCache implements Cache {
      */
     @Override
     public boolean isValid() {
-        return cachefile != null;
+        return (cachefile != null);
     }
 
 

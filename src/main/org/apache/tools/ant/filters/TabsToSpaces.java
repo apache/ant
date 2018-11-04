@@ -143,9 +143,11 @@ public final class TabsToSpaces
         Parameter[] params = getParameters();
         if (params != null) {
             for (Parameter param : params) {
-                if (param != null && TAB_LENGTH_KEY.equals(param.getName())) {
-                    tabLength = Integer.parseInt(param.getValue());
-                    break;
+                if (param != null) {
+                    if (TAB_LENGTH_KEY.equals(param.getName())) {
+                        tabLength = Integer.parseInt(param.getValue());
+                        break;
+                    }
                 }
             }
         }
