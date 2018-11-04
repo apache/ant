@@ -70,7 +70,7 @@ public class TaskOutputStream extends OutputStream {
      * @param c the character to write
      * @throws IOException on error
      */
-
+    @Override
     public void write(int c) throws IOException {
         char cc = (char) c;
         if (cc == '\r' || cc == '\n') {

@@ -228,6 +228,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @exception SAXParseException if this method is not overridden, or in
          *                              case of error in an overridden version
          */
+        @Override
         public void startElement(String tag, AttributeList attrs) throws SAXParseException {
             throw new SAXParseException("Unexpected element \"" + tag + "\"", helperImpl.locator);
         }
@@ -244,6 +245,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @exception SAXParseException if this method is not overridden, or in
          *                              case of error in an overridden version
          */
+        @Override
         public void characters(char[] buf, int start, int count) throws SAXParseException {
             String s = new String(buf, start, count).trim();
 
@@ -263,6 +265,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @exception SAXException in case of error (not thrown in
          *                         this implementation)
          */
+        @Override
         public void endElement(String name) throws SAXException {
             // Let parent resume handling SAX events
             helperImpl.parser.setDocumentHandler(parentHandler);
@@ -290,6 +293,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @param systemId The system identifier provided in the XML
          *                 document. Will not be <code>null</code>.
          */
+        @Override
         public InputSource resolveEntity(String publicId, String systemId) {
 
             helperImpl.project.log("resolving systemId: " + systemId, Project.MSG_VERBOSE);
@@ -329,6 +333,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @exception SAXParseException if the tag given is not
          *                              <code>"project"</code>
          */
+        @Override
         public void startElement(String tag, AttributeList attrs) throws SAXParseException {
             if ("project".equals(tag)) {
                 new ProjectHandler(helperImpl, this).init(tag, attrs);
@@ -344,6 +349,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @param locator The locator used by the parser.
          *                Will not be <code>null</code>.
          */
+        @Override
         public void setDocumentLocator(Locator locator) {
             helperImpl.locator = locator;
         }
@@ -459,6 +465,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          *            <code>"property"</code>, <code>"target"</code>
          *            or a data type definition
          */
+        @Override
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             if ("target".equals(name)) {
                 handleTarget(name, attrs);
@@ -596,6 +603,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @exception SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
          */
+        @Override
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             handleElement(helperImpl, this, target, name, attrs);
         }
@@ -646,6 +654,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
          */
+        @Override
         public void characters(char[] buf, int start, int count) {
             String text = new String(buf, start, count);
             String currentDescription = helperImpl.project.getDescription();
@@ -765,6 +774,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
          */
+        @Override
         public void characters(char[] buf, int start, int count) {
             wrapper.addText(buf, start, count);
         }
@@ -782,6 +792,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @exception SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
          */
+        @Override
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             if (task instanceof TaskContainer) {
                 // task can contain other tasks - no other nested elements possible
@@ -900,6 +911,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @param start The start element in the array.
          * @param count The number of characters to read from the array.
          */
+        @Override
         public void characters(char[] buf, int start, int count) {
             childWrapper.addText(buf, start, count);
         }
@@ -917,6 +929,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @exception SAXParseException if an error occurs when initialising
          *                              the appropriate child handler
          */
+        @Override
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             if (child instanceof TaskContainer) {
                 // taskcontainer nested element can contain other tasks - no other
@@ -999,6 +1012,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          *
          * @see ProjectHelper#addText(Project,Object,char[],int,int)
          */
+        @Override
         public void characters(char[] buf, int start, int count) {
             wrapper.addText(buf, start, count);
         }
@@ -1015,6 +1029,7 @@ public class ProjectHelperImpl extends ProjectHelper {
          * @exception SAXParseException if an error occurs when initialising
          *                              the child handler
          */
+        @Override
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             new NestedElementHandler(helperImpl, this, element, wrapper, target).init(name, attrs);
         }

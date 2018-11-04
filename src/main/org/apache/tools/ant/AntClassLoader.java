@@ -126,6 +126,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
          * @return <code>true</code> if there are more elements in the
          *         enumeration; <code>false</code> otherwise.
          */
+        @Override
         public boolean hasMoreElements() {
             return this.nextResource != null;
         }
@@ -135,6 +136,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
          *
          * @return the next resource in the enumeration
          */
+        @Override
         public URL nextElement() {
             final URL ret = this.nextResource;
             if (ret == null) {
@@ -584,27 +586,25 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
         final Constructor<?>[] cons = theClass.getDeclaredConstructors();
         //At least one constructor is guaranteed to be there, but check anyway.
-        if (cons != null) {
-            if (cons.length > 0 && cons[0] != null) {
-                final String[] strs = new String[NUMBER_OF_STRINGS];
-                try {
-                    cons[0].newInstance((Object[]) strs);
-                    // Expecting an exception to be thrown by this call:
-                    // IllegalArgumentException: wrong number of Arguments
-                } catch (final Exception e) {
-                    // Ignore - we are interested only in the side
-                    // effect - that of getting the static initializers
-                    // invoked.  As we do not want to call a valid
-                    // constructor to get this side effect, an
-                    // attempt is made to call a hopefully
-                    // invalid constructor - come on, nobody
-                    // would have a constructor that takes in
-                    // 256 String arguments ;-)
-                    // (In fact, they can't - according to JVM spec
-                    // section 4.10, the number of method parameters is limited
-                    // to 255 by the definition of a method descriptor.
-                    // Constructors count as methods here.)
-                }
+        if (cons != null && cons.length > 0 && cons[0] != null) {
+            final String[] strs = new String[NUMBER_OF_STRINGS];
+            try {
+                cons[0].newInstance((Object[]) strs);
+                // Expecting an exception to be thrown by this call:
+                // IllegalArgumentException: wrong number of Arguments
+            } catch (final Exception e) {
+                // Ignore - we are interested only in the side
+                // effect - that of getting the static initializers
+                // invoked.  As we do not want to call a valid
+                // constructor to get this side effect, an
+                // attempt is made to call a hopefully
+                // invalid constructor - come on, nobody
+                // would have a constructor that takes in
+                // 256 String arguments ;-)
+                // (In fact, they can't - according to JVM spec
+                // section 4.10, the number of method parameters is limited
+                // to 255 by the definition of a method descriptor.
+                // Constructors count as methods here.)
             }
         }
     }
@@ -1523,6 +1523,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     }
 
     /** {@inheritDoc} */
+    @Override
     public void close() {
         cleanup();
     }

@@ -442,38 +442,47 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             return in instanceof SimpleFilterReader && ((SimpleFilterReader) in).editsBlocked();
         }
 
+        @Override
         public int read() throws IOException {
             return preemptIndex > 0 ? preempt[--preemptIndex] : in.read();
         }
 
+        @Override
         public void close() throws IOException {
             in.close();
         }
 
+        @Override
         public void reset() throws IOException {
             in.reset();
         }
 
+        @Override
         public boolean markSupported() {
             return in.markSupported();
         }
 
+        @Override
         public boolean ready() throws IOException {
             return in.ready();
         }
 
+        @Override
         public void mark(int i) throws IOException {
             in.mark(i);
         }
 
+        @Override
         public long skip(long i) throws IOException {
             return in.skip(i);
         }
 
+        @Override
         public int read(char[] buf) throws IOException {
             return read(buf, 0, buf.length);
         }
 
+        @Override
         public int read(char[] buf, int start, int length) throws IOException {
             int count = 0;
             int c = 0;
@@ -512,10 +521,12 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             state = JAVA;
         }
 
+        @Override
         public boolean editsBlocked() {
             return editsBlocked || super.editsBlocked();
         }
 
+        @Override
         public int read() throws IOException {
             int thisChar = super.read();
             // Mask, block from being edited, all characters in constants.
@@ -628,6 +639,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             this.fixLast = fixLast;
         }
 
+        @Override
         public int read() throws IOException {
             int thisChar = super.read();
 
@@ -704,6 +716,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             super(in);
         }
 
+        @Override
         public int read() throws IOException {
             int thisChar = super.read();
 
@@ -733,6 +746,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             }
         }
 
+        @Override
         public int read() throws IOException {
             int lookAhead2 = super.read();
 
@@ -757,6 +771,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             this.tabLength = tabLength;
         }
 
+        @Override
         public int read() throws IOException {
             int c = super.read();
 
@@ -836,6 +851,7 @@ public final class FixCrLfFilter extends BaseParamFilterReader implements Chaina
             this.tabLength = tabLength;
         }
 
+        @Override
         public int read() throws IOException {
             int c = super.read();
 

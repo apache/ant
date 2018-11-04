@@ -599,6 +599,7 @@ public class XMLValidateTask extends Task {
          * record a fatal error
          * @param exception the fatal error
          */
+        @Override
         public void fatalError(SAXParseException exception) {
             failed = true;
             doLog(exception, Project.MSG_ERR);
@@ -607,6 +608,7 @@ public class XMLValidateTask extends Task {
          * receive notification of a recoverable error
          * @param exception the error
          */
+        @Override
         public void error(SAXParseException exception) {
             failed = true;
             doLog(exception, Project.MSG_ERR);
@@ -615,6 +617,7 @@ public class XMLValidateTask extends Task {
          * receive notification of a warning
          * @param exception the warning
          */
+        @Override
         public void warning(SAXParseException exception) {
             // depending on implementation, XMLReader can yield hips of warning,
             // only output then if user explicitly asked for it
@@ -624,7 +627,6 @@ public class XMLValidateTask extends Task {
         }
 
         private void doLog(SAXParseException e, int logLevel) {
-
             log(getMessage(e), logLevel);
         }
 
@@ -742,7 +744,5 @@ public class XMLValidateTask extends Task {
         }
 
     } // Property
-
-
 
 }

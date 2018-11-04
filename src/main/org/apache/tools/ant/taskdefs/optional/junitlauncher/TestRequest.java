@@ -82,6 +82,7 @@ final class TestRequest implements AutoCloseable {
         return Collections.unmodifiableList(this.interestedInSysErr);
     }
 
+    @Override
     public void close() throws Exception {
         if (this.closables.isEmpty()) {
             return;

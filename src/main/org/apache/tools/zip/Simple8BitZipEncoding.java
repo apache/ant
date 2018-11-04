@@ -58,6 +58,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
             this.unicode = unicode;
         }
 
+        @Override
         public int compareTo(final Simple8BitChar a) {
             return this.unicode - a.unicode;
         }

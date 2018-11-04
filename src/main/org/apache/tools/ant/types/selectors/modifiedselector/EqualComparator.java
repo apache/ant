@@ -38,6 +38,7 @@ public class EqualComparator implements Comparator<Object> {
      * @param o2 the second object
      * @return 0, if both are equal, otherwise 1
      */
+    @Override
     public int compare(Object o1, Object o2) {
         if (o1 == null) {
             if (o2 == null) {
@@ -52,6 +53,7 @@ public class EqualComparator implements Comparator<Object> {
      * Override Object.toString().
      * @return information about this comparator
      */
+    @Override
     public String toString() {
         return "EqualComparator";
     }

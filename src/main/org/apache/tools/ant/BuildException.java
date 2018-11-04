@@ -141,6 +141,7 @@ public class BuildException extends RuntimeException {
      *
      * @return the location of the error and the error message
      */
+    @Override
     public String toString() {
         return location.toString() + getMessage();
     }

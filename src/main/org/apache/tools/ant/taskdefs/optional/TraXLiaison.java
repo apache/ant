@@ -531,6 +531,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log an error.
      * @param e the exception to log.
      */
+    @Override
     public void error(final TransformerException e) {
         logError(e, "Error");
     }
@@ -539,6 +540,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log a fatal error.
      * @param e the exception to log.
      */
+    @Override
     public void fatalError(final TransformerException e) {
         logError(e, "Fatal Error");
         throw new BuildException("Fatal error during transformation using " + stylesheet + ": " + e.getMessageAndLocation(), e);
@@ -548,6 +550,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Log a warning.
      * @param e the exception to log.
      */
+    @Override
     public void warning(final TransformerException e) {
         if (!suppressWarnings) {
             logError(e, "Warning");
