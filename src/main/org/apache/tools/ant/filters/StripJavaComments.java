@@ -93,32 +93,30 @@ public final class StripJavaComments
                 quoted = !quoted;
             } else {
                 quoted = false;
-                if (!inString) {
+                if (!inString && ch == '/') {
+                    ch = in.read();
                     if (ch == '/') {
-                        ch = in.read();
-                        if (ch == '/') {
-                            while (ch != '\n' && ch != -1 && ch != '\r') {
+                        while (ch != '\n' && ch != -1 && ch != '\r') {
+                            ch = in.read();
+                        }
+                    } else if (ch == '*') {
+                        while (ch != -1) {
+                            ch = in.read();
+                            if (ch == '*') {
                                 ch = in.read();
-                            }
-                        } else if (ch == '*') {
-                            while (ch != -1) {
-                                ch = in.read();
-                                if (ch == '*') {
+                                while (ch == '*') {
                                     ch = in.read();
-                                    while (ch == '*') {
-                                        ch = in.read();
-                                    }
+                                }
 
-                                    if (ch == '/') {
-                                        ch = read();
-                                        break;
-                                    }
+                                if (ch == '/') {
+                                    ch = read();
+                                    break;
                                 }
                             }
-                        } else {
-                            readAheadCh = ch;
-                            ch = '/';
                         }
+                    } else {
+                        readAheadCh = ch;
+                        ch = '/';
                     }
                 }
             }

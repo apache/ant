@@ -134,10 +134,8 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
                         final String remoteFile,
                         final File localFile) throws SftpException {
         String pwd = remoteFile;
-        if (remoteFile.lastIndexOf('/') != -1) {
-            if (remoteFile.length() > 1) {
-                pwd = remoteFile.substring(0, remoteFile.lastIndexOf('/'));
-            }
+        if (remoteFile.lastIndexOf('/') != -1 && remoteFile.length() > 1) {
+            pwd = remoteFile.substring(0, remoteFile.lastIndexOf('/'));
         }
         channel.cd(pwd);
         if (!localFile.exists()) {
@@ -168,10 +166,8 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
         if (!localFile.exists()) {
             final String path = localFile.getAbsolutePath();
             final int i = path.lastIndexOf(File.pathSeparator);
-            if (i != -1) {
-                if (path.length() > File.pathSeparator.length()) {
-                    new File(path.substring(0, i)).mkdirs();
-                }
+            if (i != -1 && path.length() > File.pathSeparator.length()) {
+                new File(path.substring(0, i)).mkdirs();
             }
         }
 

@@ -346,19 +346,14 @@ public class UnknownElement extends Task {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
                 UnknownElement child = it.next();
                 try {
-                    if (!childWrapper.isEnabled(child)) {
-                        if (ih.supportsNestedElement(
-                                parentUri, ProjectHelper.genComponentName(
-                                    child.getNamespace(), child.getTag()))) {
-                            continue;
-                        }
-                        // fall tru and fail in handlechild (unsupported element)
+                    // fall tru and fail in handlechild (unsupported element)
+                    if (!childWrapper.isEnabled(child) && ih.supportsNestedElement(parentUri,
+                            ProjectHelper.genComponentName(child.getNamespace(), child.getTag()))) {
+                        continue;
                     }
-                    if (!handleChild(
-                            parentUri, ih, parent, child, childWrapper)) {
+                    if (!handleChild(parentUri, ih, parent, child, childWrapper)) {
                         if (!(parent instanceof TaskContainer)) {
-                            ih.throwNotSupported(getProject(), parent,
-                                                 child.getTag());
+                            ih.throwNotSupported(getProject(), parent, child.getTag());
                         } else {
                             // a task container - anything could happen - just add the
                             // child to the container

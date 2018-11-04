@@ -596,11 +596,9 @@ public class RuntimeConfigurable implements Serializable {
         }
 
         // Text
-        if (r.characters != null) {
-            if (characters == null
-                || characters.toString().trim().isEmpty()) {
-                characters = new StringBuffer(r.characters.toString());
-            }
+        if (r.characters != null
+                && (characters == null || characters.toString().trim().isEmpty())) {
+            characters = new StringBuffer(r.characters.toString());
         }
     }
 }

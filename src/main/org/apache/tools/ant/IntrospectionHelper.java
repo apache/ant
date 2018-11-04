@@ -218,11 +218,12 @@ public final class IntrospectionHelper {
                         */
                         continue;
                     }
-                    if (File.class.equals(args[0])) {
-                        // Ant Resources/FileProviders override java.io.File
-                        if (Resource.class.equals(as.type) || FileProvider.class.equals(as.type)) {
-                            continue;
-                        }
+                    if (File.class.equals(args[0])
+                            && (Resource.class.equals(as.type) || FileProvider.class.equals(as.type))) {
+                        /*
+                            Ant Resources/FileProviders override java.io.File
+                         */
+                        continue;
                     }
                     /*
                         In cases other than those just explicitly covered,

@@ -282,11 +282,9 @@ public class TarBuffer {
             offset += numBytes;
             bytesNeeded -= numBytes;
 
-            if (numBytes != blockSize) {
-                if (debug) {
-                    System.err.printf("ReadBlock: INCOMPLETE READ %d of %d bytes read.%n",
-                            numBytes, blockSize);
-                }
+            if (numBytes != blockSize && debug) {
+                System.err.printf("ReadBlock: INCOMPLETE READ %d of %d bytes read.%n",
+                        numBytes, blockSize);
             }
         }
 
@@ -322,8 +320,7 @@ public class TarBuffer {
      */
     public void writeRecord(byte[] record) throws IOException {
         if (debug) {
-            System.err.printf("WriteRecord: recIdx = %d blkIdx = %d%n",
-                    currRecIdx, currBlkIdx);
+            System.err.printf("WriteRecord: recIdx = %d blkIdx = %d%n", currRecIdx, currBlkIdx);
         }
 
         if (outStream == null) {

@@ -710,25 +710,24 @@ public class FTP extends Task implements FTPTaskConfig {
             boolean candidateFound = false;
             String target = null;
             for (int icounter = 0; icounter < array.length; icounter++) {
-                if (array[icounter] != null && array[icounter].isDirectory()) {
-                    if (!".".equals(array[icounter].getName())
+                if (array[icounter] != null && array[icounter].isDirectory()
+                        && !".".equals(array[icounter].getName())
                         && !"..".equals(array[icounter].getName())) {
-                        candidateFound = true;
-                        target = fiddleName(array[icounter].getName());
-                        getProject().log("will try to cd to "
-                                         + target + " where a directory called " + array[icounter].getName()
-                                         + " exists", Project.MSG_DEBUG);
-                        for (int pcounter = 0; pcounter < array.length; pcounter++) {
-                            if (array[pcounter] != null
+                    candidateFound = true;
+                    target = fiddleName(array[icounter].getName());
+                    getProject().log("will try to cd to "
+                            + target + " where a directory called " + array[icounter].getName()
+                            + " exists", Project.MSG_DEBUG);
+                    for (int pcounter = 0; pcounter < array.length; pcounter++) {
+                        if (array[pcounter] != null
                                 && pcounter != icounter
                                 && target.equals(array[pcounter].getName())) {
-                                candidateFound = false;
-                                break;
-                            }
-                        }
-                        if (candidateFound) {
+                            candidateFound = false;
                             break;
                         }
+                    }
+                    if (candidateFound) {
+                        break;
                     }
                 }
             }

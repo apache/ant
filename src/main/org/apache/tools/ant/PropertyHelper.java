@@ -144,8 +144,7 @@ public class PropertyHelper implements GetProperty {
          * @param propertyHelper the invoking PropertyHelper.
          * @return true if this entity 'owns' the property.
          */
-        boolean setNew(
-            String property, Object value, PropertyHelper propertyHelper);
+        boolean setNew(String property, Object value, PropertyHelper propertyHelper);
 
         /**
          * Set a property.
@@ -157,8 +156,7 @@ public class PropertyHelper implements GetProperty {
          * @param propertyHelper the invoking PropertyHelper.
          * @return true if this entity 'owns' the property.
          */
-        boolean set(
-            String property, Object value, PropertyHelper propertyHelper);
+        boolean set(String property, Object value, PropertyHelper propertyHelper);
     }
 
     //TODO PropertyEnumerator Delegate type, would improve PropertySet
@@ -173,6 +171,7 @@ public class PropertyHelper implements GetProperty {
         private final String PREFIX = "toString:";
         private final int PREFIX_LEN = PREFIX.length();
 
+        @Override
         public Object evaluate(String property, PropertyHelper propertyHelper) {
             Object o = null;
             if (property.startsWith(PREFIX) && propertyHelper.getProject() != null) {
@@ -182,18 +181,15 @@ public class PropertyHelper implements GetProperty {
         }
     };
 
-    private static final PropertyExpander DEFAULT_EXPANDER =
-        (s, pos, notUsed) -> {
+    private static final PropertyExpander DEFAULT_EXPANDER = (s, pos, notUsed) -> {
             int index = pos.getIndex();
             //directly check near, triggering characters:
-            if (s.length() - index >= 3 && '$' == s.charAt(index)
-                && '{' == s.charAt(index + 1)) {
+            if (s.length() - index >= 3 && '$' == s.charAt(index) && '{' == s.charAt(index + 1)) {
                 int start = index + 2;
                 //defer to String.indexOf() for protracted check:
                 int end = s.indexOf('}', start);
                 if (end < 0) {
-                    throw new BuildException(
-                        "Syntax error in property: " + s.substring(index));
+                    throw new BuildException("Syntax error in property: " + s.substring(index));
                 }
                 pos.setIndex(end + 1);
                 return start == end ? "" : s.substring(start, end);
@@ -202,19 +198,16 @@ public class PropertyHelper implements GetProperty {
         };
 
     /** dummy */
-    private static final PropertyExpander SKIP_DOUBLE_DOLLAR =
-        (s, pos, notUsed) -> {
+    private static final PropertyExpander SKIP_DOUBLE_DOLLAR = (s, pos, notUsed) -> {
             int index = pos.getIndex();
-            if (s.length() - index >= 2) {
-                /* check for $$; if found, advance by one--
-                 * this expander is at the bottom of the stack
-                 * and will thus be the last consulted,
-                 * so the next thing that ParseProperties will do
-                 * is advance the parse position beyond the second $
-                 */
-                if ('$' == s.charAt(index) && '$' == s.charAt(++index)) {
-                    pos.setIndex(index);
-                }
+            /* check for $$; if found, advance by one--
+             * this expander is at the bottom of the stack
+             * and will thus be the last consulted,
+             * so the next thing that ParseProperties will do
+             * is advance the parse position beyond the second $
+             */
+            if (s.length() - index >= 2 && '$' == s.charAt(index) && '$' == s.charAt(++index)) {
+                pos.setIndex(index);
             }
             return null;
         };
@@ -226,6 +219,7 @@ public class PropertyHelper implements GetProperty {
         private final String PREFIX = "ant.refid:";
         private final int PREFIX_LEN = PREFIX.length();
 
+        @Override
         public Object evaluate(String prop, PropertyHelper helper) {
             return prop.startsWith(PREFIX) && helper.getProject() != null
                 ? helper.getProject().getReference(prop.substring(PREFIX_LEN))
@@ -279,8 +273,7 @@ public class PropertyHelper implements GetProperty {
      * @since Ant 1.8.0
      */
     public static Object getProperty(Project project, String name) {
-        return PropertyHelper.getPropertyHelper(project)
-            .getProperty(name);
+        return PropertyHelper.getPropertyHelper(project).getProperty(name);
     }
 
     /**
@@ -292,8 +285,7 @@ public class PropertyHelper implements GetProperty {
      * @since Ant 1.8.0
      */
     public static void setProperty(Project project, String name, Object value) {
-        PropertyHelper.getPropertyHelper(project)
-            .setProperty(name, value, true);
+        PropertyHelper.getPropertyHelper(project).setProperty(name, value, true);
     }
 
     /**
@@ -304,10 +296,8 @@ public class PropertyHelper implements GetProperty {
      * @param value the value to use.
      * @since Ant 1.8.0
      */
-    public static void setNewProperty(
-        Project project, String name, Object value) {
-        PropertyHelper.getPropertyHelper(project)
-            .setNewProperty(name, value);
+    public static void setNewProperty(Project project, String name, Object value) {
+        PropertyHelper.getPropertyHelper(project).setNewProperty(name, value);
     }
 
     //override facility for subclasses to put custom hashtables in

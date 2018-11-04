@@ -1687,13 +1687,12 @@ public class JUnitTask extends Task {
      * @since 1.9.8
      */
     private void checkModules() {
-        if (hasPath(getCommandline().getModulepath())
-                || hasPath(getCommandline().getUpgrademodulepath())) {
-            if (!batchTests.stream().allMatch(BaseTest::getFork)
-                    || !tests.stream().allMatch(BaseTest::getFork)) {
-                throw new BuildException(
+        if ((hasPath(getCommandline().getModulepath())
+                || hasPath(getCommandline().getUpgrademodulepath()))
+                && (!batchTests.stream().allMatch(BaseTest::getFork)
+                || !tests.stream().allMatch(BaseTest::getFork))) {
+            throw new BuildException(
                     "The module path requires fork attribute to be set to true.");
-            }
         }
     }
 
@@ -1943,37 +1942,35 @@ public class JUnitTask extends Task {
     private void createClassLoader() {
         final Path userClasspath = getCommandline().getClasspath();
         final Path userModulepath = getCommandline().getModulepath();
-        if (userClasspath != null || userModulepath != null) {
-            if (reloading || classLoader == null) {
-                deleteClassLoader();
-                final Path path = new Path(getProject());
-                if (userClasspath != null) {
-                    path.add((Path) userClasspath.clone());
-                }
-                if (userModulepath != null && !hasJunit(path)) {
-                    path.add(expandModulePath(userModulepath));
-                }
-                if (includeAntRuntime) {
-                    log("Implicitly adding " + antRuntimeClasses
-                        + " to CLASSPATH", Project.MSG_VERBOSE);
-                    path.append(antRuntimeClasses);
-                }
-                classLoader = getProject().createClassLoader(path);
-                if (getClass().getClassLoader() != null
-                    && getClass().getClassLoader() != Project.class.getClassLoader()) {
-                    classLoader.setParent(getClass().getClassLoader());
-                }
-                classLoader.setParentFirst(false);
-                classLoader.addJavaLibraries();
-                log("Using CLASSPATH " + classLoader.getClasspath(),
-                    Project.MSG_VERBOSE);
-                // make sure the test will be accepted as a TestCase
-                classLoader.addSystemPackageRoot("junit");
-                // make sure the test annotation are accepted
-                classLoader.addSystemPackageRoot("org.junit");
-                // will cause trouble in JDK 1.1 if omitted
-                classLoader.addSystemPackageRoot("org.apache.tools.ant");
+        if ((userClasspath != null || userModulepath != null) && (reloading || classLoader == null)) {
+            deleteClassLoader();
+            final Path path = new Path(getProject());
+            if (userClasspath != null) {
+                path.add((Path) userClasspath.clone());
             }
+            if (userModulepath != null && !hasJunit(path)) {
+                path.add(expandModulePath(userModulepath));
+            }
+            if (includeAntRuntime) {
+                log("Implicitly adding " + antRuntimeClasses
+                        + " to CLASSPATH", Project.MSG_VERBOSE);
+                path.append(antRuntimeClasses);
+            }
+            classLoader = getProject().createClassLoader(path);
+            if (getClass().getClassLoader() != null
+                    && getClass().getClassLoader() != Project.class.getClassLoader()) {
+                classLoader.setParent(getClass().getClassLoader());
+            }
+            classLoader.setParentFirst(false);
+            classLoader.addJavaLibraries();
+            log("Using CLASSPATH " + classLoader.getClasspath(),
+                    Project.MSG_VERBOSE);
+            // make sure the test will be accepted as a TestCase
+            classLoader.addSystemPackageRoot("junit");
+            // make sure the test annotation are accepted
+            classLoader.addSystemPackageRoot("org.junit");
+            // will cause trouble in JDK 1.1 if omitted
+            classLoader.addSystemPackageRoot("org.apache.tools.ant");
         }
     }
 

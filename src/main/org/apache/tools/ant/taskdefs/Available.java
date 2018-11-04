@@ -266,12 +266,10 @@ public class Available extends Task implements Condition {
                     "At least one of (classname|file|resource) is required",
                     getLocation());
             }
-            if (type != null) {
-                if (file == null) {
-                    throw new BuildException(
+            if (type != null && file == null) {
+                throw new BuildException(
                         "The type attribute is only valid when specifying the file attribute.",
                         getLocation());
-                }
             }
             if (classpath != null) {
                 classpath.setProject(getProject());
@@ -342,19 +340,16 @@ public class Available extends Task implements Condition {
             // **   full-pathname specified == path in list
             // **   simple name specified   == path in list
             if (path.exists()
-                && (filename.equals(p)
-                    || filename.equals(path.getName()))) {
+                && (filename.equals(p) || filename.equals(path.getName()))) {
                 if (type == null) {
                     log("Found: " + path, Project.MSG_VERBOSE);
                     return true;
                 }
-                if (type.isDir()
-                           && path.isDirectory()) {
+                if (type.isDir() && path.isDirectory()) {
                     log("Found directory: " + path, Project.MSG_VERBOSE);
                     return true;
                 }
-                if (type.isFile()
-                           && path.isFile()) {
+                if (type.isFile() && path.isFile()) {
                     log("Found file: " + path, Project.MSG_VERBOSE);
                     return true;
                 }
@@ -363,8 +358,7 @@ public class Available extends Task implements Condition {
             }
             File parent = path.getParentFile();
             // **   full-pathname specified == parent dir of path in list
-            if (parent != null && parent.exists()
-                && filename.equals(parent.getAbsolutePath())) {
+            if (parent != null && parent.exists() && filename.equals(parent.getAbsolutePath())) {
                 if (type == null) {
                     log("Found: " + parent, Project.MSG_VERBOSE);
                     return true;
@@ -377,17 +371,14 @@ public class Available extends Task implements Condition {
                 return false;
             }
             // **   simple name specified   == path in list + name
-            if (path.exists() && path.isDirectory()) {
-                if (checkFile(new File(path, filename),
-                              filename + " in " + path)) {
-                    return true;
-                }
+            if (path.exists() && path.isDirectory()
+                    && checkFile(new File(path, filename), filename + " in " + path)) {
+                return true;
             }
 
             // **   simple name specified   == parent dir + name
             while (searchParents && parent != null && parent.exists()) {
-                if (checkFile(new File(parent, filename),
-                              filename + " in " + parent)) {
+                if (checkFile(new File(parent, filename), filename + " in " + parent)) {
                     return true;
                 }
                 parent = parent.getParentFile();

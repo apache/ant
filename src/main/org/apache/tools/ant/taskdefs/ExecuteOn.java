@@ -361,13 +361,12 @@ public class ExecuteOn extends ExecTask {
             Vector<File> baseDirs = new Vector<>();
             for (AbstractFileSet fs : filesets) {
                 String currentType = type;
-                if (fs instanceof DirSet) {
-                    if (!FileDirBoth.DIR.equals(type)) {
-                        log("Found a nested dirset but type is " + type + ". "
-                            + "Temporarily switching to type=\"dir\" on the assumption that you really did mean <dirset> not <fileset>.",
+                if (fs instanceof DirSet && !FileDirBoth.DIR.equals(type)) {
+                    log("Found a nested dirset but type is " + type + ". "
+                                    + "Temporarily switching to type=\"dir\" on the assumption"
+                                    + " that you really did mean <dirset> not <fileset>.",
                             Project.MSG_DEBUG);
-                        currentType = FileDirBoth.DIR;
-                    }
+                    currentType = FileDirBoth.DIR;
                 }
                 File base = fs.getDir(getProject());
 

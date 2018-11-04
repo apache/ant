@@ -118,13 +118,10 @@ public class RegexpPatternMapper implements FileNameMapper {
         if (sourceFileName == null) {
             return null;
         }
-        if (handleDirSep) {
-            if (sourceFileName.contains("\\")) {
-                sourceFileName = sourceFileName.replace('\\', '/');
-            }
+        if (handleDirSep && sourceFileName.contains("\\")) {
+            sourceFileName = sourceFileName.replace('\\', '/');
         }
-        if (reg == null  || to == null
-            || !reg.matches(sourceFileName, regexpOptions)) {
+        if (reg == null || to == null || !reg.matches(sourceFileName, regexpOptions)) {
             return null;
         }
         return new String[] {replaceReferences(sourceFileName)};

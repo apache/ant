@@ -468,29 +468,27 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
 
         String baseName = null;
 
-        if (getConfig().namingScheme.getValue().equals(EjbJar.NamingScheme.DESCRIPTOR)) {
+        // try to find JOnAS specific convention name
+        if (getConfig().namingScheme.getValue().equals(EjbJar.NamingScheme.DESCRIPTOR)
+                && !descriptorFileName.contains(getConfig().baseNameTerminator)) {
 
-            // try to find JOnAS specific convention name
-            if (!descriptorFileName.contains(getConfig().baseNameTerminator)) {
+            // baseNameTerminator not found: the descriptor use the
+            // JOnAS naming convention, ie [Foo.xml,jonas-Foo.xml] and
+            // not [Foo<baseNameTerminator>-ejb-jar.xml,
+            // Foo<baseNameTerminator>-jonas-ejb-jar.xml].
 
-                // baseNameTerminator not found: the descriptor use the
-                // JOnAS naming convention, ie [Foo.xml,jonas-Foo.xml] and
-                // not [Foo<baseNameTerminator>-ejb-jar.xml,
-                // Foo<baseNameTerminator>-jonas-ejb-jar.xml].
+            String aCanonicalDescriptor = descriptorFileName.replace('\\', '/');
+            int lastSeparatorIndex = aCanonicalDescriptor.lastIndexOf('/');
+            int endOfBaseName;
 
-                String aCanonicalDescriptor = descriptorFileName.replace('\\', '/');
-                int lastSeparatorIndex = aCanonicalDescriptor.lastIndexOf('/');
-                int endOfBaseName;
+            if (lastSeparatorIndex != -1) {
+                endOfBaseName = descriptorFileName.indexOf(".xml", lastSeparatorIndex);
+            } else {
+                endOfBaseName = descriptorFileName.indexOf(".xml");
+            }
 
-                if (lastSeparatorIndex != -1) {
-                    endOfBaseName = descriptorFileName.indexOf(".xml", lastSeparatorIndex);
-                } else {
-                    endOfBaseName = descriptorFileName.indexOf(".xml");
-                }
-
-                if (endOfBaseName != -1) {
-                    baseName = descriptorFileName.substring(0, endOfBaseName);
-                }
+            if (endOfBaseName != -1) {
+                baseName = descriptorFileName.substring(0, endOfBaseName);
             }
         }
 

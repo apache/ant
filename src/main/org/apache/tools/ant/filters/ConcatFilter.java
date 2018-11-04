@@ -113,16 +113,14 @@ public final class ConcatFilter extends BaseParamFilterReader
         if (ch == -1) {
             ch = super.read();
         }
-        if (ch == -1) {
-            // don't call super.close() because that reader is used
-            // on other places ...
-            if (appendReader != null) {
-                ch = appendReader.read();
-                if (ch == -1) {
-                    // I am the only one so I have to close the reader
-                    appendReader.close();
-                    appendReader = null;
-                }
+        // don't call super.close() because that reader is used
+        // on other places ...
+        if (ch == -1 && appendReader != null) {
+            ch = appendReader.read();
+            if (ch == -1) {
+                // I am the only one so I have to close the reader
+                appendReader.close();
+                appendReader = null;
             }
         }
 

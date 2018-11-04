@@ -294,11 +294,9 @@ public class LayoutPreservingProperties extends Properties {
         boolean writtenSep = false;
         for (LogicalLine line : logicalLines.subList(skipLines, totalLines)) {
             if (line instanceof Pair) {
-                if (((Pair) line).isNew()) {
-                    if (!writtenSep) {
-                        osw.write(eol);
-                        writtenSep = true;
-                    }
+                if (((Pair) line).isNew() && !writtenSep) {
+                    osw.write(eol);
+                    writtenSep = true;
                 }
                 osw.write(line.toString() + eol);
             } else if (line != null) {
