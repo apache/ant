@@ -56,9 +56,6 @@ public class Java extends Task {
     private static final String WRONG_ATTRIBUTES_MESSAGE =
             "Cannot use combination of 'classname', 'jar', 'module', 'sourcefile' attributes in same command";
 
-    private static final String WRONG_CLASSNAME_ATTRIBUTES_MESSAGE =
-            "Cannot use combination of 'classname', 'jar', 'sourcefile' attributes in same command";
-
     private CommandlineJava cmdl = new CommandlineJava();
     private Environment env = new Environment();
     private boolean fork = false;
@@ -385,7 +382,8 @@ public class Java extends Task {
      */
     public void setClassname(String s) throws BuildException {
         if (getCommandLine().getJar() != null || getCommandLine().getSourceFile() != null) {
-            throw new BuildException(WRONG_CLASSNAME_ATTRIBUTES_MESSAGE);
+            throw new BuildException(
+                    "Cannot use combination of 'classname', 'jar', 'sourcefile' attributes in same command");
         }
         getCommandLine().setClassname(s);
     }
@@ -400,7 +398,8 @@ public class Java extends Task {
      */
     public void setModule(String module) throws BuildException {
         if (getCommandLine().getJar() != null || getCommandLine().getSourceFile() != null) {
-            throw new BuildException(WRONG_CLASSNAME_ATTRIBUTES_MESSAGE);
+            throw new BuildException(
+                    "Cannot use combination of 'jar', 'module', 'sourcefile' attributes in same command");
         }
         getCommandLine().setModule(module);
     }
