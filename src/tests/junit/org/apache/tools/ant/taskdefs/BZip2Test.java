@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import static org.hamcrest.Matchers.endsWith;
 import static org.junit.Assert.assertEquals;
@@ -68,12 +69,12 @@ public class BZip2Test {
         File actualFile   = new File(outputDir, "asf-logo-huge.tar.bz2");
 
         InputStream originalIn =
-            new BufferedInputStream(new FileInputStream(originalFile));
+            new BufferedInputStream(Files.newInputStream(originalFile.toPath()));
         assertEquals((byte) 'B', originalIn.read());
         assertEquals((byte) 'Z', originalIn.read());
 
         InputStream actualIn =
-            new BufferedInputStream(new FileInputStream(actualFile));
+            new BufferedInputStream(Files.newInputStream(actualFile.toPath()));
         assertEquals((byte) 'B', actualIn.read());
         assertEquals((byte) 'Z', actualIn.read());
 

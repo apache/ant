@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 /**
  * Base class for the uuencode/decode test tasks.
@@ -54,8 +55,8 @@ abstract public class BaseTask extends Task {
         OutputStream outputStream = null;
         try {
             inputStream = new BufferedInputStream(
-                new FileInputStream(getInFile()));
-            outputStream = new FileOutputStream(getOutFile());
+                Files.newInputStream(getInFile().toPath()));
+            outputStream = Files.newOutputStream(getOutFile().toPath());
             doit(inputStream, outputStream);
         } catch (Exception ex) {
             throw new BuildException(ex);
