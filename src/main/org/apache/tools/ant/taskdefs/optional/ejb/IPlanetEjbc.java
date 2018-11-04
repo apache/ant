@@ -1081,12 +1081,7 @@ public class IPlanetEjbc {
          *         be run to bring the stubs and skeletons up to date.
          */
         public boolean mustBeRecompiled(File destDir) {
-
-            long sourceModified = sourceClassesModified(destDir);
-
-            long destModified = destClassesModified(destDir);
-
-            return (destModified < sourceModified);
+            return destClassesModified(destDir) < sourceClassesModified(destDir);
         }
 
         /**
@@ -1236,8 +1231,7 @@ public class IPlanetEjbc {
          *         names for the stubs and skeletons to be generated.
          */
         private String[] classesToGenerate() {
-            String[] classnames = (iiop)
-                ? new String[NUM_CLASSES_WITH_IIOP]
+            String[] classnames = iiop ? new String[NUM_CLASSES_WITH_IIOP]
                 : new String[NUM_CLASSES_WITHOUT_IIOP];
 
             final String remotePkg     = remote.getPackageName() + ".";

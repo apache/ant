@@ -331,8 +331,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      * @param tryUserDir  if true try the user directory if the file is not present
      */
     public void addExisting(Path source, boolean tryUserDir) {
-        File userDir = (tryUserDir) ? new File(System.getProperty("user.dir"))
-                : null;
+        File userDir = tryUserDir ? new File(System.getProperty("user.dir")) : null;
 
         for (String name : source.list()) {
             File f = resolveFile(getProject(), name);

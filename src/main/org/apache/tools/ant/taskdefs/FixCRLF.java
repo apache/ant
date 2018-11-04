@@ -420,10 +420,9 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             throws BuildException {
             this.srcFile = srcFile;
             try {
-                reader = new BufferedReader(
-                    ((encoding == null) ? new FileReader(srcFile)
-                    : new InputStreamReader(
-                    Files.newInputStream(srcFile.toPath()), encoding)), INBUFLEN);
+                reader = new BufferedReader(encoding == null ? new FileReader(srcFile)
+                        : new InputStreamReader(Files.newInputStream(srcFile.toPath()),
+                        encoding), INBUFLEN);
 
                 nextLine();
             } catch (IOException e) {

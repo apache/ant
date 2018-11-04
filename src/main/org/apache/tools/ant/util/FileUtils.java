@@ -1181,7 +1181,7 @@ public class FileUtils {
         if (!l.endsWith(File.separator)) {
             l += File.separator;
         }
-        return (p.startsWith(l)) ? p.substring(l.length()) : p;
+        return p.startsWith(l) ? p.substring(l.length()) : p;
     }
 
     /**

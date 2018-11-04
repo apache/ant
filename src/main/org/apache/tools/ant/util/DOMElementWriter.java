@@ -515,7 +515,7 @@ public class DOMElementWriter {
         int prevEnd = 0;
         int cdataEndPos = value.indexOf("]]>");
         while (prevEnd < len) {
-            final int end = (cdataEndPos < 0 ? len : cdataEndPos);
+            final int end = cdataEndPos < 0 ? len : cdataEndPos;
             // Write out stretches of legal characters in the range [prevEnd, end).
             int prevLegalCharPos = prevEnd;
             while (prevLegalCharPos < end) {

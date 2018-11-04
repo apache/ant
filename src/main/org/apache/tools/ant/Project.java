@@ -268,7 +268,7 @@ public class Project implements ResourceFactory {
     public Project createSubProject() {
         Project subProject = null;
         try {
-            subProject = (getClass().newInstance());
+            subProject = getClass().newInstance();
         } catch (final Exception e) {
             subProject = new Project();
         }
@@ -927,7 +927,7 @@ public class Project implements ResourceFactory {
             throw new BuildException("Ant cannot work on Java prior to 1.8");
         }
         log("Detected Java version: " + javaVersion + " in: "
-            + System.getProperty("java.home"), MSG_VERBOSE);
+            + JavaEnvUtils.getJavaHome(), MSG_VERBOSE);
 
         log("Detected OS: " + System.getProperty("os.name"), MSG_VERBOSE);
     }
@@ -1716,9 +1716,9 @@ public class Project implements ResourceFactory {
      *         <code>false</code> otherwise.
      */
     public static boolean toBoolean(final String s) {
-        return ("on".equalsIgnoreCase(s)
+        return "on".equalsIgnoreCase(s)
                 || "true".equalsIgnoreCase(s)
-                || "yes".equalsIgnoreCase(s));
+                || "yes".equalsIgnoreCase(s);
     }
 
     /**
@@ -1828,7 +1828,7 @@ public class Project implements ResourceFactory {
                 .collect(Collectors.joining(","))
                 + " is " + ret, MSG_VERBOSE);
 
-        final Vector<Target> complete = (returnAll) ? ret : new Vector<>(ret);
+        final Vector<Target> complete = returnAll ? ret : new Vector<>(ret);
         for (final String curTarget : targetTable.keySet()) {
             final String st = state.get(curTarget);
             if (st == null) {

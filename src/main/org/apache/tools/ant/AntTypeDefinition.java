@@ -315,8 +315,7 @@ public class AntTypeDefinition {
             noArg = false;
         }
         //now we instantiate
-        T o = ctor.newInstance(
-            ((noArg) ? new Object[0] : new Object[] {project}));
+        T o = ctor.newInstance(noArg ? new Object[0] : new Object[] {project});
 
         //set up project references.
         project.setProjectReference(o);
@@ -331,12 +330,12 @@ public class AntTypeDefinition {
      * @return true if the definitions are the same.
      */
     public boolean sameDefinition(AntTypeDefinition other, Project project) {
-        return (other != null && other.getClass() == getClass()
+        return other != null && other.getClass() == getClass()
             && other.getTypeClass(project).equals(getTypeClass(project))
             && other.getExposedClass(project).equals(getExposedClass(project))
             && other.restrict == restrict
             && other.adapterClass == adapterClass
-            && other.adaptToClass == adaptToClass);
+            && other.adaptToClass == adaptToClass;
     }
 
     /**

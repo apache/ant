@@ -479,7 +479,7 @@ public class SchemaValidate extends XMLValidateTask {
         public int hashCode() {
             int result;
             // CheckStyle:MagicNumber OFF
-            result = (namespace == null ? 0 : namespace.hashCode());
+            result = namespace == null ? 0 : namespace.hashCode();
             result = 29 * result + (file == null ? 0 : file.hashCode());
             result = 29 * result + (url == null ? 0 : url.hashCode());
             // CheckStyle:MagicNumber OFF

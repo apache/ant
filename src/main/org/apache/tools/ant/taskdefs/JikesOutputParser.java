@@ -169,9 +169,9 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
     private void log(String line) {
        if (!emacsMode) {
-           task.log("", (error ? Project.MSG_ERR : Project.MSG_WARN));
+           task.log("", error ? Project.MSG_ERR : Project.MSG_WARN);
        }
-       task.log(line, (error ? Project.MSG_ERR : Project.MSG_WARN));
+       task.log(line, error ? Project.MSG_ERR : Project.MSG_WARN);
     }
 
     /**

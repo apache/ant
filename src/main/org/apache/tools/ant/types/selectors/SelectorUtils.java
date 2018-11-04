@@ -278,8 +278,8 @@ public final class SelectorUtils {
             }
             // Find the pattern between padIdxStart & padIdxTmp in str between
             // strIdxStart & strIdxEnd
-            int patLength = (patIdxTmp - patIdxStart - 1);
-            int strLength = (strIdxEnd - strIdxStart + 1);
+            int patLength = patIdxTmp - patIdxStart - 1;
+            int strLength = strIdxEnd - strIdxStart + 1;
             int foundIdx = -1;
             strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {
@@ -433,8 +433,8 @@ public final class SelectorUtils {
             }
             // Find the pattern between padIdxStart & padIdxTmp in str between
             // strIdxStart & strIdxEnd
-            int patLength = (patIdxTmp - patIdxStart - 1);
-            int strLength = (strIdxEnd - strIdxStart + 1);
+            int patLength = patIdxTmp - patIdxStart - 1;
+            int strLength = strIdxEnd - strIdxStart + 1;
             int foundIdx = -1;
             strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {

@@ -467,7 +467,7 @@ public final class Extension {
      * @return true if the specified extension is compatible with this extension
      */
     public boolean isCompatibleWith(final Extension required) {
-        return (COMPATIBLE == getCompatibilityWith(required));
+        return COMPATIBLE == getCompatibilityWith(required);
     }
 
     /**

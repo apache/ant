@@ -215,7 +215,7 @@ public class TarInputStream extends FilterInputStream {
             }
             skip -= numRead;
         }
-        return (numToSkip - skip);
+        return numToSkip - skip;
     }
 
     /**

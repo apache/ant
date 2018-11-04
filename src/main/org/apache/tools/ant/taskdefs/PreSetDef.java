@@ -266,9 +266,9 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          */
         @Override
         public boolean sameDefinition(AntTypeDefinition other, Project project) {
-            return (other != null && other.getClass() == getClass() && parent != null
-                && parent.sameDefinition(((PreSetDefinition) other).parent, project)
-                && element.similar(((PreSetDefinition) other).element));
+            return other != null && other.getClass() == getClass() && parent != null
+                    && parent.sameDefinition(((PreSetDefinition) other).parent, project)
+                    && element.similar(((PreSetDefinition) other).element);
         }
 
         /**
@@ -279,12 +279,11 @@ public class PreSetDef extends AntlibDefinition implements TaskContainer {
          * @return true if the definitions are similar.
          */
         @Override
-        public boolean similarDefinition(
-            AntTypeDefinition other, Project project) {
-            return (other != null && other.getClass().getName().equals(
-                getClass().getName()) && parent != null
-                && parent.similarDefinition(((PreSetDefinition) other).parent, project)
-                && element.similar(((PreSetDefinition) other).element));
+        public boolean similarDefinition(AntTypeDefinition other, Project project) {
+            return other != null && other.getClass().getName().equals(getClass().getName())
+                    && parent != null
+                    && parent.similarDefinition(((PreSetDefinition) other).parent, project)
+                    && element.similar(((PreSetDefinition) other).element);
         }
     }
 }

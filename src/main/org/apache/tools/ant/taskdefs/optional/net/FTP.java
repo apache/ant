@@ -876,7 +876,7 @@ public class FTP extends Task implements FTPTaskConfig {
              * @return  true if the file exists
              */
             public boolean exists() {
-                return (ftpFile != null);
+                return ftpFile != null;
             }
 
             /**

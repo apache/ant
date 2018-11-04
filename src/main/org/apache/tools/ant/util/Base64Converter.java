@@ -91,7 +91,7 @@ public class Base64Converter {
             out[outIndex++] = ALPHABET[bits6];
             bits6  = (bits24 & POS_1_MASK) >> POS_1_SHIFT;
             out[outIndex++] = ALPHABET[bits6];
-            bits6 = (bits24 & POS_0_MASK);
+            bits6 = bits24 & POS_0_MASK;
             out[outIndex++] = ALPHABET[bits6];
         }
         if (octetString.length - i == 2) {

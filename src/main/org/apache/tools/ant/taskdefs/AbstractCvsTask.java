@@ -364,7 +364,7 @@ public abstract class AbstractCvsTask extends Task {
             log("Caught exception: " + e.getMessage(), Project.MSG_WARN);
         } catch (BuildException e) {
             if (failOnError) {
-                throw(e);
+                throw e;
             }
             Throwable t = e.getCause();
             if (t == null) {

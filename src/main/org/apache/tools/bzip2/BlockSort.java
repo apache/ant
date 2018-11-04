@@ -686,17 +686,17 @@ class BlockSort {
                                                                                         i2 -= lastPlus1;
                                                                                     }
                                                                                     workDoneShadow++;
-                                                                                } else if ((quadrant[i1 + 3] > quadrant[i2 + 3])) {
+                                                                                } else if (quadrant[i1 + 3] > quadrant[i2 + 3]) {
                                                                                     continue HAMMER;
                                                                                 } else {
                                                                                     break HAMMER;
                                                                                 }
-                                                                            } else if ((block[i1 + 4] & 0xff) > (block[i2 + 4] & 0xff)) {
+                                                                            } else if ((block[i2 + 4] & 0xff) < (block[i1 + 4] & 0xff)) {
                                                                                 continue HAMMER;
                                                                             } else {
                                                                                 break HAMMER;
                                                                             }
-                                                                        } else if ((quadrant[i1 + 2] > quadrant[i2 + 2])) {
+                                                                        } else if (quadrant[i1 + 2] > quadrant[i2 + 2]) {
                                                                             continue HAMMER;
                                                                         } else {
                                                                             break HAMMER;
@@ -706,7 +706,7 @@ class BlockSort {
                                                                     } else {
                                                                         break HAMMER;
                                                                     }
-                                                                } else if ((quadrant[i1 + 1] > quadrant[i2 + 1])) {
+                                                                } else if (quadrant[i1 + 1] > quadrant[i2 + 1]) {
                                                                     continue HAMMER;
                                                                 } else {
                                                                     break HAMMER;
@@ -716,7 +716,7 @@ class BlockSort {
                                                             } else {
                                                                 break HAMMER;
                                                             }
-                                                        } else if ((quadrant[i1] > quadrant[i2])) {
+                                                        } else if (quadrant[i1] > quadrant[i2]) {
                                                             continue HAMMER;
                                                         } else {
                                                             break HAMMER;
@@ -900,8 +900,8 @@ class BlockSort {
         }
     }
 
-    private static final int SETMASK = (1 << 21);
-    private static final int CLEARMASK = (~SETMASK);
+    private static final int SETMASK = 1 << 21;
+    private static final int CLEARMASK = ~SETMASK;
 
     final void mainSort(final CBZip2OutputStream.Data dataShadow,
                         final int lastShadow) {
@@ -1024,7 +1024,7 @@ class BlockSort {
                 copy[j] = ftab[(j << 8) + ss] & CLEARMASK;
             }
 
-            for (int j = ftab[ss << 8] & CLEARMASK, hj = (ftab[(ss + 1) << 8] & CLEARMASK); j < hj; j++) {
+            for (int j = ftab[ss << 8] & CLEARMASK, hj = ftab[ss + 1 << 8] & CLEARMASK; j < hj; j++) {
                 final int fmap_j = fmap[j];
                 c1 = block[fmap_j] & 0xff;
                 if (!bigDone[c1]) {

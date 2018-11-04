@@ -45,7 +45,7 @@ public class EqualComparator implements Comparator<Object> {
             }
             return 0;
         }
-        return (o1.equals(o2)) ? 0 : 1;
+        return o1.equals(o2) ? 0 : 1;
     }
 
     /**

@@ -44,10 +44,10 @@ import java.util.Arrays;
 public class TarBuffer {
 
     /** Default record size */
-    public static final int DEFAULT_RCDSIZE = (512);
+    public static final int DEFAULT_RCDSIZE = 512;
 
     /** Default block size */
-    public static final int DEFAULT_BLKSIZE = (DEFAULT_RCDSIZE * 20);
+    public static final int DEFAULT_BLKSIZE = DEFAULT_RCDSIZE * 20;
 
     private InputStream     inStream;
     private OutputStream    outStream;
@@ -123,7 +123,7 @@ public class TarBuffer {
         this.debug = false;
         this.blockSize = blockSize;
         this.recordSize = recordSize;
-        this.recsPerBlock = (this.blockSize / this.recordSize);
+        this.recsPerBlock = this.blockSize / this.recordSize;
         this.blockBuffer = new byte[this.blockSize];
 
         if (this.inStream != null) {
@@ -183,8 +183,7 @@ public class TarBuffer {
      */
     public void skipRecord() throws IOException {
         if (debug) {
-            System.err.println("SkipRecord: recIdx = " + currRecIdx
-                               + " blkIdx = " + currBlkIdx);
+            System.err.printf("SkipRecord: recIdx = %d blkIdx = %d%n", currRecIdx, currBlkIdx);
         }
 
         if (inStream == null) {
@@ -206,8 +205,7 @@ public class TarBuffer {
      */
     public byte[] readRecord() throws IOException {
         if (debug) {
-            System.err.println("ReadRecord: recIdx = " + currRecIdx
-                               + " blkIdx = " + currBlkIdx);
+            System.err.printf("ReadRecord: recIdx = %d blkIdx = %d%n", currRecIdx, currBlkIdx);
         }
 
         if (inStream == null) {
@@ -223,9 +221,7 @@ public class TarBuffer {
 
         byte[] result = new byte[recordSize];
 
-        System.arraycopy(blockBuffer,
-                         (currRecIdx * recordSize), result, 0,
-                         recordSize);
+        System.arraycopy(blockBuffer, currRecIdx * recordSize, result, 0, recordSize);
 
         currRecIdx++;
 
@@ -250,8 +246,7 @@ public class TarBuffer {
         int bytesNeeded = blockSize;
 
         while (bytesNeeded > 0) {
-            long numBytes = inStream.read(blockBuffer, offset,
-                                               bytesNeeded);
+            long numBytes = inStream.read(blockBuffer, offset, bytesNeeded);
 
             //
             // NOTE
@@ -289,9 +284,8 @@ public class TarBuffer {
 
             if (numBytes != blockSize) {
                 if (debug) {
-                    System.err.println("ReadBlock: INCOMPLETE READ "
-                                       + numBytes + " of " + blockSize
-                                       + " bytes read.");
+                    System.err.printf("ReadBlock: INCOMPLETE READ %d of %d bytes read.%n",
+                            numBytes, blockSize);
                 }
             }
         }
@@ -328,8 +322,8 @@ public class TarBuffer {
      */
     public void writeRecord(byte[] record) throws IOException {
         if (debug) {
-            System.err.println("WriteRecord: recIdx = " + currRecIdx
-                               + " blkIdx = " + currBlkIdx);
+            System.err.printf("WriteRecord: recIdx = %d blkIdx = %d%n",
+                    currRecIdx, currBlkIdx);
         }
 
         if (outStream == null) {
@@ -350,9 +344,7 @@ public class TarBuffer {
             writeBlock();
         }
 
-        System.arraycopy(record, 0, blockBuffer,
-                         (currRecIdx * recordSize),
-                         recordSize);
+        System.arraycopy(record, 0, blockBuffer, currRecIdx * recordSize, recordSize);
 
         currRecIdx++;
     }
@@ -368,8 +360,7 @@ public class TarBuffer {
      */
     public void writeRecord(byte[] buf, int offset) throws IOException {
         if (debug) {
-            System.err.println("WriteRecord: recIdx = " + currRecIdx
-                               + " blkIdx = " + currBlkIdx);
+            System.err.printf("WriteRecord: recIdx = %d blkIdx = %d%n", currRecIdx, currBlkIdx);
         }
 
         if (outStream == null) {
@@ -390,9 +381,7 @@ public class TarBuffer {
             writeBlock();
         }
 
-        System.arraycopy(buf, offset, blockBuffer,
-                         (currRecIdx * recordSize),
-                         recordSize);
+        System.arraycopy(buf, offset, blockBuffer, currRecIdx * recordSize, recordSize);
 
         currRecIdx++;
     }
@@ -447,8 +436,7 @@ public class TarBuffer {
         if (outStream != null) {
             flushBlock();
 
-            if (outStream != System.out
-                    && outStream != System.err) {
+            if (outStream != System.out && outStream != System.err) {
                 outStream.close();
 
                 outStream = null;

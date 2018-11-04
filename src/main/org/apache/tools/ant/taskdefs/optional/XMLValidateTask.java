@@ -364,7 +364,7 @@ public class XMLValidateTask extends Task {
      * @return true when a SAX1 parser is in use
      */
     protected boolean isSax1Parser() {
-        return (xmlReader instanceof ParserAdapter);
+        return xmlReader instanceof ParserAdapter;
     }
 
     /**

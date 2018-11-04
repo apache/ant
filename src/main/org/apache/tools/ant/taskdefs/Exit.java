@@ -134,8 +134,8 @@ public class Exit extends Task {
      */
     @Override
     public void execute() throws BuildException {
-        boolean fail = (nestedConditionPresent()) ? testNestedCondition()
-                     : (testIfCondition() && testUnlessCondition());
+        boolean fail = nestedConditionPresent() ? testNestedCondition()
+                     : testIfCondition() && testUnlessCondition();
         if (fail) {
             String text = null;
             if (message != null && !message.trim().isEmpty()) {
@@ -231,7 +231,7 @@ public class Exit extends Task {
      * @return <code>boolean</code>.
      */
     private boolean nestedConditionPresent() {
-        return (nestedCondition != null);
+        return nestedCondition != null;
     }
 
 }
