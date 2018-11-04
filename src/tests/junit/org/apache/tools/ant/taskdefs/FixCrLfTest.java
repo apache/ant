@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import junit.framework.AssertionFailedError;
 
@@ -234,8 +235,8 @@ public class FixCrLfTest {
     public void assertEqualContent(File expect, File result) throws AssertionFailedError, IOException {
         assertTrue("Expected file " + result + " doesn\'t exist", result.exists());
 
-        try (InputStream inExpect = new BufferedInputStream(new FileInputStream(expect));
-             InputStream inResult = new BufferedInputStream(new FileInputStream(result))) {
+        try (InputStream inExpect = new BufferedInputStream(Files.newInputStream(expect.toPath()));
+             InputStream inResult = new BufferedInputStream(Files.newInputStream(result.toPath()))) {
 
             int expectedByte = inExpect.read();
             while (expectedByte != -1) {
