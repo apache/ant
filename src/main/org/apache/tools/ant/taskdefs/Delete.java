@@ -815,19 +815,7 @@ public class Delete extends MatchingTask {
         }
         for (String s : list) {
             File f = new File(d, s);
-
-            boolean isFsLoop = false;
-
-            try {
-                isFsLoop = Files.isSymbolicLink(f.toPath()) &&
-                    FileUtils.getFileUtils().isLeadingPath(f.getAbsoluteFile(),
-                        d.getAbsoluteFile(), true);
-            } catch (IOException e) {
-                log("Failed to check if " + f + " causes a filesystem loop due to " +
-                        "symbolic link; continuing");
-            }
-
-            if (f.isDirectory() && !isFsLoop) {
+            if (f.isDirectory()) {
                 removeDir(f);
             } else {
                 log("Deleting " + f.getAbsolutePath(), quiet ? Project.MSG_VERBOSE : verbosity);

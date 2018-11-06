@@ -27,11 +27,6 @@ Fixed bugs:
    an incorrect compression level for a zip entry. This is now fixed.
    Bugzilla Report 62686
 
- * A filesystem "loop" caused due to symbolic links could trigger an
-   out of memory error in the org.apache.tools.ant.DirectoryScanner
-   This has now been fixed.
-   Bugzilla Report 62849
-
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
