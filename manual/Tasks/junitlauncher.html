@@ -102,15 +102,18 @@
     To have these in the test classpath, you can follow <em>either</em> of the following approaches:
 </p>
 
-<ul>
-    <li>Put all these relevant jars along with the <samp>ant-junitlauncher.jar</samp>
+<ul id="setup">
+    <li id="setup-recommended"><b>Recommended approach since Ant 1.10.6</b>: Place the <samp>ant-junitlauncher.jar</samp> in <samp>ANT_HOME/lib</samp> directory
+    and use the nested <code>&lt;classpath&gt;</code> element to specify the location of the
+    the rest of the JUnit specific jars (noted above). Please read the
+    <a href=#nested-classpath>using classpath element</a> section for more details.</li>
+
+    <li>OR Put all these relevant jars along with the <samp>ant-junitlauncher.jar</samp>
         in <samp>ANT_HOME/lib</samp> directory</li>
-    <li>OR Leave <samp>ant-junitlauncher.jar</samp> in the <samp>ANT_HOME/lib</samp> directory and
+
+    <li>OR Put <samp>ant-junitlauncher.jar</samp> in the <samp>ANT_HOME/lib</samp> directory and
         include all other relevant jars in the classpath by passing them as a <kbd>-lib</kbd>
         option, while invoking Ant</li>
-    <li>OR Use the nested <code>&lt;classpath&gt;</code> element to specify the location of the
-        test engines. For more details about this approach, please read the
-        <a href=#test-engine-in-classpath>using classpath element to include test engines</a> section.
 </ul>
 
 <p>
@@ -153,7 +156,7 @@
 
 <h3 id="nested">Nested Elements</h3>
 
-<h4>classpath</h4>
+<h4 id="nested-classpath">classpath</h4>
 <p>
     The nested <code>&lt;classpath&gt;</code> element that represents
     a <a href="../using.html#path">PATH like structure</a> can be used to configure the task to use
@@ -162,29 +165,16 @@
 <ul>
     <li>Finding the test classes to execute</li>
     <li>Finding test engines that run the tests</li>
+    <li>If <a href="#setup-recommended">configured to do so</a>, finding all necessary JUnit libraries</li>
 </ul>
 <p>
     If the <code>classpath</code> element isn't configured for the task, then the classpath of Ant
-    itself will be used for finding the test classes.
+    itself will be used for finding the test classes and the JUnit libraries.
 </p>
 
-<h5 id="test-engine-in-classpath">Using the classpath element to include test engines</h5>
 <p>
-    The <code>&lt;classpath&gt;</code> can be used to include the test engines that you want to be
-    considered for execution of the tests.
-</p>
-<p>
-    <strong>NOTE:</strong> An important aspect to remember is that
-    whether or not you use this approach, the JUnit 5 platform libraries
-    <a href="#junit-platform-libraries">listed earlier in this
-    document</a> and the <code>ant-junitlauncher.jar</code>, <i>shouldn't</i> be part of this classpath
-    and instead they must be included in Ant runtime's classpath either by placing them
-    in <code>ANT_HOME/lib</code> or by passing the <code>-lib</code> option.
-</p>
-<p>
-    Below is an example of setting up the classpath to include the Jupiter test engine during the
-    execution of the tests. We assume that the JUnit 5 platform libraries and the
-    <code>ant-junitlauncher.jar</code> have been setup as explained previously.
+    Below is an example of setting up the classpath to include the Jupiter test engine and
+    the JUnit platform libraries during the execution of the tests.
     <br/>
     <pre>
 &lt;project&gt;
@@ -197,6 +187,10 @@
         &lt;mkdir dir="${output.dir}"/&gt;
     &lt;/target&gt;
 
+    &lt;path id="junit.platform.libs.classpath"&gt;
+        &lt;fileset dir="${basedir}/src/lib/junit-platform/"/&gt;
+    &lt;/path&gt;
+
     &lt;path id="junit.engine.jupiter.classpath"&gt;
         &lt;fileset dir="${basedir}/src/lib/jupiter/"/&gt;
     &lt;/path&gt;
@@ -205,14 +199,23 @@
         &lt;mkdir dir="${build.classes.dir}"/&gt;
         &lt;javac srcdir="${src.test.dir}"
            destdir="${build.classes.dir}"&gt;
+           &lt;!-- our tests only need JUnit Jupiter engine
+           libraries in our compile classpath for the tests --&gt;
            &lt;classpath refid="junit.engine.jupiter.classpath"/&gt;
         &lt;/javac&gt;
     &lt;/target&gt;
 
     &lt;target name="test" depends="compile-test"&gt;
         &lt;junitlauncher&gt;
+            &lt;!-- include the JUnit platform related libraries
+            required to run the tests --&gt;
+            &lt;classpath refid="junit.platform.libs.classpath"/&gt;
+
+            &lt;!-- include the JUnit Jupiter engine libraries --&gt;
             &lt;classpath refid="junit.engine.jupiter.classpath"/&gt;
+
             &lt;classpath&gt;
+                &lt;!-- the test classes themselves --&gt;
                 &lt;pathelement location="${build.classes.dir}"/&gt;
             &lt;/classpath&gt;
             &lt;testclasses outputdir="${output.dir}"&gt;
@@ -226,13 +229,22 @@
 &lt;/project&gt;
     </pre>
 
-    In the example above, the <code>src/lib/jupiter</code> directory is expected to contain
-    the Jupiter test engine related jars (which have been
-    <a href="#junit-jupiter-engine-libraries">listed in an earlier section of this
-    document</a>). In the <code>test</code> target we use the <code>classpath</code> nested element
-    to point to the <code>junit.engine.jupiter.classpath</code> containing those jars. In this
-    <code>test</code> target we also use another <code>classpath</code> element to point to
-    the location containing our test classes. If required, both these classpath can be combined
+    In the example above,
+    <ul>
+        <li>The <code>src/lib/jupiter</code> directory is expected to contain
+        the Jupiter test engine related jars (which have been
+        <a href="#junit-jupiter-engine-libraries">listed in an earlier section of this
+        document</a>).</li>
+        <li>The <code>src/lib/junit-platform</code> directory is expected to
+        contain the JUnit platform jars (which have been
+        <a href="#junit-platform-libraries">listed in an earlier section of this
+        document</a>)</li>
+    </ul>
+    In the <code>test</code> target we use the <code>classpath</code> nested element
+    to point to the <code>junit.engine.jupiter.classpath</code> and <code>junit.platform.libs.classpath</code>
+    containing those jars.
+    In this <code>test</code> target we also use another <code>classpath</code> element to point to
+    the location containing our test classes. If required, all these classpaths can be combined
     into one.
 </p>
 
