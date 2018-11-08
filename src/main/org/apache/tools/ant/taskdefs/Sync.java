@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -40,6 +41,7 @@ import org.apache.tools.ant.types.resources.Restrict;
 import org.apache.tools.ant.types.resources.selectors.Exists;
 import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.NoneSelector;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Synchronize a local target directory from the files defined
@@ -222,6 +224,13 @@ public class Sync extends Task {
         } else {
             ds = new DirectoryScanner();
             ds.setBasedir(toDir);
+            // set the case sensitivity of the directory scanner based on the
+            // directory we are scanning, if we are able to determine that detail.
+            // Else let the directory scanner default it to whatever it does internally
+            final Optional<Boolean> caseSensitive = FileUtils.isCaseSensitiveFileSystem(toDir.toPath());
+            if (caseSensitive.isPresent()) {
+                ds.setCaseSensitive(caseSensitive.get());
+            }
         }
         ds.addExcludes(excls);
 

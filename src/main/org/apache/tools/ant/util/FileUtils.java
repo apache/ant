@@ -31,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channel;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,7 +39,11 @@ import java.nio.file.StandardOpenOption;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
@@ -75,6 +80,7 @@ public class FileUtils {
     private static final boolean ON_DOS = Os.isFamily("dos");
     private static final boolean ON_WIN9X = Os.isFamily("win9x");
     private static final boolean ON_WINDOWS = Os.isFamily("windows");
+    private static final Map<FileSystem, Boolean> fileSystemCaseSensitivity = new HashMap<>();
 
     static final int BUF_SIZE = 8192;
 
@@ -1768,5 +1774,68 @@ public class FileUtils {
         } else {
             return Files.newOutputStream(path);
         }
+    }
+
+    /**
+     * Tries to determine the case sensitivity of the filesystem corresponding to the
+     * {@code path}. While doing so, this method might create a temporary file under
+     * the directory represented by the {@code path}, if it's a directory or in the
+     * parent directory of the {@code path}, if it's a file.
+     * <p>
+     * This method works on a best effort basis and will return an {@link Optional#empty()}
+     * if it cannot determine the case sensitivity, either due to exception or for any other
+     * reason.
+     * </p>
+     * @param path The path whose filesystem case sensitivity needs to be checked
+     * @return Returns true if the filesystem corresponding to the passed {@code path}
+     *          is case sensitive. Else returns false. If the case sensitivity
+     *          cannot be determined for whatever reason, this method returns an
+     *          {@link Optional#empty()}
+     * @throws IllegalArgumentException If the passed path is null
+     * @since Ant 1.10.6
+     */
+    public static Optional<Boolean> isCaseSensitiveFileSystem(final Path path) {
+        if (path == null) {
+            throw new IllegalArgumentException("Path cannot be null");
+        }
+        final FileSystem fileSystem = path.getFileSystem();
+        final Boolean caseSensitivity = fileSystemCaseSensitivity.get(fileSystem);
+        if (caseSensitivity != null) {
+            return Optional.of(caseSensitivity);
+        }
+        final String mixedCaseFileNamePrefix = "aNt";
+        Path mixedCaseTmpFile = null;
+        final boolean caseSensitive;
+        try {
+            synchronized (fileSystemCaseSensitivity) {
+                if (fileSystemCaseSensitivity.containsKey(fileSystem)) {
+                    return Optional.of(fileSystemCaseSensitivity.get(fileSystem));
+                }
+                if (Files.isRegularFile(path)) {
+                    mixedCaseTmpFile = Files.createTempFile(path.getParent(), mixedCaseFileNamePrefix, null);
+                } else if (Files.isDirectory(path)) {
+                    mixedCaseTmpFile = Files.createTempFile(path, mixedCaseFileNamePrefix, null);
+                } else {
+                    // we can only do our tricks to figure out whether the filesystem is
+                    // case sensitive, only if the path is a directory or a file.
+                    // In other cases (like the path being non-existent), we don't
+                    // have a way to determine that detail
+                    return Optional.empty();
+                }
+                final Path lowerCasePath = Paths.get(mixedCaseTmpFile.toString().toLowerCase(Locale.US));
+                caseSensitive = !Files.isSameFile(mixedCaseTmpFile, lowerCasePath);
+                fileSystemCaseSensitivity.put(fileSystem, caseSensitive);
+            }
+        } catch (IOException ioe) {
+            System.err.println("Could not determine the case sensitivity of the " +
+                    "filesystem for path " + path + " due to " + ioe);
+            return Optional.empty();
+        } finally {
+            // delete the tmp file
+            if (mixedCaseTmpFile != null) {
+                FileUtils.delete(mixedCaseTmpFile.toFile());
+            }
+        }
+        return Optional.of(caseSensitive);
     }
 }

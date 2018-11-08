@@ -138,4 +138,23 @@
     </sync>
   </target>
 
+  <target name="casesensitivity-test" depends="setUp" description="Tests the bug fix for bz-62890">
+    <mkdir dir="${src}/casecheck"/>
+    <mkdir dir="${dest}/casecheck"/>
+    <!-- lower case file in source dir -->
+    <touch file="${src}/casecheck/a.txt"/>
+    <!-- upper case file in dest dir -->
+    <touch file="${dest}/casecheck/A.txt"/>
+    <!-- some random file in source dir -->
+    <touch file="${src}/casecheck/foo.txt"/>
+    <!-- some random file in dest dir -->
+    <touch file="${dest}/casecheck/bar.txt"/>
+
+    <sync todir="${dest}/casecheck"
+          includeEmptyDirs="true"
+          overwrite="false">
+      <fileset dir="${src}/casecheck"/>
+    </sync>
+  </target>
+
 </project>

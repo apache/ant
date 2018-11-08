@@ -139,6 +139,21 @@ public class SyncTest {
         assertThat(buildRule.getFullLog(), not(containsString("Removing orphan file:")));
     }
 
+    /**
+     * Test for bz-62890 bug fix
+     */
+    @Test
+    public void testCaseSensitivityOfDest() {
+        buildRule.executeTarget("casesensitivity-test");
+        final String destDir = buildRule.getProject().getProperty("dest") + "/casecheck";
+        assertFileIsPresent(destDir + "/a.txt");
+        assertFileIsPresent(destDir + "/A.txt");
+        assertFileIsPresent(destDir + "/foo.txt");
+
+        assertFileIsNotPresent(destDir + "/bar.txt");
+    }
+
+
     public void assertFileIsPresent(String f) {
         assertTrue("Expected file " + f, buildRule.getProject().resolveFile(f).exists());
     }

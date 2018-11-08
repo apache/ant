@@ -21,11 +21,18 @@ package org.apache.tools.ant.util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Locale;
+import java.util.Optional;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -681,6 +688,37 @@ public class FileUtilsTest {
         assertTrue(FILE_UTILS.isLeadingPath(new File("c:\\foo"), new File("c:\\foo\\"), false));
     }
 
+    /**
+     * Tests {@link FileUtils#isCaseSensitiveFileSystem(Path)} method
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testCaseSensitiveFileSystem() throws Exception {
+        // create a temp file in a fresh directory
+        final Path tmpDir = Files.createTempDirectory(null);
+        final Path tmpFile = Files.createTempFile(tmpDir, null, null);
+        tmpFile.toFile().deleteOnExit();
+        tmpDir.toFile().deleteOnExit();
+        // now check if a file with that same name but different case is considered to exist
+        final boolean existsAsLowerCase = Files.exists(Paths.get(tmpDir.toString(), tmpFile.getFileName().toString().toLowerCase(Locale.US)));
+        final boolean existsAsUpperCase = Files.exists(Paths.get(tmpDir.toString(), tmpFile.getFileName().toString().toUpperCase(Locale.US)));
+        // if the temp file that we created is found to not exist in a particular "case", then
+        // the filesystem is case sensitive
+        final Boolean expectedCaseSensitivity = existsAsLowerCase == false || existsAsUpperCase == false;
+
+        // call the method and pass it a directory
+        Optional<Boolean> actualCaseSensitivity = FileUtils.isCaseSensitiveFileSystem(tmpDir);
+        Assert.assertTrue("Filesystem case sensitivity was expected to be determined", actualCaseSensitivity.isPresent());
+        Assert.assertEquals("Filesystem was expected to be case " + (expectedCaseSensitivity
+                ? "sensitive" : "insensitive"), expectedCaseSensitivity, actualCaseSensitivity.get());
+
+        // now test it out by passing it a file
+        actualCaseSensitivity = FileUtils.isCaseSensitiveFileSystem(tmpFile);
+        Assert.assertTrue("Filesystem case sensitivity was expected to be determined", actualCaseSensitivity.isPresent());
+        Assert.assertEquals("Filesystem was expected to be case " + (expectedCaseSensitivity
+                ? "sensitive" : "insensitive"), expectedCaseSensitivity, actualCaseSensitivity.get());
+    }
     /**
      * adapt file separators to local conventions
      */
