@@ -33,6 +33,7 @@ import java.net.URLConnection;
 import java.nio.channels.Channel;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -1805,7 +1806,7 @@ public class FileUtils {
         }
         final String mixedCaseFileNamePrefix = "aNt";
         Path mixedCaseTmpFile = null;
-        final boolean caseSensitive;
+        boolean caseSensitive;
         try {
             synchronized (fileSystemCaseSensitivity) {
                 if (fileSystemCaseSensitivity.containsKey(fileSystem)) {
@@ -1823,7 +1824,14 @@ public class FileUtils {
                     return Optional.empty();
                 }
                 final Path lowerCasePath = Paths.get(mixedCaseTmpFile.toString().toLowerCase(Locale.US));
-                caseSensitive = !Files.isSameFile(mixedCaseTmpFile, lowerCasePath);
+                try {
+                    caseSensitive = !Files.isSameFile(mixedCaseTmpFile, lowerCasePath);
+                } catch (NoSuchFileException nsfe) {
+                    // a NSFE implies that the "lowerCasePath" file wasn't considered to be present
+                    // even if the different cased file exists. That effectively means this is a
+                    // case sensitive filesystem
+                    caseSensitive = true;
+                }
                 fileSystemCaseSensitivity.put(fileSystem, caseSensitive);
             }
         } catch (IOException ioe) {

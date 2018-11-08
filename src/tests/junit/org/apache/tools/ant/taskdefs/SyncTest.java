@@ -19,9 +19,13 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.util.FileUtils;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -147,7 +151,14 @@ public class SyncTest {
         buildRule.executeTarget("casesensitivity-test");
         final String destDir = buildRule.getProject().getProperty("dest") + "/casecheck";
         assertFileIsPresent(destDir + "/a.txt");
-        assertFileIsPresent(destDir + "/A.txt");
+        final boolean caseSensitive = FileUtils.isCaseSensitiveFileSystem(
+                buildRule.getProject().resolveFile(destDir).toPath())
+                .orElse(true); // directory scanner defaults to case sensitive = true
+        if (caseSensitive) {
+            assertFileIsNotPresent(destDir + "/A.txt");
+        } else {
+            assertFileIsPresent(destDir + "/A.txt");
+        }
         assertFileIsPresent(destDir + "/foo.txt");
 
         assertFileIsNotPresent(destDir + "/bar.txt");
