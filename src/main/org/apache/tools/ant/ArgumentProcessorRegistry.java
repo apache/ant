@@ -126,7 +126,7 @@ public class ArgumentProcessorRegistry {
             processor = processorClass.getConstructor().newInstance();
         } catch (Exception e) {
             throw new BuildException("The argument processor class"
-                    + processorClass.getClass().getName()
+                    + processorClass.getName()
                     + " could not be instantiated with a default constructor",
                     e);
         }

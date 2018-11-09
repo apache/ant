@@ -18,7 +18,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.IOException;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;

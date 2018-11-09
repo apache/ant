@@ -20,18 +20,18 @@ package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -44,6 +44,9 @@ import static org.junit.Assert.assertEquals;
  */
 
 public class PatternSetTest {
+
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -222,23 +225,15 @@ public class PatternSetTest {
 
     @Test
     public void testEncodingOfIncludesFile() throws IOException {
-        File testFile = File.createTempFile("ant-", ".pattern");
-        testFile.deleteOnExit();
-        OutputStream o = null;
-        Writer w = null;
-        try {
-            o = new FileOutputStream(testFile);
-            w = new OutputStreamWriter(o, StandardCharsets.UTF_16LE);
+        File testFile = testFolder.newFile("ant.pattern");
+        Charset cs = StandardCharsets.UTF_16LE;
+        try (Writer w = new OutputStreamWriter(new FileOutputStream(testFile), cs)) {
             w.write("\u00e4\n");
-        } finally {
-            FileUtils.close(w);
-            FileUtils.close(o);
         }
-        PatternSet p = new PatternSet();
         PatternSet.PatternFileNameEntry ne =
-            (PatternSet.PatternFileNameEntry) p.createIncludesFile();
+                (PatternSet.PatternFileNameEntry) p.createIncludesFile();
         ne.setName(testFile.getAbsolutePath());
-        ne.setEncoding("UTF-16LE");
-        assertArrayEquals(new String[] { "\u00e4" }, p.getIncludePatterns(project));
+        ne.setEncoding(cs.name());
+        assertArrayEquals(new String[] {"\u00e4"}, p.getIncludePatterns(project));
     }
 }

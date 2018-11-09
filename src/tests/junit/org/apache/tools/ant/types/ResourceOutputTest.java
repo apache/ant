@@ -48,8 +48,6 @@ public class ResourceOutputTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
     private Project project;
 
     @Before
@@ -121,7 +119,7 @@ public class ResourceOutputTest {
         // TODO assert exception message
         File f = project.resolveFile("testurloutput");
         try {
-            FILE_UTILS.createNewFile(f);
+            FileUtils.getFileUtils().createNewFile(f);
             testoutput(new URLResource(f));
         } finally {
             if (!f.delete()) {

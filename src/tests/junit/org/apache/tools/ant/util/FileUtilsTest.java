@@ -21,7 +21,6 @@ package org.apache.tools.ant.util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -705,7 +704,7 @@ public class FileUtilsTest {
         final boolean existsAsUpperCase = Files.exists(Paths.get(tmpDir.toString(), tmpFile.getFileName().toString().toUpperCase(Locale.US)));
         // if the temp file that we created is found to not exist in a particular "case", then
         // the filesystem is case sensitive
-        final Boolean expectedCaseSensitivity = existsAsLowerCase == false || existsAsUpperCase == false;
+        final Boolean expectedCaseSensitivity = !existsAsLowerCase || !existsAsUpperCase;
 
         // call the method and pass it a directory
         Optional<Boolean> actualCaseSensitivity = FileUtils.isCaseSensitiveFileSystem(tmpDir);

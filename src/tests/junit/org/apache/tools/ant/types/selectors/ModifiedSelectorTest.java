@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.RuleBasedCollator;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -41,12 +42,12 @@ import org.apache.tools.ant.types.selectors.modifiedselector.EqualComparator;
 import org.apache.tools.ant.types.selectors.modifiedselector.HashvalueAlgorithm;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.PropertiesfileCache;
-import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
@@ -70,8 +71,8 @@ public class ModifiedSelectorTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     //  =====================  fixtures  =====================
 
@@ -344,11 +345,10 @@ public class ModifiedSelectorTest {
      * configure() method of ModifiedSelector. This testcase tests that.
      */
     @Test
-    public void testCreatePropertiesCacheViaCustomSelector() {
-        File cachefile = FILE_UTILS.createTempFile("tmp-cache-", ".properties", null, false, false);
+    public void testCreatePropertiesCacheViaCustomSelector() throws IOException {
+        File cachefile = testFolder.newFile("tmp-cache.properties");
 
         // Configure the selector
-
         ExtendSelector s = new ExtendSelector();
         s.setClassname("org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector");
         s.addParam(createParam("update", "true"));
@@ -359,7 +359,6 @@ public class ModifiedSelectorTest {
 
         // evaluate correctness
         assertTrue("Cache file is not created.", cachefile.exists());
-        cachefile.delete();
     }
 
     @Test

@@ -373,6 +373,6 @@ public class AntTypeDefinition {
     }
 
     private String extractClassname(Class<?> c) {
-        return (c == null) ? "<null>" : c.getClass().getName();
+        return (c == null) ? "<null>" : c.getName();
     }
 }

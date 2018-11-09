@@ -227,10 +227,7 @@ public class Sync extends Task {
             // set the case sensitivity of the directory scanner based on the
             // directory we are scanning, if we are able to determine that detail.
             // Else let the directory scanner default it to whatever it does internally
-            final Optional<Boolean> caseSensitive = FileUtils.isCaseSensitiveFileSystem(toDir.toPath());
-            if (caseSensitive.isPresent()) {
-                ds.setCaseSensitive(caseSensitive.get());
-            }
+            FileUtils.isCaseSensitiveFileSystem(toDir.toPath()).ifPresent(ds::setCaseSensitive);
         }
         ds.addExcludes(excls);
 

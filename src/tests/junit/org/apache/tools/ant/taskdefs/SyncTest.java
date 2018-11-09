@@ -20,12 +20,9 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;

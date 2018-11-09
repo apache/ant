@@ -183,10 +183,8 @@ public class LauncherSupport {
         final List<TestRequest> requests = new ArrayList<>();
         for (final TestDefinition test : tests) {
             final List<TestRequest> testRequests;
-            if (test instanceof SingleTestClass) {
-                testRequests = createTestRequests((SingleTestClass) test);
-            } else if (test instanceof TestClasses) {
-                testRequests = createTestRequests((TestClasses) test);
+            if (test instanceof SingleTestClass || test instanceof TestClasses) {
+                testRequests = createTestRequests(test);
             } else {
                 throw new BuildException("Unexpected test definition type " + test.getClass().getName());
             }

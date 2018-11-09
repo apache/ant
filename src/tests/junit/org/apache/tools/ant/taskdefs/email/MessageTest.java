@@ -18,19 +18,19 @@
 
 package org.apache.tools.ant.taskdefs.email;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
-import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class MessageTest {
-    private static final File f = new File(System.getProperty("java.io.tmpdir"),
-                              "message.txt");
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
+
     /**
      * test for bugzilla 48932
      */
@@ -40,23 +40,9 @@ public class MessageTest {
         Project p = new Project();
         ms.setProject(p);
         ms.addText("hi, this is an email");
-        FileOutputStream fis = null;
-        try {
-            fis = new FileOutputStream(f);
-            ms.print(new PrintStream(fis));
-            fis.write(120);
-        } finally {
-            FileUtils.close(fis);
-        }
-
-    }
-
-    @After
-    public void tearDown() {
-        if (f.exists()) {
-            FileUtils fu = FileUtils.getFileUtils();
-            fu.tryHardToDelete(f);
+        try (FileOutputStream fos = new FileOutputStream(testFolder.newFile("message.txt"))) {
+            ms.print(new PrintStream(fos));
+            fos.write(120);
         }
     }
-
 }

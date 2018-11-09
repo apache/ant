@@ -43,9 +43,6 @@ public class PropertyTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    /** Utilities used for file operations */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
     @Before
     public void setUp() {
         buildRule.configureProject("src/etc/testcases/taskdefs/property.xml");
@@ -85,7 +82,7 @@ public class PropertyTest {
     @Test
     public void test5() {
         String baseDir = buildRule.getProject().getProperty(MagicNames.PROJECT_BASEDIR);
-        String uri = FILE_UTILS.toURI(baseDir + "/property3.properties");
+        String uri = FileUtils.getFileUtils().toURI(baseDir + "/property3.properties");
         buildRule.getProject().setNewProperty("test5.url", uri);
 
         buildRule.executeTarget("test5");

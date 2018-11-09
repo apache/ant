@@ -37,9 +37,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  */
 public final class JavaEnvUtils {
 
-    private JavaEnvUtils() {
-    }
-
     /** Are we on a DOS-based system */
     private static final boolean IS_DOS = Os.isFamily("dos");
     /** Are we on Novell NetWare */
@@ -146,6 +143,8 @@ public final class JavaEnvUtils {
     /** array of packages in the runtime */
     private static Vector<String> jrePackages;
 
+    private JavaEnvUtils() {
+    }
 
     static {
 
