@@ -20,6 +20,7 @@ package org.apache.tools.ant.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * Adapts a <code>Reader</code> as an <code>InputStream</code>.
@@ -65,6 +66,22 @@ public class ReaderInputStream extends InputStream {
     }
 
     /**
+     * Construct a <code>ReaderInputStream</code>
+     * for the specified <code>Reader</code>,
+     * with the specified encoding.
+     *
+     * @param reader     non-null <code>Reader</code>.
+     * @param charset    non-null <code>Charset</code> charset.
+     */
+    public ReaderInputStream(Reader reader, Charset charset) {
+        this(reader);
+        if (charset == null) {
+            throw new IllegalArgumentException("encoding must not be null");
+        }
+        this.encoding = charset.name();
+    }
+
+    /**
      * Reads from the <code>Reader</code>, returning the same value.
      *
      * @return the value of the next character in the <code>Reader</code>.
@@ -105,8 +122,7 @@ public class ReaderInputStream extends InputStream {
      * @exception IOException if an error occurs
      */
     @Override
-    public synchronized int read(byte[] b, int off, int len)
-        throws IOException {
+    public synchronized int read(byte[] b, int off, int len) throws IOException {
         if (in == null) {
             throw new IOException("Stream Closed");
         }

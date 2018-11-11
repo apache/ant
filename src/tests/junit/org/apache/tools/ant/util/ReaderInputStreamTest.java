@@ -89,40 +89,32 @@ public class ReaderInputStreamTest {
 
     @Test
     public void testIso88591ToUtf8() throws Exception {
-        InputStreamReader fin = null;
-        ReaderInputStream r = null;
-        FileInputStream utf8 = null;
-        try {
-            fin = new InputStreamReader(new FileInputStream(new File(ROOT,
-                    "src/tests/antunit/taskdefs/exec/input/iso8859-1")), "ISO8859_1");
-            r = new ReaderInputStream(fin, "UTF8");
-
-            ByteArrayOutputStream actualOS = new ByteArrayOutputStream();
+        ByteArrayOutputStream actualOS = new ByteArrayOutputStream();
+        try (ReaderInputStream r = new ReaderInputStream(new InputStreamReader(new FileInputStream(new File(ROOT,
+                "src/tests/antunit/taskdefs/exec/input/iso8859-1")), StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8)) {
             int b = r.read();
             while (b > -1) {
                 actualOS.write((byte) b);
                 b = r.read();
             }
+        }
 
-            utf8 = new FileInputStream(new File(ROOT,
-                    "src/tests/antunit/taskdefs/exec/expected/utf-8"));
-            ByteArrayOutputStream expectedOS = new ByteArrayOutputStream();
-            b = utf8.read();
+        ByteArrayOutputStream expectedOS = new ByteArrayOutputStream();
+        try (FileInputStream utf8 = new FileInputStream(new File(ROOT,
+                "src/tests/antunit/taskdefs/exec/expected/utf-8"))) {
+            int b = utf8.read();
             while (b > -1) {
                 expectedOS.write((byte) b);
                 b = utf8.read();
             }
+        }
 
-            byte[] expected = expectedOS.toByteArray();
-            byte[] actual = actualOS.toByteArray();
-            assertEquals("length", expected.length, actual.length);
-            for (int i = 0; i < actual.length; i++) {
-                assertEquals("byte " + i, expected[i], actual[i]);
-            }
-        } finally {
-            FileUtils.close(fin);
-            FileUtils.close(r);
-            FileUtils.close(utf8);
+        byte[] expected = expectedOS.toByteArray();
+        byte[] actual = actualOS.toByteArray();
+        assertEquals("length", expected.length, actual.length);
+        for (int i = 0; i < actual.length; i++) {
+            assertEquals("byte " + i, expected[i], actual[i]);
         }
     }
 

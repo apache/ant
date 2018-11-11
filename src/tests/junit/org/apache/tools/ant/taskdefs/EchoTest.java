@@ -24,15 +24,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
+import static org.apache.tools.ant.util.FileUtils.readFully;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -40,11 +42,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class EchoTest {
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
     private EchoTestLogger logger;
 
     private Echo echo;
-
-    private File removeThis;
 
     @Before
     public void setUp() {
@@ -56,13 +59,6 @@ public class EchoTest {
         echo.setProject(p);
     }
 
-    @After
-    public void tearDown() {
-        if (removeThis != null && removeThis.exists() && !removeThis.delete()) {
-            removeThis.deleteOnExit();
-        }
-    }
-
     @Test
     public void testLogBlankEcho() {
         echo.setTaskName("testLogBlankEcho");
@@ -72,14 +68,17 @@ public class EchoTest {
 
     @Test
     public void testLogUTF8Echo() throws IOException {
+        File removeThis = folder.newFile("abc.txt");
+        Charset cs = StandardCharsets.UTF_8;
+        String msg = "\u00e4\u00a9";
+
         echo.setTaskName("testLogUTF8Echo");
-        echo.setMessage("\u00e4\u00a9");
-        removeThis = new File("abc.txt");
+        echo.setMessage(msg);
         echo.setFile(removeThis);
-        echo.setEncoding("UTF-8");
+        echo.setEncoding(cs.name());
         echo.execute();
-        String x = FileUtils.readFully(new InputStreamReader(new FileInputStream(removeThis), StandardCharsets.UTF_8));
-        assertEquals(x, "\u00e4\u00a9");
+
+        assertEquals(msg, readFully(new InputStreamReader(new FileInputStream(removeThis), cs)));
     }
 
     private class EchoTestLogger extends DefaultLogger {
