@@ -83,11 +83,6 @@
     </filters>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration> </configuration>
-      </plugin>
-      <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
@@ -103,6 +98,23 @@
                 <touch file="${project.build.directory}/.build.timestamp.properties"/>
                 <echo file="${project.build.directory}/.build.timestamp.properties" append="false"
                   message="TODAY=${TODAY}"/>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>get-ant-distribution</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <get src="http://apache.mirrors.spacedump.net//ant/binaries/apache-ant-1.10.5-bin.zip"
+                     dest="${project.build.directory}/ant.zip"/>
+                <delete dir="${project.build.directory}/ant.zip"/>
+                <unzip src="${project.build.directory}/ant.zip" dest="${project.build.directory}/ant-home">
+                  <cutdirsmapper dirs="1"/>
+                </unzip>
               </tasks>
             </configuration>
           </execution>
@@ -207,7 +219,7 @@
             <exclude>org/apache/tools/ant/taskdefs/optional/Pvcs*</exclude>
             <!-- xalan: workaround for different resource encoding -->
             <exclude>org/apache/tools/ant/taskdefs/optional/TraXLiaison*</exclude>
-            <!-- ERROR: UnknownHostException: chemical -->
+            <!-- ERROR: UnknownHostException: chemical (XML parser-dependent) -->
             <exclude>org/apache/tools/ant/taskdefs/optional/XmlValidateCatalog*</exclude>
             <!-- image/imageio -->
             <exclude>org/apache/tools/ant/taskdefs/optional/image/</exclude>
@@ -227,8 +239,6 @@
             <exclude>org/apache/tools/ant/types/Assertions*</exclude>
             <!-- bcel -->
             <exclude>org/apache/tools/ant/types/optional/depend/ClassFileSet*</exclude>
-            <!-- dependent on ANT_HOME containing full distribution with bin and lib -->
-            <exclude>org/apache/tools/ant/types/selectors/ModifiedSelector*</exclude>
             <!-- ERROR: defaults.properties are in both compile and test file tree -->
             <exclude>org/apache/tools/ant/util/ClasspathUtils*</exclude>
             <exclude>org/apache/tools/ant/util/LoaderUtils*</exclude>
@@ -239,7 +249,7 @@
             <!-- dependent on IncludeTest.class: checks presence -->
             <exclude>org/apache/tools/ant/AntClassLoaderDelegation*</exclude>
             <!-- ERROR:  More pseudo attributes are expected (encoding="UTF-8");
-             failure mode is JRE-dependent (see to do for failures in IDE) -->
+             failure mode is XML parser-dependent (see to do for failures in IDE) -->
             <exclude>org/apache/tools/ant/Include*</exclude>
             <!-- dependent on JUnit 5 -->
             <exclude>org/example/junitlauncher/</exclude>
@@ -270,7 +280,7 @@
           <systemProperties>
             <property>
               <name>ant.home</name>
-              <value>${env.ANT_HOME}</value>
+              <value>${project.build.directory}/ant-home</value>
             </property>
             <property>
               <name>build.classes.value</name>
