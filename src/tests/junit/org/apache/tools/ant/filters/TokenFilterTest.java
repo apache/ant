@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.filters;
 
+import static org.apache.tools.ant.util.FileUtils.readFully;
 import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
@@ -32,7 +33,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.tools.ant.BuildFileRule;
-import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,8 +43,6 @@ public class TokenFilterTest {
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
-
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     @Before
     public void setUp() {
@@ -268,23 +266,15 @@ public class TokenFilterTest {
     // -----------------------------------------------------
 
     private String getFileString(String filename) throws IOException {
-        Reader r = null;
-        try {
-            r = new FileReader(FILE_UTILS.resolveFile(buildRule.getProject().getBaseDir(),filename));
-            return FileUtils.readFully(r);
-        }
-        finally {
-            FileUtils.close(r);
+        try (Reader r = new FileReader(buildRule.getProject().resolveFile(filename))) {
+            return readFully(r);
         }
     }
 
 
     public static class Capitalize implements TokenFilter.Filter {
         public String filter(String token) {
-            if (token.isEmpty()) {
-                return token;
-            }
-            return token.substring(0, 1).toUpperCase() + token.substring(1);
+            return token.isEmpty() ? token : token.substring(0, 1).toUpperCase() + token.substring(1);
         }
     }
 

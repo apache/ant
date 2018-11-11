@@ -4,6 +4,7 @@ import org.apache.tools.ant.BuildFileRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -23,10 +24,15 @@ public class ExecStreamRedirectorTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
+    private File outputDir;
+
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         buildRule.configureProject("src/etc/testcases/taskdefs/exec/exec-with-redirector.xml");
-        final File outputDir = this.createTmpDir();
+        outputDir = folder.newFolder(String.valueOf("temp-" + System.nanoTime()));
         buildRule.getProject().setUserProperty("output", outputDir.toString());
         buildRule.executeTarget("setUp");
     }
@@ -47,10 +53,9 @@ public class ExecStreamRedirectorTest {
         buildRule.executeTarget("list-dir");
 
         // verify the redirected output
-        final String outputDirPath = buildRule.getProject().getProperty("output");
         byte[] dirListingOutput = null;
         for (int i = 1; i <= 16; i++) {
-            final File redirectedOutputFile = new File(outputDirPath, "ls" + i + ".txt");
+            final File redirectedOutputFile = new File(outputDir, "ls" + i + ".txt");
             assertTrue(redirectedOutputFile + " is missing or not a regular file",
                     redirectedOutputFile.isFile());
             final byte[] redirectedOutput = readAllBytes(redirectedOutputFile);
@@ -66,14 +71,6 @@ public class ExecStreamRedirectorTest {
             }
             dirListingOutput = redirectedOutput;
         }
-    }
-
-    private File createTmpDir() {
-        final File tmpDir = new File(System.getProperty("java.io.tmpdir"),
-                String.valueOf("temp-" + System.nanoTime()));
-        tmpDir.mkdir();
-        tmpDir.deleteOnExit();
-        return tmpDir;
     }
 
     private static byte[] readAllBytes(final File file) throws IOException {

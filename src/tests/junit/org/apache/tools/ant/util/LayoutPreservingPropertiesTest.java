@@ -26,8 +26,11 @@ import java.util.Properties;
 
 import org.apache.tools.ant.MagicTestNames;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
+import static org.apache.tools.ant.util.FileUtils.readFully;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
@@ -36,13 +39,19 @@ import static org.junit.Assert.assertThat;
 
 public class LayoutPreservingPropertiesTest {
 
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
     private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
 
     private LayoutPreservingProperties lpf;
 
+    private File tmp;
+
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         lpf = new LayoutPreservingProperties();
+        tmp = folder.newFile("tmp.properties");
     }
     /**
      * Tests that a properties file read by the
@@ -55,8 +64,6 @@ public class LayoutPreservingPropertiesTest {
         FileInputStream fis = new FileInputStream(simple);
         lpf.load(fis);
 
-        File tmp = File.createTempFile("tmp", "props");
-        tmp.deleteOnExit();
         lpf.saveAs(tmp);
 
         // now compare original and tmp for property equivalence
@@ -91,8 +98,6 @@ public class LayoutPreservingPropertiesTest {
         lpf.setProperty("prop#nine", "contains#hash");
         lpf.setProperty("prop!ten", "contains!exclamation");
 
-        File tmp = File.createTempFile("tmp", "props");
-        tmp.deleteOnExit();
         lpf.saveAs(tmp);
 
         // and check that the resulting file looks okay
@@ -124,8 +129,6 @@ public class LayoutPreservingPropertiesTest {
         lpf.setProperty("prop\ttwo", "new two");
         lpf.setProperty("prop\nthree", "new three");
 
-        File tmp = File.createTempFile("tmp", "props");
-        tmp.deleteOnExit();
         lpf.saveAs(tmp);
 
         // and check that the resulting file looks okay
@@ -145,11 +148,9 @@ public class LayoutPreservingPropertiesTest {
         FileInputStream fis = new FileInputStream(simple);
         lpf.load(fis);
 
-        File tmp = File.createTempFile("tmp", "props");
-        tmp.deleteOnExit();
-        FileOutputStream fos = new FileOutputStream(tmp);
-        lpf.store(fos, "file-header");
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(tmp)) {
+            lpf.store(fos, "file-header");
+        }
 
         // and check that the resulting file looks okay
         assertThat("should have had header ", readFile(tmp), startsWith("#file-header"));
@@ -163,8 +164,6 @@ public class LayoutPreservingPropertiesTest {
 
         lpf.clear();
 
-        File tmp = File.createTempFile("tmp", "props");
-        tmp.deleteOnExit();
         lpf.saveAs(tmp);
 
         // and check that the resulting file looks okay
@@ -187,8 +186,6 @@ public class LayoutPreservingPropertiesTest {
 
         lpf.remove("prop.beta");
 
-        File tmp = File.createTempFile("tmp", "props");
-        tmp.deleteOnExit();
         lpf.saveAs(tmp);
 
         // and check that the resulting file looks okay
@@ -208,8 +205,6 @@ public class LayoutPreservingPropertiesTest {
 
         lpf.remove("prop.beta");
 
-        File tmp = File.createTempFile("tmp", "props");
-        tmp.deleteOnExit();
         lpf.saveAs(tmp);
 
         // and check that the resulting file looks okay
@@ -233,15 +228,12 @@ public class LayoutPreservingPropertiesTest {
         assertEquals("size of original is wrong", 3, lpf.size());
         assertEquals("size of clone is wrong", 4, lpfClone.size());
 
-        File tmp1 = File.createTempFile("tmp", "props");
-        tmp1.deleteOnExit();
-        lpf.saveAs(tmp1);
-        String s1 = readFile(tmp1);
+        lpf.saveAs(tmp);
+        String s1 = readFile(tmp);
 
-        File tmp2 = File.createTempFile("tmp", "props");
-        tmp2.deleteOnExit();
-        lpfClone.saveAs(tmp2);
-        String s2 = readFile(tmp2);
+        File tmpClone = folder.newFile("tmp-clone.properties");
+        lpfClone.saveAs(tmpClone);
+        String s2 = readFile(tmpClone);
 
         // check original is untouched
         assertThat("should have had 'simple'", s1, containsString(("simple")));
@@ -265,8 +257,6 @@ public class LayoutPreservingPropertiesTest {
         lpf.setProperty("alpha", "new value for alpha");
         lpf.setProperty("beta", "new value for beta");
 
-        File tmp = File.createTempFile("tmp", "props");
-        tmp.deleteOnExit();
         lpf.saveAs(tmp);
 
         // and check that the resulting file looks okay
@@ -285,11 +275,8 @@ public class LayoutPreservingPropertiesTest {
     }
 
     private static String readFile(File f) throws IOException {
-        FileInputStream fis = new FileInputStream(f);
-        InputStreamReader isr = new InputStreamReader(fis);
-        String s = FileUtils.readFully(isr);
-        isr.close();
-        fis.close();
-        return s;
+        try (InputStreamReader isr = new InputStreamReader(new FileInputStream(f))) {
+            return readFully(isr);
+        }
     }
 }

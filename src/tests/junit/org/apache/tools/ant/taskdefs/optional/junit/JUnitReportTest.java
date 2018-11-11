@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import static org.apache.tools.ant.util.FileUtils.getFileUtils;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -88,12 +89,9 @@ public class JUnitReportTest {
         assertTrue("Can't read the report file.", reportFile.canRead());
         assertTrue("File shouldn't be empty.", reportFile.length() > 0);
         // conversion to URL via FileUtils like in XMLResultAggregator, not as suggested in the bug report
-        URL reportUrl = new URL(FileUtils.getFileUtils().toURI(reportFile.getAbsolutePath()));
-        InputStream reportStream = reportUrl.openStream();
-        try {
+        URL reportUrl = new URL(getFileUtils().toURI(reportFile.getAbsolutePath()));
+        try (InputStream reportStream = reportUrl.openStream()) {
             assertTrue("This shouldn't be an empty stream.", reportStream.available() > 0);
-        } finally {
-            FileUtils.close(reportStream);
         }
     }
 
@@ -126,16 +124,13 @@ public class JUnitReportTest {
     public void testStackTraceLineBreaks() throws Exception {
         buildRule.executeTarget("testStackTraceLineBreaks");
         assertIndexCreated();
-        FileReader r = null;
-        try {
-            r = new FileReader(new File(buildRule.getOutputDir(), "html/sampleproject/coins/0_CoinTest.html"));
+        try (FileReader r = new FileReader(new File(buildRule.getOutputDir(),
+                "html/sampleproject/coins/0_CoinTest.html"))) {
             String report = FileUtils.readFully(r);
             assertThat("output must contain <br>:\n" + report, report,
                     containsString("junit.framework.AssertionFailedError: DOEG<br>"));
             assertThat("#51049: output must translate line breaks:\n" + report, report,
                     containsString("cur['line.separator'] = '\\r\\n';"));
-        } finally {
-            FileUtils.close(r);
         }
     }
 

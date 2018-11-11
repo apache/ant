@@ -37,9 +37,14 @@ import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarOutputStream;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class PermissionUtilsTest {
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
     public void modeFromPermissionsReturnsExpectedResult() {
@@ -65,44 +70,31 @@ public class PermissionUtilsTest {
 
     @Test
     public void detectsFileTypeOfRegularFileFromPath() throws IOException {
-        File f = File.createTempFile("ant", ".tst");
-        f.deleteOnExit();
         assertEquals(PermissionUtils.FileType.REGULAR_FILE,
-                     PermissionUtils.FileType.of(f.toPath()));
+                     PermissionUtils.FileType.of(folder.newFile("ant.tst").toPath()));
     }
 
     @Test
     public void detectsFileTypeOfRegularFileFromResource() throws IOException {
-        File f = File.createTempFile("ant", ".tst");
-        f.deleteOnExit();
         assertEquals(PermissionUtils.FileType.REGULAR_FILE,
-                     PermissionUtils.FileType.of(new FileResource(f)));
+                     PermissionUtils.FileType.of(new FileResource(folder.newFile("ant.tst"))));
     }
 
     @Test
     public void detectsFileTypeOfDirectoryFromPath() throws IOException {
-        File f = File.createTempFile("ant", ".dir");
-        f.delete();
-        f.mkdirs();
-        f.deleteOnExit();
         assertEquals(PermissionUtils.FileType.DIR,
-                     PermissionUtils.FileType.of(f.toPath()));
+                     PermissionUtils.FileType.of(folder.newFolder("ant.tst").toPath()));
     }
 
     @Test
     public void detectsFileTypeOfDirectoryFromResource() throws IOException {
-        File f = File.createTempFile("ant", ".tst");
-        f.delete();
-        f.mkdirs();
-        f.deleteOnExit();
         assertEquals(PermissionUtils.FileType.DIR,
-                     PermissionUtils.FileType.of(new FileResource(f)));
+                     PermissionUtils.FileType.of(new FileResource(folder.newFolder("ant.tst"))));
     }
 
     @Test
     public void getSetPermissionsWorksForFiles() throws IOException {
-        File f = File.createTempFile("ant", ".tst");
-        f.deleteOnExit();
+        File f = folder.newFile("ant.tst");
         assumeNotNull(Files.getFileAttributeView(f.toPath(),
                 PosixFileAttributeView.class));
         Set<PosixFilePermission> s =
@@ -116,8 +108,7 @@ public class PermissionUtilsTest {
 
     @Test
     public void getSetPermissionsWorksForZipResources() throws IOException {
-        File f = File.createTempFile("ant", ".zip");
-        f.deleteOnExit();
+        File f = folder.newFile("ant.zip");
         try (ZipOutputStream os = new ZipOutputStream(f)) {
             ZipEntry e = new ZipEntry("foo");
             os.putNextEntry(e);
@@ -138,8 +129,7 @@ public class PermissionUtilsTest {
 
     @Test
     public void getSetPermissionsWorksForTarResources() throws IOException {
-        File f = File.createTempFile("ant", ".zip");
-        f.deleteOnExit();
+        File f = folder.newFile("ant.tar");
         try (TarOutputStream os = new TarOutputStream(new FileOutputStream(f))) {
             TarEntry e = new TarEntry("foo");
             os.putNextEntry(e);
