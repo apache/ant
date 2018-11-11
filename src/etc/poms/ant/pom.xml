@@ -92,13 +92,13 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
+              <target>
                 <tstamp/>
                 <mkdir dir="${project.build.directory}"/>
                 <touch file="${project.build.directory}/.build.timestamp.properties"/>
                 <echo file="${project.build.directory}/.build.timestamp.properties" append="false"
                   message="TODAY=${TODAY}"/>
-              </tasks>
+              </target>
             </configuration>
           </execution>
           <execution>
@@ -108,14 +108,14 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
+              <target>
                 <get src="http://apache.mirrors.spacedump.net//ant/binaries/apache-ant-1.10.5-bin.zip"
                      dest="${project.build.directory}/ant.zip"/>
-                <delete dir="${project.build.directory}/ant.zip"/>
+                <delete dir="${project.build.directory}/ant-home"/>
                 <unzip src="${project.build.directory}/ant.zip" dest="${project.build.directory}/ant-home">
                   <cutdirsmapper dirs="1"/>
                 </unzip>
-              </tasks>
+              </target>
             </configuration>
           </execution>
           <execution>
@@ -125,7 +125,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
+              <target>
                 <jar jarfile="${project.build.testOutputDirectory}/org/apache/tools/ant/taskdefs/test2-antlib.jar">
                   <manifest>
                     <attribute name="Extension-name"
@@ -147,7 +147,8 @@
                     <include name="taskdefs/test2.antlib.xml"/>
                   </zipfileset>
                 </jar>
-              </tasks>
+                <echoproperties prefix="maven."/>
+              </target>
             </configuration>
           </execution>
           <execution>
@@ -157,9 +158,9 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
+              <target>
                 <delete file="${project.build.directory}/.build.timestamp.properties"/>
-              </tasks>
+              </target>
             </configuration>
           </execution>
         </executions>

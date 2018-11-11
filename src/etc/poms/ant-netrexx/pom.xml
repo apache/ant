@@ -85,16 +85,15 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.4</version>
         <executions>
           <execution>
             <phase>validate</phase>
             <configuration>
-              <tasks>
+              <target>
                 <ant dir="${basedir}/../../../.." antfile="fetch.xml" target="netrexx">
                   <property name="dest" value="optional"/>
                 </ant>
-              </tasks>
+              </target>
             </configuration>
             <goals>
               <goal>run</goal>
