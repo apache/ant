@@ -94,10 +94,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
           <includes>
             <include>org/apache/tools/ant/taskdefs/optional/junit/*</include>
           </includes>
-          <excludes>
-            <exclude>org/apache/tools/ant/taskdefs/optional/junit/JUnit4TestMethodAdapter*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/optional/junit/CustomJUnit4TestAdapterCache*</exclude>
-          </excludes>
           <testIncludes>
             <include>org/apache/tools/ant/taskdefs/optional/junit/</include>
             <include>org/example/junit/</include>
@@ -110,6 +106,11 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
+          <!-- Cannot exclude JUnit 4-specific classes from compilation because tests depend on them -->
+          <excludes>
+            <exclude>org/apache/tools/ant/taskdefs/optional/junit/JUnit4TestMethodAdapter*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/junit/CustomJUnit4TestAdapterCache*</exclude>
+          </excludes>
           <archive>
             <index>true</index>
             <manifest>
@@ -154,6 +155,21 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
       </resource>
     </resources>
     <testResources>
+      <testResource>
+        <directory>../../../../src/etc/testcases</directory>
+        <includes>
+         <include>taskdefs/optional/junit/**</include>
+          <include>taskdefs/optional/junit.xml</include>
+          <include>taskdefs/optional/junitreport.xml</include>
+         <include>buildfiletest-base.xml</include>
+        </includes>
+      </testResource>
+      <testResource>
+        <directory>../../../../src</directory>
+        <includes>
+          <include>tests/junit/org/apache/tools/ant/taskdefs/optional/junit/*Test.java</include>
+        </includes>
+      </testResource>
       <testResource>
         <directory>../../../../src/tests/junit</directory>
         <includes>

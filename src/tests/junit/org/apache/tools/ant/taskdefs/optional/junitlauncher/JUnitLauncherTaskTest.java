@@ -272,12 +272,7 @@ public class JUnitLauncherTaskTest {
     public void testAntRuntimeLibsCustomLocation() throws Exception {
         final String targetName = "test-ant-runtime-lib-custom-location";
         final Path trackerFile = setupTrackerProperty(targetName);
-        // setup a property that points to the locations of Ant runtime classes.
-        // this path will then be used in target to create a duplicate copied
-        // classes and then will be used as a custom location for Ant runtime libraries
-        final String projectResourceName = LoaderUtils.classNameToResource(Project.class.getName());
-        final File antClassesPath = LoaderUtils.getResourceSource(Project.class.getClassLoader(), projectResourceName);
-        buildRule.getProject().setProperty("ant.runtime.classes.original.path", antClassesPath.getAbsolutePath());
+        setupRuntimeClassesProperty();
         // run the target
         buildRule.executeTarget(targetName);
         final String exclusionLogMsg = "Excluding Ant runtime libraries";
@@ -305,12 +300,7 @@ public class JUnitLauncherTaskTest {
     public void testAntAndJUnitPlatformLibsCustomLocation() throws Exception {
         final String targetName = "test-ant-and-junit-platform-lib-custom-location";
         final Path trackerFile = setupTrackerProperty(targetName);
-        // setup a property that points to the locations of Ant runtime classes.
-        // this path will then be used in target to create a duplicate copied
-        // classes and then will be used as a custom location for Ant runtime libraries
-        final String projectResourceName = LoaderUtils.classNameToResource(Project.class.getName());
-        final File antClassesPath = LoaderUtils.getResourceSource(Project.class.getClassLoader(), projectResourceName);
-        buildRule.getProject().setProperty("ant.runtime.classes.original.path", antClassesPath.getAbsolutePath());
+        setupRuntimeClassesProperty();
         // run the target
         buildRule.executeTarget(targetName);
 
@@ -328,5 +318,14 @@ public class JUnitLauncherTaskTest {
         buildRule.getProject().setProperty(targetName + ".tracker", filename);
         final String outputDir = buildRule.getProject().getProperty("output.dir");
         return Paths.get(outputDir, filename);
+    }
+
+    private void setupRuntimeClassesProperty() {
+        // setup a property that points to the locations of Ant runtime classes.
+        // this path will then be used in target to create a duplicate copied
+        // classes and then will be used as a custom location for Ant runtime libraries
+        final String projectResourceName = LoaderUtils.classNameToResource(Project.class.getName());
+        final File antClassesPath = LoaderUtils.getResourceSource(Project.class.getClassLoader(), projectResourceName);
+        buildRule.getProject().setProperty("ant.runtime.classes.original.path", antClassesPath.getAbsolutePath());
     }
 }
