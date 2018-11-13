@@ -81,7 +81,6 @@ public class FileUtils {
     private static final boolean ON_DOS = Os.isFamily("dos");
     private static final boolean ON_WIN9X = Os.isFamily("win9x");
     private static final boolean ON_WINDOWS = Os.isFamily("windows");
-    private static final Map<FileSystem, Boolean> fileSystemCaseSensitivity = new HashMap<>();
 
     static final int BUF_SIZE = 8192;
 
@@ -1799,40 +1798,29 @@ public class FileUtils {
         if (path == null) {
             throw new IllegalArgumentException("Path cannot be null");
         }
-        final FileSystem fileSystem = path.getFileSystem();
-        final Boolean caseSensitivity = fileSystemCaseSensitivity.get(fileSystem);
-        if (caseSensitivity != null) {
-            return Optional.of(caseSensitivity);
-        }
         final String mixedCaseFileNamePrefix = "aNt";
         Path mixedCaseTmpFile = null;
         boolean caseSensitive;
         try {
-            synchronized (fileSystemCaseSensitivity) {
-                if (fileSystemCaseSensitivity.containsKey(fileSystem)) {
-                    return Optional.of(fileSystemCaseSensitivity.get(fileSystem));
-                }
-                if (Files.isRegularFile(path)) {
-                    mixedCaseTmpFile = Files.createTempFile(path.getParent(), mixedCaseFileNamePrefix, null);
-                } else if (Files.isDirectory(path)) {
-                    mixedCaseTmpFile = Files.createTempFile(path, mixedCaseFileNamePrefix, null);
-                } else {
-                    // we can only do our tricks to figure out whether the filesystem is
-                    // case sensitive, only if the path is a directory or a file.
-                    // In other cases (like the path being non-existent), we don't
-                    // have a way to determine that detail
-                    return Optional.empty();
-                }
-                final Path lowerCasePath = Paths.get(mixedCaseTmpFile.toString().toLowerCase(Locale.US));
-                try {
-                    caseSensitive = !Files.isSameFile(mixedCaseTmpFile, lowerCasePath);
-                } catch (NoSuchFileException nsfe) {
-                    // a NSFE implies that the "lowerCasePath" file wasn't considered to be present
-                    // even if the different cased file exists. That effectively means this is a
-                    // case sensitive filesystem
-                    caseSensitive = true;
-                }
-                fileSystemCaseSensitivity.put(fileSystem, caseSensitive);
+            if (Files.isRegularFile(path)) {
+                mixedCaseTmpFile = Files.createTempFile(path.getParent(), mixedCaseFileNamePrefix, null);
+            } else if (Files.isDirectory(path)) {
+                mixedCaseTmpFile = Files.createTempFile(path, mixedCaseFileNamePrefix, null);
+            } else {
+                // we can only do our tricks to figure out whether the filesystem is
+                // case sensitive, only if the path is a directory or a file.
+                // In other cases (like the path being non-existent), we don't
+                // have a way to determine that detail
+                return Optional.empty();
+            }
+            final Path lowerCasePath = Paths.get(mixedCaseTmpFile.toString().toLowerCase(Locale.US));
+            try {
+                caseSensitive = !Files.isSameFile(mixedCaseTmpFile, lowerCasePath);
+            } catch (NoSuchFileException nsfe) {
+                // a NSFE implies that the "lowerCasePath" file wasn't considered to be present
+                // even if the different cased file exists. That effectively means this is a
+                // case sensitive filesystem
+                caseSensitive = true;
             }
         } catch (IOException ioe) {
             System.err.println("Could not determine the case sensitivity of the " +
