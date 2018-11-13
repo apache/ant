@@ -27,6 +27,13 @@ Fixed bugs:
    an incorrect compression level for a zip entry. This is now fixed.
    Bugzilla Report 62686
 
+ * sync task, in some cases on case insensitive file systems, would consider
+   a file in a destination directory to be orphaned and would delete it.
+   This task has now been fixed to infer the case sensitivity of the filesystem
+   of the destination directory.
+   Bugzilla Report 62890
+
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key
