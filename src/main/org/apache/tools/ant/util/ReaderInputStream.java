@@ -72,6 +72,7 @@ public class ReaderInputStream extends InputStream {
      *
      * @param reader     non-null <code>Reader</code>.
      * @param charset    non-null <code>Charset</code> charset.
+     * @since Ant 1.10.6
      */
     public ReaderInputStream(Reader reader, Charset charset) {
         this(reader);
