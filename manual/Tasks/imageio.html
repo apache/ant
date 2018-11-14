@@ -29,7 +29,12 @@
 <p>Applies a chain of image operations on a set of files.</p>
 <p>Uses AWT and ImageIO; replaces <a href="image.html">image</a> task for Java 9+. The task can be
 used with Java 8 as well, see parameter table for limitations.</p>
-
+<p><strong>Note</strong>: this task tries to stay as close as possible to syntax and semantics
+of <code>image</code> task. However, it uses <var>format</var> attribute rather
+than <var>encoding</var> attribute, because the latter is a misnomer: almost all tasks use similar
+attributes for character encodings in files, file names or other strings. Also,
+when <var>format</var> is not specified, its value is defined by the format of the first processed
+image file.</p>
 <h5>Overview of used datatypes</h5>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill-opacity="1"
      color-rendering="auto" color-interpolation="auto" text-rendering="auto" stroke="black"
@@ -390,12 +395,12 @@ used with Java 8 as well, see parameter table for limitations.</p>
     <td>Yes, unless nested fileset is used</td>
   </tr>
   <tr>
-    <td>encoding</td>
+    <td>format</td>
     <td>Image format.<br/>Valid (case insensitive)
       are: <q>bmp</q>, <q>gif</q>, <q>jpeg</q>, <q>jpg</q>, <q>png</q>, <q>tif</q>, <q>tiff</q>, <q>wbmp</q>
       (Java 8 VM lacks support for TIFF, which can be provided
       by <a href="../install.html#librarydependencies">external libraries</a>).</td>
-    <td>No; defaults to the format of the first original file</td>
+    <td>No; defaults to the format of the (first) original file</td>
   </tr>
   <tr>
     <td>overwrite</td>

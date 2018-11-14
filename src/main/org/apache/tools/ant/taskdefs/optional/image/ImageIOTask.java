@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.image;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.optional.imageio.Draw;
@@ -59,7 +60,7 @@ public class ImageIOTask extends MatchingTask {
     private File srcDir = null;
     private File destDir = null;
 
-    private String format;
+    private ImageFormat outputFormat;
 
     private boolean garbageCollect = false;
 
@@ -93,11 +94,11 @@ public class ImageIOTask extends MatchingTask {
     }
 
     /**
-     * Set the image format.
-     * @param encoding the String image format.
+     * Set the output image format.
+     * @param format an ImageFormat.
      */
-    public void setEncoding(String encoding) {
-        format = encoding;
+    public void setFormat(ImageFormat format) {
+        outputFormat = format;
     }
 
     /**
@@ -281,8 +282,8 @@ public class ImageIOTask extends MatchingTask {
                 return;
             }
             ImageReader reader = readers.next();
-            if (format == null) {
-                format = reader.getFormatName();
+            if (outputFormat == null) {
+                outputFormat = new ImageFormat(reader.getFormatName());
             }
             reader.setInput(input);
 
@@ -308,7 +309,7 @@ public class ImageIOTask extends MatchingTask {
                 newFile.delete();
             }
 
-            if (!ImageIO.write(image, format, newFile)) {
+            if (!ImageIO.write(image, outputFormat.getValue(), newFile)) {
                 log("Failed to save the transformed file");
             }
         } catch (IOException | RuntimeException err) {
@@ -378,11 +379,33 @@ public class ImageIOTask extends MatchingTask {
         if (srcDir == null && destDir == null) {
             throw new BuildException("Specify the destDir, or the srcDir.");
         }
-        if (format != null && !Arrays.asList(ImageIO.getReaderFormatNames()).contains(format)) {
-            throw new BuildException("Unknown image format '" + format + "'"
-                + System.lineSeparator() + "Use any of "
-                    + Arrays.stream(ImageIO.getReaderFormatNames()).sorted()
-                    .collect(Collectors.joining(", ")));
+    }
+
+    /**
+     * defines acceptable image formats.
+     */
+    public static class ImageFormat extends EnumeratedAttribute {
+
+        private static final String[] VALUES = ImageIO.getReaderFormatNames();
+
+        /**
+         * Constructor
+         */
+        public ImageFormat() {
+        }
+
+        /**
+         * Constructor using a string.
+         * @param value the value of the attribute
+         */
+        public ImageFormat(String value) {
+            setValue(value);
+        }
+
+        /** {@inheritDoc}. */
+        @Override
+        public String[] getValues() {
+            return VALUES;
         }
     }
 }
