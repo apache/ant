@@ -17,10 +17,14 @@
  */
 package org.apache.tools.ant.types.optional.imageio;
 
+import org.apache.tools.ant.types.EnumeratedAttribute;
+
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Draw an arc.
@@ -28,7 +32,7 @@ import java.awt.image.BufferedImage;
 public class Arc extends BasicShape implements DrawOperation {
     private int start = 0;
     private int stop = 0;
-    private int type = Arc2D.OPEN;
+    private ArcType type = ArcType.getDefault();
 
     /**
      * Set the start of the arc.
@@ -48,17 +52,10 @@ public class Arc extends BasicShape implements DrawOperation {
 
     /**
      * Set the type of arc.
-     * @param strType the type to use - open, pie or chord.
-     * @todo refactor using an EnumeratedAttribute
+     * @param arcType the type to use - open, pie or chord.
      */
-    public void setType(String strType) {
-        if ("open".equalsIgnoreCase(strType)) {
-            type = Arc2D.OPEN;
-        } else if ("pie".equalsIgnoreCase(strType)) {
-            type = Arc2D.PIE;
-        } else if ("chord".equalsIgnoreCase(strType)) {
-            type = Arc2D.CHORD;
-        }
+    public void setType(ArcType arcType) {
+        type = arcType;
     }
 
     /** {@inheritDoc}. */
@@ -74,13 +71,13 @@ public class Arc extends BasicShape implements DrawOperation {
             graphics.setColor(ColorMapper.getColorByName(stroke));
             graphics.setStroke(bStroke);
             graphics.draw(new Arc2D.Double(strokeWidth, strokeWidth, width,
-                height, start, stop, type));
+                height, start, stop, type.getIndex()));
         }
 
         if (!"transparent".equalsIgnoreCase(fill)) {
             graphics.setColor(ColorMapper.getColorByName(fill));
             graphics.fill(new Arc2D.Double(strokeWidth, strokeWidth,
-                width, height, start, stop, type));
+                width, height, start, stop, type.getIndex()));
         }
 
         for (ImageOperation instr : instructions) {
@@ -93,5 +90,47 @@ public class Arc extends BasicShape implements DrawOperation {
             }
         }
         return bi;
+    }
+
+    public static class ArcType extends EnumeratedAttribute {
+
+        private static final List<String> VALUES = new ArrayList<>();
+
+        static {
+            VALUES.add(Arc2D.OPEN, "open");
+            VALUES.add(Arc2D.CHORD, "chord");
+            VALUES.add(Arc2D.PIE, "pie");
+        }
+
+        /**
+         * Constructor
+         */
+        public ArcType() {
+        }
+
+        /**
+         * Constructor using a string.
+         * @param value the value of the attribute
+         */
+        public ArcType(String value) {
+            setValue(value);
+        }
+
+        /**
+         * Get the default ArcType value.
+         * @return the default value.
+         */
+        public static ArcType getDefault() {
+            return new ArcType(VALUES.get(0));
+        }
+
+        /**
+         * @see EnumeratedAttribute#getValues()
+         * {@inheritDoc}.
+         */
+        @Override
+        public String[] getValues() {
+            return VALUES.toArray(new String[0]);
+        }
     }
 }
