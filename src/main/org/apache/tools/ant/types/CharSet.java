@@ -1,0 +1,78 @@
+/*
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+package org.apache.tools.ant.types;
+
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * EnumeratedAttribute implementation for Charset to use with encoding/charset attributes.
+ * @since Ant 1.10.6
+ */
+public class CharSet extends EnumeratedAttribute {
+
+    private static final List<String> VALUES = new ArrayList<>();
+
+    static {
+        for (Map.Entry<String, Charset> entry :  Charset.availableCharsets().entrySet()) {
+            VALUES.add(entry.getKey());
+            VALUES.addAll(entry.getValue().aliases());
+        }
+    }
+
+    /**
+     * Default constructor.
+     */
+    public CharSet() {
+    }
+
+    /**
+     * Construct a new CharSet with the specified value.
+     * @param value the EnumeratedAttribute value.
+     */
+    public CharSet(String value) {
+        setValue(value);
+    }
+
+    /**
+     * Get the default value as provided by Charset.
+     * @return the default value.
+     */
+    public static CharSet getDefault() {
+        return new CharSet(Charset.defaultCharset().name());
+    }
+
+    /**
+     * Convert this enumerated type to a <code>Charset</code>.
+     * @return a <code>Charset</code> object.
+     */
+    public Charset getCharset() {
+        return Charset.forName(getValue());
+    }
+
+    /**
+     * Return the possible values.
+     * @return String[] of Charset names.
+     */
+    @Override
+    public String[] getValues() {
+        return VALUES.toArray(new String[0]);
+    }
+}
