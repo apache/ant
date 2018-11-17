@@ -79,6 +79,7 @@ public class CharSet extends EnumeratedAttribute {
 
     /**
      * Tell if CharSet values are aliases.
+     * @param cs CharSet to compare the value to.
      * @return true if CharSet values are aliases.
      */
     public boolean equivalent(CharSet cs) {
