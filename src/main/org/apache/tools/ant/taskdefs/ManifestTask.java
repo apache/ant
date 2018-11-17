@@ -264,7 +264,7 @@ public class ManifestTask extends Task {
         }
 
         try (PrintWriter w = new PrintWriter(new OutputStreamWriter(
-            Files.newOutputStream(manifestFile.toPath()), Manifest.JAR_ENCODING))) {
+            Files.newOutputStream(manifestFile.toPath()), Manifest.JAR_CHARSET))) {
             toWrite.write(w, flattenClassPaths);
             if (w.checkError()) {
                 throw new IOException("Encountered an error writing manifest");

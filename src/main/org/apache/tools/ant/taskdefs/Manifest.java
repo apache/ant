@@ -91,8 +91,11 @@ public class Manifest {
     public static final String ERROR_FROM_FORBIDDEN = "Manifest attributes should not start "
                         + "with \"" + ATTRIBUTE_FROM + "\" in \"";
 
+    /** Charset to be used for JAR files. */
+    public static final Charset JAR_CHARSET = StandardCharsets.UTF_8;
     /** Encoding to be used for JAR files. */
-    public static final Charset JAR_ENCODING = StandardCharsets.UTF_8;
+    @Deprecated
+    public static final String JAR_ENCODING = JAR_CHARSET.name();
 
     private static final String ATTRIBUTE_MANIFEST_VERSION_LC =
         ATTRIBUTE_MANIFEST_VERSION.toLowerCase(Locale.ENGLISH);
@@ -342,7 +345,7 @@ public class Manifest {
         private void writeValue(PrintWriter writer, String value)
              throws IOException {
             String line;
-            int nameLength = name.getBytes(JAR_ENCODING).length;
+            int nameLength = name.getBytes(JAR_CHARSET).length;
             if (nameLength > MAX_NAME_VALUE_LENGTH) {
                 if (nameLength > MAX_NAME_LENGTH) {
                     throw new IOException("Unable to write manifest line "
@@ -353,14 +356,14 @@ public class Manifest {
             } else {
                 line = name + ": " + value;
             }
-            while (line.getBytes(JAR_ENCODING).length > MAX_SECTION_LENGTH) {
+            while (line.getBytes(JAR_CHARSET).length > MAX_SECTION_LENGTH) {
                 // try to find a MAX_LINE_LENGTH byte section
                 int breakIndex = MAX_SECTION_LENGTH;
                 if (breakIndex >= line.length()) {
                     breakIndex = line.length() - 1;
                 }
                 String section = line.substring(0, breakIndex);
-                while (section.getBytes(JAR_ENCODING).length > MAX_SECTION_LENGTH
+                while (section.getBytes(JAR_CHARSET).length > MAX_SECTION_LENGTH
                      && breakIndex > 0) {
                     breakIndex--;
                     section = line.substring(0, breakIndex);
@@ -756,7 +759,7 @@ public class Manifest {
                 throw new BuildException("Could not find default manifest: %s",
                     defManifest);
             }
-            Manifest defaultManifest = new Manifest(new InputStreamReader(in, JAR_ENCODING));
+            Manifest defaultManifest = new Manifest(new InputStreamReader(in, JAR_CHARSET));
             String version = System.getProperty("java.runtime.version");
             if (version == null) {
                 version = System.getProperty("java.vm.version");

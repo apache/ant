@@ -533,7 +533,7 @@ public class Jar extends Zip {
                JAR_MARKER);
         // time to write the manifest
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OutputStreamWriter osw = new OutputStreamWriter(baos, Manifest.JAR_ENCODING);
+        OutputStreamWriter osw = new OutputStreamWriter(baos, Manifest.JAR_CHARSET);
         PrintWriter writer = new PrintWriter(osw);
         manifest.write(writer, flattenClassPaths);
         if (writer.checkError()) {
