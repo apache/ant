@@ -40,7 +40,6 @@ import org.apache.tools.ant.launch.Launcher;
 import org.apache.tools.ant.taskdefs.Definer;
 import org.apache.tools.ant.taskdefs.Property;
 import org.apache.tools.ant.taskdefs.Typedef;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Component creation and configuration.
@@ -785,9 +784,7 @@ public class ComponentHelper  {
             String resource = type ? MagicNames.TYPEDEFS_PROPERTIES_RESOURCE
                     : MagicNames.TASKDEF_PROPERTIES_RESOURCE;
             String errorString = type ? ERROR_NO_TYPE_LIST_LOAD : ERROR_NO_TASK_LIST_LOAD;
-            InputStream in = null;
-            try {
-                in = ComponentHelper.class.getResourceAsStream(resource);
+            try (InputStream in = ComponentHelper.class.getResourceAsStream(resource)) {
                 if (in == null) {
                     throw new BuildException(errorString);
                 }
@@ -796,8 +793,6 @@ public class ComponentHelper  {
                 defaultDefinitions[idx] = p;
             } catch (IOException e) {
                 throw new BuildException(errorString, e);
-            } finally {
-                FileUtils.close(in);
             }
         }
         return defaultDefinitions[idx];

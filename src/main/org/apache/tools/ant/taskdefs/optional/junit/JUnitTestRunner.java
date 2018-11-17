@@ -1203,28 +1203,18 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     private static void registerNonCrash()
             throws IOException {
         if (crashFile != null) {
-            FileWriter out = null;
-            try {
-                out = new FileWriter(crashFile);
+            try (FileWriter out = new FileWriter(crashFile)) {
                 out.write(Constants.TERMINATED_SUCCESSFULLY + "\n");
                 out.flush();
-            } finally {
-                FileUtils.close(out);
             }
         }
     }
 
     private static void registerTestCase(final String testCase) {
         if (crashFile != null) {
-            try {
-                FileWriter out = null;
-                try {
-                    out = new FileWriter(crashFile);
-                    out.write(testCase + "\n");
-                    out.flush();
-                } finally {
-                    FileUtils.close(out);
-                }
+            try (FileWriter out = new FileWriter(crashFile)) {
+                out.write(testCase + "\n");
+                out.flush();
             } catch (final IOException e) {
                 // ignored.
             }

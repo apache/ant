@@ -648,33 +648,20 @@ public class Property extends Task {
     protected void loadResource(String name) {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
-        ClassLoader cL = null;
-        boolean cleanup = false;
-        if (classpath != null) {
-            cleanup = true;
-            cL = getProject().createClassLoader(classpath);
-        } else {
-            cL = this.getClass().getClassLoader();
-        }
-        InputStream is = null;
-        try {
-            if (cL == null) {
-                is = ClassLoader.getSystemResourceAsStream(name);
+        ClassLoader cL = (classpath == null) ? this.getClass().getClassLoader()
+                : getProject().createClassLoader(classpath);
+        try (InputStream is = (cL == null) ? ClassLoader.getSystemResourceAsStream(name)
+                : cL.getResourceAsStream(name)) {
+            if (is == null) {
+                log("Unable to find resource " + name, Project.MSG_WARN);
             } else {
-                is = cL.getResourceAsStream(name);
-            }
-
-            if (is != null) {
                 loadProperties(props, is, name.endsWith(".xml"));
                 addProperties(props);
-            } else {
-                log("Unable to find resource " + name, Project.MSG_WARN);
             }
         } catch (IOException ex) {
             throw new BuildException(ex, getLocation());
         } finally {
-            FileUtils.close(is);
-            if (cleanup && cL != null) {
+            if (classpath != null && cL != null) {
                 ((AntClassLoader) cL).cleanup();
             }
         }

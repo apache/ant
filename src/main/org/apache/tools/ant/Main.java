@@ -637,15 +637,11 @@ public class Main implements AntMain {
     private void loadPropertyFiles() {
         for (final String filename : propertyFiles) {
             final Properties props = new Properties();
-            InputStream fis = null;
-            try {
-                fis = Files.newInputStream(Paths.get(filename));
+            try (InputStream fis = Files.newInputStream(Paths.get(filename))) {
                 props.load(fis);
             } catch (final IOException e) {
                 System.out.println("Could not load property file "
                                    + filename + ": " + e.getMessage());
-            } finally {
-                FileUtils.close(fis);
             }
 
             // ensure that -D properties take precedence

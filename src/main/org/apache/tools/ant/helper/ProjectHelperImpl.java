@@ -113,22 +113,20 @@ public class ProjectHelperImpl extends ProjectHelper {
                 + "default plugin");
         }
         File bFile = (File) source;
-        InputStream inputStream = null;
-        InputSource inputSource = null;
 
         this.project = project;
         this.buildFile = new File(bFile.getAbsolutePath());
         buildFileParent = new File(this.buildFile.getParent());
 
         try {
-            try {
-                parser = JAXPUtils.getParser();
-            } catch (BuildException e) {
-                parser = new XMLReaderAdapter(JAXPUtils.getXMLReader());
-            }
+            parser = JAXPUtils.getParser();
+        } catch (BuildException e) {
+            parser = new XMLReaderAdapter(JAXPUtils.getXMLReader());
+        }
+
+        try (InputStream inputStream = Files.newInputStream(bFile.toPath())) {
             String uri = FILE_UTILS.toURI(bFile.getAbsolutePath());
-            inputStream = Files.newInputStream(bFile.toPath());
-            inputSource = new InputSource(inputStream);
+            InputSource inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
             project.log("parsing buildfile " + bFile + " with URI = " + uri, Project.MSG_VERBOSE);
             HandlerBase hb = new RootHandler(this);
@@ -138,8 +136,8 @@ public class ProjectHelperImpl extends ProjectHelper {
             parser.setDTDHandler(hb);
             parser.parse(inputSource);
         } catch (SAXParseException exc) {
-            Location location = new Location(exc.getSystemId(), exc.getLineNumber(), exc
-                    .getColumnNumber());
+            Location location = new Location(exc.getSystemId(), exc.getLineNumber(),
+                    exc.getColumnNumber());
 
             Throwable t = exc.getException();
             if (t instanceof BuildException) {
@@ -162,8 +160,6 @@ public class ProjectHelperImpl extends ProjectHelper {
             throw new BuildException("Encoding of project file is invalid.", exc);
         } catch (IOException exc) {
             throw new BuildException("Error reading project file: " + exc.getMessage(), exc);
-        } finally {
-            FileUtils.close(inputStream);
         }
     }
 

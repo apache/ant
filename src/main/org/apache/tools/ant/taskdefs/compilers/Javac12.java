@@ -26,7 +26,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
@@ -50,8 +49,7 @@ public class Javac12 extends DefaultCompilerAdapter {
         attributes.log("Using classic compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupJavacCommand(true);
 
-        OutputStream logstr = new LogOutputStream(attributes, Project.MSG_WARN);
-        try {
+        try (OutputStream logstr = new LogOutputStream(attributes, Project.MSG_WARN)) {
             // Create an instance of the compiler, redirecting output to
             // the project log
             Class<?> c = Class.forName(CLASSIC_COMPILER_CLASSNAME);
@@ -78,8 +76,6 @@ public class Javac12 extends DefaultCompilerAdapter {
                 throw new BuildException("Error starting classic compiler: ",
                                          ex, location);
             }
-        } finally {
-            FileUtils.close(logstr);
         }
     }
 }

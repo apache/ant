@@ -1343,9 +1343,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         // we can find the class we want.
         final String classFilename = getClassFilename(name);
         for (final File pathComponent : pathComponents) {
-            InputStream stream = null;
-            try {
-                stream = getResourceStream(pathComponent, classFilename);
+            try (InputStream stream = getResourceStream(pathComponent, classFilename)) {
                 if (stream != null) {
                     log("Loaded from " + pathComponent + " "
                         + classFilename, Project.MSG_DEBUG);
@@ -1357,8 +1355,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
                 // ioe.printStackTrace();
                 log("Exception reading component " + pathComponent + " (reason: "
                     + ioe.getMessage() + ")", Project.MSG_VERBOSE);
-            } finally {
-                FileUtils.close(stream);
             }
         }
         throw new ClassNotFoundException(name);

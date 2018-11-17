@@ -29,7 +29,6 @@ import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.depend.AbstractAnalyzer;
 
 /**
@@ -69,23 +68,13 @@ public class AntAnalyzer extends AbstractAnalyzer {
                     }
                     containers.add(container);
 
-                    ZipFile zipFile = null;
-                    InputStream inStream = null;
-                    try {
-                        if (container.getName().endsWith(".class")) {
-                            inStream = Files.newInputStream(Paths.get(container.getPath()));
-                        } else {
-                            zipFile = new ZipFile(container.getPath());
-                            String entryName = classname.replace('.', '/') + ".class";
-                            ZipEntry entry = new ZipEntry(entryName);
-                            inStream = zipFile.getInputStream(entry);
-                        }
+                    try (InputStream inStream = container.getName().endsWith(".class")
+                            ? Files.newInputStream(Paths.get(container.getPath()))
+                            : new ZipFile(container.getPath()).getInputStream(new ZipEntry(
+                                    classname.replace('.', '/') + ".class"))) {
                         ClassFile classFile = new ClassFile();
                         classFile.read(inStream);
                         analyzedDeps.addAll(classFile.getClassRefs());
-                    } finally {
-                        FileUtils.close(inStream);
-                        FileUtils.close(zipFile);
                     }
                 } catch (IOException ioe) {
                     // ignore

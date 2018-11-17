@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -37,7 +37,6 @@ import java.util.Objects;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StreamUtils;
 
 /**
@@ -93,7 +92,7 @@ public class Manifest {
                         + "with \"" + ATTRIBUTE_FROM + "\" in \"";
 
     /** Encoding to be used for JAR files. */
-    public static final String JAR_ENCODING = "UTF-8";
+    public static final Charset JAR_ENCODING = StandardCharsets.UTF_8;
 
     private static final String ATTRIBUTE_MANIFEST_VERSION_LC =
         ATTRIBUTE_MANIFEST_VERSION.toLowerCase(Locale.ENGLISH);
@@ -751,35 +750,25 @@ public class Manifest {
      *            default manifest
      */
     public static Manifest getDefaultManifest() throws BuildException {
-        InputStreamReader insr = null;
         String defManifest = "/org/apache/tools/ant/defaultManifest.mf";
         try (InputStream in = Manifest.class.getResourceAsStream(defManifest)) {
             if (in == null) {
                 throw new BuildException("Could not find default manifest: %s",
                     defManifest);
             }
-            try {
-                insr = new InputStreamReader(in, StandardCharsets.UTF_8);
-                Manifest defaultManifest = new Manifest(insr);
-                String version = System.getProperty("java.runtime.version");
-                if (version == null) {
-                    version = System.getProperty("java.vm.version");
-                }
-                Attribute createdBy = new Attribute("Created-By",
-                    version + " ("
-                    + System.getProperty("java.vm.vendor") + ")");
-                defaultManifest.getMainSection().storeAttribute(createdBy);
-                return defaultManifest;
-            } catch (UnsupportedEncodingException e) {
-                insr = new InputStreamReader(in);
-                return new Manifest(insr);
+            Manifest defaultManifest = new Manifest(new InputStreamReader(in, JAR_ENCODING));
+            String version = System.getProperty("java.runtime.version");
+            if (version == null) {
+                version = System.getProperty("java.vm.version");
             }
+            Attribute createdBy = new Attribute("Created-By", version
+                    + " (" + System.getProperty("java.vm.vendor") + ")");
+            defaultManifest.getMainSection().storeAttribute(createdBy);
+            return defaultManifest;
         } catch (ManifestException e) {
             throw new BuildException("Default manifest is invalid !!", e);
         } catch (IOException e) {
             throw new BuildException("Unable to read default manifest", e);
-        } finally {
-            FileUtils.close(insr);
         }
     }
 

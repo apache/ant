@@ -187,27 +187,18 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             createTransformer();
         }
 
-        InputStream fis = null;
-        OutputStream fos = null;
-        try {
-            fis = new BufferedInputStream(Files.newInputStream(infile.toPath()));
-            fos = new BufferedOutputStream(Files.newOutputStream(outfile.toPath()));
+        // autoclose all handles, otherwise the garbage collector will close them...
+        // and Windows may complain about not being able to delete files.
+        try (InputStream fis = new BufferedInputStream(Files.newInputStream(infile.toPath()));
+             OutputStream fos = new BufferedOutputStream(Files.newOutputStream(outfile.toPath()))) {
             final StreamResult res = new StreamResult(fos);
             // not sure what could be the need of this...
             res.setSystemId(JAXPUtils.getSystemId(outfile));
-            final Source src = getSource(fis, infile);
-
             // set parameters on each transformation, maybe something has changed
             //(e.g. value of file name parameter)
             setTransformationParameters();
 
-            transformer.transform(src, res);
-        } finally {
-            // make sure to close all handles, otherwise the garbage
-            // collector will close them...whenever possible and
-            // Windows may complain about not being able to delete files.
-            FileUtils.close(fis);
-            FileUtils.close(fos);
+            transformer.transform(getSource(fis, infile), res);
         }
     }
 

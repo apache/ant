@@ -21,10 +21,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -78,18 +78,12 @@ public class Jikes {
         File tmpFile = null;
 
         try {
-            String myos = System.getProperty("os.name");
-
             // Windows has a 32k limit on total arg size, so
             // create a temporary file to store all the arguments
-
-            if (myos.toLowerCase(Locale.ENGLISH).contains("windows")
-                && args.length > MAX_FILES_ON_COMMAND_LINE) {
-                BufferedWriter out = null;
-                try {
-                    tmpFile = FileUtils.getFileUtils().createTempFile("jikes",
-                            "tmp", null, false, true);
-                    out = new BufferedWriter(new FileWriter(tmpFile));
+            if (Os.isFamily(Os.FAMILY_WINDOWS) && args.length > MAX_FILES_ON_COMMAND_LINE) {
+                tmpFile = FileUtils.getFileUtils().createTempFile("jikes",
+                        "tmp", null, false, true);
+                try (BufferedWriter out = new BufferedWriter(new FileWriter(tmpFile))) {
                     for (String arg : args) {
                         out.write(arg);
                         out.newLine();
@@ -98,10 +92,7 @@ public class Jikes {
                     commandArray = new String[] {command,
                                                "@" + tmpFile.getAbsolutePath()};
                 } catch (IOException e) {
-                    throw new BuildException("Error creating temporary file",
-                                             e);
-                } finally {
-                    FileUtils.close(out);
+                    throw new BuildException("Error creating temporary file", e);
                 }
             } else {
                 commandArray = new String[args.length + 1];
@@ -123,10 +114,8 @@ public class Jikes {
                 throw new BuildException("Error running Jikes compiler", e);
             }
         } finally {
-            if (tmpFile != null) {
-                if (!tmpFile.delete()) {
-                    tmpFile.deleteOnExit();
-                }
+            if (tmpFile != null && !tmpFile.delete()) {
+                tmpFile.deleteOnExit();
             }
         }
     }

@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
@@ -76,26 +77,17 @@ public class EchoXML extends XMLFragment {
      * Execute the task.
      */
     public void execute() {
-        DOMElementWriter writer =
-            new DOMElementWriter(!append, namespacePolicy.getPolicy());
-        OutputStream os = null;
-        try {
-            if (file != null) {
-                os = FileUtils.newOutputStream(file.toPath(), append);
-            } else {
-                os = new LogOutputStream(this, Project.MSG_INFO);
-            }
-            Node n = getFragment().getFirstChild();
-            if (n == null) {
-                throw new BuildException(ERROR_NO_XML);
-            }
+        Node n = getFragment().getFirstChild();
+        if (n == null) {
+            throw new BuildException(ERROR_NO_XML);
+        }
+
+        DOMElementWriter writer = new DOMElementWriter(!append, namespacePolicy.getPolicy());
+        try (OutputStream os = (file == null) ? new LogOutputStream(this, Project.MSG_INFO)
+                : FileUtils.newOutputStream(file.toPath(), append)) {
             writer.write((Element) n, os);
-        } catch (BuildException e) {
-            throw e;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new BuildException(e);
-        } finally {
-            FileUtils.close(os);
         }
     }
 

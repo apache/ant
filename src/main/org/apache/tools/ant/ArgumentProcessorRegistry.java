@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 
 /**
@@ -146,16 +145,11 @@ public class ArgumentProcessorRegistry {
 
     private ArgumentProcessor getProcessorByService(InputStream is)
             throws IOException {
-        InputStreamReader isr = null;
-        try {
-            isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-            BufferedReader rd = new BufferedReader(isr);
+        try (BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             String processorClassName = rd.readLine();
             if (processorClassName != null && !processorClassName.isEmpty()) {
                 return getProcessor(processorClassName);
             }
-        } finally {
-            FileUtils.close(isr);
         }
         return null;
     }

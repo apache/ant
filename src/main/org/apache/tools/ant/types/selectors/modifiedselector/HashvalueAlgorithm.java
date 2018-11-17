@@ -53,18 +53,14 @@ public class HashvalueAlgorithm implements Algorithm {
      // Because the content is only read the file will not be damaged. I tested
      // with JPG, ZIP and PDF as binary files.
     public String getValue(File file) {
-        Reader r = null;
-        try {
-            if (!file.canRead()) {
-                return null;
-            }
-            r = new FileReader(file);
+        if (!file.canRead()) {
+            return null;
+        }
+        try (Reader r = new FileReader(file)) {
             int hash = FileUtils.readFully(r).hashCode();
             return Integer.toString(hash);
         } catch (Exception e) {
             return null;
-        } finally {
-            FileUtils.close(r);
         }
     }
 
