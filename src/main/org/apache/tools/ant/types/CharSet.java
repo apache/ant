@@ -18,7 +18,9 @@
 package org.apache.tools.ant.types;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +62,30 @@ public class CharSet extends EnumeratedAttribute {
     }
 
     /**
+     * Convenience methood: get US-ASCII CharSet.
+     * @return the default value.
+     */
+    public static CharSet getAscii() {
+        return new CharSet(StandardCharsets.US_ASCII.name());
+    }
+
+    /**
+     * Convenience method: get UTF-8 CharSet.
+     * @return the default value.
+     */
+    public static CharSet getUtf8() {
+        return new CharSet(StandardCharsets.UTF_8.name());
+    }
+
+    /**
+     * Tell if CharSet values are aliases.
+     * @return true if CharSet values are aliases.
+     */
+    public boolean equivalent(CharSet cs) {
+        return getCharset().name().equals(cs.getCharset().name());
+    }
+
+    /**
      * Convert this enumerated type to a <code>Charset</code>.
      * @return a <code>Charset</code> object.
      */
@@ -74,5 +100,26 @@ public class CharSet extends EnumeratedAttribute {
     @Override
     public String[] getValues() {
         return VALUES.toArray(new String[0]);
+    }
+
+    /**
+     * Accept additional values for backwards compatibility
+     * (some java.io encoding names not available in java.nio)
+     * @param value the <code>String</code> value of the attribute
+     */
+    @Override
+    public final void setValue(final String value) {
+        String realValue = value;
+        if (value == null || value.isEmpty()) {
+           realValue = Charset.defaultCharset().name();
+       } else {
+           for (String v : Arrays.asList(value, value.toLowerCase(), value.toUpperCase())) {
+               if (VALUES.contains(v)) {
+                   realValue = v;
+                   break;
+               }
+           }
+        }
+        super.setValue(realValue);
     }
 }

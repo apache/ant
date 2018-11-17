@@ -88,7 +88,7 @@ public abstract class EnumeratedAttribute {
      * @param value the <code>String</code> value of the attribute
      * @throws BuildException if the value is not valid for the attribute
      */
-    public final void setValue(String value) throws BuildException {
+    public void setValue(String value) throws BuildException {
         int idx = indexOfValue(value);
         if (idx == -1) {
             throw new BuildException(value + " is not a legal value for this attribute");
