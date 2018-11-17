@@ -156,8 +156,12 @@ public class ListenerDefinition {
         return propertyHelper.testIfCondition(this.ifProperty) && propertyHelper.testUnlessCondition(this.unlessProperty);
     }
 
+    /**
+     * defines available listener types.
+     */
     public static class ListenerType extends EnumeratedAttribute {
 
+        /** {@inheritDoc}. */
         @Override
         public String[] getValues() {
             return new String[]{LEGACY_PLAIN, LEGACY_BRIEF, LEGACY_XML};

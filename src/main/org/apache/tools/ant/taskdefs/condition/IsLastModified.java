@@ -208,6 +208,7 @@ public class IsLastModified extends ProjectComponent implements Condition {
             setValue(s);
         }
 
+        /** {@inheritDoc}. */
         @Override
         public String[] getValues() {
             return new String[] {
