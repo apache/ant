@@ -61,23 +61,24 @@ public class AntAnalyzer extends AbstractAnalyzer {
             analyzedDeps.clear();
             for (String classname : toAnalyze) {
                 dependencies.add(classname);
+                File container = null;
                 try {
-                    File container = getClassContainer(classname);
-                    if (container == null) {
-                        continue;
-                    }
+                    container = getClassContainer(classname);
+                } catch (IOException ioe) {
+                    // ignore
+                }
+                if (container != null) {
                     containers.add(container);
 
                     try (InputStream inStream = container.getName().endsWith(".class")
                             ? Files.newInputStream(Paths.get(container.getPath()))
-                            : new ZipFile(container.getPath()).getInputStream(new ZipEntry(
-                                    classname.replace('.', '/') + ".class"))) {
+                            : getZipEntryStream(new ZipFile(container.getPath()), classname)) {
                         ClassFile classFile = new ClassFile();
                         classFile.read(inStream);
                         analyzedDeps.addAll(classFile.getClassRefs());
+                    } catch (IOException ioe) {
+                        // ignore
                     }
-                } catch (IOException ioe) {
-                    // ignore
                 }
             }
 
@@ -94,6 +95,22 @@ public class AntAnalyzer extends AbstractAnalyzer {
         files.addAll(containers);
         classes.removeAllElements();
         classes.addAll(dependencies);
+    }
+
+    private InputStream getZipEntryStream(ZipFile zipFile, String classname) throws IOException {
+        InputStream zipEntryStream = zipFile.getInputStream(new ZipEntry(
+                classname.replace('.', '/') + ".class"));
+        return new InputStream() {
+            @Override
+            public int read() throws IOException {
+                return zipEntryStream.read();
+            }
+            @Override
+            public void close() throws IOException {
+                zipEntryStream.close();
+                zipFile.close();
+            }
+        };
     }
 
     /**
