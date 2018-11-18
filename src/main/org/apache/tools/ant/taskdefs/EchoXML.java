@@ -86,7 +86,9 @@ public class EchoXML extends XMLFragment {
         try (OutputStream os = (file == null) ? new LogOutputStream(this, Project.MSG_INFO)
                 : FileUtils.newOutputStream(file.toPath(), append)) {
             writer.write((Element) n, os);
-        } catch (IOException e) {
+        } catch (BuildException be) {
+            throw be;
+        } catch (Exception e) {
             throw new BuildException(e);
         }
     }
