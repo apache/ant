@@ -108,7 +108,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public File getFile() {
         if (isReference()) {
-            return getCheckedRef().getFile();
+            return getRef().getFile();
         }
         dieOnCircularReference();
         synchronized (this) {
@@ -139,7 +139,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      */
     public File getBaseDir() {
         if (isReference()) {
-            return getCheckedRef().getBaseDir();
+            return getRef().getBaseDir();
         }
         dieOnCircularReference();
         return baseDir;
@@ -166,7 +166,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public String getName() {
         if (isReference()) {
-            return getCheckedRef().getName();
+            return getRef().getName();
         }
         File b = getBaseDir();
         return b == null ? getNotNullFile().getName()
@@ -179,7 +179,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      */
     @Override
     public boolean isExists() {
-        return isReference() ? getCheckedRef().isExists()
+        return isReference() ? getRef().isExists()
             : getNotNullFile().exists();
     }
 
@@ -190,7 +190,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public long getLastModified() {
         return isReference()
-            ? getCheckedRef().getLastModified()
+            ? getRef().getLastModified()
             : getNotNullFile().lastModified();
     }
 
@@ -200,7 +200,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      */
     @Override
     public boolean isDirectory() {
-        return isReference() ? getCheckedRef().isDirectory()
+        return isReference() ? getRef().isDirectory()
             : getNotNullFile().isDirectory();
     }
 
@@ -210,7 +210,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      */
     @Override
     public long getSize() {
-        return isReference() ? getCheckedRef().getSize()
+        return isReference() ? getRef().getSize()
             : getNotNullFile().length();
     }
 
@@ -221,7 +221,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
      */
     @Override
     public InputStream getInputStream() throws IOException {
-        return isReference() ? getCheckedRef().getInputStream()
+        return isReference() ? getRef().getInputStream()
             : Files.newInputStream(getNotNullFile().toPath());
     }
 
@@ -236,7 +236,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getOutputStream();
+            return getRef().getOutputStream();
         }
         return getOutputStream(false);
     }
@@ -247,7 +247,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public OutputStream getAppendOutputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getAppendOutputStream();
+            return getRef().getAppendOutputStream();
         }
         return getOutputStream(true);
     }
@@ -276,7 +276,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public int compareTo(Resource another) {
         if (isReference()) {
-            return getCheckedRef().compareTo(another);
+            return getRef().compareTo(another);
         }
         if (this.equals(another)) {
             return 0;
@@ -309,7 +309,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
             return true;
         }
         if (isReference()) {
-            return getCheckedRef().equals(another);
+            return getRef().equals(another);
         }
         if (another == null || !(another.getClass().equals(getClass()))) {
             return false;
@@ -327,7 +327,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public int hashCode() {
         if (isReference()) {
-            return getCheckedRef().hashCode();
+            return getRef().hashCode();
         }
         return MAGIC * (getFile() == null ? NULL_FILE : getFile().hashCode());
     }
@@ -339,7 +339,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public String toString() {
         if (isReference()) {
-            return getCheckedRef().toString();
+            return getRef().toString();
         }
         if (file == null) {
             return "(unbound file resource)";
@@ -355,7 +355,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public boolean isFilesystemOnly() {
         if (isReference()) {
-            return getCheckedRef().isFilesystemOnly();
+            return getRef().isFilesystemOnly();
         }
         dieOnCircularReference();
         return true;
@@ -368,7 +368,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     @Override
     public void touch(long modTime) {
         if (isReference()) {
-            getCheckedRef().touch(modTime);
+            getRef().touch(modTime);
             return;
         }
         if (!getNotNullFile().setLastModified(modTime)) {
@@ -408,7 +408,7 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     }
 
     @Override
-    protected FileResource getCheckedRef() {
-        return (FileResource) super.getCheckedRef();
+    protected FileResource getRef() {
+        return getCheckedRef(FileResource.class);
     }
 }

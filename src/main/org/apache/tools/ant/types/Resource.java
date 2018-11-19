@@ -141,7 +141,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      * @return the name of this resource.
      */
     public String getName() {
-        return isReference() ? getCheckedRef().getName() : name;
+        return isReference() ? getRef().getName() : name;
     }
 
     /**
@@ -160,7 +160,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     public boolean isExists() {
         if (isReference()) {
-            return getCheckedRef().isExists();
+            return getRef().isExists();
         }
         //default true:
         return exists == null || exists;
@@ -187,7 +187,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     public long getLastModified() {
         if (isReference()) {
-            return getCheckedRef().getLastModified();
+            return getRef().getLastModified();
         }
         if (!isExists() || lastmodified == null) {
             return UNKNOWN_DATETIME;
@@ -211,7 +211,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     public boolean isDirectory() {
         if (isReference()) {
-            return getCheckedRef().isDirectory();
+            return getRef().isDirectory();
         }
         //default false:
         return directory != null && directory;
@@ -244,7 +244,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     public long getSize() {
         if (isReference()) {
-            return getCheckedRef().getSize();
+            return getRef().getSize();
         }
         return isExists()
             ? (size != null ? size : UNKNOWN_SIZE)
@@ -275,7 +275,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
     @Override
     public int compareTo(Resource other) {
         if (isReference()) {
-            return getCheckedRef().compareTo(other);
+            return getRef().compareTo(other);
         }
         return toString().compareTo(other.toString());
     }
@@ -292,7 +292,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
             return true;
         }
         if (isReference()) {
-            return getCheckedRef().equals(other);
+            return getRef().equals(other);
         }
         return other != null && other.getClass().equals(getClass())
             && compareTo((Resource) other) == 0;
@@ -306,7 +306,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
     @Override
     public int hashCode() {
         if (isReference()) {
-            return getCheckedRef().hashCode();
+            return getRef().hashCode();
         }
         String name = getName();
         return MAGIC * (name == null ? NULL_NAME : name.hashCode());
@@ -323,7 +323,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     public InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getInputStream();
+            return getRef().getInputStream();
         }
         throw new UnsupportedOperationException();
     }
@@ -339,7 +339,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     public OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getOutputStream();
+            return getRef().getOutputStream();
         }
         throw new UnsupportedOperationException();
     }
@@ -351,7 +351,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     @Override
     public Iterator<Resource> iterator() {
-        return isReference() ? getCheckedRef().iterator()
+        return isReference() ? getRef().iterator()
             : Collections.singleton(this).iterator();
     }
 
@@ -362,7 +362,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     @Override
     public int size() {
-        return isReference() ? getCheckedRef().size() : 1;
+        return isReference() ? getRef().size() : 1;
     }
 
     /**
@@ -372,7 +372,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      */
     @Override
     public boolean isFilesystemOnly() {
-        return (isReference() && getCheckedRef().isFilesystemOnly())
+        return (isReference() && getRef().isFilesystemOnly())
             || this.as(FileProvider.class) != null;
     }
 
@@ -384,7 +384,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
     @Override
     public String toString() {
         if (isReference()) {
-            return getCheckedRef().toString();
+            return getRef().toString();
         }
         String n = getName();
         return n == null ? "(anonymous)" : n;
@@ -398,7 +398,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
      * @since Ant 1.7
      */
     public final String toLongString() {
-        return isReference() ? getCheckedRef().toLongString()
+        return isReference() ? getRef().toLongString()
             : getDataTypeName() + " \"" + toString() + '"';
     }
 
@@ -449,8 +449,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
         return Optional.ofNullable(as(clazz));
     }
 
-    @Override
-    protected Resource getCheckedRef() {
-        return (Resource) super.getCheckedRef();
+    protected Resource getRef() {
+        return getCheckedRef(Resource.class);
     }
 }

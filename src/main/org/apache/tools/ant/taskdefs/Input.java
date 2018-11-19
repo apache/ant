@@ -105,7 +105,7 @@ public class Input extends Task {
             }
             if (refid != null) {
                try {
-                   return (InputHandler) (getProject().getReference(refid));
+                   return getProject().getReference(refid);
                } catch (final ClassCastException e) {
                    throw new BuildException(
                        refid + " does not denote an InputHandler", e);

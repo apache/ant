@@ -80,7 +80,7 @@ public abstract class BaseSelector extends DataType implements FileSelector {
      */
     public void verifySettings() {
         if (isReference()) {
-            getCheckedRef().verifySettings();
+            getRef().verifySettings();
         }
     }
 
@@ -114,9 +114,8 @@ public abstract class BaseSelector extends DataType implements FileSelector {
     public abstract boolean isSelected(File basedir, String filename,
                                        File file);
 
-    @Override
-    protected BaseSelector getCheckedRef() {
-        return (BaseSelector) super.getCheckedRef();
+    private BaseSelector getRef() {
+        return getCheckedRef(BaseSelector.class);
     }
 }
 

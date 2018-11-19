@@ -77,7 +77,7 @@ public class TarResource extends ArchiveResource {
     @Override
     public InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getInputStream();
+            return getRef().getInputStream();
         }
         Resource archive = getArchive();
         final TarInputStream i = new TarInputStream(archive.getInputStream());
@@ -104,7 +104,7 @@ public class TarResource extends ArchiveResource {
     @Override
     public OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getOutputStream();
+            return getRef().getOutputStream();
         }
         throw new UnsupportedOperationException(
             "Use the tar task for tar output.");
@@ -115,7 +115,7 @@ public class TarResource extends ArchiveResource {
      */
     public String getUserName() {
         if (isReference()) {
-            return getCheckedRef().getUserName();
+            return getRef().getUserName();
         }
         checkEntry();
         return userName;
@@ -126,7 +126,7 @@ public class TarResource extends ArchiveResource {
      */
     public String getGroup() {
         if (isReference()) {
-            return getCheckedRef().getGroup();
+            return getRef().getGroup();
         }
         checkEntry();
         return groupName;
@@ -138,7 +138,7 @@ public class TarResource extends ArchiveResource {
      */
     public long getLongUid() {
         if (isReference()) {
-            return getCheckedRef().getLongUid();
+            return getRef().getLongUid();
         }
         checkEntry();
         return uid;
@@ -158,7 +158,7 @@ public class TarResource extends ArchiveResource {
      */
     public long getLongGid() {
         if (isReference()) {
-            return getCheckedRef().getLongGid();
+            return getRef().getLongGid();
         }
         checkEntry();
         return gid;
@@ -194,8 +194,8 @@ public class TarResource extends ArchiveResource {
     }
 
     @Override
-    protected TarResource getCheckedRef() {
-        return (TarResource) super.getCheckedRef();
+    protected TarResource getRef() {
+        return getCheckedRef(TarResource.class);
     }
 
     private void setEntry(TarEntry e) {

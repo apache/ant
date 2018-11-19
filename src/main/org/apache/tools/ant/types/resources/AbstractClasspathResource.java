@@ -84,7 +84,7 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     public Path getClasspath() {
         if (isReference()) {
-            return ((AbstractClasspathResource) getCheckedRef()).getClasspath();
+            return getRef().getClasspath();
         }
         dieOnCircularReference();
         return classpath;
@@ -96,7 +96,7 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     public Reference getLoader() {
         if (isReference()) {
-            return ((AbstractClasspathResource) getCheckedRef()).getLoader();
+            return getRef().getLoader();
         }
         dieOnCircularReference();
         return loader;
@@ -151,7 +151,7 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     public boolean isExists() {
         if (isReference()) {
-            return  getCheckedRef().isExists();
+            return getRef().isExists();
         }
         dieOnCircularReference();
         try (InputStream is = getInputStream()) {
@@ -169,7 +169,7 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     public InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getInputStream();
+            return getRef().getInputStream();
         }
         dieOnCircularReference();
 
@@ -204,7 +204,7 @@ public abstract class AbstractClasspathResource extends Resource {
     protected ClassLoaderWithFlag getClassLoader() {
         ClassLoader cl = null;
         if (loader != null) {
-            cl = (ClassLoader) loader.getReferencedObject();
+            cl = loader.getReferencedObject();
         }
         boolean clNeedsCleanup = false;
         if (cl == null) {
@@ -250,6 +250,11 @@ public abstract class AbstractClasspathResource extends Resource {
             }
             setChecked(true);
         }
+    }
+
+    @Override
+    protected AbstractClasspathResource getRef() {
+        return getCheckedRef(AbstractClasspathResource.class);
     }
 
     public static class ClassLoaderWithFlag {

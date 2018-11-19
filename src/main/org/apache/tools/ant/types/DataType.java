@@ -196,24 +196,44 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     /**
      * Performs the check for circular references and returns the
      * referenced object.
+     * @param <T> required reference type
      * @return the dereferenced object.
      * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
      * @since Ant 1.7
+     * @deprecated use getCheckedRef(Class)
      */
-    protected Object getCheckedRef() {
+    @Deprecated
+    protected <T> T getCheckedRef() {
         return getCheckedRef(getProject());
     }
 
     /**
      * Performs the check for circular references and returns the
      * referenced object.
+     * @param <T> required reference type
+     * @param requiredClass the class that this reference should be a subclass of.
+     * @return the dereferenced object.
+     * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
+     * @since Ant 1.10.6
+     */
+    protected <T> T getCheckedRef(final Class<T> requiredClass) {
+        return getCheckedRef(requiredClass, getDataTypeName(), getProject());
+    }
+
+    /**
+     * Performs the check for circular references and returns the
+     * referenced object.
+     * @param <T> required reference type
      * @param p the Ant Project instance against which to resolve references.
      * @return the dereferenced object.
      * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
      * @since Ant 1.7
+     * @deprecated use getCheckedRef(Class)
      */
-    protected Object getCheckedRef(Project p) {
-        return getCheckedRef(getClass(), getDataTypeName(), p);
+    @Deprecated
+    @SuppressWarnings("unchecked")
+    protected <T> T getCheckedRef(Project p) {
+        return getCheckedRef((Class<T>) getClass(), getDataTypeName(), p);
     }
 
     /**
@@ -244,16 +264,15 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
      *                        or if <code>project</code> is <code>null</code>.
      * @since Ant 1.7
      */
-    @SuppressWarnings("unchecked")
     protected <T> T getCheckedRef(final Class<T> requiredClass,
                                   final String dataTypeName, final Project project) {
         if (project == null) {
             throw new BuildException("No Project specified");
         }
         dieOnCircularReference(project);
-        Object o = ref.getReferencedObject(project);
+        T o = ref.getReferencedObject(project);
         if (requiredClass.isAssignableFrom(o.getClass())) {
-            return (T) o;
+            return o;
         }
         log("Class " + displayName(o.getClass())
                         + " is not a subclass of "

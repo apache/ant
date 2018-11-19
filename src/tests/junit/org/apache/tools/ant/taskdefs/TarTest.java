@@ -182,5 +182,8 @@ public class TarTest {
                 FileUtilities.getFileContents(new File(buildRule.getProject().getProperty("output"), "untar/asf-logo.gif.gz")));
     }
 
-
+    @Test
+    public void testtestTarFilesetWithReference() {
+        buildRule.executeTarget("testTarFilesetWithReference");
+    }
 }

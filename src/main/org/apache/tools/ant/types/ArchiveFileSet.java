@@ -189,7 +189,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public File getSrc() {
         if (isReference()) {
-            return ((ArchiveFileSet) getCheckedRef()).getSrc();
+            return getCheckedRef(ArchiveFileSet.class).getSrc();
         }
         dieOnCircularReference();
         if (src == null) {
@@ -201,18 +201,17 @@ public abstract class ArchiveFileSet extends FileSet {
     /**
      * Performs the check for circular references and returns the
      * referenced object.
-     * This is an override which does not delegate to the superclass; instead it invokes
-     * {@link #getRef(Project)}, because that contains the special support for fileset
-     * references, which can be handled by all ArchiveFileSets.
-     * @param p the Ant Project instance against which to resolve references.
+     * This method must be overridden together with
+     * {@link AbstractFileSet#getRef(Project) getRef(Project)}
+     * providing implementations containing the special support
+     * for FileSet references, which can be handled by all ArchiveFileSets.
+     * NB! This method cannot be implemented in AbstractFileSet in order to allow
+     * FileSet and DirSet to implement it as a private method.
      * @return the dereferenced object.
      * @throws BuildException if the reference is invalid (circular ref, wrong class, etc).
-     * @since Ant 1.8
      */
-    // TODO is the above true? AFAICT the calls look circular :/
-    @Override
-    protected Object getCheckedRef(Project p) {
-        return getRef(p);
+    protected AbstractFileSet getRef() {
+        return getCheckedRef(AbstractFileSet.class);
     }
 
     /**
@@ -286,7 +285,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public String getEncoding() {
         if (isReference()) {
-            AbstractFileSet ref = getRef(getProject());
+            AbstractFileSet ref = getRef();
             return ref instanceof ArchiveFileSet ? ((ArchiveFileSet) ref).getEncoding() : null;
         }
         return encoding;
@@ -339,13 +338,12 @@ public abstract class ArchiveFileSet extends FileSet {
     @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((ResourceCollection) (getRef(getProject()))).iterator();
+            return ((ResourceCollection) getRef()).iterator();
         }
         if (src == null) {
             return super.iterator();
         }
-        ArchiveScanner as = (ArchiveScanner) getDirectoryScanner(getProject());
-        return as.getResourceFiles(getProject());
+        return ((ArchiveScanner) getDirectoryScanner()).getResourceFiles(getProject());
     }
 
     /**
@@ -356,13 +354,12 @@ public abstract class ArchiveFileSet extends FileSet {
     @Override
     public int size() {
         if (isReference()) {
-            return ((ResourceCollection) (getRef(getProject()))).size();
+            return ((ResourceCollection) getRef()).size();
         }
         if (src == null) {
             return super.size();
         }
-        ArchiveScanner as = (ArchiveScanner) getDirectoryScanner(getProject());
-        return as.getIncludedFilesCount();
+        return getDirectoryScanner().getIncludedFilesCount();
     }
 
     /**
@@ -376,7 +373,7 @@ public abstract class ArchiveFileSet extends FileSet {
     @Override
     public boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((ArchiveFileSet) getCheckedRef()).isFilesystemOnly();
+            return ((ArchiveFileSet) getRef()).isFilesystemOnly();
         }
         dieOnCircularReference();
         return src == null;
@@ -427,7 +424,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public boolean hasFileModeBeenSet() {
         if (isReference()) {
-            return ((ArchiveFileSet) getRef(getProject())).hasFileModeBeenSet();
+            return ((ArchiveFileSet) getRef()).hasFileModeBeenSet();
         }
         dieOnCircularReference();
         return fileModeHasBeenSet;
@@ -478,7 +475,7 @@ public abstract class ArchiveFileSet extends FileSet {
      */
     public boolean hasDirModeBeenSet() {
         if (isReference()) {
-            return ((ArchiveFileSet) getRef(getProject())).hasDirModeBeenSet();
+            return ((ArchiveFileSet) getRef()).hasDirModeBeenSet();
         }
         dieOnCircularReference();
         return dirModeHasBeenSet;
@@ -507,8 +504,7 @@ public abstract class ArchiveFileSet extends FileSet {
     @Override
     public Object clone() {
         if (isReference()) {
-            return getCheckedRef(ArchiveFileSet.class, getDataTypeName(),
-                getProject()).clone();
+            return getCheckedRef(ArchiveFileSet.class).clone();
         }
         return super.clone();
     }

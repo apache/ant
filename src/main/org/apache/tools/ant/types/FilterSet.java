@@ -236,7 +236,7 @@ public class FilterSet extends DataType implements Cloneable {
      * @return the filterset from the reference.
      */
     protected FilterSet getRef() {
-        return getCheckedRef(FilterSet.class, "filterset");
+        return getCheckedRef(FilterSet.class);
     }
 
     /**

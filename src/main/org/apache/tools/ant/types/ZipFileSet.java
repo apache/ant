@@ -88,6 +88,16 @@ public class ZipFileSet extends ArchiveFileSet {
     }
 
     /**
+     * A ZipFileset accepts another ZipFileSet or a FileSet as reference
+     * FileSets are often used by the war task for the lib attribute
+     * @return the abstract fileset instance
+     */
+    @Override
+    protected AbstractFileSet getRef() {
+        return getRef(getProject());
+    }
+
+    /**
      * Return a ZipFileSet that has the same properties
      * as this one.
      * @return the cloned zipFileSet
@@ -95,7 +105,7 @@ public class ZipFileSet extends ArchiveFileSet {
     @Override
     public Object clone() {
         if (isReference()) {
-            return getRef(getProject()).clone();
+            return getRef().clone();
         }
         return super.clone();
     }

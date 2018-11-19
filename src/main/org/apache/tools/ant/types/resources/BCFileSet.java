@@ -50,7 +50,7 @@ public class BCFileSet extends FileSet {
     @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((FileSet) getRef(getProject())).iterator();
+            return getRef().iterator();
         }
         FileResourceIterator result = new FileResourceIterator(getProject(), getDir());
         result.addFiles(getDirectoryScanner().getIncludedFiles());
@@ -66,10 +66,14 @@ public class BCFileSet extends FileSet {
     @Override
     public int size() {
         if (isReference()) {
-            return ((FileSet) getRef(getProject())).size();
+            return getRef().size();
         }
         return getDirectoryScanner().getIncludedFilesCount()
             + getDirectoryScanner().getIncludedDirsCount();
+    }
+
+    private FileSet getRef() {
+        return getCheckedRef(FileSet.class);
     }
 
 }

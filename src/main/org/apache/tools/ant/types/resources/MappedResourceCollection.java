@@ -127,7 +127,7 @@ public class MappedResourceCollection
     @Override
     public boolean isFilesystemOnly() {
         if (isReference()) {
-            return getCheckedRef().isFilesystemOnly();
+            return getRef().isFilesystemOnly();
         }
         checkInitialized();
         return false;
@@ -139,7 +139,7 @@ public class MappedResourceCollection
     @Override
     public int size() {
         if (isReference()) {
-            return getCheckedRef().size();
+            return getRef().size();
         }
         checkInitialized();
         return cacheCollection().size();
@@ -151,7 +151,7 @@ public class MappedResourceCollection
     @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return getCheckedRef().iterator();
+            return getRef().iterator();
         }
         checkInitialized();
         return cacheCollection().iterator();
@@ -254,14 +254,13 @@ public class MappedResourceCollection
     @Override
     public String toString() {
         if (isReference()) {
-            return getCheckedRef().toString();
+            return getRef().toString();
         }
         return isEmpty() ? "" : stream().map(Object::toString)
             .collect(Collectors.joining(File.pathSeparator));
     }
 
-    @Override
-    protected MappedResourceCollection getCheckedRef() {
-        return (MappedResourceCollection) super.getCheckedRef();
+    private MappedResourceCollection getRef() {
+        return getCheckedRef(MappedResourceCollection.class);
     }
 }

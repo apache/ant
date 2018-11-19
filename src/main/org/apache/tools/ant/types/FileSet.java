@@ -20,6 +20,7 @@ package org.apache.tools.ant.types;
 
 import java.util.Iterator;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
 
 /**
@@ -52,7 +53,7 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
     @Override
     public Object clone() {
         if (isReference()) {
-            return getRef(getProject()).clone();
+            return getRef().clone();
         }
         return super.clone();
     }
@@ -65,10 +66,10 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
     @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((FileSet) getRef(getProject())).iterator();
+            return getRef().iterator();
         }
         return new FileResourceIterator(getProject(), getDir(getProject()),
-            getDirectoryScanner(getProject()).getIncludedFiles());
+            getDirectoryScanner().getIncludedFiles());
     }
 
     /**
@@ -79,9 +80,9 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
     @Override
     public int size() {
         if (isReference()) {
-            return ((FileSet) getRef(getProject())).size();
+            return getRef().size();
         }
-        return getDirectoryScanner(getProject()).getIncludedFilesCount();
+        return getDirectoryScanner().getIncludedFilesCount();
     }
 
     /**
@@ -92,6 +93,15 @@ public class FileSet extends AbstractFileSet implements ResourceCollection {
     @Override
     public boolean isFilesystemOnly() {
         return true;
+    }
+
+    @Override
+    protected AbstractFileSet getRef(Project p) {
+        return getCheckedRef(FileSet.class, getDataTypeName(), p);
+    }
+
+    private FileSet getRef() {
+        return getCheckedRef(FileSet.class);
     }
 
 }

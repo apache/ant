@@ -137,16 +137,6 @@ public class FileList extends DataType implements ResourceCollection {
     }
 
     /**
-     * Performs the check for circular references and returns the
-     * referenced FileList.
-     * @param p the current project
-     * @return the FileList represented by a referenced filelist.
-     */
-    protected FileList getRef(Project p) {
-        return (FileList) getCheckedRef(p);
-    }
-
-    /**
      * Inner class corresponding to the &lt;file&gt; nested element.
      */
     public static class FileName {
@@ -191,7 +181,7 @@ public class FileList extends DataType implements ResourceCollection {
     @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return getRef(getProject()).iterator();
+            return getRef().iterator();
         }
         return new FileResourceIterator(getProject(), dir,
             filenames.toArray(new String[filenames.size()]));
@@ -205,7 +195,7 @@ public class FileList extends DataType implements ResourceCollection {
     @Override
     public int size() {
         if (isReference()) {
-            return getRef(getProject()).size();
+            return getRef().size();
         }
         return filenames.size();
     }
@@ -218,6 +208,14 @@ public class FileList extends DataType implements ResourceCollection {
     @Override
     public boolean isFilesystemOnly() {
         return true;
+    }
+
+    private FileList getRef() {
+        return getCheckedRef(FileList.class);
+    }
+
+    private FileList getRef(Project p) {
+        return getCheckedRef(FileList.class, getDataTypeName(), p);
     }
 
 }

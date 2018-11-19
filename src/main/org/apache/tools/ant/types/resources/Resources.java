@@ -219,7 +219,7 @@ public class Resources extends DataType implements ResourceCollection {
     @Override
     public synchronized String toString() {
         if (isReference()) {
-            return getCheckedRef().toString();
+            return getRef().toString();
         }
         validate();
         if (coll == null || coll.isEmpty()) {
@@ -266,7 +266,7 @@ public class Resources extends DataType implements ResourceCollection {
      * @return the referenced ResourceCollection.
      */
     private ResourceCollection getRef() {
-        return getCheckedRef(ResourceCollection.class, "ResourceCollection");
+        return getCheckedRef(ResourceCollection.class);
     }
 
     private synchronized void validate() {

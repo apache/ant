@@ -89,7 +89,7 @@ public abstract class AbstractResourceCollectionWrapper
     @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((AbstractResourceCollectionWrapper) getCheckedRef()).iterator();
+            return getRef().iterator();
         }
         dieOnCircularReference();
         return new FailFast(this, createIterator());
@@ -112,7 +112,7 @@ public abstract class AbstractResourceCollectionWrapper
     @Override
     public synchronized int size() {
         if (isReference()) {
-            return ((AbstractResourceCollectionWrapper) getCheckedRef()).size();
+            return getRef().size();
         }
         dieOnCircularReference();
         return getSize();
@@ -132,7 +132,7 @@ public abstract class AbstractResourceCollectionWrapper
      */
     public synchronized boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((BaseResourceCollectionContainer) getCheckedRef()).isFilesystemOnly();
+            return getRef().isFilesystemOnly();
         }
         dieOnCircularReference();
 
@@ -191,13 +191,17 @@ public abstract class AbstractResourceCollectionWrapper
     @Override
     public synchronized String toString() {
         if (isReference()) {
-            return getCheckedRef().toString();
+            return getRef().toString();
         }
         if (isEmpty()) {
             return "";
         }
         return stream().map(Object::toString)
             .collect(Collectors.joining(File.pathSeparator));
+    }
+
+    private AbstractResourceCollectionWrapper getRef() {
+        return getCheckedRef(AbstractResourceCollectionWrapper.class);
     }
 
     private BuildException oneNested() {

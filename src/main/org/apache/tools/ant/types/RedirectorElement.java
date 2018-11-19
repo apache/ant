@@ -624,7 +624,7 @@ public class RedirectorElement extends DataType {
      * @return the referenced RedirectorElement.
      */
     private RedirectorElement getRef() {
-        return (RedirectorElement) getCheckedRef();
+        return getCheckedRef(RedirectorElement.class);
     }
 
 }

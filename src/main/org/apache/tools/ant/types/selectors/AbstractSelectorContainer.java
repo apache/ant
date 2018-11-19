@@ -50,7 +50,7 @@ public abstract class AbstractSelectorContainer extends DataType
     @Override
     public boolean hasSelectors() {
         if (isReference()) {
-            return getCheckedRef().hasSelectors();
+            return getRef().hasSelectors();
         }
         dieOnCircularReference();
         return !selectorsList.isEmpty();
@@ -62,7 +62,7 @@ public abstract class AbstractSelectorContainer extends DataType
      */
     public int selectorCount() {
         if (isReference()) {
-            return getCheckedRef().selectorCount();
+            return getRef().selectorCount();
         }
         dieOnCircularReference();
         return selectorsList.size();
@@ -75,8 +75,7 @@ public abstract class AbstractSelectorContainer extends DataType
      */
     public FileSelector[] getSelectors(Project p) {
         if (isReference()) {
-            return getCheckedRef(AbstractSelectorContainer.class,
-                getDataTypeName(), p).getSelectors(p);
+            return getRef(p).getSelectors(p);
         }
         dieOnCircularReference(p);
         return selectorsList.toArray(new FileSelector[selectorsList.size()]);
@@ -88,7 +87,7 @@ public abstract class AbstractSelectorContainer extends DataType
      */
     public Enumeration<FileSelector> selectorElements() {
         if (isReference()) {
-            return getCheckedRef().selectorElements();
+            return getRef().selectorElements();
         }
         dieOnCircularReference();
         return Collections.enumeration(selectorsList);
@@ -137,7 +136,7 @@ public abstract class AbstractSelectorContainer extends DataType
      */
     public void validate() {
         if (isReference()) {
-            getCheckedRef().validate();
+            getRef().validate();
         }
         dieOnCircularReference();
         selectorsList.stream().filter(BaseSelector.class::isInstance)
@@ -367,7 +366,7 @@ public abstract class AbstractSelectorContainer extends DataType
 
     public synchronized Object clone() {
         if (isReference()) {
-            return getCheckedRef().clone();
+            return getRef().clone();
         }
         try {
             AbstractSelectorContainer sc =
@@ -379,9 +378,13 @@ public abstract class AbstractSelectorContainer extends DataType
         }
     }
 
-    @Override
-    protected AbstractSelectorContainer getCheckedRef() {
-        return (AbstractSelectorContainer) super.getCheckedRef();
+
+    private AbstractSelectorContainer getRef(Project p) {
+        return getCheckedRef(AbstractSelectorContainer.class, getDataTypeName(), p);
+    }
+
+    private AbstractSelectorContainer getRef() {
+        return getCheckedRef(AbstractSelectorContainer.class);
     }
 
 }

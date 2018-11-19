@@ -276,7 +276,7 @@ public class Mapper extends DataType {
      */
     @Deprecated
     protected Mapper getRef() {
-        return getCheckedRef(Mapper.class, getDataTypeName());
+        return getCheckedRef(Mapper.class);
     }
 
     /**

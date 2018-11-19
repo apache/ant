@@ -100,7 +100,7 @@ public class Compare extends DataType implements ResourceSelector {
     /** {@inheritDoc} */
     public synchronized boolean isSelected(Resource r) {
         if (isReference()) {
-            return ((ResourceSelector) getCheckedRef()).isSelected(r);
+            return getRef().isSelected(r);
         }
         if (control == null) {
             throw oneControl();
@@ -138,6 +138,10 @@ public class Compare extends DataType implements ResourceSelector {
             DataType.pushAndInvokeCircularReferenceCheck(comp, stk, p);
             setChecked(true);
         }
+    }
+
+    private ResourceSelector getRef() {
+        return getCheckedRef(ResourceSelector.class);
     }
 
     private BuildException oneControl() {

@@ -95,7 +95,7 @@ public class ExtensionSet
     public Extension[] toExtensions(final Project proj)
         throws BuildException {
         if (isReference()) {
-            return ((ExtensionSet) getCheckedRef()).toExtensions(proj);
+            return getRef().toExtensions(proj);
         }
         dieOnCircularReference();
         final List<Extension> extensionsList = ExtensionUtil.toExtensions(extensions);
@@ -139,6 +139,10 @@ public class ExtensionSet
             }
             setChecked(true);
         }
+    }
+
+    private ExtensionSet getRef() {
+        return getCheckedRef(ExtensionSet.class);
     }
 
     /**

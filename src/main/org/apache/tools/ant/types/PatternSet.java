@@ -505,7 +505,7 @@ public class PatternSet extends DataType implements Cloneable {
      * referenced PatternSet.
      */
     private PatternSet getRef(Project p) {
-        return (PatternSet) getCheckedRef(p);
+        return getCheckedRef(PatternSet.class, getDataTypeName(), p);
     }
 
     /**

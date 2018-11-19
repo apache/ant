@@ -68,7 +68,7 @@ public class FilterChain extends DataType {
      */
     public Vector<Object> getFilterReaders() {
         if (isReference()) {
-            return ((FilterChain) getCheckedRef()).getFilterReaders();
+            return getRef().getFilterReaders();
         }
         dieOnCircularReference();
         return filterReaders;
@@ -411,5 +411,9 @@ public class FilterChain extends DataType {
             }
             setChecked(true);
         }
+    }
+
+    private FilterChain getRef() {
+        return getCheckedRef(FilterChain.class);
     }
 }

@@ -39,7 +39,7 @@ public abstract class ResourceComparator extends DataType implements Comparator<
     @Override
     public final int compare(Resource foo, Resource bar) {
         dieOnCircularReference();
-        ResourceComparator c = isReference() ? getCheckedRef() : this;
+        ResourceComparator c = isReference() ? getRef() : this;
         return c.resourceCompare(foo, bar);
     }
 
@@ -51,7 +51,7 @@ public abstract class ResourceComparator extends DataType implements Comparator<
     @Override
     public boolean equals(Object o) {
         if (isReference()) {
-            return getCheckedRef().equals(o);
+            return getRef().equals(o);
         }
         return o != null && (o == this || o.getClass().equals(getClass()));
     }
@@ -63,7 +63,7 @@ public abstract class ResourceComparator extends DataType implements Comparator<
     @Override
     public synchronized int hashCode() {
         if (isReference()) {
-            return getCheckedRef().hashCode();
+            return getRef().hashCode();
         }
         return getClass().hashCode();
     }
@@ -77,8 +77,7 @@ public abstract class ResourceComparator extends DataType implements Comparator<
      */
     protected abstract int resourceCompare(Resource foo, Resource bar);
 
-    @Override
-    protected ResourceComparator getCheckedRef() {
-        return (ResourceComparator) super.getCheckedRef();
+    private ResourceComparator getRef() {
+        return getCheckedRef(ResourceComparator.class);
     }
 }

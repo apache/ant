@@ -573,11 +573,17 @@ public abstract class AbstractFileSet extends DataType
     /**
      * Performs the check for circular references and returns the
      * referenced FileSet.
+     * This method can overridden together with {@link ArchiveFileSet#getRef() getRef()}
+     * providing implementations containing the special support
+     * for FileSet references, which can be handled by all ArchiveFileSets.
+     * NB! This method must be overridden in subclasses such as FileSet and DirSet
+     * to distinguish between the data types.
+     * @return the dereferenced object.
      * @param p the current project
      * @return the referenced FileSet
      */
     protected AbstractFileSet getRef(Project p) {
-        return (AbstractFileSet) getCheckedRef(p);
+        return getCheckedRef(AbstractFileSet.class, getDataTypeName(), p);
     }
 
     // SelectorContainer methods
@@ -901,8 +907,7 @@ public abstract class AbstractFileSet extends DataType
             return getRef(getProject()).toString();
         }
         dieOnCircularReference();
-        DirectoryScanner ds = getDirectoryScanner(getProject());
-        return String.join(";", ds.getIncludedFiles());
+        return String.join(";", getDirectoryScanner().getIncludedFiles());
     }
 
     /**

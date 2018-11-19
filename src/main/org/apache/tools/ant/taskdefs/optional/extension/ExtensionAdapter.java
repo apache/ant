@@ -180,7 +180,7 @@ public class ExtensionAdapter extends DataType {
     Extension toExtension()
         throws BuildException {
         if (isReference()) {
-            return ((ExtensionAdapter) getCheckedRef()).toExtension();
+            return getRef().toExtension();
         }
         dieOnCircularReference();
         if (null == extensionName) {
@@ -212,5 +212,9 @@ public class ExtensionAdapter extends DataType {
     @Override
     public String toString() {
         return "{" + toExtension() + "}";
+    }
+
+    private ExtensionAdapter getRef() {
+        return getCheckedRef(ExtensionAdapter.class);
     }
 }

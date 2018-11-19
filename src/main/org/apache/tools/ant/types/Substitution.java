@@ -71,6 +71,6 @@ public class Substitution extends DataType {
      * @return the resolved reference
      */
     public Substitution getRef(Project p) {
-        return (Substitution) getCheckedRef(p);
+        return getCheckedRef(Substitution.class, getDataTypeName(), p);
     }
 }

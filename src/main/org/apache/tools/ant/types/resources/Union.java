@@ -82,7 +82,7 @@ public class Union extends BaseResourceCollectionContainer {
      */
     public String[] list() {
         if (isReference()) {
-            return getCheckedRef(Union.class, getDataTypeName()).list();
+            return getRef().list();
         }
         return streamResources().map(Object::toString).toArray(String[]::new);
     }
@@ -93,7 +93,7 @@ public class Union extends BaseResourceCollectionContainer {
      */
     public Resource[] listResources() {
         if (isReference()) {
-            return getCheckedRef(Union.class, getDataTypeName()).listResources();
+            return getRef().listResources();
         }
         return streamResources().toArray(Resource[]::new);
     }
@@ -137,6 +137,10 @@ public class Union extends BaseResourceCollectionContainer {
     protected Set<Resource> getAllResources() {
         return streamResources()
             .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private Union getRef() {
+        return getCheckedRef(Union.class);
     }
 
     private Stream<? extends Resource> streamResources() {

@@ -72,7 +72,7 @@ public class ResourceSelectorContainer extends DataType {
      */
     public boolean hasSelectors() {
         if (isReference()) {
-            return getCheckedRef().hasSelectors();
+            return getRef().hasSelectors();
         }
         dieOnCircularReference();
         return !resourceSelectors.isEmpty();
@@ -84,7 +84,7 @@ public class ResourceSelectorContainer extends DataType {
      */
     public int selectorCount() {
         if (isReference()) {
-            return getCheckedRef().selectorCount();
+            return getRef().selectorCount();
         }
         dieOnCircularReference();
         return resourceSelectors.size();
@@ -96,7 +96,7 @@ public class ResourceSelectorContainer extends DataType {
      */
     public Iterator<ResourceSelector> getSelectors() {
         if (isReference()) {
-            return getCheckedRef().getSelectors();
+            return getRef().getSelectors();
         }
         return getResourceSelectors().iterator();
     }
@@ -107,7 +107,7 @@ public class ResourceSelectorContainer extends DataType {
      */
     public List<ResourceSelector> getResourceSelectors() {
         if (isReference()) {
-            return getCheckedRef().getResourceSelectors();
+            return getRef().getResourceSelectors();
         }
         dieOnCircularReference();
         return Collections.unmodifiableList(resourceSelectors);
@@ -136,8 +136,7 @@ public class ResourceSelectorContainer extends DataType {
         }
     }
 
-    @Override
-    protected ResourceSelectorContainer getCheckedRef() {
-        return (ResourceSelectorContainer) super.getCheckedRef();
+    private ResourceSelectorContainer getRef() {
+        return getCheckedRef(ResourceSelectorContainer.class);
     }
 }

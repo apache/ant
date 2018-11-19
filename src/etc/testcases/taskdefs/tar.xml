@@ -172,6 +172,12 @@
     <untar src="${output}/test11.tar.bz2" dest="${output}/untar" compression="bzip2"/>
   </target>
 
+  <target name="testTarFilesetWithReference">
+    <fileset id="xml.fileset" dir="." includes="*.xml"/>
+    <tar destfile="${output}/testtar.tar">
+      <tarfileset prefix="pre" refid="xml.fileset"/>
+    </tar>
+  </target>
 
   <target name="feather">
     <tar destfile="${output}/asf-logo.gif.tar"

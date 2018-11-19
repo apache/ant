@@ -105,7 +105,7 @@ public class ZipResource extends ArchiveResource {
      */
     public String getEncoding() {
         return isReference()
-            ? ((ZipResource) getCheckedRef()).getEncoding() : encoding;
+            ? getRef().getEncoding() : encoding;
     }
 
     /**
@@ -127,7 +127,7 @@ public class ZipResource extends ArchiveResource {
      */
     public InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getInputStream();
+            return getRef().getInputStream();
         }
         return getZipEntryStream(new ZipFile(getZipfile(), getEncoding()), getName());
     }
@@ -142,7 +142,7 @@ public class ZipResource extends ArchiveResource {
      */
     public OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getOutputStream();
+            return getRef().getOutputStream();
         }
         throw new UnsupportedOperationException(
             "Use the zip task for zip output.");
@@ -155,7 +155,7 @@ public class ZipResource extends ArchiveResource {
      */
     public ZipExtraField[] getExtraFields() {
         if (isReference()) {
-            return ((ZipResource) getCheckedRef()).getExtraFields();
+            return getRef().getExtraFields();
         }
         checkEntry();
         if (extras == null) {
@@ -217,6 +217,11 @@ public class ZipResource extends ArchiveResource {
         } finally {
             ZipFile.closeQuietly(z);
         }
+    }
+
+    @Override
+    protected ZipResource getRef() {
+        return getCheckedRef(ZipResource.class);
     }
 
     private void setEntry(ZipEntry e) {

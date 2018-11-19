@@ -113,7 +113,7 @@ public class MultiRootFileSet extends AbstractFileSet
     @Override
     public Object clone() {
         if (isReference()) {
-            return getRef(getProject()).clone();
+            return getRef().clone();
         }
         final MultiRootFileSet fs = (MultiRootFileSet) super.clone();
         fs.baseDirs = new ArrayList<>(baseDirs);
@@ -128,7 +128,7 @@ public class MultiRootFileSet extends AbstractFileSet
     @Override
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((MultiRootFileSet) getRef(getProject())).iterator();
+            return getRef().iterator();
         }
         return merge().iterator();
     }
@@ -140,7 +140,7 @@ public class MultiRootFileSet extends AbstractFileSet
     @Override
     public int size() {
         if (isReference()) {
-            return ((MultiRootFileSet) getRef(getProject())).size();
+            return getRef().size();
         }
         return merge().size();
     }
@@ -162,9 +162,13 @@ public class MultiRootFileSet extends AbstractFileSet
     @Override
     public String toString() {
         if (isReference()) {
-            return getRef(getProject()).toString();
+            return getRef().toString();
         }
         return merge().toString();
+    }
+
+    private MultiRootFileSet getRef() {
+        return getCheckedRef(MultiRootFileSet.class);
     }
 
     private synchronized Union merge() {
@@ -210,7 +214,7 @@ public class MultiRootFileSet extends AbstractFileSet
 
         @Override
         public Iterator<Resource> iterator() {
-            final DirectoryScanner ds = getDirectoryScanner(getProject());
+            final DirectoryScanner ds = getDirectoryScanner();
             String[] names = type == SetType.file
                 ? ds.getIncludedFiles()
                 : ds.getIncludedDirectories();
@@ -227,7 +231,7 @@ public class MultiRootFileSet extends AbstractFileSet
 
         @Override
         public int size() {
-            final DirectoryScanner ds = getDirectoryScanner(getProject());
+            final DirectoryScanner ds = getDirectoryScanner();
             int count = type == SetType.file
                 ? ds.getIncludedFilesCount()
                 : ds.getIncludedDirsCount();

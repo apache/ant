@@ -55,7 +55,7 @@ public final class AntFilterReader extends DataType {
      */
     public String getClassName() {
         if (isReference()) {
-            return ((AntFilterReader) getCheckedRef()).getClassName();
+            return getRef().getClassName();
         }
         dieOnCircularReference();
         return className;
@@ -110,7 +110,7 @@ public final class AntFilterReader extends DataType {
      */
     public Path getClasspath() {
         if (isReference()) {
-            ((AntFilterReader) getCheckedRef()).getClasspath();
+            getRef().getClasspath();
         }
         dieOnCircularReference();
         return classpath;
@@ -135,7 +135,7 @@ public final class AntFilterReader extends DataType {
      */
     public Parameter[] getParams() {
         if (isReference()) {
-            ((AntFilterReader) getCheckedRef()).getParams();
+            getRef().getParams();
         }
         dieOnCircularReference();
         return parameters.toArray(new Parameter[parameters.size()]);
@@ -172,5 +172,9 @@ public final class AntFilterReader extends DataType {
             }
             setChecked(true);
         }
+    }
+
+    private AntFilterReader getRef() {
+        return getCheckedRef(AntFilterReader.class);
     }
 }

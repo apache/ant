@@ -458,7 +458,7 @@ public class Files extends AbstractSelectorContainer
      * @return <code>FileCollection</code>.
      */
     protected Files getRef() {
-        return (Files) getCheckedRef();
+        return getCheckedRef(Files.class);
     }
 
     private synchronized void ensureDirectoryScannerSetup() {

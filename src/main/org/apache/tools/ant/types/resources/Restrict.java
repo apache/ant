@@ -96,7 +96,7 @@ public class Restrict
     @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
-            return getCheckedRef().iterator();
+            return getRef().iterator();
         }
         dieOnCircularReference();
         return w.iterator();
@@ -109,7 +109,7 @@ public class Restrict
     @Override
     public synchronized int size() {
         if (isReference()) {
-            return getCheckedRef().size();
+            return getRef().size();
         }
         dieOnCircularReference();
         return w.size();
@@ -122,7 +122,7 @@ public class Restrict
     @Override
     public synchronized boolean isFilesystemOnly() {
         if (isReference()) {
-            return getCheckedRef().isFilesystemOnly();
+            return getRef().isFilesystemOnly();
         }
         dieOnCircularReference();
         return w.isFilesystemOnly();
@@ -135,7 +135,7 @@ public class Restrict
     @Override
     public synchronized String toString() {
         if (isReference()) {
-            return getCheckedRef().toString();
+            return getRef().toString();
         }
         dieOnCircularReference();
         return w.toString();
@@ -156,8 +156,7 @@ public class Restrict
         }
     }
 
-    @Override
-    protected Restrict getCheckedRef() {
-        return (Restrict) super.getCheckedRef();
+    private Restrict getRef() {
+        return getCheckedRef(Restrict.class);
     }
 }

@@ -81,7 +81,7 @@ public class Archives extends DataType
     @Override
     public int size() {
         if (isReference()) {
-            return getCheckedRef().size();
+            return getRef().size();
         }
         dieOnCircularReference();
         return streamArchives().mapToInt(ArchiveFileSet::size).sum();
@@ -94,7 +94,7 @@ public class Archives extends DataType
      */
     public Iterator<Resource> iterator() {
         if (isReference()) {
-            return getCheckedRef().iterator();
+            return getRef().iterator();
         }
         dieOnCircularReference();
         return streamArchives().flatMap(ResourceCollection::stream)
@@ -106,7 +106,7 @@ public class Archives extends DataType
      */
     public boolean isFilesystemOnly() {
         if (isReference()) {
-            return getCheckedRef().isFilesystemOnly();
+            return getRef().isFilesystemOnly();
         }
         dieOnCircularReference();
         // TODO check each archive in turn?
@@ -207,9 +207,8 @@ public class Archives extends DataType
         }
     }
 
-    @Override
-    protected Archives getCheckedRef() {
-        return (Archives) super.getCheckedRef();
+    private Archives getRef() {
+        return getCheckedRef(Archives.class);
     }
 
 }

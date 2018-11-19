@@ -162,8 +162,7 @@ public class ClassfileSet extends FileSet {
      */
     @Override
     public Object clone() {
-        return new ClassfileSet(isReference()
-            ? (ClassfileSet) (getRef(getProject())) : this);
+        return new ClassfileSet(isReference() ? getRef() : this);
     }
 
     @Override
@@ -181,5 +180,9 @@ public class ClassfileSet extends FileSet {
             }
             setChecked(true);
         }
+    }
+
+    private ClassfileSet getRef() {
+        return getCheckedRef(ClassfileSet.class);
     }
 }

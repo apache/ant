@@ -143,7 +143,7 @@ public class ResourceList extends DataType implements ResourceCollection {
     @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
-            return getCheckedRef().iterator();
+            return getRef().iterator();
         }
         return cache().iterator();
     }
@@ -156,7 +156,7 @@ public class ResourceList extends DataType implements ResourceCollection {
     @Override
     public synchronized int size() {
         if (isReference()) {
-            return getCheckedRef().size();
+            return getRef().size();
         }
         return cache().size();
     }
@@ -169,7 +169,7 @@ public class ResourceList extends DataType implements ResourceCollection {
     @Override
     public synchronized boolean isFilesystemOnly() {
         if (isReference()) {
-            return getCheckedRef().isFilesystemOnly();
+            return getRef().isFilesystemOnly();
         }
         return cache().isFilesystemOnly();
     }
@@ -203,9 +203,8 @@ public class ResourceList extends DataType implements ResourceCollection {
         }
     }
 
-    @Override
-    protected ResourceList getCheckedRef() {
-        return (ResourceList) super.getCheckedRef();
+    private ResourceList getRef() {
+        return getCheckedRef(ResourceList.class);
     }
 
     private synchronized ResourceCollection cache() {

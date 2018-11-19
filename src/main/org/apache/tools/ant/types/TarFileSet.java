@@ -78,7 +78,7 @@ public class TarFileSet extends ArchiveFileSet {
      */
     public String getUserName() {
         if (isReference()) {
-            return ((TarFileSet) getCheckedRef()).getUserName();
+            return ((TarFileSet) getRef()).getUserName();
         }
         return userName;
     }
@@ -106,7 +106,7 @@ public class TarFileSet extends ArchiveFileSet {
      */
     public int getUid() {
         if (isReference()) {
-            return ((TarFileSet) getCheckedRef()).getUid();
+            return ((TarFileSet) getRef()).getUid();
         }
         return uid;
     }
@@ -134,7 +134,7 @@ public class TarFileSet extends ArchiveFileSet {
      */
     public String getGroup() {
         if (isReference()) {
-            return ((TarFileSet) getCheckedRef()).getGroup();
+            return ((TarFileSet) getRef()).getGroup();
         }
         return groupName;
     }
@@ -162,7 +162,7 @@ public class TarFileSet extends ArchiveFileSet {
      */
     public int getGid() {
         if (isReference()) {
-            return ((TarFileSet) getCheckedRef()).getGid();
+            return ((TarFileSet) getRef()).getGid();
         }
         return gid;
     }
@@ -224,6 +224,16 @@ public class TarFileSet extends ArchiveFileSet {
     }
 
     /**
+     * A TarFileset accepts another TarFileSet or a FileSet as reference
+     * FileSets are often used by the war task for the lib attribute
+     * @return the abstract fileset instance
+     */
+    @Override
+    protected AbstractFileSet getRef() {
+        return getRef(getProject());
+    }
+
+    /**
      * Configure a fileset based on this fileset.
      * If the fileset is a TarFileSet copy in the tarfileset
      * specific attributes.
@@ -249,7 +259,7 @@ public class TarFileSet extends ArchiveFileSet {
     @Override
     public Object clone() {
         if (isReference()) {
-            return getRef(getProject()).clone();
+            return getRef().clone();
         }
         return super.clone();
     }

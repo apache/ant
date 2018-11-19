@@ -107,12 +107,12 @@ public class Reference {
      * @return the dereferenced object.
      * @throws BuildException if the reference cannot be dereferenced.
      */
-    public Object getReferencedObject(Project fallback) throws BuildException {
+    public <T> T getReferencedObject(Project fallback) throws BuildException {
         if (refid == null) {
             throw new BuildException("No reference specified");
         }
 
-        Object o = project == null ? fallback.getReference(refid) : project.getReference(refid);
+        T o = project == null ? fallback.getReference(refid) : project.getReference(refid);
         if (o == null) {
             throw new BuildException("Reference " + refid + " not found.");
         }
@@ -126,7 +126,7 @@ public class Reference {
      * @throws BuildException if the project is null or the reference cannot be dereferenced
      * @since Ant 1.6.3
      */
-    public Object getReferencedObject() throws BuildException {
+    public <T> T getReferencedObject() throws BuildException {
         if (project == null) {
             throw new BuildException("No project set on reference to " + refid);
         }

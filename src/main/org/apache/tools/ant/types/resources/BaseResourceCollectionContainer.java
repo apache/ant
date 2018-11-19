@@ -136,7 +136,7 @@ public abstract class BaseResourceCollectionContainer
     @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
-            return getCheckedRef().iterator();
+            return getRef().iterator();
         }
         dieOnCircularReference();
         return new FailFast(this, cacheCollection().iterator());
@@ -149,8 +149,7 @@ public abstract class BaseResourceCollectionContainer
     @Override
     public synchronized int size() {
         if (isReference()) {
-            return getCheckedRef(BaseResourceCollectionContainer.class,
-                getDataTypeName()).size();
+            return getRef().size();
         }
         dieOnCircularReference();
         return cacheCollection().size();
@@ -163,7 +162,7 @@ public abstract class BaseResourceCollectionContainer
     @Override
     public synchronized boolean isFilesystemOnly() {
         if (isReference()) {
-            return getCheckedRef().isFilesystemOnly();
+            return getRef().isFilesystemOnly();
         }
         dieOnCircularReference();
         //first the easy way, if all children are filesystem-only, return true:
@@ -240,7 +239,7 @@ public abstract class BaseResourceCollectionContainer
     @Override
     public synchronized String toString() {
         if (isReference()) {
-            return getCheckedRef().toString();
+            return getRef().toString();
         }
         if (cacheCollection().isEmpty()) {
             return "";
@@ -249,9 +248,8 @@ public abstract class BaseResourceCollectionContainer
             .collect(Collectors.joining(File.pathSeparator));
     }
 
-    @Override
-    protected BaseResourceCollectionContainer getCheckedRef() {
-        return (BaseResourceCollectionContainer) super.getCheckedRef();
+     private BaseResourceCollectionContainer getRef() {
+        return getCheckedRef(BaseResourceCollectionContainer.class);
     }
 
     private synchronized Collection<Resource> cacheCollection() {

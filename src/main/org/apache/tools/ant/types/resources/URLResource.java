@@ -143,7 +143,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized URL getURL() {
         if (isReference()) {
-            return ((URLResource) getCheckedRef()).getURL();
+            return getRef().getURL();
         }
         if (url == null) {
             if (baseURL != null) {
@@ -180,7 +180,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized String getName() {
         if (isReference()) {
-            return getCheckedRef().getName();
+            return getRef().getName();
         }
         String name = getURL().getFile();
         return name.isEmpty() ? name : name.substring(1);
@@ -192,7 +192,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized String toString() {
         return isReference()
-            ? getCheckedRef().toString() : String.valueOf(getURL());
+            ? getRef().toString() : String.valueOf(getURL());
     }
 
     /**
@@ -201,7 +201,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized boolean isExists() {
         if (isReference()) {
-            return getCheckedRef().isExists();
+            return getRef().isExists();
         }
         return isExists(false);
     }
@@ -262,7 +262,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized long getLastModified() {
         if (isReference()) {
-            return getCheckedRef().getLastModified();
+            return getRef().getLastModified();
         }
         if (!isExists(false)) {
             return UNKNOWN_DATETIME;
@@ -276,7 +276,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized boolean isDirectory() {
         return isReference()
-            ? getCheckedRef().isDirectory()
+            ? getRef().isDirectory()
             : getName().endsWith("/");
     }
 
@@ -287,7 +287,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized long getSize() {
         if (isReference()) {
-            return getCheckedRef().getSize();
+            return getRef().getSize();
         }
         if (!isExists(false)) {
             return 0L;
@@ -305,7 +305,7 @@ public class URLResource extends Resource implements URLProvider {
             return true;
         }
         if (isReference()) {
-            return getCheckedRef().equals(another);
+            return getRef().equals(another);
         }
         if (another == null || another.getClass() != getClass()) {
             return false;
@@ -322,7 +322,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized int hashCode() {
         if (isReference()) {
-            return getCheckedRef().hashCode();
+            return getRef().hashCode();
         }
         return MAGIC * ((getURL() == null) ? NULL_URL : getURL().hashCode());
     }
@@ -337,7 +337,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getInputStream();
+            return getRef().getInputStream();
         }
         connect();
         try {
@@ -358,7 +358,7 @@ public class URLResource extends Resource implements URLProvider {
      */
     public synchronized OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getOutputStream();
+            return getRef().getOutputStream();
         }
         connect();
         try {
@@ -399,6 +399,11 @@ public class URLResource extends Resource implements URLProvider {
                 throw e;
             }
         }
+    }
+
+    @Override
+    protected URLResource getRef() {
+        return getCheckedRef(URLResource.class);
     }
 
     /**

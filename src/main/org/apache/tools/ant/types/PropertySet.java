@@ -425,7 +425,7 @@ public class PropertySet extends DataType implements ResourceCollection {
      * @return the referenced PropertySet.
      */
     protected PropertySet getRef() {
-        return getCheckedRef(PropertySet.class, "propertyset");
+        return getCheckedRef(PropertySet.class);
     }
 
     /**

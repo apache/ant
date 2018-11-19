@@ -130,6 +130,6 @@ public class RegularExpression extends DataType {
      * @return resolved RegularExpression instance
      */
     public RegularExpression getRef(Project p) {
-        return (RegularExpression) getCheckedRef(p);
+        return getCheckedRef(RegularExpression.class, getDataTypeName(), p);
     }
 }

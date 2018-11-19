@@ -66,7 +66,7 @@ public class SelectSelector extends BaseSelectorContainer {
      * referenced Selector.
      */
     private SelectSelector getRef() {
-        return getCheckedRef(this.getClass(), "SelectSelector");
+        return getCheckedRef(SelectSelector.class);
     }
 
     /**

@@ -108,7 +108,7 @@ public class MappedResource extends ResourceDecorator {
     @Override
     public String toString() {
         if (isReference()) {
-            return getCheckedRef().toString();
+            return getRef().toString();
         }
         return getName();
     }

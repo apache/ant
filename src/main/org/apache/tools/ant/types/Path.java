@@ -376,7 +376,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      */
     public String[] list() {
         if (isReference()) {
-            return ((Path) getCheckedRef()).list();
+            return getRef().list();
         }
         return assertFilesystemOnly(union) == null
             ? new String[0] : union.list();
@@ -389,7 +389,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      */
     @Override
     public String toString() {
-        return isReference() ? getCheckedRef().toString()
+        return isReference() ? getRef().toString()
             : union == null ? "" : union.toString();
     }
 
@@ -463,7 +463,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     @Override
     public synchronized int size() {
         if (isReference()) {
-            return ((Path) getCheckedRef()).size();
+            return getRef().size();
         }
         dieOnCircularReference();
         return union == null ? 0 : assertFilesystemOnly(union).size();
@@ -690,7 +690,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     @Override
     public final synchronized Iterator<Resource> iterator() {
         if (isReference()) {
-            return ((Path) getCheckedRef()).iterator();
+            return getRef().iterator();
         }
         dieOnCircularReference();
         if (getPreserveBC()) {
@@ -707,7 +707,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     @Override
     public synchronized boolean isFilesystemOnly() {
         if (isReference()) {
-            return ((Path) getCheckedRef()).isFilesystemOnly();
+            return getRef().isFilesystemOnly();
         }
         dieOnCircularReference();
         assertFilesystemOnly(union);
@@ -762,6 +762,10 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
      */
     private static boolean containsWildcards(String path) {
         return path != null && (path.contains("*") || path.contains("?"));
+    }
+
+    private Path getRef() {
+        return getCheckedRef(Path.class);
     }
 
 }

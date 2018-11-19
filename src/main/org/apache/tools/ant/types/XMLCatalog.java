@@ -474,7 +474,7 @@ public class XMLCatalog extends DataType
         if (!isReference()) {
             return this;
         }
-        return getCheckedRef(XMLCatalog.class, "xmlcatalog");
+        return getCheckedRef(XMLCatalog.class);
     }
 
     /**

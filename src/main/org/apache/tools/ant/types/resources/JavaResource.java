@@ -82,7 +82,7 @@ public class JavaResource extends AbstractClasspathResource
     @Override
     public URL getURL() {
         if (isReference()) {
-            return getCheckedRef().getURL();
+            return getRef().getURL();
         }
         AbstractClasspathResource.ClassLoaderWithFlag classLoader =
             getClassLoader();
@@ -106,7 +106,7 @@ public class JavaResource extends AbstractClasspathResource
     @Override
     public int compareTo(Resource another) {
         if (isReference()) {
-            return getCheckedRef().compareTo(another);
+            return getRef().compareTo(another);
         }
         if (another.getClass().equals(getClass())) {
             JavaResource otherjr = (JavaResource) another;
@@ -140,7 +140,7 @@ public class JavaResource extends AbstractClasspathResource
     }
 
     @Override
-    protected JavaResource getCheckedRef() {
-        return (JavaResource) super.getCheckedRef();
+    protected JavaResource getRef() {
+        return getCheckedRef(JavaResource.class);
     }
 }

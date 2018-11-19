@@ -54,7 +54,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
 
     /**
      * Equality method based on the vector of resources,
-     * or if a reference, the referredto object.
+     * or if a reference, the referred to object.
      * @param o the object to check against.
      * @return true if there is equality.
      */
@@ -64,7 +64,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
             return true;
         }
         if (isReference()) {
-            return getCheckedRef().equals(o);
+            return getCheckedRef(DelegatedResourceComparator.class).equals(o);
         }
         if (o instanceof DelegatedResourceComparator) {
             List<ResourceComparator> ov = ((DelegatedResourceComparator) o).resourceComparators;
@@ -80,7 +80,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
     @Override
     public synchronized int hashCode() {
         if (isReference()) {
-            return getCheckedRef().hashCode();
+            return getCheckedRef(DelegatedResourceComparator.class).hashCode();
         }
         return resourceComparators == null ? 0 : resourceComparators.hashCode();
     }

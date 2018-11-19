@@ -149,7 +149,7 @@ public class StringResource extends Resource {
      */
     @Override
     public synchronized long getSize() {
-        return isReference() ? getCheckedRef().getSize()
+        return isReference() ? getRef().getSize()
             : getContent().length();
     }
 
@@ -161,7 +161,7 @@ public class StringResource extends Resource {
     public synchronized int hashCode() { //NOSONAR
         // super.equals + super.compareTo are consistent with this implementation
         if (isReference()) {
-            return getCheckedRef().hashCode();
+            return getRef().hashCode();
         }
         return super.hashCode() * STRING_MAGIC;
     }
@@ -188,7 +188,7 @@ public class StringResource extends Resource {
     @Override
     public synchronized InputStream getInputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getInputStream();
+            return getRef().getInputStream();
         }
         String content = getContent();
         if (content == null) {
@@ -209,7 +209,7 @@ public class StringResource extends Resource {
     @Override
     public synchronized OutputStream getOutputStream() throws IOException {
         if (isReference()) {
-            return getCheckedRef().getOutputStream();
+            return getRef().getOutputStream();
         }
         if (getValue() != null) {
             throw new ImmutableResourceException();
@@ -238,8 +238,8 @@ public class StringResource extends Resource {
     }
 
     @Override
-    protected StringResource getCheckedRef() {
-        return (StringResource) super.getCheckedRef();
+    protected StringResource getRef() {
+        return getCheckedRef(StringResource.class);
     }
 
     private class StringResourceFilterOutputStream extends FilterOutputStream {

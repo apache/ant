@@ -67,7 +67,7 @@ public class PropertyResource extends Resource {
      */
     public String getValue() {
         if (isReference()) {
-            return getCheckedRef().getValue();
+            return getRef().getValue();
         }
         Project p = getProject();
         return p == null ? null : p.getProperty(getName());
@@ -80,7 +80,7 @@ public class PropertyResource extends Resource {
      */
     public Object getObjectValue() {
         if (isReference()) {
-            return getCheckedRef().getObjectValue();
+            return getRef().getObjectValue();
         }
         Project p = getProject();
         return p == null ? null : PropertyHelper.getProperty(p, getName());
@@ -199,7 +199,7 @@ public class PropertyResource extends Resource {
      */
     protected Resource getReferencedOrProxied() {
         if (isReference()) {
-            return getCheckedRef(Resource.class, "resource");
+            return super.getRef();
         }
         Object o = getObjectValue();
         if (o instanceof Resource) {
@@ -210,7 +210,7 @@ public class PropertyResource extends Resource {
     }
 
     @Override
-    protected PropertyResource getCheckedRef() {
-        return (PropertyResource) super.getCheckedRef();
+    protected PropertyResource getRef() {
+        return getCheckedRef(PropertyResource.class);
     }
 }

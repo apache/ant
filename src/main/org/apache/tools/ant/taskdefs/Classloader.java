@@ -124,7 +124,7 @@ public class Classloader extends Task {
      * @throws BuildException if there is a problem.
      */
     public void setClasspathRef(Reference pathRef) throws BuildException {
-        classpath = (Path) pathRef.getReferencedObject(getProject());
+        classpath = pathRef.getReferencedObject(getProject());
     }
 
     /**
