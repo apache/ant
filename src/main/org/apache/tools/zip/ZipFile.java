@@ -395,6 +395,10 @@ public class ZipFile implements Closeable {
         }
     }
 
+    public String getName() {
+        return archiveName;
+    }
+
     /**
      * Ensures that the close method of this zipfile is called when
      * there are no more references to it.

@@ -129,26 +129,7 @@ public class ZipResource extends ArchiveResource {
         if (isReference()) {
             return getCheckedRef().getInputStream();
         }
-        final ZipFile z = new ZipFile(getZipfile(), getEncoding());
-        ZipEntry ze = z.getEntry(getName());
-        if (ze == null) {
-            z.close();
-            throw new BuildException("no entry " + getName() + " in "
-                                     + getArchive());
-        }
-        return new FilterInputStream(z.getInputStream(ze)) {
-            public void close() throws IOException {
-                FileUtils.close(in);
-                z.close();
-            }
-            protected void finalize() throws Throwable {
-                try {
-                    close();
-                } finally {
-                    super.finalize();
-                }
-            }
-        };
+        return getZipEntryStream(new ZipFile(getZipfile(), getEncoding()), getName());
     }
 
     /**
@@ -190,6 +171,36 @@ public class ZipResource extends ArchiveResource {
      */
     public int getMethod() {
         return method;
+    }
+
+    /**
+     * Return an InputStream for reading the contents of a ZipEntry
+     * with autoclose.
+     * @param zipFile a org.apache.tools.zip.ZipFile
+     * @param zipEntry String a name of a zip entry
+     * @return an InputStream object
+     * @throws IOException if the entry cannot be read
+     */
+    public static InputStream getZipEntryStream(ZipFile zipFile,
+                                                String zipEntry) throws IOException {
+        ZipEntry ze = zipFile.getEntry(zipEntry);
+        if (ze == null) {
+            zipFile.close();
+            throw new BuildException("no entry " + zipEntry + " in " + zipFile.getName());
+        }
+        return new FilterInputStream(zipFile.getInputStream(ze)) {
+            public void close() throws IOException {
+                FileUtils.close(in);
+                zipFile.close();
+            }
+            protected void finalize() throws Throwable {
+                try {
+                    close();
+                } finally {
+                    super.finalize();
+                }
+            }
+        };
     }
 
     /**

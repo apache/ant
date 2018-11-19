@@ -26,10 +26,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
+import org.apache.tools.ant.types.resources.ZipResource;
 import org.apache.tools.ant.util.depend.AbstractAnalyzer;
+import org.apache.tools.zip.ZipFile;
 
 /**
  * An analyzer which uses the depend task's bytecode classes to analyze
@@ -72,7 +72,8 @@ public class AntAnalyzer extends AbstractAnalyzer {
 
                     try (InputStream inStream = container.getName().endsWith(".class")
                             ? Files.newInputStream(Paths.get(container.getPath()))
-                            : getZipEntryStream(new ZipFile(container.getPath()), classname)) {
+                            : ZipResource.getZipEntryStream(new ZipFile(container.getPath(), "UTF-8"),
+                            classname.replace('.', '/') + ".class")) {
                         ClassFile classFile = new ClassFile();
                         classFile.read(inStream);
                         analyzedDeps.addAll(classFile.getClassRefs());
@@ -95,22 +96,6 @@ public class AntAnalyzer extends AbstractAnalyzer {
         files.addAll(containers);
         classes.removeAllElements();
         classes.addAll(dependencies);
-    }
-
-    private InputStream getZipEntryStream(ZipFile zipFile, String classname) throws IOException {
-        InputStream zipEntryStream = zipFile.getInputStream(new ZipEntry(
-                classname.replace('.', '/') + ".class"));
-        return new InputStream() {
-            @Override
-            public int read() throws IOException {
-                return zipEntryStream.read();
-            }
-            @Override
-            public void close() throws IOException {
-                zipEntryStream.close();
-                zipFile.close();
-            }
-        };
     }
 
     /**
