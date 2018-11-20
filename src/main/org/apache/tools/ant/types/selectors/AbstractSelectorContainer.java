@@ -364,6 +364,10 @@ public abstract class AbstractSelectorContainer extends DataType
         }
     }
 
+    /**
+     * Clone the selector container.
+     * @return a deep clone of a selector container.
+     */
     public synchronized Object clone() {
         if (isReference()) {
             return getRef().clone();

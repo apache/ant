@@ -578,9 +578,8 @@ public abstract class AbstractFileSet extends DataType
      * for FileSet references, which can be handled by all ArchiveFileSets.
      * NB! This method must be overridden in subclasses such as FileSet and DirSet
      * to distinguish between the data types.
-     * @return the dereferenced object.
      * @param p the current project
-     * @return the referenced FileSet
+     * @return the dereferenced object.
      */
     protected AbstractFileSet getRef(Project p) {
         return getCheckedRef(AbstractFileSet.class, getDataTypeName(), p);

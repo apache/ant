@@ -449,6 +449,11 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
         return Optional.ofNullable(as(clazz));
     }
 
+    /**
+     * Perform the check for circular references and return the
+     * referenced Resource.
+     * @return <code>Resource</code>.
+     */
     protected Resource getRef() {
         return getCheckedRef(Resource.class);
     }

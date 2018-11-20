@@ -102,6 +102,7 @@ public class Reference {
     /**
      * Resolve the reference, using the associated project if
      * it set, otherwise use the passed in project.
+     * @param <T> desired object type
      * @param fallback the fallback project to use if the project attribute of
      *                 reference is not set.
      * @return the dereferenced object.
@@ -122,6 +123,7 @@ public class Reference {
     /**
      * Resolve the reference, looking in the associated project.
      * @see Project#getReference
+     * @param <T> desired object type
      * @return the dereferenced object.
      * @throws BuildException if the project is null or the reference cannot be dereferenced
      * @since Ant 1.6.3
