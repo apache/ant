@@ -573,7 +573,7 @@ public abstract class AbstractFileSet extends DataType
     /**
      * Performs the check for circular references and returns the
      * referenced FileSet.
-     * This method can overridden together with {@link ArchiveFileSet#getRef() getRef()}
+     * This method can be overridden together with {@link ArchiveFileSet#getRef() getRef()}
      * providing implementations containing the special support
      * for FileSet references, which can be handled by all ArchiveFileSets.
      * NB! This method must be overridden in subclasses such as FileSet and DirSet
