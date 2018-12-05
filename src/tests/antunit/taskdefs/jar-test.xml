@@ -314,9 +314,22 @@ Main-Class: MyClass
     </loadresource>
     <au:assertTrue>
       <or>
-    	<equals arg1="Java8" arg2="${valueFrom8}"/>
-        <!-- maybe we are running on an early version of Java9 -->
-    	<equals arg1="Java9" arg2="${valueFrom8}"/>
+        <and>
+          <not>
+            <javaversion atleast="9"/>
+          </not>
+          <equals arg1="Java8" arg2="${valueFrom8}"/>
+        </and>
+
+        <and>
+          <javaversion exactly="9"/>
+          <equals arg1="Java9" arg2="${valueFrom8}"/>
+        </and>
+
+        <and>
+          <javaversion atleast="10"/>
+          <equals arg1="Java10" arg2="${valueFrom8}"/>
+        </and>
       </or>
     </au:assertTrue>
   </target>
