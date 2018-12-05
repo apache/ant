@@ -65,6 +65,13 @@ Other changes:
    tasks that must deal with different character encodings in files,
    file names and other string resources.
 
+ * org.apache.tools.ant.AntClassLoader is now multi-release jar aware.
+   Starting Java 9, jar files can be packaged as multi-release jars,
+   AntClassLoader now recognizes such multi-release jar files while
+   loading resources at runtime in Java 9+ runtime environments.
+   Bugzilla Report 62952
+
+
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================
 

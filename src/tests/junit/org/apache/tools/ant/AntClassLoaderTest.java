@@ -33,7 +33,9 @@ import java.util.Enumeration;
 
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -231,6 +233,26 @@ public class AntClassLoaderTest {
                                              new Path(null), true);
         assertNull(acl.getResource("META-INF/MANIFEST.MF"));
         assertFalse(acl.getResources("META-INF/MANIFEST.MF").hasMoreElements());
+    }
+
+    /**
+     * Tests that {@link AntClassLoader} supports multi-release jar files while dealing with
+     * runtime resources in Java 9+ runtime environments.
+     *
+     * @see <a href="bz-62952">https://bz.apache.org/bugzilla/show_bug.cgi?id=62952</a>
+     */
+    @Test
+    public void testMultiReleaseJar() {
+        buildRule.executeTarget("testMRJar");
+        final boolean atleastJava9 = JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9);
+        final String targetOutput = buildRule.getOutput();
+        Assert.assertNotNull("Multi-release jar test did not generate any output", targetOutput);
+        if (atleastJava9) {
+            Assert.assertTrue("Unexpected output from multi-release jar test for Java runtime >= 9",
+                    targetOutput.contains("mrjar test result = 9"));
+        } else {
+            Assert.assertTrue("Unexpected output from multi-release jar test", targetOutput.contains("mrjar test result = default"));
+        }
     }
 
     private static class EmptyLoader extends ClassLoader {

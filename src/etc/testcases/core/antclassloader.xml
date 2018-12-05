@@ -73,4 +73,52 @@ public class Foo {}
     <target name="createNonJar">
       <touch file="${tmp.dir}/foo.jar"/>
     </target>
+
+    <target name="testMRJar" description="tests AntClassLoader support for multi-release jars.
+                            see https://bz.apache.org/bugzilla/show_bug.cgi?id=62952">
+        <mkdir dir="${tmp.dir}/mrjar/org/example"/>
+        <mkdir dir="${tmp.dir}/mrjar-9/org/example"/>
+        <!-- default version of the class -->
+        <echo file="${tmp.dir}/mrjar/org/example/MRJarTest.java"><![CDATA[
+                package org.example;
+                public class MRJarTest {
+                    public static void main(String[] args) {
+                        System.out.println("mrjar test result = default");
+                    }
+                }
+            ]]>
+        </echo>
+        <!-- Java runtime version 9 of the class -->
+        <echo file="${tmp.dir}/mrjar-9/org/example/MRJarTest.java"><![CDATA[
+                package org.example;
+                public class MRJarTest {
+                    public static void main(String[] args) {
+                        System.out.println("mrjar test result = 9");
+                    }
+                }
+            ]]>
+        </echo>
+        <!-- compile these classes -->
+        <javac srcdir="${tmp.dir}/mrjar" destdir="${tmp.dir}/mrjar"/>
+        <javac srcdir="${tmp.dir}/mrjar-9" destdir="${tmp.dir}/mrjar-9"/>
+
+        <!-- create multi-release jar file -->
+        <jar destfile="${tmp.dir}/mrjar.jar">
+            <manifest>
+                <attribute name="Multi-Release" value="true"/>
+            </manifest>
+            <!-- default classes -->
+            <fileset dir="${tmp.dir}/mrjar" includes="**/*.class"/>
+            <!-- Java 9 specific classes -->
+            <zipfileset prefix="META-INF/versions/9/" dir="${tmp.dir}/mrjar-9" includes="**/*.class"/>
+        </jar>
+
+        <!-- now run the class present in the multi-release jar -->
+        <java classname="org.example.MRJarTest" failonerror="true">
+            <classpath>
+                <pathelement location="${tmp.dir}/mrjar.jar"/>
+            </classpath>
+        </java>
+
+    </target>
 </project>
