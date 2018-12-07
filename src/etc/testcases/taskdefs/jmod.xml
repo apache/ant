@@ -1,0 +1,992 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="jmodtest" default="nil" >
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="nil"/>
+
+  <target name="-dirs">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <property name="jmod" value="${output}/test.jmod"/>
+    <property name="version" value="1.0.1-+99"/>
+  </target>
+
+  <target name="setUp" depends="-dirs">
+  </target>
+
+  <!-- Creates simple modular jar, with only Java SE dependencies. -->
+  <target name="-hello" depends="-dirs">
+
+    <property name="hello.root" value="${input}/hello"/>
+
+    <property name="hello.src" value="${hello.root}/src"/>
+    <property name="hello.classes" value="${hello.root}/classes"/>
+    <property name="hello.jar.dir" value="${hello.root}/jars"/>
+    <property name="hello.jar" value="${hello.jar.dir}/hello.jar"/>
+
+    <property name="hello.pkg"     value=             "org.apache.tools.ant.test.hello"/>
+    <property name="hello.pkg.dir" value="${hello.src}/org/apache/tools/ant/test/hello"/>
+
+    <property name="hello.main-class" value="${hello.pkg}.HelloWorld"/>
+
+    <mkdir dir="${hello.pkg.dir}"/>
+    <echo file="${hello.pkg.dir}/HelloWorld.java">
+package ${hello.pkg};
+
+import java.util.logging.Logger;
+
+public class HelloWorld {
+    public void run() {
+        Logger logger = Logger.getLogger(HelloWorld.class.getName());
+        logger.info("HELLO WORLD");
+    }
+
+    public static void main(String[] args) {
+        new HelloWorld().run();
+    }
+}
+    </echo>
+    <echo file="${hello.src}/module-info.java">
+module ${hello.pkg} {
+    exports ${hello.pkg};
+    requires java.logging;
+}
+    </echo>
+
+    <mkdir dir="${hello.classes}"/>
+    <javac srcdir="${hello.src}" destdir="${hello.classes}" includeAntRuntime="false"/>
+
+    <mkdir dir="${hello.jar.dir}"/>
+    <jar destfile="${hello.jar}" basedir="${hello.classes}"/>
+  </target>
+
+  <!-- Creates modular jar with dependency on hello module. -->
+  <target name="-smile" depends="-dirs,-hello">
+    <property name="smile.root" value="${input}/smile"/>
+
+    <property name="smile.src" value="${smile.root}/src"/>
+    <property name="smile.classes" value="${smile.root}/classes"/>
+    <property name="smile.jar.dir" value="${smile.root}/jars"/>
+    <property name="smile.jar" value="${smile.jar.dir}/smile.jar"/>
+
+    <property name="smile.pkg"     value=             "org.apache.tools.ant.test.smile"/>
+    <property name="smile.pkg.dir" value="${smile.src}/org/apache/tools/ant/test/smile"/>
+
+    <property name="smile.main-class" value="${smile.pkg}.Smile"/>
+
+    <mkdir dir="${smile.pkg.dir}"/>
+    <echo file="${smile.pkg.dir}/Smile.java">
+package ${smile.pkg};
+
+import java.util.logging.Logger;
+import ${hello.pkg}.HelloWorld;
+
+public class Smile {
+    public void run() {
+        Logger logger = Logger.getLogger(Smile.class.getName());
+        logger.info("\u263a\u263b\u263a\u263b");
+    }
+
+    public static void main(String[] args) {
+        new Smile().run();
+        new HelloWorld().run();
+    }
+}
+    </echo>
+    <echo file="${smile.src}/module-info.java">
+module ${smile.pkg} {
+    exports ${smile.pkg};
+    requires java.logging;
+    requires ${hello.pkg};
+}
+    </echo>
+
+    <mkdir dir="${smile.classes}"/>
+    <javac srcdir="${smile.src}" destdir="${smile.classes}"
+           includeAntRuntime="false"
+           modulepath="${hello.jar}"/>
+
+    <mkdir dir="${smile.jar.dir}"/>
+    <jar destfile="${smile.jar}" basedir="${smile.classes}"/>
+  </target>
+
+  <!-- Creates additional modular jar, with only Java SE dependencies. -->
+  <target name="-foobar" depends="-smile">
+
+    <property name="foobar.root" value="${input}/foobar"/>
+
+    <property name="foobar.src" value="${foobar.root}/src"/>
+    <property name="foobar.classes" value="${foobar.root}/classes"/>
+    <property name="foobar.jar.dir" value="${foobar.root}/jars"/>
+    <property name="foobar.jar" value="${foobar.jar.dir}/foobar.jar"/>
+
+    <property name="foobar.pkg"     value=             "org.apache.tools.ant.test.foobar"/>
+    <property name="foobar.pkg.dir" value="${foobar.src}/org/apache/tools/ant/test/foobar"/>
+
+    <property name="foobar.main-class" value="${foobar.pkg}.FooBar"/>
+
+    <mkdir dir="${foobar.pkg.dir}"/>
+    <echo file="${foobar.pkg.dir}/FooBar.java">
+package ${foobar.pkg};
+
+import ${hello.main-class};
+import ${smile.main-class};
+
+public class FooBar {
+    public void run() {
+        new HelloWorld().run();
+        new Smile().run();
+    }
+
+    public static void main(String[] args) {
+        new FooBar().run();
+    }
+}
+    </echo>
+    <echo file="${foobar.src}/module-info.java">
+module ${foobar.pkg} {
+    exports ${foobar.pkg};
+    requires java.logging;
+    requires ${hello.pkg};
+    requires ${smile.pkg};
+}
+    </echo>
+
+    <mkdir dir="${foobar.classes}"/>
+    <javac srcdir="${foobar.src}" destdir="${foobar.classes}"
+           includeAntRuntime="false" modulepath="${hello.jar};${smile.jar}"/>
+
+    <mkdir dir="${foobar.jar.dir}"/>
+    <jar destfile="${foobar.jar}" basedir="${foobar.classes}"/>
+  </target>
+
+  <target name="destAndClasspathNoJmod" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}"/>
+  </target>
+
+  <target name="destAndClasspathOlderThanJmod" depends="-hello">
+    <property name="dateformat" value="yyyy-MM-dd HH:mm:ss.SSS"/>
+    <tstamp>
+      <format property="future" pattern="${dateformat}" offset="1" unit="hour"/>
+    </tstamp>
+    <touch file="${jmod}" datetime="${future}" pattern="${dateformat}"/>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"/>
+  </target>
+
+  <target name="noDestFile">
+    <jmod classpath="."/>
+  </target>
+
+  <target name="noClasspath">
+    <jmod destfile="${jmod}"/>
+  </target>
+
+  <target name="emptyClasspath">
+    <jmod destfile="${jmod}" classpath=""/>
+  </target>
+
+  <target name="nonexistentClasspath">
+    <jmod destfile="${jmod}" classpath="dummy:dummy2"/>
+  </target>
+
+  <target name="classpathref" depends="-hello">
+    <path id="classpathref.testpath">
+      <pathelement location="${hello.jar}"/>
+    </path>
+
+    <jmod destfile="${jmod}" classpathref="classpathref.testpath"/>
+  </target>
+
+  <target name="classpath-nested" depends="-hello">
+    <jmod destfile="${jmod}">
+      <classpath>
+        <pathelement location="${hello.jar}"/>
+      </classpath>
+    </jmod>
+  </target>
+
+  <target name="classpath-both" depends="-smile">
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <classpath>
+        <pathelement location="${smile.classes}"/>
+      </classpath>
+    </jmod>
+  </target>
+
+  <!-- modulepath targets -->
+
+  <target name="modulepath" depends="-smile">
+    <jmod destfile="${jmod}" classpath="${smile.jar}"
+        modulepath="${hello.jar.dir}"/>
+  </target>
+
+  <target name="modulepathref" depends="-smile">
+    <path id="modulepathref.testpath">
+      <pathelement location="${hello.jar.dir}"/>
+    </path>
+
+    <jmod destfile="${jmod}" classpath="${smile.jar}"
+          modulepathref="modulepathref.testpath"/>
+  </target>
+
+  <target name="modulepath-nested" depends="-smile">
+    <jmod destfile="${jmod}" classpath="${smile.jar}">
+      <modulepath>
+        <pathelement location="${hello.jar.dir}"/>
+      </modulepath>
+    </jmod>
+  </target>
+
+  <target name="modulepath-both" depends="-smile,-foobar">
+    <jmod destfile="${jmod}" classpath="${foobar.jar}"
+          modulepath="${hello.jar.dir}">
+      <modulepath>
+        <pathelement location="${smile.jar.dir}"/>
+      </modulepath>
+    </jmod>
+  </target>
+
+  <target name="modulepathnondir" depends="-smile">
+    <jmod destfile="${jmod}" classpath="${smile.jar}"
+          modulepath="${hello.jar}"/>
+  </target>
+
+  <!-- commandpath targets -->
+
+  <target name="commandpath" depends="-hello">
+    <property name="commands" value="${output}/commands"/>
+    <mkdir dir="${commands}"/>
+
+    <property name="command1" value="${commands}/command1"/>
+
+    <echo file="${command1}">
+#!/bin/bash
+`dirname "$0"`/java -m ${hello.pkg}/${hello.pkg}.HelloWorld
+    </echo>
+    <setpermissions mode="777" nonPosixMode="tryDosOrPass">
+      <file file="${command1}"/>
+    </setpermissions>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          commandpath="${commands}"/>
+  </target>
+
+  <target name="commandpathref" depends="-hello">
+    <property name="commands" value="${output}/commands"/>
+    <mkdir dir="${commands}"/>
+
+    <property name="command2" value="${commands}/command2"/>
+
+    <echo file="${command2}">
+#!/bin/bash
+`dirname "$0"`/java -m ${hello.pkg}/${hello.pkg}.HelloWorld
+    </echo>
+    <setpermissions mode="777" nonPosixMode="tryDosOrPass">
+      <file file="${command2}"/>
+    </setpermissions>
+
+    <path id="commandpathref.testpath">
+      <pathelement location="${commands}"/>
+    </path>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          commandpathref="commandpathref.testpath"/>
+  </target>
+
+  <target name="commandpath-nested" depends="-hello">
+    <property name="commands" value="${output}/commands"/>
+    <mkdir dir="${commands}"/>
+
+    <property name="command3" value="${commands}/command3"/>
+
+    <echo file="${command3}">
+#!/bin/bash
+`dirname "$0"`/java -m ${hello.pkg}/${hello.pkg}.HelloWorld
+    </echo>
+    <setpermissions mode="777" nonPosixMode="tryDosOrPass">
+      <file file="${command3}"/>
+    </setpermissions>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <commandpath>
+        <pathelement location="${commands}"/>
+      </commandpath>
+    </jmod>
+  </target>
+
+  <target name="commandpath-both" depends="-hello">
+    <property name="commands1" value="${output}/commands1"/>
+    <property name="commands2" value="${output}/commands2"/>
+    <mkdir dir="${commands1}"/>
+    <mkdir dir="${commands2}"/>
+
+    <property name="command4" value="${commands1}/command4"/>
+    <echo file="${command4}">
+#!/bin/bash
+`dirname "$0"`/java -m ${hello.pkg}/${hello.pkg}.HelloWorld
+    </echo>
+    <setpermissions mode="777" nonPosixMode="tryDosOrPass">
+      <file file="${command4}"/>
+    </setpermissions>
+
+    <property name="command5" value="${commands2}/command5"/>
+    <echo file="${command5}">
+#!/bin/bash
+`dirname "$0"`/java -m ${hello.pkg}/${hello.pkg}.HelloWorld
+    </echo>
+    <setpermissions mode="777" nonPosixMode="tryDosOrPass">
+      <file file="${command5}"/>
+    </setpermissions>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          commandpath="${commands1}">
+      <commandpath>
+        <pathelement location="${commands2}"/>
+      </commandpath>
+    </jmod>
+  </target>
+
+  <!-- headerpath targets -->
+
+  <target name="headerpath" depends="-hello">
+    <property name="headers" value="${output}/headers"/>
+    <mkdir dir="${headers}"/>
+
+    <property name="header1" value="${headers}/header1.h"/>
+
+    <echo file="${header1}">
+typedef int index_t;
+    </echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          headerpath="${headers}"/>
+  </target>
+
+  <target name="headerpathref" depends="-hello">
+    <property name="headers" value="${output}/headers"/>
+    <mkdir dir="${headers}"/>
+
+    <property name="header2" value="${headers}/header2.h"/>
+
+    <echo file="${header2}">
+typedef char * string_t;
+    </echo>
+
+    <path id="headerpathref.testpath">
+      <pathelement location="${headers}"/>
+    </path>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          headerpathref="headerpathref.testpath"/>
+  </target>
+
+  <target name="headerpath-nested" depends="-hello">
+    <property name="headers" value="${output}/headers"/>
+    <mkdir dir="${headers}"/>
+
+    <property name="header3" value="${headers}/header3.h"/>
+
+    <echo file="${header3}">
+typedef char * string_t;
+    </echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <headerpath>
+        <pathelement location="${headers}"/>
+      </headerpath>
+    </jmod>
+  </target>
+
+  <target name="headerpath-both" depends="-hello">
+    <property name="headers4" value="${output}/headers4"/>
+    <property name="headers5" value="${output}/headers5"/>
+    <mkdir dir="${headers4}"/>
+    <mkdir dir="${headers5}"/>
+
+    <property name="header4" value="${headers4}/header4.h"/>
+    <property name="header5" value="${headers5}/header5.h"/>
+
+    <echo file="${header4}">
+typedef int index_t;
+    </echo>
+    <echo file="${header5}">
+typedef char * string_t;
+    </echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}" headerpath="${headers4}">
+      <headerpath>
+        <pathelement location="${headers5}"/>
+      </headerpath>
+    </jmod>
+  </target>
+
+  <!-- configpath targets -->
+
+  <target name="configpath" depends="-hello">
+    <property name="config" value="${output}/config"/>
+    <mkdir dir="${config}"/>
+
+    <property name="config1" value="${config}/config1.properties"/>
+
+    <echo file="${config1}">
+timeout=3600
+    </echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}" configpath="${config}"/>
+  </target>
+
+  <target name="configpathref" depends="-hello">
+    <property name="config" value="${output}/config"/>
+    <mkdir dir="${config}"/>
+
+    <property name="config2" value="${config}/config2.properties"/>
+
+    <echo file="${config2}">
+timeout=7200
+    </echo>
+
+    <path id="configpathref.testpath">
+      <pathelement location="${config}"/>
+    </path>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          configpathref="configpathref.testpath"/>
+  </target>
+
+  <target name="configpath-nested" depends="-hello">
+    <property name="config" value="${output}/config"/>
+    <mkdir dir="${config}"/>
+
+    <property name="config3" value="${config}/config3.properties"/>
+
+    <echo file="${config3}">
+timeout=7200
+    </echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <configpath>
+        <pathelement location="${config}"/>
+      </configpath>
+    </jmod>
+  </target>
+
+  <target name="configpath-both" depends="-hello">
+    <property name="config4" value="${output}/config4"/>
+    <property name="config5" value="${output}/config5"/>
+    <mkdir dir="${config4}"/>
+    <mkdir dir="${config5}"/>
+
+    <property name="configfile4" value="${config4}/config4.properties"/>
+    <property name="configfile5" value="${config5}/config5.properties"/>
+
+    <echo file="${configfile4}">
+timeout=3600
+    </echo>
+    <echo file="${configfile5}">
+timeout=7200
+    </echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}" configpath="${config4}">
+      <configpath>
+        <pathelement location="${config5}"/>
+      </configpath>
+    </jmod>
+  </target>
+
+  <!-- legalpath targets -->
+
+  <target name="legalpath" depends="-hello">
+    <property name="legal" value="${output}/legal"/>
+    <mkdir dir="${legal}"/>
+
+    <property name="legal1" value="${legal}/legal1.txt"/>
+
+    <echo file="${legal1}">
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+    </echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}" legalpath="${legal}"/>
+  </target>
+
+  <target name="legalpathref" depends="-hello">
+    <property name="legal" value="${output}/legal"/>
+    <mkdir dir="${legal}"/>
+
+    <property name="legal2" value="${legal}/legal2.txt"/>
+
+    <echo file="${legal2}">
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+    </echo>
+
+    <path id="legalpathref.testpath">
+      <pathelement location="${legal}"/>
+    </path>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          legalpathref="legalpathref.testpath"/>
+  </target>
+
+  <target name="legalpath-nested" depends="-hello">
+    <property name="legal" value="${output}/legal"/>
+    <mkdir dir="${legal}"/>
+
+    <property name="legal3" value="${legal}/legal3.txt"/>
+
+    <echo file="${legal3}">
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+    </echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <legalpath>
+        <pathelement location="${legal}"/>
+      </legalpath>
+    </jmod>
+  </target>
+
+  <target name="legalpath-both" depends="-hello">
+    <property name="legal4" value="${output}/legal4"/>
+    <property name="legal5" value="${output}/legal5"/>
+    <mkdir dir="${legal4}"/>
+    <mkdir dir="${legal5}"/>
+
+    <property name="legalfile4" value="${legal4}/legal4.txt"/>
+    <property name="legalfile5" value="${legal5}/legal5.txt"/>
+
+    <echo file="${legalfile4}">
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+    </echo>
+    <copy file="${legalfile4}" tofile="${legalfile5}"/>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}" legalpath="${legal4}">
+      <legalpath>
+        <pathelement location="${legal5}"/>
+      </legalpath>
+    </jmod>
+  </target>
+
+  <!-- manpath targets -->
+
+  <target name="manpath" depends="-hello">
+    <property name="manpages" value="${output}/manpages"/>
+    <mkdir dir="${manpages}"/>
+
+    <property name="man1" value="${manpages}/man1.1"/>
+
+    <echo file="${man1}"><!--
+--><![CDATA[.TH TRUE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
+.SH NAME
+true \- do nothing, successfully
+.SH SYNOPSIS
+.B true
+[\fI\,ignored command line arguments\/\fR]
+.br
+.B true
+\fI\,OPTION\/\fR
+.SH DESCRIPTION
+.\" Add any additional description here
+.PP
+Exit with a status code indicating success.
+.TP
+\fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-\-version\fR
+output version information and exit
+.PP
+NOTE: your shell may have its own version of true, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+.SH AUTHOR
+Written by Jim Meyering.
+.SH "REPORTING BUGS"
+GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
+.br
+Report true translation bugs to <http://translationproject.org/team/>
+.SH COPYRIGHT
+Copyright \(co 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+.SH "SEE ALSO"
+Full documentation at: <http://www.gnu.org/software/coreutils/true>
+]]><!--
+    --></echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}" manpath="${manpages}"/>
+  </target>
+
+  <target name="manpathref" depends="-hello">
+    <property name="manpages" value="${output}/manpages"/>
+    <mkdir dir="${manpages}"/>
+
+    <property name="man2" value="${manpages}/man2.1"/>
+
+    <echo file="${man2}"><!--
+--><![CDATA[.TH FALSE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
+.SH NAME
+false \- do nothing, unsuccessfully
+.SH SYNOPSIS
+.B false
+[\fI\,ignored command line arguments\/\fR]
+.br
+.B false
+\fI\,OPTION\/\fR
+.SH DESCRIPTION
+.\" Add any additional description here
+.PP
+Exit with a status code indicating failure.
+.TP
+\fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-\-version\fR
+output version information and exit
+.PP
+NOTE: your shell may have its own version of false, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+.SH AUTHOR
+Written by Jim Meyering.
+.SH "REPORTING BUGS"
+GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
+.br
+Report false translation bugs to <http://translationproject.org/team/>
+.SH COPYRIGHT
+Copyright \(co 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+.SH "SEE ALSO"
+Full documentation at: <http://www.gnu.org/software/coreutils/false>
+]]><!--
+    --></echo>
+
+    <path id="manpathref.testpath">
+      <pathelement location="${manpages}"/>
+    </path>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          manpathref="manpathref.testpath"/>
+  </target>
+
+  <target name="manpath-nested" depends="-hello">
+    <property name="manpages" value="${output}/manpages"/>
+    <mkdir dir="${manpages}"/>
+
+    <property name="man3" value="${manpages}/man3.1"/>
+
+    <echo file="${man3}"><!--
+--><![CDATA[.TH FALSE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
+.SH NAME
+false \- do nothing, unsuccessfully
+.SH SYNOPSIS
+.B false
+[\fI\,ignored command line arguments\/\fR]
+.br
+.B false
+\fI\,OPTION\/\fR
+.SH DESCRIPTION
+.\" Add any additional description here
+.PP
+Exit with a status code indicating failure.
+.TP
+\fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-\-version\fR
+output version information and exit
+.PP
+NOTE: your shell may have its own version of false, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+.SH AUTHOR
+Written by Jim Meyering.
+.SH "REPORTING BUGS"
+GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
+.br
+Report false translation bugs to <http://translationproject.org/team/>
+.SH COPYRIGHT
+Copyright \(co 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+.SH "SEE ALSO"
+Full documentation at: <http://www.gnu.org/software/coreutils/false>
+]]><!--
+    --></echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <manpath>
+        <pathelement location="${manpages}"/>
+      </manpath>
+    </jmod>
+  </target>
+
+  <target name="manpath-both" depends="-hello">
+    <property name="manpages4" value="${output}/manpages4"/>
+    <property name="manpages5" value="${output}/manpages5"/>
+    <mkdir dir="${manpages4}"/>
+    <mkdir dir="${manpages5}"/>
+
+    <property name="man4" value="${manpages4}/man4.1"/>
+    <property name="man5" value="${manpages5}/man5.1"/>
+
+    <echo file="${man4}"><!--
+--><![CDATA[.TH TRUE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
+.SH NAME
+true \- do nothing, successfully
+.SH SYNOPSIS
+.B true
+[\fI\,ignored command line arguments\/\fR]
+.br
+.B true
+\fI\,OPTION\/\fR
+.SH DESCRIPTION
+.\" Add any additional description here
+.PP
+Exit with a status code indicating success.
+.TP
+\fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-\-version\fR
+output version information and exit
+.PP
+NOTE: your shell may have its own version of true, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+.SH AUTHOR
+Written by Jim Meyering.
+.SH "REPORTING BUGS"
+GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
+.br
+Report true translation bugs to <http://translationproject.org/team/>
+.SH COPYRIGHT
+Copyright \(co 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+.SH "SEE ALSO"
+Full documentation at: <http://www.gnu.org/software/coreutils/true>
+]]><!--
+    --></echo>
+    <echo file="${man5}"><!--
+--><![CDATA[.TH FALSE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
+.SH NAME
+false \- do nothing, unsuccessfully
+.SH SYNOPSIS
+.B false
+[\fI\,ignored command line arguments\/\fR]
+.br
+.B false
+\fI\,OPTION\/\fR
+.SH DESCRIPTION
+.\" Add any additional description here
+.PP
+Exit with a status code indicating failure.
+.TP
+\fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-\-version\fR
+output version information and exit
+.PP
+NOTE: your shell may have its own version of false, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+.SH AUTHOR
+Written by Jim Meyering.
+.SH "REPORTING BUGS"
+GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
+.br
+Report false translation bugs to <http://translationproject.org/team/>
+.SH COPYRIGHT
+Copyright \(co 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+.SH "SEE ALSO"
+Full documentation at: <http://www.gnu.org/software/coreutils/false>
+]]><!--
+    --></echo>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}" manpath="${manpages4}">
+      <manpath>
+        <pathelement location="${manpages5}"/>
+      </manpath>
+    </jmod>
+  </target>
+
+  <!-- nativelibpath targets -->
+
+  <target name="nativelibpath" depends="-hello">
+    <property name="nativelib" location="${java.home}/lib;${java.home}/bin"/>
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          nativelibpath="${nativelib}"/>
+  </target>
+
+  <target name="nativelibpathref" depends="-hello">
+
+    <path id="nativelibpathref.testpath">
+      <pathelement location="${java.home}/lib"/>
+      <pathelement location="${java.home}/bin"/>
+    </path>
+
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          nativelibpathref="nativelibpathref.testpath"/>
+  </target>
+
+  <target name="nativelibpath-nested" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <nativelibpath>
+        <pathelement location="${java.home}/lib"/>
+        <pathelement location="${java.home}/bin"/>
+      </nativelibpath>
+    </jmod>
+  </target>
+
+  <target name="nativelibpath-both" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          nativelibpath="${java.home}/lib;${java.home}/bin">
+      <nativelibpath>
+        <dirset dir="${java.home}">
+          <include name="lib/server"/>
+          <include name="bin/server"/>
+        </dirset>
+      </nativelibpath>
+    </jmod>
+  </target>
+
+  <!-- non-path targets -->
+
+  <target name="version" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}" version="${version}"/>
+  </target>
+
+  <target name="version-nested" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <version number="1.0.1" build="99"/>
+    </jmod>
+  </target>
+
+  <target name="version-nested-number" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <version number="1.0.1"/>
+    </jmod>
+  </target>
+
+  <target name="version-nested-no-number" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <version build="99"/>
+    </jmod>
+  </target>
+
+  <target name="version-nested-invalid-number" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <version number="1-0-1" build="99"/>
+    </jmod>
+  </target>
+
+  <target name="version-nested-invalid-prerelease" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}">
+      <version number="1.0.1" build="99" prerelease="unit+testing"/>
+    </jmod>
+  </target>
+
+  <target name="version-both" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}" version="${version}">
+      <version number="1.0.1" build="99"/>
+    </jmod>
+  </target>
+
+  <target name="mainclass" depends="-hello">
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          mainclass="${hello.main-class}"/>
+  </target>
+
+  <target name="platform" depends="-smile">
+    <property name="target-platform" value="windows-amd64"/>
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          platform="${target-platform}"/>
+  </target>
+
+  <target name="hashing" depends="-smile">
+    <jmod destfile="${jmod}" classpath="${hello.jar}"
+          modulepath="${smile.jar.dir}"
+          hashModulesPattern=".*smile.*"/>
+  </target>
+</project>
