@@ -25,11 +25,15 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 /**
@@ -45,10 +49,23 @@ public class Tracker implements TestResultFormatter {
 
     private PrintWriter writer;
     private TestExecutionContext context;
+    private OutputStream appendModeFile;
 
     @Override
     public void setDestination(final OutputStream os) {
-        this.writer = new PrintWriter(os, true);
+        final String propVal = this.context.getProperties().getProperty("junitlauncher.test.tracker.append.file");
+        if (propVal == null) {
+            this.writer = new PrintWriter(os, true);
+            return;
+        }
+        // ignore the passed outputstream and instead create our own, in append mode
+        final Path appendModeFilePath = Paths.get(propVal);
+        try {
+            this.appendModeFile = Files.newOutputStream(appendModeFilePath, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            this.writer = new PrintWriter(this.appendModeFile, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -59,6 +76,9 @@ public class Tracker implements TestResultFormatter {
     @Override
     public void close() throws IOException {
         this.writer.flush();
+        if (this.appendModeFile != null) {
+            this.appendModeFile.close();
+        }
     }
 
     @Override

@@ -245,7 +245,23 @@ public class LauncherSupport {
 
     private Path getListenerOutputFile(final TestRequest testRequest, final ListenerDefinition listener) {
         final TestDefinition test = testRequest.getOwner();
-        final String filename = listener.requireResultFile(test);
+        final String filename;
+        if (listener.getResultFile() != null) {
+            filename = listener.getResultFile();
+        } else {
+            // compute a file name
+            final StringBuilder sb = new StringBuilder("TEST-");
+            sb.append(testRequest.getName() == null ? "unknown" : testRequest.getName());
+            sb.append(".");
+            final String suffix;
+            if ("org.apache.tools.ant.taskdefs.optional.junitlauncher.LegacyXmlResultFormatter".equals(listener.getClassName())) {
+                suffix = "xml";
+            } else {
+                suffix = "txt";
+            }
+            sb.append(suffix);
+            filename = sb.toString();
+        }
         if (listener.getOutputDir() != null) {
             // use the output dir defined on the listener
             return Paths.get(listener.getOutputDir(), filename);
@@ -391,19 +407,13 @@ public class LauncherSupport {
 
 
     private List<TestRequest> createTestRequests(final TestDefinition test) {
-        // create a TestRequest and add necessary selectors, filters to it
-        final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
-        final TestRequest request = new TestRequest(test, requestBuilder);
-        addDiscoverySelectors(request);
-        addFilters(request);
-        return Collections.singletonList(request);
-    }
+        // create TestRequest(s) and add necessary selectors, filters to it
 
-    private void addDiscoverySelectors(final TestRequest testRequest) {
-        final TestDefinition test = testRequest.getOwner();
-        final LauncherDiscoveryRequestBuilder requestBuilder = testRequest.getDiscoveryRequest();
         if (test instanceof SingleTestClass) {
             final SingleTestClass singleTestClass = (SingleTestClass) test;
+            final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
+            final TestRequest request = new TestRequest(test, requestBuilder);
+            request.setName(singleTestClass.getName());
             final String[] methods = singleTestClass.getMethods();
             if (methods == null) {
                 requestBuilder.selectors(DiscoverySelectors.selectClass(singleTestClass.getName()));
@@ -413,19 +423,28 @@ public class LauncherSupport {
                     requestBuilder.selectors(DiscoverySelectors.selectMethod(singleTestClass.getName(), method));
                 }
             }
-            return;
+            addFilters(request);
+            return Collections.singletonList(request);
         }
+
         if (test instanceof TestClasses) {
-            final TestClasses testClasses = (TestClasses) test;
-            final List<String> testClassNames = testClasses.getTestClassNames();
-            if (testClassNames.isEmpty()) {
-                return;
+            final List<String> testClasses = ((TestClasses) test).getTestClassNames();
+            if (testClasses.isEmpty()) {
+                return Collections.emptyList();
             }
-            for (final String testClass : testClassNames) {
+            final List<TestRequest> requests = new ArrayList<>();
+            for (final String testClass : testClasses) {
+                final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request();
+                final TestRequest request = new TestRequest(test, requestBuilder);
+                request.setName(testClass);
                 requestBuilder.selectors(DiscoverySelectors.selectClass(testClass));
+                addFilters(request);
+
+                requests.add(request);
             }
-            return;
+            return requests;
         }
+        return Collections.emptyList();
     }
 
     /**

@@ -100,25 +100,8 @@ public class ListenerDefinition {
         this.resultFile = filename;
     }
 
-    public String requireResultFile(final TestDefinition test) {
-        if (this.resultFile != null) {
-            return this.resultFile;
-        }
-        final StringBuilder sb = new StringBuilder("TEST-");
-        if (test instanceof NamedTest) {
-            sb.append(((NamedTest) test).getName());
-        } else {
-            sb.append("unknown");
-        }
-        sb.append(".");
-        final String suffix;
-        if ("org.apache.tools.ant.taskdefs.optional.junitlauncher.LegacyXmlResultFormatter".equals(this.className)) {
-            suffix = "xml";
-        } else {
-            suffix = "txt";
-        }
-        sb.append(suffix);
-        return sb.toString();
+    public String getResultFile() {
+        return this.resultFile;
     }
 
     public void setSendSysOut(final boolean sendSysOut) {

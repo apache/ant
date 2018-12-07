@@ -36,7 +36,7 @@ final class TestRequest implements AutoCloseable {
     private final List<Closeable> closables = new ArrayList<>();
     private final List<TestResultFormatter> interestedInSysOut = new ArrayList<>();
     private final List<TestResultFormatter> interestedInSysErr = new ArrayList<>();
-
+    private String name;
 
     TestRequest(final TestDefinition ownerTest, final LauncherDiscoveryRequestBuilder discoveryRequest) {
         this.ownerTest = ownerTest;
@@ -49,6 +49,14 @@ final class TestRequest implements AutoCloseable {
 
     LauncherDiscoveryRequestBuilder getDiscoveryRequest() {
         return discoveryRequest;
+    }
+
+    void setName(final String name) {
+        this.name = name;
+    }
+
+    String getName() {
+        return this.name;
     }
 
     void closeUponCompletion(final Closeable closeable) {

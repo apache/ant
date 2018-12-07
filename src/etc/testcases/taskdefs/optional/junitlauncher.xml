@@ -131,12 +131,11 @@
     </target>
 
     <target name="test-batch" depends="init">
+        <property name="junitlauncher.test.tracker.append.file" value="${output.dir}/${test-batch.tracker}"/>
         <junitlauncher>
             <classpath refid="test.classpath"/>
             <testclasses outputdir="${output.dir}">
                 <listener classname="org.example.junitlauncher.Tracker"
-                          outputDir="${output.dir}"
-                          resultFile="${test-batch.tracker}"
                           if="test-batch.tracker"/>
 
                 <fileset dir="${build.classes.dir}">
@@ -216,6 +215,7 @@
         <!-- duplicate the Ant classes into a jar -->
         <jar destfile="${output.dir}/ant-runtime-duplicated.jar" basedir="${ant.runtime.classes.original.path}"/>
 
+        <property name="junitlauncher.test.tracker.append.file" value="${output.dir}/${test-ant-runtime-lib-custom-location.tracker}"/>
         <junitlauncher>
             <classpath>
                 <path refid="junit.engine.jupiter.classpath"/>
@@ -231,8 +231,6 @@
                     <include name="org/example/**/junitlauncher/**/"/>
                 </fileset>
                 <listener classname="org.example.junitlauncher.Tracker"
-                          outputDir="${output.dir}"
-                          resultFile="${test-ant-runtime-lib-custom-location.tracker}"
                           if="test-ant-runtime-lib-custom-location.tracker"/>
                 <fork dir="${basedir}" includeAntRuntimeLibraries="false">
                     <sysproperty key="junitlauncher.test.sysprop.one" value="forked"/>
