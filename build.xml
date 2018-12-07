@@ -42,6 +42,7 @@
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="taskdefs.package" value="${ant.package}/taskdefs"/>
   <property name="condition.package" value="${taskdefs.package}/condition"/>
+  <property name="modules.package" value="${taskdefs.package}/modules"/>
   <property name="optional.package" value="${taskdefs.package}/optional"/>
   <property name="type.package" value="${ant.package}/types"/>
   <property name="optional.type.package" value="${type.package}/optional"/>
@@ -177,6 +178,10 @@
          files that have dependencies that are not available
        ===================================================================
   -->
+
+  <selector id="needs.jdk9+">
+    <filename name="${modules.package}/"/>
+  </selector>
 
   <!-- Kaffe has some JDK 1.5 features including java.lang.Readable,
        but not all of them -->
@@ -609,6 +614,7 @@
       <selector id="conditional-patterns">
         <not>
           <or>
+            <selector refid="needs.jdk9+" unless="jdk9+"/>
             <selector refid="not.in.kaffe" if="kaffe"/>
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/> <!-- TODO should perhaps use -source 1.4? -->

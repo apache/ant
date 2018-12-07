@@ -1,0 +1,1088 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="linktest" default="nil" xmlns:unless="ant:unless">
+  <import file="../buildfiletest-base.xml"/>
+
+  <target name="nil"/>
+
+  <target name="-dirs">
+    <mkdir dir="${input}"/>
+
+    <property name="jmods" value="${output}/jmods"/>
+    <mkdir dir="${jmods}"/>
+
+    <property name="manpages" value="${output}/manpages"/>
+    <mkdir dir="${manpages}"/>
+
+    <property name="image" value="${output}/image"/>
+
+    <!--
+      Before Java 10, JDK's jmods directory must be explicitly included
+      in module paths.
+     -->
+    <condition property="jdkmods" value=""
+               else="${java.home}/jmods${path.separator}">
+      <hasmethod classname="java.util.List" method="copyOf"/>
+    </condition>
+  </target>
+
+  <target name="setUp" depends="-dirs">
+  </target>
+
+  <!-- Creates simple modular jar, with only Java SE dependencies. -->
+  <target name="-hello" depends="-dirs">
+
+    <property name="hello.root" value="${input}/hello"/>
+
+    <property name="hello.src" value="${hello.root}/src"/>
+    <property name="hello.classes" value="${hello.root}/classes"/>
+    <property name="hello.jar.dir" value="${hello.root}/jars"/>
+    <property name="hello.jar" value="${hello.jar.dir}/hello.jar"/>
+    <property name="hello.legal" value="${hello.root}/legal"/>
+
+    <property name="hello.mod"      value="org.apache.tools.ant.test.hello"/>
+    <property name="hello.pkg"      value="org.apache.tools.ant.test.hello"/>
+    <property name="hello.pkg.path" value="org/apache/tools/ant/test/hello"/>
+    <property name="hello.pkg.dir" value="${hello.src}/${hello.pkg.path}"/>
+
+    <property name="hello.main-class" value="${hello.pkg}.HelloWorld"/>
+
+    <mkdir dir="${hello.pkg.dir}"/>
+    <echo file="${hello.pkg.dir}/HelloWorld.java">
+package ${hello.pkg};
+
+import java.util.logging.Logger;
+
+public class HelloWorld {
+    public void run(String[] resources) {
+        Logger logger = Logger.getLogger(HelloWorld.class.getName());
+        logger.info("HELLO WORLD");
+
+        for (String resource : resources) {
+            Object url = HelloWorld.class.getResource(resource);
+            logger.info(resource + " " + (url != null ? "present" : "absent"));
+        }
+    }
+
+    public static void main(String[] args) {
+        new HelloWorld().run(args);
+    }
+}
+    </echo>
+    <echo file="${hello.src}/module-info.java">
+module ${hello.mod} {
+    exports ${hello.pkg};
+    requires java.logging;
+}
+    </echo>
+
+    <mkdir dir="${hello.classes}"/>
+    <javac srcdir="${hello.src}" destdir="${hello.classes}"
+           includeAntRuntime="false" debug="true"/>
+    <echo file="${hello.classes}/${hello.pkg.path}/resource1.txt"
+          message="First HelloWorld resource."/>
+    <echo file="${hello.classes}/${hello.pkg.path}/resource2.txt"
+          message="Second HelloWorld resource."/>
+
+    <mkdir dir="${hello.jar.dir}"/>
+    <jar destfile="${hello.jar}" basedir="${hello.classes}"/>
+  </target>
+
+  <!-- Creates modular jar with dependency on hello module. -->
+  <target name="-smile" depends="-dirs,-hello">
+    <property name="smile.root" value="${input}/smile"/>
+
+    <property name="smile.src" value="${smile.root}/src"/>
+    <property name="smile.classes" value="${smile.root}/classes"/>
+    <property name="smile.jar.dir" value="${smile.root}/jars"/>
+    <property name="smile.jar" value="${smile.jar.dir}/smile.jar"/>
+    <property name="smile.legal" value="${smile.root}/legal"/>
+
+    <property name="smile.mod"      value="org.apache.tools.ant.test.smile"/>
+    <property name="smile.pkg"      value="org.apache.tools.ant.test.smile"/>
+    <property name="smile.pkg.path" value="org/apache/tools/ant/test/smile"/>
+    <property name="smile.pkg.dir" value="${smile.src}/${smile.pkg.path}"/>
+
+    <property name="smile.main-class" value="${smile.pkg}.Smile"/>
+
+    <mkdir dir="${smile.pkg.dir}"/>
+    <echo file="${smile.pkg.dir}/Smile.java">
+package ${smile.pkg};
+
+import java.util.logging.Logger;
+import ${hello.pkg}.HelloWorld;
+
+public class Smile {
+    public void run(String[] resources) {
+        Logger logger = Logger.getLogger(Smile.class.getName());
+        logger.info("\u263a\u263b\u263a\u263b");
+
+        for (String resource : resources) {
+            Object url = HelloWorld.class.getResource(resource);
+            logger.info(resource + " " + (url != null ? "present" : "absent"));
+        }
+    }
+
+    public static void main(String[] args) {
+        new Smile().run(args);
+        new HelloWorld().run(args);
+    }
+}
+    </echo>
+    <echo file="${smile.src}/module-info.java">
+module ${smile.mod} {
+    exports ${smile.pkg};
+    requires java.logging;
+    requires ${hello.mod};
+}
+    </echo>
+
+    <mkdir dir="${smile.classes}"/>
+    <javac srcdir="${smile.src}" destdir="${smile.classes}"
+           includeAntRuntime="false" debug="true"
+           modulepath="${hello.jar}"/>
+    <echo file="${smile.classes}/${smile.pkg.path}/resource1.txt"
+          message="First Smile resource."/>
+    <echo file="${smile.classes}/${smile.pkg.path}/resource2.txt"
+          message="Second Smile resource."/>
+
+    <mkdir dir="${smile.jar.dir}"/>
+    <jar destfile="${smile.jar}" basedir="${smile.classes}"/>
+  </target>
+
+  <target name="-manpages" depends="-dirs">
+
+    <property name="man1" value="${manpages}/man1.1"/>
+    <property name="man2" value="${manpages}/man2.1"/>
+
+    <echo file="${man1}"><!--
+--><![CDATA[.TH TRUE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
+.SH NAME
+true \- do nothing, successfully
+.SH SYNOPSIS
+.B true
+[\fI\,ignored command line arguments\/\fR]
+.br
+.B true
+\fI\,OPTION\/\fR
+.SH DESCRIPTION
+.\" Add any additional description here
+.PP
+Exit with a status code indicating success.
+.TP
+\fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-\-version\fR
+output version information and exit
+.PP
+NOTE: your shell may have its own version of true, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+.SH AUTHOR
+Written by Jim Meyering.
+.SH "REPORTING BUGS"
+GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
+.br
+Report true translation bugs to <http://translationproject.org/team/>
+.SH COPYRIGHT
+Copyright \(co 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+.SH "SEE ALSO"
+Full documentation at: <http://www.gnu.org/software/coreutils/true>
+]]><!--
+    --></echo>
+
+    <echo file="${man2}"><!--
+--><![CDATA[.TH FALSE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
+.SH NAME
+false \- do nothing, unsuccessfully
+.SH SYNOPSIS
+.B false
+[\fI\,ignored command line arguments\/\fR]
+.br
+.B false
+\fI\,OPTION\/\fR
+.SH DESCRIPTION
+.\" Add any additional description here
+.PP
+Exit with a status code indicating failure.
+.TP
+\fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-\-version\fR
+output version information and exit
+.PP
+NOTE: your shell may have its own version of false, which usually supersedes
+the version described here.  Please refer to your shell's documentation
+for details about the options it supports.
+.SH AUTHOR
+Written by Jim Meyering.
+.SH "REPORTING BUGS"
+GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
+.br
+Report false translation bugs to <http://translationproject.org/team/>
+.SH COPYRIGHT
+Copyright \(co 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+.br
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+.SH "SEE ALSO"
+Full documentation at: <http://www.gnu.org/software/coreutils/false>
+]]><!--
+    --></echo>
+  </target>
+
+  <target name="-legal" depends="-smile">
+    <property name="sharedlicense.name" value="USELESSLICENSE"/>
+    <property name="sharedlicense.text"
+              value="This license grants no particular rights."/>
+
+    <mkdir dir="${hello.legal}"/>
+    <mkdir dir="${smile.legal}"/>
+
+    <echo file="${hello.legal}/${sharedlicense.name}"
+          message="${sharedlicense.text}"/>
+    <echo file="${smile.legal}/${sharedlicense.name}"
+          message="${sharedlicense.text}"/>
+
+    <property name="uniquelicense.name" value="UNIQUELICENSE"/>
+    <echo file="${hello.legal}/${uniquelicense.name}"
+          message="License for ${hello.mod}."/>
+    <echo file="${smile.legal}/${uniquelicense.name}"
+          message="License for ${smile.mod}."/>
+  </target>
+
+  <target name="-jmods" depends="-smile,-legal">
+    <property name="hello.jmod" value="${jmods}/hello.jmod"/>
+    <property name="smile.jmod" value="${jmods}/smile.jmod"/>
+
+    <jmod destfile="${hello.jmod}"
+          classpath="${hello.jar}"
+          legalpath="${hello.legal}"
+          manpath="${manpages}"/>
+
+    <jmod destfile="${smile.jmod}"
+          classpath="${smile.jar}"
+          legalpath="${smile.legal}"
+          manpath="${manpages}"
+          modulepath="${hello.jar.dir}"/>
+  </target>
+
+  <target name="modulepath" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"/>
+  </target>
+
+  <target name="imageNewerThanJmods" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"/>
+
+    <chmod perm="a+w">
+      <fileset dir="${image}"/>
+    </chmod>
+
+    <property name="dateformat" value="yyyy-MM-dd HH:mm:ss.SSS"/>
+    <tstamp>
+      <format property="future" pattern="${dateformat}" offset="1" unit="hour"/>
+    </tstamp>
+    <touch datetime="${future}" pattern="${dateformat}">
+      <fileset dir="${image}"/>
+    </touch>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"/>
+  </target>
+
+  <target name="nomodulepath" depends="-jmods">
+    <link destdir="${image}"
+          modules="${hello.mod},${smile.mod}"/>
+  </target>
+
+  <target name="nomodules" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"/>
+  </target>
+
+  <target name="modulepathref" depends="-jmods">
+    <path id="modules">
+      <pathelement location="${jdkmods}" unless:blank="${jdkmods}"/>
+      <pathelement location="${jmods}"/>
+    </path>
+    <link destdir="${image}" modulepathref="modules"
+          modules="${hello.mod},${smile.mod}"/>
+  </target>
+
+  <target name="modulepath-nested" depends="-jmods">
+    <link destdir="${image}" modules="${hello.mod},${smile.mod}">
+      <modulepath>
+        <pathelement location="${jdkmods}" unless:blank="${jdkmods}"/>
+        <pathelement location="${jmods}"/>
+      </modulepath>
+    </link>
+  </target>
+
+  <target name="modulepath-both" depends="-jmods">
+    <property name="mod1" value="${output}/mod1"/>
+    <property name="mod2" value="${output}/mod2"/>
+
+    <mkdir dir="${mod1}"/>
+    <mkdir dir="${mod2}"/>
+
+    <copy file="${hello.jmod}" todir="${mod1}"/>
+    <copy file="${smile.jmod}" todir="${mod2}"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${mod1}"
+          modules="${hello.mod},${smile.mod}">
+      <modulepath>
+        <pathelement location="${mod2}"/>
+      </modulepath>
+    </link>
+  </target>
+
+  <target name="modules-nested" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}">
+      <module name="${hello.mod}"/>
+      <module name="${smile.mod}"/>
+    </link>
+  </target>
+
+  <target name="modules-nested-missing-name" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}">
+      <module/>
+      <module name="${smile.mod}"/>
+    </link>
+  </target>
+
+  <target name="modules-both" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}" modules="${hello.mod}">
+      <module name="${smile.mod}"/>
+      <!--
+        Adding this launcher guarantees an error occurs unless
+        both modules are found.
+      -->
+      <launcher name="Smile" module="${smile.mod}" mainclass="${smile.main-class}"/>
+    </link>
+  </target>
+
+  <target name="observable" depends="-jmods">
+    <link destdir="${image}" modulepath="${jmods};${java.home}/jmods"
+          modules="${hello.mod},${smile.mod}"
+          observableModules="java.base"/>
+  </target>
+
+  <target name="observable-nested" depends="-jmods">
+    <link destdir="${image}" modulepath="${jmods};${java.home}/jmods"
+          modules="${hello.mod},${smile.mod}">
+        <observableModule name="java.base"/>
+    </link>
+  </target>
+
+  <target name="observable-nested-missing-name" depends="-jmods">
+    <link destdir="${image}" modulepath="${jmods};${java.home}/jmods"
+          modules="${hello.mod},${smile.mod}">
+        <observableModule/>
+    </link>
+  </target>
+
+  <target name="observable-both" depends="-jmods">
+    <link destdir="${image}" modulepath="${jmods};${java.home}/jmods"
+          modules="${hello.mod},${smile.mod}"
+          observableModules="java.base">
+        <observableModule name="java.logging"/>
+    </link>
+  </target>
+
+  <target name="launchers" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          launchers="Hello=${hello.mod}/${hello.main-class},Smile=${smile.mod}/${smile.main-class}"/>
+  </target>
+
+  <target name="launchers-nested" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <launcher name="Hello" module="${hello.mod}" mainClass="${hello.main-class}"/>
+      <launcher name="Smile" module="${smile.mod}" mainClass="${smile.main-class}"/>
+    </link>
+  </target>
+
+  <target name="launchers-nested-missing-name" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <launcher              module="${hello.mod}" mainClass="${hello.main-class}"/>
+      <launcher name="Smile" module="${smile.mod}" mainClass="${smile.main-class}"/>
+    </link>
+  </target>
+
+  <target name="launchers-nested-missing-module" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <launcher name="Hello"                       mainClass="${hello.main-class}"/>
+      <launcher name="Smile" module="${smile.mod}" mainClass="${smile.main-class}"/>
+    </link>
+  </target>
+
+  <target name="launchers-both" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          launchers="Hello=${hello.mod}/${hello.main-class}">
+      <launcher name="Smile" module="${smile.mod}" mainClass="${smile.main-class}"/>
+    </link>
+  </target>
+
+  <target name="-localefinder" depends="-dirs">
+
+    <property name="localefinder.root" value="${input}/localefinder"/>
+
+    <property name="localefinder.src" value="${localefinder.root}/src"/>
+    <property name="localefinder.classes" value="${localefinder.root}/classes"/>
+    <property name="localefinder.jar.dir" value="${localefinder.root}/jars"/>
+    <property name="localefinder.jar" value="${localefinder.jar.dir}/localefinder.jar"/>
+
+    <property name="localefinder.mod"      value="org.apache.tools.ant.test.localefinder"/>
+    <property name="localefinder.pkg"      value="org.apache.tools.ant.test.localefinder"/>
+    <property name="localefinder.pkg.path" value="org/apache/tools/ant/test/localefinder"/>
+    <property name="localefinder.pkg.dir" value="${localefinder.src}/${localefinder.pkg.path}"/>
+
+    <property name="localefinder.main-class" value="${localefinder.pkg}.LocaleFinder"/>
+
+    <mkdir dir="${localefinder.pkg.dir}"/>
+    <echo file="${localefinder.pkg.dir}/LocaleFinder.java"><![CDATA[
+package ${localefinder.pkg};
+
+import java.util.Locale;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.HashSet;
+
+public class LocaleFinder {
+    public static void main(String[] languagesToFind) {
+        Set<String> languages = new HashSet<>();
+        for (Locale locale : Locale.getAvailableLocales()) {
+            languages.add(locale.getLanguage());
+        }
+
+        boolean matched = languages.containsAll(Arrays.asList(languagesToFind));
+        System.exit(matched ? 0 : 1);
+    }
+}]]>
+    </echo>
+    <echo file="${localefinder.src}/module-info.java">
+module ${localefinder.mod} {
+    exports ${localefinder.pkg};
+    requires jdk.localedata;
+}
+    </echo>
+
+    <mkdir dir="${localefinder.classes}"/>
+    <javac srcdir="${localefinder.src}"
+           destdir="${localefinder.classes}"
+           includeAntRuntime="false"
+           debug="true"/>
+
+    <mkdir dir="${localefinder.jar.dir}"/>
+    <jar destfile="${localefinder.jar}" basedir="${localefinder.classes}"/>
+
+    <property name="localefinder.jmod" value="${jmods}/localefinder.jmod"/>
+    <jmod destfile="${localefinder.jmod}" classpath="${localefinder.jar}"/>
+  </target>
+
+  <target name="locales" depends="-localefinder">
+    <link destdir="${image}" modulepath="${jmods};${java.home}/jmods"
+          modules="${localefinder.mod},jdk.localedata"
+          locales="zh,in"/>
+  </target>
+
+  <target name="locales-nested" depends="-localefinder">
+    <link destdir="${image}" modulepath="${jmods};${java.home}/jmods"
+          modules="${localefinder.mod},jdk.localedata">
+      <locale name="zh"/>
+      <locale name="in"/>
+    </link>
+  </target>
+
+  <target name="locales-nested-missing-name" depends="-localefinder">
+    <link destdir="${image}" modulepath="${jmods};${java.home}/jmods"
+          modules="${localefinder.mod},jdk.localedata">
+      <locale/>
+      <locale name="in"/>
+    </link>
+  </target>
+
+  <target name="locales-both" depends="-localefinder">
+    <link destdir="${image}" modulepath="${jmods};${java.home}/jmods"
+          modules="${localefinder.mod},jdk.localedata"
+          locales="zh">
+      <locale name="in"/>
+    </link>
+  </target>
+
+  <target name="ordering" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          resourceOrder="**/resource1.txt"/>
+  </target>
+
+  <target name="ordering-nested" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <resourceOrder pattern="**/resource1.txt"/>
+    </link>
+  </target>
+
+  <target name="ordering-nested-file" depends="-jmods">
+    <tempfile property="listfile" destdir="${output}" suffix=".lst"/>
+    <echo file="${listfile}" message="**/resource1.txt"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <resourceOrder listfile="${listfile}"/>
+    </link>
+  </target>
+
+  <target name="ordering-nested-no-attr" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <resourceOrder/>
+    </link>
+  </target>
+
+  <target name="ordering-nested-both" depends="-jmods">
+    <tempfile property="listfile" destdir="${output}" suffix=".lst"/>
+    <echo file="${listfile}" message="**/resource1.txt"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <resourceOrder pattern="**/resource1.txt" listfile="${listfile}"/>
+    </link>
+  </target>
+
+  <target name="ordering-both" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          resourceOrder="**/resource1.txt">
+      <resourceOrder pattern="**/resource2.txt"/>
+    </link>
+  </target>
+
+  <target name="excluderesources" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          excludeResources="**/resource1.txt"/>
+  </target>
+
+  <target name="excluderesources-nested" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <excludeResources pattern="**/resource1.txt"/>
+    </link>
+  </target>
+
+  <target name="excluderesources-nested-file" depends="-jmods">
+    <tempfile property="listfile" destdir="${output}" suffix=".lst"/>
+    <echo file="${listfile}" message="**/resource1.txt"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <excludeResources listfile="${listfile}"/>
+    </link>
+  </target>
+
+  <target name="excluderesources-nested-no-attr" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <excludeResources/>
+    </link>
+  </target>
+
+  <target name="excluderesources-nested-both" depends="-jmods">
+    <tempfile property="listfile" destdir="${output}" suffix=".lst"/>
+    <echo file="${listfile}" message="**/resource1.txt"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <excludeResources pattern="**/resource1.txt" listfile="${listfile}"/>
+    </link>
+  </target>
+
+  <target name="excluderesources-both" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          excludeResources="**/resource1.txt">
+      <excludeResources pattern="**/resource2.txt"/>
+    </link>
+  </target>
+
+  <target name="excludefiles" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          excludeFiles="**/file1.txt"/>
+  </target>
+
+  <target name="excludefiles-nested" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <excludeFiles pattern="**/file1.txt"/>
+    </link>
+  </target>
+
+  <target name="excludefiles-nested-file" depends="-jmods">
+    <tempfile property="listfile" destdir="${output}" suffix=".lst"/>
+    <echo file="${listfile}" message="**/file1.txt"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <excludeFiles listfile="${listfile}"/>
+    </link>
+  </target>
+
+  <target name="excludefiles-nested-no-attr" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <excludeFiles/>
+    </link>
+  </target>
+
+  <target name="excludefiles-nested-both" depends="-jmods">
+    <tempfile property="listfile" destdir="${output}" suffix=".lst"/>
+    <echo file="${listfile}" message="**/file1.txt"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <excludeFiles pattern="**/file1.txt" listfile="${listfile}"/>
+    </link>
+  </target>
+
+  <target name="excludefiles-both" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          excludeFiles="**/file1.txt">
+      <excludeFiles pattern="**/file2.txt"/>
+    </link>
+  </target>
+
+  <target name="includeheaders" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          includeHeaders="false"/>
+  </target>
+
+  <target name="includemanpages" depends="-manpages,-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          includeManPages="false"/>
+  </target>
+
+  <target name="includenativecommands" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          includeNativeCommands="false"/>
+  </target>
+
+  <target name="compression" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"/>
+
+    <property name="compressed-image" value="${output}/image2"/>
+    <link destdir="${compressed-image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          compress="zip"/>
+  </target>
+
+  <target name="compression-nested" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"/>
+
+    <property name="compressed-image" value="${output}/image2"/>
+    <link destdir="${compressed-image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <compress level="zip"/>
+    </link>
+  </target>
+
+  <target name="compression-nested-no-attr" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <compress/>
+    </link>
+  </target>
+
+  <target name="compression-both" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"/>
+
+    <property name="compressed-image" value="${output}/image2"/>
+    <link destdir="${compressed-image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          compress="zip">
+      <compress level="zip"/>
+    </link>
+  </target>
+
+  <target name="endian" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}" endianness="little"/>
+  </target>
+
+  <target name="vm" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}" vmType="server"/>
+  </target>
+
+  <target name="releaseinfo-file" depends="-jmods">
+    <property name="props" value="${output}/app.properties"/>
+    <echo file="${props}" message="test=true" encoding="ISO-8859-1"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo file="${props}"/>
+    </link>
+  </target>
+
+  <target name="releaseinfo-delete" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add key="test" value="true"/>
+      </releaseinfo>
+      <releaseinfo delete="test"/>
+    </link>
+  </target>
+
+  <target name="releaseinfo-nested-delete" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add key="test" value="true"/>
+      </releaseinfo>
+      <releaseinfo>
+        <delete key="test"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-nested-delete-no-key" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <delete/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-nested-delete-both" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add key="test" value="true"/>
+        <add key="foo" value="bar"/>
+      </releaseinfo>
+      <releaseinfo delete="test">
+        <delete key="foo"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-add-file" depends="-jmods">
+    <property name="props" value="${output}/app.properties"/>
+    <echo file="${props}" message="test=s&#xed;" encoding="ISO-8859-1"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add file="${props}"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-add-file-charset" depends="-jmods">
+    <property name="props" value="${output}/app.properties"/>
+    <echo file="${props}" message="test=s&#xed;" encoding="UTF-8"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add file="${props}" charset="UTF-8"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-add-key" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add key="test" value="true"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-add-no-value" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add key="test"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-add-no-key" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add value="true"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-add-file-and-key" depends="-jmods">
+    <property name="props" value="${output}/app.properties"/>
+    <echo file="${props}" message="test=s&#xed;" encoding="UTF-8"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add file="${props}" key="test"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="releaseinfo-add-file-and-value" depends="-jmods">
+    <property name="props" value="${output}/app.properties"/>
+    <echo file="${props}" message="test=s&#xed;" encoding="UTF-8"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}">
+      <releaseinfo>
+        <add file="${props}" value="true"/>
+      </releaseinfo>
+    </link>
+  </target>
+
+  <target name="-thrower" depends="-dirs">
+
+    <property name="thrower.root" value="${input}/thrower"/>
+
+    <property name="thrower.src" value="${thrower.root}/src"/>
+    <property name="thrower.classes" value="${thrower.root}/classes"/>
+    <property name="thrower.jar.dir" value="${thrower.root}/jars"/>
+    <property name="thrower.jar" value="${thrower.jar.dir}/thrower.jar"/>
+
+    <property name="thrower.mod"      value="org.apache.tools.ant.test.thrower"/>
+    <property name="thrower.pkg"      value="org.apache.tools.ant.test.thrower"/>
+    <property name="thrower.pkg.path" value="org/apache/tools/ant/test/thrower"/>
+    <property name="thrower.pkg.dir" value="${thrower.src}/${thrower.pkg.path}"/>
+
+    <property name="thrower.main-class" value="${thrower.pkg}.Thrower"/>
+
+    <mkdir dir="${thrower.pkg.dir}"/>
+    <echo file="${thrower.pkg.dir}/Thrower.java">
+package ${thrower.pkg};
+
+public class Thrower {
+    public static void main(String[] args) {
+        throw new RuntimeException("Deliberate exception.");
+    }
+}
+    </echo>
+    <echo file="${thrower.src}/module-info.java">
+module ${thrower.mod} {
+    exports ${thrower.pkg};
+}
+    </echo>
+
+    <mkdir dir="${thrower.classes}"/>
+    <javac srcdir="${thrower.src}" destdir="${thrower.classes}"
+           includeAntRuntime="false" debug="true"/>
+
+    <mkdir dir="${thrower.jar.dir}"/>
+    <jar destfile="${thrower.jar}" basedir="${thrower.classes}"/>
+  </target>
+
+  <target name="debug" depends="-thrower">
+    <property name="thrower.jmod" value="${jmods}/thrower.jmod"/>
+    <jmod destfile="${thrower.jmod}" classpath="${thrower.jar}"/>
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${thrower.mod}" debug="false"/>
+  </target>
+
+  <target name="dedup" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"/>
+  </target>
+
+  <target name="dedup-identical" depends="-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          checkDuplicateLegal="true"/>
+  </target>
+
+  <target name="-sign" depends="-smile,-legal">
+    <property name="keystore.file" value="${output}/keystore"/>
+    <property name="keystore.alias" value="test"/>
+    <property name="keystore.password" value="swordfish"/>
+
+    <condition property="execsuffix" value=".exe" else="">
+      <os family="windows"/>
+    </condition>
+    <exec executable="${java.home}/bin/keytool${execsuffix}" failonerror="true">
+      <arg value="-genkeypair"/>
+      <arg value="-keystore"/>
+      <arg file="${keystore.file}"/>
+      <arg value="-storepass"/>
+      <arg value="${keystore.password}"/>
+      <arg value="-keypass"/>
+      <arg value="${keystore.password}"/>
+      <arg value="-alias"/>
+      <arg value="${keystore.alias}"/>
+      <arg value="-dname"/>
+      <arg value="CN=Ant Unit Test, OU=Ant, O=Apache Software Foundation, L=Unknown, ST=Unknown, C=US"/>
+    </exec>
+
+    <signjar jar="${hello.jar}"
+             keystore="${keystore.file}"
+             alias="${keystore.alias}"
+             storepass="${keystore.password}"/>
+  </target>
+
+  <target name="ignoresigning" depends="-sign,-jmods">
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${hello.mod},${smile.mod}"
+          ignoreSigning="true"/>
+  </target>
+
+  <target name="bindservices" depends="-dirs">
+    <property name="inc.root" value="${input}/inc"/>
+
+    <property name="inc.src" value="${inc.root}/src"/>
+    <property name="inc.classes" value="${inc.root}/classes"/>
+    <property name="inc.jar.dir" value="${inc.root}/jars"/>
+    <property name="inc.jar" value="${inc.jar.dir}/inc.jar"/>
+
+    <property name="inc.mod"      value="org.apache.tools.ant.test.inc"/>
+    <property name="inc.pkg"      value="org.apache.tools.ant.test.inc"/>
+    <property name="inc.pkg.path" value="org/apache/tools/ant/test/inc"/>
+    <property name="inc.pkg.dir" value="${inc.src}/${inc.pkg.path}"/>
+
+    <property name="inc.main-class" value="${inc.pkg}.Incrementer"/>
+
+    <mkdir dir="${inc.pkg.dir}"/>
+    <echo file="${inc.pkg.dir}/IncrementProvider.java">
+package ${inc.pkg};
+
+public interface IncrementProvider {
+    int getIncrement();
+}
+    </echo>
+    <echo file="${inc.pkg.dir}/Incrementer.java">
+package ${inc.pkg};
+
+import java.util.ServiceLoader;
+
+public class Incrementer {
+    public static void main(String[] args) {
+        for (IncrementProvider provider : ServiceLoader.load(IncrementProvider.class)) {
+            int n = 0;
+            for (int i = 0; i &lt; 5; i++) {
+                n += provider.getIncrement();
+                System.out.println(n);
+            }
+        }
+    }
+}
+    </echo>
+    <echo file="${inc.src}/module-info.java">
+module ${inc.mod} {
+    exports ${inc.pkg};
+    uses ${inc.pkg}.IncrementProvider;
+}
+    </echo>
+
+    <mkdir dir="${inc.classes}"/>
+    <javac srcdir="${inc.src}" destdir="${inc.classes}"
+           includeAntRuntime="false" debug="true"/>
+
+    <mkdir dir="${inc.jar.dir}"/>
+    <jar destfile="${inc.jar}" basedir="${inc.classes}"/>
+
+    <property name="provider.root" value="${input}/provider"/>
+    <property name="provider.src" value="${provider.root}/src"/>
+    <property name="provider.classes" value="${provider.root}/classes"/>
+    <property name="provider.jar.dir" value="${provider.root}/jars"/>
+    <property name="provider.jar" value="${provider.jar.dir}/provider.jar"/>
+
+    <property name="provider.mod"      value="org.apache.tools.ant.test.provider"/>
+    <property name="provider.pkg"      value="org.apache.tools.ant.test.provider"/>
+    <property name="provider.pkg.path" value="org/apache/tools/ant/test/provider"/>
+    <property name="provider.pkg.dir" value="${provider.src}/${provider.pkg.path}"/>
+
+    <mkdir dir="${provider.pkg.dir}"/>
+    <echo file="${provider.pkg.dir}/ByTwoProvider.java">
+package ${provider.pkg};
+
+import ${inc.pkg}.IncrementProvider;
+
+public class ByTwoProvider
+implements IncrementProvider {
+    @Override
+    public int getIncrement() {
+        return 2;
+    }
+}
+    </echo>
+    <echo file="${provider.src}/module-info.java">
+module ${provider.mod} {
+    exports ${provider.pkg};
+    requires transitive ${inc.mod};
+    provides ${inc.pkg}.IncrementProvider with ${provider.pkg}.ByTwoProvider;
+}
+    </echo>
+
+    <mkdir dir="${provider.classes}"/>
+    <javac srcdir="${provider.src}" destdir="${provider.classes}"
+           includeAntRuntime="false" debug="true"
+           modulepath="${inc.classes}"/>
+
+    <mkdir dir="${provider.jar.dir}"/>
+    <jar destfile="${provider.jar}" basedir="${provider.classes}"/>
+
+    <property name="inc.jmod" value="${jmods}/inc.jmod"/>
+    <property name="provider.jmod" value="${jmods}/provider.jmod"/>
+
+    <jmod destfile="${inc.jmod}"
+          classpath="${inc.jar}"/>
+
+    <jmod destfile="${provider.jmod}"
+          classpath="${provider.jar}"
+          modulepath="${inc.jar.dir}"/>
+
+    <property name="image2" value="${output}/image2"/>
+
+    <link destdir="${image}" modulepath="${jdkmods}${jmods}"
+          modules="${inc.mod}"
+          bindServices="false"/>
+  
+    <link destdir="${image2}" modulepath="${jdkmods}${jmods}"
+          modules="${inc.mod}"
+          bindServices="true"/>
+  </target>
+</project>

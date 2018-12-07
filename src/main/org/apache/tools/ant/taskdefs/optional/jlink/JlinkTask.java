@@ -25,8 +25,10 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 
 /**
- * This class defines objects that can link together various jar and
- * zip files.
+ * This task defines objects that can link together various jar and
+ * zip files.  It is not related to the {@code jlink} tool present in
+ * Java 9 and later;  for that, see
+ * {@link org.apache.tools.ant.taskdefs.modules.Link}.
  *
  * <p>It is basically a wrapper for the jlink code written originally
  * by <a href="mailto:beard@netscape.com">Patrick Beard</a>.  The

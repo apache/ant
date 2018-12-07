@@ -121,7 +121,7 @@
          destfile="${tmp.jar}"
          basedir="."
          includes="j*.xml"
-         excludes="java.xml"
+         excludes="java.xml,jmod.xml"
          update="true"
     />
   </target>
@@ -131,7 +131,7 @@
          destfile="${tmp.jar}"
          basedir="."
          includes="j*.xml"
-         excludes="java.xml"
+         excludes="java.xml,jmod.xml"
     />
   </target>
 
@@ -144,14 +144,14 @@
           depends="makezip">
     <jar destfile="${tmp.jar}"
          update="true">
-      <zipfileset src="${tmp.zip}" excludes="java.xml"/>
+      <zipfileset src="${tmp.zip}" excludes="java.xml,jmod.xml"/>
     </jar>
   </target>
 
   <target name="testNoRecreateZipfilesetExcludesWithoutUpdate"
           depends="makezip">
     <jar destfile="${tmp.jar}">
-      <zipfileset src="${tmp.zip}" excludes="java.xml"/>
+      <zipfileset src="${tmp.zip}" excludes="java.xml,jmod.xml"/>
     </jar>
   </target>
 
