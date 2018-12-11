@@ -140,6 +140,9 @@ public class Project implements ResourceFactory {
     private String description;
 
 
+    /** lock object used when adding/removing references */
+    private final Object referencesLock = new Object();
+
     /** Map of references within the project (paths etc) (String to Object). */
     private final Hashtable<String, Object> references = new AntRefTable();
 
@@ -1971,17 +1974,19 @@ public class Project implements ResourceFactory {
      * @param value The value of the reference.
      */
     public void addReference(final String referenceName, final Object value) {
-        final Object old = ((AntRefTable) references).getReal(referenceName);
-        if (old == value) {
-            // no warning, this is not changing anything
-            return;
+        synchronized (referencesLock) {
+            final Object old = ((AntRefTable) references).getReal(referenceName);
+            if (old == value) {
+                // no warning, this is not changing anything
+                return;
+            }
+            if (old != null && !(old instanceof UnknownElement)) {
+                log("Overriding previous definition of reference to " + referenceName,
+                    MSG_VERBOSE);
+            }
+            log("Adding reference: " + referenceName, MSG_DEBUG);
+            references.put(referenceName, value);
         }
-        if (old != null && !(old instanceof UnknownElement)) {
-            log("Overriding previous definition of reference to " + referenceName,
-                MSG_VERBOSE);
-        }
-        log("Adding reference: " + referenceName, MSG_DEBUG);
-        references.put(referenceName, value);
     }
 
     /**
@@ -2002,7 +2007,9 @@ public class Project implements ResourceFactory {
      * @since Ant 1.8.0
      */
     public boolean hasReference(final String key) {
-        return references.containsKey(key);
+        synchronized (referencesLock) {
+            return references.containsKey(key);
+        }
     }
 
     /**
@@ -2015,7 +2022,9 @@ public class Project implements ResourceFactory {
      * @since Ant 1.8.1
      */
     public Map<String, Object> getCopyOfReferences() {
-        return new HashMap<>(references);
+        synchronized (referencesLock) {
+            return new HashMap<>(references);
+        }
     }
 
     /**
@@ -2029,11 +2038,14 @@ public class Project implements ResourceFactory {
      *         there is no such reference in the project, with type inference.
      */
     public <T> T getReference(final String key) {
-        @SuppressWarnings("unchecked")
-        final T ret = (T) references.get(key);
-        if (ret != null) {
-            return ret;
+        synchronized (referencesLock) {
+            @SuppressWarnings("unchecked")
+            final T ret = (T) references.get(key);
+            if (ret != null) {
+                return ret;
+            }
         }
+
         if (!key.equals(MagicNames.REFID_PROPERTY_HELPER)) {
             try {
                 if (PropertyHelper.getPropertyHelper(this).containsProperties(key)) {

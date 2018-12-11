@@ -33,6 +33,10 @@ Fixed bugs:
    of the destination directory.
    Bugzilla Report 62890
 
+ * Fixes a potential java.util.ConcurrentModificationException in
+   org.apache.tools.ant.Project#getCopyOfReferences.
+   Github Pull Request #81
+
 
 Other changes:
 --------------
