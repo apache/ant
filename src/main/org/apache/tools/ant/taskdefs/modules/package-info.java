@@ -19,5 +19,7 @@
 /**
  * Tasks for dealing with Java modules, which are supported starting with
  * Java 9.
+ *
+ * @since 1.10.6
  */
 package org.apache.tools.ant.taskdefs.modules;

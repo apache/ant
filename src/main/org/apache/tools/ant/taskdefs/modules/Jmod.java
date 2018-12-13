@@ -150,6 +150,8 @@ import org.apache.tools.ant.types.resources.Union;
  * </dl>
  * <p>
  * destFile and classpath are required data.
+ *
+ * @since 1.10.6
  */
 public class Jmod
 extends Task {

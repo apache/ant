@@ -230,6 +230,8 @@ import org.apache.tools.ant.util.ResourceUtils;
  * </dl>
  *
  * @see <a href="https://docs.oracle.com/en/java/javase/11/tools/jlink.html"><code>jlink</code> tool reference</a>
+ *
+ * @since 1.10.6
  */
 public class Link
 extends Task {

@@ -171,84 +171,256 @@ module ${smile.mod} {
     <property name="man2" value="${manpages}/man2.1"/>
 
     <echo file="${man1}"><!--
---><![CDATA[.TH TRUE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
-.SH NAME
-true \- do nothing, successfully
-.SH SYNOPSIS
-.B true
-[\fI\,ignored command line arguments\/\fR]
-.br
-.B true
-\fI\,OPTION\/\fR
-.SH DESCRIPTION
-.\" Add any additional description here
+--><![CDATA[.TH "CHFN" "1" "05/17/2017" "shadow\-utils 4\&.4" "User Commands"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+chfn \- change real user name and information
+.SH "SYNOPSIS"
+.HP \w'\fBchfn\fR\ 'u
+\fBchfn\fR [\fIoptions\fR] [\fILOGIN\fR]
+.SH "DESCRIPTION"
 .PP
-Exit with a status code indicating success.
-.TP
-\fB\-\-help\fR
-display this help and exit
-.TP
-\fB\-\-version\fR
-output version information and exit
+The
+\fBchfn\fR
+command changes user fullname, office room number, office phone number, and home phone number information for a user\*(Aqs account\&. This information is typically printed by
+\fBfinger\fR(1)
+and similar programs\&. A normal user may only change the fields for her own account, subject to the restrictions in
+/etc/login\&.defs\&. (The default configuration is to prevent users from changing their fullname\&.) The superuser may change any field for any account\&. Additionally, only the superuser may use the
+\fB\-o\fR
+option to change the undefined portions of the GECOS field\&.
 .PP
-NOTE: your shell may have its own version of true, which usually supersedes
-the version described here.  Please refer to your shell's documentation
-for details about the options it supports.
-.SH AUTHOR
-Written by Jim Meyering.
-.SH "REPORTING BUGS"
-GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
-.br
-Report true translation bugs to <http://translationproject.org/team/>
-.SH COPYRIGHT
-Copyright \(co 2016 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
-.br
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
+These fields must not contain any colons\&. Except for the
+\fIother\fR
+field, they should not contain any comma or equal sign\&. It is also recommended to avoid non\-US\-ASCII characters, but this is only enforced for the phone numbers\&. The
+\fIother\fR
+field is used to store accounting information used by other applications\&.
+.SH "OPTIONS"
+.PP
+The options which apply to the
+\fBchfn\fR
+command are:
+.PP
+\fB\-f\fR, \fB\-\-full\-name\fR\ \&\fIFULL_NAME\fR
+.RS 4
+Change the user\*(Aqs full name\&.
+.RE
+.PP
+\fB\-h\fR, \fB\-\-home\-phone\fR\ \&\fIHOME_PHONE\fR
+.RS 4
+Change the user\*(Aqs home phone number\&.
+.RE
+.PP
+\fB\-o\fR, \fB\-\-other\fR\ \&\fIOTHER\fR
+.RS 4
+Change the user\*(Aqs other GECOS information\&. This field is used to store accounting information used by other applications, and can be changed only by a superuser\&.
+.RE
+.PP
+\fB\-r\fR, \fB\-\-room\fR\ \&\fIROOM_NUMBER\fR
+.RS 4
+Change the user\*(Aqs room number\&.
+.RE
+.PP
+\fB\-R\fR, \fB\-\-root\fR\ \&\fICHROOT_DIR\fR
+.RS 4
+Apply changes in the
+\fICHROOT_DIR\fR
+directory and use the configuration files from the
+\fICHROOT_DIR\fR
+directory\&.
+.RE
+.PP
+\fB\-u\fR, \fB\-\-help\fR
+.RS 4
+Display help message and exit\&.
+.RE
+.PP
+\fB\-w\fR, \fB\-\-work\-phone\fR\ \&\fIWORK_PHONE\fR
+.RS 4
+Change the user\*(Aqs office phone number\&.
+.RE
+.PP
+If none of the options are selected,
+\fBchfn\fR
+operates in an interactive fashion, prompting the user with the current values for all of the fields\&. Enter the new value to change the field, or leave the line blank to use the current value\&. The current value is displayed between a pair of
+\fB[ ]\fR
+marks\&. Without options,
+\fBchfn\fR
+prompts for the current user account\&.
+.SH "CONFIGURATION"
+.PP
+The following configuration variables in
+/etc/login\&.defs
+change the behavior of this tool:
+.PP
+\fBCHFN_RESTRICT\fR (string)
+.RS 4
+This parameter specifies which values in the
+\fIgecos\fR
+field of the
+/etc/passwd
+file may be changed by regular users using the
+\fBchfn\fR
+program\&. It can be any combination of letters
+\fIf\fR,
+\fIr\fR,
+\fIw\fR,
+\fIh\fR, for Full name, Room number, Work phone, and Home phone, respectively\&. For backward compatibility,
+\fIyes\fR
+is equivalent to
+\fIrwh\fR
+and
+\fIno\fR
+is equivalent to
+\fIfrwh\fR\&. If not specified, only the superuser can make any changes\&. The most restrictive setting is better achieved by not installing
+\fBchfn\fR
+SUID\&.
+.RE
+.SH "FILES"
+.PP
+/etc/login\&.defs
+.RS 4
+Shadow password suite configuration\&.
+.RE
+.PP
+/etc/passwd
+.RS 4
+User account information\&.
+.RE
 .SH "SEE ALSO"
-Full documentation at: <http://www.gnu.org/software/coreutils/true>
+.PP
+\fBchsh\fR(1),
+\fBlogin.defs\fR(5),
+\fBpasswd\fR(5)\&.
 ]]><!--
     --></echo>
 
     <echo file="${man2}"><!--
---><![CDATA[.TH FALSE "1" "February 2017" "GNU coreutils 8.26" "User Commands"
-.SH NAME
-false \- do nothing, unsuccessfully
-.SH SYNOPSIS
-.B false
-[\fI\,ignored command line arguments\/\fR]
-.br
-.B false
-\fI\,OPTION\/\fR
-.SH DESCRIPTION
-.\" Add any additional description here
+--><![CDATA[.TH "VIPW" "8" "05/17/2017" "shadow\-utils 4\&.4" "System Management Commands"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+vipw, vigr \- edit the password, group, shadow\-password or shadow\-group file
+.SH "SYNOPSIS"
+.HP \w'\fBvipw\fR\ 'u
+\fBvipw\fR [\fIoptions\fR]
+.HP \w'\fBvigr\fR\ 'u
+\fBvigr\fR [\fIoptions\fR]
+.SH "DESCRIPTION"
 .PP
-Exit with a status code indicating failure.
-.TP
-\fB\-\-help\fR
-display this help and exit
-.TP
-\fB\-\-version\fR
-output version information and exit
+The
+\fBvipw\fR
+and
+\fBvigr\fR
+commands edits the files
+/etc/passwd
+and
+/etc/group, respectively\&. With the
+\fB\-s\fR
+flag, they will edit the shadow versions of those files,
+/etc/shadow
+and
+/etc/gshadow, respectively\&. The programs will set the appropriate locks to prevent file corruption\&. When looking for an editor, the programs will first try the environment variable
+\fB$VISUAL\fR, then the environment variable
+\fB$EDITOR\fR, and finally the default editor,
+\fBvi\fR(1)\&.
+.SH "OPTIONS"
 .PP
-NOTE: your shell may have its own version of false, which usually supersedes
-the version described here.  Please refer to your shell's documentation
-for details about the options it supports.
-.SH AUTHOR
-Written by Jim Meyering.
-.SH "REPORTING BUGS"
-GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
-.br
-Report false translation bugs to <http://translationproject.org/team/>
-.SH COPYRIGHT
-Copyright \(co 2016 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
-.br
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
+The options which apply to the
+\fBvipw\fR
+and
+\fBvigr\fR
+commands are:
+.PP
+\fB\-g\fR, \fB\-\-group\fR
+.RS 4
+Edit group database\&.
+.RE
+.PP
+\fB\-h\fR, \fB\-\-help\fR
+.RS 4
+Display help message and exit\&.
+.RE
+.PP
+\fB\-p\fR, \fB\-\-passwd\fR
+.RS 4
+Edit passwd database\&.
+.RE
+.PP
+\fB\-q\fR, \fB\-\-quiet\fR
+.RS 4
+Quiet mode\&.
+.RE
+.PP
+\fB\-R\fR, \fB\-\-root\fR\ \&\fICHROOT_DIR\fR
+.RS 4
+Apply changes in the
+\fICHROOT_DIR\fR
+directory and use the configuration files from the
+\fICHROOT_DIR\fR
+directory\&.
+.RE
+.PP
+\fB\-s\fR, \fB\-\-shadow\fR
+.RS 4
+Edit shadow or gshadow database\&.
+.RE
+.SH "ENVIRONMENT"
+.PP
+\fBVISUAL\fR
+.RS 4
+Editor to be used\&.
+.RE
+.PP
+\fBEDITOR\fR
+.RS 4
+Editor to be used if
+\fBVISUAL\fR
+is not set\&.
+.RE
+.SH "FILES"
+.PP
+/etc/group
+.RS 4
+Group account information\&.
+.RE
+.PP
+/etc/gshadow
+.RS 4
+Secure group account information\&.
+.RE
+.PP
+/etc/passwd
+.RS 4
+User account information\&.
+.RE
+.PP
+/etc/shadow
+.RS 4
+Secure user account information\&.
+.RE
 .SH "SEE ALSO"
-Full documentation at: <http://www.gnu.org/software/coreutils/false>
+.PP
+\fBvi\fR(1),
+\fBgroup\fR(5),
+\fBgshadow\fR(5)
+,
+\fBpasswd\fR(5), ,
+\fBshadow\fR(5)\&.
 ]]><!--
     --></echo>
   </target>

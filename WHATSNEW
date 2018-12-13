@@ -71,6 +71,8 @@ Other changes:
    loading resources at runtime in Java 9+ runtime environments.
    Bugzilla Report 62952
 
+ * Added jmod and link tasks, to support jmod and jlink tools of JDK 9+.
+
 
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================
