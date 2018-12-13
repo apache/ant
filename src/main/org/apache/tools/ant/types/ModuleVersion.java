@@ -24,6 +24,8 @@ import java.util.Objects;
  * Element describing the parts of a Java
  * <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/module/ModuleDescriptor.Version.html">module version</a>.
  * The version number is required;  all other parts are optional.
+ *
+ * @since 1.10.6
  */
 public class ModuleVersion {
     /** Module version's required <em>version number</em>. */
