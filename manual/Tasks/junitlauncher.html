@@ -576,6 +576,24 @@ the new JVM instance that will be created to launch the tests.
             than this configured value, then the JVM is killed</td>
         <td>No</td>
     </tr>
+    <tr>
+        <td>includeJUnitPlatformLibraries</td>
+        <td>If set to <code>true</code>, then the jar files that make up the
+        JUnit platform, will be included in the runtime classpath of the forked
+        JVM. If set to <code>false</code>, then the <a href="#nested-classpath">configured classpath</a>
+        of this task, which will be made available to the runtime classpath of the forked
+        JVM, is expected to contain the JUnit platform library jars</td>
+        <td>No. Value defaults to <code>true</code>.</td>
+    </tr>
+    <tr>
+        <td>includeAntRuntimeLibraries</td>
+        <td>If set to <code>true</code>, then the jar files that make up the
+            Ant runtime, will be included in the runtime classpath of the forked
+            JVM. If set to <code>false</code>, then the <a href="#nested-classpath">configured classpath</a>
+            of this task, which will be made available to the runtime classpath of the forked
+            JVM, is expected to contain the Ant runtime jars</td>
+        <td>No. Value defaults to <code>true</code>.</td>
+    </tr>
 </table>
 
 The <code>fork</code> element allows the following nested elements:

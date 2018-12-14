@@ -8,6 +8,13 @@ Changes that could break older environments:
    supporting Java Advanced Imaging are removed; imageio task (based on
    ImageIO and AWT) is provided as a replacement.
 
+ * junitlauncher task has changed the class names and package names of
+   the task as well as some of the supporting classes of that task. If
+   any code depended on these class or package names, they will have to
+   be updated to reference these newly named classes. This however,
+   doesn't impact build scripts if their reference to junitlauncher task
+   was merely through the use of the <junitlauncher> element.
+
 Fixed bugs:
 -----------
 
@@ -46,8 +53,8 @@ Other changes:
  * the <modified> selector has a new built-in algorithm 'lastmodified'
    which computes a value based upon the lastmodified time of the file.
 
- * junitlauncher task now supports forking and can be used with JaCoCo
-   (see https://github.com/jacoco/jacoco/issues/673).
+ * junitlauncher task now supports running tests in a forked JVM. More
+   details available in the junitlauncher task manual.
 
  * signjar and verifyjar now support the -providerName, -providerClass
    and -providerArg command line options of keytool via new attributes.
