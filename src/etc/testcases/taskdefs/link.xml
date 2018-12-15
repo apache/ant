@@ -1252,7 +1252,7 @@ module ${provider.mod} {
     <link destdir="${image}" modulepath="${jdkmods}${jmods}"
           modules="${inc.mod}"
           bindServices="false"/>
-  
+
     <link destdir="${image2}" modulepath="${jdkmods}${jmods}"
           modules="${inc.mod}"
           bindServices="true"/>
