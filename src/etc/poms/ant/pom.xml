@@ -35,6 +35,9 @@
   <artifactId>ant</artifactId>
   <version>1.10.6-SNAPSHOT</version>
   <name>Apache Ant Core</name>
+  <properties>
+    <modules.exclude>org/apache/tools/ant/taskdefs/modules/</modules.exclude>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>org.apache.ant</groupId>
@@ -175,6 +178,7 @@
             <exclude>org/apache/tools/ant/listener/CommonsLoggingListener*</exclude>
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
+            <exclude>${modules.exclude}</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/NetRexxC*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Xalan2TraceSupport*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/image/</exclude>
@@ -213,6 +217,8 @@
             <exclude>org/apache/tools/ant/taskdefs/StyleTest*</exclude>
             <!-- ERROR: Unexpected recipients -->
             <exclude>org/apache/tools/ant/taskdefs/email/EmailTask*</exclude>
+            <!-- Java9+ -->
+            <exclude>${modules.exclude}</exclude>
             <!-- antlr -->
             <exclude>org/apache/tools/ant/taskdefs/optional/ANTLR*</exclude>
             <!-- obsolete -->
@@ -366,4 +372,15 @@
     <testOutputDirectory>../../../../target/${project.artifactId}/testcases</testOutputDirectory>
     <directory>../../../../target/${project.artifactId}</directory>
   </build>
+  <profiles>
+    <profile>
+      <id>java9+</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <properties>
+        <modules.exclude>not/here</modules.exclude>
+      </properties>
+    </profile>
+  </profiles>
 </project>
