@@ -6,7 +6,7 @@ that all other people could benefit from?  This is great, we'd love to
 hear from you.
 
 Ant's primary code repository is the
-[git repository at Apache](https://git-wip-us.apache.org/repos/asf/ant.git)
+[git repository at Apache](https://gitbox.apache.org/repos/asf/ant.git)
 and we've also got a [github mirror](https://github.com/apache/ant/).
 
 There are two ways you can contribute, you can either use the

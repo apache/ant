@@ -92,7 +92,7 @@ Note: This document was adapted from the one created in the context of
 
 9.  Ensure that the GPG key you use is inside the KEYS file in Ant's
     git repository
-    <https://git-wip-us.apache.org/repos/asf?p=ant-antlibs-common.git;a=blob;f=KEYS;h=dc62b011b1b429bd6de913f8f2bce79b715f96db;hb=HEAD>
+    <https://gitbox.apache.org/repos/asf?p=ant-antlibs-common.git;a=blob;f=KEYS;h=dc62b011b1b429bd6de913f8f2bce79b715f96db;hb=HEAD>
     - and that you copy the KEYS file to /www/www.apache.org/dist/ant
 
     Also make sure you have sent the key that you use to a public

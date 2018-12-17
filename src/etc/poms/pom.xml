@@ -52,9 +52,9 @@
     </repository>
   </distributionManagement>
   <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/ant.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/ant.git</developerConnection>
-    <url>https://git-wip-us.apache.org/repos/asf/ant.git</url>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/ant.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/ant.git</developerConnection>
+    <url>https://gitbox.apache.org/repos/asf/ant.git</url>
   </scm>
   <ciManagement>
     <system>jenkins</system>
