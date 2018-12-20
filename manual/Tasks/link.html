@@ -279,7 +279,7 @@ which executes a particular module's main class.  Attributes:</p>
 
 <h4 id="nested-locale">locale</h4>
 <p>Specifies locales to include in linked image.  May be specified multiple
-times.  Requires <code>jdk.localedata</code> module.  Attributes:
+times.  Requires <code>jdk.localedata</code> module.  Attributes:</p>
 <table class="attr">
   <tr>
     <th scope="col">Attribute</th>
@@ -318,7 +318,7 @@ times.  Attributes:</p>
 
 <p>If the <code>resourceOrder</code> attribute is also present on the task, its
 patterns are treated as if they occur before patterns in nested
-<code><resourceOrder></code> elements.</p>
+<code>&lt;resourceOrder&gt;</code> elements.</p>
 
 <h4 id="nested-excludeResources">excludeResources</h4>
 <p>Excludes files from linked image tree.  May be specified multiple times.
@@ -423,7 +423,7 @@ patterns are treated as if they occur before patterns in nested
 
 <h4 id="nested-releaseInfo">releaseInfo</h4>
 <p>Replaces, augments, or trims the image's release info properties.
-Can be specified multiple times.  Attributes:
+Can be specified multiple times.  Attributes:</p>
 <table class="attr">
   <tr>
     <th scope="col">Attribute</th>
@@ -575,7 +575,6 @@ jmod describe "$FOREIGN_JDK_HOME"/jmods/java.base.jmod | grep '^platform'
 </pre>
 </li>
 </ul>
-<ul>
 
 </body>
 </html>

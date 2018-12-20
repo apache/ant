@@ -175,7 +175,7 @@
 <p>
     Below is an example of setting up the classpath to include the Jupiter test engine and
     the JUnit platform libraries during the execution of the tests.
-    <br/>
+</p>
     <pre>
 &lt;project&gt;
 
@@ -228,8 +228,9 @@
     &lt;/target&gt;
 &lt;/project&gt;
     </pre>
-
+<p>
     In the example above,
+</p>
     <ul>
         <li>The <code>src/lib/jupiter</code> directory is expected to contain
         the Jupiter test engine related jars (which have been
@@ -240,6 +241,7 @@
         <a href="#junit-platform-libraries">listed in an earlier section of this
         document</a>)</li>
     </ul>
+<p>
     In the <code>test</code> target we use the <code>classpath</code> nested element
     to point to the <code>junit.engine.jupiter.classpath</code> and <code>junit.platform.libs.classpath</code>
     containing those jars.
@@ -602,13 +604,13 @@ The <code>fork</code> element allows the following nested elements:
 <p>
     Additional JVM arguments may be passed to the forked JVM via the <code>jvmarg</code> elements.
     For example:
+</p>
     <pre>
     &lt;fork ...&gt;
       &lt;jvmarg value="-Djava.compiler=NONE"/&gt;
       ...
     &lt;/fork&gt;
     </pre>
-</p>
 
 <p>
     <code>jvmarg</code> allows all attributes described in <a href="../using.html#arg">Command-line Arguments</a>
@@ -617,13 +619,13 @@ The <code>fork</code> element allows the following nested elements:
 <h5>sysproperty</h5>
 <p>
     The <code>sysproperty</code> elements allow passing Java system properties to the forked JVM:
+</p>
     <pre>
     &lt;fork&gt;
         &lt;sysproperty key="greeting" value="hello world"/&gt;
     ...
     &lt;/fork&gt;
     </pre>
-</p>
 <p>
     The attributes for this element are the same as for <a href="../Tasks/exec.html#env">environment variables</a>
 </p>
