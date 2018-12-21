@@ -109,7 +109,7 @@
   <!-- Simian -->
   <property name="simian.version"
             value="2.5.10"
-            description="Which Version of Simian to use"/>
+            description="Which version of Simian to use"/>
   <property name="simian.uri"
             value="http://www.harukizaemon.com/simian/simian-${simian.version}.tar.gz"
             description="Where to get Simian"/>
@@ -127,6 +127,11 @@
   <property name="owasp.dc.report.dir"
             value="${build.dir}/reports/owasp-dc"
             description="Where to store the OWASP Dependency Check reports"/>
+
+  <!-- Nu HTML Validator -->
+  <property name="vnu.version"
+            value="18.11.5"
+            description="Which version of Nu HTML Validator to use"/>
 
   <target name="init-ivy">
     <property name="ivy.version"  value="2.4.0"/>
@@ -312,4 +317,19 @@
     </owasp:dependency-check>
   </target>
 
+  <target name="vnu" description="--> Runs the Nu HTML Validator" depends="init-ivy">
+    <ivy:cachepath organisation="nu.validator" module="validator" revision="${vnu.version}"
+                   inline="true" conf="default" pathid="nu.classpath"/>
+    <fileset dir="." id="html.files">
+      <include name="${src.dir}/**/*.html"/>
+      <include name="${manual.dir}/**/*.html"/>
+      <exclude name="${manual.dir}/index.html"/>
+    </fileset>
+    <pathconvert pathsep=" " property="html.list" refid="html.files"/>
+    <java classname="nu.validator.client.SimpleCommandLineValidator" classpathref="nu.classpath"
+          failonerror="true" taskname="vnu">
+      <arg line="--html --format text"/>
+      <arg line="${html.list}"/>
+    </java>
+  </target>
 </project>
