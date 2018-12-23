@@ -85,6 +85,10 @@ Other changes:
  * Added jmod and link tasks, to support jmod and jlink tools of JDK 9+.
    Github Pull Request #80
 
+ * Jsch library dependency has now been upgraded to 0.1.55. Jsch is
+   the library behind the sshexec and scp Ant tasks.
+   Github Pull Request #84
+
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================
 
