@@ -35,6 +35,10 @@ Other changes:
  * added several attributes to <javadoc> that support modules.
    Bugzilla Report 62424
 
+ * Jsch library dependency has now been upgraded to 0.1.55. Jsch is
+   the library behind the sshexec and scp Ant tasks.
+   Github Pull Request #84
+
 Changes from Ant 1.9.12 TO Ant 1.9.13
 =====================================
 
