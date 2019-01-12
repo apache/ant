@@ -144,8 +144,21 @@ public abstract class ClearCase extends Task {
      * Execute the given command, and return it's output
      * @param cmdline command line to execute
      * @return output of the command line
+     * @deprecated use the two arg version instead
      */
+    @Deprecated
     protected String runS(Commandline cmdline) {
+        return runS(cmdline, false);
+    }
+
+    /**
+     * Execute the given command, and return it's output
+     * @param cmdline command line to execute
+     * @param failOnError whether to fail the build if the command fails
+     * @return output of the command line
+     * @since Ant 1.9.14
+     */
+    protected String runS(Commandline cmdline, boolean failOnError) {
         String   outV  = "opts.cc.runS.output" + pcnt++;
         ExecTask exe   = new ExecTask(this);
         Commandline.Argument arg = exe.createArg();
@@ -153,6 +166,7 @@ public abstract class ClearCase extends Task {
         exe.setExecutable(cmdline.getExecutable());
         arg.setLine(Commandline.toString(cmdline.getArguments()));
         exe.setOutputproperty(outV);
+        exe.setFailonerror(failOnError);
         exe.execute();
 
         return getProject().getProperty(outV);

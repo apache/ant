@@ -168,7 +168,7 @@ public class CCCheckout extends ClearCase {
         // viewpath
         cmdl.createArgument().setValue(getViewPath());
 
-        result = runS(cmdl);
+        result = runS(cmdl, getFailOnErr());
 
         // System.out.println( "lsCheckout: " + result );
 
