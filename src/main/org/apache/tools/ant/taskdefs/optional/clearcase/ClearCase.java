@@ -34,9 +34,9 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * A base class for creating tasks for executing commands on ClearCase.
  * <p>
- * The class extends the 'exec' task as it operates by executing the cleartool program
- * supplied with ClearCase. By default the task expects the cleartool executable to be
- * in the path, * you can override this be specifying the cleartooldir attribute.
+ * By default the task expects the cleartool executable to be in the
+ * path, you can override this be specifying the cleartooldir
+ * attribute.
  * </p>
  * <p>
  * This class provides set and get methods for the 'viewpath' and 'objselect'
