@@ -15,6 +15,10 @@ Changes that could break older environments:
    doesn't impact build scripts if their reference to junitlauncher task
    was merely through the use of the <junitlauncher> element.
 
+ * ClearCase#runS has been augmented by a two arg-version and the
+   one-arg version will no longer be called. This may affect
+   subclasses that have overridden runS.
+
 Fixed bugs:
 -----------
 
@@ -44,6 +48,9 @@ Fixed bugs:
    org.apache.tools.ant.Project#getCopyOfReferences.
    Github Pull Request #81
 
+ * cccheckout would ignore an error of the "ls checkout" command even
+   if failOnError was set to false.
+   Bugzilla Report 63071
 
 Other changes:
 --------------

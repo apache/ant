@@ -217,7 +217,7 @@ public class CCCheckout extends ClearCase {
         // viewpath
         cmdl.createArgument().setValue(getViewPath());
 
-        String result = runS(cmdl);
+        String result = runS(cmdl, getFailOnErr());
 
         return result != null && !result.isEmpty();
     }

@@ -33,9 +33,9 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * A base class for creating tasks for executing commands on ClearCase.
  * <p>
- * The class extends the 'exec' task as it operates by executing the cleartool program
- * supplied with ClearCase. By default the task expects the cleartool executable to be
- * in the path, * you can override this be specifying the cleartooldir attribute.
+ * By default the task expects the cleartool executable to be in the
+ * path, you can override this be specifying the cleartooldir
+ * attribute.
  * </p>
  * <p>
  * This class provides set and get methods for the 'viewpath' and 'objselect'
@@ -205,8 +205,21 @@ public abstract class ClearCase extends Task {
      * Execute the given command, and return it's output
      * @param cmdline command line to execute
      * @return output of the command line
+     * @deprecated use the two arg version instead
      */
+    @Deprecated
     protected String runS(Commandline cmdline) {
+        return runS(cmdline, false);
+    }
+
+    /**
+     * Execute the given command, and return it's output
+     * @param cmdline command line to execute
+     * @param failOnError whether to fail the build if the command fails
+     * @return output of the command line
+     * @since Ant 1.10.6
+     */
+    protected String runS(Commandline cmdline, boolean failOnError) {
         String   outV  = "opts.cc.runS.output" + pcnt++;
         ExecTask exe   = new ExecTask(this);
         Commandline.Argument arg = exe.createArg();
@@ -214,6 +227,7 @@ public abstract class ClearCase extends Task {
         exe.setExecutable(cmdline.getExecutable());
         arg.setLine(Commandline.toString(cmdline.getArguments()));
         exe.setOutputproperty(outV);
+        exe.setFailonerror(failOnError);
         exe.execute();
 
         return getProject().getProperty(outV);
