@@ -23,6 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class DeweyDecimalTest {
 
@@ -72,6 +73,59 @@ public class DeweyDecimalTest {
         assertEquals(0, new DeweyDecimal("1.2").compareTo(new DeweyDecimal("1.2.0")));
     }
 
-    // TODO isGreaterThan, ...
+    @Test
+    public void intConstructor() {
+        int[] args = {1,2,3};
+        assertEquals("1.2.3", new DeweyDecimal(args).toString());
+    }
 
+    @Test
+    public void intConstructorNegativeValues() {
+        int[] args = {-1,-2,-3};
+        assertEquals("-1.-2.-3", new DeweyDecimal(args).toString());
+    }
+
+    @Test
+    public void details() {
+         DeweyDecimal dd = new DeweyDecimal("1.2.3");
+         assertEquals(3, dd.getSize());
+         assertEquals(2, dd.get(1));
+    }
+
+    @Test
+    public void isGreaterThanOrEqual() {
+         DeweyDecimal first = new DeweyDecimal("1.2.3");
+         assertTrue(first.isGreaterThanOrEqual(new DeweyDecimal("1")));
+         assertTrue(first.isGreaterThanOrEqual(new DeweyDecimal("1.2")));
+         assertTrue(first.isGreaterThanOrEqual(new DeweyDecimal("1.2.3")));
+         assertTrue(first.isGreaterThanOrEqual(new DeweyDecimal("1.2.3.0")));
+         assertFalse(first.isGreaterThanOrEqual(new DeweyDecimal("1.2.4")));
+         assertFalse(first.isGreaterThanOrEqual(new DeweyDecimal("1.3")));
+         assertFalse(first.isGreaterThanOrEqual(new DeweyDecimal("2")));
+    }
+
+    @Test
+    public void equals() {
+         DeweyDecimal dd = new DeweyDecimal("1.2.3");
+         assertFalse(dd.equals("other"));
+         assertFalse(dd.equals(null));
+         assertTrue(dd.equals(new DeweyDecimal("1.2.3")));
+         assertTrue(dd.equals(new DeweyDecimal("1.2.3.0")));
+    }
+
+    @Test
+    public void isLessThan() {
+         DeweyDecimal dd = new DeweyDecimal("1.2.3");
+         assertTrue(dd.isLessThan(new DeweyDecimal("2")));
+         assertFalse(dd.isLessThan(new DeweyDecimal("1")));
+         assertFalse(dd.isLessThan(new DeweyDecimal("1.2.3")));
+    }
+
+    @Test
+    public void isLessThanOrEqual() {
+         DeweyDecimal dd = new DeweyDecimal("1.2.3");
+         assertTrue(dd.isLessThanOrEqual(new DeweyDecimal("2")));
+         assertFalse(dd.isLessThanOrEqual(new DeweyDecimal("1")));
+         assertTrue(dd.isLessThanOrEqual(new DeweyDecimal("1.2.3")));
+    }
 }
