@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.SocketTimeoutException;
 import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
@@ -35,6 +36,7 @@ import org.apache.tools.ant.ProjectComponent;
  *   url - the URL of the request.
  *   errorsBeginAt - number at which errors begin at; default=400.
  *   requestMethod - HTTP request method to use; GET, HEAD, etc. default=GET
+ *   readTimeout - The read timeout in ms. default=0
  * @since Ant 1.5
  */
 public class Http extends ProjectComponent implements Condition {
@@ -46,6 +48,7 @@ public class Http extends ProjectComponent implements Condition {
     private boolean followRedirects = true;
 
     private int errorsBeginAt = ERROR_BEGINS;
+    private int readTimeout = 0;
 
     /**
      * Set the url attribute
@@ -93,6 +96,20 @@ public class Http extends ProjectComponent implements Condition {
     }
 
     /**
+     * Sets the read timeout. Any value < 0 will be ignored
+     *
+     * @param t the timeout value in milli seconds
+     *
+     * @see java.net.HttpURLConnection#setReadTimeout
+     * @since Ant 1.10.6
+     */
+    public void setReadTimeout(int t) {
+        if(t >= 0) {
+            this.readTimeout = t;
+        }
+    }
+
+    /**
      * @return true if the HTTP request succeeds
      * @exception BuildException if an error occurs
      */
@@ -110,6 +127,7 @@ public class Http extends ProjectComponent implements Condition {
                     HttpURLConnection http = (HttpURLConnection) conn;
                     http.setRequestMethod(requestMethod);
                     http.setInstanceFollowRedirects(followRedirects);
+                    http.setReadTimeout(readTimeout);
                     int code = http.getResponseCode();
                     log("Result code for " + spec + " was " + code,
                         Project.MSG_VERBOSE);
@@ -118,6 +136,8 @@ public class Http extends ProjectComponent implements Condition {
             } catch (ProtocolException pe) {
                 throw new BuildException("Invalid HTTP protocol: "
                                          + requestMethod, pe);
+            } catch (SocketTimeoutException ste) {
+                return false;
             } catch (IOException e) {
                 return false;
             }

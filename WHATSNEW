@@ -96,6 +96,11 @@ Other changes:
    the library behind the sshexec and scp Ant tasks.
    Github Pull Request #84
 
+ * The "http" condition, now has a "readTimeout" attribute which can be
+   used to control the amount of time to wait for the read to complete.
+   Bugzilla Report 63193
+
+
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================
 
