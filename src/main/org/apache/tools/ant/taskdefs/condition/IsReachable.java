@@ -47,9 +47,6 @@ import org.apache.tools.ant.ProjectComponent;
  * on the floor. Similarly, a host may be detected as reachable with ICMP, but not
  * reachable on other ports (i.e. port 80), because of firewalls.</p>
  *
- * <p>Requires Java 5+ to work properly. On Java 1.4, if a hostname
- * can be resolved, the destination is assumed to be reachable.</p>
- *
  * @since Ant 1.7
  */
 public class IsReachable extends ProjectComponent implements Condition {
