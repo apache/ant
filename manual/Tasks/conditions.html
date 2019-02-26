@@ -576,10 +576,7 @@ specifications, by attempting to set the appropriate property/feature</p>
 
 <p>Uses Java 5+ networking APIs to probe for a (remote) system being reachable. Exactly what probe
 mechanisms are used is an implementation feature of the JVM. They may include ICMP "ping" packets,
-UDP or TCP connections to port 7 "echo service" or other means. On Java 1.4 and earlier, being able
-to resolve the hostname is considered success. This means that if DNS is not working or a
-URL/hostname is bad, the test will fail, but otherwise succeed even if the remote host is actually
-absent.</p>
+UDP or TCP connections to port 7 "echo service" or other means.</p>
 <p>This condition turns unknown host exceptions into false conditions. This is because on a laptop,
 DNS is one of the first services when the network goes; you are implicitly offline.</p>
 <p>If a URL is supplied instead of a <var>host</var>, the hostname is extracted and used in the

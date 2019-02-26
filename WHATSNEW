@@ -52,6 +52,11 @@ Fixed bugs:
    if failOnError was set to false.
    Bugzilla Report 63071
 
+ * The isreachable condition could in some cases return true even if the
+   actual address could potentially be unreachable. This is now fixed
+   and the resolved address is actually checked for reachability.
+
+
 Other changes:
 --------------
  * generatekey task now supports SubjectAlternativeName during key

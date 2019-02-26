@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -85,7 +86,11 @@ public class IsReachable extends ProjectComponent implements Condition {
     public static final String ERROR_BAD_URL = "Bad URL ";
     /** Error message when no hostname in url. */
     public static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
-    /** The method name to look for in InetAddress */
+    /**
+     * The method name to look for in InetAddress
+     * @deprecated Since 1.10.6
+     */
+    @Deprecated
     public static final String METHOD_NAME = "isReachable";
 
     private String host;
@@ -174,28 +179,11 @@ public class IsReachable extends ProjectComponent implements Condition {
         log("Host address = " + address.getHostAddress(),
                 Project.MSG_VERBOSE);
         boolean reachable;
-        //Java1.5: reachable = address.isReachable(timeout * 1000);
         try {
-            Method reachableMethod =
-                InetAddress.class.getMethod(METHOD_NAME, Integer.class);
-            try {
-                reachable = (Boolean) reachableMethod.invoke(address,
-                        timeout * SECOND);
-            } catch (final IllegalAccessException e) {
-                //utterly implausible, but catered for anyway
-                throw new BuildException("When calling " + reachableMethod);
-            } catch (final InvocationTargetException e) {
-                //assume this is an IOException about un readability
-                final Throwable nested = e.getTargetException();
-                log(ERROR_ON_NETWORK + target + ": " + nested.toString());
-                //any kind of fault: not reachable.
-                reachable = false;
-            }
-        } catch (final NoSuchMethodException e) {
-            //java1.4
-            log("Not found: InetAddress." + METHOD_NAME, Project.MSG_VERBOSE);
-            log(MSG_NO_REACHABLE_TEST);
-            reachable = true;
+            reachable = address.isReachable(timeout * SECOND);
+        } catch (final IOException ioe) {
+            reachable = false;
+            log(ERROR_ON_NETWORK + target + ": " + ioe.toString());
         }
 
         log("host is" + (reachable ? "" : " not") + " reachable", Project.MSG_VERBOSE);
