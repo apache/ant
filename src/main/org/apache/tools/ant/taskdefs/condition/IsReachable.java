@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.condition;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -45,9 +46,6 @@ import org.apache.tools.ant.ProjectComponent;
  * using a protocol such as HTTP, while the lower level ICMP packets get dropped
  * on the floor. Similarly, a host may be detected as reachable with ICMP, but not
  * reachable on other ports (i.e. port 80), because of firewalls.</p>
- *
- * <p>Requires Java 5+ to work properly. On Java 1.4, if a hostname
- * can be resolved, the destination is assumed to be reachable.</p>
  *
  * @since Ant 1.7
  */
@@ -88,7 +86,11 @@ public class IsReachable extends ProjectComponent implements Condition {
     public static final String ERROR_BAD_URL = "Bad URL ";
     /** Error message when no hostname in url. */
     public static final String ERROR_NO_HOST_IN_URL = "No hostname in URL ";
-    /** The method name to look for in InetAddress */
+    /**
+     * The method name to look for in InetAddress
+     * @deprecated Since 1.9.14
+     */
+    @Deprecated
     public static final String METHOD_NAME = "isReachable";
 
     /**
@@ -128,8 +130,6 @@ public class IsReachable extends ProjectComponent implements Condition {
     private boolean empty(final String string) {
         return string == null || string.length() == 0;
     }
-
-    private static Class[] parameterTypes = {Integer.TYPE};
 
     /**
      * Evaluate the condition.
@@ -173,32 +173,11 @@ public class IsReachable extends ProjectComponent implements Condition {
         log("Host address = " + address.getHostAddress(),
                 Project.MSG_VERBOSE);
         boolean reachable;
-        //Java1.5: reachable = address.isReachable(timeout * 1000);
-        Method reachableMethod = null;
         try {
-            reachableMethod = InetAddress.class.getMethod(METHOD_NAME,
-                    parameterTypes);
-            final Object[] params = new Object[1];
-            params[0] = new Integer(timeout * SECOND);
-            try {
-                reachable = ((Boolean) reachableMethod.invoke(address, params))
-                        .booleanValue();
-            } catch (final IllegalAccessException e) {
-                //utterly implausible, but catered for anyway
-                throw new BuildException("When calling " + reachableMethod);
-            } catch (final InvocationTargetException e) {
-                //assume this is an IOException about un readability
-                final Throwable nested = e.getTargetException();
-                log(ERROR_ON_NETWORK + target + ": " + nested.toString());
-                //any kind of fault: not reachable.
-                reachable = false;
-            }
-        } catch (final NoSuchMethodException e) {
-            //java1.4
-            log("Not found: InetAddress." + METHOD_NAME, Project.MSG_VERBOSE);
-            log(MSG_NO_REACHABLE_TEST);
-            reachable = true;
-
+            reachable = address.isReachable(timeout * SECOND);
+        } catch (final IOException ioe) {
+            reachable = false;
+            log(ERROR_ON_NETWORK + target + ": " + ioe.toString());
         }
 
         log("host is" + (reachable ? "" : " not") + " reachable", Project.MSG_VERBOSE);
