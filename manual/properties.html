@@ -165,7 +165,7 @@ public class DefaultExpander implements PropertyExpander {
         int index = pos.getIndex();
         if (s.indexOf("${", index) == index) {
             int end = s.indexOf('}', index);
-            if (end < 0) {
+            if (end &lt; 0) {
                 throw new BuildException("Syntax error in property: " + s);
             }
             int start = index + 2;

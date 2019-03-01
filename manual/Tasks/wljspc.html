@@ -69,7 +69,7 @@ for dirname/fileName.jsp</samp></p>
 <h3>Example</h3>
 <pre>
 &lt;target name="jspcompile" depends="compile"&gt;
-  &lt;wljspc src="c:\\weblogic\\myserver\\public_html" dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp"&gt
+  &lt;wljspc src="c:\\weblogic\\myserver\\public_html" dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp"&gt;
     &lt;classpath&gt;
       &lt;pathelement location="${weblogic.classpath}"/&gt;
       &lt;pathelement path="${compile.dest}"/&gt;

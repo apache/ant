@@ -96,7 +96,7 @@
 <pre>
 &lt;target name="myTarget" depends="myTarget.check" if="myTarget.run"&gt;
     &lt;echo&gt;Files foo.txt and bar.txt are present.&lt;/echo&gt;
-&lt/target&gt;
+&lt;/target&gt;
 
 &lt;target name="myTarget.check"&gt;
     &lt;condition property="myTarget.run"&gt;
@@ -105,7 +105,7 @@
             &lt;available file="bar.txt"/&gt;
         &lt;/and&gt;
     &lt;/condition&gt;
-&lt/target&gt;</pre>
+&lt;/target&gt;</pre>
 
   <pre><b>Call-Graph:</b>  myTarget.check &rarr; maybe(myTarget)</pre>
 

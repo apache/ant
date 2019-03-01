@@ -221,7 +221,7 @@ server:</p>
 server:</p>
 
 <pre>
-&lt;serverdeploy action=&quot;delete&quot; source=&quot;${lib.dir}/ejb_myApp.jar&quot;/&gt
+&lt;serverdeploy action=&quot;delete&quot; source=&quot;${lib.dir}/ejb_myApp.jar&quot;/&gt;
     &lt;weblogic application=&quot;myapp&quot;
               server=&quot;t3://myserver:7001&quot;
               classpath=&quot;${weblogic.home}/lib/weblogic.jar&quot;
@@ -292,9 +292,9 @@ server:</p>
 server and a WebLogic server:</p>
 
 <pre>
-&lt;serverdeploy action=&quot;list&quot;/&gt
+&lt;serverdeploy action=&quot;list&quot;/&gt;
     &lt;jonas jonasroot=&quot;${jonas.root}&quot; orb=&quot;JEREMIE&quot;/&gt;
-    &lt;weblogic application=&quot;myapp&quot
+    &lt;weblogic application=&quot;myapp&quot;
               server=&quot;t3://myserver:7001&quot;
               classpath=&quot;${weblogic.home}/lib/weblogic.jar&quot;
               username=&quot;${user.name}&quot;
