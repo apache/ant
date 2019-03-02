@@ -96,7 +96,7 @@ public class Http extends ProjectComponent implements Condition {
     }
 
     /**
-     * Sets the read timeout. Any value < 0 will be ignored
+     * Sets the read timeout. Any value &lt; 0 will be ignored
      *
      * @param t the timeout value in milli seconds
      *
