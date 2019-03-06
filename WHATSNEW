@@ -50,6 +50,11 @@ Other changes:
    the library behind the sshexec and scp Ant tasks.
    Github Pull Request #84
 
+ * ftp task manual has been updated to mention that the remote listing of
+   files honours the followsymlinks attribute.
+   Bugzilla Report 63226
+
+
 Changes from Ant 1.9.12 TO Ant 1.9.13
 =====================================
 
