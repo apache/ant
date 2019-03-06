@@ -105,6 +105,10 @@ Other changes:
    used to control the amount of time to wait for the read to complete.
    Bugzilla Report 63193
 
+ * ftp task manual has been updated to mention that the remote listing of
+   files honours the followsymlinks attribute.
+   Bugzilla Report 63226
+
 
 Changes from Ant 1.10.4 TO Ant 1.10.5
 =====================================

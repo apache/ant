@@ -387,7 +387,7 @@ connection.</p>
 nested <a href="../Types/fileset.html"><code>&lt;fileset&gt;</code></a> elements to specify the
 files to be retrieved, or deleted, or listed, or whose mode you want to change.</p>
 <p>The attribute <var>followsymlinks</var> of <code>fileset</code> is supported on local
-(<q>put</q>) as well as remote (<q>get</q>, <q>chmod</q>, <q>delete</q>) filesets.  <em>Before Ant
+(<q>put</q>) as well as remote (<q>get</q>, <q>chmod</q>, <q>delete</q>, <q>list</q>) filesets.  <em>Before Ant
 1.6 there was no support of symbolic links in remote filesets.  In order to exclude symbolic links
 (preserve the behavior of Ant 1.5.x and older), you need to explicitly set <var>followsymlinks</var>
 to <q>false</q>.</em>  On remote filesets hidden files are not checked for being symbolic links.
