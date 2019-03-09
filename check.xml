@@ -41,6 +41,9 @@
     plain text files."  It is available at https://www.harukizaemon.com/simian/
     and is for free use in open source projects.
 
+    Nu HTML Validator by Mozilla Foundation checks html files against HTML5
+    specs and recommendations.
+
     See external task page and homepages for more information.
   </description>
 
@@ -129,9 +132,16 @@
             description="Where to store the OWASP Dependency Check reports"/>
 
   <!-- Nu HTML Validator -->
-  <property name="vnu.version"
+  <property name="htmlcheck.nu.version"
             value="18.11.5"
             description="Which version of Nu HTML Validator to use"/>
+  <property name="htmlcheck.report.dir"
+            value="${build.dir}/html-check"
+            description="Directory where to store the HTML-Check report"/>
+  <property name="htmlcheck.report.file"
+            value="${htmlcheck.report.dir}/report.txt"
+            description="Report file of the HTML-Check"/>
+
 
   <target name="init-ivy">
     <property name="ivy.version"  value="2.4.0"/>
@@ -317,8 +327,8 @@
     </owasp:dependency-check>
   </target>
 
-  <target name="vnu" description="--> Runs the Nu HTML Validator" depends="init-ivy">
-    <ivy:cachepath organisation="nu.validator" module="validator" revision="${vnu.version}"
+  <target name="html-check" description="--> Runs the Nu HTML Validator" depends="init-ivy">
+    <ivy:cachepath organisation="nu.validator" module="validator" revision="${htmlcheck.nu.version}"
                    inline="true" conf="default" pathid="nu.classpath"/>
     <fileset dir="." id="html.files">
       <include name="${src.dir}/**/*.html"/>
@@ -326,10 +336,12 @@
       <exclude name="${manual.dir}/index.html"/>
     </fileset>
     <pathconvert pathsep=" " property="html.list" refid="html.files"/>
+    <mkdir dir="${htmlcheck.report.dir}"/>
     <java classname="nu.validator.client.SimpleCommandLineValidator" classpathref="nu.classpath"
-          failonerror="true" taskname="vnu">
+          taskname="html-check" output="${htmlcheck.report.file}">
       <arg line="--html --format text"/>
       <arg line="${html.list}"/>
     </java>
+    <concat><file name="${htmlcheck.report.file}"/></concat>
   </target>
 </project>
