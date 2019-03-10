@@ -19,7 +19,8 @@
 
   <description>
     Check Ant codebase against certain code style guidelines using
-    Checkstyle, Apache Rat, SpotBugs, OWASP Dependency Check and Simian.
+    Checkstyle, Apache Rat, SpotBugs, OWASP Dependency Check, Simian
+    and Nu Html Checker (v.Nu).
 
     Checkstyle uses an abstract syntax tree (AST) for doing checks
     against Java sources. It is available at http://checkstyle.sourceforge.net/
@@ -41,8 +42,9 @@
     plain text files."  It is available at https://www.harukizaemon.com/simian/
     and is for free use in open source projects.
 
-    Nu HTML Validator by Mozilla Foundation checks html files against HTML5
-    specs and recommendations.
+    "The Nu Html Checker (v.Nu) is the backend of checker.html5.org,
+    html5.validator.nu, and validator.w3.org/nu." It is available at
+    https://validator.github.io/validator/ under MIT license.
 
     See external task page and homepages for more information.
   </description>
@@ -120,7 +122,7 @@
             value="${build.dir}/simian-lib"
             description="Where to store Simian resources"/>
   <property name="simian.report.dir"
-            value="${build.dir}/simian"
+            value="${build.dir}/reports/simian"
             description="Where to store Simian reports"/>
 
   <!-- OWASP Dependency Check -->
@@ -131,12 +133,12 @@
             value="${build.dir}/reports/owasp-dc"
             description="Where to store the OWASP Dependency Check reports"/>
 
-  <!-- Nu HTML Validator -->
+  <!-- Nu Html Checker -->
   <property name="htmlcheck.nu.version"
             value="18.11.5"
-            description="Which version of Nu HTML Validator to use"/>
+            description="Which version of Nu Html Checker to use"/>
   <property name="htmlcheck.report.dir"
-            value="${build.dir}/html-check"
+            value="${build.dir}/reports/html-check"
             description="Directory where to store the HTML-Check report"/>
   <property name="htmlcheck.report.file"
             value="${htmlcheck.report.dir}/report.txt"
@@ -305,7 +307,7 @@
              uri="antlib:org.apache.rat.anttasks"
              classpathref="rat.classpath"/>
     <mkdir dir="${rat.report.dir}"/>
-    <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="${build.dir}/reports/rat/report.txt">
+    <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="${rat.report.dir}/report.txt">
       <fileset dir="${java.dir}">
         <exclude name="org/apache/tools/ant/defaultManifest.mf"/>
         <exclude name="org/apache/tools/ant/version.txt"/>
@@ -327,7 +329,7 @@
     </owasp:dependency-check>
   </target>
 
-  <target name="html-check" description="--> Runs the Nu HTML Validator" depends="init-ivy">
+  <target name="html-check" description="--> Runs the Nu Html Checker" depends="init-ivy">
     <ivy:cachepath organisation="nu.validator" module="validator" revision="${htmlcheck.nu.version}"
                    inline="true" conf="default" pathid="nu.classpath"/>
     <fileset dir="." id="html.files">
