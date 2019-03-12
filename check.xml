@@ -27,7 +27,7 @@
     under GPL 2.1 license.
 
     "Apache Rat is a release audit tool, focused on licenses." It is available
-    at https://creadur.apache.org/rat/ under Apache License, Version 2.0
+    at https://creadur.apache.org/rat/ under Apache License, Version 2.0.
 
     "SpotBugs is a program which uses static analysis to look for bugs in Java
     code." It is available at https://spotbugs.github.io/ under LGPL 3 license.
@@ -35,7 +35,7 @@
     "Dependency-Check is a utility that identifies project dependencies and
     checks if there are any known, publicly disclosed, vulnerabilities." It is
     available at https://www.owasp.org/index.php/OWASP_Dependency_Check under
-    Apache License, Version 2.0
+    Apache License, Version 2.0.
 
     "Simian (Similarity Analyser) identifies duplication in Java, C#, C, CPP,
     COBOL, Ruby, JSP, ASP, HTML, XML, Visual Basic, Groovy source code and even
