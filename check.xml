@@ -50,15 +50,18 @@
   </description>
 
   <import file="build.xml"/>
+  <property name="reports.dir"
+            value="${build.dir}/reports"
+            description="Base directory for generated reports"/>
 
-  <property name="checkstyle.src.dir" location="${etc.dir}/checkstyle"/>
 
   <!-- Ant Checkstyle -->
+  <property name="checkstyle.src.dir" location="${etc.dir}/checkstyle"/>
   <property name="checkstyle.version"
             value="6.19"
             description="Which version of Checkstyle to use"/>
   <property name="checkstyle.reportdir"
-            location="${build.dir}/reports/checkstyle"
+            location="${reports.dir}/checkstyle"
             description="Where to store Checkstyle reports"/>
   <property name="checkstyle.raw"
             location="${checkstyle.reportdir}/raw.xml"
@@ -88,7 +91,7 @@
             value="3.1.4"
             description="Which version of SpotBugs to use"/>
   <property name="findbugs.reportdir"
-            location="${build.dir}/reports/findbugs"
+            location="${reports.dir}/findbugs"
             description="Where to store SpotBugs results"/>
   <property name="findbugs.raw"
             value="raw.xml"
@@ -105,7 +108,7 @@
             value="0.12"
             description="Which version of Apache Rat to use"/>
   <property name="rat.report.dir"
-            value="${build.dir}/reports/rat"
+            value="${reports.dir}/rat"
             description="Where to store Apache Rat reports"/>
   <property name="rat.report.file"
             value="${rat.report.dir}/report.html"
@@ -122,7 +125,7 @@
             value="${build.dir}/simian-lib"
             description="Where to store Simian resources"/>
   <property name="simian.report.dir"
-            value="${build.dir}/reports/simian"
+            value="${reports.dir}/simian"
             description="Where to store Simian reports"/>
 
   <!-- OWASP Dependency Check -->
@@ -130,7 +133,7 @@
             value="3.2.1"
             description="Which version of OWASP Dependency Check to use"/>
   <property name="owasp.dc.report.dir"
-            value="${build.dir}/reports/owasp-dc"
+            value="${reports.dir}/owasp-dc"
             description="Where to store the OWASP Dependency Check reports"/>
 
   <!-- Nu Html Checker -->
@@ -138,7 +141,7 @@
             value="18.11.5"
             description="Which version of Nu Html Checker to use"/>
   <property name="htmlcheck.report.dir"
-            value="${build.dir}/reports/html-check"
+            value="${reports.dir}/html-check"
             description="Directory where to store the HTML-Check report"/>
   <property name="htmlcheck.report.file"
             value="${htmlcheck.report.dir}/report.txt"
