@@ -37,6 +37,11 @@ Note: This document was updated in the context of releasing Ant
     the build with -verbose option and scan for lines beginning with
     "Unable to load...". 
 
+    Also check the NOTICE file to make sure it has the correct
+    Copyright year. If the year isn't right, update that file to use
+    the right year and commit and push the change upstream, before
+    starting any release process.
+
 3.  We don't want tags for failed votes to end up on our branches so
     the release is first created from a detached head.
 
