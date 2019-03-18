@@ -1021,24 +1021,9 @@
     </copy>
   </target>
 
-  <macrodef name="checksums-mvn" description="only md5 and sha1 are needed for the maven directory structure">
-    <element name="resources" implicit="true"/>
-    <sequential>
-      <checksum algorithm="md5">
-        <resources/>
-      </checksum>
-      <checksum algorithm="sha1">
-        <resources/>
-      </checksum>
-    </sequential>
-  </macrodef>
-
   <macrodef name="checksums">
     <element name="resources" implicit="true"/>
     <sequential>
-      <checksum algorithm="sha1">
-        <resources/>
-      </checksum>
       <checksum fileext=".sha512" algorithm="sha-512">
         <resources/>
       </checksum>
@@ -1374,12 +1359,6 @@
         <include name="NOTICE.txt"/>
       </metainf>
     </jar>
-    <checksums-mvn>
-      <fileset dir="${java-repository.dir}" includes="**/*${project.version}.jar"/>
-      <fileset dir="${java-repository.dir}" includes="**/*${project.version}-sources.jar"/>
-      <fileset dir="${java-repository.dir}" includes="**/*${project.version}-javadoc.jar"/>
-      <fileset dir="${java-repository.dir}" includes="**/*${project.version}.pom"/>
-    </checksums-mvn>
 
     <zip destfile="${dist.base.manual}/${dist.name}-manual.zip">
       <zipfileset dir="${dist.name}/manual" prefix="${dist.name}"/>
@@ -1402,12 +1381,10 @@
     <checksums>
       <fileset dir="${dist.base.binaries}/">
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
       <fileset dir="${dist.base.manual}/">
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
     </checksums>
@@ -1452,7 +1429,6 @@
     <checksums>
       <fileset dir="${dist.base.source}/">
         <exclude name="**/*.asc"/>
-        <exclude name="**/*.sha1"/>
         <exclude name="**/*.sha512"/>
       </fileset>
     </checksums>
