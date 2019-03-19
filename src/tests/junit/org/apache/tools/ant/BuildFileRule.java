@@ -70,7 +70,7 @@ public class BuildFileRule extends ExternalResource {
 
     /**
      * Tidies up following a test execution. If the currently configured
-     * project has a <tt>tearDown</tt> target then this will automatically
+     * project has a <code>tearDown</code> target then this will automatically
      * be called, otherwise this method will not perform any actions.
      */
     @Override

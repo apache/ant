@@ -480,7 +480,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Set the destination directory into which the XSL result
      * files should be copied to;
-     * required, unless <tt>in</tt> and <tt>out</tt> are
+     * required, unless <code>in</code> and <code>out</code> are
      * specified.
      * @param dir the name of the destination directory
      **/
@@ -736,7 +736,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * Specifies the output name for the styled result from the
-     * <tt>in</tt> attribute; required if <tt>in</tt> is set
+     * <code>in</code> attribute; required if <code>in</code> is set
      *
      * @param outFile the output File instance.
      */
@@ -746,7 +746,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * specifies a single XML document to be styled. Should be used
-     * with the <tt>out</tt> attribute; required if <tt>out</tt> is set
+     * with the <code>out</code> attribute; required if <code>out</code> is set
      *
      * @param inFile the input file
      */

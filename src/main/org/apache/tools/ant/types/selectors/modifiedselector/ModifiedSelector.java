@@ -488,7 +488,7 @@ public class ModifiedSelector extends BaseExtendSelector
      * @param basedir as described in BaseExtendSelector
      * @param filename as described in BaseExtendSelector
      * @param cacheKey the name for the key for storing the hashvalue
-     * @return <tt>true</tt> if the file is selected otherwise <tt>false</tt>
+     * @return <code>true</code> if the file is selected otherwise <code>false</code>
      */
     private boolean isSelected(File basedir, String filename, String cacheKey) {
         validate();

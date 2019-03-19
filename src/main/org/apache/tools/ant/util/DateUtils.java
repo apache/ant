@@ -45,19 +45,19 @@ public final class DateUtils {
     private static final int TEN = 10;
     /**
      * ISO8601-like pattern for date-time. It does not support timezone.
-     *  <tt>yyyy-MM-ddTHH:mm:ss</tt>
+     *  <code>yyyy-MM-ddTHH:mm:ss</code>
      */
     public static final String ISO8601_DATETIME_PATTERN
             = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
-     * ISO8601-like pattern for date. <tt>yyyy-MM-dd</tt>
+     * ISO8601-like pattern for date. <code>yyyy-MM-dd</code>
      */
     public static final String ISO8601_DATE_PATTERN
             = "yyyy-MM-dd";
 
     /**
-     * ISO8601-like pattern for time.  <tt>HH:mm:ss</tt>
+     * ISO8601-like pattern for time.  <code>HH:mm:ss</code>
      */
     public static final String ISO8601_TIME_PATTERN
             = "HH:mm:ss";

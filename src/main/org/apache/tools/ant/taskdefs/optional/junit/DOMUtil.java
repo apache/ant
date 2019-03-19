@@ -43,13 +43,13 @@ public final class DOMUtil {
 
     /**
      * Filter interface to be applied when iterating over a DOM tree.
-     * Just think of it like a <tt>FileFilter</tt> clone.
+     * Just think of it like a <code>FileFilter</code> clone.
      */
     public interface NodeFilter {
         /**
          * @param       node    the node to check for acceptance.
-         * @return      <tt>true</tt> if the node is accepted by this filter,
-         *                      otherwise <tt>false</tt>
+         * @return      <code>true</code> if the node is accepted by this filter,
+         *                      otherwise <code>false</code>
          */
         boolean accept(Node node);
     }
@@ -59,8 +59,8 @@ public final class DOMUtil {
      * recursively or not.
      * @param   parent  the parent node to search from
      * @param   filter  the filter that children should match.
-     * @param   recurse <tt>true</tt> if you want the list to be made recursively
-     *                  otherwise <tt>false</tt>.
+     * @param   recurse <code>true</code> if you want the list to be made recursively
+     *                  otherwise <code>false</code>.
      * @return the node list that matches the filter.
      */
     public static NodeList listChildNodes(Node parent, NodeFilter filter, boolean recurse) {
@@ -116,8 +116,8 @@ public final class DOMUtil {
      * return the attribute value of an element.
      * @param node the node to get the attribute from.
      * @param name the name of the attribute we are looking for the value.
-     * @return the value of the requested attribute or <tt>null</tt> if the
-     *         attribute was not found or if <tt>node</tt> is not an <tt>Element</tt>.
+     * @return the value of the requested attribute or <code>null</code> if the
+     *         attribute was not found or if <code>node</code> is not an <code>Element</code>.
      */
     public static String getNodeAttribute(Node node, String name) {
         if (node instanceof Element) {
@@ -131,10 +131,10 @@ public final class DOMUtil {
     /**
      * Iterate over the children of a given node and return the first node
      * that has a specific name.
-     * @param   parent  the node to search child from. Can be <tt>null</tt>.
-     * @param   tagname the child name we are looking for. Cannot be <tt>null</tt>.
-     * @return  the first child that matches the given name or <tt>null</tt> if
-     *                  the parent is <tt>null</tt> or if a child does not match the
+     * @param   parent  the node to search child from. Can be <code>null</code>.
+     * @param   tagname the child name we are looking for. Cannot be <code>null</code>.
+     * @return  the first child that matches the given name or <code>null</code> if
+     *                  the parent is <code>null</code> or if a child does not match the
      *                  given name.
      */
     public static Element getChildByTagName(Node parent, String tagname) {
@@ -155,15 +155,15 @@ public final class DOMUtil {
 
     /**
      * Simple tree walker that will clone recursively a node. This is to
-     * avoid using parser-specific API such as Sun's <tt>changeNodeOwner</tt>
-     * when we are dealing with DOM L1 implementations since <tt>cloneNode(boolean)</tt>
+     * avoid using parser-specific API such as Sun's <code>changeNodeOwner</code>
+     * when we are dealing with DOM L1 implementations since <code>cloneNode(boolean)</code>
      * will not change the owner document.
-     * <tt>changeNodeOwner</tt> is much faster and avoid the costly cloning process.
-     * <tt>importNode</tt> is in the DOM L2 interface.
+     * <code>changeNodeOwner</code> is much faster and avoid the costly cloning process.
+     * <code>importNode</code> is in the DOM L2 interface.
      * @param   parent  the node parent to which we should do the import to.
      * @param   child   the node to clone recursively. Its clone will be
-     *              appended to <tt>parent</tt>.
-     * @return  the cloned node that is appended to <tt>parent</tt>
+     *              appended to <code>parent</code>.
+     * @return  the cloned node that is appended to <code>parent</code>
      */
     public static Node importNode(Node parent, Node child) {
         final Document doc = parent.getOwnerDocument();

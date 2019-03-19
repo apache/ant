@@ -110,7 +110,7 @@ public class SplashTask extends Task {
     }
 
     /**
-     * Proxy password; required if <tt>user</tt> is set.
+     * Proxy password; required if <code>user</code> is set.
      * @param password the proxy password
      * @deprecated since 1.5.x.
      *             Use org.apache.tools.ant.taskdefs.optional.net.SetProxy

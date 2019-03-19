@@ -53,7 +53,7 @@ public class FileUtilities {
     }
 
     /**
-     * Modified the timestamp on a file so it's <tt>seconds</tt> earlier than it was before. Where <tt>file</tt>
+     * Modified the timestamp on a file so it's <code>seconds</code> earlier than it was before. Where <code>file</code>
      * is a directory, this function recurses into all child files (and directories) and reduces their modified
      * timestamps by the same range, rather than set all timestamps to the same time.
      * @param file the file to change, or the directory to change then recurse into

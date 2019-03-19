@@ -555,10 +555,10 @@ public class XMLCatalog extends DataType
      * inherit the EntityResolver of the original (although arguably
      * it should).  See below:</p>
      *
-     * <tt>"If an application wants to set the ErrorHandler or
+     * <code>"If an application wants to set the ErrorHandler or
      * EntityResolver for an XMLReader used during a transformation,
      * it should use a URIResolver to return the SAXSource which
-     * provides (with getXMLReader) a reference to the XMLReader"</tt>
+     * provides (with getXMLReader) a reference to the XMLReader"</code>
      *
      * <p>...quoted from page 118 of the Java API for XML
      * Processing 1.1 specification</p>

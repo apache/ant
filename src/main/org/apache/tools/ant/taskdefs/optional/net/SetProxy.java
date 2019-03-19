@@ -47,8 +47,8 @@ import org.apache.tools.ant.util.ProxySetup;
  * <pre>&lt;setproxy socksproxyhost=""/&gt;</pre>
  * stop using the socks server.
  * <p>
- * You can set a username and password for http with the <tt>proxyHost</tt>
- * and <tt>proxyPassword</tt> attributes. These can also be
+ * You can set a username and password for http with the <code>proxyHost</code>
+ * and <code>proxyPassword</code> attributes. These can also be
  * used against SOCKS5 servers.
  * </p>
  * @see <a href="http://java.sun.com/j2se/1.5.0/docs/guide/net/properties.html">

@@ -138,7 +138,7 @@ public class ManifestTask extends Task {
      *   alphanum:   {A-Z} | {a-z} | {0-9}
      *   headerchar: alphanum | - | _
      * </pre>
-     * So the resulting regexp would be <tt>[A-Za-z0-9][A-Za-z0-9-_]*</tt>.
+     * So the resulting regexp would be <code>[A-Za-z0-9][A-Za-z0-9-_]*</code>.
      *
      * Because of JDK 1.2 compliance and the possible absence of a
      * regexp matcher we can not use regexps here. Instead we have to

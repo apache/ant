@@ -84,7 +84,7 @@ public final class Diagnostics {
     /**
      * Doesn't do anything.
      * @deprecated Obsolete since Ant 1.8.2
-     * @return <tt>true</tt>
+     * @return <code>true</code>
      */
     @Deprecated
     public static boolean isOptionalAvailable() {
@@ -103,7 +103,7 @@ public final class Diagnostics {
      * return the list of jar files existing in ANT_HOME/lib
      * and that must have been picked up by Ant script.
      * @return the list of jar files existing in ant.home/lib or
-     * <tt>null</tt> if an error occurs.
+     * <code>null</code> if an error occurs.
      */
     public static File[] listLibraries() {
         String home = System.getProperty(MagicNames.ANT_HOME);
@@ -467,7 +467,7 @@ public final class Diagnostics {
      * because Ant requires multiple libraries to compile and one of them
      * was missing when compiling Ant.
      * @param out the stream to print the tasks report to
-     * <tt>null</tt> for a missing stream (ie mapping).
+     * <code>null</code> for a missing stream (ie mapping).
      */
     private static void doReportTasksAvailability(PrintStream out) {
         InputStream is = Main.class.getResourceAsStream(

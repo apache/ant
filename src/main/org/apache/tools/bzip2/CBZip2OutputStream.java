@@ -34,7 +34,7 @@ import java.io.OutputStream;
  * <p>
  * The compression requires large amounts of memory. Thus you should call the
  * {@link #close() close()} method as soon as possible, to force
- * <tt>CBZip2OutputStream</tt> to release the allocated memory.
+ * <code>CBZip2OutputStream</code> to release the allocated memory.
  * </p>
  *
  * <p>You can shrink the amount of allocated memory and maybe raise
@@ -57,62 +57,62 @@ import java.io.OutputStream;
  * &lt;code&gt;65k + (5 * blocksize)&lt;/code&gt;.
  * </pre>
  *
- * <table border="1">
+ * <table style="border:1px solid black">
  * <caption>Memory usage by blocksize</caption>
  * <tr>
- * <th align="right">Blocksize</th>
- * <th align="right">Compression<br>memory usage</th>
- * <th align="right">Decompression<br>memory usage</th>
+ * <th style="text-align:right">Blocksize</th>
+ * <th style="text-align:right">Compression<br>memory usage</th>
+ * <th style="text-align:right">Decompression<br>memory usage</th>
  * </tr>
  * <tr>
- * <td align="right">100k</td>
- * <td align="right">1300k</td>
- * <td align="right">565k</td>
+ * <td style="text-align:right">100k</td>
+ * <td style="text-align:right">1300k</td>
+ * <td style="text-align:right">565k</td>
  * </tr>
  * <tr>
- * <td align="right">200k</td>
- * <td align="right">2200k</td>
- * <td align="right">1065k</td>
+ * <td style="text-align:right">200k</td>
+ * <td style="text-align:right">2200k</td>
+ * <td style="text-align:right">1065k</td>
  * </tr>
  * <tr>
- * <td align="right">300k</td>
- * <td align="right">3100k</td>
- * <td align="right">1565k</td>
+ * <td style="text-align:right">300k</td>
+ * <td style="text-align:right">3100k</td>
+ * <td style="text-align:right">1565k</td>
  * </tr>
  * <tr>
- * <td align="right">400k</td>
- * <td align="right">4000k</td>
- * <td align="right">2065k</td>
+ * <td style="text-align:right">400k</td>
+ * <td style="text-align:right">4000k</td>
+ * <td style="text-align:right">2065k</td>
  * </tr>
  * <tr>
- * <td align="right">500k</td>
- * <td align="right">4900k</td>
- * <td align="right">2565k</td>
+ * <td style="text-align:right">500k</td>
+ * <td style="text-align:right">4900k</td>
+ * <td style="text-align:right">2565k</td>
  * </tr>
  * <tr>
- * <td align="right">600k</td>
- * <td align="right">5800k</td>
- * <td align="right">3065k</td>
+ * <td style="text-align:right">600k</td>
+ * <td style="text-align:right">5800k</td>
+ * <td style="text-align:right">3065k</td>
  * </tr>
  * <tr>
- * <td align="right">700k</td>
- * <td align="right">6700k</td>
- * <td align="right">3565k</td>
+ * <td style="text-align:right">700k</td>
+ * <td style="text-align:right">6700k</td>
+ * <td style="text-align:right">3565k</td>
  * </tr>
  * <tr>
- * <td align="right">800k</td>
- * <td align="right">7600k</td>
- * <td align="right">4065k</td>
+ * <td style="text-align:right">800k</td>
+ * <td style="text-align:right">7600k</td>
+ * <td style="text-align:right">4065k</td>
  * </tr>
  * <tr>
- * <td align="right">900k</td>
- * <td align="right">8500k</td>
- * <td align="right">4565k</td>
+ * <td style="text-align:right">900k</td>
+ * <td style="text-align:right">8500k</td>
+ * <td style="text-align:right">4565k</td>
  * </tr>
  * </table>
  *
  * <p>
- * For decompression <tt>CBZip2InputStream</tt> allocates less memory if the
+ * For decompression <code>CBZip2InputStream</code> allocates less memory if the
  * bzipped input is smaller than one block.
  * </p>
  *
@@ -129,12 +129,12 @@ public class CBZip2OutputStream extends OutputStream
     implements BZip2Constants {
 
     /**
-     * The minimum supported blocksize <tt> == 1</tt>.
+     * The minimum supported blocksize <code> == 1</code>.
      */
     public static final int MIN_BLOCKSIZE = 1;
 
     /**
-     * The maximum supported blocksize <tt> == 9</tt>.
+     * The maximum supported blocksize <code> == 9</code>.
      */
     public static final int MAX_BLOCKSIZE = 9;
 
@@ -564,10 +564,10 @@ public class CBZip2OutputStream extends OutputStream
      *
      * @param inputLength
      *            The length of the data which will be compressed by
-     *            <tt>CBZip2OutputStream</tt>.
+     *            <code>CBZip2OutputStream</code>.
      * @return The blocksize, between {@link #MIN_BLOCKSIZE} and
      *         {@link #MAX_BLOCKSIZE} both inclusive. For a negative
-     *         <tt>inputLength</tt> this method returns <tt>MAX_BLOCKSIZE</tt>
+     *         <code>inputLength</code> this method returns <code>MAX_BLOCKSIZE</code>
      *         always.
      */
     public static int chooseBlockSize(long inputLength) {
@@ -576,11 +576,11 @@ public class CBZip2OutputStream extends OutputStream
     }
 
     /**
-     * Constructs a new <tt>CBZip2OutputStream</tt> with a blocksize of 900k.
+     * Constructs a new <code>CBZip2OutputStream</code> with a blocksize of 900k.
      *
      * <p>
      * <b>Attention: </b>The caller is responsible to write the two BZip2 magic
-     * bytes <tt>"BZ"</tt> to the specified stream prior to calling this
+     * bytes <code>"BZ"</code> to the specified stream prior to calling this
      * constructor.
      * </p>
      *
@@ -597,11 +597,11 @@ public class CBZip2OutputStream extends OutputStream
     }
 
     /**
-     * Constructs a new <tt>CBZip2OutputStream</tt> with specified blocksize.
+     * Constructs a new <code>CBZip2OutputStream</code> with specified blocksize.
      *
      * <p>
      * <b>Attention: </b>The caller is responsible to write the two BZip2 magic
-     * bytes <tt>"BZ"</tt> to the specified stream prior to calling this
+     * bytes <code>"BZ"</code> to the specified stream prior to calling this
      * constructor.
      * </p>
      *

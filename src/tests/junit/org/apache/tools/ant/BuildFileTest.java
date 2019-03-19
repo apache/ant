@@ -155,7 +155,7 @@ public abstract class BuildFileTest extends TestCase {
      * Assert that the given substring is in the output messages.
      *
      * @param message Print this message if the test fails. Defaults to
-     *                a meaningful text if <tt>null</tt> is passed.
+     *                a meaningful text if <code>null</code> is passed.
      * @param substring String
      * @since Ant1.7
      */
@@ -171,7 +171,7 @@ public abstract class BuildFileTest extends TestCase {
      * Assert that the given substring is not in the output messages.
      *
      * @param message Print this message if the test fails. Defaults to
-     *                a meaningful text if <tt>null</tt> is passed.
+     *                a meaningful text if <code>null</code> is passed.
      * @param substring String
      * @since Ant1.7
      */

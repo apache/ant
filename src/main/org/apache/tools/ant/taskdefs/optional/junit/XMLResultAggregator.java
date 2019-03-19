@@ -70,10 +70,10 @@ public class XMLResultAggregator extends Task implements XMLConstants {
 
     protected Vector<AggregateTransformer> transformers = new Vector<>();
 
-    /** The default directory: <tt>&#046;</tt>. It is resolved from the project directory */
+    /** The default directory: <code>&#046;</code>. It is resolved from the project directory */
     public static final String DEFAULT_DIR = ".";
 
-    /** the default file name: <tt>TESTS-TestSuites.xml</tt> */
+    /** the default file name: <code>TESTS-TestSuites.xml</code> */
     public static final String DEFAULT_FILENAME = "TESTS-TestSuites.xml";
 
     /** the current generated id */
@@ -108,7 +108,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
 
     /**
      * Set the name of the aggregated results file. It must be relative
-     * from the <tt>todir</tt> attribute. If not set it will use {@link #DEFAULT_FILENAME}
+     * from the <code>todir</code> attribute. If not set it will use {@link #DEFAULT_FILENAME}
      * @param  value   the name of the file.
      * @see #setTodir(File)
      */
@@ -160,7 +160,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
 
     /**
      * Get the full destination file where to write the result. It is made of
-     * the <tt>todir</tt> and <tt>tofile</tt> attributes.
+     * the <code>todir</code> and <code>tofile</code> attributes.
      * @return the destination file where should be written the result file.
      */
     public File getDestinationFile() {
@@ -270,10 +270,10 @@ public class XMLResultAggregator extends Task implements XMLConstants {
      * <p>Add a new testsuite node to the document.
      * The main difference is that it
      * split the previous fully qualified name into a package and a name.</p>
-     * <p>For example: <tt>org.apache.Whatever</tt> will be split into
-     * <tt>org.apache</tt> and <tt>Whatever</tt>.</p>
+     * <p>For example: <code>org.apache.Whatever</code> will be split into
+     * <code>org.apache</code> and <code>Whatever</code>.</p>
      *
-     * @param root the root element to which the <tt>testsuite</tt> node should
+     * @param root the root element to which the <code>testsuite</code> node should
      *        be appended.
      * @param testsuite the element to append to the given root. It will slightly
      *        modify the original node to change the name attribute and add
@@ -295,7 +295,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     }
 
     /**
-     * Create a new document builder. Will issue an <tt>ExceptionInitializerError</tt>
+     * Create a new document builder. Will issue an <code>ExceptionInitializerError</code>
      * if something is going wrong. It is fatal anyway.
      * @todo factorize this somewhere else. It is duplicated code.
      * @return a new document builder to create a DOM

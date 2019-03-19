@@ -21,7 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Provides common assert functions for use across multiple tests, similar to the <tt>Assert</tt>s
+ * Provides common assert functions for use across multiple tests, similar to the <code>Assert</code>s
  * within JUnit.
  *
  * @deprecated use assertThat() in JUnit 4.4+ in combination with containsString() matcher;

@@ -21,7 +21,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.email.EmailTask;
 
 /**
- * A task to send SMTP email; Use <tt>mail</tt> instead
+ * A task to send SMTP email; Use <code>mail</code> instead
  *
  * @deprecated since 1.6.x.
  *             Use {@link EmailTask} instead.

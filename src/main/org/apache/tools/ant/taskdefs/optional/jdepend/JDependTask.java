@@ -162,8 +162,8 @@ public class JDependTask extends Task {
     /**
      * If true, forks into a new JVM. Default: false.
      *
-     * @param   value   <tt>true</tt> if a JVM should be forked,
-     *                  otherwise <tt>false</tt>
+     * @param   value   <code>true</code> if a JVM should be forked,
+     *                  otherwise <code>false</code>
      */
     public void setFork(boolean value) {
         fork = value;
@@ -179,8 +179,8 @@ public class JDependTask extends Task {
     /**
      * The command used to invoke a forked Java Virtual Machine.
      *
-     * Default is <tt>java</tt>. Ignored if no JVM is forked.
-     * @param   value   the new VM to use instead of <tt>java</tt>
+     * Default is <code>java</code>. Ignored if no JVM is forked.
+     * @param   value   the new VM to use instead of <code>java</code>
      * @see #setFork(boolean)
      */
     public void setJvm(String value) {
@@ -537,10 +537,10 @@ public class JDependTask extends Task {
     /**
      * Execute the task by forking a new JVM. The command will block until
      * it finishes. To know if the process was destroyed or not, use the
-     * <tt>killedProcess()</tt> method of the watchdog class.
+     * <code>killedProcess()</code> method of the watchdog class.
      * @param commandline the commandline for forked jvm
      * @param  watchdog   the watchdog in charge of cancelling the test if it
-     * exceeds a certain amount of time. Can be <tt>null</tt>.
+     * exceeds a certain amount of time. Can be <code>null</code>.
      * @return the result of running the jdepend
      * @throws BuildException in case of error
      */
@@ -616,7 +616,7 @@ public class JDependTask extends Task {
     }
 
     /**
-     * @return <tt>null</tt> if there is a timeout value, otherwise the
+     * @return <code>null</code> if there is a timeout value, otherwise the
      * watchdog instance.
      * @throws BuildException in case of error
      */

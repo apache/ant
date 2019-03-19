@@ -82,7 +82,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
     /**
      * Watches the given process and terminates it, if it runs for too long.
      * All information from the previous run are reset.
-     * @param process the process to monitor. It cannot be <tt>null</tt>
+     * @param process the process to monitor. It cannot be <code>null</code>
      * @throws IllegalStateException if a process is still being monitored.
      */
     public synchronized void start(Process process) {
@@ -160,8 +160,8 @@ public class ExecuteWatchdog implements TimeoutObserver {
 
     /**
      * Indicates whether or not the watchdog is still monitoring the process.
-     * @return  <tt>true</tt> if the process is still running, otherwise
-     *          <tt>false</tt>.
+     * @return  <code>true</code> if the process is still running, otherwise
+     *          <code>false</code>.
      */
     public boolean isWatching() {
         return watch;
@@ -169,8 +169,8 @@ public class ExecuteWatchdog implements TimeoutObserver {
 
     /**
      * Indicates whether the last process run was killed on timeout or not.
-     * @return  <tt>true</tt> if the process was killed otherwise
-     *          <tt>false</tt>.
+     * @return  <code>true</code> if the process was killed otherwise
+     *          <code>false</code>.
      */
     public boolean killedProcess() {
         return killedProcess;

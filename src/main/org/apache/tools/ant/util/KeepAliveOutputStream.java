@@ -23,7 +23,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
- * Class that can be used to wrap <tt>System.out</tt> and <tt>System.err</tt>
+ * Class that can be used to wrap <code>System.out</code> and <code>System.err</code>
  * without getting anxious about any client closing the stream.
  *
  * <p>

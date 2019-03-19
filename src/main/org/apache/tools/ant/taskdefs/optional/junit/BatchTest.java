@@ -61,7 +61,7 @@ public final class BatchTest extends BaseTest {
 
     /**
      * Add a new fileset instance to this batchtest. Whatever the fileset is,
-     * only filename that are <tt>.java</tt> or <tt>.class</tt> will be
+     * only filename that are <code>.java</code> or <code>.class</code> will be
      * considered as 'candidates'.
      * @param     fs the new fileset containing the rules to get the testcases.
      */
@@ -84,7 +84,7 @@ public final class BatchTest extends BaseTest {
     /**
      * Add a new ResourceCollection instance to this
      * batchtest. Whatever the collection is, only names that are
-     * <tt>.java</tt> or <tt>.class</tt> will be considered as
+     * <code>.java</code> or <code>.class</code> will be considered as
      * 'candidates'.
      * @param rc the new ResourceCollection containing the rules to
      * get the testcases.
@@ -95,17 +95,17 @@ public final class BatchTest extends BaseTest {
     }
 
     /**
-     * Return all <tt>JUnitTest</tt> instances obtain by applying the fileset rules.
+     * Return all <code>JUnitTest</code> instances obtain by applying the fileset rules.
      * @return  an enumeration of all elements of this batchtest that are
-     * a <tt>JUnitTest</tt> instance.
+     * a <code>JUnitTest</code> instance.
      */
     public Enumeration<JUnitTest> elements() {
         return Collections.enumeration(Arrays.asList(createAllJUnitTest()));
     }
 
     /**
-     * Convenient method to merge the <tt>JUnitTest</tt>s of this batchtest
-     * to a <tt>Vector</tt>.
+     * Convenient method to merge the <code>JUnitTest</code>s of this batchtest
+     * to a <code>Vector</code>.
      * @param v the vector to which should be added all individual tests of this
      * batch test.
      */
@@ -118,9 +118,9 @@ public final class BatchTest extends BaseTest {
     }
 
     /**
-     * Create all <tt>JUnitTest</tt>s based on the filesets. Each instance
+     * Create all <code>JUnitTest</code>s based on the filesets. Each instance
      * is configured to match this instance properties.
-     * @return the array of all <tt>JUnitTest</tt>s that belongs to this batch.
+     * @return the array of all <code>JUnitTest</code>s that belongs to this batch.
      */
     private JUnitTest[] createAllJUnitTest() {
         return Stream.of(getFilenames()).map(BatchTest::javaToClass)
@@ -129,13 +129,13 @@ public final class BatchTest extends BaseTest {
 
     /**
      * Iterate over all filesets and return the filename of all files
-     * that end with <tt>.java</tt> or <tt>.class</tt>. This is to avoid
-     * wrapping a <tt>JUnitTest</tt> over an xml file for example. A Testcase
+     * that end with <code>.java</code> or <code>.class</code>. This is to avoid
+     * wrapping a <code>JUnitTest</code> over an xml file for example. A Testcase
      * is obviously a java file (compiled or not).
      * @return an array of filenames without their extension. As they should
      * normally be taken from their root, filenames should match their fully
      * qualified class name (If it is not the case it will fail when running the test).
-     * For the class <tt>org/apache/Whatever.class</tt> it will return <tt>org/apache/Whatever</tt>.
+     * For the class <code>org/apache/Whatever.class</code> it will return <code>org/apache/Whatever</code>.
      */
     private String[] getFilenames() {
         return resources.stream().filter(Resource::isExists)
@@ -147,8 +147,8 @@ public final class BatchTest extends BaseTest {
 
     /**
      * Convenient method to convert a pathname without extension to a
-     * fully qualified classname. For example <tt>org/apache/Whatever</tt> will
-     * be converted to <tt>org.apache.Whatever</tt>
+     * fully qualified classname. For example <code>org/apache/Whatever</code> will
+     * be converted to <code>org.apache.Whatever</code>
      * @param filename the filename to "convert" to a classname.
      * @return the classname matching the filename.
      */
@@ -158,11 +158,11 @@ public final class BatchTest extends BaseTest {
     }
 
     /**
-     * Create a <tt>JUnitTest</tt> that has the same property as this
-     * <tt>BatchTest</tt> instance.
+     * Create a <code>JUnitTest</code> that has the same property as this
+     * <code>BatchTest</code> instance.
      * @param classname the name of the class that should be run as a
-     * <tt>JUnitTest</tt>. It must be a fully qualified name.
-     * @return the <tt>JUnitTest</tt> over the given classname.
+     * <code>JUnitTest</code>. It must be a fully qualified name.
+     * @return the <code>JUnitTest</code> over the given classname.
      */
     private JUnitTest createJUnitTest(String classname) {
         JUnitTest test = new JUnitTest();

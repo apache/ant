@@ -150,7 +150,7 @@ public class TelnetTask extends Task {
 
     /**
      * Set the the login id to use on the server;
-     * required if <tt>password</tt> is set.
+     * required if <code>password</code> is set.
      * @param u a <code>String</code> value
      */
     public void setUserid(String u) {
@@ -159,7 +159,7 @@ public class TelnetTask extends Task {
 
     /**
      *  Set the the login password to use
-     * required if <tt>userid</tt> is set.
+     * required if <code>userid</code> is set.
      * @param p a <code>String</code> value
      */
     public void setPassword(String p) {
