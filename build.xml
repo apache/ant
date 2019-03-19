@@ -952,7 +952,7 @@
          Create the essential distribution that can run Apache Ant
        ===================================================================
   -->
-  <target name="dist-lite" depends="jars,test-jar"
+  <target name="dist-lite" depends="jars,test-jar,-ant-dist-warn-jdk9+"
           description="--> creates a minimum distribution to run Apache Ant">
 
     <mkdir dir="${dist.dir}"/>
@@ -2006,6 +2006,10 @@ ${antunit.reports}
 
   <target name="-antunit-warn-location" depends="-antunit-check-location" if="run.antunit" unless="${antunit.recommended.location}">
       <echo>AntUnit tests must be run with ${bootstrap.dir} (or ${dist.dir}), not ${ant.home}. Try './build.sh antunit-tests' for example.</echo>
+  </target>
+
+  <target name="-ant-dist-warn-jdk9+" unless="jdk9+">
+      <echo>Java 9+ features won't be available in the distribution</echo>
   </target>
 
   <target name="antunit-tests" depends="build,test-init,-antunit-warn-location" if="run.antunit"

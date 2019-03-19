@@ -43,6 +43,10 @@ Note: This document was adapted from the one created in the context of
     the right year and commit and push the change upstream, before
     starting any release process.
 
+    There are certain features that require JDK 9+ version to be used
+    while releasing Ant 1.10.x from master branch. Make sure JAVA_HOME
+    points to a JDK installation which is minimally Java 9.
+
 3.  We don't want tags for failed votes to end up on our branches so
     the release is first created from a detached head.
 
@@ -74,6 +78,14 @@ Note: This document was adapted from the one created in the context of
 6.  Next bootstrap, build and run the tests.
 
     $ ./bootstrap.sh
+
+    Make sure the log messages doesn't contain the message:
+
+    "Java 9+ features won't be available in the distribution"
+
+    If it does, then it's a sign that JAVA_HOME isn't pointing to a JDK 9+ version.
+    Fix JAVA_HOME to point to a valid JDK 9+ version and redo the release steps.
+
     $ ./build.sh
     $ ./build.sh test
     # if you've got maven installed
