@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Class that can be used to wrap <tt>System.in</tt>
+ * Class that can be used to wrap <code>System.in</code>
  * without getting anxious about any client closing the stream.
  *
  * <p>

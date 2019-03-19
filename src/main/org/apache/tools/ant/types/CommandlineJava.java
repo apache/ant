@@ -30,7 +30,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * A representation of a Java command line that is
- * a composite of 2 <tt>Commandline</tt>s. One is used for the
+ * a composite of 2 <code>Commandline</code>s. One is used for the
  * vm/options and one for the classname/arguments. It provides
  * specific methods for a Java command line.
  *
@@ -325,7 +325,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Get the name of the jar to be run.
      * @return the pathname of the jar file to run via -jar option
-     * or <tt>null</tt> if there is no jar to run.
+     * or <code>null</code> if there is no jar to run.
      * @see #getClassname()
      */
     public String getJar() {
@@ -352,7 +352,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Get the name of the class to be run.
-     * @return the name of the class to run or <tt>null</tt> if there is no class.
+     * @return the name of the class to run or <code>null</code> if there is no class.
      * @see #getJar()
      */
     public String getClassname() {
@@ -419,7 +419,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Get the name of the module to be run.
-     * @return the name of the module to run or <tt>null</tt> if there is no module.
+     * @return the name of the module to run or <code>null</code> if there is no module.
      * @see #getJar()
      * @see #getClassname()
      * @since 1.9.7

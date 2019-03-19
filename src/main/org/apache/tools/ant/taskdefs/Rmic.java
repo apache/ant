@@ -68,7 +68,7 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  *
  * <p>It is possible to use different compilers. This can be selected
  * with the &quot;build.rmic&quot; property or the <code>compiler</code>
- * attribute. <a name="compilervalues">There are three choices</a>:</p>
+ * attribute. <span id="compilervalues">There are three choices</span>:</p>
  *
  * <ul>
  *   <li>sun (the standard compiler of the JDK)</li>

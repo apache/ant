@@ -124,7 +124,7 @@ public final class ZipLong implements Cloneable {
      * @param buf the output buffer
      * @param  offset
      *         The offset within the output buffer of the first byte to be written.
-     *         must be non-negative and no larger than <tt>buf.length-4</tt>
+     *         must be non-negative and no larger than <code>buf.length-4</code>
      */
     public static void putLong(long value, byte[] buf, int offset) {
         buf[offset++] = (byte) ((value & BYTE_MASK));

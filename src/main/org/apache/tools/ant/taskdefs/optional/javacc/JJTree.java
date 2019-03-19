@@ -340,7 +340,7 @@ public class JJTree extends Task {
      *
      * @param destFile String
      * @param outputDir String
-     * @return validation file, relative if possible; <tt>null</tt> if not set
+     * @return validation file, relative if possible; <code>null</code> if not set
      * @throws BuildException if something goes wrong
      */
     private String validateOutputFile(String destFile,

@@ -30,7 +30,7 @@ import org.junit.runner.notification.RunNotifier;
 /**
  * Provides a custom implementation of the notifier for a JUnit4TestAdapter
  * so that skipped and ignored tests can be reported to the existing
- * <tt>TestListener</tt>s.
+ * <code>TestListener</code>s.
  *
  */
 public class CustomJUnit4TestAdapterCache extends JUnit4TestAdapterCache {

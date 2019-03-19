@@ -21,7 +21,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.StreamUtils;
 
 /**
- * The <tt>Xor</tt> condition type to exclusive or operations.
+ * The <code>Xor</code> condition type to exclusive or operations.
  * This does not shortcut stuff.
  * @since Ant 1.7
  */

@@ -50,7 +50,7 @@ public final class StringUtils {
 
     /**
      * Splits up a string into a list of lines. It is equivalent
-     * to <tt>split(data, '\n')</tt>.
+     * to <code>split(data, '\n')</code>.
      * @param data the string to split up into lines.
      * @return the list of lines available in the string.
      */

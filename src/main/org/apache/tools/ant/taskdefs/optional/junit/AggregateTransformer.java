@@ -128,7 +128,7 @@ public class AggregateTransformer {
      */
     private static volatile int counter = 0;
 
-    /** the format to use for the report. Must be <tt>FRAMES</tt> or <tt>NOFRAMES</tt> */
+    /** the format to use for the report. Must be <code>FRAMES</code> or <code>NOFRAMES</code> */
     protected String format = FRAMES;
 
     // CheckStyle:VisibilityModifier ON
@@ -154,7 +154,7 @@ public class AggregateTransformer {
 
     /**
      * sets the format.
-     * @param format  Must be <tt>FRAMES</tt> or <tt>NOFRAMES</tt>
+     * @param format  Must be <code>FRAMES</code> or <code>NOFRAMES</code>
      */
     public void setFormat(Format format) {
         this.format = format.getValue();

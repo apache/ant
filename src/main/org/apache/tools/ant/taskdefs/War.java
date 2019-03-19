@@ -72,7 +72,7 @@ public class War extends Jar {
 
     /**
      * <i>Deprecated</i> name of the file to create
-     * -use <tt>destfile</tt> instead.
+     * -use <code>destfile</code> instead.
      * @param warFile the destination file
      * @deprecated since 1.5.x.
      *             Use setDestFile(File) instead
@@ -85,7 +85,7 @@ public class War extends Jar {
 
     /**
      * set the deployment descriptor to use (WEB-INF/web.xml);
-     * required unless <tt>update=true</tt>
+     * required unless <code>update=true</code>
      * @param descr the deployment descriptor file
      */
     public void setWebxml(File descr) {

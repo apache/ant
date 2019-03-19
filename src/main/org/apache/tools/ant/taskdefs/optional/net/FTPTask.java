@@ -265,7 +265,7 @@ public class FTPTask extends Task implements FTPTaskConfig {
     }
 
     /**
-     * A synonym for <tt>depends</tt>. Set to true to transmit only new
+     * A synonym for <code>depends</code>. Set to true to transmit only new
      * or changed files.
      *
      * See the related attributes timediffmillis and timediffauto.

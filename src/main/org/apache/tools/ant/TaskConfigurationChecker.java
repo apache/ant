@@ -23,8 +23,8 @@ import java.util.List;
 /**
  * <p>Helper class for the check of the configuration of a given task.
  * This class provides methods for making assumptions about the task configuration.
- * After collecting all violations with <tt>assert*</tt> and <tt>fail</tt>
- * methods the <tt>checkErrors</tt> will throw a BuildException with all collected
+ * After collecting all violations with <code>assert*</code> and <code>fail</code>
+ * methods the <code>checkErrors</code> will throw a BuildException with all collected
  * messages or does nothing if there wasn't any error.</p>
  *
  * <p>Example:</p>

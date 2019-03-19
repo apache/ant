@@ -164,8 +164,8 @@ public class EchoProperties extends Task {
      * If true, the task will fail if an error occurs writing the properties
      * file, otherwise errors are just logged.
      *
-     * @param failonerror  <tt>true</tt> if IO exceptions are reported as build
-     *      exceptions, or <tt>false</tt> if IO exceptions are ignored.
+     * @param failonerror  <code>true</code> if IO exceptions are reported as build
+     *      exceptions, or <code>false</code> if IO exceptions are ignored.
      */
     public void setFailOnError(boolean failonerror) {
         this.failonerror = failonerror;
@@ -174,7 +174,7 @@ public class EchoProperties extends Task {
     /**
      * If the prefix is set, then only properties which start with this
      * prefix string will be recorded. If regex is not set and  if this
-     * is never set, or it is set to an empty string or <tt>null</tt>,
+     * is never set, or it is set to an empty string or <code>null</code>,
      * then all properties will be recorded.
      *
      * <p>For example, if the attribute is set as:</p>
@@ -197,7 +197,7 @@ public class EchoProperties extends Task {
     /**
      * If the regex is set, then only properties whose names match it
      * will be recorded.  If prefix is not set and if this is never set,
-     * or it is set to an empty string or <tt>null</tt>, then all
+     * or it is set to an empty string or <code>null</code>, then all
      * properties will be recorded.
      *
      * <p>For example, if the attribute is set as:</p>
@@ -333,7 +333,7 @@ public class EchoProperties extends Task {
 
     /**
      * Send the key/value pairs in the hashtable to the given output stream.
-     * Only those properties matching the <tt>prefix</tt> constraint will be
+     * Only those properties matching the <code>prefix</code> constraint will be
      * sent to the output stream.
      * The output stream will be closed when this method returns.
      *
@@ -464,8 +464,8 @@ public class EchoProperties extends Task {
 
     /**
      * JDK 1.2 allows for the safer method
-     * <tt>Properties.store(OutputStream, String)</tt>, which throws an
-     * <tt>IOException</tt> on an output error.
+     * <code>Properties.store(OutputStream, String)</code>, which throws an
+     * <code>IOException</code> on an output error.
      *
      * @param props the properties to record
      * @param os record the properties to this output stream

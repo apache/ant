@@ -22,7 +22,7 @@ package org.apache.tools.ant.taskdefs;
  * Has been merged into ExecuteOn, empty class for backwards compatibility.
  * We leave that in case that external programs access this class directly,
  * for example via
- *   <tt> Transform tr = (Transform) getProject().createTask("apply") </tt>
+ *   <code> Transform tr = (Transform) getProject().createTask("apply") </code>
  *
  * @ant.task ignore="true"
  */

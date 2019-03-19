@@ -31,7 +31,7 @@ public interface XSLTLiaison {
     /**
      * the file protocol prefix for systemid.
      * This file protocol must be appended to an absolute path.
-     * Typically: <tt>FILE_PROTOCOL_PREFIX + file.getAbsolutePath()</tt>
+     * Typically: <code>FILE_PROTOCOL_PREFIX + file.getAbsolutePath()</code>
      * Note that on Windows, an extra '/' must be appended to the
      * protocol prefix so that there is always 3 consecutive slashes.
      * @since Ant 1.4

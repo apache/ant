@@ -191,7 +191,7 @@ public abstract class BaseTest {
     /**
      * Get the destination directory.
      * @return the destination directory as an absolute path if it exists
-     *         otherwise return <tt>null</tt>
+     *         otherwise return <code>null</code>
      */
     public String getTodir() {
         if (destDir != null) {

@@ -50,7 +50,7 @@ public final class Enumerations {
     /**
      * creates an enumeration from an array of enumeration. The created enumeration
      * will sequentially enumerate over all elements of each enumeration and skip
-     * <tt>null</tt> enumeration elements in the array.
+     * <code>null</code> enumeration elements in the array.
      * @param <T> object type
      * @param enums the array of enumerations.
      * @return the enumeration over the array of enumerations.

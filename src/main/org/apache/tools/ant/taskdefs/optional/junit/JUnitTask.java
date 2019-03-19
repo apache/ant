@@ -219,8 +219,8 @@ public class JUnitTask extends Task {
      * <p>This property is applied on all BatchTest (batchtest) and
      * JUnitTest (test) however it can possibly be overridden by their
      * own properties.</p>
-     * @param value <tt>false</tt> if it should not filter, otherwise
-     * <tt>true</tt>
+     * @param value <code>false</code> if it should not filter, otherwise
+     * <code>true</code>
      *
      * @since Ant 1.5
      */
@@ -233,8 +233,8 @@ public class JUnitTask extends Task {
      * This property is applied on all BatchTest (batchtest) and JUnitTest
      * (test) however it can possibly be overridden by their own
      * properties.
-     * @param value <tt>true</tt> if it should halt, otherwise
-     * <tt>false</tt>
+     * @param value <code>true</code> if it should halt, otherwise
+     * <code>false</code>
      *
      * @since Ant 1.2
      */
@@ -263,8 +263,8 @@ public class JUnitTask extends Task {
      * This property is applied on all BatchTest (batchtest) and
      * JUnitTest (test) however it can possibly be overridden by their
      * own properties.
-     * @param value <tt>true</tt> if it should halt, otherwise
-     * <tt>false</tt>
+     * @param value <code>true</code> if it should halt, otherwise
+     * <code>false</code>
      *
      * @since Ant 1.2
      */
@@ -294,8 +294,8 @@ public class JUnitTask extends Task {
      * hanging the build.  this property is applied on all BatchTest
      * (batchtest) and JUnitTest (test) however it can possibly be
      * overridden by their own properties.</p>
-     * @param value <tt>true</tt> if a JVM should be forked, otherwise
-     * <tt>false</tt>
+     * @param value <code>true</code> if a JVM should be forked, otherwise
+     * <code>false</code>
      * @see #setTimeout
      *
      * @since Ant 1.2
@@ -350,9 +350,9 @@ public class JUnitTask extends Task {
      *
      * Can take the values on, off, and withOutAndErr.
      *
-     * @param value <tt>true</tt> to print a summary,
-     * <tt>withOutAndErr</tt> to include the test's output as
-     * well, <tt>false</tt> otherwise.
+     * @param value <code>true</code> to print a summary,
+     * <code>withOutAndErr</code> to include the test's output as
+     * well, <code>false</code> otherwise.
      * @see SummaryJUnitResultFormatter
      * @since Ant 1.2
      */
@@ -405,7 +405,7 @@ public class JUnitTask extends Task {
     /**
      * Set the maximum memory to be used by all forked JVMs.
      *
-     * @param   max     the value as defined by <tt>-mx</tt> or <tt>-Xmx</tt>
+     * @param   max     the value as defined by <code>-mx</code> or <code>-Xmx</code>
      *                  in the java command line options.
      * @since Ant 1.2
      */
@@ -418,7 +418,7 @@ public class JUnitTask extends Task {
      * default is 'java'. The command is resolved by
      * java.lang.Runtime.exec(). Ignored if fork is disabled.
      *
-     * @param   value   the new VM to use instead of <tt>java</tt>
+     * @param   value   the new VM to use instead of <code>java</code>
      * @see #setFork(boolean)
      *
      * @since Ant 1.2
@@ -1139,9 +1139,9 @@ public class JUnitTask extends Task {
      * attributes of the returned holder object.
      * @param  test       the testcase to execute.
      * @param  watchdog   the watchdog in charge of cancelling the test if it
-     * exceeds a certain amount of time. Can be <tt>null</tt>, in this case
+     * exceeds a certain amount of time. Can be <code>null</code>, in this case
      * the test could probably hang forever.
-     * @param casesFile list of test cases to execute. Can be <tt>null</tt>,
+     * @param casesFile list of test cases to execute. Can be <code>null</code>,
      * in this case only one test is executed.
      * @return the test results from the JVM itself.
      * @throws BuildException in case of error creating a temporary property file,
@@ -1629,7 +1629,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * @return <tt>null</tt> if there is a timeout value, otherwise the
+     * @return <code>null</code> if there is a timeout value, otherwise the
      * watchdog instance.
      *
      * @throws BuildException under unspecified circumstances
@@ -1654,7 +1654,7 @@ public class JUnitTask extends Task {
 
     /**
      * Merge all individual tests from the batchtest with all individual tests
-     * and return an enumeration over all <tt>JUnitTest</tt>.
+     * and return an enumeration over all <code>JUnitTest</code>.
      *
      * @return enumeration over individual tests
      * @since Ant 1.3

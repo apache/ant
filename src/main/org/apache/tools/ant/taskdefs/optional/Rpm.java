@@ -205,7 +205,7 @@ public class Rpm extends Task {
      * The directory which will have the expected
      * subdirectories, SPECS, SOURCES, BUILD, SRPMS; optional.
      * If this isn't specified,
-     * the <tt>baseDir</tt> value is used
+     * the <code>baseDir</code> value is used
      *
      * @param td the directory containing the normal RPM directories.
      */
@@ -253,7 +253,7 @@ public class Rpm extends Task {
     /**
      * Flag (optional, default=false)
      * to remove the sources after the build.
-     * See the <tt>--rmsource</tt>  option of rpmbuild.
+     * See the <code>--rmsource</code>  option of rpmbuild.
      * @param rs a <code>boolean</code> value.
      */
     public void setRemoveSource(boolean rs) {

@@ -36,7 +36,7 @@ import org.apache.tools.ant.util.ResourceUtils;
 /**
  * Signs JAR or ZIP files with the javasign command line tool. The tool detailed
  * dependency checking: files are only signed if they are not signed. The
- * <tt>signjar</tt> attribute can point to the file to generate; if this file
+ * <code>signjar</code> attribute can point to the file to generate; if this file
  * exists then its modification date is used as a cue as to whether to resign
  * any JAR file.
  *

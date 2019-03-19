@@ -601,7 +601,7 @@ public class Property extends Task {
      * definition.
      * @param props The property object to load into
      * @param is    The input stream from where to load
-     * @param isXml <tt>true</tt> if we should try to load from xml
+     * @param isXml <code>true</code> if we should try to load from xml
      * @throws IOException if something goes wrong
      * @since 1.8.0
      * @see "http://java.sun.com/dtd/properties.dtd"
