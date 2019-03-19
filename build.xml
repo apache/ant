@@ -1503,9 +1503,6 @@
         <patternset refid="useful.tests"/>
       </srcfiles>
     </uptodate>
-    <condition property="javadoc.jaf.module" value="--add-modules java.activation" else="">
-      <isset property="jdk9+"/>
-    </condition>
   </target>
 
   <target name="javadocs" depends="check-javadoc"
@@ -1538,7 +1535,6 @@
       <group title="Optional Types" packages="org.apache.tools.ant.types.optional*"/>
       <group title="Ant Utilities" packages="org.apache.tools.ant.util*"/>
       <classpath refid="tests-classpath"/>
-      <arg line="${javadoc.jaf.module}"/>
     </javadoc>
   </target>
 
