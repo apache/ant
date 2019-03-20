@@ -1503,14 +1503,6 @@
         <patternset refid="useful.tests"/>
       </srcfiles>
     </uptodate>
-    <!-- Javadoc on classes in Ant project, don't (yet) comply to HTML5
-    semantics. javadoc tool in JDK 9+ allows specifying the HTML version
-    to use for the output generation. We intentionally set it to -html4
-    to prevent javadoc tool failures (in JDK 11, which is strict) when
-    running against our code -->
-    <condition property="javadoc.output.htmlversion" value="-html4" else="">
-      <isset property="jdk9+"/>
-    </condition>
   </target>
 
   <target name="javadocs" depends="check-javadoc"
@@ -1543,7 +1535,6 @@
       <group title="Optional Types" packages="org.apache.tools.ant.types.optional*"/>
       <group title="Ant Utilities" packages="org.apache.tools.ant.util*"/>
       <classpath refid="tests-classpath"/>
-      <arg line="${javadoc.output.htmlversion}"/>
     </javadoc>
   </target>
 
