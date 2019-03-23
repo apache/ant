@@ -218,6 +218,23 @@ e.g. decreasing the size by deleting 'same' classes from the versions-branches, 
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
+    <td>version</td>
+    <td>The <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/module/ModuleDescriptor.Version.html">module version</a>
+      to embed into the jar file's module descriptor, if it has one.  Not used in Java versions
+      older than Java 9.
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>mainClass</td>
+    <td>Fully qualified name of main class of a modular jar file.  Modular jar files, introduced
+      with Java 9, use this instead of their manifest's Main-Class attribute to determine their
+      execution entry point.  Setting this does not affect the manifest in any way, and specifying
+      a Main-Class in the manifest will not cause this attribute to be set.
+      <strong>Note:</strong> If this is set to a class which isn't in the jar file, Java will
+      refuse to load the module at runtime.
+    <td>No</td>
+  </tr>
+  <tr>
     <td>manifestencoding</td>
     <td>The encoding used to read the JAR manifest, when a manifest file is specified.  The task
       will always use UTF-8 when writing the manifest.</td>
@@ -384,6 +401,40 @@ that implement the service, by <code>provider</code> nested elements.</p>
 nested <code>&lt;provider&gt;</code> element, which has a single <var>classname</var> attribute.  If
 a JAR file has more that one implementation of the service, a number of
 nested <code>&lt;provider&gt;</code> elements may be used.</p>
+
+<h4 id="version">version</h4>
+
+<p><em>Since Ant 1.10.6</em></p>
+
+<p>Specifies a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/module/ModuleDescriptor.Version.html">module version</a>
+as individual components.  Either this or the <code>version</code> attribute may be specified,
+but not both.</p>
+
+<table class="attr">
+  <caption>Attributes:</caption>
+  <tr>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
+  </tr>
+  <tr>
+    <td>number</td>
+    <td>Primary version number.  Can contain any characters except
+        "<code>-</code>" (ASCII hyphen) and "<code>+</code>" (ASCII plus).</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>preRelease</td>
+    <td>Optional release status, such as <code>ea</code> (early access), <code>internal</code>,
+        <code>beta</code>, etc.  Can contain any characters except "<code>+</code>" (ASCII plus).</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>build</td>
+    <td>Optional build number.  Can contain any text.
+    <td>No</td>
+  </tr>
+</table>
 
 <h3>Examples</h3>
 
