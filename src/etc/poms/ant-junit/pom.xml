@@ -140,6 +140,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
           <excludes>
             <exclude>org/example/junit/*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/junit/*$*</exclude>
+            <!-- test fails as classloaders are different when run via Maven -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/junit/JUnitTaskTest*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/optional/junit/JUnitClassLoaderTest*</exclude>
           </excludes>
         </configuration>
       </plugin>

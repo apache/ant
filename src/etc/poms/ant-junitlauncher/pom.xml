@@ -108,6 +108,8 @@
                     </systemProperties>
                     <excludes>
                         <exclude>org/example/junitlauncher/**</exclude>
+                        <!-- test fails as classloaders are different when run via Maven -->
+                        <exclude>org/apache/tools/ant/taskdefs/optional/junitlauncher/JUnitLauncherTaskTest*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
