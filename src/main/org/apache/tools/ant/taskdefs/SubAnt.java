@@ -510,7 +510,7 @@ public class SubAnt extends Task {
     }
 
     /**
-     * Set the buildpath to be used to find sub-projects.
+     *  Append the contents of the other Path instance to this.
      *
      * @param  s an Ant Path object containing the buildpath.
      */
