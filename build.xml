@@ -49,6 +49,7 @@
   <property name="apache.resolver.type.package" value="${type.package}/resolver"/>
   <property name="util.package" value="${ant.package}/util"/>
   <property name="regexp.package" value="${util.package}/regexp"/>
+  <property name="jarattr.package" value="${util.package}/jarattr"/>
 
   <property name="optional.jars.prefix" value="ant"/>
   <property name="optional.jars.whenmanifestonly" value="skip"/>
@@ -180,7 +181,10 @@
   -->
 
   <selector id="needs.jdk9+">
-    <filename name="${modules.package}/"/>
+    <or>
+      <filename name="${modules.package}/"/>
+      <filename name="${jarattr.package}/"/>
+    </or>
   </selector>
 
   <!-- Kaffe has some JDK 1.5 features including java.lang.Readable,

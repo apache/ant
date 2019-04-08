@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +42,7 @@ import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -50,6 +52,7 @@ import org.apache.tools.ant.taskdefs.Manifest.Section;
 import org.apache.tools.ant.types.ArchiveFileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ModuleVersion;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -74,6 +77,10 @@ public class Jar extends Zip {
 
     /** The manifest file name. */
     private static final String MANIFEST_NAME = "META-INF/MANIFEST.MF";
+
+    /** Pattern matching name of module descriptor entry. */
+    private static final Pattern MODULE_INFO =
+        Pattern.compile("(?:META-INF/versions/[0-9]+/)?module-info\\.class");
 
     /**
      * List of all known SPI Services
@@ -169,6 +176,21 @@ public class Jar extends Zip {
      * whether to flatten Class-Path attributes into a single one.
      */
     private boolean flattenClassPaths = false;
+
+    /**
+     * Module version to embed in jar file, specified as a string
+     * (Java 9+ only).
+     */
+    private String version;
+
+    /**
+     * Module version to embed in jar file, specified as a child element
+     * (Java 9+ only).
+     */
+    private ModuleVersion moduleVersion;
+
+    /** Module entry point to embed in jar file (Java 9+ only). */
+    private String mainClass;
 
     /**
      * Extra fields needed to make Solaris recognize the archive as a jar file.
@@ -453,6 +475,55 @@ public class Jar extends Zip {
     }
 
     /**
+     * Sets fully qualified class name of entry point of module,
+     * if jar file is a modular jar file.  Ignored if Java version
+     * is less than 9, or jar file is not a modular jar file.
+     *
+     * @param className fully qualified name of main class, or {@code null}
+     *
+     * @since Ant 1.10.6
+     */
+    public void setMainClass(String className) {
+        this.mainClass = className;
+    }
+
+    // CheckStyle:LineLength OFF - Link is too long.
+    /**
+     * Sets <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/module/ModuleDescriptor.Version.html">module version</a>
+     * to embed in jar file.  Ignored if Java version is less than 9,
+     * or jar file is not a modular jar file.
+     *
+     * @param version new module version to embed in jar file
+     *
+     * @since Ant 1.10.6
+     */
+    // CheckStyle:LineLength ON
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /**
+     * Creates an uninitialized child element representing the version of
+     * the modular jar.
+     *
+     * @return new, unconfigured child element
+     *
+     * @since Ant 1.10.6
+     *
+     * @see #setVersion(String)
+     */
+    public ModuleVersion createVersion() {
+        if (moduleVersion != null) {
+            throw new BuildException(
+                "No more than one <moduleVersion> element is allowed.",
+                getLocation());
+        }
+
+        moduleVersion = new ModuleVersion();
+        return moduleVersion;
+    }
+
+    /**
      * Initialize the zip output stream.
      * @param zOut the zip output stream
      * @throws IOException on I/O errors
@@ -661,6 +732,18 @@ public class Jar extends Zip {
                            + " files include a " + INDEX_NAME + " which will"
                            + " be replaced by a newly generated one.",
                            Project.MSG_WARN);
+        } else if (MODULE_INFO.matcher(vPath).matches()) {
+            java.nio.file.Path newModuleInfo = copyAndSetModuleAttributes(is);
+
+            try (InputStream newModuleInfoStream =
+                new BufferedInputStream(
+                    Files.newInputStream(newModuleInfo))) {
+
+                super.zipFile(newModuleInfoStream,
+                    zOut, vPath, lastModified, fromArchive, mode);
+            } finally {
+                Files.delete(newModuleInfo);
+            }
         } else {
             if (index && !vPath.contains("/")) {
                 rootEntries.add(vPath);
@@ -774,7 +857,7 @@ public class Jar extends Zip {
             return new ArchiveState(true, manifests);
         }
 
-        // need to handle manifest as a special check
+        // need to handle manifest and modular attributes as a special check
         if (zipFile.exists()) {
             // if it doesn't exist, it will get created anyway, don't
             // bother with any up-to-date checks.
@@ -784,6 +867,13 @@ public class Jar extends Zip {
                 if (originalManifest == null) {
                     log("Updating jar since the current jar has"
                                    + " no manifest", Project.MSG_VERBOSE);
+                    needsUpdate = true;
+                } else if (version != null || moduleVersion != null || mainClass != null) {
+                    /*
+                     * Task's modular attributes were not set during
+                     * the initial creation of the jar, so we need to
+                     * make sure we can process them the next time around.
+                     */
                     needsUpdate = true;
                 } else {
                     Manifest mf = createManifest();
@@ -1116,6 +1206,82 @@ public class Jar extends Zip {
             }
         }
         return manifests;
+    }
+
+    /**
+     * Updates a module-info.class descriptor's module-specific attributes
+     * from this task's attributes, and writes the new module-info to a
+     * temporary file.
+     * <p>
+     * The argument is consumed, even if there were no changes made
+     * to its content.  Either way, returned file can be opened and
+     * the InputStream can be read from, just as the original InputStream
+     * would have been.
+     *
+     * @param originalModuleInfo module-info to update
+     *
+     * @return new module-info file, with task's attributes applied
+     *
+     * @throws IOException if stream cannot be read, or new module-info
+     *                     cannot be written
+     */
+    private java.nio.file.Path copyAndSetModuleAttributes(InputStream originalModuleInfo)
+        throws IOException {
+
+        if (version != null && moduleVersion != null) {
+            throw new BuildException(
+                "version attribute and nested <version> cannot both be specified.",
+                getLocation());
+        }
+
+        String versionStr;
+        if (moduleVersion != null) {
+            try {
+                versionStr = moduleVersion.toModuleVersionString();
+            } catch (IllegalStateException e) {
+                throw new BuildException(e, getLocation());
+            }
+        } else {
+            versionStr = version;
+        }
+
+        java.nio.file.Path newModuleInfoFile =
+            Files.createTempFile("module-info-", ".class");
+
+        if (versionStr != null) {
+            log("Setting modular jar's version to \"" + versionStr + "\"",
+                Project.MSG_VERBOSE);
+        }
+        if (mainClass != null) {
+            log("Setting modular jar's main class to " + mainClass,
+                Project.MSG_VERBOSE);
+        }
+
+        try {
+            // Call via reflection, to avoid compile-time dependency
+            // on Java 9+ classes.
+            // Equivalent to:
+            // JarAttributeUpdater.writeNewModuleInfo(
+            //   originalModuleInfo, versionStr, mainClass, newModuleInfoFile);
+            Class<?> updaterClass = Class.forName(
+                "org.apache.tools.ant.util.jarattr.JarAttributeUpdater");
+            updaterClass.getMethod("writeNewModuleInfo",
+                InputStream.class,
+                String.class,
+                String.class,
+                java.nio.file.Path.class).invoke(
+                    null,
+                    originalModuleInfo,
+                    versionStr, mainClass,
+                    newModuleInfoFile);
+        } catch (ReflectiveOperationException e) {
+            throw new BuildException(
+                "Unable to set modular attributes of jar file"
+                + " (possibly because this Ant was compiled for Java 8)"
+                + ": " + e, e, getLocation());
+        }
+
+        return newModuleInfoFile;
     }
 
     private Charset getManifestCharset() {

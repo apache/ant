@@ -281,5 +281,108 @@
     </jar>
   </target>  
 
-    
+  <target name="-modularTestProgram">
+    <property name="package.name" value="org.apache.tools.ant.test"/>
+    <property name="package.path" value="org/apache/tools/ant/test"/>
+    <property name="test-module.name" value="org.apache.tools.ant.test"/>
+    <property name="test-module.src" value="${tmp.dir}/src"/>
+    <property name="test-module.classes" value="${tmp.dir}/classes"/>
+
+    <mkdir dir="${test-module.src}/${package.path}"/>
+    <echo file="${test-module.src}/${package.path}/Test.java"><!--
+-->package ${package.name};
+
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Successful.");
+    }
+}
+<!-- --></echo>
+    <echo file="${test-module.src}/module-info.java"><!--
+-->module ${test-module.name} {
+    exports ${package.name};
+}
+<!-- --></echo>
+
+    <mkdir dir="${test-module.classes}"/>
+    <javac srcdir="${test-module.src}" destdir="${test-module.classes}"
+           debug="true" includeAntRuntime="false">
+      <compilerarg value="-Xlint"/>
+    </javac>
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}"/>
+  </target>
+
+  <target name="testModularJar" depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}"/>
+  </target>
+
+  <target name="testModuleVersion" depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}"
+index="true"
+         version="1.0-test+0001"/>
+  </target>
+
+  <target name="testNestedVersion" depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}">
+       <version number="1.0" preRelease="test" build="0001"/>
+    </jar>
+  </target>
+
+  <target name="testNestedVersionNumberOnly" depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}">
+       <version number="1.0"/>
+    </jar>
+  </target>
+
+  <target name="testNestedVersionNumberAndPreReleaseOnly"
+          depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}">
+       <version number="1.0" preRelease="test"/>
+    </jar>
+  </target>
+
+  <target name="testNestedVersionNumberAndBuildOnly"
+          depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}">
+       <version number="1.0" build="0001"/>
+    </jar>
+  </target>
+
+  <target name="testNestedVersionMissingNumber" depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}">
+       <version preRelease="test" build="0001"/>
+    </jar>
+  </target>
+
+  <target name="testNestedVersionInvalidNumber" depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}">
+       <version number="1-0" preRelease="test" build="0001"/>
+    </jar>
+  </target>
+
+  <target name="testNestedVersionInvalidPreRelease"
+          depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}">
+       <version number="1.0" preRelease="ant+test" build="0001"/>
+    </jar>
+  </target>
+
+  <target name="testNestedVersionAndAttribute"
+          depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}"
+         version="1.0-test+0001">
+       <version number="2.0" preRelease="test" build="0002"/>
+    </jar>
+  </target>
+
+  <target name="testMainClass" depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}"
+         mainClass="${package.name}.Test"/>
+  </target>
+
+  <target name="testModuleVersionAndMainClass" depends="-modularTestProgram">
+    <jar destfile="${tmp.jar}" basedir="${test-module.classes}"
+         version="1.0-test+0001" mainClass="${package.name}.Test"/>
+  </target>
+
 </project>

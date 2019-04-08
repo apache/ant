@@ -56,6 +56,9 @@ Fixed bugs:
    actual address could potentially be unreachable. This is now fixed
    and the resolved address is actually checked for reachability.
 
+ * Added version and mainClass attributes for modular jar files.
+   Bugzilla Report 62772
+   Bugzilla Report 62789
 
 Other changes:
 --------------
