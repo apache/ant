@@ -151,11 +151,7 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * Creates the real object instance and child elements, then configures
-     * the attributes and text of the real object. This unknown element
-     * is then replaced with the real object in the containing target's list
-     * of children.
-     *
+     * Configure the given object from this UnknownElement
      * @exception BuildException if the configuration fails
      */
     public void maybeConfigure() throws BuildException {
