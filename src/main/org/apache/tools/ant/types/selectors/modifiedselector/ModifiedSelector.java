@@ -686,9 +686,7 @@ public class ModifiedSelector extends BaseExtendSelector
 
 
     /**
-     * Defined in org.apache.tools.ant.types.Parameterizable.
-     * Overwrite implementation in superclass because only special
-     * parameters are valid.
+     * Set all the Parameters for this custom selector, collected by\n the ExtendSelector class.
      * @see #addParam(String,Object)
      * @param parameters the parameters to set.
      */
