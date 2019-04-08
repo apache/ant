@@ -104,7 +104,7 @@ public class LoadProperties extends Task {
     }
 
     /**
-     * Set the classpath to use when looking up a resource.
+     * Append the contents of the other Path instance to this.
      * @param classpath to add to any existing classpath
      */
     public void setClasspath(Path classpath) {
