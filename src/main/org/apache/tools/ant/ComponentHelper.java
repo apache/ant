@@ -452,12 +452,7 @@ public class ComponentHelper  {
     }
 
     /**
-     * Adds a new datatype definition.
-     * Attempting to override an existing definition with an
-     * equivalent one (i.e. with the same classname) results in
-     * a verbose log message. Attempting to override an existing definition
-     * with a different one results in a warning log message, but the
-     * definition is changed.
+     * Update the component definition table with a new or modified definition.
      *
      * @param typeName The name of the datatype.
      *                 Must not be <code>null</code>.
