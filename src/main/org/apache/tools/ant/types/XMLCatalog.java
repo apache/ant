@@ -197,10 +197,7 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * Allows simple classpath string.  Not allowed if this catalog is
-     * itself a reference to another catalog -- that is, a catalog
-     * cannot both refer to another <em>and</em> contain elements or
-     * other attributes.
+     * Append the contents of the other Path instance to this.
      *
      * @param classpath the classpath to use to look up entities.
      */
