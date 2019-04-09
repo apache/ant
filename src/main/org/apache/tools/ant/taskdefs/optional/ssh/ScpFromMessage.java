@@ -286,14 +286,13 @@ public class ScpFromMessage extends AbstractSshMessage {
                 fos.write(buf, 0, length);
                 filesize -= length;
                 totalLength += length;
-                if (filesize == 0) {
-                    break;
-                }
-
                 if (trackProgress) {
                     percentTransmitted = trackProgress(initFilesize,
                                                        totalLength,
                                                        percentTransmitted);
+                }
+                if (filesize == 0) {
+                    break;
                 }
             }
         } finally {
