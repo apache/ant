@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
+import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -481,7 +482,7 @@ public class SSHExec extends SSHBase {
      */
     private void writeToFile(final String from, final boolean append, final File to)
         throws IOException {
-        try (FileWriter out = new FileWriter(to.getAbsolutePath(), append)) {
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(to.getAbsolutePath(), append))) {
             final StringReader in = new StringReader(from);
             final char[] buffer = new char[BUFFER_SIZE];
             while (true) {
