@@ -315,11 +315,18 @@ deploy.url=http://${deploy.server}:${deploy.port}/
 <a name="notes-env"></a>
 <h3>Notes about environment variables</h3>
 <p>
-  Ant runs on Java 1.2 therefore it cannot use Java5 features for accessing environment
-  variables. So it starts a command in a new process which prints the environment variables,
-  analyzes the output and creates the properties. <br>
+  When Ant started to support setting properties from environment
+  variables it ran on Java 1.2 where <code>System.getEnv</code> didn't
+  work. So we decided to start a command in a new process which prints
+  the environment variables, analyzes the output and creates the
+  properties. Once Java 5 became our baseline we could have switched
+  to <code>getEnv</code> but it returned different results on some
+  platforms so we stuck with the command approach to remain backwards
+  compatible.
+</p>
+<p>
   There are commands for the following operating systems implemented in
-  <a href="https://git-wip-us.apache.org/repos/asf?p=ant.git;a=blob;f=src/main/org/apache/tools/ant/taskdefs/Execute.java;hb=24e5a0e881dba01a6f012c4a271b743946412a0d">
+  <a href="https://gitbox.apache.org/repos/asf?p=ant.git;a=blob;f=src/main/org/apache/tools/ant/taskdefs/Execute.java;h=2f29256ed8ee964d78718fd0d7929659008482e6;hb=HEAD">
   Execute.java</a> (method <tt>getProcEnvCommand()</tt>):
   <table>
     <tr>
