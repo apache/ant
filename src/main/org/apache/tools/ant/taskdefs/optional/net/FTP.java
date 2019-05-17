@@ -537,7 +537,9 @@ public class FTP extends Task implements FTPTaskConfig {
                         } else {
                             if (!isFollowSymlinks() && file.isSymbolicLink()) {
                                 filesExcluded.addElement(name);
-                            } else if (isFunctioningAsFile(ftp, dir, file)) {
+                            } else {
+                                // at this point, it's either a symbolic link or a file, but not a directory.
+                                // so we include it
                                 accountForIncludedFile(name);
                             }
                         }

@@ -1,6 +1,12 @@
 Changes from Ant 1.10.6 TO Ant 1.10.7
 =====================================
 
+Fixed bugs:
+-----------
+
+ * FTP task no longer duplicates a check for a file being a symlink.
+   Bugzilla Report 63259
+
 
 Changes from Ant 1.10.5 TO Ant 1.10.6
 =====================================
