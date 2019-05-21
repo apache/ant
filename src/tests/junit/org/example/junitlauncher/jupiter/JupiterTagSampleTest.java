@@ -21,18 +21,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
  */
-public class JupiterSampleTest {
-
-    private static final String message = "The quick brown fox jumps over the lazy dog";
+public class JupiterTagSampleTest {
 
     @BeforeAll
     static void beforeAll() {
@@ -43,35 +38,20 @@ public class JupiterSampleTest {
     }
 
     @Test
-    void testSucceeds() {
-        System.out.println(message);
-        System.out.print("<some-other-message>Hello world! <!-- some comment --></some-other-message>");
-    }
-
-    @Test
-    void testFails() {
-        fail("intentionally failing");
-    }
-
-    @Test
-    @Disabled("intentionally skipped")
-    void testSkipped() {
-    }
-
-    @Test
     @Tag("fast")
-    void testMethodIncludeTagisExecuted() {
-    }
-
-    @Test
-    @Tag("fast")
-    void testMethodIncludeTagisExecuted2() {
+    void testMethodIncludeTagisExecutedTagSampleTest() {
     }
 
     @Test
     @Tag("slow")
-    void testMethodIncludeTagisNotExecuted() {
+    void testMethodIncludeTagisNotExecutedTagSampleTest() {
     }
+
+    @Test
+    @Tag("extraSlow")
+    void testMethodIncludeTagisNotExecuted2TagSampleTest() {
+    }
+
 
     @AfterEach
     void afterEach() {

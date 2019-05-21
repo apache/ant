@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
@@ -34,6 +35,7 @@ import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -462,6 +464,13 @@ public class LauncherSupport {
         final String[] enginesToExclude = testRequest.getOwner().getExcludeEngines();
         if (enginesToExclude != null && enginesToExclude.length > 0) {
             requestBuilder.filters(EngineFilter.excludeEngines(enginesToExclude));
+        }
+        // add any tag filters
+        if (this.launchDefinition.getIncludeTags().size() > 0) {
+            requestBuilder.filters(TagFilter.includeTags(this.launchDefinition.getIncludeTags()));
+        }
+        if (this.launchDefinition.getExcludeTags().size() > 0) {
+            requestBuilder.filters(TagFilter.excludeTags(this.launchDefinition.getExcludeTags()));
         }
     }
 

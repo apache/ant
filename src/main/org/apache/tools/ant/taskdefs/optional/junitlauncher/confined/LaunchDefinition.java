@@ -55,4 +55,15 @@ public interface LaunchDefinition {
      */
     ClassLoader getClassLoader();
 
+    /**
+     * @return Returns the list of tags which will be used to evaluate tests that need to be included
+     * in the test execution
+     */
+    List<String> getIncludeTags();
+
+    /**
+     * @return Returns the list of tags which will be used to evaluate tests that need to be excluded
+     * from the test execution
+     */
+    List<String> getExcludeTags();
 }

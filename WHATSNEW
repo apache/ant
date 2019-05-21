@@ -12,6 +12,13 @@ Fixed bugs:
    has now been fixed.
    Bugzilla Report 63446
 
+Other changes:
+--------------
+
+ * junitlauncher task now supports selecting test classes for execution,
+   based on the JUnit 5 tags, through the new "includeTags" and
+   "excludeTags" attributes.
+
 
 Changes from Ant 1.10.5 TO Ant 1.10.6
 =====================================

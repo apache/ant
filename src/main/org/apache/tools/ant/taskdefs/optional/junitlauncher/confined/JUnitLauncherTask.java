@@ -41,11 +41,16 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_EXCLUDE_TAGS;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_INCLUDE_TAGS;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_PRINT_SUMMARY;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LAUNCH_DEF;
+
 
 /**
  * An Ant {@link Task} responsible for launching the JUnit platform for running tests.
@@ -75,6 +80,8 @@ public class JUnitLauncherTask extends Task {
     private boolean printSummary;
     private final List<TestDefinition> tests = new ArrayList<>();
     private final List<ListenerDefinition> listeners = new ArrayList<>();
+    private List<String> includeTags = new ArrayList<>();
+    private List<String> excludeTags = new ArrayList<>();
 
     public JUnitLauncherTask() {
     }
@@ -158,6 +165,32 @@ public class JUnitLauncherTask extends Task {
         this.printSummary = printSummary;
     }
 
+    /**
+     * Tags to include. Will trim each tag.
+     *
+     * @param includes comma separated list of tags to include while running the tests.
+     * @since Ant 1.10.7
+     */
+    public void setIncludeTags(final String includes) {
+        final StringTokenizer tokens = new StringTokenizer(includes, ",");
+        while (tokens.hasMoreTokens()) {
+            includeTags.add(tokens.nextToken().trim());
+        }
+    }
+
+    /**
+     * Tags to exclude. Will trim each tag.
+     *
+     * @param excludes comma separated list of tags to exclude while running the tests.
+     * @since Ant 1.10.7
+     */
+    public void setExcludeTags(final String excludes) {
+        final StringTokenizer tokens = new StringTokenizer(excludes, ",");
+        while (tokens.hasMoreTokens()) {
+            excludeTags.add(tokens.nextToken().trim());
+        }
+    }
+
     private void preConfigure(final TestDefinition test) {
         if (test.getHaltOnFailure() == null) {
             test.setHaltOnFailure(this.haltOnFailure);
@@ -233,6 +266,12 @@ public class JUnitLauncherTask extends Task {
                 if (this.haltOnFailure) {
                     writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, "true");
                 }
+                if (this.includeTags.size() > 0) {
+                    writer.writeAttribute(LD_XML_ATTR_INCLUDE_TAGS, commaSeparatedListElements(includeTags));
+                }
+                if (this.excludeTags.size() > 0) {
+                    writer.writeAttribute(LD_XML_ATTR_EXCLUDE_TAGS, commaSeparatedListElements(excludeTags));
+                }
                 // task level listeners
                 for (final ListenerDefinition listenerDef : this.listeners) {
                     if (!listenerDef.shouldUse(getProject())) {
@@ -292,6 +331,12 @@ public class JUnitLauncherTask extends Task {
                 throw new BuildException(new TimeoutException("Forked test(s) timed out"));
             }
         }
+    }
+
+    private static String commaSeparatedListElements(final List<String> stringList) {
+        return stringList.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", "));
     }
 
     private int executeForkedTest(final ForkDefinition forkDefinition, final CommandlineJava commandlineJava) {
@@ -357,6 +402,16 @@ public class JUnitLauncherTask extends Task {
         @Override
         public boolean isHaltOnFailure() {
             return haltOnFailure;
+        }
+
+        @Override
+        public List<String> getIncludeTags() {
+            return includeTags;
+        }
+
+        @Override
+        public List<String> getExcludeTags() {
+            return excludeTags;
         }
 
         @Override
