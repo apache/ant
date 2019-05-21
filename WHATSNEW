@@ -7,6 +7,11 @@ Fixed bugs:
  * FTP task no longer duplicates a check for a file being a symlink.
    Bugzilla Report 63259
 
+ * junitlauncher task, when used in fork mode with "<testclasses>",
+   used to create the wrong number of listeners per test class. This
+   has now been fixed.
+   Bugzilla Report 63446
+
 
 Changes from Ant 1.10.5 TO Ant 1.10.6
 =====================================

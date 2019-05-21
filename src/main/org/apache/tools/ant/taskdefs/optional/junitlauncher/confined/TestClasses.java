@@ -110,12 +110,13 @@ public class TestClasses extends TestDefinition {
 
     public static List<TestDefinition> fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {
         reader.require(XMLStreamConstants.START_ELEMENT, null, LD_XML_ELM_TEST_CLASSES);
-        final TestClasses testDefinition = new TestClasses();
+        final List<TestDefinition> testDefinitions = new ArrayList<>();
         // read out as multiple SingleTestClass representations
         while (reader.nextTag() != XMLStreamConstants.END_ELEMENT) {
+            final SingleTestClass testDefinition = new SingleTestClass();
             reader.require(XMLStreamConstants.START_ELEMENT, null, Constants.LD_XML_ELM_TEST);
             final String testClassName = requireAttributeValue(reader, LD_XML_ATTR_CLASS_NAME);
-            testDefinition.add(new StringResource(testClassName + ".class"));
+            testDefinition.setName(testClassName);
             final String halt = reader.getAttributeValue(null, LD_XML_ATTR_HALT_ON_FAILURE);
             if (halt != null) {
                 testDefinition.setHaltOnFailure(Boolean.parseBoolean(halt));
@@ -137,9 +138,10 @@ public class TestClasses extends TestDefinition {
                 testDefinition.addConfiguredListener(ListenerDefinition.fromForkedRepresentation(reader));
             }
             reader.require(XMLStreamConstants.END_ELEMENT, null, Constants.LD_XML_ELM_TEST);
+            testDefinitions.add(testDefinition);
         }
         reader.require(XMLStreamConstants.END_ELEMENT, null, LD_XML_ELM_TEST_CLASSES);
-        return Collections.singletonList(testDefinition);
+        return Collections.unmodifiableList(testDefinitions);
     }
 
     private static String requireAttributeValue(final XMLStreamReader reader, final String attrName) throws XMLStreamException {
