@@ -17,12 +17,23 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
+import static org.example.junitlauncher.Tracker.verifyFailed;
+import static org.example.junitlauncher.Tracker.verifySkipped;
+import static org.example.junitlauncher.Tracker.verifySuccess;
+import static org.example.junitlauncher.Tracker.wasTestRun;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.example.junitlauncher.jupiter.JupiterSampleTest;
+import org.example.junitlauncher.jupiter.JupiterTagSampleTest;
 import org.example.junitlauncher.vintage.AlwaysFailingJUnit4Test;
 import org.example.junitlauncher.vintage.ForkedTest;
 import org.example.junitlauncher.vintage.JUnit4SampleTest;
@@ -30,15 +41,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static org.example.junitlauncher.Tracker.verifyFailed;
-import static org.example.junitlauncher.Tracker.verifySkipped;
-import static org.example.junitlauncher.Tracker.verifySuccess;
-import static org.example.junitlauncher.Tracker.wasTestRun;
 
 /**
  * Tests the {@link JUnitLauncherTask}
@@ -228,7 +230,7 @@ public class JUnitLauncherTaskTest {
         final String targetName = "test-junit-ant-runtime-lib-excluded";
         try {
             buildRule.executeTarget(targetName);
-            Assert.fail(targetName + " was expected to fail since JUnit platform libraries " +
+            Assert.fail(targetName + " was expected to fail since Ant runtime libraries " +
                     "weren't included in the classpath of the forked JVM");
         } catch (BuildException be) {
             // expect a Error due to missing main class (which is part of Ant runtime libraries
@@ -311,6 +313,107 @@ public class JUnitLauncherTaskTest {
 
         Assert.assertTrue("JUnit4SampleTest#testBar was expected to pass", verifySuccess(trackerFile,
                 JUnit4SampleTest.class.getName(), "testBar"));
+    }
+    
+    /**
+     * Tests execution of a test which is configured to execute only methods with a special tag
+     */
+    @Test
+    public void testMethodWithIncludeTag() throws Exception {
+    	final String target = "test-method-with-include-tag";
+        final Path tracker2 = setupTrackerProperty(target);
+        buildRule.executeTarget(target);
+        // verify only that specific method was run
+        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisExecuted"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecuted"));
+    }
+    
+    /**
+     * Tests execution of a test which is configured to execute only methods without special tags
+     */
+    @Test
+    public void testMethodWithExcludeTag() throws Exception {
+    	final String target = "test-method-with-exclude-tag";
+        final Path tracker2 = setupTrackerProperty(target);
+        buildRule.executeTarget(target);
+        // verify only that specific method was run
+        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisExecuted"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecuted"));
+    }
+    
+    /**
+     * Tests execution of a test which is configured to execute only methods with special tags, two classes specified 
+     */
+    @Test
+    public void testMethodWithTag2Classes() throws Exception {
+    	final String target = "test-method-with-tag-2-classes";
+        final Path tracker1 = setupTrackerProperty(target+"1");
+                
+        final Path tracker2 = setupTrackerProperty(target+"2");
+        
+        buildRule.executeTarget(target);
+        // verify only that specific method was run
+        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker1, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisExecuted"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker1, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecuted"));
+        Assert.assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
+                "testMethodIncludeTagisExecutedTagSampleTest"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecutedTagSampleTest"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecutedTagSampleTest2"));
+    }
+    
+    /**
+     * Tests execution of a test which is configured to execute only methods with special tags, two classes specified 
+     */
+    @Test
+    public void testMethodWithTagFileSet() throws Exception {
+    	final String target = "test-method-with-tag-fileset";
+        final Path tracker = setupTrackerProperty(target);
+                
+        buildRule.executeTarget(target);
+        // verify only that specific method was run
+        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisExecuted"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecuted"));
+        Assert.assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+                "testMethodIncludeTagisExecutedTagSampleTest"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecutedTagSampleTest"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecutedTagSampleTest2"));
+    }
+    
+    /**
+     * Tests execution of a test which is configured to execute only methods with special tags, two classes specified 
+     */
+    @Test
+    public void testMethodWithTagFileSetFork() throws Exception {
+    	final String target = "test-method-with-tag-fileset-fork";
+        final Path tracker = setupTrackerProperty(target);
+        
+        buildRule.executeTarget(target);
+        
+        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisExecuted"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecuted"));
+        Assert.assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+                 "testMethodIncludeTagisExecutedTagSampleTest"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+                 "testMethodIncludeTagisNotExecutedTagSampleTest"));
+        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+                "testMethodIncludeTagisNotExecutedTagSampleTest2"));
+        
+        // Do it in the test, cause otherwise the file will be too big
+        Files.deleteIfExists(tracker);        
     }
 
     private Path setupTrackerProperty(final String targetName) {
