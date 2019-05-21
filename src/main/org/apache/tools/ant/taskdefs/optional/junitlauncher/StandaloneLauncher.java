@@ -18,6 +18,30 @@
 
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_EXCLUDE_TAGS;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_INCLUDE_TAGS;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_PRINT_SUMMARY;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LAUNCH_DEF;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LISTENER;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST_CLASSES;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.stream.Stream;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants;
@@ -28,28 +52,7 @@ import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.SingleTestC
 import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestClasses;
 import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestDefinition;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
 
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_PRINT_SUMMARY;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LAUNCH_DEF;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LISTENER;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_TEST_CLASSES;
 
 /**
  * Used for launching forked tests from the {@link JUnitLauncherTask}.
@@ -140,6 +143,14 @@ public class StandaloneLauncher {
             if (haltOnfFailure != null) {
                 forkedLaunch.setHaltOnFailure(Boolean.parseBoolean(haltOnfFailure));
             }
+			final String includeFilter = reader.getAttributeValue(null, LD_XML_ATTR_INCLUDE_TAGS);
+			if (includeFilter != null) {
+				Stream.of(includeFilter.split(",")).forEach(i -> forkedLaunch.addIncludeTag(i));
+			}
+			final String excludeFilter = reader.getAttributeValue(null, LD_XML_ATTR_EXCLUDE_TAGS);
+			if (excludeFilter != null) {
+				Stream.of(excludeFilter.split(",")).forEach(e -> forkedLaunch.addExcludeTag(e));
+			}
             final String printSummary = reader.getAttributeValue(null, LD_XML_ATTR_PRINT_SUMMARY);
             if (printSummary != null) {
                 forkedLaunch.setPrintSummary(Boolean.parseBoolean(printSummary));
@@ -204,6 +215,8 @@ public class StandaloneLauncher {
         private boolean haltOnFailure;
         private List<TestDefinition> tests = new ArrayList<>();
         private List<ListenerDefinition> listeners = new ArrayList<>();
+		private List<String> includesList = new ArrayList<>();
+		private List<String> excludesList = new ArrayList<>();		
 
         @Override
         public List<TestDefinition> getTests() {
@@ -249,5 +262,19 @@ public class StandaloneLauncher {
         public ClassLoader getClassLoader() {
             return this.getClass().getClassLoader();
         }
+		public void addIncludeTag(String filter) {
+			this.includesList.add(filter);
     }
+		@Override
+		public List<String> getIncludeTags() {
+			return includesList;
+		}
+		public void addExcludeTag(String filter) {
+			this.excludesList.add(filter);
+		}
+		@Override
+		public List<String> getExcludeTags() {
+			return excludesList;
+		}
+	}
 }

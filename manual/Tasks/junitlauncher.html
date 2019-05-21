@@ -130,6 +130,18 @@
         <th scope="col">Required</th>
     </tr>
     <tr>
+        <td>includeTags</td>
+        <td>A comma separated list of <a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-annotations">JUnit 5 tags</a>, describing the tests to include.            
+        </td>
+        <td>No</td>
+    </tr>
+    <tr>
+        <td>excludeTags</td>
+        <td>A comma separated list of <a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-annotations">JUnit 5 tags</a>, describing the tests to exclude.            
+        </td>
+        <td>No</td>
+    </tr>
+    <tr>
         <td>haltOnFailure</td>
         <td>A value of <q>true</q> implies that build has to stop if any failure occurs in any of
             the tests. JUnit 4+ classifies failures as both assertion failures as well as exceptions

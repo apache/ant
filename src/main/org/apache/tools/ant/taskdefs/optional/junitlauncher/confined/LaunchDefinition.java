@@ -55,4 +55,13 @@ public interface LaunchDefinition {
      */
     ClassLoader getClassLoader();
 
+    /**
+     * @return Returns the list of included tags.  
+     */
+	List<String> getIncludeTags();
+
+	/**
+     * @return Returns the list of excluded tags.  
+     */
+	List<String> getExcludeTags();
 }

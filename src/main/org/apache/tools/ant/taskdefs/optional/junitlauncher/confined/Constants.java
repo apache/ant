@@ -36,6 +36,8 @@ public final class Constants {
     public static final String LD_XML_ELM_TEST = "test";
     public static final String LD_XML_ELM_TEST_CLASSES = "test-classes";
     public static final String LD_XML_ATTR_HALT_ON_FAILURE = "haltOnFailure";
+    public static final String LD_XML_ATTR_INCLUDE_TAGS = "includeTags";
+    public static final String LD_XML_ATTR_EXCLUDE_TAGS = "excludeTags";
     public static final String LD_XML_ATTR_OUTPUT_DIRECTORY = "outDir";
     public static final String LD_XML_ATTR_INCLUDE_ENGINES = "includeEngines";
     public static final String LD_XML_ATTR_EXCLUDE_ENGINES = "excludeEngines";

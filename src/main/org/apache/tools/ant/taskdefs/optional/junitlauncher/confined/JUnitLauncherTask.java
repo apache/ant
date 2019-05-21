@@ -17,6 +17,26 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_EXCLUDE_TAGS;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_INCLUDE_TAGS;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_PRINT_SUMMARY;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LAUNCH_DEF;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -29,23 +49,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.TimeoutException;
 
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_PRINT_SUMMARY;
-import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LAUNCH_DEF;
 
 /**
  * An Ant {@link Task} responsible for launching the JUnit platform for running tests.
@@ -75,6 +79,8 @@ public class JUnitLauncherTask extends Task {
     private boolean printSummary;
     private final List<TestDefinition> tests = new ArrayList<>();
     private final List<ListenerDefinition> listeners = new ArrayList<>();
+	private List<String> includeTagList = new ArrayList<>();
+	private List<String> excludeTagList = new ArrayList<>();
 
     public JUnitLauncherTask() {
     }
@@ -157,6 +163,30 @@ public class JUnitLauncherTask extends Task {
     public void setPrintSummary(final boolean printSummary) {
         this.printSummary = printSummary;
     }
+    
+    /**
+	 * Tags to include. Will trim each tag.
+	 *
+	 * @param list comma separated list of tags.
+	 */
+	public void setIncludeTags(final String includes) {
+		StringTokenizer tokens = new StringTokenizer(includes, ",");
+		while (tokens.hasMoreTokens()) {
+			includeTagList.add(tokens.nextToken().trim());
+		}
+	}
+	
+    /**
+	 * Tags to exclude. Will trim each tag.
+	 *
+	 * @param list comma separated list of tags.
+	 */
+	public void setExcludeTags(final String excludes) {
+		StringTokenizer tokens = new StringTokenizer(excludes, ",");
+		while (tokens.hasMoreTokens()) {
+			excludeTagList.add(tokens.nextToken().trim());
+		}
+    }
 
     private void preConfigure(final TestDefinition test) {
         if (test.getHaltOnFailure() == null) {
@@ -233,6 +263,12 @@ public class JUnitLauncherTask extends Task {
                 if (this.haltOnFailure) {
                     writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, "true");
                 }
+                if (this.includeTagList.size() > 0) {
+                	writer.writeAttribute(LD_XML_ATTR_INCLUDE_TAGS, commaSeparatedListElements(includeTagList));
+                }
+                if (this.excludeTagList.size() > 0) {
+                	writer.writeAttribute(LD_XML_ATTR_EXCLUDE_TAGS, commaSeparatedListElements(excludeTagList));
+                }
                 // task level listeners
                 for (final ListenerDefinition listenerDef : this.listeners) {
                     if (!listenerDef.shouldUse(getProject())) {
@@ -292,6 +328,11 @@ public class JUnitLauncherTask extends Task {
                 throw new BuildException(new TimeoutException("Forked test(s) timed out"));
             }
         }
+    }
+	private String commaSeparatedListElements(List<String> stringList) {
+		return stringList.stream()
+				.map(Object::toString)
+				.collect(Collectors.joining(", "));
     }
 
     private int executeForkedTest(final ForkDefinition forkDefinition, final CommandlineJava commandlineJava) {
@@ -357,6 +398,14 @@ public class JUnitLauncherTask extends Task {
         @Override
         public boolean isHaltOnFailure() {
             return haltOnFailure;
+        }
+        @Override
+        public List<String> getIncludeTags() {
+            return includeTagList;
+        }
+        @Override
+        public List<String> getExcludeTags() {
+            return excludeTagList;
         }
 
         @Override
