@@ -21,7 +21,7 @@
         <property name="build.dir" value="build"/>
         <tempfile property="temp.dir"/>
         <mkdir dir="${temp.dir}/org/apache/tomcat/buildutil"/>
-        <get src="http://svn.apache.org/viewvc/tomcat/trunk/java/org/apache/tomcat/buildutil/Txt2Html.java?view=co&amp;pathrev=987920"
+        <get src="https://svn.apache.org/viewvc/tomcat/trunk/java/org/apache/tomcat/buildutil/Txt2Html.java?view=co&amp;pathrev=987920"
              dest="${temp.dir}/org/apache/tomcat/buildutil/Txt2Html.java"/>
         <javac srcdir="${temp.dir}" destdir="${temp.dir}" includeAntRuntime="true"/>
         <taskdef name="txt2html" classname="org.apache.tomcat.buildutil.Txt2Html" classpath="${temp.dir}"/>
