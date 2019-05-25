@@ -360,7 +360,7 @@
   [explanations]
    </td></tr></table>
 
-  <p>The following explanations are for quick reference and are lifted directly from the original <a href="http://www.clarkware.com/software/JDepend.html">JDepend documentation</a>.</p>
+  <p>The following explanations are for quick reference and are lifted directly from the original <a href="https://github.com/clarkware/jdepend">JDepend documentation</a>.</p>
 
   <h3><a name="EXnumber">Number of Classes</a></h3>
     <p>The number of concrete and abstract classes (and interfaces) in the package is an indicator of the extensibility of the package.</p>
@@ -476,7 +476,7 @@ Creates an html file that contains a link to all package links in overview-cycle
   <table width="100%">
   <tr>
     <td align="left"></td>
-      <td align="right">Designed for use with <a href="http://www.clarkware.com/software/JDepend.html">JDepend</a> and <a href="http://jakarta.apache.org">Ant</a>.</td>
+      <td align="right">Designed for use with <a href="https://github.com/clarkware/jdepend">JDepend</a> and <a href="https://ant.apache.org">Ant</a>.</td>
   </tr>
   </table>
   <hr size="1"/>

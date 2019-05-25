@@ -79,7 +79,7 @@
             <tr>
                 <td class="text-align:right">Designed for use with
                   <a href='http://checkstyle.sourceforge.net/'>CheckStyle</a> and
-                  <a href='http://ant.apache.org/'>Ant</a>.</td>
+                  <a href='https://ant.apache.org/'>Ant</a>.</td>
             </tr>
         </table>
         <hr size="1"/>

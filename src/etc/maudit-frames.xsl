@@ -343,11 +343,11 @@
         <td style="text-align: justify;">
         Note: Rules checked have originated from style guidelines suggested by the language designers,
         experience from the Java development community and insite experience. Violations are generally
-        reported with a reference to the <a href="http://java.sun.com/docs/books/jls/second_edition/html/jTOC.doc.html">Java Language Specifications</a> (JLS x.x.x)
+        reported with a reference to the <a href="https://docs.oracle.com/javase/specs/">Java Language Specifications</a> (JLS x.x.x)
         and Metamata Audit rules (x.x).
         Please consult these documents for additional information about violations.
         <p/>
-        Rules checked also enforce adherence to <a href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">Sun Java coding guidelines</a> in use at Jakarta.
+        Rules checked also enforce adherence to <a href="https://www.oracle.com/technetwork/java/codeconvtoc-136057.html">Sun Java coding guidelines</a> in use at Jakarta.
         <p/>
         One should note that these violations do not necessary underline errors but should be used
         as an indication for <i>possible</i> errors. As always, use your best judgment and review
@@ -438,14 +438,14 @@
   <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td class="bannercell" rowspan="2">
-      <a href="http://jakarta.apache.org/">
-      <img src="http://jakarta.apache.org/images/jakarta-logo.gif" alt="http://jakarta.apache.org" align="left" border="0"/>
+      <a href="https://ant.apache.org/">
+      <img src="https://ant.apache.org/images/group-logo.gif" alt="https://ant.apache.org" align="left" border="0"/>
       </a>
     </td>
         <td style="text-align:right"><h2>Source Code Audit</h2></td>
         </tr>
         <tr>
-        <td style="text-align:right">Designed for use with <a href='http://www.webgain.com/products/quality_analyzer/'>Webgain QA/Metamata Audit</a> and <a href='http://jakarta.apache.org'>Ant</a>.</td>
+        <td style="text-align:right">Designed for use with Webgain QA/Metamata Audit and <a href='https://ant.apache.org'>Ant</a>.</td>
         </tr>
   </table>
     <hr size="1"/>

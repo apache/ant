@@ -782,14 +782,14 @@ will increase this number.
   <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td class="bannercell" rowspan="2">
-      <a href="http://jakarta.apache.org/">
-      <img src="http://jakarta.apache.org/images/jakarta-logo.gif" alt="http://jakarta.apache.org" align="left" border="0"/>
+      <a href="https://ant.apache.org/">
+      <img src="https://ant.apache.org/images/group-logo.gif" alt="https://ant.apache.org" align="left" border="0"/>
       </a>
     </td>
     <td style="text-align:right"><h2>Source Code Metrics</h2></td>
     </tr>
     <tr>
-    <td style="text-align:right">Designed for use with <a href='http://www.webgain.com/products/quality_analyzer/'>Webgain QA/Metamata Metrics</a> and <a href='http://jakarta.apache.org'>Ant</a>.</td>
+    <td style="text-align:right">Designed for use with Webgain QA/Metamata Metrics and <a href='https://ant.apache.org'>Ant</a>.</td>
     </tr>
   </table>
   <hr size="1"/>

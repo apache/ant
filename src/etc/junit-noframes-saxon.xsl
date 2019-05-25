@@ -319,7 +319,7 @@
     <table width="100%">
     <tr>
         <td align="left"></td>
-        <td align="right">Designed for use with <a href='http://www.junit.org'>JUnit</a> and <a href='http://ant.apache.org/ant'>Ant</a>.</td>
+        <td align="right">Designed for use with <a href='https://www.junit.org'>JUnit</a> and <a href='https://ant.apache.org/ant'>Ant</a>.</td>
     </tr>
     </table>
     <hr size="1"/>

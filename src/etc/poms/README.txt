@@ -46,4 +46,4 @@ which make a large part of our tests fail
 REFERENCES :
 
 about skipping tests :
-http://maven.apache.org/plugins/maven-surefire-plugin/examples/skipping-test.html
+https://maven.apache.org/plugins/maven-surefire-plugin/examples/skipping-test.html

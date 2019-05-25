@@ -89,7 +89,7 @@
     </ul-->
     
     <h1><a name="top">JDepend Analysis</a></h1>
-    <p align="right">Designed for use with <a href="http://www.clarkware.com/software/JDepend.html">JDepend</a> and <a href="https://ant.apache.org">Ant</a>.</p>
+    <p align="right">Designed for use with <a href="https://github.com/clarkware/jdepend">JDepend</a> and <a href="https://ant.apache.org">Ant</a>.</p>
     <hr size="2" />
     
     <table width="100%"><tr><td>
@@ -250,7 +250,7 @@
     [<a href="#NVexplanations">explanations</a>]
     </td></tr></table>
     
-    <p>The following explanations are for quick reference and are lifted directly from the original <a href="http://www.clarkware.com/software/JDepend.html">JDepend documentation</a>.</p>
+    <p>The following explanations are for quick reference and are lifted directly from the original <a href="https://github.com/clarkware/jdepend">JDepend documentation</a>.</p>
     
     <h3><a name="EXnumber">Number of Classes</a></h3>
         <p>The number of concrete and abstract classes (and interfaces) in the package is an indicator of the extensibility of the package.</p>

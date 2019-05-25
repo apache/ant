@@ -65,7 +65,7 @@
                 <h1>CheckStyle Audit</h1>
                 <p>Designed for use with
                   <a href='http://checkstyle.sourceforge.net/'>CheckStyle</a> and
-                  <a href='http://ant.apache.org/'>Ant</a>.
+                  <a href='https://ant.apache.org/'>Ant</a>.
                 </p>
                 <xsl:apply-templates select="." mode="navigation"/>
                 <xsl:apply-templates select="." mode="data"/>

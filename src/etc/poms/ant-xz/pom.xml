@@ -18,10 +18,10 @@
 <!--
   This POM has been created manually by the Ant Development Team.
   Please contact us if you are not satisfied with the data contained in this POM.
-  URL : http://ant.apache.org
+  URL : https://ant.apache.org
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.ant</groupId>
     <artifactId>ant-parent</artifactId>
@@ -29,7 +29,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
     <version>1.10.7-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <url>http://ant.apache.org/</url>
+  <url>https://ant.apache.org/</url>
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-xz</artifactId>
   <version>1.10.7-SNAPSHOT</version>

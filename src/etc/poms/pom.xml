@@ -18,11 +18,11 @@
 <!--
   This POM has been created manually by the Ant Development Team.
   Please contact us if you are not satisfied with the data contained in this POM.
-  URL : http://ant.apache.org
+  URL : https://ant.apache.org
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-parent</artifactId>
@@ -37,18 +37,18 @@
     </license>
   </licenses>
   <name>Apache Ant</name>
-  <url>http://ant.apache.org/</url>
+  <url>https://ant.apache.org/</url>
   <inceptionYear>2000</inceptionYear>
   <organization>
     <name>The Apache Software Foundation</name>
-    <url>http://www.apache.org/</url>
+    <url>https://www.apache.org/</url>
   </organization>
   <distributionManagement>
     <!-- Null out inherited apache distribution repo by default -->
     <repository>
       <id>dummy</id>
       <name>Dummy to avoid accidental deploys</name>
-      <url>http://nowhere.net/</url>
+      <url>https://nowhere.net/</url>
     </repository>
   </distributionManagement>
   <scm>
@@ -66,19 +66,19 @@
       <subscribe>dev-subscribe@ant.apache.org</subscribe>
       <unsubscribe>dev-unsubscribe@ant.apache.org</unsubscribe>
       <post>dev@ant.apache.org</post>
-      <archive>http://mail-archives.apache.org/mod_mbox/ant-dev</archive>
+      <archive>https://mail-archives.apache.org/mod_mbox/ant-dev</archive>
     </mailingList>
     <mailingList>
       <name>Ant Users List</name>
       <subscribe>user-subscribe@ant.apache.org</subscribe>
       <unsubscribe>user-unsubscribe@ant.apache.org</unsubscribe>
       <post>user@ant.apache.org</post>
-      <archive>http://mail-archives.apache.org/mod_mbox/ant-user</archive>
+      <archive>https://mail-archives.apache.org/mod_mbox/ant-user</archive>
     </mailingList>
   </mailingLists>
   <issueManagement>
     <system>bugzilla</system>
-    <url>http://issues.apache.org/bugzilla/</url>
+    <url>https://issues.apache.org/bugzilla/</url>
   </issueManagement>
   <modules>
     <module>ant</module>

@@ -109,12 +109,12 @@
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td valign="top" class="bannercell">
-        <a href="http://jakarta.apache.org/">
-        <img src="http://jakarta.apache.org/images/jakarta-logo.gif" alt="http://jakarta.apache.org" align="left" border="0"/>
+        <a href="https://ant.apache.org/">
+        <img src="https://ant.apache.org/images/group-logo.gif" alt="https://ant.apache.org" align="left" border="0"/>
         </a>
       </td>
       <td style="text-align:right;vertical-align:bottom">
-        <a href="http://ant.apache.org/">Apache Ant</a>
+        <a href="https://ant.apache.org/">Apache Ant</a>
       </td>
     </tr>
     </table>

@@ -65,7 +65,7 @@
           </h1>
           Tagdiff between <xsl:value-of select="@startTag"/> <xsl:value-of select="@startDate"/> and
 			<xsl:value-of select="@endTag"/> <xsl:value-of select="@endDate"/>
-          <p align="right">Designed for use with <a href="http://ant.apache.org/">Ant</a>.</p>
+          <p align="right">Designed for use with <a href="https://ant.apache.org/">Ant</a>.</p>
           <hr size="2"/>
 	<a name="TOP"/>
 	<table width="100%">
