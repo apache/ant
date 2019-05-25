@@ -64,7 +64,7 @@ from a property file.</p>
 <p>A list of predefined properties can be
 found <a href="../properties.html#built-in-props">here</a>.</p>
 <p><em>Since Apache Ant 1.8.0</em>, it is possible to load properties defined in XML according
-to <a href="http://java.sun.com/dtd/properties.dtd" target="_top">Sun DTD</a>, when running on Java
+to <a href="https://java.sun.com/dtd/properties.dtd" target="_top">Sun DTD</a>, when running on Java
 5+. For this the name of the file, resource or url has to end with <samp>.xml</samp>.</p>
 
 <h3>Parameters</h3>
@@ -215,8 +215,8 @@ nested <code>classpath</code> element.</p>
 <pre>&lt;property file=&quot;foo.properties&quot;/&gt;</pre>
 
 <p>Read a set of properties from the
-address <samp>http://www.mysite.com/bla/props/foo.properties</samp>.</p>
-<pre>&lt;property url=&quot;http://www.mysite.com/bla/props/foo.properties&quot;/&gt;</pre>
+address <samp>https://www.mysite.com/bla/props/foo.properties</samp>.</p>
+<pre>&lt;property url=&quot;https://www.mysite.com/bla/props/foo.properties&quot;/&gt;</pre>
 
 <p>Read a set of properties from a resource called <samp>foo.properties</samp>.</p>
 <pre>&lt;property resource=&quot;foo.properties&quot;/&gt;</pre>
@@ -278,8 +278,8 @@ on a classpath. Here are some interesting facts about this feature</p>
 <pre>
 build.compiler=jikes
 deploy.server=lucky
-deploy.port=8080
-deploy.url=http://${deploy.server}:${deploy.port}/</pre>
+deploy.port=8443
+deploy.url=https://${deploy.server}:${deploy.port}/</pre>
 
 <h3 id="notes-env">Notes about environment variables</h3>
 <p>

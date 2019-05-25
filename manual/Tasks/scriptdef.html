@@ -249,7 +249,7 @@ that Ant will not create a task of the same (namespace,localname) name pair.</p>
 &lt;target name="echo-task-jython"&gt;
   &lt;scriptdef language="jython"
              name="echo"
-             uri="http://example.org/script"&gt;
+             uri="https://example.org/script"&gt;
       &lt;![CDATA[
 self.log("text: " +self.text)
       ]]&gt;
@@ -257,7 +257,7 @@ self.log("text: " +self.text)
 &lt;/target&gt;
 
 &lt;target name="testEcho" depends="echo-task-jython"
-        xmlns:s="http://example.org/script"&gt;
+        xmlns:s="https://example.org/script"&gt;
   &lt;s:echo&gt;nested text&lt;/s:echo&gt;
 &lt;/target&gt;</pre>
 

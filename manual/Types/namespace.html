@@ -64,8 +64,8 @@
       URI of the XML namespace with which the type should be associated:
     </p>
     <pre>
-&lt;typedef resource="org/example/tasks.properties" uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
-&lt;my:task xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
+&lt;typedef resource="org/example/tasks.properties" uri="http://example.org/tasks"/&gt;
+&lt;my:task xmlns:my="http://example.org/tasks"&gt;
     ...
 &lt;/my:task&gt;</pre>
     <p>As the above example demonstrates, the namespace URI needs to be specified at least
@@ -74,8 +74,8 @@
       the <var>xmlns</var> attribute. This mapping can happen at any level in the build file:
     </p>
     <pre>
-&lt;project name="test" xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
-    &lt;typedef resource="org/example/tasks.properties" uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
+&lt;project name="test" xmlns:my="http://example.org/tasks"&gt;
+    &lt;typedef resource="org/example/tasks.properties" uri="http://example.org/tasks"/&gt;
     &lt;my:task&gt;
         ...
     &lt;/my:task&gt;
@@ -86,8 +86,8 @@
     </p>
     <pre>
 &lt;project name="test"&gt;
-    &lt;typedef resource="org/example/tasks.properties" uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
-    &lt;task xmlns="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
+    &lt;typedef resource="org/example/tasks.properties" uri="http://example.org/tasks"/&gt;
+    &lt;task xmlns="http://example.org/tasks"&gt;
         ...
     &lt;/task&gt;
 &lt;/project&gt;</pre>
@@ -113,8 +113,8 @@
       nested <code>config</code> element, the build file snippet would look like this:
     </p>
     <pre>
-&lt;typedef resource="org/example/tasks.properties" uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
-&lt;my:task xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
+&lt;typedef resource="org/example/tasks.properties" uri="http://example.org/tasks"/&gt;
+&lt;my:task xmlns:my="http://example.org/tasks"&gt;
     &lt;my:config a="foo" b="bar"/&gt;
     ...
 &lt;/my:task&gt;</pre>
@@ -123,8 +123,8 @@
       script:
     </p>
     <pre>
-&lt;typedef resource="org/example/tasks.properties" uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
-&lt;task xmlns="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
+&lt;typedef resource="org/example/tasks.properties" uri="http://example.org/tasks"/&gt;
+&lt;task xmlns="http://example.org/tasks"&gt;
     &lt;config a="foo" b="bar"/&gt;
     ...
 &lt;/task&gt;</pre>
@@ -134,8 +134,8 @@
     </p>
     <pre>
 &lt;typedef resource="org/example/tasks.properties"
-    uri="<a href="http://example.org/tasks">http://example.org/tasks</a>"/&gt;
-&lt;my:task xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
+    uri="http://example.org/tasks"/&gt;
+&lt;my:task xmlns:my="http://example.org/tasks"&gt;
     &lt;config a="foo" b="bar"/&gt;
     ...
 &lt;/my:task&gt;</pre>
@@ -161,7 +161,7 @@
     <p>
     </p>
     <pre>
-&lt;my:task xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
+&lt;my:task xmlns:my="http://example.org/tasks"&gt;
     &lt;my:config a="foo" b="bar"/&gt;
     ...
 &lt;/my:task&gt;</pre>
@@ -169,7 +169,7 @@
       and
     </p>
     <pre>
-&lt;my:task xmlns:my="<a href="http://example.org/tasks">http://example.org/tasks</a>"&gt;
+&lt;my:task xmlns:my="http://example.org/tasks"&gt;
     &lt;my:config my:a="foo" my:b="bar"/&gt;
     ...
 &lt;/my:task&gt;</pre>
@@ -198,8 +198,8 @@
       or <code class="code">addConfigured(Condition)</code> method):
     </p>
     <pre>
-&lt;typedef resource="org/example/conditions.properties" uri="<a href="http://example.org/conditions">http://example.org/conditions</a>"/&gt;
-&lt;condition property="prop" xmlns="<a href="http://example.org/conditions">http://example.org/conditions</a>"&gt;
+&lt;typedef resource="org/example/conditions.properties" uri="http://example.org/conditions"/&gt;
+&lt;condition property="prop" xmlns="http://example.org/conditions"&gt;
     &lt;and&gt;
         &lt;available file="bla.txt"/&gt;
         &lt;my:condition a="foo"/&gt;

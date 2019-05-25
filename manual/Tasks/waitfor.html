@@ -106,16 +106,16 @@ task. See <a href="conditions.html">here</a> for the full list.</p>
 on <samp>localhost</samp> to serve up the specified URL.</p>
 <pre>
 &lt;waitfor maxwait="3" maxwaitunit="minute" checkevery="500"&gt;
-    &lt;http url="http://localhost/myapp/index.html"/&gt;
+    &lt;http url="https://localhost/myapp/index.html"/&gt;
 &lt;/waitfor&gt;</pre>
 
 <p>Wait up to 10 seconds for a server on the <samp>dbserver</samp> machine to begin listening on
-port 1521 and for the <samp>http://webserver/mypage.html</samp> web page to become available.</p>
+port 1521 and for the <samp>https://webserver/mypage.html</samp> web page to become available.</p>
 <pre>
 &lt;waitfor maxwait="10" maxwaitunit="second"&gt;
     &lt;and&gt;
         &lt;socket server="dbserver" port="1521"/&gt;
-        &lt;http url="http://webserver/mypage.html"/&gt;
+        &lt;http url="https://webserver/mypage.html"/&gt;
     &lt;/and&gt;
 &lt;/waitfor&gt;</pre>
 

@@ -28,7 +28,7 @@
 <h3>Description</h3>
 <p>Gets files from URLs.  When the <var>verbose</var> option is <q>on</q>, this task displays
 a <q>.</q> for every 100 Kb retrieved. Any URL schema supported by the runtime is valid here,
-including <q>http:</q>, <q>ftp:</q> and <q>jar:</q>.</p>
+including <q>http:</q>, <q>https:</q>, <q>ftp:</q> and <q>jar:</q>.</p>
 <p>The <var>usetimestamp</var> option enables you to control downloads so that the remote file is
 only fetched if newer than the local copy. If there is no local copy, the download always takes
 place. When a file is downloaded, the timestamp of the downloaded file is set to the remote
@@ -175,14 +175,14 @@ nested <code>&lt;header/&gt;</code> node are as follows:</p>
 
 <h3>Examples</h3>
 
-<p>Get the index page of <samp>http://ant.apache.org/</samp>, and store it in the
+<p>Get the index page of <samp>https://ant.apache.org/</samp>, and store it in the
 file <samp>help/index.html</samp>.</p>
-<pre>&lt;get src=&quot;http://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
+<pre>&lt;get src=&quot;https://ant.apache.org/&quot; dest=&quot;help/index.html&quot;/&gt;</pre>
 
 <p>Get the PGP keys of Ant's (current and past) release managers, if the local copy is missing or
 out of date. Use the <var>verbose</var> option for progress information.</p>
 <pre>
-&lt;get src=&quot;http://www.apache.org/dist/ant/KEYS&quot;
+&lt;get src=&quot;https://www.apache.org/dist/ant/KEYS&quot;
      dest=&quot;KEYS&quot;
      verbose=&quot;true&quot;
      usetimestamp=&quot;true&quot;/&gt;</pre>
@@ -230,20 +230,20 @@ naming convention for the checksum file, of course) and validate the checksum on
 
 <pre>
 &lt;get dest=&quot;downloads&quot;&gt;
-  &lt;url url=&quot;http://ant.apache.org/index.html&quot;/&gt;
-  &lt;url url=&quot;http://ant.apache.org/faq.html&quot;/&gt;
+  &lt;url url=&quot;https://ant.apache.org/index.html&quot;/&gt;
+  &lt;url url=&quot;https://ant.apache.org/faq.html&quot;/&gt;
 &lt;/get&gt;</pre>
 
 <p>Using custom HTTP headers</p>
 
 <pre>
-&lt;get src=&quot;http://ant.apache.org/index.html&quot; dest=&quot;downloads&quot;&gt;
+&lt;get src=&quot;https://ant.apache.org/index.html&quot; dest=&quot;downloads&quot;&gt;
   &lt;header name=&quot;header1&quot; value=&quot;headerValue1&quot;/&gt;
   &lt;header name=&quot;header2&quot; value=&quot;headerValue2&quot;/&gt;
   &lt;header name=&quot;header3&quot; value=&quot;headerValue3&quot;/&gt;
 &lt;/get&gt;</pre>
 
-<p>get the index and FAQ pages of <samp>http://ant.apache.org/</samp>, and store them in the
+<p>get the index and FAQ pages of <samp>https://ant.apache.org/</samp>, and store them in the
 directory <samp>downloads</samp> which will be created if necessary.</p>
 </body>
 </html>

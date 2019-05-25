@@ -158,7 +158,7 @@ does not implement extension then throw an exception.</p>
 
 &lt;jarlib-resolve property="dve.library"&gt;
   &lt;extension refid="dve.ext"/&gt;
-  &lt;url url="http://www.realityforge.net/jars/dve.jar" destfile="lib/dve.jar"/&gt;
+  &lt;url url="https://www.example.com/jars/dve.jar" destfile="lib/dve.jar"/&gt;
 &lt;/jarlib-resolve&gt;</pre>
 
 <p>Resolve Extension to file produce by Ant build. If file does not get produced or Ant file is
@@ -188,7 +188,7 @@ finally try to download it from a website. If all steps fail then throw a build 
   &lt;extension refid="dve.ext"/&gt;
   &lt;location location="/opt/jars/dve.jar"/&gt;
   &lt;ant antfile="../dve/build.xml" target="main" destfile="lib/dve.jar"/&gt;
-  &lt;url url="http://www.realityforge.net/jars/dve.jar" destfile="lib/dve.jar"/&gt;
+  &lt;url url="https://example.com/jars/dve.jar" destfile="lib/dve.jar"/&gt;
 &lt;/jarlib-resolve&gt;</pre>
 
 </body>
