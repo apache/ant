@@ -64,7 +64,7 @@
             <body onload="javascript:openFirst();">
                 <h1>CheckStyle Audit</h1>
                 <p>Designed for use with
-                  <a href='http://checkstyle.sourceforge.net/'>CheckStyle</a> and
+                  <a href='https://checkstyle.org/'>CheckStyle</a> and
                   <a href='https://ant.apache.org/'>Ant</a>.
                 </p>
                 <xsl:apply-templates select="." mode="navigation"/>
