@@ -35,11 +35,11 @@
   </target>
 
   <target name="test5">
-    <get src="http://www.apache.org/" dest=""/>
+    <get src="https://www.apache.org/" dest=""/>
   </target>
 
   <target name="test6">
-    <get src="http://www.apache.org/" dest="get.tmp" userAgent="Apache Ant/test"/>
+    <get src="https://www.apache.org/" dest="get.tmp" userAgent="Apache Ant/test"/>
 
     <fileset id="t6" file="get.tmp" />
     <pathconvert property="t6" refid="t6" setonempty="false" />
@@ -80,7 +80,7 @@
 
     <touch file="get.tmp" datetime="${dt}" pattern="${pat}" />
 
-    <get src="http://www.w3.org/MarkUp" dest="get.tmp"
+    <get src="https://www.w3.org/MarkUp" dest="get.tmp"
          usetimestamp="true" verbose="true" />
 
     <fileset id="ts" file="get.tmp">
@@ -99,21 +99,21 @@
   </target>
 
   <target name="testTwoHeadersAreAddedOK">
-    <get src="http://www.apache.org/" dest="get.tmp">
+    <get src="https://www.apache.org/" dest="get.tmp">
       <header name="header1" value="header1Value"/>
       <header name="header2" value="header2Value"/>
     </get>
   </target>
 
   <target name="testEmptyHeadersAreNeverAdded">
-    <get src="http://www.apache.org/" dest="get.tmp">
+    <get src="https://www.apache.org/" dest="get.tmp">
       <header name="" value="headerValue"/>
       <header name="header2" value=""/>
     </get>
   </target>
 
   <target name="testThatWhenMoreThanOneHeaderHaveSameNameOnlyLastOneIsAdded">
-    <get src="http://www.apache.org/" dest="get.tmp">
+    <get src="https://www.apache.org/" dest="get.tmp">
       <header name="header1" value="headerValue1"/>
       <header name="header1" value="headerValue2"/>
       <header name="header1" value="headerValue3"/>
@@ -121,7 +121,7 @@
   </target>
 
   <target name="testHeaderSpaceTrimmed">
-    <get src="http://www.apache.org/" dest="get.tmp">
+    <get src="https://www.apache.org/" dest="get.tmp">
       <header name="  header1     " value="  headerValue1  "/>
     </get>
   </target>

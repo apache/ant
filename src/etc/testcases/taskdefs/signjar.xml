@@ -80,7 +80,7 @@
   </target>
 
   <target name="urlKeystoreHTTP" depends="jar">
-    <sign keystore="http://ant.apache.org/webtest/testkeystore"/>
+    <sign keystore="https://ant.apache.org/webtest/testkeystore"/>
     <assertSigned/>
   </target>
 

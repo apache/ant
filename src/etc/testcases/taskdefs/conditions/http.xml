@@ -23,34 +23,34 @@
 
   <target name="basic-no-method">
       <condition property="basic-no-method">
-          <http url="http://ant.apache.org/"/>
+          <http url="https://ant.apache.org/"/>
       </condition>
       <condition property="basic-no-method-bad-url">
-          <http url="http://ant.apache.org/this-page-does-not-exist"/>
+          <http url="https://ant.apache.org/this-page-does-not-exist"/>
       </condition>
   </target>
 
   <target name="test-head-request">
       <condition property="test-head-request">
-          <http url="http://ant.apache.org/" requestMethod="HEAD"/>
+          <http url="https://ant.apache.org/" requestMethod="HEAD"/>
       </condition>
       <condition property="test-head-request-bad-url">
-          <http url="http://ant.apache.org/this-page-does-not-exist" requestMethod="HEAD"/>
+          <http url="https://ant.apache.org/this-page-does-not-exist" requestMethod="HEAD"/>
       </condition>
   </target>
 
   <target name="test-get-request">
       <condition property="test-get-request">
-          <http url="http://ant.apache.org/" requestMethod="GET"/>
+          <http url="https://ant.apache.org/" requestMethod="GET"/>
       </condition>
       <condition property="test-get-request-bad-url">
-          <http url="http://ant.apache.org/this-page-does-not-exist" requestMethod="GET"/>
+          <http url="https://ant.apache.org/this-page-does-not-exist" requestMethod="GET"/>
       </condition>
   </target>
 
   <target name="bad-request-method">
       <condition property="bad-request-method">
-          <http url="http://ant.apache.org" requestMethod="UNKNOWN"/>
+          <http url="https://ant.apache.org" requestMethod="UNKNOWN"/>
       </condition>
   </target>
 

@@ -187,7 +187,7 @@ public class NullByteStreamResource extends Resource {
     <au:expectfailure>
       <copy todir="${output}" failonerror="true" flatten="true">
         <resources>
-          <url url="http://i-do-not-exist/"/>
+          <url url="https://i-do-not-exist/"/>
         </resources>
       </copy>
     </au:expectfailure>

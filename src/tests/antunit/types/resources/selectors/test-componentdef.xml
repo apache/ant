@@ -81,7 +81,7 @@
         <restrict>
           <resources>
             <file file="foo" />
-            <url url="http://ant.apache.org/index.html" />
+            <url url="https://ant.apache.org/index.html" />
             <resource name="foo" />
             <string value="foo" />
             <file file="bar" />

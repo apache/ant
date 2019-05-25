@@ -318,7 +318,7 @@ under the License.
     <table width="100%">
     <tr>
         <td align="left"></td>
-        <td align="right">Designed for use with <a href='http://ant.apache.org/antlibs/antunit/'>AntUnit</a> and <a href='http://ant.apache.org/'>Ant</a>.</td>
+        <td align="right">Designed for use with <a href='https://ant.apache.org/antlibs/antunit/'>AntUnit</a> and <a href='https://ant.apache.org/'>Ant</a>.</td>
     </tr>
     </table>
     <hr size="1"/>

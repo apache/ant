@@ -39,7 +39,7 @@
   <target name="testURL">
     <au:assertTrue>
       <cond:resourceexists>
-        <url url="http://ant.apache.org/index.html"/>
+        <url url="https://ant.apache.org/index.html"/>
       </cond:resourceexists>
     </au:assertTrue>
   </target>

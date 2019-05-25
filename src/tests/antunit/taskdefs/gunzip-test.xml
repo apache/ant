@@ -40,9 +40,9 @@
 
   <target name="testWithNonFileResourceToFile" depends="setup">
     <gunzip dest="${output}/greeting.txt">
-      <url url="http://ant.apache.org/webtest/gunzip/greeting.txt.gz"/>
+      <url url="https://ant.apache.org/webtest/gunzip/greeting.txt.gz"/>
     </gunzip>
-    <get src="http://ant.apache.org/webtest/gunzip/greeting.txt"
+    <get src="https://ant.apache.org/webtest/gunzip/greeting.txt"
          dest="${output}/orig.greeting.txt"/>
     <au:assertFilesMatch expected="${output}/orig.greeting.txt"
                          actual="${output}/greeting.txt"/>
@@ -50,9 +50,9 @@
 
   <target name="testWithNonFileResourceToDir" depends="setup">
     <gunzip dest="${output}">
-      <url url="http://ant.apache.org/webtest/gunzip/greeting.txt.gz"/>
+      <url url="https://ant.apache.org/webtest/gunzip/greeting.txt.gz"/>
     </gunzip>
-    <get src="http://ant.apache.org/webtest/gunzip/greeting.txt"
+    <get src="https://ant.apache.org/webtest/gunzip/greeting.txt"
          dest="${output}/orig.greeting.txt"/>
     <au:assertFilesMatch expected="${output}/orig.greeting.txt"
                          actual="${output}/greeting.txt"/>

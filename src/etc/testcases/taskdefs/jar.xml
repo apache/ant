@@ -269,7 +269,7 @@
     <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="warn"/>
   </target>  
     
-  <!-- see http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning -->  
+  <!-- see https://docs.oracle.com/javase/tutorial/deployment/jar/packageman.html -->  
   <target name="testHasVersionInfo">
     <mkdir dir="${tmp.dir}"/>
     <jar destfile="${tmp.jar}" basedir="${tmp.dir}" strict="fail">

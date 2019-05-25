@@ -97,8 +97,8 @@ public class Task {
     <javac srcdir="${input}" destdir="${output}"/>
     <taskdef name="x" classname="org.example.Task"
              classpath="${output}"/>
-    <url url="http://ant.apache.org/" id="anturl"/>
+    <url url="https://ant.apache.org/" id="anturl"/>
     <x attr="${ant.refid:anturl}"/>
-    <au:assertLogContains text="URL is: http://ant.apache.org/"/>
+    <au:assertLogContains text="URL is: https://ant.apache.org/"/>
   </target>
 </project>

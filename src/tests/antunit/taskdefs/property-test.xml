@@ -154,7 +154,7 @@ b=$${a}
   <!-- 
   Problems with @-sign discussed on the mailinglist.
   Seems to work.
-  http://mail-archives.apache.org/mod_mbox/ant-user/201412.mbox/%3CCAPxjwW%2BQKFFj45O-ZbCGOnAkJXe9KJ5qKtVQCvS2x7hObRJmkQ%40mail.gmail.com%3E
+  https://mail-archives.apache.org/mod_mbox/ant-user/201412.mbox/%3CCAPxjwW%2BQKFFj45O-ZbCGOnAkJXe9KJ5qKtVQCvS2x7hObRJmkQ%40mail.gmail.com%3E
   -->
   <target name="testAtSign">
     <mkdir dir="${input}"/>

@@ -28,8 +28,8 @@
   <condition property="offline">
     <not>
       <or>
-        <http url="http://www.apache.org"/>
-        <http url="http://www.google.com"/>
+        <http url="https://www.apache.org"/>
+        <http url="https://www.google.com"/>
       </or>
     </not>
   </condition>
@@ -280,7 +280,7 @@
 
   <target name="testhttpurl2" unless="offline">
     <concat destfile="${file}" force="true" append="false">
-      <url id="httpurl" url="http://ant.apache.org/index.html" />
+      <url id="httpurl" url="https://ant.apache.org/index.html" />
       <url refid="httpurl" />
     </concat>
     <length property="httpurl.length">

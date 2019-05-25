@@ -19,7 +19,7 @@
 <project name="get-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <property name="location" value="http://ant.apache.org/webtest/gettest" />
+  <property name="location" value="https://ant.apache.org/webtest/gettest" />
 
   <target name="setUp">
     <mkdir dir="${output}" />
@@ -103,8 +103,8 @@
 
     <target name="testNestedResources">
       <get dest="${output}/downloads">
-        <url url="http://ant.apache.org/index.html"/> 
-        <url url="http://ant.apache.org/faq.html"/>
+        <url url="https://ant.apache.org/index.html"/> 
+        <url url="https://ant.apache.org/faq.html"/>
       </get>
       <au:assertFileExists file="${output}/downloads/index.html"/>
       <au:assertFileExists file="${output}/downloads/faq.html"/>

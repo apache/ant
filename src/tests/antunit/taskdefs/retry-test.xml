@@ -26,7 +26,7 @@
 
   <target name="test-fail-and-retry" depends="setUp">
     <!-- just in case this ever becomes a legit url... -->
-    <property name="src" value="http://iojasodjojaosdj"/>
+    <property name="src" value="https://iojasodjojaosdj"/>
     <au:expectfailure expectedmessage="Task [get] failed after [${i}] attempts; giving up">
       <retry retrycount="${i}">
         <get src="${src}" dest="${dest}"/>
