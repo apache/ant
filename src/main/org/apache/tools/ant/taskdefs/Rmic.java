@@ -73,11 +73,11 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * <ul>
  *   <li>sun (the standard compiler of the JDK)</li>
  *   <li>kaffe (the standard compiler of
- *       <a href="http://www.kaffe.org">Kaffe</a>)</li>
+ *       <a href="https://github.com/kaffe/kaffe">Kaffe</a>)</li>
  *   <li>weblogic</li>
  * </ul>
  *
- * <p>The <a href="http://dione.zcu.cz/~toman40/miniRMI/">miniRMI</a>
+ * <p>The miniRMI
  * project contains a compiler implementation for this task as well,
  * please consult miniRMI's documentation to learn how to use it.</p>
  *

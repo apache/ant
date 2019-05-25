@@ -255,7 +255,7 @@ public class Jar extends Zip {
      * jars on Java 1.4 or earlier Ant will not include META-INF
      * unless explicitly asked to.</p>
      *
-     * @see <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526">
+     * @see <a href="https://bugs.openjdk.java.net/browse/JDK-4408526">
      * jar -i omits service providers in index.list</a>
      * @since Ant 1.8.0
      * @param flag a <code>boolean</code> value, defaults to false
@@ -573,7 +573,7 @@ public class Jar extends Zip {
     /**
      * Create the index list to speed up classloading.
      * This is a JDK 1.3+ specific feature and is enabled by default. See
-     * <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR%20Index">
+     * <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#JAR%20Index">
      * the JAR index specification</a> for more details.
      *
      * @param zOut the zip stream representing the jar being built.
@@ -893,7 +893,7 @@ public class Jar extends Zip {
     // CheckStyle:LineLength OFF - Link is too long.
     /**
      * Check against packaging spec
-     * @see "http://java.sun.com/j2se/1.3/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning"
+     * @see "https://docs.oracle.com/javase/tutorial/deployment/jar/packageman.html"
      */
     // CheckStyle:LineLength ON
     private void checkJarSpec() {
@@ -993,7 +993,7 @@ public class Jar extends Zip {
             // and the check is not case insensitive.
             // see sun.misc.JarIndex
             // see also
-            // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4408526
+            // https://bugs.openjdk.java.net/browse/JDK-4408526
             if (!indexMetaInf && dir.startsWith("META-INF")) {
                 continue;
             }

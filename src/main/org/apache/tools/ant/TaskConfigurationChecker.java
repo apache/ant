@@ -50,7 +50,7 @@ import java.util.List;
  *     }
  * </pre>
  *
- * @see <a href="http://martinfowler.com/eaaDev/Notification.html">Notification Pattern</a>
+ * @see <a href="https://martinfowler.com/eaaDev/Notification.html">Notification Pattern</a>
  */
 public class TaskConfigurationChecker {
 

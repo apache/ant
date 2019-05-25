@@ -42,7 +42,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  *
  * Timestamp driven signing is based on the unstable and inadequately documented
  * information in the Java1.5 docs
- * @see <a href="http://java.sun.com/j2se/1.5.0/docs/guide/security/time-of-signing-beta1.html">
+ * @see <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/security/time-of-signing-beta1.html">
  * beta documentation</a>
  * @ant.task category="java"
  * @since Ant 1.1

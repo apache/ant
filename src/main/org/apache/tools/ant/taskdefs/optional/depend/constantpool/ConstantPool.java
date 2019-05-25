@@ -31,7 +31,7 @@ import java.util.stream.IntStream;
  * constants used in a Java class file. It stores strings, constant values,
  * class names, method names, field names etc.
  *
- * @see <a href="http://java.sun.com/docs/books/vmspec/">The Java Virtual
+ * @see <a href="https://docs.oracle.com/javase/specs/index.html">The Java Virtual
  *      Machine Specification</a>
  */
 public class ConstantPool {

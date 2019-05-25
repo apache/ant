@@ -703,7 +703,7 @@ public class XMLValidateTask extends Task {
 
     /**
      * A Parser property.
-     * See <a href="http://xml.apache.org/xerces-j/properties.html">
+     * See <a href="https://xml.apache.org/xerces-j/properties.html">
      * XML parser properties</a> for usable properties
      * @since ant 1.6.2
      */

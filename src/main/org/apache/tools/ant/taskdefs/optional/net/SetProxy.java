@@ -51,8 +51,8 @@ import org.apache.tools.ant.util.ProxySetup;
  * and <code>proxyPassword</code> attributes. These can also be
  * used against SOCKS5 servers.
  * </p>
- * @see <a href="http://java.sun.com/j2se/1.5.0/docs/guide/net/properties.html">
- *  java 1.5 network property list</a>
+ * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/net/properties.html">
+ *  https://docs.oracle.com/javase/8/docs/technotes/guides/net/properties.html</a>
   *@since       Ant 1.5
  * @ant.task category="network"
  */

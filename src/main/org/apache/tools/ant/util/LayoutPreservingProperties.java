@@ -39,7 +39,7 @@ import java.util.Properties;
 /**
  * <p>A Properties collection which preserves comments and whitespace
  * present in the input stream from which it was loaded.</p>
- * <p>The class defers the usual work of the <a href="http://java.sun.com/j2se/1.3/docs/api/java/util/Properties.html">java.util.Properties</a>
+ * <p>The class defers the usual work of the <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html">java.util.Properties</a>
  * class to there, but it also keeps track of the contents of the
  * input stream from which it was loaded (if applicable), so that it can
  * write out the properties in as close a form as possible to the input.</p>
@@ -436,7 +436,7 @@ public class LayoutPreservingProperties extends Properties {
     /**
      * Unescape the string according to the rules for a Properties
      * file, as laid out in the docs for <a
-     * href="http://java.sun.com/j2se/1.3/docs/api/java/util/Properties.html">java.util.Properties</a>.
+     * href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html">java.util.Properties</a>.
      * @param s the string to unescape (coming from the source file)
      * @return the unescaped string
      */
@@ -503,7 +503,7 @@ public class LayoutPreservingProperties extends Properties {
     /**
      * Escape the string <code>s</code> according to the rules in the
      * docs for <a
-     * href="http://java.sun.com/j2se/1.3/docs/api/java/util/Properties.html">java.util.Properties</a>.
+     * href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html">java.util.Properties</a>.
      * @param s the string to escape
      * @return the escaped string
      */
@@ -514,7 +514,7 @@ public class LayoutPreservingProperties extends Properties {
     /**
      * Escape the string <code>s</code> according to the rules in the
      * docs for <a
-     * href="http://java.sun.com/j2se/1.3/docs/api/java/util/Properties.html">java.util.Properties</a>.
+     * href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html">java.util.Properties</a>.
      * This method escapes all the whitespace, not just the stuff at
      * the beginning.
      * @param s the string to escape
@@ -527,7 +527,7 @@ public class LayoutPreservingProperties extends Properties {
     /**
      * Escape the string <code>s</code> according to the rules in the
      * docs for <a
-     * href="http://java.sun.com/j2se/1.3/docs/api/java/util/Properties.html">java.util.Properties</a>.
+     * href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html">java.util.Properties</a>.
      * @param s the string to escape
      * @param escapeAllSpaces if <code>true</code> the method escapes
      * all the spaces, if <code>false</code>, it escapes only the

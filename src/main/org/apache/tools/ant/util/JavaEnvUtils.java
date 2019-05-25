@@ -302,7 +302,7 @@ public final class JavaEnvUtils {
      * Checks whether the current Java VM is Kaffe.
      * @return true if the current Java VM is Kaffe.
      * @since Ant 1.6.3
-     * @see <a href="http://www.kaffe.org/">http://www.kaffe.org/</a>
+     * @see <a href="https://github.com/kaffe/kaffe">https://github.com/kaffe/kaffe</a>
      */
     public static boolean isKaffe() {
         return kaffeDetected;

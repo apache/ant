@@ -19,8 +19,8 @@ package org.apache.tools.ant.util;
 
 /**
  * XML Parser constants, all kept in one place for ease of reuse
- * @see <a href="http://xml.apache.org/xerces-j/features.html">Xerces features</a>
- * @see <a href="http://xml.apache.org/xerces-j/properties.html">Xerces properties</a>
+ * @see <a href="https://xml.apache.org/xerces-j/features.html">Xerces features</a>
+ * @see <a href="https://xml.apache.org/xerces-j/properties.html">Xerces properties</a>
  * @see <a href=
  * "http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"
  * >SAX.</a>

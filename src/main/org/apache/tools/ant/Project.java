@@ -2243,7 +2243,7 @@ public class Project implements ResourceFactory {
              * Log4jListener which invokes getLogger() which in
              * turn wants to write to the console).
              *
-             * @see http://marc.theaimsgroup.com/?t=110538624200006&r=1&w=2
+             * @see https://marc.info/?l=ant-user&m=111105127200101&w=2
              *
              * We now (Ant 1.6.3 and later) simply swallow the message.
              */

@@ -27,7 +27,7 @@ import java.util.zip.ZipException;
  * Holds size and other extended information for entries that use Zip64
  * features.
  *
- * <p>See <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">PKWARE's
+ * <p>See <a href="https://www.pkware.com/documents/casestudies/APPNOTE.TXT">PKWARE's
  * APPNOTE.TXT, section 4.5.3</a>.</p>
  *
  * <p>Currently Ant doesn't support encrypting the

@@ -71,7 +71,7 @@ public class AntClassLoaderDelegationTest {
         // The intended result URLs:
         URL urlFromPath = new URL(
             FILE_UTILS.toURI(buildTestcases) + "org/" + TEST_RESOURCE);
-        URL urlFromParent = new URL("http://ant.apache.org/" + TEST_RESOURCE);
+        URL urlFromParent = new URL("https://ant.apache.org/" + TEST_RESOURCE);
         assertEquals("correct resources (regular delegation order)",
             Arrays.asList(urlFromParent, urlFromPath),
                 Collections.list(acl.getResources(TEST_RESOURCE)));
@@ -111,7 +111,7 @@ public class AntClassLoaderDelegationTest {
             if (name.equals(TEST_RESOURCE)) {
                 return Collections.enumeration(
                     Collections.singleton(
-                        new URL("http://ant.apache.org/" + name)));
+                        new URL("https://ant.apache.org/" + name)));
             } else {
                 return Collections.enumeration(Collections.emptySet());
             }

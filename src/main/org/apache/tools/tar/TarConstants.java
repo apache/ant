@@ -252,7 +252,7 @@ public interface TarConstants {
      */
     byte LF_GNUTYPE_SPARSE = (byte) 'S';
 
-    // See "http://www.opengroup.org/onlinepubs/009695399/utilities/pax.html#tag_04_100_13_02"
+    // See "https://www.opengroup.org/onlinepubs/009695399/utilities/pax.html#tag_04_100_13_02"
 
     /**
      * Identifies the entry as a Pax extended header.

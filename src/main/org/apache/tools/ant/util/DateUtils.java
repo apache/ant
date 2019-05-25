@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 
 /**
  * Helper methods to deal with date/time formatting with a specific
- * defined format (<a href="http://www.w3.org/TR/NOTE-datetime">ISO8601</a>)
+ * defined format (<a href="https://www.w3.org/TR/NOTE-datetime">ISO8601</a>)
  * or a correct pluralization of elapsed time in minutes and seconds.
  *
  * @since Ant 1.5
@@ -177,7 +177,7 @@ public final class DateUtils {
      * Calculate the phase of the moon for a given date.
      *
      * <p>Code heavily influenced by hacklib.c in <a
-     * href="http://www.nethack.org/">Nethack</a></p>
+     * href="https://www.nethack.org/">Nethack</a></p>
      *
      * <p>The Algorithm:
      *

@@ -25,7 +25,7 @@ import java.io.IOException;
  *
  * <p>This seems to happen with some version of MS Exchange that
  * doesn't respond with a 221 code immediately.  See <a
- * href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=5273">Bug
+ * href="https://bz.apache.org/bugzilla/show_bug.cgi?id=5273">Bug
  * report 5273</a>.</p>
  *
  */

@@ -31,8 +31,8 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * ANT Jar-Task SPI extension
  *
- * @see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=31520">
- * http://issues.apache.org/bugzilla/show_bug.cgi?id=31520</a>
+ * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=31520">
+ * https://issues.apache.org/bugzilla/show_bug.cgi?id=31520</a>
  */
 public class Service extends ProjectComponent {
     private List<Provider> providerList = new ArrayList<>();

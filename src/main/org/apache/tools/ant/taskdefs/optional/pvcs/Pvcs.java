@@ -45,7 +45,7 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * Extracts the latest edition of the source code from a PVCS repository.
  * PVCS is a version control system
- * developed by <a href="http://www.merant.com/products/pvcs">Merant</a>.
+ * developed by Merant.
  * <p>
  * Before using this tag, the user running ant must have access to the commands
  * of PVCS (get and pcli) and must have access to the repository. Note that the way to specify

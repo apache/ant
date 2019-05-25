@@ -137,7 +137,7 @@ class ProcessDestroyer implements Runnable {
             }
             // start the hook thread, a unstarted thread may not be
             // eligible for garbage collection
-            // Cf.: http://developer.java.sun.com/developer/bugParade/bugs/4533087.html
+            // Cf.: https://bugs.openjdk.java.net/browse/JDK-4533087
             destroyProcessThread.setShouldDestroy(false);
             if (!destroyProcessThread.getThreadGroup().isDestroyed()) {
                 // start() would throw IllegalThreadStateException from

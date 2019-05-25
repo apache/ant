@@ -43,7 +43,7 @@ import org.apache.tools.ant.util.StreamUtils;
  * Holds the data of a jar manifest.
  *
  * Manifests are processed according to the
- * <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html">Jar
+ * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html">Jar
  * file specification</a>.
  * Specifically, a manifest element consists of
  * a set of attributes and sections. These sections in turn may contain

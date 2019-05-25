@@ -1259,7 +1259,7 @@ public class FileUtils {
      *
      * <p>The coding of the output is the same as what File.toURI().toASCIIString() produces</p>
      *
-     * See <a href="http://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
+     * See <a href="https://www.w3.org/TR/xml11/#dt-sysid">dt-sysid</a>
      * which makes some mention of how
      * characters not supported by URI Reference syntax should be escaped.
      *

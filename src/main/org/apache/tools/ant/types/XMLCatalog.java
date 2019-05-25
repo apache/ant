@@ -55,7 +55,7 @@ import org.xml.sax.XMLReader;
  * both for Entity resolution and URI resolution, in accordance with
  * the {@link org.xml.sax.EntityResolver EntityResolver} and {@link
  * javax.xml.transform.URIResolver URIResolver} interfaces as defined
- * in the <a href="http://java.sun.com/xml/jaxp">Java API for XML
+ * in the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/xml/jaxp/index.html">Java API for XML
  * Processing Specification</a>.</p>
  *
  * <p>Resource locations can be specified either in-line or in
@@ -597,8 +597,8 @@ public class XMLCatalog extends DataType
     /**
      * Utility method to remove trailing fragment from a URI.
      * For example,
-     * <code>http://java.sun.com/index.html#chapter1</code>
-     * would return <code>http://java.sun.com/index.html</code>.
+     * <code>https://java.sun.com/index.html#chapter1</code>
+     * would return <code>https://java.sun.com/index.html</code>.
      *
      * @param uri The URI to process.  It may or may not contain a
      *            fragment.

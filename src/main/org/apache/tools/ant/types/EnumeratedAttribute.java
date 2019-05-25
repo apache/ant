@@ -63,8 +63,8 @@ public abstract class EnumeratedAttribute {
      * @return                  Configured EA
      * @throws BuildException   If the class could not be found or the value
      *                          is not valid for the given EA-class.
-     * @see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=14831">
-     * http://issues.apache.org/bugzilla/show_bug.cgi?id=14831</a>
+     * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=14831">
+     * https://issues.apache.org/bugzilla/show_bug.cgi?id=14831</a>
      */
     public static EnumeratedAttribute getInstance(
         Class<? extends EnumeratedAttribute> clazz,

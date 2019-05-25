@@ -324,7 +324,7 @@ public class TelnetTask extends Task {
     /**
      *  This class handles the abstraction of the telnet protocol.
      *  Currently it is a wrapper around <a
-     *  href="http://jakarta.apache.org/commons/net/index.html">Jakarta
+     *  href="https://jakarta.apache.org/commons/net/index.html">Jakarta
      *  Commons Net</a>.
      */
     public class AntTelnetClient extends TelnetClient {

@@ -53,7 +53,7 @@ import jdepend.textui.JDepend;
  *
  * <p>JDepend is a tool to generate design quality metrics for each Java package.
  * It has been initially created by Mike Clark. JDepend can be found at <a
- * href="http://www.clarkware.com/software/JDepend.html">http://www.clarkware.com/software/JDepend.html</a>.
+ * href="https://github.com/clarkware/jdepend">https://github.com/clarkware/jdepend</a>.
  *
  * The current implementation spawn a new Java VM.
  *

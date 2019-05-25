@@ -41,7 +41,7 @@ public class ProxyDiagnostics {
     private URI destURI;
 
     /** {@value} */
-    public static final String DEFAULT_DESTINATION = "http://ant.apache.org/";
+    public static final String DEFAULT_DESTINATION = "https://ant.apache.org/";
 
     /**
      * create a diagnostics binding for a specific URI

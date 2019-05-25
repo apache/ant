@@ -129,7 +129,7 @@ public final class StringUtils {
         // implementation is ok though does allocation/copying
         // StringBuffer.toString().endsWith() does massive memory
         // allocation/copying on JDK 1.5
-        // See http://issues.apache.org/bugzilla/show_bug.cgi?id=37169
+        // See https://issues.apache.org/bugzilla/show_bug.cgi?id=37169
         int endIndex = suffix.length() - 1;
         int bufferIndex = buffer.length() - 1;
         while (endIndex >= 0) {

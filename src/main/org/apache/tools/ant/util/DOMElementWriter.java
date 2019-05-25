@@ -476,10 +476,10 @@ public class DOMElementWriter {
      * <code>&amp;#x5d;&amp;#x5d;&amp;gt;</code>.</p>
      *
      * <p>See XML 1.0 2.2 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">
-     * http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
+     * href="https://www.w3.org/TR/1998/REC-xml-19980210#charsets">
+     * https://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
      * 2.7 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
+     * href="https://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">https://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
      * @param value the value to be encoded.
      * @return the encoded value.
      */
@@ -502,10 +502,10 @@ public class DOMElementWriter {
      * <code>&amp;#x5d;&amp;#x5d;&amp;gt;</code>.</p>
      *
      * <p>See XML 1.0 2.2 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">
-     * http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
+     * href="https://www.w3.org/TR/1998/REC-xml-19980210#charsets">
+     * https://www.w3.org/TR/1998/REC-xml-19980210#charsets</a> and
      * 2.7 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">http://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
+     * href="https://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect">https://www.w3.org/TR/1998/REC-xml-19980210#sec-cdata-sect</a>.</p>
      * @param value the value to be encoded.
      * @param out where to write the encoded data to.
      * @throws IOException if data cannot be written
@@ -581,8 +581,8 @@ public class DOMElementWriter {
      * Is the given character allowed inside an XML document?
      *
      * <p>See XML 1.0 2.2 <a
-     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">
-     * http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
+     * href="https://www.w3.org/TR/1998/REC-xml-19980210#charsets">
+     * https://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
      * @param c the character to test.
      * @return true if the character is allowed.
      * @since 1.10, Ant 1.5

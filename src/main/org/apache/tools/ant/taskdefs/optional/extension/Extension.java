@@ -53,7 +53,7 @@ public final class Extension {
      * are not required for the library to operate but if present will be used.
      * It is NOT part of the official "Optional Package" specification.
      *
-     * @see <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/spec.html#dependency">
+     * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/extensions/spec.html#dependency">
      *      Installed extension dependency</a>
      */
     public static final Attributes.Name OPTIONAL_EXTENSION_LIST

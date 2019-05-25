@@ -408,7 +408,7 @@ public class Zip extends MatchingTask {
      * default encoding.
      *
      * <p>For a list of possible values see <a
-     * href="http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html">http://java.sun.com/j2se/1.5.0/docs/guide/intl/encoding.doc.html</a>.</p>
+     * href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</a>.</p>
      * @param encoding the encoding name
      */
     public void setEncoding(final String encoding) {

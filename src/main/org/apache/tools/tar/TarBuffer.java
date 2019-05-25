@@ -270,12 +270,12 @@ public class TarBuffer {
                 if (offset == 0) {
                     // Ensure that we do not read gigabytes of zeros
                     // for a corrupt tar file.
-                    // See http://issues.apache.org/bugzilla/show_bug.cgi?id=39924
+                    // See https://issues.apache.org/bugzilla/show_bug.cgi?id=39924
                     return false;
                 }
                 // However, just leaving the unread portion of the buffer dirty does
                 // cause problems in some cases.  This problem is described in
-                // http://issues.apache.org/bugzilla/show_bug.cgi?id=29877
+                // https://issues.apache.org/bugzilla/show_bug.cgi?id=29877
                 //
                 // The solution is to fill the unused portion of the buffer with zeros.
 

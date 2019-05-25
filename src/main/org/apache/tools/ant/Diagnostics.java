@@ -448,7 +448,7 @@ public final class Diagnostics {
             method.invoke(null, new Object[]{new String[]{}});
         } catch (ClassNotFoundException e) {
             out.println("Not available.");
-            out.println("Download it at http://xml.apache.org/commons/");
+            out.println("Download it at https://xml.apache.org/commons/");
         } catch (InvocationTargetException e) {
             error = e.getTargetException() == null ? e : e.getTargetException();
         } catch (Throwable e) {

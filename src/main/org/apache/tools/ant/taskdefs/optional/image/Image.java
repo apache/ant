@@ -45,13 +45,11 @@ import com.sun.media.jai.codec.FileSeekableStream;
 
 /**
  * A MatchingTask which relies on <a
- * href="http://java.sun.com/products/java-media/jai">JAI (Java
+ * href="https://www.oracle.com/technetwork/java/javasebusiness/downloads/java-archive-downloads-java-client-419417.html">JAI (Java
  * Advanced Imaging)</a> to perform image manipulation operations on
  * existing images.  The operations are represented as ImageOperation
  * DataType objects.  The operations are arranged to conform to the
- * Chaining Model of JAI.  Check out the <a
- * href="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/">
- * JAI Programming Guide</a>.
+ * Chaining Model of JAI.  Check out the JAI Programming Guide.
  *
  * @deprecated JAI is not developed any more. Internal APIs that JAI depends on were
  * scheduled for removal in Java 7 and finally removed in Java 9.
@@ -108,8 +106,7 @@ public class Image extends MatchingTask {
 
     /**
      * Set the image encoding type.  <a
-     * href="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/Encode.doc.html#56610">
-     * See this table in the JAI Programming Guide</a>.
+     * See the encoding table in the JAI Programming Guide</a>.
      * @param encoding the String image encoding.
      */
     public void setEncoding(String encoding) {

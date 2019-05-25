@@ -147,8 +147,8 @@ public class LocatorTest {
     }
 
     @Test
-    public void testHttpURI() {
-        String url = "http://ant.apache.org";
+    public void testHttpsURI() {
+        String url = "https://ant.apache.org";
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(Locator.ERROR_NOT_FILE_URI + url);
         Locator.fromURI(url);

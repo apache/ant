@@ -72,7 +72,7 @@ import org.apache.tools.ant.util.StringUtils;
  *
  * <p>JUnit is a framework to create unit tests. It has been initially
  * created by Erich Gamma and Kent Beck.  JUnit can be found at <a
- * href="http://www.junit.org">http://www.junit.org</a>.
+ * href="https://www.junit.org">https://www.junit.org</a>.
  *
  * <p><code>JUnitTask</code> can run a single specific
  * <code>JUnitTest</code> using the <code>test</code> element.</p>

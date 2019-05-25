@@ -44,10 +44,10 @@ public class LibFileSet extends FileSet {
      * String that is the base URL for the libraries
      * when constructing the "Implementation-URL"
      * attribute. For instance setting the base to
-     * "http://jakarta.apache.org/avalon/libs/" and then
+     * "https://jakarta.apache.org/avalon/libs/" and then
      * including the library "excalibur-cli-1.0.jar" in the
      * fileset will result in the "Implementation-URL" attribute
-     * being set to "http://jakarta.apache.org/avalon/libs/excalibur-cli-1.0.jar"
+     * being set to "https://jakarta.apache.org/avalon/libs/excalibur-cli-1.0.jar"
      *
      * Note this is only used if the library does not define
      * "Implementation-URL" itself.

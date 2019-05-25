@@ -24,7 +24,7 @@ package org.apache.tools.zip;
  * <p>Stores the UTF-8 version of the file name field as stored in the
  * local header and central directory header.</p>
  *
- * <p>See <a href="http://www.pkware.com/documents/casestudies/APPNOTE.TXT">PKWARE's
+ * <p>See <a href="https://www.pkware.com/documents/casestudies/APPNOTE.TXT">PKWARE's
  * APPNOTE.TXT, section 4.6.9</a>.</p>
  */
 public class UnicodePathExtraField extends AbstractUnicodeExtraField {

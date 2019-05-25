@@ -23,8 +23,8 @@ import org.apache.tools.ant.types.Commandline;
  * Run rmic in a new process with -Xnew set.
  * This switches rmic to use a new compiler, one that doesn't work in-process
  * on ant on java1.6.
- * see: <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=38732">
- * http://issues.apache.org/bugzilla/show_bug.cgi?id=38732</a>
+ * see: <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=38732">
+ * https://issues.apache.org/bugzilla/show_bug.cgi?id=38732</a>
  */
 public class XNewRmic extends ForkingSunRmic {
 

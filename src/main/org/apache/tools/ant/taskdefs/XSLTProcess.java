@@ -1170,7 +1170,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     /**
      * Specify how the result tree should be output as specified
-     * in the <a href="http://www.w3.org/TR/xslt#output">
+     * in the <a href="https://www.w3.org/TR/xslt#output">
      * specification</a>.
      * @since Ant 1.5
      */

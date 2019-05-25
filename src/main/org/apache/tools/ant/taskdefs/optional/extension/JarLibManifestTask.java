@@ -44,8 +44,8 @@ import org.apache.tools.ant.Task;
  * The specification for this mechanism is available in the JDK1.3
  * documentation in the directory
  * $JDK_HOME/docs/guide/extensions/versioning.html. Alternatively it is
- * available online at <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html">
- * http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.</p>
+ * available online at <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/extensions/versioning.html">
+ * https://docs.oracle.com/javase/8/docs/technotes/guides/extensions/versioning.html</a>.</p>
  *
  * @ant.task name="jarlib-manifest"
  */

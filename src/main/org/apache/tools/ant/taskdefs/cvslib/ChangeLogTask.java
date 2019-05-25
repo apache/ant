@@ -372,14 +372,8 @@ public class ChangeLogTask extends AbstractCvsTask {
             //bug#30471
             //this is caused by Date.after throwing a NullPointerException
             //for some reason there's no date set in the CVSEntry
-            //Java 1.3.1 API
-            //http://java.sun.com/j2se/1.3/docs/api/java/util/Date.html#after(java.util.Date)
-            //doesn't throw NullPointerException
-            //Java 1.4.2 + 1.5 API
-            //http://java.sun.com/j2se/1.4.2/docs/api/java/util/Date.html#after(java.util.Date)
-            //according to the docs it doesn't throw, according to the bug report it does
-            //http://java.sun.com/j2se/1.5.0/docs/api/java/util/Date.html#after(java.util.Date)
-            //according to the docs it does throw
+            //https://docs.oracle.com/javase/1.5.0/docs/api/java/util/Date.html#after(java.util.Date)
+            //according to the docs as of 1.5 it does throw
 
             //for now skip entries which are missing a date
             if (null == date) {

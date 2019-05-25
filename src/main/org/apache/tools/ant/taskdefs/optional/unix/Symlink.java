@@ -587,7 +587,7 @@ public class Symlink extends DispatchTask {
         // Not clearing/updating that cache results in this deleted (and later recreated) symlink
         // to point to a wrong/outdated target for a few seconds (30 seconds is the time the JRE
         // maintains the cache entries for). All this is implementation detail of the JRE and
-        // is a JRE bug http://mail.openjdk.java.net/pipermail/core-libs-dev/2017-December/050540.html,
+        // is a JRE bug https://mail.openjdk.java.net/pipermail/core-libs-dev/2017-December/050540.html,
         // but given that it affects our tests (SymlinkTest#testRecreate consistently fails
         // on MacOS/Unix) as well as the Symlink task, it makes sense to use this API instead of
         // the Files#delete(Path) API

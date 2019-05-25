@@ -182,7 +182,7 @@ public class RExecTask extends Task {
     /**
      *  This class handles the abstraction of the rexec protocol.
      *  Currently it is a wrapper around <a
-     *  href="http://jakarta.apache.org/commons/net/index.html">Jakarta
+     *  href="https://jakarta.apache.org/commons/net/index.html">Jakarta
      *  Commons Net</a>.
      */
     public class AntRExecClient extends RExecClient {

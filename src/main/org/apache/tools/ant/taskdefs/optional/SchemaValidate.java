@@ -130,7 +130,7 @@ public class SchemaValidate extends XMLValidateTask {
 
     /**
      * Set schema attributes in a JAXP 1.2 engine.
-     * @see <A href="http://java.sun.com/xml/jaxp/change-requests-11.html">
+     * @see <A href="https://java.sun.com/xml/jaxp/change-requests-11.html">
      * JAXP 1.2 Approved CHANGES</A>
      * @return true on success, false on failure
      */

@@ -25,8 +25,8 @@ import org.apache.tools.ant.ProjectComponent;
  * This class corresponds to the nested element
  * &lt;provider type="type"&gt; in the &lt;service type=""&gt;
  * nested element of the jar task.
- * @see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=31520">
- * http://issues.apache.org/bugzilla/show_bug.cgi?id=31520</a>
+ * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=31520">
+ * https://issues.apache.org/bugzilla/show_bug.cgi?id=31520</a>
  */
 public class Provider extends ProjectComponent {
     private String type;
