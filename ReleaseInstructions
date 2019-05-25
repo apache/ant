@@ -27,7 +27,7 @@ Note: This document was adapted from the one created in the context of
     releases is needed.
 
     This document assumes you are familiar with git
-    http://git-scm.com/book/en/v2/
+    https://git-scm.com/book/en/v2/
     may be a good guide if you are not.
 
 2.  Ensure you have all the external libraries that Ant uses in your
@@ -127,7 +127,7 @@ Note: This document was adapted from the one created in the context of
     This script requires using commons-openpgp to sign the artefacts,
 
     This tool can be checked out from 
-    http://svn.apache.org/repos/asf/commons/sandbox/openpgp/trunk
+    https://svn.apache.org/repos/asf/commons/sandbox/openpgp/trunk
     You have to build it using maven.
 
     $ mvn install
@@ -330,9 +330,9 @@ Note: This document was adapted from the one created in the context of
 
 Related Information
 
-http://www.apache.org/dev/#releases
-http://commons.apache.org/releases/index.html
-http://wiki.apache.org/commons/SigningReleases
+https://www.apache.org/dev/#releases
+https://commons.apache.org/releases/index.html
+https://wiki.apache.org/commons/SigningReleases
 
 Files containing version information
 ------------------------------------

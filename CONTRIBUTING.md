@@ -15,11 +15,11 @@ Bugzilla issue or you use a github pull request.  We do not plan to
 use github issues, so if you are reporting a bug, please raise a
 [Bugzilla issue](https://issues.apache.org/bugzilla/).
 
-Before reporting a bug, please also review http://ant.apache.org/problems.html
+Before reporting a bug, please also review https://ant.apache.org/problems.html
 
 If you're planning to implement a new feature please discuss you're
 changes on the
-[dev list](http://ant.apache.org/mail.html#Developer%20List:%20dev@ant.apache.org)
+[dev list](https://ant.apache.org/mail.html#Developer%20List:%20dev@ant.apache.org)
 first. This way you can make sure you're not wasting your time on
 something that isn't considered to be in Ant's scope.
 
@@ -65,4 +65,4 @@ Submitting Changes
 + Alternatively push your changes to a topic branch in your fork of the repository.
   + Submit a pull request to the repository in the apache organization.
 
-[cla]:http://www.apache.org/licenses/#clas
+[cla]:https://www.apache.org/licenses/#clas
