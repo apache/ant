@@ -23,7 +23,7 @@
     and Nu Html Checker (v.Nu).
 
     Checkstyle uses an abstract syntax tree (AST) for doing checks
-    against Java sources. It is available at http://checkstyle.sourceforge.net/
+    against Java sources. It is available at https://checkstyle.org/
     under GPL 2.1 license.
 
     "Apache Rat is a release audit tool, focused on licenses." It is available
