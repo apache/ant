@@ -105,8 +105,8 @@ public class Image extends MatchingTask {
     }
 
     /**
-     * Set the image encoding type.  <a
-     * See the encoding table in the JAI Programming Guide</a>.
+     * Set the image encoding type. 
+     * See the encoding table in the JAI Programming Guide.
      * @param encoding the String image encoding.
      */
     public void setEncoding(String encoding) {
