@@ -39,6 +39,7 @@
   </target>
 
   <target name="testWithNonFileResourceToFile" depends="setup">
+    <sleep milliseconds="250"/>
     <gunzip dest="${output}/greeting.txt">
       <url url="https://ant.apache.org/webtest/gunzip/greeting.txt.gz"/>
     </gunzip>
@@ -49,6 +50,7 @@
   </target>
 
   <target name="testWithNonFileResourceToDir" depends="setup">
+    <sleep milliseconds="250"/>
     <gunzip dest="${output}">
       <url url="https://ant.apache.org/webtest/gunzip/greeting.txt.gz"/>
     </gunzip>

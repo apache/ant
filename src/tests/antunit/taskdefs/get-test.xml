@@ -20,12 +20,14 @@
   <import file="../antunit-base.xml" />
 
   <property name="location" value="https://ant.apache.org/webtest/gettest" />
+  <property name="unsecurelocation" value="http://ant.apache.org/webtest/gettest/http-to-https.txt" />
 
   <target name="setUp">
     <mkdir dir="${output}" />
   </target>
 
   <target name="testSeeOtherRedirect">
+    <sleep milliseconds="250"/>
     <get  src="${location}/other.txt" dest="${output}/other.tmp"/>
       <au:assertTrue>
             <resourcecount count="1">
@@ -39,6 +41,7 @@
   </target>
     
     <target name="testPermanentRedirect">
+      <sleep milliseconds="250"/>
       <get  src="${location}/permanent.txt" dest="${output}/permanent.tmp"/>
         <au:assertTrue>
           <resourcecount count="1">
@@ -52,6 +55,7 @@
     </target>
     
     <target name="testTemporaryRedirect">
+      <sleep milliseconds="250"/>
       <get  src="${location}/temp.txt" dest="${output}/temp.txt"/>
         <au:assertTrue>
           <resourcecount count="1">
@@ -65,6 +69,7 @@
     </target>
     
     <target name="testStatusCode307Redirect">
+      <sleep milliseconds="250"/>
       <get  src="${location}/307.txt" dest="${output}/307.txt"/>
         <au:assertTrue>
           <resourcecount count="1">
@@ -78,6 +83,7 @@
     </target>
     
     <target name="test5LevelsOfRedirect">
+      <sleep milliseconds="250"/>
       <get  src="${location}/redir5.txt" dest="${output}/redir5.tmp"/>
         <au:assertTrue>
           <resourcecount count="1">
@@ -95,6 +101,7 @@
     
     
     <target name="testInfiniteRedirect" unless="jenkins">
+      <sleep milliseconds="250"/>
       <au:expectfailure expectedmessage="More than 25 times redirected, giving up">
       <get  src="${location}/infinite.txt" dest="${output}/infinite.tmp"/>
         </au:expectfailure>
@@ -102,6 +109,7 @@
 
 
     <target name="testNestedResources">
+      <sleep milliseconds="250"/>
       <get dest="${output}/downloads">
         <url url="https://ant.apache.org/index.html"/> 
         <url url="https://ant.apache.org/faq.html"/>
@@ -111,6 +119,7 @@
     </target>
 
   <target name="XtestRelativeRedirect">
+    <sleep milliseconds="250"/>
     <get  src="${location}/local.cgi" dest="${output}/other.tmp"/>
     <au:assertTrue>
       <resourcecount count="1">
@@ -125,7 +134,8 @@
 
   <target name="testHttpToHttpsRedirect" description="Tests that a resource that's redirected
         from HTTP to HTTPS works without an error. See bugzilla-62499 for details">
-    <get  src="${location}/http-to-https.txt" dest="${output}/http-to-https-redirect.tmp"/>
+    <sleep milliseconds="250"/>
+    <get  src="${unsecurelocation}" dest="${output}/http-to-https-redirect.tmp"/>
     <au:assertFileExists file="${output}/http-to-https-redirect.tmp"/>
     <au:assertTrue>
       <resourcecontains resource="${output}/http-to-https-redirect.tmp" substring="hello world"/>
