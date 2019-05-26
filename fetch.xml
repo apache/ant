@@ -342,6 +342,14 @@ Set -Ddest=LOCATION on the command line
   <target name="netrexx"
           description="load NetRexx compiler"
           depends="init-no-m2,-setup-temp-cache,-fetch-netrexx,-fetch-netrexx-no-commons-net">
+    <checksum file="${temp.dir}/NetRexx.zip" algorithm="SHA-256" property="${netrexx.sha256}" verifyProperty="netrexx.hash.matches"/>
+    <fail message="NetRexx.zip fetched via ftp has an unexpected SHA-256 checksum, the file may have been tampered with">
+       <condition>
+         <not>
+           <istrue value="${netrexx.hash.matches}"/>
+         </not>
+      </condition>
+    </fail>
     <copy todir="${dest.dir}" flatten="true">
       <zipfileset src="${temp.dir}/NetRexx.zip">
         <include name="NetRexx\lib\NetRexxC.jar"/>
