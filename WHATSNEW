@@ -3,6 +3,14 @@ Changes from Ant 1.10.6 TO Ant 1.10.7
 
 Fixed bugs:
 -----------
+ * FTP still tries checking or entering directories after a timeout
+   Bugzilla Report 63454
+
+ * junitlauncher - does not detect failure in @BeforeAll
+   Bugzilla Report 63479
+
+ * Error using ant-1.10.6 with jdk8
+   Bugzilla Report 63457
 
  * FTP task no longer duplicates a check for a file being a symlink.
    Bugzilla Report 63259
