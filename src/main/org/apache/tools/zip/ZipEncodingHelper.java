@@ -18,6 +18,7 @@
 
 package org.apache.tools.zip;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
@@ -147,14 +148,24 @@ public abstract class ZipEncodingHelper {
      *
      */
     static ByteBuffer growBuffer(final ByteBuffer b, final int newCapacity) {
-        b.limit(b.position());
-        b.rewind();
-
+    	prepareBufferForRead(b);
         final int c2 = b.capacity() * 2;
         final ByteBuffer on = ByteBuffer.allocate(c2 < newCapacity ? newCapacity : c2);
 
         on.put(b);
         return on;
+    }
+    
+    /**
+     * Prepares a buffer to be read after writing.
+     * 
+     * @param b The buffer
+     */
+    static void prepareBufferForRead(final Buffer b) {
+    	// ByteBuffer has overridden methods in java 11 but not in java 8 
+    	// so the Buffer is significant to get java 8 compatible classes
+    	b.limit(b.position());
+    	b.rewind();
     }
 
 
