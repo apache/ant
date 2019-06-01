@@ -45,6 +45,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPConnectionClosedException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -546,6 +547,9 @@ public class FTP extends Task implements FTPTaskConfig {
                     }
                 }
                 ftp.changeToParentDirectory();
+            } catch (FTPConnectionClosedException ftpcce) {
+                throw new BuildException("Error while communicating with FTP "
+                                         + "server: ", ftpcce);
             } catch (IOException e) {
                 throw new BuildException("Error while communicating with FTP "
                                          + "server: ", e);
@@ -1138,7 +1142,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @return true if it is possible to cd to this directory
      * @since ant 1.6
      */
-    private boolean isFunctioningAsDirectory(FTPClient ftp, String dir, FTPFile file) {
+    private boolean isFunctioningAsDirectory(FTPClient ftp, String dir, FTPFile file) throws FTPConnectionClosedException {
         if (file.isDirectory()) {
             return true;
         }
@@ -1148,6 +1152,11 @@ public class FTP extends Task implements FTPTaskConfig {
         String currentWorkingDir = null;
         try {
             currentWorkingDir = ftp.printWorkingDirectory();
+        } catch (FTPConnectionClosedException ftpcce) {
+            getProject().log("could not find current working directory " + dir
+                             + " while checking a symlink because connection was closed",
+                             Project.MSG_DEBUG);
+            throw(ftpcce);
         } catch (IOException ioe) {
             getProject().log("could not find current working directory " + dir
                              + " while checking a symlink",
@@ -1157,6 +1166,11 @@ public class FTP extends Task implements FTPTaskConfig {
         if (currentWorkingDir != null) {
             try {
                 result = ftp.changeWorkingDirectory(file.getLink());
+            } catch (FTPConnectionClosedException ftpcce) {
+                getProject().log("could not find current working directory " + dir
+                                + " while checking a symlink because connection was closed",
+                                Project.MSG_DEBUG);
+                throw(ftpcce);
             } catch (IOException ioe) {
                 getProject().log("could not cd to " + file.getLink() + " while checking a symlink",
                                  Project.MSG_DEBUG);
@@ -1189,7 +1203,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @return true if it is possible to cd to this directory
      * @since ant 1.6
      */
-    private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file) {
+    private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file) throws FTPConnectionClosedException {
         return !file.isDirectory() && (file.isFile() || !isFunctioningAsDirectory(ftp, dir, file));
     }
 
