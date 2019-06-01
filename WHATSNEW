@@ -27,6 +27,9 @@ Other changes:
    based on the JUnit 5 tags, through the new "includeTags" and
    "excludeTags" attributes.
 
+ * prefer https over http when building ant itself, and in the ant 
+   documentation and sources
+
 
 Changes from Ant 1.10.5 TO Ant 1.10.6
 =====================================
