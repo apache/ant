@@ -300,6 +300,24 @@
             </test>
         </junitlauncher>
     </target>
+	
+    <target name="test-beforeall-failure-stops-build" depends="init">
+        <property name="junitlauncher.test.tracker.append.file" value="${output.dir}/${test-beforeall-failure-stops-build.tracker}"/>
+        <junitlauncher>
+            <listener classname="org.example.junitlauncher.Tracker"
+                      if="test-beforeall-failure-stops-build.tracker"/>
+            <test name="org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll" haltOnFailure="true"/>
+        </junitlauncher>
+    </target>
+
+    <target name="test-beforeall-failure-continues-build" depends="init">
+        <property name="junitlauncher.test.tracker.append.file" value="${output.dir}/${test-beforeall-failure-continues-build.tracker}"/>
+        <junitlauncher>
+            <listener classname="org.example.junitlauncher.Tracker"
+                      if="test-beforeall-failure-continues-build.tracker"/>
+            <test name="org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll"/>
+        </junitlauncher>
+    </target>
 
     <target name="test-method-with-tag-fileset" depends="init">
         <property name="junitlauncher.test.tracker.append.file" value="${output.dir}/${test-method-with-tag-fileset.tracker}"/>

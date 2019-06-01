@@ -304,7 +304,7 @@ public class LauncherSupport {
             // print the summary to System.out
             summary.printTo(new PrintWriter(System.out, true));
         }
-        final boolean hasTestFailures = summary.getTestsFailedCount() != 0;
+        final boolean hasTestFailures = summary.getTotalFailureCount() != 0;
         if (hasTestFailures) {
             // keep track of the test failure(s) for the entire launched instance
             this.testsFailed = true;

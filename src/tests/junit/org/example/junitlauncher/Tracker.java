@@ -143,6 +143,11 @@ public class Tracker implements TestResultFormatter {
         final List<String> lines = readTrackerFile(trackerFile);
         return lines.contains(TestExecutionResult.Status.FAILED + ":test-method:" + className + "#" + methodName);
     }
+    
+    public static boolean verifySetupFailed(final Path trackerFile, final String className) throws IOException {
+        final List<String> lines = readTrackerFile(trackerFile);
+        return lines.contains(TestExecutionResult.Status.FAILED + ":test-class:" + className);
+    }
 
     public static boolean verifySuccess(final Path trackerFile, final String className, final String methodName) throws IOException {
         final List<String> lines = readTrackerFile(trackerFile);

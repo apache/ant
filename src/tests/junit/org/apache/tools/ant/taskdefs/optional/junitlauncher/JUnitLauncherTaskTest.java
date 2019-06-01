@@ -17,12 +17,24 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
+import static org.example.junitlauncher.Tracker.verifyFailed;
+import static org.example.junitlauncher.Tracker.verifySetupFailed;
+import static org.example.junitlauncher.Tracker.verifySkipped;
+import static org.example.junitlauncher.Tracker.verifySuccess;
+import static org.example.junitlauncher.Tracker.wasTestRun;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.example.junitlauncher.jupiter.JupiterSampleTest;
+import org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll;
 import org.example.junitlauncher.jupiter.JupiterTagSampleTest;
 import org.example.junitlauncher.vintage.AlwaysFailingJUnit4Test;
 import org.example.junitlauncher.vintage.ForkedTest;
@@ -31,16 +43,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import static org.example.junitlauncher.Tracker.verifyFailed;
-import static org.example.junitlauncher.Tracker.verifySkipped;
-import static org.example.junitlauncher.Tracker.verifySuccess;
-import static org.example.junitlauncher.Tracker.wasTestRun;
 
 /**
  * Tests the {@link JUnitLauncherTask}
@@ -78,7 +80,7 @@ public class JUnitLauncherTaskTest {
             }
         }
     }
-
+    
     /**
      * Tests that when a test, that's isn't configured with {@code haltOnFailure=true}, continues the
      * build even when there are test failures
@@ -368,6 +370,39 @@ public class JUnitLauncherTaskTest {
         Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecutedTagSampleTest2"));
     }
+    
+
+    /**
+     * Tests that failure at with beforeall stops the build 
+     */
+    @Test
+    public void testBeforeAllFailureStopsBuild() throws Exception {
+        final String targetName = "test-beforeall-failure-stops-build";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        try {
+            buildRule.executeTarget(targetName);
+            Assert.fail(targetName + " was expected to fail");
+        } catch (BuildException e) {
+            // expected, but do further tests to make sure the build failed for expected reason
+            if (!verifySetupFailed(trackerFile, JupiterSampleTestFailingBeforeAll.class.getName())) {
+                // throw back the original cause
+                throw e;
+            }
+        }
+    }
+    
+    /**
+     * Tests that when a test, that's isn't configured with {@code haltOnFailure=true}, continues the
+     * build even when there are test failures
+     */
+    @Test
+    public void testBeforeAllFailureContinuesBuild() throws Exception {
+        final String targetName = "test-beforeall-failure-continues-build";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+        Assert.assertTrue("Expected @BeforeAll failure to lead to failing testcase", verifySetupFailed(trackerFile, JupiterSampleTestFailingBeforeAll.class.getName()));
+    }
+
 
     /**
      * Tests execution of a test which is configured to execute only methods with special tags, two classes specified
