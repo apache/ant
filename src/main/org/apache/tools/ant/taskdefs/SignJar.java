@@ -40,10 +40,9 @@ import org.apache.tools.ant.util.ResourceUtils;
  * exists then its modification date is used as a cue as to whether to resign
  * any JAR file.
  *
- * Timestamp driven signing is based on the unstable and inadequately documented
- * information in the Java1.5 docs
- * @see <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/security/time-of-signing-beta1.html">
- * beta documentation</a>
+ * Timestamp signature support is based on Java 8
+ * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/time-of-signing.html">
+ * documentation</a>
  * @ant.task category="java"
  * @since Ant 1.1
  */

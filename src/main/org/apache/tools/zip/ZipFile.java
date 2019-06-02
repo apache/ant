@@ -103,7 +103,8 @@ public class ZipFile implements Closeable {
      * The encoding to use for filenames and the file comment.
      *
      * <p>For a list of possible values see <a
-     * href="https://docs.oracle.com/javase/1.5.0/docs/guide/intl/encoding.doc.html">https://docs.oracle.com/javase/1.5.0/docs/guide/intl/encoding.doc.html</a>.
+     * href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
+     * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</a>.
      * Defaults to the platform's default character encoding.</p>
      */
     private final String encoding;

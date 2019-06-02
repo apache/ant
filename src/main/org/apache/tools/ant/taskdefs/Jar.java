@@ -573,7 +573,7 @@ public class Jar extends Zip {
     /**
      * Create the index list to speed up classloading.
      * This is a JDK 1.3+ specific feature and is enabled by default. See
-     * <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#JAR%20Index">
+     * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Index">
      * the JAR index specification</a> for more details.
      *
      * @param zOut the zip stream representing the jar being built.
