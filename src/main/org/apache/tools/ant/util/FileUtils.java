@@ -54,6 +54,7 @@ import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.launch.Locator;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.resources.FileResource;
@@ -390,7 +391,7 @@ public class FileUtils {
      */
     public void copyFile(File sourceFile, File destFile, FilterSetCollection filters,
                          boolean overwrite, boolean preserveLastModified) throws IOException {
-        copyFile(sourceFile, destFile, filters, overwrite, preserveLastModified, null);
+        copyFile(sourceFile, destFile, filters, overwrite, preserveLastModified, CharSet.getDefault());
     }
 
     /**
@@ -417,6 +418,30 @@ public class FileUtils {
                          boolean preserveLastModified, String encoding) throws IOException {
         copyFile(sourceFile, destFile, filters, null, overwrite,
                  preserveLastModified, encoding, null);
+    }
+
+    /**
+     * Convenience method to copy a file from a source to a destination specifying if token
+     * filtering must be used, if source files may overwrite newer destination files, the last
+     * modified time of <code>destFile</code> file should be made equal to the last modified time
+     * of <code>sourceFile</code> and which character encoding to assume.
+     *
+     * @param sourceFile the file to copy from. Must not be <code>null</code>.
+     * @param destFile the file to copy to. Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param overwrite Whether or not the destination file should be overwritten if it already
+     *            exists.
+     * @param preserveLastModified Whether or not the last modified time of the resulting file
+     *            should be set to that of the source file.
+     * @param charSet the CharSet used to read and write the files.
+     *
+     * @throws IOException if the copying fails.
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, boolean overwrite,
+                         boolean preserveLastModified, CharSet charSet) throws IOException {
+        copyFile(sourceFile, destFile, filters, null, overwrite,
+                 preserveLastModified, charSet, null);
     }
 
     /**
@@ -472,6 +497,38 @@ public class FileUtils {
      * @param preserveLastModified Whether or not the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
+     * @param charSet the CharSet used to read and write the files.
+     * @param project the project instance.
+     *
+     * @throws IOException if the copying fails.
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         CharSet charSet, Project project) throws IOException {
+        copyFile(sourceFile, destFile, filters, filterChains,
+                 overwrite, preserveLastModified, charSet, charSet, project);
+    }
+
+    /**
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
      * @param inputEncoding the encoding used to read the files.
      * @param outputEncoding the encoding used to write the files.
      * @param project the project instance.
@@ -488,6 +545,41 @@ public class FileUtils {
             Project project) throws IOException {
         copyFile(sourceFile, destFile, filters, filterChains, overwrite, preserveLastModified,
                 false, inputEncoding, outputEncoding, project);
+    }
+
+    /**
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param inputCharSet the CharSet used to read the files.
+     * @param outputCharSet the CharSet used to write the files.
+     * @param project the project instance.
+     *
+     *
+     * @throws IOException if the copying fails.
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         CharSet inputCharSet, CharSet outputCharSet,
+                         Project project) throws IOException {
+        copyFile(sourceFile, destFile, filters, filterChains, overwrite, preserveLastModified,
+                false, inputCharSet, outputCharSet, project);
     }
 
     /**
@@ -550,6 +642,44 @@ public class FileUtils {
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param append whether to append to the destination file.
+     * @param inputCharSet the CharSet used to read the files.
+     * @param outputCharSet the CharSet used to write the files.
+     * @param project the project instance.
+     *
+     *
+     * @throws IOException if the copying fails.
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         boolean append,
+                         CharSet inputCharSet, CharSet outputCharSet,
+                         Project project) throws IOException {
+        copyFile(sourceFile, destFile, filters, filterChains, overwrite,
+                 preserveLastModified, append, inputCharSet, outputCharSet,
+                 project, /* force: */ false);
+    }
+
+    /**
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param append whether to append to the destination file.
      * @param inputEncoding the encoding used to read the files.
      * @param outputEncoding the encoding used to write the files.
      * @param project the project instance.
@@ -566,10 +696,50 @@ public class FileUtils {
                          String inputEncoding, String outputEncoding,
                          Project project, boolean force) throws IOException {
         ResourceUtils.copyResource(new FileResource(sourceFile),
+                new FileResource(destFile),
+                filters, filterChains, overwrite,
+                preserveLastModified, append, inputEncoding,
+                outputEncoding, project, force);
+    }
+
+    /**
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @param sourceFile the file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile the file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     * @param append whether to append to the destination file.
+     * @param inputCharSet the CharSet used to read the files.
+     * @param outputCharSet the CharSet used to write the files.
+     * @param project the project instance.
+     * @param force whether to overwrite read-only destination files.
+     *
+     * @throws IOException if the copying fails.
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, Vector<FilterChain> filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         boolean append,
+                         CharSet inputCharSet, CharSet outputCharSet,
+                         Project project, boolean force) throws IOException {
+        ResourceUtils.copyResource(new FileResource(sourceFile),
                                    new FileResource(destFile),
                                    filters, filterChains, overwrite,
-                                   preserveLastModified, append, inputEncoding,
-                                   outputEncoding, project, force);
+                                   preserveLastModified, append, inputCharSet,
+                                   outputCharSet, project, force);
     }
 
     // CheckStyle:ParameterNumberCheck ON

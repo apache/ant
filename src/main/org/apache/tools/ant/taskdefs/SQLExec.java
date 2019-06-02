@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.nio.charset.Charset;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,6 +41,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
@@ -163,7 +163,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Output encoding.
      */
-    private String outputEncoding = null;
+    private CharSet outputCharSet = CharSet.getDefault();
 
     /**
      * Action to perform if an error is found
@@ -173,7 +173,7 @@ public class SQLExec extends JDBCTask {
     /**
      * Encoding to use when reading SQL statements from a file
      */
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
 
     /**
      * Append to an existing file or overwrite it?
@@ -361,7 +361,16 @@ public class SQLExec extends JDBCTask {
      * @param encoding the encoding to use on the files
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Set the charset to use on the SQL files read in
+     *
+     * @param charSet the encoding to use on the files
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**
@@ -438,13 +447,22 @@ public class SQLExec extends JDBCTask {
 
     /**
      * The encoding to use when writing the result to a resource.
-     * <p>Default's to the platform's default encoding</p>
-     * @param outputEncoding the name of the encoding or null for the
-     * platform's default encoding
+     * <p>Defaults to the platform encoding</p>
+     * @param outputEncoding the name of the encoding or "" for the
+     * platform encoding
      * @since Ant 1.9.4
      */
     public void setOutputEncoding(String outputEncoding) {
-        this.outputEncoding = outputEncoding;
+        setOutputCharSet(new CharSet(outputEncoding));
+    }
+
+    /**
+     * The charset to use when writing the result to a resource.
+     * <p>Defaults to the platform encoding</p>
+     * @param outputCharSet the CharSet
+     */
+    public void setOutputCharSet(CharSet outputCharSet) {
+        this.outputCharSet = outputCharSet;
     }
 
     /**
@@ -678,12 +696,8 @@ public class SQLExec extends JDBCTask {
                                 }
                             }
                         }
-                        if (outputEncoding != null) {
-                            out = new PrintStream(new BufferedOutputStream(os),
-                                                  false, outputEncoding);
-                        } else {
-                            out = new PrintStream(new BufferedOutputStream(os));
-                        }
+                        out = new PrintStream(new BufferedOutputStream(os),
+                                false, outputCharSet.getValue());
                     }
 
                     // Process all transactions
@@ -1057,10 +1071,8 @@ public class SQLExec extends JDBCTask {
             if (tSrcResource != null) {
                 log("Executing resource: " + tSrcResource.toString(),
                     Project.MSG_INFO);
-                Charset charset = encoding == null ? Charset.defaultCharset()
-                    : Charset.forName(encoding);
-                try (Reader reader = new InputStreamReader(
-                    tSrcResource.getInputStream(), charset)) {
+                try (Reader reader = new InputStreamReader(tSrcResource.getInputStream(),
+                        charSet.getCharset())) {
                     runStatements(reader, out);
                 }
             }

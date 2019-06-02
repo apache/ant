@@ -181,7 +181,7 @@ public class TarFileSet extends ArchiveFileSet {
     @Override
     protected ArchiveScanner newArchiveScanner() {
         TarScanner zs = new TarScanner();
-        zs.setEncoding(getEncoding());
+        zs.setCharSet(getCharSet());
         return zs;
     }
 

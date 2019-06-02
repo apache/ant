@@ -52,7 +52,7 @@ public class ZipScanner extends ArchiveScanner {
      * patterns and didn't match any exclude patterns.
      */
     @Override
-    protected void fillMapsFromArchive(Resource src, String encoding,
+    protected void fillMapsFromArchive(Resource src, CharSet encoding,
             Map<String, Resource> fileEntries, Map<String, Resource> matchFileEntries,
             Map<String, Resource> dirEntries, Map<String, Resource> matchDirEntries) {
 
@@ -60,7 +60,7 @@ public class ZipScanner extends ArchiveScanner {
             .map(FileProvider::getFile).orElseThrow(() -> new BuildException(
                 "Only file provider resources are supported"));
 
-        try (ZipFile zf = new ZipFile(srcFile, encoding)) {
+        try (ZipFile zf = new ZipFile(srcFile, encoding.getValue())) {
             StreamUtils.enumerationAsStream(zf.getEntries()).forEach(entry -> {
                 Resource r = new ZipResource(srcFile, encoding, entry);
                 String name = entry.getName();

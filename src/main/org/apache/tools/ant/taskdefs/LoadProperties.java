@@ -22,7 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
@@ -33,6 +32,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.filters.util.ChainReaderHelper.ChainReader;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -60,9 +60,9 @@ public class LoadProperties extends Task {
     private final List<FilterChain> filterChains = new Vector<>();
 
     /**
-     * Encoding to use for input; defaults to the platform's default encoding.
+     * Encoding to use for input; defaults to the platform encoding.
      */
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
 
     /**
      * Prefix for loaded properties.
@@ -89,18 +89,33 @@ public class LoadProperties extends Task {
     }
 
     /**
-     * Encoding to use for input, defaults to the platform's default
-     * encoding. <p>
+     * Encoding to use for input, defaults to the platform encoding.
      *
+     * <p>
      * For a list of possible values see
      * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
      * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
      * </a>.</p>
      *
-     * @param encoding The new Encoding value
+     * @param encoding The new encoding value
      */
     public final void setEncoding(final String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Charset to use for input, defaults to the platform encoding.
+     *
+     * <p>
+     * For a list of possible values see
+     * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
+     * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
+     * </a>.</p>
+     *
+     * @param charSet The new charset value
+     */
+    public final void setCharSet(final CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**
@@ -175,11 +190,9 @@ public class LoadProperties extends Task {
             throw new BuildException("Source resource does not exist: " + src);
         }
 
-        Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
-
         try (ChainReader instream = new ChainReaderHelper(getProject(),
-            new InputStreamReader(new BufferedInputStream(src.getInputStream()), charset), filterChains)
-                .getAssembledReader()) {
+            new InputStreamReader(new BufferedInputStream(src.getInputStream()),
+                    charSet.getCharset()), filterChains).getAssembledReader()) {
 
             String text = instream.readFully();
 

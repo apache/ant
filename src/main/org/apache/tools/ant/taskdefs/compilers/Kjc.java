@@ -93,9 +93,9 @@ public class Kjc extends DefaultCompilerAdapter {
 
         // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.
-        if (encoding != null) {
+        if (hasCharset()) {
             cmd.createArgument().setValue("-encoding");
-            cmd.createArgument().setValue(encoding);
+            cmd.createArgument().setValue(charSet.getValue());
         }
 
         if (debug) {

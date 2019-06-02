@@ -47,7 +47,7 @@ import java.util.zip.ZipException;
  *
  * <p>Since the documentation this class is based upon doesn't mention
  * the character encoding of the file name at all, it is assumed that
- * it uses the current platform's default encoding.</p>
+ * it uses the current platform encoding.</p>
  */
 public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
 

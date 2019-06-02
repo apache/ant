@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.LogLevel;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileProvider;
@@ -44,8 +45,8 @@ public class Echo extends Task {
     protected String message = "";
     protected File file = null;
     protected boolean append = false;
-    /** encoding; set to null or empty means 'default' */
-    private String encoding = "";
+    /** encoding */
+    private CharSet charSet = CharSet.getDefault();
     private boolean force = false;
 
     // by default, messages are always displayed
@@ -64,8 +65,8 @@ public class Echo extends Task {
             ResourceUtils.copyResource(
                     new StringResource(message.isEmpty() ? System.lineSeparator() : message),
                     output == null ? new LogOutputResource(this, logLevel) : output,
-                    null, null, false, false, append, null,
-                    encoding.isEmpty() ? null : encoding, getProject(), force);
+                    null, null, false, false, append,
+                    CharSet.getDefault(), charSet, getProject(), force);
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
         }
@@ -139,12 +140,20 @@ public class Echo extends Task {
 
     /**
      * Declare the encoding to use when outputting to a file;
-     * Use "" for the platform's default encoding.
+     * Use "" for the platform encoding.
      * @param encoding the character encoding to use.
      * @since 1.7
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Declare the charset to use when outputting to a file;
+     * @param charSet the charset to use.
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**

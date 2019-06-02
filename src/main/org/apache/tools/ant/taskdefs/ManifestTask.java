@@ -23,12 +23,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.StreamUtils;
 
@@ -68,7 +68,7 @@ public class ManifestTask extends Task {
     /**
      * The encoding of the manifest file
      */
-    private String encoding;
+    private CharSet charSet = CharSet.getUtf8();
 
     /**
      * whether to merge Class-Path attributes.
@@ -179,7 +179,15 @@ public class ManifestTask extends Task {
      * @param encoding the manifest file encoding.
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * The charset to use for reading in an existing manifest file
+     * @param charSet the manifest file charset.
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**
@@ -227,9 +235,8 @@ public class ManifestTask extends Task {
         BuildException error = null;
 
         if (manifestFile.exists()) {
-            Charset charset = Charset.forName(encoding == null ? "UTF-8" : encoding);
             try (InputStreamReader isr = new InputStreamReader(
-                Files.newInputStream(manifestFile.toPath()), charset)) {
+                Files.newInputStream(manifestFile.toPath()), charSet.getCharset())) {
                 current = new Manifest(isr);
             } catch (ManifestException m) {
                 error = new BuildException("Existing manifest " + manifestFile

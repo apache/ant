@@ -26,6 +26,7 @@ import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Resource;
 
@@ -39,8 +40,9 @@ public class StringResource extends Resource {
     private static final int STRING_MAGIC
         = Resource.getMagicNumber("StringResource".getBytes());
 
-    private static final String DEFAULT_ENCODING = "UTF-8";
-    private String encoding = DEFAULT_ENCODING;
+    private CharSet charSet = CharSet.getUtf8();
+
+    private boolean isEncodingSet = false;
 
     /**
      * Default constructor.
@@ -130,8 +132,7 @@ public class StringResource extends Resource {
      * @param s the encoding name.
      */
     public synchronized void setEncoding(String s) {
-        checkAttributesAllowed();
-        encoding = s;
+        setCharSet(new CharSet(s));
     }
 
     /**
@@ -139,7 +140,25 @@ public class StringResource extends Resource {
      * @return the encoding name.
      */
     public synchronized String getEncoding() {
-        return encoding;
+        return charSet.getValue();
+    }
+
+    /**
+     * Set the encoding to be used for this StringResource.
+     * @param cs the CharSet.
+     */
+    public synchronized void setCharSet(CharSet cs) {
+        checkAttributesAllowed();
+        charSet = cs;
+        isEncodingSet = true;
+    }
+
+    /**
+     * Get the encoding used by this StringResource.
+     * @return the CharSet.
+     */
+    public synchronized CharSet getCharSet() {
+        return charSet;
     }
 
     /**
@@ -194,8 +213,7 @@ public class StringResource extends Resource {
         if (content == null) {
             throw new IllegalStateException("unset string value");
         }
-        return new ByteArrayInputStream(encoding == null
-                ? content.getBytes() : content.getBytes(encoding));
+        return new ByteArrayInputStream(content.getBytes(charSet.getCharset()));
     }
 
     /**
@@ -223,7 +241,7 @@ public class StringResource extends Resource {
      */
     @Override
     public void setRefid(Reference r) {
-        if (encoding != DEFAULT_ENCODING) {
+        if (isEncodingSet) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
@@ -253,10 +271,7 @@ public class StringResource extends Resource {
         @Override
         public void close() throws IOException {
             super.close();
-            String result = encoding == null
-                    ? baos.toString() : baos.toString(encoding);
-
-            setValueFromOutputStream(result);
+            setValueFromOutputStream(baos.toString(charSet.getValue()));
         }
 
         private void setValueFromOutputStream(String output) {

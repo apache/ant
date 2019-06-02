@@ -22,10 +22,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
@@ -51,7 +51,7 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
     private String contains = null;
     private boolean casesensitive = true;
     private boolean ignorewhitespace = false;
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
 
     /**
      * @return a string describing this object
@@ -76,7 +76,15 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
      * @param encoding encoding of the resources processed
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * The encoding of the resources processed
+     * @param charSet CharSet of the resources processed
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**
@@ -170,9 +178,8 @@ public class ContainsSelector extends BaseExtendSelector implements ResourceSele
         if (ignorewhitespace) {
             userstr = SelectorUtils.removeWhitespace(userstr);
         }
-        try (BufferedReader in = new BufferedReader(
-            new InputStreamReader(r.getInputStream(), encoding == null
-                ? Charset.defaultCharset() : Charset.forName(encoding)))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(r.getInputStream(),
+                charSet.getCharset()))) {
             try {
                 String teststr = in.readLine();
                 while (teststr != null) {

@@ -246,8 +246,8 @@ public class Move extends Copy {
                                     forceOverwrite,
                                     getPreserveLastModified(),
                                     /* append: */ false,
-                                    getEncoding(),
-                                    getOutputEncoding(),
+                                    getCharSet(),
+                                    getOutputCharSet(),
                                     getProject(), getForce());
         } catch (IOException ioe) {
             throw new BuildException("Failed to copy " + fromFile + " to "

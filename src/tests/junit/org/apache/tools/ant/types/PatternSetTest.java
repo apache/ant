@@ -233,7 +233,7 @@ public class PatternSetTest {
         PatternSet.PatternFileNameEntry ne =
                 (PatternSet.PatternFileNameEntry) p.createIncludesFile();
         ne.setName(testFile.getAbsolutePath());
-        ne.setEncoding(cs.name());
+        ne.setCharSet(new CharSet(cs.name()));
         assertArrayEquals(new String[] {"\u00e4"}, p.getIncludePatterns(project));
     }
 }

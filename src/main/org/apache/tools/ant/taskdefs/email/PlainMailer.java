@@ -83,12 +83,8 @@ class PlainMailer extends Mailer {
                 mailMessage.setSubject(subject);
             }
             mailMessage.setHeader("Date", getDate());
-            if (message.getCharset() != null) {
-                mailMessage.setHeader("Content-Type", message.getMimeType()
+            mailMessage.setHeader("Content-Type", message.getMimeType()
                     + "; charset=\"" + message.getCharset() + "\"");
-            } else {
-                mailMessage.setHeader("Content-Type", message.getMimeType());
-            }
             if (headers != null) {
                 for (Header h : headers) {
                     mailMessage.setHeader(h.getName(), h.getValue());

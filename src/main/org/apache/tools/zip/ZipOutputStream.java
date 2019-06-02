@@ -18,6 +18,8 @@
 
 package org.apache.tools.zip;
 
+import org.apache.tools.ant.types.CharSet;
+
 import static org.apache.tools.zip.ZipConstants.DATA_DESCRIPTOR_MIN_VERSION;
 import static org.apache.tools.zip.ZipConstants.DWORD;
 import static org.apache.tools.zip.ZipConstants.INITIAL_VERSION;
@@ -141,9 +143,15 @@ public class ZipOutputStream extends FilterOutputStream {
     public static final int STORED = java.util.zip.ZipEntry.STORED;
 
     /**
+     * default charset for file names and comment.
+     */
+    private static final CharSet DEFAULT_CHARSET = CharSet.getDefault();
+
+    /**
      * default encoding for file names and comment.
      */
-    static final String DEFAULT_ENCODING = null;
+    @Deprecated
+    static final String DEFAULT_ENCODING = DEFAULT_CHARSET.getValue();
 
     /**
      * General purpose flag, which indicates that filenames are
@@ -255,21 +263,21 @@ public class ZipOutputStream extends FilterOutputStream {
      * <p>For a list of possible values see <a
      * href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
      * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</a>.
-     * Defaults to the platform's default character encoding.</p>
+     * Defaults to the platform character encoding.</p>
      *
      * @since 1.3
      */
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
 
     /**
      * The zip encoding to use for filenames and the file comment.
      * <p>
      * This field is of internal use and will be set in {@link
-     * #setEncoding(String)}.
+     * #setCharSet(CharSet)}.
      * </p>
      */
     private ZipEncoding zipEncoding =
-        ZipEncodingHelper.getZipEncoding(DEFAULT_ENCODING);
+        ZipEncodingHelper.getZipEncoding(DEFAULT_CHARSET);
 
    // CheckStyle:VisibilityModifier OFF - bc
 
@@ -382,14 +390,28 @@ public class ZipOutputStream extends FilterOutputStream {
      * <p>For a list of possible values see <a
      * href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
      * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</a>.
-     * Defaults to the platform's default character encoding.</p>
+     * Defaults to the platform character encoding.</p>
      * @param encoding the encoding value
      * @since 1.3
      */
     public void setEncoding(final String encoding) {
-        this.encoding = encoding;
-        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
-        if (useUTF8Flag && !ZipEncodingHelper.isUTF8(encoding)) {
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * The charset to use for filenames and the file comment.
+     *
+     * <p>For a list of possible values see
+     * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
+     * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
+     * </a>.
+     * Defaults to the platform character encoding.</p>
+     * @param charSet the encoding value
+     */
+    public void setCharSet(final CharSet charSet) {
+        this.charSet = charSet;
+        this.zipEncoding = ZipEncodingHelper.getZipEncoding(charSet);
+        if (useUTF8Flag && !ZipEncodingHelper.isUTF8(charSet)) {
             useUTF8Flag = false;
         }
     }
@@ -397,12 +419,21 @@ public class ZipOutputStream extends FilterOutputStream {
     /**
      * The encoding to use for filenames and the file comment.
      *
-     * @return null if using the platform's default character encoding.
+     * @return null if using the platform character encoding.
      *
      * @since 1.3
      */
     public String getEncoding() {
-        return encoding;
+        return charSet.getValue();
+    }
+
+    /**
+     * The encoding to use for filenames and the file comment.
+     *
+     * @return null if using the platform character encoding.
+     */
+    public CharSet getCharSet() {
+        return charSet;
     }
 
     /**
@@ -414,7 +445,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @param b boolean
      */
     public void setUseLanguageEncodingFlag(boolean b) {
-        useUTF8Flag = b && ZipEncodingHelper.isUTF8(encoding);
+        useUTF8Flag = b && ZipEncodingHelper.isUTF8(charSet);
     }
 
     /**
@@ -1423,7 +1454,7 @@ public class ZipOutputStream extends FilterOutputStream {
     protected byte[] getBytes(String name) throws ZipException {
         try {
             ByteBuffer b =
-                ZipEncodingHelper.getZipEncoding(encoding).encode(name);
+                ZipEncodingHelper.getZipEncoding(charSet).encode(name);
             byte[] result = new byte[b.limit()];
             System.arraycopy(b.array(), b.arrayOffset(), result, 0,
                              result.length);

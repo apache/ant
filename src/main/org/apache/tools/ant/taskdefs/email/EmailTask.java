@@ -23,6 +23,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -77,7 +78,7 @@ public class EmailTask extends Task {
     private boolean failOnError = true;
     private boolean includeFileNames = false;
     private String messageMimeType = null;
-    private String messageFileInputEncoding;
+    private CharSet messageFileInputCharSet = CharSet.getDefault();
     /* special headers */
     /** sender  */
     private EmailAddress from = null;
@@ -95,8 +96,10 @@ public class EmailTask extends Task {
 
     /** file list  */
     private Path attachments = null;
-    /** Character set for MimeMailer*/
-    private String charset = null;
+    /** Character set for MimeMailer */
+    private CharSet charSet = CharSet.getDefault();
+    /** Is character set defined explicitly */
+    private boolean hasCharSet = false;
     /** User for SMTP auth */
     private String user = null;
     /** Password for SMTP auth */
@@ -525,15 +528,14 @@ public class EmailTask extends Task {
                 }
                 message.setMimeType(messageMimeType);
             }
-            // set the character set if not done already (and required)
-            if (charset != null) {
-                if (message.getCharset() != null) {
-                    throw new BuildException(
-                        "The charset can only be specified in one location");
-                }
-                message.setCharset(charset);
+            if (message.hasCharSet() && hasCharSet) {
+                throw new BuildException("The charset can only be specified in one location");
             }
-            message.setInputEncoding(messageFileInputEncoding);
+            // set the character set of message unless equivalent
+            if (!charSet.equivalent(message.getCharSet())) {
+                message.setCharSet(charSet);
+            }
+            message.setInputCharSet(messageFileInputCharSet);
 
             // identify which files should be attached
             Vector<File> files = new Vector<>();
@@ -613,7 +615,7 @@ public class EmailTask extends Task {
      * @since Ant 1.6
      */
     public void setCharset(String charset) {
-        this.charset = charset;
+        setCharSet(new CharSet(charset));
     }
 
     /**
@@ -623,17 +625,46 @@ public class EmailTask extends Task {
      * @since Ant 1.6
      */
     public String getCharset() {
-        return charset;
+        return charSet.getValue();
+    }
+
+    /**
+     * Sets the character set of mail message.
+     * Will be ignored if mimeType contains ....; Charset=... substring or
+     * encoding is not <code>mime</code>.
+     * @param charSet the charset to use.
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
+        hasCharSet = true;
+    }
+
+    /**
+     * Returns the character set of mail message.
+     *
+     * @return Charset of mail message.
+     */
+    public CharSet getCharSet() {
+        return charSet;
     }
 
     /**
      * Sets the encoding to expect when reading the message from a file.
      * <p>Will be ignored if the message has been specified inline.</p>
-     * @param encoding the name of the charset used
+     * @param encoding the name of the encoding used
      * @since Ant 1.9.4
      */
     public void setMessageFileInputEncoding(String encoding) {
-        messageFileInputEncoding = encoding;
+        setMessageFileInputCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Sets the charset to expect when reading the message from a file.
+     * <p>Will be ignored if the message has been specified inline.</p>
+     * @param charSet the name of the charset used
+     */
+    public void setMessageFileInputCharSet(CharSet charSet) {
+        messageFileInputCharSet = charSet;
     }
 
 }

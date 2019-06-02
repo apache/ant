@@ -19,6 +19,7 @@ package org.apache.tools.ant.types.resources;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Reference;
 import org.junit.After;
@@ -52,7 +53,7 @@ public class ResourceListTest {
     public void testEmptyElementSetEncodingThenRefid() {
         thrown.expect(BuildException.class);
         thrown.expectMessage("You must not specify more than one attribute when using refid");
-        rl.setEncoding("foo");
+        rl.setCharSet(CharSet.getAscii());
         rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
     }
 
@@ -61,7 +62,7 @@ public class ResourceListTest {
         thrown.expect(BuildException.class);
         thrown.expectMessage("You must not specify more than one attribute when using refid");
         rl.setRefid(new Reference(buildRule.getProject(), "dummyref"));
-        rl.setEncoding("foo");
+        rl.setCharSet(CharSet.getAscii());
     }
 
     @Test

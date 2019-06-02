@@ -83,7 +83,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      *
      * @since Ant 1.6
      */
-    private String encoding;
+    private CharSet encoding = CharSet.getDefault();
 
     /**
      * @since Ant 1.8.0
@@ -138,11 +138,19 @@ public abstract class ArchiveScanner extends DirectoryScanner {
 
     /**
      * Sets encoding of file names.
-     * @param encoding the encoding format
+     * @param encoding the encoding name
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Sets CharSet of file names.
+     * @param charSet the CharSet
+     */
+    public void setCharSet(CharSet charSet) {
+        this.encoding = charSet;
     }
 
     /**
@@ -311,7 +319,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
      * patterns and didn't match any exclude patterns.
      */
     protected abstract void fillMapsFromArchive(Resource archive,
-                                                String encoding,
+                                                CharSet encoding,
                                                 Map<String, Resource> fileEntries,
                                                 Map<String, Resource> matchFileEntries,
                                                 Map<String, Resource> dirEntries,

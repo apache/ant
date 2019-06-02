@@ -28,7 +28,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Manifest.Section;
 import org.apache.tools.ant.types.ArchiveFileSet;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -55,7 +55,6 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.spi.Service;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StreamUtils;
 import org.apache.tools.zip.JarMarker;
 import org.apache.tools.zip.ZipExtraField;
@@ -111,7 +110,7 @@ public class Jar extends Zip {
     private Manifest manifest;
 
     /** The encoding to use when reading in a manifest file */
-    private String manifestEncoding;
+    private CharSet manifestCharSet = CharSet.getUtf8();
 
     /**
      * The file found from the 'manifest' attribute.  This can be
@@ -184,7 +183,7 @@ public class Jar extends Zip {
         super();
         archiveType = "jar";
         emptyBehavior = "create";
-        setEncoding("UTF8");
+        setCharSet(CharSet.getUtf8());
         setZip64Mode(Zip64ModeAttribute.NEVER);
         rootEntries = new Vector<>();
     }
@@ -270,7 +269,16 @@ public class Jar extends Zip {
      * @param manifestEncoding the character encoding
      */
     public void setManifestEncoding(String manifestEncoding) {
-        this.manifestEncoding = manifestEncoding;
+        setManifestCharSet(new CharSet(manifestEncoding));
+    }
+
+    /**
+     * The charset to use in the manifest file.
+     *
+     * @param manifestCharSet the charset
+     */
+    public void setManifestCharSet(CharSet manifestCharSet) {
+        this.manifestCharSet = manifestCharSet;
     }
 
     /**
@@ -308,7 +316,7 @@ public class Jar extends Zip {
 
     private Manifest getManifest(File manifestFile) {
         try (InputStreamReader isr = new InputStreamReader(
-            Files.newInputStream(manifestFile.toPath()), getManifestCharset())) {
+            Files.newInputStream(manifestFile.toPath()), manifestCharSet.getCharset())) {
             return getManifest(isr);
         } catch (IOException e) {
             throw new BuildException("Unable to read manifest file: "
@@ -541,15 +549,9 @@ public class Jar extends Zip {
         }
         writer.close();
 
-        ByteArrayInputStream bais =
-            new ByteArrayInputStream(baos.toByteArray());
-        try {
-            super.zipFile(bais, zOut, MANIFEST_NAME,
-                          System.currentTimeMillis(), null,
-                          ZipFileSet.DEFAULT_FILE_MODE);
-        } finally {
-            // not really required
-            FileUtils.close(bais);
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray())) {
+            super.zipFile(bais, zOut, MANIFEST_NAME, System.currentTimeMillis(), null,
+                    ZipFileSet.DEFAULT_FILE_MODE);
         }
         super.initZipOutputStream(zOut);
     }
@@ -678,7 +680,7 @@ public class Jar extends Zip {
                 manifest = getManifest(file);
             } else {
                 try (InputStreamReader isr =
-                    new InputStreamReader(is, getManifestCharset())) {
+                    new InputStreamReader(is, manifestCharSet.getCharset())) {
                     manifest = getManifest(isr);
                 }
             }
@@ -694,7 +696,7 @@ public class Jar extends Zip {
                     newManifest = getManifest(file);
                 } else {
                     try (InputStreamReader isr =
-                        new InputStreamReader(is, getManifestCharset())) {
+                        new InputStreamReader(is, manifestCharSet.getCharset())) {
                         newManifest = getManifest(isr);
                     }
                 }
@@ -849,7 +851,7 @@ public class Jar extends Zip {
                     + getDestFile().getAbsolutePath());
 
             try (ZipOutputStream zOut = new ZipOutputStream(getDestFile())) {
-                zOut.setEncoding(getEncoding());
+                zOut.setCharSet(getCharSet());
                 zOut.setUseZip64(getZip64Mode().getMode());
                 if (isCompress()) {
                     zOut.setMethod(ZipOutputStream.DEFLATED);
@@ -1062,7 +1064,7 @@ public class Jar extends Zip {
     protected static void grabFilesAndDirs(String file, List<String> dirs,
                                                  List<String> files)
         throws IOException {
-        try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(file, "utf-8")) {
+        try (org.apache.tools.zip.ZipFile zf = new org.apache.tools.zip.ZipFile(file, Manifest.JAR_CHARSET)) {
             Set<String> dirSet = new HashSet<>();
             StreamUtils.enumerationAsStream(zf.getEntries()).forEach(ze -> {
                 String name = ze.getName();
@@ -1116,20 +1118,6 @@ public class Jar extends Zip {
             }
         }
         return manifests;
-    }
-
-    private Charset getManifestCharset() {
-        if (manifestEncoding == null) {
-            return Charset.defaultCharset();
-        }
-        try {
-            return Charset.forName(manifestEncoding);
-        } catch (IllegalArgumentException e) {
-            throw new BuildException(
-                "Unsupported encoding while reading manifest: "
-                    + e.getMessage(),
-                e);
-        }
     }
 
     /** The strict enumerated type. */

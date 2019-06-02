@@ -94,19 +94,25 @@ public class RedirectorElement extends DataType {
     private Vector<FilterChain> errorFilterChains = new Vector<>();
 
     /** The output encoding */
-    private String outputEncoding;
+    private CharSet outputCharSet = CharSet.getDefault();
 
     /** The error encoding */
-    private String errorEncoding;
+    private CharSet errorCharSet = CharSet.getDefault();
 
     /** The input encoding */
-    private String inputEncoding;
+    private CharSet inputCharSet = CharSet.getDefault();
 
     /** whether to log the inputstring */
     private Boolean logInputString;
 
     /** Is the output binary or can we safely split it into lines? */
     private boolean outputIsBinary = false;
+
+    private boolean hasOutputCharSet = false;
+
+    private boolean hasErrorCharSet = false;
+
+    private boolean hasInputCharSet = false;
 
     /**
      * Add the input file mapper.
@@ -184,9 +190,9 @@ public class RedirectorElement extends DataType {
             || logError != null
             || append != null
             || createEmptyFiles != null
-            || inputEncoding != null
-            || outputEncoding != null
-            || errorEncoding != null
+            || hasOutputCharSet
+            || hasInputCharSet
+            || hasErrorCharSet
             || outputProperty != null
             || errorProperty != null
             || logInputString != null) {
@@ -264,7 +270,7 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        this.outputEncoding = outputEncoding;
+        setOutputCharSet(new CharSet(outputEncoding));
     }
 
     /**
@@ -276,7 +282,7 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        this.errorEncoding = errorEncoding;
+        setErrorCharSet(new CharSet(errorEncoding));
     }
 
     /**
@@ -287,7 +293,44 @@ public class RedirectorElement extends DataType {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        this.inputEncoding = inputEncoding;
+        setInputCharSet(new CharSet(inputEncoding));
+    }
+
+    /**
+     * Set the output encoding.
+     * @param outputCharSet   <code>CharSet</code>.
+     */
+    public void setOutputCharSet(CharSet outputCharSet) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        this.outputCharSet = outputCharSet;
+        hasOutputCharSet = true;
+    }
+
+    /**
+     * Set the error encoding.
+     *
+     * @param errorCharSet   <code>CharSet</code>.
+     */
+    public void setErrorCharSet(CharSet errorCharSet) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        this.errorCharSet = errorCharSet;
+        hasErrorCharSet = true;
+    }
+
+    /**
+     * Set the input encoding.
+     * @param inputCharSet   <code>String</code>.
+     */
+    public void setInputCharSet(CharSet inputCharSet) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        this.inputCharSet = inputCharSet;
+        hasInputCharSet = true;
     }
 
     /**
@@ -538,14 +581,14 @@ public class RedirectorElement extends DataType {
         if (!errorFilterChains.isEmpty()) {
             redirector.setErrorFilterChains(errorFilterChains);
         }
-        if (inputEncoding != null) {
-            redirector.setInputEncoding(inputEncoding);
+        if (hasInputCharSet) {
+            redirector.setInputCharSet(inputCharSet);
         }
-        if (outputEncoding != null) {
-            redirector.setOutputEncoding(outputEncoding);
+        if (hasOutputCharSet) {
+            redirector.setOutputCharSet(outputCharSet);
         }
-        if (errorEncoding != null) {
-            redirector.setErrorEncoding(errorEncoding);
+        if (hasErrorCharSet) {
+            redirector.setErrorCharSet(errorCharSet);
         }
         redirector.setBinaryOutput(outputIsBinary);
     }

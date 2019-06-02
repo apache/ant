@@ -38,6 +38,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.util.ConcatFileInputStream;
 import org.apache.tools.ant.util.FileUtils;
@@ -57,9 +58,6 @@ import org.apache.tools.ant.util.TeeOutputStream;
  */
 public class Redirector {
     private static final int STREAMPUMPER_WAIT_INTERVAL = 1000;
-
-    private static final String DEFAULT_ENCODING = System
-            .getProperty("file.encoding");
 
     private class PropertyOutputStream extends ByteArrayOutputStream {
         private final String property;
@@ -167,14 +165,14 @@ public class Redirector {
     /** The input filter chains */
     private Vector<FilterChain> inputFilterChains;
 
-    /** The output encoding */
-    private String outputEncoding = DEFAULT_ENCODING;
+    /** The output charset */
+    private CharSet outputCharSet = CharSet.getDefault();
 
-    /** The error encoding */
-    private String errorEncoding = DEFAULT_ENCODING;
+    /** The error charset */
+    private CharSet errorCharSet = CharSet.getDefault();
 
-    /** The input encoding */
-    private String inputEncoding = DEFAULT_ENCODING;
+    /** The input charset */
+    private CharSet inputCharSet = CharSet.getDefault();
 
     /** Whether to complete properties settings **/
     private boolean appendProperties = true;
@@ -316,13 +314,7 @@ public class Redirector {
      *            <code>String</code>.
      */
     public void setOutputEncoding(final String outputEncoding) {
-        if (outputEncoding == null) {
-            throw new IllegalArgumentException(
-                    "outputEncoding must not be null");
-        }
-        synchronized (outMutex) {
-            this.outputEncoding = outputEncoding;
-        }
+        setOutputCharSet(new CharSet(outputEncoding));
     }
 
     /**
@@ -332,12 +324,7 @@ public class Redirector {
      *            <code>String</code>.
      */
     public void setErrorEncoding(final String errorEncoding) {
-        if (errorEncoding == null) {
-            throw new IllegalArgumentException("errorEncoding must not be null");
-        }
-        synchronized (errMutex) {
-            this.errorEncoding = errorEncoding;
-        }
+        setErrorCharSet(new CharSet(errorEncoding));
     }
 
     /**
@@ -347,11 +334,42 @@ public class Redirector {
      *            <code>String</code>.
      */
     public void setInputEncoding(final String inputEncoding) {
-        if (inputEncoding == null) {
-            throw new IllegalArgumentException("inputEncoding must not be null");
+        setInputCharSet(new CharSet(inputEncoding));
+    }
+
+    /**
+     * Set the output charset.
+     *
+     * @param outputCharSet
+     *            <code>CharSet</code>.
+     */
+    public void setOutputCharSet(final CharSet outputCharSet) {
+        synchronized (outMutex) {
+            this.outputCharSet = outputCharSet;
         }
+    }
+
+    /**
+     * Set the error charset.
+     *
+     * @param errorCharSet
+     *            <code>CharSet</code>.
+     */
+    public void setErrorCharSet(final CharSet errorCharSet) {
+        synchronized (errMutex) {
+            this.errorCharSet = errorCharSet;
+        }
+    }
+
+    /**
+     * Set the input charset.
+     *
+     * @param inputCharSet
+     *            <code>CharSet</code>.
+     */
+    public void setInputCharSet(final CharSet inputCharSet) {
         synchronized (inMutex) {
-            this.inputEncoding = inputEncoding;
+            this.inputCharSet = inputCharSet;
         }
     }
 
@@ -573,7 +591,7 @@ public class Redirector {
             }
 
             if ((outputFilterChains != null && outputFilterChains.size() > 0)
-                    || !outputEncoding.equalsIgnoreCase(inputEncoding)) {
+                    || !outputCharSet.equivalent(inputCharSet)) {
                 try {
                     final LeadPipeInputStream snk = new LeadPipeInputStream();
                     snk.setManagingComponent(managingTask);
@@ -581,7 +599,7 @@ public class Redirector {
                     InputStream outPumpIn = snk;
 
                     Reader reader = new InputStreamReader(outPumpIn,
-                            inputEncoding);
+                            inputCharSet.getCharset());
 
                     if (outputFilterChains != null
                             && outputFilterChains.size() > 0) {
@@ -591,7 +609,7 @@ public class Redirector {
                         helper.setFilterChains(outputFilterChains);
                         reader = helper.getAssembledReader();
                     }
-                    outPumpIn = new ReaderInputStream(reader, outputEncoding);
+                    outPumpIn = new ReaderInputStream(reader, outputCharSet.getCharset());
 
                     final Thread t = new Thread(threadGroup, new StreamPumper(
                             outPumpIn, outputStream, true), "output pumper");
@@ -615,7 +633,7 @@ public class Redirector {
             }
 
             if ((errorFilterChains != null && errorFilterChains.size() > 0)
-                    || !errorEncoding.equalsIgnoreCase(inputEncoding)) {
+                    || !errorCharSet.equivalent(inputCharSet)) {
                 try {
                     final LeadPipeInputStream snk = new LeadPipeInputStream();
                     snk.setManagingComponent(managingTask);
@@ -623,7 +641,7 @@ public class Redirector {
                     InputStream errPumpIn = snk;
 
                     Reader reader = new InputStreamReader(errPumpIn,
-                            inputEncoding);
+                            inputCharSet.getCharset());
 
                     if (errorFilterChains != null
                             && errorFilterChains.size() > 0) {
@@ -633,7 +651,7 @@ public class Redirector {
                         helper.setFilterChains(errorFilterChains);
                         reader = helper.getAssembledReader();
                     }
-                    errPumpIn = new ReaderInputStream(reader, errorEncoding);
+                    errPumpIn = new ReaderInputStream(reader, errorCharSet.getCharset());
 
                     final Thread t = new Thread(threadGroup, new StreamPumper(
                             errPumpIn, errorStream, true), "error pumper");
@@ -678,16 +696,11 @@ public class Redirector {
                     && inputFilterChains.size() > 0) {
                 final ChainReaderHelper helper = new ChainReaderHelper();
                 helper.setProject(managingTask.getProject());
-                try {
-                    helper.setPrimaryReader(new InputStreamReader(inputStream,
-                            inputEncoding));
-                } catch (final IOException eyeOhEx) {
-                    throw new BuildException("error setting up input stream",
-                            eyeOhEx);
-                }
+                helper.setPrimaryReader(new InputStreamReader(inputStream,
+                        inputCharSet.getCharset()));
                 helper.setFilterChains(inputFilterChains);
-                inputStream = new ReaderInputStream(
-                        helper.getAssembledReader(), inputEncoding);
+                inputStream = new ReaderInputStream(helper.getAssembledReader(),
+                        inputCharSet.getCharset());
             }
         }
     }

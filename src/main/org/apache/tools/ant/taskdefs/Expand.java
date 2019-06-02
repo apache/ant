@@ -34,6 +34,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.PatternSet;
@@ -59,8 +60,6 @@ import org.apache.tools.zip.ZipFile;
  *           name="unwar"
  */
 public class Expand extends Task {
-    public static final String NATIVE_ENCODING = "native-encoding";
-
     /** Error message when more that one mapper is defined */
     public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
 
@@ -79,13 +78,12 @@ public class Expand extends Task {
     private boolean scanForUnicodeExtraFields = true;
     private Boolean allowFilesToEscapeDest = null;
 
-    private String encoding;
+    private CharSet charSet = CharSet.getUtf8();
 
     /**
      * Creates an Expand instance and sets encoding to UTF-8.
      */
     public Expand() {
-        this("UTF8");
     }
 
     /**
@@ -95,7 +93,16 @@ public class Expand extends Task {
      * @since Ant 1.9.5
      */
     protected Expand(String encoding) {
-        this.encoding = encoding;
+        this.charSet = new CharSet(encoding);
+    }
+
+    /**
+     * Creates an Expand instance and sets the given charset.
+     *
+     * @param charSet CharSet
+     */
+    protected Expand(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**
@@ -182,26 +189,20 @@ public class Expand extends Task {
         log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
         FileNameMapper mapper = getMapper();
         if (!srcF.exists()) {
-            throw new BuildException("Unable to expand "
-                    + srcF
+            throw new BuildException("Unable to expand " + srcF
                     + " as the file does not exist",
                     getLocation());
         }
-        try (ZipFile zf = new ZipFile(srcF, encoding, scanForUnicodeExtraFields)) {
+        try (ZipFile zf = new ZipFile(srcF, charSet.getCharset(), scanForUnicodeExtraFields)) {
             boolean empty = true;
             Enumeration<ZipEntry> entries = zf.getEntries();
             while (entries.hasMoreElements()) {
                 ZipEntry ze = entries.nextElement();
                 empty = false;
-                InputStream is = null;
                 log("extracting " + ze.getName(), Project.MSG_DEBUG);
-                try {
-                    extractFile(fileUtils, srcF, dir,
-                                is = zf.getInputStream(ze), //NOSONAR
-                                ze.getName(), new Date(ze.getTime()),
-                                ze.isDirectory(), mapper);
-                } finally {
-                    FileUtils.close(is);
+                try (InputStream is = zf.getInputStream(ze)) {
+                    extractFile(fileUtils, srcF, dir, is, ze.getName(), new Date(ze.getTime()),
+                            ze.isDirectory(), mapper);
                 }
             }
             if (empty && getFailOnEmptyArchive()) {
@@ -209,8 +210,7 @@ public class Expand extends Task {
             }
             log("expand complete", Project.MSG_VERBOSE);
         } catch (IOException ioe) {
-            throw new BuildException(
-                "Error while expanding " + srcF.getPath()
+            throw new BuildException("Error while expanding " + srcF.getPath()
                 + "\n" + ioe.toString(),
                 ioe);
         }
@@ -454,17 +454,27 @@ public class Expand extends Task {
         createMapper().add(fileNameMapper);
     }
 
-
     /**
      * Sets the encoding to assume for file names and comments.
      *
      * <p>Set to <code>native-encoding</code> if you want your
-     * platform's native encoding, defaults to UTF8.</p>
+     * platform encoding, defaults to UTF-8.</p>
      * @param encoding the name of the character encoding
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
         internalSetEncoding(encoding);
+    }
+
+    /**
+     * Sets the encoding to assume for file names and comments.
+     *
+     * <p>Set to <code>native-encoding</code> if you want your
+     * platform encoding, defaults to UTF-8.</p>
+     * @param charSet the name of the charset
+     */
+    public void setCharSet(CharSet charSet) {
+        internalSetCharSet(charSet);
     }
 
     /**
@@ -476,10 +486,18 @@ public class Expand extends Task {
      * @since Ant 1.8.0
      */
     protected void internalSetEncoding(String encoding) {
-        if (NATIVE_ENCODING.equals(encoding)) {
-            encoding = null;
-        }
-        this.encoding = encoding;
+        internalSetCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Supports grand-children that want to support the attribute
+     * where the child-class doesn't (i.e. Unzip in the compress
+     * Antlib).
+     *
+     * @param charSet CharSet
+     */
+    protected void internalSetCharSet(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**
@@ -487,7 +505,14 @@ public class Expand extends Task {
      * @since Ant 1.8.0
      */
     public String getEncoding() {
-        return encoding;
+        return charSet.getValue();
+    }
+
+    /**
+     * @return String
+     */
+    public CharSet getCharSet() {
+        return charSet;
     }
 
     /**

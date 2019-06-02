@@ -20,9 +20,7 @@ package org.apache.tools.ant.taskdefs.email;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -30,6 +28,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.types.CharSet;
 
 /**
  * Class representing an email message.
@@ -41,8 +40,9 @@ public class Message extends ProjectComponent {
     private StringBuffer buffer = new StringBuffer();
     private String mimeType = "text/plain";
     private boolean specified = false;
-    private String charset = null;
-    private String inputEncoding;
+    private CharSet charSet = CharSet.getDefault();
+    private boolean hasCharSet = false;
+    private CharSet inputCharSet = CharSet.getDefault();
 
     /** Creates a new empty message  */
     public Message() {
@@ -115,8 +115,7 @@ public class Message extends ProjectComponent {
         // So, using BufferedWriter over OutputStreamWriter instead of PrintStream
         BufferedWriter out = null;
         try {
-            out = charset == null ? new BufferedWriter(new OutputStreamWriter(ps))
-                    : new BufferedWriter(new OutputStreamWriter(ps, charset));
+            out = new BufferedWriter(new OutputStreamWriter(ps, charSet.getCharset()));
             if (messageSource != null) {
                 // Read message from a file
                 try (BufferedReader in = new BufferedReader(getReader(messageSource))) {
@@ -152,39 +151,65 @@ public class Message extends ProjectComponent {
      * @since Ant 1.6
      */
     public void setCharset(String charset) {
-        this.charset = charset;
+        setCharSet(new CharSet(charset));
     }
 
     /**
      * Returns the charset of mail message.
      *
-     * @return Charset of mail message.
+     * @return charset of mail message.
      * @since Ant 1.6
      */
     public String getCharset() {
-        return charset;
+        return charSet.getValue();
     }
 
     /**
-     * Sets the encoding to expect when reading the message from a file.
+     * Sets the CharSet of mail message.
+     * Will be ignored if mimeType contains ....; Charset=... substring.
+     * @param charSet the CharSet.
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
+        hasCharSet = true;
+    }
+
+    /**
+     * Returns the CharSet of mail message.
+     *
+     * @return CharSet of mail message.
+     */
+    public CharSet getCharSet() {
+        return charSet;
+    }
+
+    /**
+     * Sets the character encoding to expect when reading the message from a file.
      * <p>Will be ignored if the message has been specified inline.</p>
-     * @param encoding the name of the charset used
+     * @param encoding the name of the character encoding used
      * @since Ant 1.9.4
      */
     public void setInputEncoding(String encoding) {
-        this.inputEncoding = encoding;
+        setInputCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Sets the charset to expect when reading the message from a file.
+     * <p>Will be ignored if the message has been specified inline.</p>
+     * @param charSet the charset used
+     */
+    public void setInputCharSet(CharSet charSet) {
+        this.inputCharSet = charSet;
+    }
+
+    /**
+     * @return true if charset attribute is set explicitly
+     */
+    public boolean hasCharSet() {
+        return hasCharSet;
     }
 
     private Reader getReader(File f) throws IOException {
-        if (inputEncoding != null) {
-            InputStream fis = Files.newInputStream(f.toPath());
-            try {
-                return new InputStreamReader(fis, inputEncoding);
-            } catch (IOException ex) {
-                fis.close();
-                throw ex;
-            }
-        }
-        return new FileReader(f);
+        return new InputStreamReader(Files.newInputStream(f.toPath()), inputCharSet.getCharset());
     }
 }

@@ -27,12 +27,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Resource;
@@ -131,7 +131,7 @@ public class ReplaceRegExp extends Task {
     /**
      * Encoding to assume for the files
      */
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
 
     /** Default Constructor  */
     public ReplaceRegExp() {
@@ -238,13 +238,23 @@ public class ReplaceRegExp extends Task {
 
     /**
      * Specifies the encoding Ant expects the files to be in -
-     * defaults to the platforms default encoding.
+     * defaults to the platform encoding.
      *
      * @param encoding the encoding attribute
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Specifies the charset Ant expects the files to be in -
+     * defaults to the platform charset.
+     *
+     * @param charSet the charset attribute
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**
@@ -354,14 +364,13 @@ public class ReplaceRegExp extends Task {
         try {
             boolean changes = false;
 
-            final Charset charset = encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
             try (InputStream is = Files.newInputStream(f.toPath());
                  OutputStream os = Files.newOutputStream(temp.toPath())) {
                 Reader r = null;
                 Writer w = null;
                 try {
-                    r = new InputStreamReader(is, charset);
-                    w = new OutputStreamWriter(os, charset);
+                    r = new InputStreamReader(is, charSet.getCharset());
+                    w = new OutputStreamWriter(os, charSet.getCharset());
                     log("Replacing pattern '" + regex.getPattern(getProject())
                         + "' with '" + subs.getExpression(getProject())
                         + "' in '" + f.getPath() + "'" + (byline ? " by line" : "")

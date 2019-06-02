@@ -20,6 +20,7 @@ package org.apache.tools.ant.util;
 import java.io.File;
 
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -31,7 +32,8 @@ import org.apache.tools.ant.types.resources.Union;
 public class ScriptRunnerHelper {
     private ClasspathUtils.Delegate cpDelegate = null;
     private File    srcFile;
-    private String  encoding;
+    private CharSet charSet = CharSet.getDefault();
+    private boolean hasCharSet = false;
     private String  manager = "auto";
     private String  language;
     private String  text;
@@ -56,11 +58,11 @@ public class ScriptRunnerHelper {
     public ScriptRunnerBase getScriptRunner() {
         ScriptRunnerBase runner = getRunner();
         runner.setCompiled(compiled);
-
-        if (encoding != null) {
-            // set it first, because runner.setSrc() loads immediately the file
-            runner.setEncoding(encoding);
+        if (hasCharSet) {
+            // set it first, because runner.setSrc() loads the file immediately
+            runner.setCharSet(charSet);
         }
+
         if (srcFile != null) {
             runner.setSrc(srcFile);
         }
@@ -131,7 +133,7 @@ public class ScriptRunnerHelper {
      * @since Ant 1.10.2
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
     }
 
     /**
@@ -140,7 +142,25 @@ public class ScriptRunnerHelper {
      * @since Ant 1.10.2
      */
     public String getEncoding() {
-        return encoding;
+        return charSet.getValue();
+    }
+
+    /**
+     * Set the encoding of the script from an external file; optional.
+     *
+     * @param cs the encoding of the file containing the script source.
+     */
+    public void setCharSet(CharSet cs) {
+        this.charSet = cs;
+        hasCharSet = true;
+    }
+
+    /**
+     * Get the external file encoding.
+     * @return the encoding of the file containing the script source.
+     */
+    public CharSet getCharSet() {
+        return charSet;
     }
 
     /**
@@ -260,5 +280,9 @@ public class ScriptRunnerHelper {
      */
     public void add(ResourceCollection resource) {
         resources.add(resource);
+    }
+
+    public boolean hasCharSet() {
+        return hasCharSet;
     }
 }

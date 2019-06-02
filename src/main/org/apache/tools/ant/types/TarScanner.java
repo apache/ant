@@ -48,7 +48,7 @@ public class TarScanner extends ArchiveScanner {
      * resources found inside the archive that matched all include
      * patterns and didn't match any exclude patterns.
      */
-    protected void fillMapsFromArchive(Resource src, String encoding,
+    protected void fillMapsFromArchive(Resource src, CharSet encoding,
             Map<String, Resource> fileEntries, Map<String, Resource> matchFileEntries,
             Map<String, Resource> dirEntries, Map<String, Resource> matchDirEntries) {
 

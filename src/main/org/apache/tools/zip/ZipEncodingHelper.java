@@ -18,10 +18,11 @@
 
 package org.apache.tools.zip;
 
+import org.apache.tools.ant.types.CharSet;
+
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -155,15 +156,15 @@ public abstract class ZipEncodingHelper {
         on.put(b);
         return on;
     }
-    
+
     /**
      * Prepares a buffer to be read after writing.
-     * 
+     *
      * @param b The buffer
      */
     static void prepareBufferForRead(final Buffer b) {
-    	// ByteBuffer has overridden methods in java 11 but not in java 8 
-    	// so the Buffer is significant to get java 8 compatible classes
+    	// ByteBuffer has overridden methods in Java 9+
+    	// use Buffer for Java 8 compatibility
     	b.limit(b.position());
     	b.rewind();
     }
@@ -200,12 +201,7 @@ public abstract class ZipEncodingHelper {
     /**
      * name of the encoding UTF-8
      */
-    static final String UTF8 = "UTF8";
-
-    /**
-     * variant name of the encoding UTF-8 used for comparisons.
-     */
-    private static final String UTF_DASH_8 = "utf-8";
+    static final String UTF8 = StandardCharsets.UTF_8.name();
 
     /**
      * name of the encoding UTF-8
@@ -215,47 +211,48 @@ public abstract class ZipEncodingHelper {
     /**
      * Instantiates a zip encoding.
      *
-     * @param name The name of the zip encoding. Specify {@code null} for
-     *             the platform's default encoding.
+     * @param name The non-null name of the zip encoding.
+     *             Specify "" for the platform encoding.
+     *             NB! {@code null} is permitted for backwards compatibility.
      * @return A zip encoding for the given encoding name.
      */
     public static ZipEncoding getZipEncoding(final String name) {
-
-        // fallback encoding is good enough for utf-8.
-        if (isUTF8(name)) {
-            return UTF8_ZIP_ENCODING;
-        }
-
-        if (name == null) {
-            return new FallbackZipEncoding();
-        }
-
-        final SimpleEncodingHolder h = simpleEncodings.get(name);
-
-        if (h != null) {
-            return h.getEncoding();
-        }
-
-        try {
-
-            final Charset cs = Charset.forName(name);
-            return new NioZipEncoding(cs);
-
-        } catch (final UnsupportedCharsetException e) {
-            return new FallbackZipEncoding(name);
-        }
+        return (name == null && !isUTF8("")) ? new FallbackZipEncoding()
+                : getZipEncoding(new CharSet(name));
     }
 
     /**
-     * Whether a given encoding - or the platform's default encoding
-     * if the parameter is null - is UTF-8.
+     * Instantiates a zip encoding.
+     *
+     * @param cs The charset of the zip encoding.
+     * @return A zip encoding for the given encoding name.
+     */
+    public static ZipEncoding getZipEncoding(final CharSet cs) {
+        // fallback encoding is good enough for UTF-8.
+        if (isUTF8(cs)) {
+            return UTF8_ZIP_ENCODING;
+        }
+
+        final SimpleEncodingHolder h = simpleEncodings.get(cs.getValue());
+        return (h == null) ? new NioZipEncoding(cs.getCharset()) : h.getEncoding();
+    }
+
+    /**
+     * Whether a given encoding is UTF-8.
+     *
+     * @param encoding The non-null name of an encoding.
+     *                 Specify "" for platform encoding
      */
     static boolean isUTF8(String encoding) {
-        if (encoding == null) {
-            // check platform's default encoding
-            encoding = System.getProperty("file.encoding");
-        }
-        return UTF8.equalsIgnoreCase(encoding)
-            || UTF_DASH_8.equalsIgnoreCase(encoding);
+        return isUTF8(new CharSet(encoding));
+    }
+
+    /**
+     * Whether a given charset is UTF-8.
+     *
+     * @param charSet a CharSet
+     */
+    static boolean isUTF8(CharSet charSet) {
+        return charSet.equivalent(CharSet.getUtf8());
     }
 }

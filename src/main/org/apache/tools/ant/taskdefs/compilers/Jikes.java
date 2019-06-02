@@ -103,9 +103,9 @@ public class Jikes extends DefaultCompilerAdapter {
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
 
-        if (encoding != null) {
+        if (hasCharset()) {
             cmd.createArgument().setValue("-encoding");
-            cmd.createArgument().setValue(encoding);
+            cmd.createArgument().setValue(charSet.getValue());
         }
         if (debug) {
             String debugLevel = attributes.getDebugLevel();

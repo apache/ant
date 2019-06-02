@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.zip.ZipEncoding;
 import org.apache.tools.zip.ZipEncodingHelper;
 
@@ -91,7 +92,7 @@ public class TarOutputStream extends FilterOutputStream {
 
     private boolean addPaxHeadersForNonAsciiNames = false;
     private static final ZipEncoding ASCII =
-        ZipEncodingHelper.getZipEncoding("ASCII");
+        ZipEncodingHelper.getZipEncoding(CharSet.getAscii());
 
     /**
      * Constructor for TarInputStream.
@@ -110,6 +111,16 @@ public class TarOutputStream extends FilterOutputStream {
      */
     public TarOutputStream(OutputStream os, String encoding) {
         this(os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE, encoding);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     *
+     * @param os the output stream to use
+     * @param charSet name of the CharSet to use for file names
+     */
+    public TarOutputStream(OutputStream os, CharSet charSet) {
+        this(os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE, charSet);
     }
 
     /**
@@ -138,10 +149,21 @@ public class TarOutputStream extends FilterOutputStream {
      *
      * @param os the output stream to use
      * @param blockSize the block size to use
+     * @param charSet name of the CharSet to use for file names
+     */
+    public TarOutputStream(OutputStream os, int blockSize, CharSet charSet) {
+        this(os, blockSize, TarBuffer.DEFAULT_RCDSIZE, charSet);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     *
+     * @param os the output stream to use
+     * @param blockSize the block size to use
      * @param recordSize the record size to use
      */
     public TarOutputStream(OutputStream os, int blockSize, int recordSize) {
-        this(os, blockSize, recordSize, null);
+        this(os, blockSize, recordSize, CharSet.getDefault());
     }
 
     /**
@@ -154,8 +176,21 @@ public class TarOutputStream extends FilterOutputStream {
      */
     public TarOutputStream(OutputStream os, int blockSize, int recordSize,
                            String encoding) {
+        this(os, blockSize, recordSize, new CharSet(encoding));
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     *
+     * @param os the output stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     * @param charSet name of the CharSet to use for file names
+     */
+    public TarOutputStream(OutputStream os, int blockSize, int recordSize,
+                           CharSet charSet) {
         super(os);
-        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
+        this.encoding = ZipEncodingHelper.getZipEncoding(charSet);
 
         this.buffer = new TarBuffer(os, blockSize, recordSize);
         this.debug = false;

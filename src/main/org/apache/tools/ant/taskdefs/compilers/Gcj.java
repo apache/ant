@@ -98,8 +98,8 @@ public class Gcj extends DefaultCompilerAdapter {
         cmd.createArgument().setValue("-classpath");
         cmd.createArgument().setPath(classpath);
 
-        if (encoding != null) {
-            cmd.createArgument().setValue("--encoding=" + encoding);
+        if (hasCharset()) {
+            cmd.createArgument().setValue("--encoding=" + charSet.getValue());
         }
         if (debug) {
             cmd.createArgument().setValue("-g1");
