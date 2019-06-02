@@ -28,7 +28,8 @@
 
  - the "java" executable/script is on the command path
 """
-import os, os.path, string, sys
+import os.path
+import sys
 
 # Change it to 1 to get extra debug information
 debug = 0
@@ -36,7 +37,7 @@ debug = 0
 #######################################################################
 
 # If ANT_HOME is not set default to script's parent directory
-if os.environ.has_key('ANT_HOME'):
+if 'ANT_HOME' in os.environ:
     ANT_HOME = os.environ['ANT_HOME']
 else:
     ANT_HOME = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
@@ -46,17 +47,17 @@ ANT_LIB = os.path.join(ANT_HOME, 'lib')
 
 # set JAVACMD (check variables JAVACMD and JAVA_HOME)
 JAVACMD = None
-if not os.environ.has_key('JAVACMD'):
-    if os.environ.has_key('JAVA_HOME'):
+if 'JAVACMD' not in os.environ:
+    if 'JAVA_HOME' in os.environ:
         if not os.path.exists(os.environ['JAVA_HOME']):
-            print "Warning: JAVA_HOME is not defined correctly."
+            print("Warning: JAVA_HOME is not defined correctly.")
         else:
             JAVA_HOME = os.environ['JAVA_HOME']
             while JAVA_HOME[0] == JAVA_HOME[-1] == "\"":
                 JAVA_HOME = JAVA_HOME[1:-1]
             JAVACMD = os.path.join(JAVA_HOME, 'bin', 'java')
     else:
-        print "Warning: JAVA_HOME not set."
+        print("Warning: JAVA_HOME not set.")
 else:
     JAVACMD = os.environ['JAVACMD']
 if not JAVACMD:
@@ -64,41 +65,41 @@ if not JAVACMD:
 
 launcher_jar = os.path.join(ANT_LIB, 'ant-launcher.jar')
 if not os.path.exists(launcher_jar):
-    print 'Warning: Unable to locate ant-launcher.jar. Expected to find it in %s' % \
-        ANT_LIB
+    print('Warning: Unable to locate ant-launcher.jar. Expected to find it ' +
+          'in %s' % ANT_LIB)
 
 # Build up standard classpath (LOCALCLASSPATH)
 LOCALCLASSPATH = launcher_jar
-if os.environ.has_key('LOCALCLASSPATH'):
+if 'LOCALCLASSPATH' in os.environ:
     LOCALCLASSPATH += os.pathsep + os.environ['LOCALCLASSPATH']
 
 ANT_OPTS = ""
-if os.environ.has_key('ANT_OPTS'):
+if 'ANT_OPTS' in os.environ:
     ANT_OPTS = os.environ['ANT_OPTS']
 
 OPTS = ""
-if os.environ.has_key('JIKESPATH'):
+if 'JIKESPATH' in os.environ:
     OPTS = '-Djikes.class.path=\"%s\"' % os.environ['JIKESPATH']
 
 ANT_ARGS = ""
-if os.environ.has_key('ANT_ARGS'):
+if 'ANT_ARGS' in os.environ:
     ANT_ARGS = os.environ['ANT_ARGS']
 
 CLASSPATH = ""
-if os.environ.has_key('CLASSPATH'):
+if 'CLASSPATH' in os.environ:
     CLASSPATH = "-lib " + os.environ['CLASSPATH']
 
 while JAVACMD[0] == JAVACMD[-1] == "\"":
     JAVACMD = JAVACMD[1:-1]
 
 # Builds the commandline
-cmdline = ('"%s" %s -classpath %s -Dant.home=%s %s ' + \
-    'org.apache.tools.ant.launch.Launcher %s %s %s') \
-     % (JAVACMD, ANT_OPTS, LOCALCLASSPATH, ANT_HOME, OPTS, ANT_ARGS, \
-        CLASSPATH, string.join(sys.argv[1:], ' '))
+cmdline = ('"%s" %s -classpath %s -Dant.home=%s %s ' +
+           'org.apache.tools.ant.launch.Launcher %s %s %s') \
+          % (JAVACMD, ANT_OPTS, LOCALCLASSPATH, ANT_HOME, OPTS, ANT_ARGS,
+             CLASSPATH, ' '.join(sys.argv[1:]))
 
 if debug:
-    print '\n%s\n\n' % (cmdline)
+    print('\n%s\n\n' % cmdline)
 sys.stdout.flush()
 
 # Run the biniou!
