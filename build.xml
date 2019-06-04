@@ -106,6 +106,7 @@
   <property name="optimize" value="true"/>
   <property name="javac.target" value="1.8"/>
   <property name="javac.source" value="1.8"/>
+  <property name="javac.release" value="8"/>
   <property name="junit.filtertrace" value="off"/>
   <property name="junit.summary" value="no"/>
   <property name="test.haltonfailure" value="false"/>
@@ -594,57 +595,8 @@
          Build the code
        ===================================================================
   -->
-  <target name="build" depends="prepare"
+  <target name="build" depends="prepare, compile, compile-jdk9+"
           description="--> compiles the source code">
-    <mkdir dir="${build.dir}"/>
-    <mkdir dir="${build.classes}"/>
-    <mkdir dir="${build.lib}"/>
-
-    <javac srcdir="${java.dir}"
-           includeantruntime="false"
-           destdir="${build.classes}"
-           debug="${debug}"
-           deprecation="${deprecation}"
-           excludes="${optional.package}/junitlauncher/confined/**"
-           target="${javac.target}"
-           source="${javac.source}"
-           optimize="${optimize}">
-      <classpath refid="classpath"/>
-
-      <selector id="conditional-patterns">
-        <not>
-          <or>
-            <selector refid="needs.jdk9+" unless="jdk9+"/>
-            <selector refid="not.in.kaffe" if="kaffe"/>
-            <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
-            <selector refid="needs.junit" unless="junit.present"/> <!-- TODO should perhaps use -source 1.4? -->
-            <selector refid="needs.junit4" unless="junit4.present"/>
-            <selector refid="needs.junitlauncher" unless="junitlauncher.present"/>
-            <selector refid="needs.junit.engine.vintage" unless="junit.engine.vintage.present"/>
-            <selector refid="needs.junit.engine.jupiter" unless="junit.engine.jupiter.present"/>
-            <selector refid="needs.apache-regexp" unless="apache.regexp.present"/>
-            <selector refid="needs.apache-oro" unless="apache.oro.present"/>
-            <selector refid="needs.apache-bcel" unless="bcel.present"/>
-            <selector refid="needs.apache-log4j" unless="log4j.present"/>
-            <selector refid="needs.commons-logging" unless="commons.logging.present"/>
-            <selector refid="needs.apache-bsf" unless="bsf.present"/>
-            <selector refid="needs.javamail" unless="javamail.present"/>
-            <selector refid="needs.netrexx" unless="netrexx.present"/>
-            <selector refid="needs.commons-net" unless="commons.net.present"/>
-            <selector refid="needs.antlr" unless="antlr.present"/>
-            <selector refid="needs.imageio" unless="imageio.present"/>
-            <selector refid="needs.jmf" unless="jmf.present"/>
-            <selector refid="needs.jai" unless="jai.present"/>
-            <selector refid="needs.jdepend" unless="jdepend.present"/>
-            <selector refid="needs.swing" unless="swing.present"/>
-            <selector refid="needs.jsch" unless="jsch.present"/>
-            <selector refid="needs.xz" unless="xz.present"/>
-            <selector refid="needs.xmlschema" unless="xmlschema.present"/>
-            <selector refid="needs.apache-xalan2" unless="recent.xalan2.present"/>
-          </or>
-        </not>
-      </selector>
-    </javac>
 
     <!-- Builds and verifies that the classes belonging in the confined package of
     junitlauncher task do not depend on classes they aren't meant to -->
@@ -659,6 +611,7 @@
            includes="${optional.package}/junitlauncher/confined/**"
            target="${javac.target}"
            source="${javac.source}"
+           release="${javac.release}"
            optimize="${optimize}">
       <classpath>
         <!-- A very limited classpath which only doesn't include optional libraries,
@@ -699,6 +652,77 @@
         <include name="junit-noframes-saxon.xsl"/>
       </fileset>
     </copy>
+  </target>
+
+  <target name="compile" depends="prepare">
+    <mkdir dir="${build.classes}"/>
+    <javac srcdir="${java.dir}"
+           includeantruntime="false"
+           destdir="${build.classes}"
+           debug="${debug}"
+           deprecation="${deprecation}"
+           excludes="${optional.package}/junitlauncher/confined/**"
+           target="${javac.target}"
+           source="${javac.source}"
+           release="${javac.release}"
+           optimize="${optimize}">
+      <classpath refid="classpath"/>
+
+      <selector id="conditional-patterns">
+        <not>
+          <or>
+            <selector refid="needs.jdk9+"/>
+            <selector refid="not.in.kaffe" if="kaffe"/>
+            <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
+            <selector refid="needs.junit" unless="junit.present"/> <!-- TODO should perhaps use -source 1.4? -->
+            <selector refid="needs.junit4" unless="junit4.present"/>
+            <selector refid="needs.junitlauncher" unless="junitlauncher.present"/>
+            <selector refid="needs.junit.engine.vintage" unless="junit.engine.vintage.present"/>
+            <selector refid="needs.junit.engine.jupiter" unless="junit.engine.jupiter.present"/>
+            <selector refid="needs.apache-regexp" unless="apache.regexp.present"/>
+            <selector refid="needs.apache-oro" unless="apache.oro.present"/>
+            <selector refid="needs.apache-bcel" unless="bcel.present"/>
+            <selector refid="needs.apache-log4j" unless="log4j.present"/>
+            <selector refid="needs.commons-logging" unless="commons.logging.present"/>
+            <selector refid="needs.apache-bsf" unless="bsf.present"/>
+            <selector refid="needs.javamail" unless="javamail.present"/>
+            <selector refid="needs.netrexx" unless="netrexx.present"/>
+            <selector refid="needs.commons-net" unless="commons.net.present"/>
+            <selector refid="needs.antlr" unless="antlr.present"/>
+            <selector refid="needs.imageio" unless="imageio.present"/>
+            <selector refid="needs.jmf" unless="jmf.present"/>
+            <selector refid="needs.jai" unless="jai.present"/>
+            <selector refid="needs.jdepend" unless="jdepend.present"/>
+            <selector refid="needs.swing" unless="swing.present"/>
+            <selector refid="needs.jsch" unless="jsch.present"/>
+            <selector refid="needs.xz" unless="xz.present"/>
+            <selector refid="needs.xmlschema" unless="xmlschema.present"/>
+            <selector refid="needs.apache-xalan2" unless="recent.xalan2.present"/>
+          </or>
+        </not>
+      </selector>
+    </javac>
+  </target>
+
+  <target name="compile-jdk9+" depends="prepare" if="jdk9+">
+    <mkdir dir="${build.classes}"/>
+
+    <javac srcdir="${java.dir}"
+           includeantruntime="false"
+           destdir="${build.classes}"
+           debug="${debug}"
+           deprecation="${deprecation}"
+           target="${javac.target}"
+           source="${javac.source}"
+           optimize="${optimize}">
+      <classpath refid="classpath"/>
+
+      <selector id="conditional-patterns-jdk9+">
+          <or>
+            <selector refid="needs.jdk9+"/>
+          </or>
+      </selector>
+    </javac>
   </target>
 
   <!--
@@ -1574,6 +1598,7 @@
            debug="${debug}"
            target="${javac.target}"
            source="${javac.source}"
+           release="${javac.release}"
            deprecation="${deprecation}">
       <classpath refid="tests-classpath"/>
 
