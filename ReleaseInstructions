@@ -47,6 +47,12 @@ Note: This document was adapted from the one created in the context of
     while releasing Ant 1.10.x from master branch. Make sure JAVA_HOME
     points to a JDK installation which is minimally Java 9.
 
+    You will need to have the snapcraft CLI tool installed in order to
+    create and publish snap archives. See
+    https://docs.snapcraft.io/snapcraft-overview
+    Also you will need a launchpad id that is a collaborator of Ant's
+    snapcraft store organization, Stefan can add you.
+
 3.  We don't want tags for failed votes to end up on our branches so
     the release is first created from a detached head.
 
@@ -74,6 +80,7 @@ Note: This document was adapted from the one created in the context of
     * ivy.xml in release subdirectory (version should already be correct here)
     * WHATSNEW (version should already be correct here)
     * src/etc/testcases/taskdefs/conditions/antversion.xml (version should already be correct here)
+    * snap/snapcraft.yml
 
 6.  Next bootstrap, build and run the tests.
 
@@ -196,7 +203,23 @@ Note: This document was adapted from the one created in the context of
     "Close" on the top of the table listing the uploads make a note of
     the location of the staging repository for the vote email
 
-14. Once this is committed send a release vote email on dev@ant.
+14. Create the Snap archive and publish it
+
+    You may need to login first
+
+      $ snapcraft login
+
+    And then build and publish
+
+      $ snapcraft clean
+      $ snapcraft snap
+      $ snapcraft push --release candidate ant_*.snap
+
+    This will publish the new release snap to the latest track on the
+    candidate risk level. It will be moved to stable, once the vote
+    has passed.
+
+15. Once this is committed send a release vote email on dev@ant.
     The email will typically mention :
        - the git tag for the release including commit hash,
        - the location of the tarballs, including revision number in
@@ -206,15 +229,15 @@ Note: This document was adapted from the one created in the context of
     The vote will only pass if at least three PMC members have voted +1
     and more +1s than -1s have been cast.  The vote will run for 3 days.
 
-15. If the vote fails, address the problems and recreate the next RC
+16. If the vote fails, address the problems and recreate the next RC
     build.
 
-16. Once the vote has passed, tag the last RC created with the final tag
+17. Once the vote has passed, tag the last RC created with the final tag
 
     $ git tag -s -m "Tagging version 1.10.0 of Ant" rel/1.10.0 HASH_OF_LAST_RC
     $ git push --tags
 
-17. The distrib artifacts should be published the apache dist. It is
+18. The distrib artifacts should be published the apache dist. It is
     managed via svnpubsub so the release should be committed to the
     subversion repository
     https://dist.apache.org/repos/dist/release/ant/.
@@ -234,16 +257,16 @@ Note: This document was adapted from the one created in the context of
       and click the button "Release".
       4 hours later, the artifacts will be in the maven central repository.
       
-18. Update the Apache Reporter System
+19. Update the Apache Reporter System
 
     https://reporter.apache.org/addrelease.html?ant
 
-19. Address the available version tags in BugZilla. Create new
+20. Address the available version tags in BugZilla. Create new
     milestone 1.10.1 and version 1.10.0.
 
-20. Add a new release tag to doap_Ant.rdf in Ant's site.
+21. Add a new release tag to doap_Ant.rdf in Ant's site.
 
-21. checkout the master branch, merge the tag but don't push the
+22. checkout the master branch, merge the tag but don't push the
     commit
 
     [if a release of Ant 1.9.x happened at the same time, deal with
@@ -279,6 +302,7 @@ Note: This document was adapted from the one created in the context of
     * ivy.xml in release subdirectory
     * WHATSNEW (add a new section)
     * src/etc/testcases/taskdefs/conditions/antversion.xml
+    * snap/snapcraft.yml (bump version to [newversion]alpha)
 
     Amend the merge commit
 
@@ -286,9 +310,16 @@ Note: This document was adapted from the one created in the context of
     $ git commit -a --amend
     $ git push
 
-22. wait a few hours for the mirrors to catch up
+23. copy the candidate snaps to stable. First figure out the revision
 
-23. Update the ant.apache.org site :
+    $ snapcraft status ant
+    $ snapcraft release ant REVISION latest/stable 1.10/stable
+
+    where REVISION is the revision you want to promote
+
+24. wait a few hours for the mirrors to catch up
+
+25. Update the ant.apache.org site :
 
     The website is managed here: https://svn.apache.org/repos/asf/ant/site/ant/
 
@@ -314,15 +345,15 @@ Note: This document was adapted from the one created in the context of
     Commit the modified/generated files in the 'production' folder, it will go
     live on ant.apache.org in a matter on seconds.
 
-24. At this point in time, the release is done and announcements are made.
+26. At this point in time, the release is done and announcements are made.
     PGP-sign your announcement posts.
 
     Apache mailing lists that should get the announcements:
     announce@apache.org, dev@ant and user@ant.
 
-25. You can now reacquaint yourself with your family and friends.
+27. You can now reacquaint yourself with your family and friends.
 
-26. After a few days "svn rm" the older release artifacts and release
+28. After a few days "svn rm" the older release artifacts and release
     notes from https://dist.apache.org/repos/dist/release/ant/
 
     "older" here means any older 1.10.x release but not the latest
@@ -344,6 +375,7 @@ Files containing version information
    * ivy.xml in release subdirectory
    * WHATSNEW
    * src/etc/testcases/taskdefs/conditions/antversion.xml
+   * snap/snapcraft.yml
 
 cover.html, credits.html, POM files, antversion.xml should be 
 adjusted for the [newversion] right after the build and tagging 
