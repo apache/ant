@@ -193,8 +193,10 @@ if [ -z "$JAVACMD" ]; then
 fi
 
 if [ ! -x "$JAVACMD" ]; then
-  echo "Error: JAVA_HOME is not defined correctly."
-  echo "  We cannot execute $JAVACMD"
+  echo "We cannot run Java, please ensure you have Java installed."
+  echo "  We have tried to execute $JAVACMD but failed."
+  echo "If you have installed Java in a unusual place you can set JAVA_HOME"
+  echo "to the directory containing the Java installation."
   exit 1
 fi
 
