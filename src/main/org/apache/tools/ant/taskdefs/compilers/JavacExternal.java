@@ -51,36 +51,54 @@ public class JavacExternal extends DefaultCompilerAdapter {
         } else {
             setupJavacCommandlineSwitches(cmd, true);
         }
-        int firstFileName = assumeJava11() ? -1 : cmd.size();
+        int openVmsFirstFileName = assumeJava11() ? -1 : cmd.size();
         logAndAddFilesToCompile(cmd);
         //On VMS platform, we need to create a special java options file
         //containing the arguments and classpath for the javac command.
         //The special file is supported by the "-V" switch on the VMS JVM.
         if (Os.isFamily("openvms")) {
-            return execOnVMS(cmd, firstFileName);
+            return execOnVMS(cmd, openVmsFirstFileName);
         }
-        return
-                executeExternalCompile(cmd.getCommandline(),
-                        assumeJava11() ? -1 : firstNonJOption(cmd),
-                        true)
-                        == 0;
+
+        String[] commandLine = cmd.getCommandline();
+        int firstFileName;
+        if (assumeJava11()) {
+            firstFileName = -1;
+        } else {
+            firstFileName = moveJOptionsToBeginning(commandLine);
+        }
+
+        return executeExternalCompile(commandLine, firstFileName,
+                true)
+                == 0;
     }
 
     /**
-     * Finds first non -J argument, so that all, but -J options are written to file
+     * Moves all -J arguments to the beginning
+     * So that all command line arguments could be written to file, but -J
      * As per javac documentation:
-     * you can specify one or more files that contain arguments to the javac command (except -J options)
-     * @param cmd Commandline
-     * @return int
+     *      you can specify one or more files that contain arguments to the javac command (except -J options)
+     * @param commandLine command line to process
+     * @return int index of first non -J argument
      */
-    private int firstNonJOption(Commandline cmd) {
-        String[] commandline = cmd.getCommandline();
-        int i = 1; // 0 is for javac executable
-        while(i < commandline.length && commandline[i].startsWith("-J")) {
-            i++;
+    private int moveJOptionsToBeginning(String[] commandLine) {
+        int nonJArgumentIdx = 1; // 0 for javac executable
+        while(nonJArgumentIdx < commandLine.length && commandLine[nonJArgumentIdx].startsWith("-J")) {
+            nonJArgumentIdx++;
         }
 
-        return i;
+        for(int i = nonJArgumentIdx + 1; i < commandLine.length; i++) {
+            if (commandLine[i].startsWith("-J")) {
+                String jArgument = commandLine[i];
+                for(int j = i - 1; j >= nonJArgumentIdx; j--) {
+                    commandLine[j + 1] = commandLine[j];
+                }
+                commandLine[nonJArgumentIdx] = jArgument;
+                nonJArgumentIdx++;
+            }
+        }
+
+        return nonJArgumentIdx;
     }
 
     /**
