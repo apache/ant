@@ -60,9 +60,27 @@ public class JavacExternal extends DefaultCompilerAdapter {
             return execOnVMS(cmd, firstFileName);
         }
         return
-                executeExternalCompile(cmd.getCommandline(), firstFileName,
+                executeExternalCompile(cmd.getCommandline(),
+                        assumeJava11() ? -1 : firstNonJOption(cmd),
                         true)
-                == 0;
+                        == 0;
+    }
+
+    /**
+     * Finds first non -J argument, so that all, but -J options are written to file
+     * As per javac documentation:
+     * you can specify one or more files that contain arguments to the javac command (except -J options)
+     * @param cmd Commandline
+     * @return int
+     */
+    private int firstNonJOption(Commandline cmd) {
+        String[] commandline = cmd.getCommandline();
+        int i = 1; // 0 is for javac executable
+        while(i < commandline.length && commandline[i].startsWith("-J")) {
+            i++;
+        }
+
+        return i;
     }
 
     /**
