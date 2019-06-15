@@ -51,18 +51,54 @@ public class JavacExternal extends DefaultCompilerAdapter {
         } else {
             setupJavacCommandlineSwitches(cmd, true);
         }
-        int firstFileName = assumeJava11() ? -1 : cmd.size();
+        int openVmsFirstFileName = assumeJava11() ? -1 : cmd.size();
         logAndAddFilesToCompile(cmd);
         //On VMS platform, we need to create a special java options file
         //containing the arguments and classpath for the javac command.
         //The special file is supported by the "-V" switch on the VMS JVM.
         if (Os.isFamily("openvms")) {
-            return execOnVMS(cmd, firstFileName);
+            return execOnVMS(cmd, openVmsFirstFileName);
         }
-        return
-                executeExternalCompile(cmd.getCommandline(), firstFileName,
-                        true)
+
+        String[] commandLine = cmd.getCommandline();
+        int firstFileName;
+        if (assumeJava11()) {
+            firstFileName = -1;
+        } else {
+            firstFileName = moveJOptionsToBeginning(commandLine);
+        }
+
+        return executeExternalCompile(commandLine, firstFileName,
+                true)
                 == 0;
+    }
+
+    /**
+     * Moves all -J arguments to the beginning
+     * So that all command line arguments could be written to file, but -J
+     * As per javac documentation:
+     *      you can specify one or more files that contain arguments to the javac command (except -J options)
+     * @param commandLine command line to process
+     * @return int index of first non -J argument
+     */
+    private int moveJOptionsToBeginning(String[] commandLine) {
+        int nonJArgumentIdx = 1; // 0 for javac executable
+        while(nonJArgumentIdx < commandLine.length && commandLine[nonJArgumentIdx].startsWith("-J")) {
+            nonJArgumentIdx++;
+        }
+
+        for(int i = nonJArgumentIdx + 1; i < commandLine.length; i++) {
+            if (commandLine[i].startsWith("-J")) {
+                String jArgument = commandLine[i];
+                for(int j = i - 1; j >= nonJArgumentIdx; j--) {
+                    commandLine[j + 1] = commandLine[j];
+                }
+                commandLine[nonJArgumentIdx] = jArgument;
+                nonJArgumentIdx++;
+            }
+        }
+
+        return nonJArgumentIdx;
     }
 
     /**
