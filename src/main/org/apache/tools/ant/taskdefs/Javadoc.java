@@ -1847,9 +1847,9 @@ public class Javadoc extends Task {
         doModuleArguments(toExecute);
 
         doTags(toExecute);
-		doSource(toExecute);
-		doLinkSource(toExecute);
-		doNoqualifier(toExecute);
+        doSource(toExecute);
+        doLinkSource(toExecute);
+        doNoqualifier(toExecute);
 		
         if (breakiterator) {
             toExecute.createArgument().setValue("-breakiterator");
@@ -2212,29 +2212,28 @@ public class Javadoc extends Task {
     }
 
     private void doNoqualifier(final Commandline toExecute) {
-		if (noqualifier != null && doclet == null) {
+        if (noqualifier != null && doclet == null) {
             toExecute.createArgument().setValue("-noqualifier");
             toExecute.createArgument().setValue(noqualifier);
         }
-	}
+    }
 
-	private void doLinkSource(final Commandline toExecute) {
-		if (linksource && doclet == null) {
+    private void doLinkSource(final Commandline toExecute) {
+        if (linksource && doclet == null) {
             toExecute.createArgument().setValue("-linksource");
         }
-	}
+    }
 
-	private void doSource(final Commandline toExecute) {
-		final String sourceArg = source != null ? source
-            : getProject().getProperty(MagicNames.BUILD_JAVAC_SOURCE);
+    private void doSource(final Commandline toExecute) {
+        final String sourceArg = source != null ? source : getProject().getProperty(MagicNames.BUILD_JAVAC_SOURCE);
         if (sourceArg != null) {
             toExecute.createArgument().setValue("-source");
             toExecute.createArgument().setValue(sourceArg);
         }
-	}
+    }
 
-	private void doTags(final Commandline toExecute) {
-		for (final Object element : tags) {
+    private void doTags(final Commandline toExecute) {
+        for (final Object element : tags) {
             if (element instanceof TagArgument) {
                 final TagArgument ta = (TagArgument) element;
                 final File tagDir = ta.getDir(getProject());
@@ -2247,39 +2246,34 @@ public class Javadoc extends Task {
                     // The tag element is used as a
                     // fileset. Parse all the files and create
                     // -tag arguments.
-                    final DirectoryScanner tagDefScanner =
-                        ta.getDirectoryScanner(getProject());
+                    final DirectoryScanner tagDefScanner = ta.getDirectoryScanner(getProject());
                     for (String file : tagDefScanner.getIncludedFiles()) {
                         final File tagDefFile = new File(tagDir, file);
-                        try (final BufferedReader in = new BufferedReader(
-                                new FileReader(tagDefFile))) {
+                        try (final BufferedReader in = new BufferedReader(new FileReader(tagDefFile))) {
                             in.lines().forEach(line -> {
                                 toExecute.createArgument().setValue("-tag");
                                 toExecute.createArgument().setValue(line);
                             });
                         } catch (final IOException ioe) {
-                            throw new BuildException("Couldn't read tag file from "
-                                    + tagDefFile.getAbsolutePath(), ioe);
+                            throw new BuildException("Couldn't read tag file from " + tagDefFile.getAbsolutePath(),
+                                    ioe);
                         }
                     }
                 }
             } else {
                 final ExtensionInfo tagletInfo = (ExtensionInfo) element;
                 toExecute.createArgument().setValue("-taglet");
-                toExecute.createArgument().setValue(tagletInfo
-                                                    .getName());
+                toExecute.createArgument().setValue(tagletInfo.getName());
                 if (tagletInfo.getPath() != null) {
-                    final Path tagletPath = tagletInfo.getPath()
-                        .concatSystemClasspath("ignore");
+                    final Path tagletPath = tagletInfo.getPath().concatSystemClasspath("ignore");
                     if (!tagletPath.isEmpty()) {
-                        toExecute.createArgument()
-                            .setValue("-tagletpath");
+                        toExecute.createArgument().setValue("-tagletpath");
                         toExecute.createArgument().setPath(tagletPath);
                     }
                 }
             }
         }
-	}
+    }
 
     private void doDocFilesSubDirs(final Commandline toExecute) {
         if (docFilesSubDirs) {
