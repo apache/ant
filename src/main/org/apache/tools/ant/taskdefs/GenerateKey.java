@@ -195,12 +195,7 @@ public class GenerateKey extends Task {
      * @since Ant 1.9.14
      */
     public void setSaname(final String saname) {
-        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_1_7)) {
-            this.saname = saname;
-        } else {
-            log("The SubjectAlternativeName extension is not available for "
-               +"the Java Version being used.");
-        }
+        this.saname = saname;
     }
 
     /**

@@ -144,5 +144,28 @@ public class JavaEnvUtilsTest {
         assertTrue(JavaEnvUtils.isJavaVersion("10"));
         assertTrue(JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
     }
+    
+    @Test
+    @SuppressWarnings("deprecation")
+    public void java11IsDetectedProperly() {
+        assumeTrue("11".equals(System.getProperty("java.specification.version")));
+        assertEquals("11", JavaEnvUtils.getJavaVersion());
+        assertEquals(110, JavaEnvUtils.getJavaVersionNumber());
+        assertEquals(new DeweyDecimal("11"), JavaEnvUtils.getParsedJavaVersion());
+        assertTrue(JavaEnvUtils.isJavaVersion("11"));
+        assertTrue(JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+    }
+    
+    @Test
+    @SuppressWarnings("deprecation")
+    public void java12IsDetectedProperly() {
+        assumeTrue("12".equals(System.getProperty("java.specification.version")));
+        assertEquals("12", JavaEnvUtils.getJavaVersion());
+        assertEquals(120, JavaEnvUtils.getJavaVersionNumber());
+        assertEquals(new DeweyDecimal("12"), JavaEnvUtils.getParsedJavaVersion());
+        assertTrue(JavaEnvUtils.isJavaVersion("12"));
+        assertTrue(JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9));
+    }
+
 
 }

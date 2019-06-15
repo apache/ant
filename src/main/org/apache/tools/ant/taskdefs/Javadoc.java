@@ -86,10 +86,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * @ant.task category="java"
  */
 public class Javadoc extends Task {
-    // Whether *this VM* is 1.4+ (but also check executable != null).
-
-    private static final boolean JAVADOC_5 =
-        !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4);
 
     private static final String LOAD_FRAME = "function loadFrames() {";
     private static final int LOAD_FRAME_LEN = LOAD_FRAME.length();
@@ -1851,7 +1847,7 @@ public class Javadoc extends Task {
         doModuleArguments(toExecute);
 
         doJava14(toExecute);
-        if (breakiterator && (doclet == null || JAVADOC_5)) {
+        if (breakiterator) {
             toExecute.createArgument().setValue("-breakiterator");
         }
         // If using an external file, write the command line options to it

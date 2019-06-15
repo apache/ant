@@ -127,6 +127,42 @@ public final class JavaEnvUtils {
      * @since Ant 1.9.8
      */
     public static final int VERSION_9 = 90;
+    
+    /**
+     * Version constant for Java 10
+     * @since Ant 1.10.7
+     */
+    public static final String JAVA_10 = "10";
+    /**
+     * Number Version constant for Java 10
+     * @since Ant 1.10.7
+     */
+    public static final int VERSION_10 = 100;
+
+    /**
+     * Version constant for Java 11
+     * @since Ant 1.10.7
+     */
+    public static final String JAVA_11 = "11";
+    /**
+     * Number Version constant for Java 11
+     * @since Ant 1.10.7
+     */
+    public static final int VERSION_11 = 110;
+    
+    /**
+     * Version constant for Java 12
+     * @since Ant 1.10.7
+     */
+    
+    public static final String JAVA_12 = "12";
+    /**
+     * Number Version constant for Java 12
+     * @since Ant 1.10.7
+     */
+    public static final int VERSION_12 = 120;
+    
+    
 
     /** Whether this is the Kaffe VM */
     private static boolean kaffeDetected;
@@ -148,44 +184,11 @@ public final class JavaEnvUtils {
 
     static {
 
-        // Determine the Java version by looking at available classes
-        // java.net.Proxy was introduced in JDK 1.5
-        // java.lang.CharSequence was introduced in JDK 1.4
-        // java.lang.StrictMath was introduced in JDK 1.3
-        // java.lang.ThreadLocal was introduced in JDK 1.2
-        // java.lang.Void was introduced in JDK 1.1
-        // Count up version until a NoClassDefFoundError ends the try
-
         try {
-            javaVersion = JAVA_1_0;
-            javaVersionNumber = VERSION_1_0;
-            Class.forName("java.lang.Void");
-            javaVersion = JAVA_1_1;
-            javaVersionNumber++;
-            Class.forName("java.lang.ThreadLocal");
-            javaVersion = JAVA_1_2;
-            javaVersionNumber++;
-            Class.forName("java.lang.StrictMath");
-            javaVersion = JAVA_1_3;
-            javaVersionNumber++;
-            Class.forName("java.lang.CharSequence");
-            javaVersion = JAVA_1_4;
-            javaVersionNumber++;
-            Class.forName("java.net.Proxy");
-            javaVersion = JAVA_1_5;
-            javaVersionNumber++;
-            Class.forName("java.net.CookieStore");
-            javaVersion = JAVA_1_6;
-            javaVersionNumber++;
-            Class.forName("java.nio.file.FileSystem");
-            javaVersion = JAVA_1_7;
-            javaVersionNumber++;
-            Class.forName("java.lang.reflect.Executable");
+        	// only java 1.8 up supported.
             javaVersion = JAVA_1_8;
-            javaVersionNumber++;
+            javaVersionNumber = VERSION_1_8;
             Class.forName("java.lang.module.ModuleDescriptor");
-            javaVersion = JAVA_9;
-            javaVersionNumber = VERSION_9;
             // at least Java9 and this should properly support the purely numeric version property
             String v = System.getProperty("java.specification.version");
             DeweyDecimal pv = new DeweyDecimal(v);
@@ -462,97 +465,60 @@ public final class JavaEnvUtils {
      */
 
     private static void buildJrePackages() {
-        jrePackages = new Vector<>();
-        if (isAtLeastJavaVersion(JAVA_1_1)) {
-            //things like sun.reflection, sun.misc, sun.net
-            jrePackages.addElement("sun");
-            jrePackages.addElement("java");
-            jrePackages.addElement("javax");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_2)) {
-            jrePackages.addElement("com.sun.java");
-            jrePackages.addElement("com.sun.image");
-            // are there any here that we forgot?
-        }
-        if (isAtLeastJavaVersion(JAVA_1_3)) {
-            jrePackages.addElement("org.omg");
-            jrePackages.addElement("com.sun.corba");
-            jrePackages.addElement("com.sun.jndi");
-            jrePackages.addElement("com.sun.media");
-            jrePackages.addElement("com.sun.naming");
-            jrePackages.addElement("com.sun.org.omg");
-            jrePackages.addElement("com.sun.rmi");
-            jrePackages.addElement("sunw.io");
-            jrePackages.addElement("sunw.util");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_4)) {
-            if (javaVersionNumber == VERSION_1_4) {
-                jrePackages.addElement("org.apache.crimson");
-                jrePackages.addElement("org.apache.xalan");
-                jrePackages.addElement("org.apache.xml");
-                jrePackages.addElement("org.apache.xpath");
-            }
-            jrePackages.addElement("org.ietf.jgss");
-            jrePackages.addElement("org.w3c.dom");
-            jrePackages.addElement("org.xml.sax");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_5)) {
-            //In Java1.5, the apache stuff moved.
-            jrePackages.addElement("com.sun.org.apache");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_7)) {
-            jrePackages.addElement("jdk");
-        }
-    }
+    	// do we still need this? As we only support java 1.8 upwards this would be the fixed list
+		// is this list correct for java 9 and above?
+		jrePackages = new Vector<>();
+		jrePackages.addElement("sun");
+		jrePackages.addElement("java");
+		jrePackages.addElement("javax");
+		jrePackages.addElement("com.sun.java");
+		jrePackages.addElement("com.sun.image");
+		jrePackages.addElement("org.omg");
+		jrePackages.addElement("com.sun.corba");
+		jrePackages.addElement("com.sun.jndi");
+		jrePackages.addElement("com.sun.media");
+		jrePackages.addElement("com.sun.naming");
+		jrePackages.addElement("com.sun.org.omg");
+		jrePackages.addElement("com.sun.rmi");
+		jrePackages.addElement("sunw.io");
+		jrePackages.addElement("sunw.util");
+		jrePackages.addElement("org.ietf.jgss");
+		jrePackages.addElement("org.w3c.dom");
+		jrePackages.addElement("org.xml.sax");
+		jrePackages.addElement("com.sun.org.apache");
+		jrePackages.addElement("jdk");
+	}
 
     /**
      * Testing helper method; kept here for unification of changes.
      * @return a list of test classes depending on the java version.
      */
     public static Vector<String> getJrePackageTestCases() {
+    	// do we still need this? As we only support java 1.8 upwards this would be the fixed list
+		// is this list correct for java 9 and above?
         Vector<String> tests = new Vector<>();
-        tests.addElement("java.lang.Object");
-        if (isAtLeastJavaVersion(JAVA_1_1)) {
-            //things like sun.reflection, sun.misc, sun.net
-            tests.addElement("sun.reflect.SerializationConstructorAccessorImpl");
-            tests.addElement("sun.net.www.http.HttpClient");
-            tests.addElement("sun.audio.AudioPlayer");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_2)) {
-            tests.addElement("javax.accessibility.Accessible");
-            tests.addElement("sun.misc.BASE64Encoder");
-            tests.addElement("com.sun.image.codec.jpeg.JPEGCodec");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_3)) {
-            tests.addElement("org.omg.CORBA.Any");
-            tests.addElement("com.sun.corba.se.internal.corba.AnyImpl");
-            tests.addElement("com.sun.jndi.ldap.LdapURL");
-            tests.addElement("com.sun.media.sound.Printer");
-            tests.addElement("com.sun.naming.internal.VersionHelper");
-            tests.addElement("com.sun.org.omg.CORBA.Initializer");
-            tests.addElement("sunw.io.Serializable");
-            tests.addElement("sunw.util.EventListener");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_4)) {
-            tests.addElement("sun.audio.AudioPlayer");
-            if (javaVersionNumber == VERSION_1_4) {
-                // only for 1.4, not for higher versions
-                tests.addElement("org.apache.crimson.parser.ContentModel");
-                tests.addElement("org.apache.xalan.processor.ProcessorImport");
-                tests.addElement("org.apache.xml.utils.URI");
-                tests.addElement("org.apache.xpath.XPathFactory");
-            }
-            tests.addElement("org.ietf.jgss.Oid");
-            tests.addElement("org.w3c.dom.Attr");
-            tests.addElement("org.xml.sax.XMLReader");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_5)) {
-            tests.addElement("com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl");
-        }
-        if (isAtLeastJavaVersion(JAVA_1_7)) {
-            tests.addElement("jdk.net.Sockets");
-        }
-        return tests;
+		tests.addElement("java.lang.Object");
+		tests.addElement("sun.reflect.SerializationConstructorAccessorImpl");
+		tests.addElement("sun.net.www.http.HttpClient");
+		tests.addElement("sun.audio.AudioPlayer");
+		tests.addElement("javax.accessibility.Accessible");
+		tests.addElement("sun.misc.BASE64Encoder");
+		tests.addElement("com.sun.image.codec.jpeg.JPEGCodec");
+		tests.addElement("org.omg.CORBA.Any");
+		tests.addElement("com.sun.corba.se.internal.corba.AnyImpl");
+		tests.addElement("com.sun.jndi.ldap.LdapURL");
+		tests.addElement("com.sun.media.sound.Printer");
+		tests.addElement("com.sun.naming.internal.VersionHelper");
+		tests.addElement("com.sun.org.omg.CORBA.Initializer");
+		tests.addElement("sunw.io.Serializable");
+		tests.addElement("sunw.util.EventListener");
+		tests.addElement("sun.audio.AudioPlayer");
+		tests.addElement("org.ietf.jgss.Oid");
+		tests.addElement("org.w3c.dom.Attr");
+		tests.addElement("org.xml.sax.XMLReader");
+		tests.addElement("com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl");
+		tests.addElement("jdk.net.Sockets");
+		return tests;
     }
     /**
      * get a vector of strings of packages built into

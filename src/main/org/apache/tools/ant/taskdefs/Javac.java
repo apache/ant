@@ -160,28 +160,16 @@ public class Javac extends MatchingTask {
     }
 
     private String assumedJavaVersion() {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
-            return JAVAC14;
-        }
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
-            return JAVAC15;
-        }
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6)) {
-            return JAVAC16;
-        }
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7)) {
-            return JAVAC17;
-        }
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
             return JAVAC18;
-        }
-        if (JavaEnvUtils.isAtLeastJavaVersion("10")) {
-            return JAVAC10_PLUS;
         }
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
             return JAVAC9;
         }
-        return CLASSIC;
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_10)) {
+            return JAVAC10_PLUS;
+        }
+        return MODERN; // as we are assumed to be 1.8+ and classic refers to the really old ones,  default to modern
     }
 
     /**
