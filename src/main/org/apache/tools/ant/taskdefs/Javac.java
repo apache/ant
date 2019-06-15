@@ -87,15 +87,15 @@ public class Javac extends MatchingTask {
 
     private static final String JAVAC10_PLUS = "javac10+";
     private static final String JAVAC9 = "javac9";
-    private static final String JAVAC19 = "javac1.9";
-    private static final String JAVAC18 = "javac1.8";
-    private static final String JAVAC17 = "javac1.7";
-    private static final String JAVAC16 = "javac1.6";
-    private static final String JAVAC15 = "javac1.5";
-    private static final String JAVAC14 = "javac1.4";
-    private static final String JAVAC13 = "javac1.3";
-    private static final String JAVAC12 = "javac1.2";
-    private static final String JAVAC11 = "javac1.1";
+    private static final String JAVAC9_ALIAS = "javac1.9";
+    private static final String JAVAC1_8 = "javac1.8";
+    private static final String JAVAC1_7 = "javac1.7";
+    private static final String JAVAC1_6 = "javac1.6";
+    private static final String JAVAC1_5 = "javac1.5";
+    private static final String JAVAC1_4 = "javac1.4";
+    private static final String JAVAC1_3 = "javac1.3";
+    private static final String JAVAC1_2 = "javac1.2";
+    private static final String JAVAC1_1 = "javac1.1";
     private static final String MODERN = "modern";
     private static final String CLASSIC = "classic";
     private static final String EXTJAVAC = "extJavac";
@@ -161,7 +161,7 @@ public class Javac extends MatchingTask {
 
     private String assumedJavaVersion() {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
-            return JAVAC18;
+            return JAVAC1_8;
         }
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
             return JAVAC9;
@@ -959,29 +959,24 @@ public class Javac extends MatchingTask {
     private String getAltCompilerName(final String anImplementation) {
         if (JAVAC10_PLUS.equalsIgnoreCase(anImplementation)
                 || JAVAC9.equalsIgnoreCase(anImplementation)
-                || JAVAC19.equalsIgnoreCase(anImplementation)
-                || JAVAC18.equalsIgnoreCase(anImplementation)
-                || JAVAC17.equalsIgnoreCase(anImplementation)
-                || JAVAC16.equalsIgnoreCase(anImplementation)
-                || JAVAC15.equalsIgnoreCase(anImplementation)
-                || JAVAC14.equalsIgnoreCase(anImplementation)
-                || JAVAC13.equalsIgnoreCase(anImplementation)) {
+                || JAVAC9_ALIAS.equalsIgnoreCase(anImplementation)
+                || JAVAC1_8.equalsIgnoreCase(anImplementation)
+                || JAVAC1_7.equalsIgnoreCase(anImplementation)
+                || JAVAC1_6.equalsIgnoreCase(anImplementation)
+                || JAVAC1_5.equalsIgnoreCase(anImplementation)
+                || JAVAC1_4.equalsIgnoreCase(anImplementation)
+                || JAVAC1_3.equalsIgnoreCase(anImplementation)) {
             return MODERN;
         }
-        if (JAVAC12.equalsIgnoreCase(anImplementation)
-                || JAVAC11.equalsIgnoreCase(anImplementation)) {
+        if (JAVAC1_2.equalsIgnoreCase(anImplementation)
+                || JAVAC1_1.equalsIgnoreCase(anImplementation)) {
             return CLASSIC;
         }
         if (MODERN.equalsIgnoreCase(anImplementation)) {
             final String nextSelected = assumedJavaVersion();
             if (JAVAC10_PLUS.equalsIgnoreCase(anImplementation)
                     || JAVAC9.equalsIgnoreCase(nextSelected)
-                    || JAVAC18.equalsIgnoreCase(nextSelected)
-                    || JAVAC17.equalsIgnoreCase(nextSelected)
-                    || JAVAC16.equalsIgnoreCase(nextSelected)
-                    || JAVAC15.equalsIgnoreCase(nextSelected)
-                    || JAVAC14.equalsIgnoreCase(nextSelected)
-                    || JAVAC13.equalsIgnoreCase(nextSelected)) {
+                    || JAVAC1_8.equalsIgnoreCase(nextSelected)) {
                 return nextSelected;
             }
         }
@@ -1251,14 +1246,14 @@ public class Javac extends MatchingTask {
             || CLASSIC.equals(compilerImpl)
             || JAVAC10_PLUS.equals(compilerImpl)
             || JAVAC9.equals(compilerImpl)
-            || JAVAC18.equals(compilerImpl)
-            || JAVAC17.equals(compilerImpl)
-            || JAVAC16.equals(compilerImpl)
-            || JAVAC15.equals(compilerImpl)
-            || JAVAC14.equals(compilerImpl)
-            || JAVAC13.equals(compilerImpl)
-            || JAVAC12.equals(compilerImpl)
-            || JAVAC11.equals(compilerImpl);
+            || JAVAC1_8.equals(compilerImpl)
+            || JAVAC1_7.equals(compilerImpl)
+            || JAVAC1_6.equals(compilerImpl)
+            || JAVAC1_5.equals(compilerImpl)
+            || JAVAC1_4.equals(compilerImpl)
+            || JAVAC1_3.equals(compilerImpl)
+            || JAVAC1_2.equals(compilerImpl)
+            || JAVAC1_1.equals(compilerImpl);
     }
 
     /**

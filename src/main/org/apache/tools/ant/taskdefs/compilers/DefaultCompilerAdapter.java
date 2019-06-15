@@ -264,7 +264,8 @@ public abstract class DefaultCompilerAdapter
             sourcepath = src;
         }
 
-        final String memoryParameterPrefix = assumeJava11() ? "-J-" : "-J-X";
+        final String memoryParameterPrefix = assumeJava1_2Plus() ? "-J-X" : "-J-";
+
         if (memoryInitialSize != null) {
             if (!attributes.isForkedJavac()) {
                 attributes.log(
@@ -304,7 +305,7 @@ public abstract class DefaultCompilerAdapter
 
         // Just add "sourcepath" to classpath (for JDK1.1)
         // as well as "bootclasspath" and "extdirs"
-        if (assumeJava11()) {
+        if (!assumeJava1_2Plus()) {
             final Path cp = new Path(project);
             Optional.ofNullable(getBootClassPath()).ifPresent(cp::append);
 
@@ -346,7 +347,7 @@ public abstract class DefaultCompilerAdapter
             cmd.createArgument().setValue(encoding);
         }
         if (debug) {
-            if (useDebugLevel && !assumeJava11()) {
+            if (useDebugLevel && assumeJava1_2Plus()) {
                 final String debugLevel = attributes.getDebugLevel();
                 if (debugLevel != null) {
                     cmd.createArgument().setValue("-g:" + debugLevel);
@@ -364,14 +365,14 @@ public abstract class DefaultCompilerAdapter
         }
 
         if (depend) {
-            if (assumeJava11()) {
+        	if (assumeJava1_3Plus()) {
+        		attributes.log(
+                        "depend attribute is not supported by the modern compiler",
+                        Project.MSG_WARN);
+        	} else if (assumeJava1_2Plus()) {
+        		cmd.createArgument().setValue("-Xdepend");
+        	} else { //java 1.1
                 cmd.createArgument().setValue("-depend");
-            } else if (assumeJava12()) {
-                cmd.createArgument().setValue("-Xdepend");
-            } else {
-                attributes.log(
-                    "depend attribute is not supported by the modern compiler",
-                    Project.MSG_WARN);
             }
         }
 
@@ -392,7 +393,7 @@ public abstract class DefaultCompilerAdapter
      */
     protected Commandline setupModernJavacCommandlineSwitches(final Commandline cmd) {
         setupJavacCommandlineSwitches(cmd, true);
-        if (!assumeJava13()) { // -source added with JDK 1.4
+        if (assumeJava1_4Plus()) { // -source added with JDK 1.4
             final String t = attributes.getTarget();
             final String s = attributes.getSource();
             if (release == null || !assumeJava9Plus()) {
@@ -433,8 +434,7 @@ public abstract class DefaultCompilerAdapter
             cmd.createArgument().setPath(ump);
         }
         if (attributes.getNativeHeaderDir() != null) {
-            if (assumeJava13() || assumeJava14() || assumeJava15() || assumeJava16()
-                    || assumeJava17()) {
+            if (!assumeJava1_8Plus()) {
                 attributes.log(
                     "Support for javac -h has been added in Java8, ignoring it");
             } else {
@@ -621,74 +621,162 @@ public abstract class DefaultCompilerAdapter
      * Shall we assume JDK 1.1 command line switches?
      * @return true if jdk 1.1
      * @since Ant 1.5
+     * @deprecated since Ant 1.10.7, use assumeJava1_1Plus, if necessary combined with !assumeJava1_2Plus
      */
+    @Deprecated
     protected boolean assumeJava11() {
-        return "javac1.1".equals(attributes.getCompilerVersion());
+        return assumeJava1_1Plus() && !assumeJava1_2Plus();
     }
-
+    
+    /**
+     * Shall we assume JDK 1.1+ command line switches?
+     * @return true if jdk 1.1 and above
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava1_1Plus() {
+        return "javac1.1".equals(attributes.getCompilerVersion()) || assumeJava1_2Plus() ;
+    }
+    
     /**
      * Shall we assume JDK 1.2 command line switches?
      * @return true if jdk 1.2
      * @since Ant 1.5
+     * @deprecated since Ant 1.10.7, use assumeJava1_2Plus, if necessary combined with !assumeJava1_3Plus
      */
+    @Deprecated
     protected boolean assumeJava12() {
-        return "javac1.2".equals(attributes.getCompilerVersion());
+    	return assumeJava1_2Plus() && !assumeJava1_3Plus();
     }
 
+    /**
+     * Shall we assume JDK 1.2+ command line switches?
+     * @return true if jdk 1.2 and above
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava1_2Plus() {
+        return "javac1.2".equals(attributes.getCompilerVersion()) || assumeJava1_3Plus() ;
+    }
+    
     /**
      * Shall we assume JDK 1.3 command line switches?
      * @return true if jdk 1.3
      * @since Ant 1.5
+     * @deprecated since Ant 1.10.7, use assumeJava1_3Plus, if necessary combined with !assumeJava1_4Plus
      */
+    @Deprecated
     protected boolean assumeJava13() {
-        return "javac1.3".equals(attributes.getCompilerVersion());
+    	return assumeJava1_3Plus() && !assumeJava1_4Plus();
     }
 
+    /**
+     * Shall we assume JDK 1.3+ command line switches?
+     * @return true if jdk 1.3 and above
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava1_3Plus() {
+        return "javac1.3".equals(attributes.getCompilerVersion()) || assumeJava1_4Plus() ;
+    }
+    
     /**
      * Shall we assume JDK 1.4 command line switches?
      * @return true if jdk 1.4
      * @since Ant 1.6.3
+     * @deprecated since Ant 1.10.7, use assumeJava1_4Plus, if necessary combined with !assumeJava1_5Plus
      */
+    @Deprecated
     protected boolean assumeJava14() {
-        return assumeJavaXY("javac1.4", JavaEnvUtils.JAVA_1_4);
+    	return assumeJava1_4Plus() && !assumeJava1_5Plus();
+    }
+    
+    /**
+     * Shall we assume JDK 1.4+ command line switches?
+     * @return true if jdk 1.4 and above
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava1_4Plus() {
+        return assumeJavaXY("javac1.4", JavaEnvUtils.JAVA_1_4) || assumeJava1_5Plus() ;
     }
 
     /**
      * Shall we assume JDK 1.5 command line switches?
      * @return true if JDK 1.5
      * @since Ant 1.6.3
+     * @deprecated since Ant 1.10.7, use assumeJava1_5Plus, if necessary combined with !assumeJava1_6Plus
      */
+    @Deprecated
     protected boolean assumeJava15() {
-        return assumeJavaXY("javac1.5", JavaEnvUtils.JAVA_1_5);
+    	return assumeJava1_5Plus() && !assumeJava1_6Plus();
+    }
+    
+    /**
+     * Shall we assume JDK 1.5+ command line switches?
+     * @return true if jdk 1.5 and above
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava1_5Plus() {
+        return assumeJavaXY("javac1.5", JavaEnvUtils.JAVA_1_5) || assumeJava1_6Plus() ;
     }
 
     /**
      * Shall we assume JDK 1.6 command line switches?
      * @return true if JDK 1.6
      * @since Ant 1.7
+     * @deprecated since Ant 1.10.7, use assumeJava1_6Plus, if necessary combined with !assumeJava1_7Plus
      */
+    @Deprecated
     protected boolean assumeJava16() {
-        return assumeJavaXY("javac1.6", JavaEnvUtils.JAVA_1_6);
+    	return assumeJava1_6Plus() && !assumeJava1_7Plus();
     }
 
+    /**
+     * Shall we assume JDK 1.6+ command line switches?
+     * @return true if jdk 1.6 and above
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava1_6Plus() {
+        return assumeJavaXY("javac1.6", JavaEnvUtils.JAVA_1_6) || assumeJava1_7Plus() ;
+    }
+    
     /**
      * Shall we assume JDK 1.7 command line switches?
      * @return true if JDK 1.7
      * @since Ant 1.8.2
+     * @deprecated since Ant 1.10.7, use assumeJava1_7Plus, if necessary combined with !assumeJava1_8Plus
      */
+    @Deprecated
     protected boolean assumeJava17() {
-        return assumeJavaXY("javac1.7", JavaEnvUtils.JAVA_1_7);
+    	return assumeJava1_7Plus() && !assumeJava1_8Plus();
+    }
+    
+    /**
+     * Shall we assume JDK 1.7+ command line switches?
+     * @return true if jdk 1.7 and above
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava1_7Plus() {
+        return assumeJavaXY("javac1.7", JavaEnvUtils.JAVA_1_7) || assumeJava1_8Plus() ;
     }
 
     /**
      * Shall we assume JDK 1.8 command line switches?
      * @return true if JDK 1.8
      * @since Ant 1.8.3
+     * @deprecated since Ant 1.10.7, use assumeJava1_8Plus, if necessary combined with !assumeJava9Plus
      */
+    @Deprecated
     protected boolean assumeJava18() {
-        return assumeJavaXY("javac1.8", JavaEnvUtils.JAVA_1_8);
+    	return assumeJava1_8Plus() && !assumeJava9Plus();
     }
 
+    /**
+     * Shall we assume JDK 1.8+ command line switches?
+     * @return true if jdk 1.8 and above
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava1_8Plus() {
+        return assumeJavaXY("javac1.8", JavaEnvUtils.JAVA_1_8) || assumeJava9Plus() ;
+    }
+    
     /**
      * Shall we assume JDK 9 command line switches?
      * @return true if JDK 9
@@ -704,7 +792,9 @@ public abstract class DefaultCompilerAdapter
      * Shall we assume JDK 9 command line switches?
      * @return true if JDK 9
      * @since Ant 1.9.8
+     * @deprecated since Ant 1.10.7, use assumeJava9Plus, in the future if necessary combined with !assumeJava10Plus
      */
+    @Deprecated
     protected boolean assumeJava9() {
         return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_9)
                 || assumeJavaXY("javac9", JavaEnvUtils.JAVA_9);
@@ -718,23 +808,24 @@ public abstract class DefaultCompilerAdapter
     protected boolean assumeJava9Plus() {
         return "javac1.9".equals(attributes.getCompilerVersion())
             || "javac9".equals(attributes.getCompilerVersion())
-            || "javac10+".equals(attributes.getCompilerVersion())
-            || (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)
-                && ("classic".equals(attributes.getCompilerVersion())
-                || "modern".equals(attributes.getCompilerVersion())
-                || "extJavac".equals(attributes.getCompilerVersion())));
+            || assumeJava10Plus();
     }
 
+    /**
+     * Shall we assume JDK 10+ command line switches?
+     * @return true if JDK 10+
+     * @since Ant 1.10.7
+     */
+    protected boolean assumeJava10Plus() {
+        return "javac10+".equals(attributes.getCompilerVersion());
+    }
+    
     /**
      * Shall we assume command line switches for the given version of Java?
      * @since Ant 1.8.3
      */
     private boolean assumeJavaXY(final String javacXY, final String javaEnvVersionXY) {
-        return javacXY.equals(attributes.getCompilerVersion())
-            || (JavaEnvUtils.isJavaVersion(javaEnvVersionXY)
-                && ("classic".equals(attributes.getCompilerVersion())
-                 || "modern".equals(attributes.getCompilerVersion())
-                 || "extJavac".equals(attributes.getCompilerVersion())));
+        return javacXY.equals(attributes.getCompilerVersion());
     }
 
     /**
@@ -763,7 +854,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.6.3
      */
     protected String getNoDebugArgument() {
-        return assumeJava11() ? null : "-g:none";
+    	return assumeJava1_2Plus() ? "-g:none" : null;
     }
 
     private void setImplicitSourceSwitch(final Commandline cmd,
@@ -789,17 +880,17 @@ public abstract class DefaultCompilerAdapter
      * selected JDK's javac.
      */
     private String getDefaultSource() {
-        if (assumeJava15() || assumeJava16()) {
-            return "1.5 in JDK 1.5 and 1.6";
-        }
-        if (assumeJava17()) {
-            return "1.7 in JDK 1.7";
-        }
-        if (assumeJava18()) {
-            return "1.8 in JDK 1.8";
-        }
         if (assumeJava9Plus()) {
             return "9 in JDK 9";
+        }
+        if (assumeJava1_8Plus()) {
+            return "1.8 in JDK 1.8";
+        }
+        if (assumeJava1_7Plus()) {
+            return "1.7 in JDK 1.7";
+        }
+        if (assumeJava1_5Plus()) {
+            return "1.5 in JDK 1.5 and 1.6";
         }
         return "";
     }
@@ -814,17 +905,17 @@ public abstract class DefaultCompilerAdapter
      * @param t the -target value, must not be null
      */
     private boolean mustSetSourceForTarget(String t) {
-        if (assumeJava14()) {
+        if (!assumeJava1_5Plus()) {
             return false;
         }
         if (t.startsWith("1.")) {
             t = t.substring(2);
         }
         return "1".equals(t) || "2".equals(t) || "3".equals(t) || "4".equals(t)
-                || (("5".equals(t) || "6".equals(t)) && !assumeJava15() && !assumeJava16())
-                || ("7".equals(t) && !assumeJava17())
-                || ("8".equals(t) && !assumeJava18())
-                || ("9".equals(t) && !assumeJava9Plus());
+                || (("5".equals(t) || "6".equals(t)) && assumeJava1_7Plus())
+                || ("7".equals(t) && assumeJava1_8Plus())
+                || ("8".equals(t) && assumeJava9Plus())
+                || ("9".equals(t) && assumeJava10Plus());
     }
 
     /**

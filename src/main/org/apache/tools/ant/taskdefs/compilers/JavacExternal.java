@@ -46,12 +46,14 @@ public class JavacExternal extends DefaultCompilerAdapter {
 
         Commandline cmd = new Commandline();
         cmd.setExecutable(getJavac().getJavacExecutable());
-        if (!assumeJava11() && !assumeJava12()) {
+        if (assumeJava1_3Plus()) {
             setupModernJavacCommandlineSwitches(cmd);
         } else {
             setupJavacCommandlineSwitches(cmd, true);
         }
-        int openVmsFirstFileName = assumeJava11() ? -1 : cmd.size();
+
+        int openVmsFirstFileName = assumeJava1_2Plus() ? cmd.size() : -1;
+
         logAndAddFilesToCompile(cmd);
         //On VMS platform, we need to create a special java options file
         //containing the arguments and classpath for the javac command.

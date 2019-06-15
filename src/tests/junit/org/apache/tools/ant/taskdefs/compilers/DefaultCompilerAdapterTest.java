@@ -18,6 +18,15 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,22 +36,15 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.types.Commandline;
-import org.junit.Test;
-
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
+import org.junit.Test;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class DefaultCompilerAdapterTest {
 
@@ -411,7 +413,7 @@ public class DefaultCompilerAdapterTest {
         LogCapturingJavac javac = new LogCapturingJavac();
         Project p = new Project();
         javac.setProject(p);
-        javac.setCompiler("javac8");
+        javac.setCompiler("javac1.8");
         javac.setSource("6");
         javac.setTarget("6");
         javac.setRelease("6");
@@ -455,6 +457,90 @@ public class DefaultCompilerAdapterTest {
         assertEquals("--release", args[3]);
         assertEquals("6", args[4]);
     }
+
+    @Test
+    public void testAssumeJavaXPlus() {
+    	LogCapturingJavac javac = new LogCapturingJavac();
+        Project p = new Project();
+        javac.setProject(p);
+        DefaultCompilerAdapter ca = new DefaultCompilerAdapter() {	
+			@Override
+			public boolean execute() throws BuildException {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		};
+		ca.setJavac(javac);
+		System.out.println(javac.getCompiler());
+		
+		if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_10)) {
+			assertTrue(ca.assumeJava10Plus());
+			assertTrue(ca.assumeJava9Plus());
+		} else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
+			assertFalse(ca.assumeJava10Plus());
+			assertTrue(ca.assumeJava9Plus());
+			assertTrue(ca.assumeJava1_8Plus());
+		} else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
+			assertFalse(ca.assumeJava9Plus());
+			assertTrue(ca.assumeJava1_8Plus());
+			assertTrue(ca.assumeJava1_7Plus());
+		}
+		javac.setCompiler("javac10+");
+		assertTrue(ca.assumeJava10Plus());
+		assertTrue(ca.assumeJava9Plus());
+		
+		javac.setCompiler("javac9");
+		assertFalse(ca.assumeJava10Plus());
+		assertTrue(ca.assumeJava9Plus());
+		assertTrue(ca.assumeJava1_8Plus());
+		
+		javac.setCompiler("javac1.9");
+		assertFalse(ca.assumeJava10Plus());
+		assertTrue(ca.assumeJava9Plus());
+		assertTrue(ca.assumeJava1_8Plus());
+		
+		javac.setCompiler("javac1.8");
+		assertFalse(ca.assumeJava9Plus());
+		assertTrue(ca.assumeJava1_8Plus());
+		assertTrue(ca.assumeJava1_7Plus());
+		
+		javac.setCompiler("javac1.7");
+		assertFalse(ca.assumeJava1_8Plus());
+		assertTrue(ca.assumeJava1_7Plus());
+		assertTrue(ca.assumeJava1_6Plus());
+		
+		javac.setCompiler("javac1.6");
+		assertFalse(ca.assumeJava1_7Plus());
+		assertTrue(ca.assumeJava1_6Plus());
+		assertTrue(ca.assumeJava1_5Plus());
+		
+		javac.setCompiler("javac1.5");
+		assertFalse(ca.assumeJava1_6Plus());
+		assertTrue(ca.assumeJava1_5Plus());
+		assertTrue(ca.assumeJava1_4Plus());
+		
+		javac.setCompiler("javac1.4");
+		assertFalse(ca.assumeJava1_5Plus());
+		assertTrue(ca.assumeJava1_4Plus());
+		assertTrue(ca.assumeJava1_3Plus());
+		
+		javac.setCompiler("javac1.3");
+		assertFalse(ca.assumeJava1_4Plus());
+		assertTrue(ca.assumeJava1_3Plus());
+		assertTrue(ca.assumeJava1_2Plus());
+		
+		javac.setCompiler("javac1.2");
+		assertFalse(ca.assumeJava1_3Plus());
+		assertTrue(ca.assumeJava1_2Plus());
+		assertTrue(ca.assumeJava1_1Plus());
+		
+		javac.setCompiler("javac1.1");
+		assertFalse(ca.assumeJava1_2Plus());
+		assertTrue(ca.assumeJava1_1Plus());
+    }
+    
+
+    
 
     private void commonSourceDowngrades(String javaVersion) {
         testSource("1.3", javaVersion,
