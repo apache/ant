@@ -164,57 +164,6 @@ public final class Locator {
      * @since Ant 1.6
      */
     public static String fromURI(String uri) {
-        return fromURIJava13(uri);
-        // #buzilla8031: first try Java 1.4.
-        // TODO should use java.net.URI now that we can rely on 1.4...
-        // but check for UNC-related regressions, e.g. #42275
-        // (and remember that \\server\share\file -> file:////server/share/file
-        // rather than -> file://server/share/file as it should;
-        // fixed only in JDK 7's java.nio.file.Path.toUri)
-        // return fromUriJava14(uri);
-    }
-
-    /**
-     * Java1.4+ code to extract the path from the URI.
-     * @param uri
-     * @return null if a conversion was not possible
-     */
-    /* currently unused:
-    private static String fromUriJava14(String uri) {
-        // Also check for properly formed URIs. Ant formerly recommended using
-        // nonsense URIs such as "file:./foo.xml" in XML includes. You shouldn't
-        // do that (just "foo.xml" is correct) but for compatibility we special-case
-        // things when the path is not absolute, and fall back to the old parsing behavior.
-        if (uri.startsWith("file:/")) {
-            try {
-                File f = new File(URI.create(encodeURI(uri)));
-                //bug #42227 forgot to decode before returning
-                return decodeUri(f.getAbsolutePath());
-            } catch (IllegalArgumentException e) {
-                // Bad URI, pass this on.
-                // no, this is downgraded to a warning after various
-                // JRE bugs surfaced. Hand off
-                // to our built in code on a failure
-                //throw new IllegalArgumentException(
-                //   "Bad URI " + uri + ":" + e.getMessage(), e);
-                e.printStackTrace();
-            } catch (Exception e) {
-                // Unexpected exception? Should not happen.
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-     */
-
-    /**
-     * @param uri uri to expand
-     * @return the decoded URI
-     * @since Ant1.7.1
-     */
-    private static String fromURIJava13(String uri) {
-        // Fallback method for Java 1.3 or earlier.
-
         URL url = null;
         try {
             url = new URL(uri);

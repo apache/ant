@@ -1846,7 +1846,11 @@ public class Javadoc extends Task {
         doDocFilesSubDirs(toExecute); // docfilessubdir attribute
         doModuleArguments(toExecute);
 
-        doJava14(toExecute);
+        doTags(toExecute);
+		doSource(toExecute);
+		doLinkSource(toExecute);
+		doNoqualifier(toExecute);
+		
         if (breakiterator) {
             toExecute.createArgument().setValue("-breakiterator");
         }
@@ -2207,9 +2211,30 @@ public class Javadoc extends Task {
         }
     }
 
-    // Do java1.4 arguments
-    private void doJava14(final Commandline toExecute) {
-        for (final Object element : tags) {
+    private void doNoqualifier(final Commandline toExecute) {
+		if (noqualifier != null && doclet == null) {
+            toExecute.createArgument().setValue("-noqualifier");
+            toExecute.createArgument().setValue(noqualifier);
+        }
+	}
+
+	private void doLinkSource(final Commandline toExecute) {
+		if (linksource && doclet == null) {
+            toExecute.createArgument().setValue("-linksource");
+        }
+	}
+
+	private void doSource(final Commandline toExecute) {
+		final String sourceArg = source != null ? source
+            : getProject().getProperty(MagicNames.BUILD_JAVAC_SOURCE);
+        if (sourceArg != null) {
+            toExecute.createArgument().setValue("-source");
+            toExecute.createArgument().setValue(sourceArg);
+        }
+	}
+
+	private void doTags(final Commandline toExecute) {
+		for (final Object element : tags) {
             if (element instanceof TagArgument) {
                 final TagArgument ta = (TagArgument) element;
                 final File tagDir = ta.getDir(getProject());
@@ -2254,22 +2279,7 @@ public class Javadoc extends Task {
                 }
             }
         }
-
-        final String sourceArg = source != null ? source
-            : getProject().getProperty(MagicNames.BUILD_JAVAC_SOURCE);
-        if (sourceArg != null) {
-            toExecute.createArgument().setValue("-source");
-            toExecute.createArgument().setValue(sourceArg);
-        }
-
-        if (linksource && doclet == null) {
-            toExecute.createArgument().setValue("-linksource");
-        }
-        if (noqualifier != null && doclet == null) {
-            toExecute.createArgument().setValue("-noqualifier");
-            toExecute.createArgument().setValue(noqualifier);
-        }
-    }
+	}
 
     private void doDocFilesSubDirs(final Commandline toExecute) {
         if (docFilesSubDirs) {

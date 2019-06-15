@@ -64,12 +64,13 @@ public class JavacExternal extends DefaultCompilerAdapter {
 
         String[] commandLine = cmd.getCommandline();
         int firstFileName;
-        if (assumeJava11()) {
-            firstFileName = -1;
-        } else {
-            firstFileName = moveJOptionsToBeginning(commandLine);
-        }
-
+        
+		if (assumeJava1_2Plus()) {
+			firstFileName = moveJOptionsToBeginning(commandLine);
+		} else {
+			firstFileName = -1;
+		}
+        
         return executeExternalCompile(commandLine, firstFileName,
                 true)
                 == 0;
