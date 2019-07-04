@@ -1,0 +1,54 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: ant
+version: "1.9.15alpha"
+summary: Apache Ant
+description: |
+  Apache Ant™ is a Java library and command-line tool whose mission is
+  to drive processes described in build files as targets and extension
+  points dependent upon each other. The main known usage of Ant is the
+  build of Java applications. Ant supplies a number of built-in tasks
+  allowing to compile, assemble, test and run Java applications. Ant
+  can also be used effectively to build non Java applications, for
+  instance C or C++ applications. More generally, Ant can be used to
+  pilot any type of process which can be described in terms of targets
+  and tasks.
+
+  Ant is written in Java and thus requires Java 5 or a later runtime
+  environment to be installed. If you want to build a Java project you
+  will need a Java Development Kit rather than just a Java Runtime
+  Environment.
+confinement: classic
+grade: devel
+base: core18
+license: Apache-2.0
+architectures:
+  - run-on: all
+    build-on: [amd64, i386]
+
+apps:
+  ant:
+    command: bin/ant
+  ant-docs:
+    command: ant-docs.sh $SNAP/manual/index.html
+
+parts:
+  ant:
+    plugin: dump
+    source: distribution/binaries/apache-ant-${SNAPCRAFT_PROJECT_VERSION}-bin.tar.gz
+  ant-docs:
+    plugin: dump
+    source: snap/local
