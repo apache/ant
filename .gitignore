@@ -2,6 +2,7 @@
 *.ipr
 *.iws
 *.pif
+*.snap
 .ant.properties
 .classpath
 .DS_Store
