@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.SocketTimeoutException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -144,6 +145,7 @@ public class FTP extends Task implements FTPTaskConfig {
     private String siteCommand = null;
     private String initialSiteCommand = null;
     private boolean enableRemoteVerification = true;
+    private int dataTimeout = -1;
 
     protected static final String[] ACTION_STRS = { //NOSONAR
         "sending",
@@ -1695,6 +1697,19 @@ public class FTP extends Task implements FTPTaskConfig {
     }
 
     /**
+     * Sets the timeout on the data connection.
+     * Any negative value is discarded and leaves the default
+     *
+     * @param dataTimeout int
+     * @since Ant 1.10.6
+     */
+    public void setDataTimeout(int dataTimeout) {
+        if(dataTimeout >= 0) {
+            this.dataTimeout = dataTimeout;
+        }
+    }
+
+    /**
      * Checks to see that all required parameters are set.
      *
      * @throws BuildException if the configuration is not valid.
@@ -2443,6 +2458,11 @@ public class FTP extends Task implements FTPTaskConfig {
 
             ftp.setRemoteVerificationEnabled(enableRemoteVerification);
             ftp.connect(server, port);
+
+            if (dataTimeout >= 0) {
+                ftp.setDataTimeout(dataTimeout);
+                log("Setting data timeout to " + dataTimeout, Project.MSG_VERBOSE);
+            }
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
                 throw new BuildException("FTP connection failed: %s",
                     ftp.getReplyString());
@@ -2536,6 +2556,22 @@ public class FTP extends Task implements FTPTaskConfig {
             }
 
         } catch (IOException ex) {
+            String cause = ex.getCause().toString();
+            if(cause != null) {
+                if(cause.contains("java.net.SocketTimeoutException")) {
+                    // When a read timeout occurs, inform the server that it
+                    // should abort.
+                    // Note that the latest commons-net (3.6) still doesn't 
+                    // support sending urgent data, which is normally a
+                    // prerequisite for ABORT command.
+                    // As a consequence, it  might not be taken in account immediately
+                    try {
+                        ftp.abort();
+                    } catch(IOException ioe) {
+                        // ignore it
+                    }
+                }
+            }
             throw new BuildException("error during FTP transfer: " + ex, ex);
         } finally {
             if (ftp != null && ftp.isConnected()) {
