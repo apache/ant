@@ -146,6 +146,9 @@ public class FTP extends Task implements FTPTaskConfig {
     private String initialSiteCommand = null;
     private boolean enableRemoteVerification = true;
     private int dataTimeout = -1;
+    private int wakeUpTransferInterval = -1;
+    private long lastWakeUpTime = 0;
+
 
     protected static final String[] ACTION_STRS = { //NOSONAR
         "sending",
@@ -547,6 +550,14 @@ public class FTP extends Task implements FTPTaskConfig {
                             }
                         }
                     }
+                    if(wakeUpTransferInterval > 0) {
+                        if(wakeUpTransferIntervalExpired()) {
+                            getProject().log("wakeUpTransferInterval is reached, trigger a data connection " , Project.MSG_DEBUG);
+                            // send a minimalist command to trigger a data connection
+                            ftp.listFiles(file.getName());
+                        }
+                    }
+
                 }
                 ftp.changeToParentDirectory();
             } catch (FTPConnectionClosedException ftpcce) {
@@ -1711,6 +1722,21 @@ public class FTP extends Task implements FTPTaskConfig {
     }
 
     /**
+     * Sets the time interval when we should automatically
+     * call a command triggering a transfer
+     * The parameter is in seconds
+     *
+     * @param wakeUpTransferInterval int
+     * @since Ant 1.10.6
+     */
+    public void setWakeUpTransferInterval(int wakeUpTransferInterval) {
+        if(wakeUpTransferInterval > 0) {
+            this.wakeUpTransferInterval = wakeUpTransferInterval;
+        }
+    }
+
+
+    /**
      * Checks to see that all required parameters are set.
      *
      * @throws BuildException if the configuration is not valid.
@@ -2435,6 +2461,28 @@ public class FTP extends Task implements FTPTaskConfig {
             throw new BuildException("could not create directory: %s",
                 ftp.getReplyString());
         }
+    }
+
+    /**
+     * checks if the wake up interval is expired
+     */
+    private boolean wakeUpTransferIntervalExpired() {
+        boolean result = false;
+
+        // on the first call, initialize the keep-alive mechanism
+        // by storing the current date
+        if(lastWakeUpTime == 0) {
+            lastWakeUpTime = (new Date()).getTime();
+        }
+        else {
+            long currentTime = (new Date()).getTime();
+            if(currentTime > (lastWakeUpTime + wakeUpTransferInterval*1000)) {
+                lastWakeUpTime = currentTime;
+                result = true;
+            }
+        }
+
+        return result;
     }
 
     /**
