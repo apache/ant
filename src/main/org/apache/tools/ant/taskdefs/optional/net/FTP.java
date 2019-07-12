@@ -1697,11 +1697,12 @@ public class FTP extends Task implements FTPTaskConfig {
     }
 
     /**
-     * Sets the timeout on the data connection.
+     * Sets the timeout on the data connection in milliseconds.
      * Any negative value is discarded and leaves the default
+     * A value of 0 means an infinite timeout
      *
      * @param dataTimeout int
-     * @since Ant 1.10.6
+     * @since Ant 1.10.7
      */
     public void setDataTimeout(int dataTimeout) {
         if(dataTimeout >= 0) {

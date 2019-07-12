@@ -190,7 +190,7 @@ connection.</p>
   <tr>
     <td>preservelastmodified</td>
     <td>Give the copied files the same last modified time as the original source files (applies to
-      getting files only).  (<strong>Note</strong>: Ignored on Java 1.1)</td>
+      getting files only).  (<strong>Note</strong>: Ignored on Java 1.1)</td>11
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
@@ -218,6 +218,12 @@ connection.</p>
       connection.  This is a security measure that is enabled by default, but it may be useful to
       disable it in certain firewall scenarios.  <em>since Ant 1.8.0</em></td>
     <td>No; default is <q>true</q></td>
+  </tr>
+  <tr>
+    <td>dataTimeout</td>
+    <td>Sets a timeout in milliseconds used when waiting for data on the data connection.
+      A value of 0 means an infinite timeout.<em>since Ant 1.10.7</em></td>
+    <td>No</td>
   </tr>
   <tr>
     <td colspan="3" class="left">
