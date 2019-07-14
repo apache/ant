@@ -23,13 +23,13 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -482,7 +482,8 @@ public class SSHExec extends SSHBase {
      */
     private void writeToFile(final String from, final boolean append, final File to)
         throws IOException {
-        try (BufferedWriter out = new BufferedWriter(new FileWriter(to.getAbsolutePath(), append))) {
+        try (BufferedWriter out = Files.newBufferedWriter(to.getAbsoluteFile().toPath(),
+            StandardOpenOption.APPEND)) {
             final StringReader in = new StringReader(from);
             final char[] buffer = new char[BUFFER_SIZE];
             while (true) {
