@@ -25,7 +25,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.SocketTimeoutException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -150,7 +149,7 @@ public class FTP extends Task implements FTPTaskConfig {
     private long lastWakeUpTime = 0;
 
 
-    protected static final String[] ACTION_STRS = { //NOSONAR
+    protected static final String[] ACTION_STRS = {//NOSONAR
         "sending",
         "getting",
         "deleting",
@@ -161,7 +160,7 @@ public class FTP extends Task implements FTPTaskConfig {
         "site"
     };
 
-    protected static final String[] COMPLETED_ACTION_STRS = { //NOSONAR
+    protected static final String[] COMPLETED_ACTION_STRS = {//NOSONAR
         "sent",
         "retrieved",
         "deleted",
@@ -172,7 +171,7 @@ public class FTP extends Task implements FTPTaskConfig {
         "site command executed"
     };
 
-    protected static final String[] ACTION_TARGET_STRS = { //NOSONAR
+    protected static final String[] ACTION_TARGET_STRS = {//NOSONAR
         "files",
         "files",
         "files",
@@ -431,7 +430,8 @@ public class FTP extends Task implements FTPTaskConfig {
             }
         }
 
-        private void scanRoots(AntFTPFile baseFTPFile, String currentelement, String originalpattern) {
+        private void scanRoots(AntFTPFile baseFTPFile, String currentelement,
+                               String originalpattern) {
             AntFTPFile myfile = new AntFTPFile(baseFTPFile, currentelement);
             boolean isOK = true;
             boolean traversesSymlinks = false;
@@ -544,15 +544,16 @@ public class FTP extends Task implements FTPTaskConfig {
                             if (!isFollowSymlinks() && file.isSymbolicLink()) {
                                 filesExcluded.addElement(name);
                             } else {
-                                // at this point, it's either a symbolic link or a file, but not a directory.
-                                // so we include it
+                                // at this point, it's either a symbolic link or a file,
+                                // but not a directory, so we include it
                                 accountForIncludedFile(name);
                             }
                         }
                     }
-                    if(wakeUpTransferInterval > 0) {
-                        if(wakeUpTransferIntervalExpired()) {
-                            getProject().log("wakeUpTransferInterval is reached, trigger a data connection " , Project.MSG_DEBUG);
+                    if (wakeUpTransferInterval > 0) {
+                        if (wakeUpTransferIntervalExpired()) {
+                            getProject().log("wakeUpTransferInterval is reached,"
+                                    + " trigger a data connection ", Project.MSG_DEBUG);
                             // send a minimalist command to trigger a data connection
                             ftp.listFiles(file.getName());
                         }
@@ -735,7 +736,8 @@ public class FTP extends Task implements FTPTaskConfig {
                         candidateFound = true;
                         target = fiddleName(array[icounter].getName());
                         getProject().log("will try to cd to "
-                                         + target + " where a directory called " + array[icounter].getName()
+                                         + target + " where a directory called "
+                                         + array[icounter].getName()
                                          + " exists", Project.MSG_DEBUG);
                         for (int pcounter = 0; pcounter < array.length; pcounter++) {
                             if (array[pcounter] != null
@@ -970,11 +972,13 @@ public class FTP extends Task implements FTPTaskConfig {
              * @return relative path
              */
             private String getRelativePath(String currentPath, String currentRelativePath) {
-                List<String> pathElements = SelectorUtils.tokenizePath(getAbsolutePath(), remoteFileSep);
+                List<String> pathElements = SelectorUtils.tokenizePath(getAbsolutePath(),
+                        remoteFileSep);
                 StringBuilder relPath = new StringBuilder(currentRelativePath == null
                         ? "" : currentRelativePath);
-                for (String currentElement : pathElements.subList(SelectorUtils.tokenizePath(currentPath,
-                        remoteFileSep).size(), pathElements.size())) {
+                for (String currentElement : pathElements.subList(
+                                SelectorUtils.tokenizePath(currentPath, remoteFileSep).size(),
+                                pathElements.size())) {
                     FTPFile[] theFiles = listFiles(currentPath);
                     FTPFile theFile = null;
                     if (theFiles != null) {
@@ -1155,7 +1159,8 @@ public class FTP extends Task implements FTPTaskConfig {
      * @return true if it is possible to cd to this directory
      * @since ant 1.6
      */
-    private boolean isFunctioningAsDirectory(FTPClient ftp, String dir, FTPFile file) throws FTPConnectionClosedException {
+    private boolean isFunctioningAsDirectory(FTPClient ftp, String dir, FTPFile file)
+            throws FTPConnectionClosedException {
         if (file.isDirectory()) {
             return true;
         }
@@ -1216,7 +1221,8 @@ public class FTP extends Task implements FTPTaskConfig {
      * @return true if it is possible to cd to this directory
      * @since ant 1.6
      */
-    private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file) throws FTPConnectionClosedException {
+    private boolean isFunctioningAsFile(FTPClient ftp, String dir, FTPFile file)
+            throws FTPConnectionClosedException {
         return !file.isDirectory() && (file.isFile() || !isFunctioningAsDirectory(ftp, dir, file));
     }
 
@@ -1439,8 +1445,8 @@ public class FTP extends Task implements FTPTaskConfig {
      */
     @Deprecated
     public void setAction(String action) throws BuildException {
-        log("DEPRECATED - The setAction(String) method has been deprecated. Use setAction(FTP.Action) instead.");
-
+        log("DEPRECATED - The setAction(String) method has been deprecated."
+                + " Use setAction(FTP.Action) instead.");
         Action a = new Action();
 
         a.setValue(action);
@@ -1716,7 +1722,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @since Ant 1.10.7
      */
     public void setDataTimeout(int dataTimeout) {
-        if(dataTimeout >= 0) {
+        if (dataTimeout >= 0) {
             this.dataTimeout = dataTimeout;
         }
     }
@@ -1730,7 +1736,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * @since Ant 1.10.6
      */
     public void setWakeUpTransferInterval(int wakeUpTransferInterval) {
-        if(wakeUpTransferInterval > 0) {
+        if (wakeUpTransferInterval > 0) {
             this.wakeUpTransferInterval = wakeUpTransferInterval;
         }
     }
@@ -1776,7 +1782,7 @@ public class FTP extends Task implements FTPTaskConfig {
                 Class.forName("org.apache.commons.net.ftp.FTPClientConfig");
             } catch (ClassNotFoundException e) {
                 throw new BuildException(
-                    "commons-net.jar >= 1.4.0 is required for at least one of the attributes specified.");
+                    "commons-net.jar >= 1.4.0 is required for the specified attributes.");
             }
         }
     }
@@ -2020,7 +2026,8 @@ public class FTP extends Task implements FTPTaskConfig {
             // create a local temporary file
             FILE_UTILS.createNewFile(tempFile);
             long localTimeStamp = tempFile.lastModified();
-            BufferedInputStream instream = new BufferedInputStream(Files.newInputStream(tempFile.toPath()));
+            BufferedInputStream instream = new BufferedInputStream(
+                    Files.newInputStream(tempFile.toPath()));
             ftp.storeFile(tempFile.getName(), instream);
             instream.close();
             boolean success = FTPReply.isPositiveCompletion(ftp.getReplyCode());
@@ -2471,12 +2478,11 @@ public class FTP extends Task implements FTPTaskConfig {
 
         // on the first call, initialize the keep-alive mechanism
         // by storing the current date
-        if(lastWakeUpTime == 0) {
+        if (lastWakeUpTime == 0) {
             lastWakeUpTime = (new Date()).getTime();
-        }
-        else {
+        } else {
             long currentTime = (new Date()).getTime();
-            if(currentTime > (lastWakeUpTime + wakeUpTransferInterval*1000)) {
+            if (currentTime > (lastWakeUpTime + wakeUpTransferInterval * 1000)) {
                 lastWakeUpTime = currentTime;
                 result = true;
             }
@@ -2606,17 +2612,17 @@ public class FTP extends Task implements FTPTaskConfig {
 
         } catch (IOException ex) {
             String cause = ex.getCause().toString();
-            if(cause != null) {
-                if(cause.contains("java.net.SocketTimeoutException")) {
+            if (cause != null) {
+                if (cause.contains("java.net.SocketTimeoutException")) {
                     // When a read timeout occurs, inform the server that it
                     // should abort.
-                    // Note that the latest commons-net (3.6) still doesn't 
+                    // Note that the latest commons-net (3.6) still does not
                     // support sending urgent data, which is normally a
                     // prerequisite for ABORT command.
                     // As a consequence, it  might not be taken in account immediately
                     try {
                         ftp.abort();
-                    } catch(IOException ioe) {
+                    } catch (IOException ioe) {
                         // ignore it
                     }
                 }
@@ -2683,8 +2689,10 @@ public class FTP extends Task implements FTPTaskConfig {
                 return RM_DIR;
             case "site":
                 return SITE_CMD;
+            default:
+                return SEND_FILES;
             }
-            return SEND_FILES;
+
         }
     }
 
