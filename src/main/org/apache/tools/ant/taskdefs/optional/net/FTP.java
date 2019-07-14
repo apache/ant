@@ -1733,7 +1733,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * The parameter is in seconds
      *
      * @param wakeUpTransferInterval int
-     * @since Ant 1.10.6
+     * @since Ant 1.10.7
      */
     public void setWakeUpTransferInterval(int wakeUpTransferInterval) {
         if (wakeUpTransferInterval > 0) {
