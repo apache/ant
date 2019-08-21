@@ -17,7 +17,13 @@
     <get dest="${sonarqube-ant-task-jar}" src="${sonarqube-ant-task-url}"/>
   </target>
 
-  <target name="sonar" depends="download">
+  <target name="build-classes">
+    <ant antfile="launch-build.xml">
+      <property name="args" value="-Djenkins=t"/>
+    </ant>
+  </target>
+
+  <target name="sonar" depends="download,build-classes">
     <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
         <classpath path="${sonarqube-ant-task-jar}" />
     </taskdef>
