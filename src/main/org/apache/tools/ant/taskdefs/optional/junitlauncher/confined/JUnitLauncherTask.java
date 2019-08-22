@@ -477,7 +477,8 @@ public class JUnitLauncherTask extends Task {
             if (theClass != null) {
                 return theClass;
             }
-            final String packageName = classname.substring(0, classname.lastIndexOf('.'));
+            final String packageName = classname.contains(".") ? classname.substring(0, classname.lastIndexOf('.'))
+                    : "";
             if (packageName.equals("org.apache.tools.ant.taskdefs.optional.junitlauncher")) {
                 theClass = findClass(classname);
                 if (resolve) {
