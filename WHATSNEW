@@ -34,6 +34,9 @@ Other changes:
  * prefer https over http when building ant itself, and in the ant 
    documentation and sources
 
+ * changed the references and Maven coordinates of JavaMail dependency
+   to Jakarta Mail and thus javax.mail to jakarta.mail - and upgraded
+   the dependency to 1.6.3.
 
 Changes from Ant 1.10.5 TO Ant 1.10.6
 =====================================

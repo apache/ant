@@ -329,14 +329,14 @@ Set -Ddest=LOCATION on the command line
     <f2 project="which"/>
   </target>
 
-  <target name="javamail"
-          description="load Java Mail"
+  <target name="jakartamail"
+          description="load Jakarta Mail"
           depends="init">
     <!-- We only need this one dependency as per
-      the project doc https://javaee.github.io/javamail/#Download_JavaMail_Release
+      the project doc https://eclipse-ee4j.github.io/mail/
       This alone should bring in all necessary dependencies (including the API
        jars and the activation jars -->
-    <f2 project="com.sun.mail" archive="javax.mail"/>
+    <f2 project="com.sun.mail" archive="jakarta.mail"/>
   </target>
 
   <target name="jspc"
@@ -397,5 +397,5 @@ Set -Ddest=LOCATION on the command line
   <target name="all"
     description="load all the libraries (except jython)"
     depends="antunit,ivy,logging,junit,junitlauncher,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,
-      javamail,jspc,jai,xz,netrexx,junit-engine-vintage,junit-engine-jupiter"/>
+      jakartamail,jspc,jai,xz,netrexx,junit-engine-vintage,junit-engine-jupiter"/>
 </project>
