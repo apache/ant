@@ -21,6 +21,11 @@ Fixed bugs:
    has now been fixed.
    Bugzilla Report 63446
 
+ * The "legacy-xml" junitlauncher task's listener would not include
+   @ParameterizedTest testcases in its XML report file. This has now
+   been fixed.
+   Bugzilla Report 63680
+
 Other changes:
 --------------
 

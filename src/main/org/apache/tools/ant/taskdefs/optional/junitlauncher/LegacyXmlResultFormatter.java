@@ -236,19 +236,14 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                     continue;
                 }
                 // find the parent class of this test method
-                final Optional<TestIdentifier> parent = testPlan.getParent(testId);
-                if (!parent.isPresent() || !parent.get().getSource().isPresent()) {
-                    // we need to know the parent test class, else we aren't interested
+                final Optional<ClassSource> parentClassSource = findFirstParentClassSource(testId);
+                if (!parentClassSource.isPresent()) {
                     continue;
                 }
-                final TestSource parentSource = parent.get().getSource().get();
-                if (!(parentSource instanceof ClassSource)) {
-                    continue;
-                }
-                final String classname = ((ClassSource) parentSource).getClassName();
+                final String classname = (parentClassSource.get()).getClassName();
                 writer.writeStartElement(ELEM_TESTCASE);
                 writer.writeAttribute(ATTR_CLASSNAME, classname);
-                writer.writeAttribute(ATTR_NAME, testId.getDisplayName());
+                writer.writeAttribute(ATTR_NAME, testId.getLegacyReportingName());
                 final Stats stats = entry.getValue();
                 writer.writeAttribute(ATTR_TIME, String.valueOf((stats.endedAt - stats.startedAt) / ONE_SECOND));
                 // skipped element if the test was skipped
@@ -374,6 +369,16 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 }
             }
             return Optional.empty();
+        }
+
+        private Optional<ClassSource> findFirstParentClassSource(final TestIdentifier testId) {
+            final Optional<TestIdentifier> parent = testPlan.getParent(testId);
+            if (!parent.isPresent() || !parent.get().getSource().isPresent()) {
+                return Optional.empty();
+            }
+            final TestSource parentSource = parent.get().getSource().get();
+            return parentSource instanceof ClassSource ? Optional.of((ClassSource) parentSource)
+                    : findFirstParentClassSource(parent.get());
         }
     }
 
