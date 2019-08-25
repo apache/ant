@@ -68,7 +68,7 @@ echo "public class JavacVersionCheck {}" > %CLASSDIR%\JavacVersionCheck.java
 IF %ERRORLEVEL% EQU 0 SET JAVAC_RELEASE_VERSION="--release 8"
 DEL %CLASSDIR%\JavacVersionCheck.java %CLASSDIR%\JavacVersionCheck.class >nul 2>&1
 echo.
-IF "%JAVAC_RELEASE_VERSION%" == "" (
+IF %JAVAC_RELEASE_VERSION% == "" (
   echo ... Compiling Ant Classes
 ) ELSE (
   echo ... Compiling Ant Classes with %JAVAC_RELEASE_VERSION%
