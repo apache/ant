@@ -127,9 +127,24 @@ mkdir -p build
 mkdir -p ${CLASSDIR}
 mkdir -p bin
 
-echo ... Compiling Ant Classes
+# Check if javac tool supports the --release param
+echo "public class JavacVersionCheck {}" > ${CLASSDIR}/JavacVersionCheck.java
+"${JAVAC}" --release 8 -d ${CLASSDIR} ${CLASSDIR}/JavacVersionCheck.java 1>&2 2>/dev/null
+ret=$?
+rm ${CLASSDIR}/JavacVersionCheck.java ${CLASSDIR}/JavacVersionCheck.class 1>&2 2>/dev/null
+JAVAC_RELEASE_VERSION=
+if [ $ret -eq 0 ]; then
+  # set --release to 8
+  JAVAC_RELEASE_VERSION="--release 8"
+fi
+if [ "${JAVAC_RELEASE_VERSION}" = "" ]; then
+  echo ... Compiling Ant Classes
+else
+  echo ... Compiling Ant Classes with ${JAVAC_RELEASE_VERSION}
+fi
 
-"${JAVAC}" $BOOTJAVAC_OPTS -d ${CLASSDIR} ${TOOLS}/bzip2/*.java ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
+"${JAVAC}" $BOOTJAVAC_OPTS -d ${CLASSDIR} ${JAVAC_RELEASE_VERSION} \
+           ${TOOLS}/bzip2/*.java ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
            ${TOOLS}/ant/util/regexp/RegexpMatcher.java \
            ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java \
            ${TOOLS}/ant/property/*.java \
