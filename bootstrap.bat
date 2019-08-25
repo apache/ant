@@ -70,11 +70,11 @@ DEL %CLASSDIR%\JavacVersionCheck.java %CLASSDIR%\JavacVersionCheck.class >nul 2>
 echo.
 IF %JAVAC_RELEASE_VERSION% == "" (
   echo ... Compiling Ant Classes
+  "%JAVAC%" %BOOTJAVAC_OPTS% -d %CLASSDIR% %TOOLS%\bzip2\*.java %TOOLS%\tar\*.java %TOOLS%\zip\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java %TOOLS%\ant\taskdefs\condition\*.java %TOOLS%\ant\taskdefs\compilers\*.java %TOOLS%\ant\types\resources\*.java %TOOLS%\ant\property\*.java
 ) ELSE (
   echo ... Compiling Ant Classes with %JAVAC_RELEASE_VERSION%
+  "%JAVAC%" %BOOTJAVAC_OPTS% -d %CLASSDIR% %JAVAC_RELEASE_VERSION% %TOOLS%\bzip2\*.java %TOOLS%\tar\*.java %TOOLS%\zip\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java %TOOLS%\ant\taskdefs\condition\*.java %TOOLS%\ant\taskdefs\compilers\*.java %TOOLS%\ant\types\resources\*.java %TOOLS%\ant\property\*.java
 )
-
-"%JAVAC%" %BOOTJAVAC_OPTS% -d %CLASSDIR% %JAVAC_RELEASE_VERSION% %TOOLS%\bzip2\*.java %TOOLS%\tar\*.java %TOOLS%\zip\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java %TOOLS%\ant\taskdefs\condition\*.java %TOOLS%\ant\taskdefs\compilers\*.java %TOOLS%\ant\types\resources\*.java %TOOLS%\ant\property\*.java
 
 if ERRORLEVEL 1 goto mainend
 
