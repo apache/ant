@@ -796,8 +796,7 @@ public abstract class DefaultCompilerAdapter
      */
     @Deprecated
     protected boolean assumeJava9() {
-        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_9)
-                || assumeJavaXY("javac9", JavaEnvUtils.JAVA_9);
+        return assumeJava9Plus() && !assumeJava10Plus();
     }
 
     /**
@@ -806,9 +805,9 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.10.2
      */
     protected boolean assumeJava9Plus() {
-        return "javac1.9".equals(attributes.getCompilerVersion())
-            || "javac9".equals(attributes.getCompilerVersion())
-            || assumeJava10Plus();
+        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_9)
+                || assumeJavaXY("javac9", JavaEnvUtils.JAVA_9)
+                || assumeJava10Plus();
     }
 
     /**
@@ -817,7 +816,11 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.10.7
      */
     protected boolean assumeJava10Plus() {
-        return "javac10+".equals(attributes.getCompilerVersion());
+        return "javac10+".equals(attributes.getCompilerVersion())
+                || (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_10)
+                    && ("classic".equals(attributes.getCompilerVersion())
+                    || "modern".equals(attributes.getCompilerVersion())
+                    || "extJavac".equals(attributes.getCompilerVersion())));
     }
     
     /**
@@ -825,7 +828,12 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.8.3
      */
     private boolean assumeJavaXY(final String javacXY, final String javaEnvVersionXY) {
-        return javacXY.equals(attributes.getCompilerVersion());
+        String compilerVersion = attributes.getCompilerVersion();
+        return javacXY.equals(compilerVersion) ||
+                (JavaEnvUtils.isJavaVersion(javaEnvVersionXY)
+                        && ("classic".equals(compilerVersion)
+                        || "modern".equals(compilerVersion)
+                        || "extJavac".equals(compilerVersion)));
     }
 
     /**
