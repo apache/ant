@@ -42,15 +42,15 @@ ant -f fetch.xml -Ddest=optional
 # This will ensure that Ant built with different (higher) version of Ant
 # can be used by Java 8 runtime and can function properly for all Ant
 # functionality
-mkdir java-8-latest
-cd java-8-latest
+mkdir -p build/java-8-latest
+cd build/java-8-latest
 # Download latest Java 8 (we use Adopt OpenJDK binaries)
 wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u222-b10/OpenJDK8U-jdk_x64_linux_hotspot_8u222b10.tar.gz
 tar -zxf ./*.tar.gz
 # set JAVA_HOME to point to the newly extracted tar's content
 export JAVA_HOME="`echo \`pwd\`/\`echo */\``"
 export PATH="${JAVA_HOME}"/bin:$PATH
-cd ..
+cd ../..
 
 echo "Using \"${JAVA_HOME}\" to run Ant tests"
 java -version
