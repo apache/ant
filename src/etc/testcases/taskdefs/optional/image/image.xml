@@ -23,47 +23,48 @@
   <target name="setUp">
     <mkdir dir="${output}"/>
     <property name="src.dir" location="${basedir}/src"/>
+    <available classname="com.sun.image.codec.jpeg.JPEGCodec" property="jpeg.codec.available"/>
   </target>
 
   <target name="main" depends="testSimpleScale">
   </target>
 
   <!-- this should produce a single file in the dest dir -->
-  <target name="testSimpleScale" depends="setUp">
+  <target name="testSimpleScale" depends="setUp" if="jpeg.codec.available">
     <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="no" failonerror="no">
       <scale width="300" proportions="width"/>
     </image>
   </target>
 
   <!-- this should put some text in the log -->
-  <target name="testEchoToLog" depends="setUp">
+  <target name="testEchoToLog" depends="setUp" if="jpeg.codec.available">
     <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="no" failonerror="no">
       <scale width="300" proportions="width"/>
     </image>
   </target>
 
   <!-- this should produce a single file in the dest dir -->
-  <target name="testFailOnError" depends="setUp">
+  <target name="testFailOnError" depends="setUp" if="jpeg.codec.available">
     <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="no" failonerror="yes">
       <scale width="300" proportions="width"/>
     </image>
   </target>
 
   <!-- this should produce a single file in the dest dir, overwriting any existing file -->
-  <target name="testOverwriteTrue" depends="setUp">
+  <target name="testOverwriteTrue" depends="setUp" if="jpeg.codec.available">
     <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="true" failonerror="no">
       <scale width="300" proportions="width"/>
     </image>
   </target>
 
   <!-- this should not overwrite the existing file -->
-  <target name="testOverwriteFalse" depends="setUp">
+  <target name="testOverwriteFalse" depends="setUp" if="jpeg.codec.available">
     <image includes="*.jpg" srcdir="${src.dir}" destdir="${output}" overwrite="false" failonerror="no">
       <scale width="300" proportions="width"/>
     </image>
   </target>
 
-  <target name="testSimpleScaleWithMapper" depends="setUp">
+  <target name="testSimpleScaleWithMapper" depends="setUp" if="jpeg.codec.available">
     <image includes="*.jpg" srcdir="${src.dir}"
            destdir="${output}" overwrite="no" failonerror="no">
       <scale width="300" proportions="width"/>

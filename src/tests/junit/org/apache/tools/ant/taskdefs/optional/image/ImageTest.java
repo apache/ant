@@ -34,6 +34,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeNotNull;
 import static org.junit.Assume.assumeTrue;
 
 /**
@@ -63,14 +64,17 @@ public class ImageTest {
     @Test
     public void testEchoToLog() {
         buildRule.executeTarget("testEchoToLog");
+        assumeNotNull("JPEG codec is unavailable in classpath",
+                buildRule.getProject().getProperty("jpeg.codec.available"));
         assertThat(buildRule.getLog(), containsString("Processing File"));
     }
 
     @Test
     public void testSimpleScale() {
         buildRule.executeTarget("testSimpleScale");
+        assumeNotNull("JPEG codec is unavailable in classpath",
+                buildRule.getProject().getProperty("jpeg.codec.available"));
         assertThat(buildRule.getLog(), containsString("Processing File"));
-
         File f = new File(buildRule.getOutputDir(), LARGEIMAGE);
         assertTrue("Did not create " + f.getAbsolutePath(), f.exists());
     }
@@ -78,6 +82,8 @@ public class ImageTest {
     @Test
     public void testOverwriteTrue() {
         buildRule.executeTarget("testSimpleScale");
+        assumeNotNull("JPEG codec is unavailable in classpath",
+                buildRule.getProject().getProperty("jpeg.codec.available"));
         assertThat(buildRule.getLog(), containsString("Processing File"));
         File f = new File(buildRule.getOutputDir(), LARGEIMAGE);
         assumeTrue("Could not change file modification date",
@@ -93,6 +99,8 @@ public class ImageTest {
     @Test
     public void testOverwriteFalse() {
         buildRule.executeTarget("testSimpleScale");
+        assumeNotNull("JPEG codec is unavailable in classpath",
+                buildRule.getProject().getProperty("jpeg.codec.available"));
         assertThat(buildRule.getLog(), containsString("Processing File"));
         File f = new File(buildRule.getOutputDir(), LARGEIMAGE);
         long lastModified = f.lastModified();
@@ -106,6 +114,8 @@ public class ImageTest {
     @Test
     public void testSimpleScaleWithMapper() {
         buildRule.executeTarget("testSimpleScaleWithMapper");
+        assumeNotNull("JPEG codec is unavailable in classpath",
+                buildRule.getProject().getProperty("jpeg.codec.available"));
         assertThat(buildRule.getLog(), containsString("Processing File"));
         File f = new File(buildRule.getOutputDir(), "scaled-" + LARGEIMAGE);
         assertTrue("Did not create " + f.getAbsolutePath(), f.exists());
