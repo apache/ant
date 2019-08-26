@@ -29,7 +29,7 @@ set -e
 
 # Build (compile and generate the dist) the project using the Java version
 # that's already set in the environment
-echo "Using  ${JAVA_HOME} to build Ant"
+echo "Using  \"${JAVA_HOME}\" to build Ant"
 java -version
 
 # Fetch all the necessary thirdparty libs, before boostraping Ant
@@ -48,16 +48,16 @@ cd java-8-latest
 wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u222-b10/OpenJDK8U-jdk_x64_linux_hotspot_8u222b10.tar.gz
 tar -zxf ./*.tar.gz
 # set JAVA_HOME to point to the newly extracted tar's content
-export JAVA_HOME=`echo \`pwd\`/\`echo */\``
-export PATH=$JAVA_HOME/bin:$PATH
+export JAVA_HOME="`echo \`pwd\`/\`echo */\``"
+export PATH="${JAVA_HOME}"/bin:$PATH
 cd ..
 
-echo "Using ${JAVA_HOME} to run Ant tests"
+echo "Using \"${JAVA_HOME}\" to run Ant tests"
 java -version
 
 # Set ANT_HOME to the boostraped version - the one which was built, using a different Java version, a few steps
 # earlier in this script
-export ANT_HOME=`pwd`/bootstrap
+export ANT_HOME="`pwd`/bootstrap"
 # Run the tests. We intentionally skip the build (compilation etc) to avoid compiling the project
 # with the newly set Java version.
 ant -nouserlib -lib lib/optional test -Dskip.build=true -Dignore.tests.failed=true -Doptional.jars.whenmanifestonly=skip -Djenkins=t
