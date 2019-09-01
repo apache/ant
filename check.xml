@@ -105,7 +105,7 @@
 
   <!-- Apache Rat: Release Auditing Tool -->
   <property name="rat.version"
-            value="0.12"
+            value="0.13"
             description="Which version of Apache Rat to use"/>
   <property name="rat.report.dir"
             value="${reports.dir}/rat"
@@ -311,6 +311,25 @@
              classpathref="rat.classpath"/>
     <mkdir dir="${rat.report.dir}"/>
     <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="${rat.report.dir}/report.txt">
+      <rat:fullTextMatcher licenseFamilyCategory="AL   "
+             licenseFamilyName="Apache License Version 2.0 with HTTPS reference">
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements.  See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License.  You may obtain a copy of the License at
+
+   https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+      </rat:fullTextMatcher>
+      <rat:approvedLicense
+             familyName="Apache License Version 2.0 with HTTPS reference"/>
       <fileset dir="${java.dir}">
         <exclude name="org/apache/tools/ant/defaultManifest.mf"/>
         <exclude name="org/apache/tools/ant/version.txt"/>
