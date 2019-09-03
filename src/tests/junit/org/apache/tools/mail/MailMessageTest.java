@@ -44,7 +44,7 @@ public class MailMessageTest {
     @Before
     public void setUp() {
         try {
-            local = InetAddress.getLocalHost().getHostName();
+            local = InetAddress.getLocalHost().getCanonicalHostName();
         } catch (java.net.UnknownHostException uhe) {
             // ignore
         }
