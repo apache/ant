@@ -393,7 +393,7 @@ public class MailMessage {
     }
 
     void sendHelo() throws IOException {
-        String local = InetAddress.getLocalHost().getHostName();
+        String local = InetAddress.getLocalHost().getCanonicalHostName();
         int[] ok = {OK_HELO};
         send("HELO " + local, ok);
     }
