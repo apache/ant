@@ -315,9 +315,13 @@ Note: This document was adapted from the one created in the context of
 23. copy the candidate snaps to stable. First figure out the revision
 
     $ snapcraft status ant
-    $ snapcraft release ant REVISION latest/stable 1.10/stable
+    $ snapcraft release ant REVISION latest/stable
+    $ snapcraft release ant REVISION 1.10/stable
 
-    where REVISION is the revision you want to promote
+    where REVISION is the revision you want to promote (keep in mind that the
+    REVISION isn't the version you are releasing. snapcraft uses its own separate integer
+    value for the REVISION and this value is listed as the output of the previous
+    "snapcraft status ant" command)
 
 24. wait a few hours for the mirrors to catch up
 
