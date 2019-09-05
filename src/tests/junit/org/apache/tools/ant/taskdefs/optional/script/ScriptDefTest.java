@@ -170,6 +170,12 @@ public class ScriptDefTest {
             notCompiledDuration = System.nanoTime() - start;
         }
 
-        assertTrue(duration < notCompiledDuration);
+        assertTrue(
+            String.format(
+                "Compiled scripts should run faster (%d ns) than not compiled (%d ns) scripts.",
+                duration, notCompiledDuration
+	        ), 
+            duration < notCompiledDuration
+        );
     }
 }
