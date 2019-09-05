@@ -80,7 +80,8 @@ Note: This document was adapted from the one created in the context of
     * ivy.xml in release subdirectory (version should already be correct here)
     * WHATSNEW (version should already be correct here)
     * src/etc/testcases/taskdefs/conditions/antversion.xml (version should already be correct here)
-    * snap/snapcraft.yml
+    * snap/snapcraft.yml - change the value for "version" attribute. Plus, change the value for "grade"
+      to "stable".
 
 6.  Next bootstrap, build and run the tests.
 
@@ -111,6 +112,7 @@ Note: This document was adapted from the one created in the context of
 
 8.  Commit your changes, tag them, push them.
 
+    $ git commit -m "Prepare for RC1 of version 1.10.0 of Ant" ./
     $ git tag -s -m "Tagging RC1 for version 1.10.0 of Ant" ANT_1.10.0_RC1
     $ git push --tags
 
@@ -302,7 +304,7 @@ Note: This document was adapted from the one created in the context of
     * ivy.xml in release subdirectory
     * WHATSNEW (add a new section)
     * src/etc/testcases/taskdefs/conditions/antversion.xml
-    * snap/snapcraft.yml (bump version to [newversion]alpha)
+    * snap/snapcraft.yml - bump version to [newversion]alpha and change value of "grade" to "devel"
 
     Amend the merge commit
 
