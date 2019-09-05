@@ -80,7 +80,7 @@ Note: This document was adapted from the one created in the context of
     * ivy.xml in release subdirectory (version should already be correct here)
     * WHATSNEW (version should already be correct here)
     * src/etc/testcases/taskdefs/conditions/antversion.xml (version should already be correct here)
-    * snap/snapcraft.yml - change the value for "version" attribute. Plus, change the value for "grade"
+    * snap/snapcraft.yaml - change the value for "version" attribute. Plus, change the value for "grade"
       to "stable".
 
 6.  Next bootstrap, build and run the tests.
@@ -304,7 +304,7 @@ Note: This document was adapted from the one created in the context of
     * ivy.xml in release subdirectory
     * WHATSNEW (add a new section)
     * src/etc/testcases/taskdefs/conditions/antversion.xml
-    * snap/snapcraft.yml - bump version to [newversion]alpha and change value of "grade" to "devel"
+    * snap/snapcraft.yaml - bump version to [newversion]alpha and change value of "grade" to "devel"
 
     Amend the merge commit
 
@@ -377,7 +377,7 @@ Files containing version information
    * ivy.xml in release subdirectory
    * WHATSNEW
    * src/etc/testcases/taskdefs/conditions/antversion.xml
-   * snap/snapcraft.yml
+   * snap/snapcraft.yaml
 
 cover.html, credits.html, POM files, antversion.xml should be 
 adjusted for the [newversion] right after the build and tagging 
