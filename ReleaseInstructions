@@ -234,7 +234,11 @@ Note: This document was adapted from the one created in the context of
 16. If the vote fails, address the problems and recreate the next RC
     build.
 
-17. Once the vote has passed, tag the last RC created with the final tag
+17. Once the vote has passed, tag the last RC created with the final tag.
+    It is important to tag the release under the "rel/" path since the
+    Apache infrastructure for .git provides certain protections for tags
+    under the "rel/" path. Releases need such protections as per Apache
+    release guidelines.
 
     $ git tag -s -m "Tagging version 1.10.0 of Ant" rel/1.10.0 HASH_OF_LAST_RC
     $ git push --tags
