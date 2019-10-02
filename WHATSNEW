@@ -1,6 +1,8 @@
 Changes from Ant 1.9.14 TO Ant 1.9.15
 =====================================
 
+* The runant.py script should now work with Python 3.
+   Github Pull Request #96
 
 Changes from Ant 1.9.13 TO Ant 1.9.14
 =====================================
