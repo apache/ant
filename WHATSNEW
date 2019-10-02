@@ -1,13 +1,15 @@
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
 
-=======
 Other changes:
 --------------
 
  * org.apache.tools.mail.MailMessage will now send a fully qualified
    domain name in its HELO message.
    Github Pull Request #101
+
+ * The runant.py script should now work with Python 3.
+   Github Pull Request #96
 
 Changes from Ant 1.10.6 TO Ant 1.10.7
 =====================================
