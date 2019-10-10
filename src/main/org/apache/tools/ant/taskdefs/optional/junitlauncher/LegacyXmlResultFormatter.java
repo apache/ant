@@ -284,7 +284,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 }
                 writer.writeAttribute(ATTR_TYPE, t.getClass().getName());
                 // write out the stacktrace
-                writer.writeCData(StringUtils.getStackTrace(cause.get()));
+                writer.writeCData(StringUtils.getStackTrace(t));
             }
             writer.writeEndElement();
         }
@@ -303,7 +303,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 }
                 writer.writeAttribute(ATTR_TYPE, t.getClass().getName());
                 // write out the stacktrace
-                writer.writeCData(StringUtils.getStackTrace(cause.get()));
+                writer.writeCData(StringUtils.getStackTrace(t));
             }
             writer.writeEndElement();
         }
