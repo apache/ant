@@ -1,6 +1,13 @@
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
 
+Fixed bugs:
+-----------
+
+ * "legacy-xml" formatter of junitlauncher task wasn't writing out
+   the stacktrace for failures. This is now fixed.
+   Bugzilla Report 63827
+
 Other changes:
 --------------
 

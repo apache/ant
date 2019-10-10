@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.DateUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -282,6 +283,8 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                     writer.writeAttribute(ATTR_MESSAGE, message);
                 }
                 writer.writeAttribute(ATTR_TYPE, t.getClass().getName());
+                // write out the stacktrace
+                writer.writeCData(StringUtils.getStackTrace(cause.get()));
             }
             writer.writeEndElement();
         }
