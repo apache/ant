@@ -8,6 +8,8 @@ Fixed bugs:
    the stacktrace for failures. This is now fixed.
    Bugzilla Report 63827
 
+ * sshexec failed to write output to a file if the file didn't exist
+
 Other changes:
 --------------
 

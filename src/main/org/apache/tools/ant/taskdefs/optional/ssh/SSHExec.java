@@ -482,8 +482,10 @@ public class SSHExec extends SSHBase {
      */
     private void writeToFile(final String from, final boolean append, final File to)
         throws IOException {
+        final StandardOpenOption appendOrTruncate = append ? StandardOpenOption.APPEND
+            : StandardOpenOption.TRUNCATE_EXISTING;
         try (BufferedWriter out = Files.newBufferedWriter(to.getAbsoluteFile().toPath(),
-            StandardOpenOption.APPEND)) {
+            appendOrTruncate, StandardOpenOption.CREATE)) {
             final StringReader in = new StringReader(from);
             final char[] buffer = new char[BUFFER_SIZE];
             while (true) {
