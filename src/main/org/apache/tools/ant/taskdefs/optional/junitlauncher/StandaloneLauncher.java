@@ -140,9 +140,9 @@ public class StandaloneLauncher {
             reader.require(START_DOCUMENT, null, null);
             reader.nextTag();
             reader.require(START_ELEMENT, null, LD_XML_ELM_LAUNCH_DEF);
-            final String haltOnfFailure = reader.getAttributeValue(null, LD_XML_ATTR_HALT_ON_FAILURE);
-            if (haltOnfFailure != null) {
-                forkedLaunch.setHaltOnFailure(Boolean.parseBoolean(haltOnfFailure));
+            final String haltOnFailure = reader.getAttributeValue(null, LD_XML_ATTR_HALT_ON_FAILURE);
+            if (haltOnFailure != null) {
+                forkedLaunch.setHaltOnFailure(Boolean.parseBoolean(haltOnFailure));
             }
             final String includeTags = reader.getAttributeValue(null, LD_XML_ATTR_INCLUDE_TAGS);
             if (includeTags != null) {
@@ -155,9 +155,6 @@ public class StandaloneLauncher {
             final String printSummary = reader.getAttributeValue(null, LD_XML_ATTR_PRINT_SUMMARY);
             if (printSummary != null) {
                 forkedLaunch.setPrintSummary(Boolean.parseBoolean(printSummary));
-            }
-            if (haltOnfFailure != null) {
-                forkedLaunch.setHaltOnFailure(Boolean.parseBoolean(haltOnfFailure));
             }
             reader.nextTag();
             reader.require(START_ELEMENT, null, null);
