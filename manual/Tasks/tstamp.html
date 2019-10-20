@@ -44,6 +44,13 @@ you could also specify that value in ISO-8601 format (<code>1972-04-17T08:07:00Z
 specify a value in an invalid format an INFO message will be logged and the value will be
 ignored.</p>
 
+<p>
+  <em>Since Ant 1.10.8</em> the <code>SOURCE_DATE_EPOCH</code> environment variable value (if set)
+  will be honoured for <a href="https://reproducible-builds.org/specs/source-date-epoch/#idm55">reproducible builds</a>.
+  Ant will log a DEBUG message if an invalid value (value that cannot be parsed to an integer), is specified
+  for that environment variable and will instead use the "current" date.
+</p>
+
 <h3>Parameters</h3>
 <table class="attr">
   <tr>

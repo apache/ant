@@ -20,6 +20,10 @@ Other changes:
  * The runant.py script should now work with Python 3.
    Github Pull Request #96
 
+ * tstamp task now honors SOURCE_DATE_EPOCH environment variable for
+   reproducible builds (https://reproducible-builds.org/specs/source-date-epoch/#idm55)
+   Bugzilla Report 62617
+
 Changes from Ant 1.10.6 TO Ant 1.10.7
 =====================================
 

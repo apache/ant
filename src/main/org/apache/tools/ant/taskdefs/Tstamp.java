@@ -50,6 +50,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  */
 public class Tstamp extends Task {
 
+    private static final String ENV_SOURCE_DATE_EPOCH = "SOURCE_DATE_EPOCH";
+
     private List<CustomFormat> customFormats = new Vector<>();
     private String prefix = "";
 
@@ -75,8 +77,21 @@ public class Tstamp extends Task {
     public void execute() throws BuildException {
         try {
             Date d = getNow();
-
-            customFormats.forEach(cts -> cts.execute(getProject(), d, getLocation()));
+            // Honour reproducible builds https://reproducible-builds.org/specs/source-date-epoch/#idm55
+            final String epoch = System.getenv(ENV_SOURCE_DATE_EPOCH);
+            try {
+                if (epoch != null) {
+                    // Value of SOURCE_DATE_EPOCH will be an integer, representing seconds.
+                    d = new Date(Integer.parseInt(epoch) * 1000);
+                }
+                log("Honouring environment variable " + ENV_SOURCE_DATE_EPOCH + " which has been set to " + epoch);
+            } catch(NumberFormatException e) {
+                // ignore
+                log("Ignoring invalid value '" + epoch + "' for " + ENV_SOURCE_DATE_EPOCH
+                        + " environment variable", Project.MSG_DEBUG);
+            }
+            final Date date = d;
+            customFormats.forEach(cts -> cts.execute(getProject(), date, getLocation()));
 
             SimpleDateFormat dstamp = new SimpleDateFormat("yyyyMMdd");
             setProperty("DSTAMP", dstamp.format(d));
