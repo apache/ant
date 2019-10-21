@@ -50,10 +50,10 @@ public class Equals implements Condition {
     /**
      * Set the first string
      *
-     * @param a1 the first string
+     * @param arg1 the first string
      */
-    public void setArg1(String a1) {
-        setArg1Internal(a1);
+    public void setArg1(String arg1) {
+        setArg1Internal(arg1);
     }
 
     private void setArg1Internal(Object arg1) {
@@ -77,10 +77,10 @@ public class Equals implements Condition {
     /**
      * Set the second string
      *
-     * @param a2 the second string
+     * @param arg2 the second string
      */
-    public void setArg2(String a2) {
-        setArg2Internal(a2);
+    public void setArg2(String arg2) {
+        setArg2Internal(arg2);
     }
 
     private void setArg2Internal(Object arg2) {

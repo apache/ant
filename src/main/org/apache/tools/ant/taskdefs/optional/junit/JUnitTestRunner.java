@@ -713,15 +713,15 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         logTestListenerEvent("endTest(" + testName + ")");
     }
 
-    private void logTestListenerEvent(String msg) {
+    private void logTestListenerEvent(String message) {
         if (logTestListenerEvents) {
             @SuppressWarnings("resource")
             final PrintStream out = savedOut != null ? savedOut : System.out;
             out.flush();
-            final StringTokenizer msgLines =
-                new StringTokenizer(String.valueOf(msg), "\r\n", false);
-            while (msgLines.hasMoreTokens()) {
-                out.println(JUnitTask.TESTLISTENER_PREFIX + msgLines.nextToken());
+            final StringTokenizer messageLines =
+                new StringTokenizer(String.valueOf(message), "\r\n", false);
+            while (messageLines.hasMoreTokens()) {
+                out.println(JUnitTask.TESTLISTENER_PREFIX + messageLines.nextToken());
             }
             out.flush();
         }
@@ -1241,9 +1241,9 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     // JUnit 4-specific test GUIs will show just "failures".
                     // But Ant's output shows "failures" vs. "errors".
                     // We would prefer to show "failure" for things that logically are.
-                    final String msg = t.getMessage();
-                    final AssertionFailedError failure = msg != null
-                        ? new AssertionFailedError(msg) : new AssertionFailedError();
+                    final String message = t.getMessage();
+                    final AssertionFailedError failure = message != null
+                        ? new AssertionFailedError(message) : new AssertionFailedError();
                     failure.initCause(t.getCause());
                     failure.setStackTrace(t.getStackTrace());
                     testListener.addFailure(test, failure);

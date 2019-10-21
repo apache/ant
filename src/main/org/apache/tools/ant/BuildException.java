@@ -74,15 +74,15 @@ public class BuildException extends RuntimeException {
      * Constructs an exception with the given message and exception as
      * a root cause and a location in a file.
      *
-     * @param msg A description of or information about the exception.
-     *            Should not be <code>null</code> unless a cause is specified.
+     * @param message A description of or information about the exception.
+     *                Should not be <code>null</code> unless a cause is specified.
      * @param cause The exception that might have caused this one.
      *              May be <code>null</code>.
      * @param location The location in the project file where the error
      *                 occurred. Must not be <code>null</code>.
      */
-    public BuildException(String msg, Throwable cause, Location location) {
-        this(msg, cause);
+    public BuildException(String message, Throwable cause, Location location) {
+        this(message, cause);
         this.location = location;
     }
 

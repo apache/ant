@@ -262,12 +262,12 @@ public class Checksum extends MatchingTask implements Condition {
      * Specify the pattern to use as a MessageFormat pattern.
      *
      * <p>{0} gets replaced by the checksum, {1} by the filename.</p>
-     * @param p a <code>String</code> value
+     * @param pattern a <code>String</code> value
      *
      * @since 1.7.0
      */
-    public void setPattern(String p) {
-        format = new MessageFormat(p);
+    public void setPattern(String pattern) {
+        format = new MessageFormat(pattern);
     }
 
     /**

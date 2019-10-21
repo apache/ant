@@ -26,8 +26,8 @@ class RCSFile {
     private String revision;
     private String previousRevision;
 
-    RCSFile(final String name, final String rev) {
-        this(name, rev, null);
+    RCSFile(final String name, final String revision) {
+        this(name, revision, null);
     }
 
     RCSFile(final String name,

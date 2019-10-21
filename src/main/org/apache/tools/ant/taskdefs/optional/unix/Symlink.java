@@ -203,20 +203,20 @@ public class Symlink extends DispatchTask {
                 return;
             }
             final Properties links = loadLinks(fileSets);
-            for (final String lnk : links.stringPropertyNames()) {
-                final String res = links.getProperty(lnk);
+            for (final String link : links.stringPropertyNames()) {
+                final String resource = links.getProperty(link);
                 try {
-                    if (Files.isSymbolicLink(Paths.get(lnk)) &&
-                            new File(lnk).getCanonicalPath().equals(new File(res).getCanonicalPath())) {
+                    if (Files.isSymbolicLink(Paths.get(link)) &&
+                            new File(link).getCanonicalPath().equals(new File(resource).getCanonicalPath())) {
                         // it's already a symlink and the symlink target is the same
                         // as the target noted in the properties file. So there's no
                         // need to recreate it
-                        log("not recreating " + lnk + " as it points to the correct target already",
+                        log("not recreating " + link + " as it points to the correct target already",
                             Project.MSG_DEBUG);
                         continue;
                     }
                 } catch (IOException e) {
-                    final String errMessage = "Failed to check if path " + lnk + " is a symbolic link, linking to " + res;
+                    final String errMessage = "Failed to check if path " + link + " is a symbolic link, linking to " + resource;
                     if (failonerror) {
                         throw new BuildException(errMessage, e);
                     }
@@ -225,7 +225,7 @@ public class Symlink extends DispatchTask {
                     continue;
                 }
                 // create the link
-                this.doLink(res, lnk);
+                this.doLink(resource, link);
             }
         } finally {
             setDefaults();
@@ -251,18 +251,18 @@ public class Symlink extends DispatchTask {
             Map<File, List<File>> byDir = new HashMap<>();
 
             // get an Iterator of file objects representing links (canonical):
-            findLinks(fileSets).forEach(lnk -> byDir
-                .computeIfAbsent(lnk.getParentFile(), k -> new ArrayList<>())
-                .add(lnk));
+            findLinks(fileSets).forEach(link -> byDir
+                .computeIfAbsent(link.getParentFile(), k -> new ArrayList<>())
+                .add(link));
 
             // write a Properties file in each directory:
             byDir.forEach((dir, linksInDir) -> {
                 Properties linksToStore = new Properties();
 
                 // fill up a Properties object with link and resource names:
-                for (File lnk : linksInDir) {
+                for (File link : linksInDir) {
                     try {
-                        linksToStore.put(lnk.getName(), lnk.getCanonicalPath());
+                        linksToStore.put(link.getName(), link.getCanonicalPath());
                     } catch (IOException ioe) {
                         handleError("Couldn't get canonical name of parent link");
                     }
@@ -323,10 +323,10 @@ public class Symlink extends DispatchTask {
     /**
      * Set the name of the link. Used when action = &quot;single&quot;.
      *
-     * @param lnk     The name for the link.
+     * @param link     The name for the link.
      */
-    public void setLink(String lnk) {
-        this.link = lnk;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     /**
@@ -435,50 +435,50 @@ public class Symlink extends DispatchTask {
     /**
      * Conduct the actual construction of a link.
      *
-     * @param res The path of the resource we are linking to.
-     * @param lnk The name of the link we wish to make.
+     * @param resource The path of the resource we are linking to.
+     * @param link The name of the link we wish to make.
      * @throws BuildException when things go wrong
      */
-    private void doLink(String res, String lnk) throws BuildException {
-        final Path link = Paths.get(lnk);
-        final Path target = Paths.get(res);
-        final boolean alreadyExists = Files.exists(link, LinkOption.NOFOLLOW_LINKS);
+    private void doLink(String resource, String link) throws BuildException {
+        final Path linkPath = Paths.get(link);
+        final Path target = Paths.get(resource);
+        final boolean alreadyExists = Files.exists(linkPath, LinkOption.NOFOLLOW_LINKS);
         if (!alreadyExists) {
             // if the path (at which the link is expected to be created) isn't already present
             // then we just go ahead and attempt to symlink
             try {
-                log("creating symlink " + link + " -> " + target, Project.MSG_DEBUG);
-                Files.createSymbolicLink(link, target);
+                log("creating symlink " + linkPath + " -> " + target, Project.MSG_DEBUG);
+                Files.createSymbolicLink(linkPath, target);
             } catch (IOException e) {
                 if (failonerror) {
-                    throw new BuildException("Failed to create symlink " + lnk + " to target " + res, e);
+                    throw new BuildException("Failed to create symlink " + link + " to target " + resource, e);
                 }
-                log("Unable to create symlink " + lnk + " to target " + res, e, Project.MSG_INFO);
+                log("Unable to create symlink " + link + " to target " + resource, e, Project.MSG_INFO);
             }
             return;
         }
         // file already exists, see if we are allowed to overwrite
         if (!overwrite) {
-            log("Skipping symlink creation, since file at " + lnk + " already exists and overwrite is set to false", Project.MSG_INFO);
+            log("Skipping symlink creation, since file at " + link + " already exists and overwrite is set to false", Project.MSG_INFO);
             return;
         }
         // we have been asked to overwrite, so we now do the necessary steps
 
         // initiate a deletion of the existing file
-        final boolean existingFileDeleted = link.toFile().delete();
+        final boolean existingFileDeleted = linkPath.toFile().delete();
         if (!existingFileDeleted) {
-            handleError("Deletion of file at " + lnk + " failed, while trying to overwrite it with a symlink");
+            handleError("Deletion of file at " + link + " failed, while trying to overwrite it with a symlink");
             return;
         }
         try {
-            log("creating symlink " + link + " -> " + target + " after removing original",
+            log("creating symlink " + linkPath + " -> " + target + " after removing original",
                 Project.MSG_DEBUG);
-            Files.createSymbolicLink(link, target);
+            Files.createSymbolicLink(linkPath, target);
         } catch (IOException e) {
             if (failonerror) {
-                throw new BuildException("Failed to create symlink " + lnk + " to target " + res, e);
+                throw new BuildException("Failed to create symlink " + link + " to target " + resource, e);
             }
-            log("Unable to create symlink " + lnk + " to target " + res, e, Project.MSG_INFO);
+            log("Unable to create symlink " + link + " to target " + resource, e, Project.MSG_INFO);
         }
     }
 
@@ -545,10 +545,10 @@ public class Symlink extends DispatchTask {
             for (String name : ds.getIncludedFiles()) {
                 File inc = new File(dir, name);
                 File pf = inc.getParentFile();
-                Properties lnks = new Properties();
+                Properties links = new Properties();
                 try (InputStream is = new BufferedInputStream(
                     Files.newInputStream(inc.toPath()))) {
-                    lnks.load(is);
+                    links.load(is);
                     pf = pf.getCanonicalFile();
                 } catch (FileNotFoundException fnfe) {
                     handleError("Unable to find " + name + "; skipping it.");
@@ -559,21 +559,21 @@ public class Symlink extends DispatchTask {
                     continue;
                 }
                 try {
-                    lnks.store(new PrintStream(
+                    links.store(new PrintStream(
                         new LogOutputStream(this, Project.MSG_INFO)),
                         "listing properties");
                 } catch (IOException ex) {
                     log("failed to log unshortened properties");
-                    lnks.list(new PrintStream(
+                    links.list(new PrintStream(
                         new LogOutputStream(this, Project.MSG_INFO)));
                 }
                 // Write the contents to our master list of links
                 // This method assumes that all links are defined in
                 // terms of absolute paths, or paths relative to the
                 // working directory:
-                for (String key : lnks.stringPropertyNames()) {
+                for (String key : links.stringPropertyNames()) {
                     finalList.put(new File(pf, key).getAbsolutePath(),
-                        lnks.getProperty(key));
+                        links.getProperty(key));
                 }
             }
         }

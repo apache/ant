@@ -360,8 +360,8 @@ public class Commandline implements Cloneable {
      * @param line an array of arguments to append.
      */
     public void addArguments(String[] line) {
-        for (String l : line) {
-            createArgument().setValue(l);
+        for (String argument : line) {
+            createArgument().setValue(argument);
         }
     }
 
@@ -464,11 +464,11 @@ public class Commandline implements Cloneable {
         }
         // path containing one or more elements
         final StringBuilder result = new StringBuilder();
-        for (String l : line) {
+        for (String argument : line) {
             if (result.length() > 0) {
                 result.append(' ');
             }
-            result.append(quoteArgument(l));
+            result.append(quoteArgument(argument));
         }
         return result.toString();
     }
