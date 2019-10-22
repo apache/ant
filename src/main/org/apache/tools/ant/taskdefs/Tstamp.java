@@ -83,8 +83,8 @@ public class Tstamp extends Task {
                 if (epoch != null) {
                     // Value of SOURCE_DATE_EPOCH will be an integer, representing seconds.
                     d = new Date(Integer.parseInt(epoch) * 1000);
+                    log("Honouring environment variable " + ENV_SOURCE_DATE_EPOCH + " which has been set to " + epoch);
                 }
-                log("Honouring environment variable " + ENV_SOURCE_DATE_EPOCH + " which has been set to " + epoch);
             } catch(NumberFormatException e) {
                 // ignore
                 log("Ignoring invalid value '" + epoch + "' for " + ENV_SOURCE_DATE_EPOCH
