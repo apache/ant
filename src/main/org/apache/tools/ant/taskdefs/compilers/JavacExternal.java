@@ -66,7 +66,7 @@ public class JavacExternal extends DefaultCompilerAdapter {
         int firstFileName;
 
         if (assumeJava1_2Plus()) {
-            firstFileName = moveJOptionsToBeginning(commandLine);
+            firstFileName = moveArgFileEligibleOptionsToEnd(commandLine);
         } else {
             firstFileName = -1;
         }
@@ -77,31 +77,36 @@ public class JavacExternal extends DefaultCompilerAdapter {
     }
 
     /**
-     * Moves all -J arguments to the beginning
-     * So that all command line arguments could be written to file, but -J
+     * Moves all -J and @argfiles arguments to the beginning
+     * So that all command line arguments could be written to file, but -J and @argfile
      * As per javac documentation:
      *      you can specify one or more files that contain arguments to the javac command (except -J options)
      * @param commandLine command line to process
-     * @return int index of first non -J argument
+     * @return int index of first argument that could be put into argfile
      */
-    private int moveJOptionsToBeginning(String[] commandLine) {
-        int nonJArgumentIdx = 1; // 0 for javac executable
-        while(nonJArgumentIdx < commandLine.length && commandLine[nonJArgumentIdx].startsWith("-J")) {
-            nonJArgumentIdx++;
+    private int moveArgFileEligibleOptionsToEnd(String[] commandLine) {
+        int nonArgFileOptionIdx = 1; // 0 for javac executable
+        while(nonArgFileOptionIdx < commandLine.length &&
+                !isArgFileEligible(commandLine[nonArgFileOptionIdx])) {
+            nonArgFileOptionIdx++;
         }
 
-        for(int i = nonJArgumentIdx + 1; i < commandLine.length; i++) {
-            if (commandLine[i].startsWith("-J")) {
-                String jArgument = commandLine[i];
-                for(int j = i - 1; j >= nonJArgumentIdx; j--) {
+        for(int i = nonArgFileOptionIdx + 1; i < commandLine.length; i++) {
+            if (!isArgFileEligible(commandLine[i])) {
+                String option = commandLine[i];
+                for(int j = i - 1; j >= nonArgFileOptionIdx; j--) {
                     commandLine[j + 1] = commandLine[j];
                 }
-                commandLine[nonJArgumentIdx] = jArgument;
-                nonJArgumentIdx++;
+                commandLine[nonArgFileOptionIdx] = option;
+                nonArgFileOptionIdx++;
             }
         }
 
-        return nonJArgumentIdx;
+        return nonArgFileOptionIdx;
+    }
+
+    private static boolean isArgFileEligible(String option) {
+        return !(option.startsWith("-J") || option.startsWith("@"));
     }
 
     /**

@@ -10,6 +10,10 @@ Fixed bugs:
 
  * sshexec failed to write output to a file if the file didn't exist
 
+ * Fixes a regression in javac task involving command line argument
+   files.
+   Bugzilla Report 63874
+
 Other changes:
 --------------
 
