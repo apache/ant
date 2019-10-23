@@ -28,6 +28,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -126,6 +127,47 @@ public class JavacExternalTest {
             assertEquals("-JDspace", impl.getArgs()[4]);
             assertTrue(impl.getArgs()[impl.getArgs().length - 1].endsWith("J2.java"));
             assertEquals(5, impl.getFirstFileName());
+        } finally {
+            delete(workDir);
+        }
+    }
+
+    @Test
+    public void argFileOptionIsMovedToBeginning() throws Exception {
+        final File workDir = createWorkDir("testSMC");
+        try {
+            final File src = new File(workDir, "src");
+            src.mkdir();
+            createFile(src, "org/apache/ant/tests/J1.java");
+            createFile(src, "org/apache/ant/tests/J2.java");
+            final File modules = new File(workDir, "modules");
+            modules.mkdir();
+            final Project prj = new Project();
+            prj.setBaseDir(workDir);
+            final Javac javac = new Javac();
+            javac.setProject(prj);
+            final Commandline[] cmd = new Commandline[1];
+            final TestJavacExternal impl = new TestJavacExternal();
+            final Path srcPath = new Path(prj);
+            srcPath.setLocation(src);
+            javac.setSrcdir(srcPath);
+            javac.createModulepath().setLocation(modules);
+            javac.setSource("9");
+            javac.setTarget("9");
+            javac.setFork(true);
+            javac.setMemoryInitialSize("80m");
+            javac.setExecutable("javacExecutable");
+            javac.add(impl);
+            javac.createCompilerArg().setValue("-g");
+            javac.createCompilerArg().setValue("@/home/my-compiler.args");
+            javac.execute();
+            assertEquals("javacExecutable", impl.getArgs()[0]);
+            assertEquals("-J-Xms80m", impl.getArgs()[1]);
+            assertEquals("@/home/my-compiler.args", impl.getArgs()[2]);
+            assertTrue(Stream.of(impl.getArgs()).anyMatch(x -> x.equals("-g")));
+            assertTrue(impl.getArgs()[impl.getArgs().length - 2].endsWith("J1.java"));
+            assertTrue(impl.getArgs()[impl.getArgs().length - 1].endsWith("J2.java"));
+            assertEquals(3, impl.getFirstFileName());
         } finally {
             delete(workDir);
         }
