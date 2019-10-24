@@ -45,7 +45,7 @@ ant -f fetch.xml -Ddest=optional
 mkdir -p build/java-8-latest
 cd build/java-8-latest
 # Download latest Java 8 (we use Adopt OpenJDK binaries)
-wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u222-b10/OpenJDK8U-jdk_x64_linux_hotspot_8u222b10.tar.gz
+wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u232-b09/OpenJDK8U-jdk_x64_linux_hotspot_8u232b09.tar.gz
 tar -zxf ./*.tar.gz
 # set JAVA_HOME to point to the newly extracted tar's content
 export JAVA_HOME="`echo \`pwd\`/\`echo */\``"
