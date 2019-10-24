@@ -105,6 +105,14 @@ JSCh earlier than 0.1.28.</p>
     <td>No; defaults to an empty string</td>
   </tr>
   <tr>
+    <td>sshConfig</td>
+    <td>Location of the file holding the OpenSSH style configuration (e.g. <code>${user.home}/.ssh/config</code>).
+        The username and the key file are read from the configuration file,
+        unless they are already specified in the task parameters.
+        <em>since Ant 1.10.8</em></td>
+    <td>No</td>
+  </tr>
+  <tr>
     <td>suppresssystemout</td>
     <td>Whether to suppress system out. <em>since Ant 1.9.0</em></td>
     <td>No; defaults to <q>false</q></td>

@@ -14,6 +14,10 @@ Fixed bugs:
    files.
    Bugzilla Report 63874
 
+ * sshexec, sshsession and scp now support a new sshConfig parameter.
+   It specified the SSH configuration file (typically ${user.home}/.ssh/config)
+   defining the username and keyfile to be used per host.
+
 Other changes:
 --------------
 

@@ -143,6 +143,14 @@ information.  This task has been tested with <code>jsch-0.1.2</code> and later.<
     <td>No; defaults to an empty string</td>
   </tr>
   <tr>
+    <td>sshConfig</td>
+    <td>Location of the file holding the OpenSSH style configuration (e.g. <code>${user.home}/.ssh/config</code>).
+        The username and the key file are read from the configuration file,
+        unless they are already specified in the task parameters.
+        <em>since Ant 1.10.8</em></td>
+    <td>No</td>
+  </tr>
+  <tr>
     <td>verbose</td>
     <td>Determines whether SCP outputs verbosely to the user. Currently this means outputting
       dots/stars showing the progress of a file transfer.  <em>since Ant 1.6.2</em></td>
