@@ -18,6 +18,11 @@
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
 
+import java.io.File;
+import java.io.IOException;
+
+import com.jcraft.jsch.ConfigRepository;
+import com.jcraft.jsch.OpenSSHConfig;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -42,6 +47,7 @@ public abstract class SSHBase extends Task implements LogListener {
     private boolean failOnError = true;
     private boolean verbose;
     private final SSHUserInfo userInfo;
+    private String sshConfig;
     private int serverAliveCountMax = 3;
     private int serverAliveIntervalSeconds = 0;
 
@@ -104,6 +110,24 @@ public abstract class SSHBase extends Task implements LogListener {
      */
     public boolean getVerbose() {
         return verbose;
+    }
+
+    /**
+     * Get the OpenSSH config file (~/.ssh/config).
+     * @return the OpenSSH config file
+     * @since Ant 1.10.8
+     */
+    public String getSshConfig() {
+        return sshConfig;
+    }
+
+    /**
+     * Set the OpenSSH config file (~/.ssh/config).
+     * @param sshConfig the OpenSSH config file
+     * @since Ant 1.10.8
+     */
+    public void setSshConfig(String sshConfig) {
+        this.sshConfig = sshConfig;
     }
 
     /**
@@ -233,6 +257,37 @@ public abstract class SSHBase extends Task implements LogListener {
         super.init();
         this.knownHosts = System.getProperty("user.home") + "/.ssh/known_hosts";
         this.port = SSH_PORT;
+    }
+
+    /**
+     * Load the SSH configuration file.
+     * @throws BuildException on error
+     */
+    protected void loadSshConfig() throws BuildException {
+        if (sshConfig != null) {
+            if (!new File(sshConfig).exists()) {
+                throw new BuildException("The SSH configuration file specified doesn't exist: " + sshConfig);
+            }
+            
+            log("Loading SSH configuration file " + sshConfig, Project.MSG_DEBUG);
+            ConfigRepository.Config config = null;
+            try {
+                config = OpenSSHConfig.parseFile(sshConfig).getConfig(host);
+            } catch (IOException e) {
+                throw new BuildException("Failed to load the SSH configuration file " + sshConfig, e);
+            }
+            
+            host = config.getHostname();
+            
+            if (userInfo.getName() == null) {
+                userInfo.setName(config.getUser());
+            }
+            
+            if (userInfo.getKeyfile() == null) {
+                log("Using SSH key file " + config.getValue("IdentityFile") + " for host " + host, Project.MSG_INFO);
+                userInfo.setKeyfile(config.getValue("IdentityFile"));
+            }
+        }
     }
 
     /**

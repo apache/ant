@@ -132,6 +132,9 @@ public class SSHSession extends SSHBase {
         if (getHost() == null) {
             throw new BuildException("Host is required.");
         }
+        
+        loadSshConfig();
+        
         if (getUserInfo().getName() == null) {
             throw new BuildException("Username is required.");
         }

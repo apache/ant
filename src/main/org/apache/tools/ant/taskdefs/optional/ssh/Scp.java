@@ -435,19 +435,22 @@ public class Scp extends SSHBase {
             throw new BuildException("no username was given.  Can't authenticate.");
         }
 
-        if (getUserInfo().getPassword() == null
-            && getUserInfo().getKeyfile() == null) {
-            throw new BuildException(
-                "neither password nor keyfile for user %s has been given.  Can't authenticate.",
-                getUserInfo().getName());
-        }
-
         final int indexOfPath = uri.indexOf(':', indexOfAt + 1);
         if (indexOfPath == -1) {
             throw new BuildException("no remote path in %s", uri);
         }
 
         setHost(uri.substring(indexOfAt + 1, indexOfPath));
+        
+        loadSshConfig();
+        
+        if (getUserInfo().getPassword() == null
+            && getUserInfo().getKeyfile() == null) {
+            throw new BuildException(
+                "neither password nor keyfile for user %s has been given.  Can't authenticate.",
+                getUserInfo().getName());
+        }
+        
         String remotePath = uri.substring(indexOfPath + 1);
         if (remotePath.isEmpty()) {
             remotePath = ".";
