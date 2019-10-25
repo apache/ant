@@ -264,7 +264,7 @@ public abstract class SSHBase extends Task implements LogListener {
      * @throws BuildException on error
      */
     protected void loadSshConfig() throws BuildException {
-        if (sshConfig != null) {
+        if (sshConfig != null && (userInfo.getName() == null || userInfo.getKeyfile() == null)) {
             if (!new File(sshConfig).exists()) {
                 throw new BuildException("The SSH configuration file specified doesn't exist: " + sshConfig);
             }
