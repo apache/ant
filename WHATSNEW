@@ -18,6 +18,10 @@ Fixed bugs:
    It specified the SSH configuration file (typically ${user.home}/.ssh/config)
    defining the username and keyfile to be used per host.
 
+ * "legacy-xml" formatter of junitlauncher task wasn't writing out
+   exceptions that happen in @BeforeAll method of a test. This is now fixed.
+   Bugzilla Report 63850
+
 Other changes:
 --------------
 

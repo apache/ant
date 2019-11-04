@@ -232,12 +232,20 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
         void writeTestCase(final XMLStreamWriter writer) throws XMLStreamException {
             for (final Map.Entry<TestIdentifier, Stats> entry : testIds.entrySet()) {
                 final TestIdentifier testId = entry.getKey();
-                if (!testId.isTest()) {
-                    // only interested in test methods
+                if (!testId.isTest() && !failed.containsKey(testId)) {
+                    // only interested in test methods unless there was a failure,
+                    // in which case we want the exception reported
+                    // (https://bz.apache.org/bugzilla/show_bug.cgi?id=63850)
                     continue;
                 }
-                // find the parent class of this test method
-                final Optional<ClassSource> parentClassSource = findFirstParentClassSource(testId);
+                // find the associated class of this test
+                final Optional<ClassSource> parentClassSource;
+                if (testId.isTest()) {
+                    parentClassSource = findFirstParentClassSource(testId);
+                }
+                else {
+                    parentClassSource = findFirstClassSource(testId);
+                }
                 if (!parentClassSource.isPresent()) {
                     continue;
                 }
