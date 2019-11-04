@@ -24,6 +24,8 @@ import static org.example.junitlauncher.Tracker.verifySuccess;
 import static org.example.junitlauncher.Tracker.wasTestRun;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -174,6 +176,18 @@ public class JUnitLauncherTaskTest {
         Assert.assertTrue("JupiterSampleTest#testSkipped was expected to be skipped", verifySkipped(trackerFile,
                 JupiterSampleTest.class.getName(), "testSkipped"));
         Assert.assertFalse("ForkedTest wasn't expected to be run", wasTestRun(trackerFile, ForkedTest.class.getName()));
+
+        verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll.xml", "<failure message=\"Intentional failure\" type=\"java.lang.RuntimeException\">");
+        verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingStatic.xml", "Caused by: java.lang.RuntimeException: Intentional exception from static init block");
+    }
+
+    private void verifyLegacyXMLFile(final String fileName, final String expectedContentExtract) throws IOException {
+        final String outputDir = buildRule.getProject().getProperty("output.dir");
+        final Path xmlFile = Paths.get(outputDir, fileName);
+
+        Assert.assertTrue("XML file doesn't exist: " + xmlFile, Files.exists(xmlFile));
+        final String content = new String(Files.readAllBytes(xmlFile), StandardCharsets.UTF_8);
+        Assert.assertTrue(fileName + " doesn't contain " + expectedContentExtract, content.contains(expectedContentExtract));
     }
 
     /**
