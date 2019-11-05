@@ -28,6 +28,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.junit.Before;
@@ -47,6 +48,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class XMLCatalogTest {
 
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
     private Project project;
     private XMLCatalog catalog;
 
@@ -63,7 +65,7 @@ public class XMLCatalogTest {
     @Before
     public void setUp() {
         project = new Project();
-        project.setBasedir(System.getProperty("root"));
+        project.setBasedir(ROOT);
 
         // This causes XMLCatalog to print out detailed logging
         // messages for debugging
@@ -211,7 +213,7 @@ public class XMLCatalogTest {
         ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId("-//stevo//DTD doc 1.0//EN");
 
-        String sysid = System.getProperty("root") + File.separator + "src/etc/testcases/taskdefs/optional/xml/doc.dtd";
+        String sysid = ROOT + File.separator + "src/etc/testcases/taskdefs/optional/xml/doc.dtd";
         dtd.setLocation(sysid);
         catalog.addDTD(dtd);
         File dtdFile = project.resolveFile(sysid);

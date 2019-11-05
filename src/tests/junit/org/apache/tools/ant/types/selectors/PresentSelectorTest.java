@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.types.Mapper;
 import org.junit.Rule;
 import org.junit.Test;
@@ -97,7 +98,7 @@ public class PresentSelectorTest {
         assertEquals("TTTTTTTTTTTT", results);
 
         s = new PresentSelector();
-        File subdir = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/expected");
+        File subdir = new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY), "src/etc/testcases/taskdefs/expected");
         s.setTargetdir(subdir);
         m = s.createMapper();
         m.setType(flatten);

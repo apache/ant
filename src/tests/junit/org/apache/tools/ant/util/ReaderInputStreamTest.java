@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.util;
 
+import org.apache.tools.ant.MagicTestNames;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -32,6 +33,8 @@ import static org.junit.Assert.fail;
  * Test for ReaderInputStream
  */
 public class ReaderInputStreamTest {
+
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
 
     @Test
     public void testSimple() throws Exception {
@@ -90,7 +93,7 @@ public class ReaderInputStreamTest {
         ReaderInputStream r = null;
         FileInputStream utf8 = null;
         try {
-            fin = new InputStreamReader(new FileInputStream(new File(System.getProperty("root"),
+            fin = new InputStreamReader(new FileInputStream(new File(ROOT,
                     "src/tests/antunit/taskdefs/exec/input/iso8859-1")),
                                         "ISO8859_1");
             r = new ReaderInputStream(fin, "UTF8");
@@ -102,7 +105,7 @@ public class ReaderInputStreamTest {
                 b = r.read();
             }
 
-            utf8 = new FileInputStream(new File(System.getProperty("root"),
+            utf8 = new FileInputStream(new File(ROOT,
                     "src/tests/antunit/taskdefs/exec/expected/utf-8"));
             ByteArrayOutputStream expectedOS = new ByteArrayOutputStream();
             b = utf8.read();

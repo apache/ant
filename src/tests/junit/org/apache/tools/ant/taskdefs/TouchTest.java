@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -55,7 +56,7 @@ public class TouchTest {
 
     public long getTargetTime() {
 
-        File file = new File(System.getProperty("root"), TOUCH_FILE);
+        File file = new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY), TOUCH_FILE);
         if (!file.exists()) {
             throw new BuildException("failed to touch file " + file);
         }

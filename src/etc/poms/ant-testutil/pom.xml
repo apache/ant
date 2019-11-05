@@ -58,6 +58,7 @@
         <configuration>
           <includes>
             <include>org/apache/tools/ant/BuildFileTest*</include>
+            <include>org/apache/tools/ant/MagicTestNames*</include>
             <include>org/apache/tools/ant/util/regexp/RegexpMatcherTest*</include>
             <include>org/apache/tools/ant/util/regexp/RegexpTest*</include>
             <include>org/apache/tools/ant/taskdefs/optional/AbstractXSLTLiaisonTest*</include>

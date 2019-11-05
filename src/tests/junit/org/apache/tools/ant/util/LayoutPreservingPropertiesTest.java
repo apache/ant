@@ -24,12 +24,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
+import org.apache.tools.ant.MagicTestNames;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LayoutPreservingPropertiesTest {
+
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
 
     /**
      * Tests that a properties file read by the
@@ -38,8 +41,7 @@ public class LayoutPreservingPropertiesTest {
      */
     @Test
     public void testPreserve() throws Exception {
-        File simple = new File(System.getProperty("root"),
-                               "src/etc/testcases/util/simple.properties");
+        File simple = new File(ROOT, "src/etc/testcases/util/simple.properties");
         FileInputStream fis = new FileInputStream(simple);
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
         lpf.load(fis);
@@ -107,8 +109,7 @@ public class LayoutPreservingPropertiesTest {
      */
     @Test
     public void testOverwrite() throws Exception {
-        File unusual = new File(System.getProperty("root"),
-                                "src/etc/testcases/util/unusual.properties");
+        File unusual = new File(ROOT, "src/etc/testcases/util/unusual.properties");
         FileInputStream fis = new FileInputStream(unusual);
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
         lpf.load(fis);
@@ -134,8 +135,7 @@ public class LayoutPreservingPropertiesTest {
 
     @Test
     public void testStoreWithHeader() throws Exception {
-        File simple = new File(System.getProperty("root"),
-                               "src/etc/testcases/util/simple.properties");
+        File simple = new File(ROOT, "src/etc/testcases/util/simple.properties");
         FileInputStream fis = new FileInputStream(simple);
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
         lpf.load(fis);
@@ -154,8 +154,7 @@ public class LayoutPreservingPropertiesTest {
 
     @Test
     public void testClear() throws Exception {
-        File simple = new File(System.getProperty("root"),
-                               "src/etc/testcases/util/simple.properties");
+        File simple = new File(ROOT, "src/etc/testcases/util/simple.properties");
         FileInputStream fis = new FileInputStream(simple);
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
         lpf.load(fis);
@@ -180,8 +179,7 @@ public class LayoutPreservingPropertiesTest {
 
     @Test
     public void testRemove() throws Exception {
-        File simple = new File(System.getProperty("root"),
-                               "src/etc/testcases/util/simple.properties");
+        File simple = new File(ROOT, "src/etc/testcases/util/simple.properties");
         FileInputStream fis = new FileInputStream(simple);
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
         lpf.load(fis);
@@ -201,8 +199,7 @@ public class LayoutPreservingPropertiesTest {
 
     @Test
     public void testRemoveWithComment() throws Exception {
-        File simple = new File(System.getProperty("root"),
-                               "src/etc/testcases/util/simple.properties");
+        File simple = new File(ROOT, "src/etc/testcases/util/simple.properties");
         FileInputStream fis = new FileInputStream(simple);
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
         lpf.load(fis);
@@ -224,8 +221,7 @@ public class LayoutPreservingPropertiesTest {
 
     @Test
     public void testClone() throws Exception {
-        File simple = new File(System.getProperty("root"),
-                               "src/etc/testcases/util/simple.properties");
+        File simple = new File(ROOT, "src/etc/testcases/util/simple.properties");
         FileInputStream fis = new FileInputStream(simple);
         LayoutPreservingProperties lpf1 = new LayoutPreservingProperties();
         lpf1.load(fis);
@@ -262,8 +258,7 @@ public class LayoutPreservingPropertiesTest {
     @Test
     public void testPreserveEscapeName() throws Exception {
         LayoutPreservingProperties lpf = new LayoutPreservingProperties();
-        File unusual = new File(System.getProperty("root"),
-                                "src/etc/testcases/util/unusual.properties");
+        File unusual = new File(ROOT, "src/etc/testcases/util/unusual.properties");
         FileInputStream fis = new FileInputStream(unusual);
         lpf.load(fis);
 

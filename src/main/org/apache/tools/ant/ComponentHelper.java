@@ -846,7 +846,7 @@ public class ComponentHelper  {
         if ("".equals(uri)) {
             uri = ProjectHelper.ANT_CORE_URI;
         }
-        if (!uri.startsWith(ProjectHelper.ANTLIB_URI)) {
+        if (!uri.startsWith(MagicNames.ANTLIB_PREFIX)) {
             return; // namespace that does not contain antlib
         }
         if (checkedNamespaces.contains(uri)) {

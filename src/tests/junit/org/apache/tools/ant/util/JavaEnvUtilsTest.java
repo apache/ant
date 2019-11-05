@@ -47,7 +47,7 @@ public class JavaEnvUtilsTest {
     @Test
     public void testGetExecutableWindows() {
         Assume.assumeTrue("Test only runs on windows", Os.isFamily("windows"));
-        String javaHome = FILE_UTILS.normalize(System.getProperty("java.home"))
+        String javaHome = FILE_UTILS.normalize(JavaEnvUtils.getJavaHome())
             .getAbsolutePath();
 
         String j = JavaEnvUtils.getJreExecutable("java");
@@ -85,7 +85,7 @@ public class JavaEnvUtilsTest {
     public void testGetExecutableMostPlatforms() {
         Assume.assumeTrue("Test only runs on non Netware and non Windows systems",
                 !Os.isName("netware") && !Os.isFamily("windows"));
-        String javaHome = FILE_UTILS.normalize(System.getProperty("java.home")).getAbsolutePath();
+        String javaHome = FILE_UTILS.normalize(JavaEnvUtils.getJavaHome()).getAbsolutePath();
 
         // could still be OS/2
         String extension = Os.isFamily("dos") ? ".exe" : "";

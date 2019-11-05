@@ -356,6 +356,7 @@
     <include name="${ant.package}/BuildFileTest*"/>
     <include name="${ant.package}/BuildFileRule*"/>
     <include name="${ant.package}/FileUtilities*"/>
+    <include name="${ant.package}/MagicTestNames*"/>
     <include name="${regexp.package}/RegexpMatcherTest*"/>
     <include name="${regexp.package}/RegexpTest*"/>
     <include name="${optional.package}/AbstractXSLTLiaisonTest*"/>
@@ -1721,6 +1722,7 @@ ${antunit.reports}
           <!-- abstract classes, not testcases -->
           <exclude name="${taskdefs.package}/TaskdefsTest.java"/>
           <exclude name="${ant.package}/BuildFileTest.java"/>
+          <exclude name="${ant.package}/MagicTestNames.java"/>
           <exclude name="${regexp.package}/RegexpMatcherTest.java"/>
           <exclude name="${regexp.package}/RegexpTest.java"/>
           <exclude name="${optional.package}/AbstractXSLTLiaisonTest.java"/>

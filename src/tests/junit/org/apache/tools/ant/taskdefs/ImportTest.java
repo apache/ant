@@ -31,6 +31,7 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Location;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.junit.Assume;
 import org.junit.Ignore;
@@ -39,6 +40,7 @@ import org.junit.Test;
 
 public class ImportTest {
 
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
@@ -142,7 +144,7 @@ public class ImportTest {
         }
         Assume.assumeTrue("Current system does not support Symlinks", new File(ln).exists());
         String symlink = "src/etc/testcases/taskdefs/import/symlinks/d3b";
-        File symlinkFile = new File(System.getProperty("root"), symlink);
+        File symlinkFile = new File(ROOT, symlink);
         if (Runtime.getRuntime().exec(new String[] {ln, "-s", "d3a", symlinkFile.getAbsolutePath()}).waitFor() != 0) {
             throw new IOException("'" + ln + " -s d3a " + symlink + "' failed");
         }
@@ -151,11 +153,11 @@ public class ImportTest {
                 "src/etc/testcases/taskdefs/import/symlinks/d1/p1.xml");
             assertEquals(
                 buildRule.getProject().getProperty("ant.file.p2"),
-                new File(System.getProperty("root"), "src/etc/testcases/taskdefs/import/symlinks/d2/p2.xml")
+                new File(ROOT, "src/etc/testcases/taskdefs/import/symlinks/d2/p2.xml")
                 .getAbsolutePath());
             assertEquals(
                 buildRule.getProject().getProperty("ant.file.p3"),
-                new File(System.getProperty("root"), "src/etc/testcases/taskdefs/import/symlinks/d3b/p3.xml")
+                new File(ROOT, "src/etc/testcases/taskdefs/import/symlinks/d3b/p3.xml")
                 .getAbsolutePath());
         } finally {
             symlinkFile.delete();

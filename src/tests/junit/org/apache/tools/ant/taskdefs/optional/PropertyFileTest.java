@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicTestNames;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -142,7 +143,7 @@ public class PropertyFileTest {
     public void testDirect() throws Exception {
         PropertyFile pf = new PropertyFile();
         pf.setProject(buildRule.getProject());
-        pf.setFile(new File(System.getProperty("root"), testPropsFilePath));
+        pf.setFile(new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY), testPropsFilePath));
         PropertyFile.Entry entry = pf.createEntry();
 
         entry.setKey("date");

@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Before;
@@ -41,12 +42,13 @@ public class PathTest {
     public static boolean isUnixStyle = File.pathSeparatorChar == ':';
     public static boolean isNetWare = Os.isFamily("netware");
 
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
     private Project project;
 
     @Before
     public void setUp() {
         project = new Project();
-        project.setBasedir(System.getProperty("root"));
+        project.setBasedir(ROOT);
     }
 
     // actually tests constructor as well as setPath
@@ -70,7 +72,7 @@ public class PathTest {
 
     @Test
     public void testRelativePathUnixStyle() {
-        project.setBasedir(new File(System.getProperty("root"), "src/etc").getAbsolutePath());
+        project.setBasedir(new File(ROOT, "src/etc").getAbsolutePath());
         Path p = new Path(project, "..:testcases");
         String[] l = p.list();
         assertEquals("two items, Unix style", 2, l.length);

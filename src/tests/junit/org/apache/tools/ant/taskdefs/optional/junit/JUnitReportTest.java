@@ -34,6 +34,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.Assume;
 import org.junit.Before;
@@ -63,7 +64,7 @@ public class JUnitReportTest {
     @Test
     public void testNoFileJUnitNoFrames() {
         buildRule.executeTarget("reports1");
-        assertFalse("No file junit-noframes.html expected", new File(System.getProperty("root"),
+        assertFalse("No file junit-noframes.html expected", new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY),
                 "src/etc/testcases/taskdefs/optional/junitreport/test/html/junit-noframes.html").exists());
     }
 

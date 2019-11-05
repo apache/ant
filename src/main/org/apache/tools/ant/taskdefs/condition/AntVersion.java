@@ -18,6 +18,7 @@
 package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.DeweyDecimal;
@@ -102,7 +103,7 @@ public class AntVersion extends Task implements Condition {
         p.init();
         StringBuilder sb = new StringBuilder();
         boolean foundFirstDigit = false;
-        for (char versionChar : p.getProperty("ant.version").toCharArray()) {
+        for (char versionChar : p.getProperty(MagicNames.ANT_VERSION).toCharArray()) {
             if (Character.isDigit(versionChar)) {
                 sb.append(versionChar);
                 foundFirstDigit = true;

@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -146,7 +147,7 @@ public class XmlPropertyTest {
     private void doTest(String msg, boolean keepRoot, boolean collapse,
                         boolean semantic, boolean include, boolean localRoot) throws IOException {
         Enumeration iter =
-            getFiles(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/xmlproperty/inputs"));
+            getFiles(new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY), "src/etc/testcases/taskdefs/xmlproperty/inputs"));
         while (iter.hasMoreElements()) {
             File inputFile = (File) iter.nextElement();
             // What's the working directory?  If local, then its the

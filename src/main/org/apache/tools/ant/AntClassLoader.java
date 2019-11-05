@@ -418,7 +418,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         if (LoaderUtils.isContextLoaderAvailable()) {
             savedContextLoader = LoaderUtils.getContextClassLoader();
             ClassLoader loader = this;
-            if (project != null && "only".equals(project.getProperty("build.sysclasspath"))) {
+            if (project != null && "only".equals(project.getProperty(MagicNames.BUILD_SYSCLASSPATH))) {
                 loader = this.getClass().getClassLoader();
             }
             LoaderUtils.setContextClassLoader(loader);

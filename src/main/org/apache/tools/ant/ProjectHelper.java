@@ -49,7 +49,7 @@ public class ProjectHelper {
     public static final String ANT_ATTRIBUTE_URI      = "ant:attribute";
 
     /** The URI for defined types/tasks - the format is antlib:&lt;package&gt; */
-    public static final String ANTLIB_URI     = "antlib:";
+    public static final String ANTLIB_URI = MagicNames.ANTLIB_PREFIX;
 
     /** Polymorphic attribute  */
     public static final String ANT_TYPE = "ant-type";

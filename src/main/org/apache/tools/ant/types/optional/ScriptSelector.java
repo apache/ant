@@ -20,6 +20,7 @@ package org.apache.tools.ant.types.optional;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -172,7 +173,7 @@ public class ScriptSelector extends BaseSelector {
         this.file = file;
         this.basedir = basedir;
         this.filename = filename;
-        runner.addBean("basedir", basedir);
+        runner.addBean(MagicNames.PROJECT_BASEDIR, basedir);
         runner.addBean("filename", filename);
         runner.addBean("file", file);
         runner.executeScript("ant_selector");
