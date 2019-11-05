@@ -20,6 +20,7 @@ package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicTestNames;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,6 +42,7 @@ import static org.junit.Assert.fail;
 public class FilterSetTest {
 
     private static final int BUF_SIZE = 32768;
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
 
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
@@ -205,8 +207,8 @@ public class FilterSetTest {
     }
 
     private boolean compareFiles(String name1, String name2) throws IOException {
-        File file1 = new File(System.getProperty("root"), name1);
-        File file2 = new File(System.getProperty("root"), name2);
+        File file1 = new File(ROOT, name1);
+        File file2 = new File(ROOT, name2);
 
 
         if (!file1.exists() || !file2.exists()) {

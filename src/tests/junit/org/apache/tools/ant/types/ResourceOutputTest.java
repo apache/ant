@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.UnknownServiceException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Zip;
 import org.apache.tools.ant.types.resources.ImmutableResourceException;
@@ -41,7 +43,7 @@ import static org.junit.Assert.fail;
 public class ResourceOutputTest {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final File basedir = new File(System.getProperty("root"),
+    private static final File basedir = new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY),
         "src/etc/testcases/types/resources");
 
     private Project project;
@@ -50,7 +52,7 @@ public class ResourceOutputTest {
     public void setUp() {
         project = new Project();
         project.init();
-        project.setUserProperty("basedir", basedir.getAbsolutePath());
+        project.setUserProperty(MagicNames.PROJECT_BASEDIR, basedir.getAbsolutePath());
     }
 
     @Test

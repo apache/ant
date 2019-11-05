@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.junit.Before;
@@ -43,8 +45,8 @@ public class ExecStreamRedirectorTest {
     public void setUp() throws Exception {
         project = new Project();
         project.init();
-        final File antFile = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/exec/exec-with-redirector.xml");
-        project.setUserProperty("ant.file", antFile.getAbsolutePath());
+        final File antFile = new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY), "src/etc/testcases/taskdefs/exec/exec-with-redirector.xml");
+        project.setUserProperty(MagicNames.ANT_FILE, antFile.getAbsolutePath());
         final File outputDir = this.createTmpDir();
         project.setUserProperty("output", outputDir.toString());
         ProjectHelper.configureProject(project, antFile);

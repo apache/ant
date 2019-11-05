@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.After;
 import org.junit.Before;
@@ -42,6 +43,7 @@ import static org.junit.Assume.assumeTrue;
 public class FileUtilsTest {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
     private File removeThis;
     private String root;
 
@@ -393,18 +395,18 @@ public class FileUtilsTest {
      */
     @Test
     public void testContentEquals() throws IOException {
-        assertTrue("Non existing files", FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"),
-                                                          new File(System.getProperty("root"), "bar")));
+        assertTrue("Non existing files", FILE_UTILS.contentEquals(new File(ROOT, "foo"),
+                                                          new File(ROOT, "bar")));
         assertTrue("One exists, the other one doesn\'t",
-                   !FILE_UTILS.contentEquals(new File(System.getProperty("root"), "foo"), new File(System.getProperty("root"), "build.xml")));
+                   !FILE_UTILS.contentEquals(new File(ROOT, "foo"), new File(ROOT, "build.xml")));
         assertTrue("Don\'t compare directories",
-                   !FILE_UTILS.contentEquals(new File(System.getProperty("root"), "src"), new File(System.getProperty("root"), "src")));
+                   !FILE_UTILS.contentEquals(new File(ROOT, "src"), new File(ROOT, "src")));
         assertTrue("File equals itself",
-                   FILE_UTILS.contentEquals(new File(System.getProperty("root"), "build.xml"),
-                                    new File(System.getProperty("root"), "build.xml")));
+                   FILE_UTILS.contentEquals(new File(ROOT, "build.xml"),
+                                    new File(ROOT, "build.xml")));
         assertTrue("Files are different",
-                   !FILE_UTILS.contentEquals(new File(System.getProperty("root"), "build.xml"),
-                                     new File(System.getProperty("root"), "docs.xml")));
+                   !FILE_UTILS.contentEquals(new File(ROOT, "build.xml"),
+                                     new File(ROOT, "docs.xml")));
     }
 
     /**

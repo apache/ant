@@ -323,12 +323,15 @@ public abstract class BuildFileTest extends TestCase {
         logBuffer = new StringBuffer();
         fullLogBuffer = new StringBuffer();
         project = new Project();
+        if (Boolean.getBoolean(MagicTestNames.TEST_BASEDIR_IGNORE)) {
+            System.clearProperty(MagicNames.PROJECT_BASEDIR);
+        }
         project.init();
-        File antFile = new File(System.getProperty("root"), filename);
-        project.setUserProperty("ant.file", antFile.getAbsolutePath());
+        File antFile = new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY), filename);
+        project.setUserProperty(MagicNames.ANT_FILE, antFile.getAbsolutePath());
         // set two new properties to allow to build unique names when running multithreaded tests
-        project.setProperty("ant.processid", ProcessUtil.getProcessId("<Process>"));
-        project.setProperty("ant.threadname", Thread.currentThread().getName());
+        project.setProperty(MagicTestNames.TEST_PROCESS_ID, ProcessUtil.getProcessId("<Process>"));
+        project.setProperty(MagicTestNames.TEST_THREAD_NAME, Thread.currentThread().getName());
         project.addBuildListener(new AntTestListener(logLevel));
         ProjectHelper.configureProject(project, antFile);
     }

@@ -26,6 +26,8 @@ import java.util.GregorianCalendar;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.util.FileUtils;
@@ -69,7 +71,7 @@ public class ExecTaskTest {
     public void testspawn() throws InterruptedException {
         buildRule.getProject().executeTarget("setUp");
         Assume.assumeNotNull(buildRule.getProject().getProperty("test.can.run"));
-        myBuild = new MonitoredBuild(new File(System.getProperty("root"), BUILD_FILE), "spawn");
+        myBuild = new MonitoredBuild(new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY), BUILD_FILE), "spawn");
         logFile = FILE_UTILS.createTempFile("spawn", "log", new File(buildRule.getProject().getProperty("output")),
                 false, false);
         // this is guaranteed by FileUtils#createTempFile
@@ -134,7 +136,7 @@ public class ExecTaskTest {
             this.target = target;
             project = new Project();
             project.init();
-            project.setUserProperty("ant.file", myBuildFile.getAbsolutePath());
+            project.setUserProperty(MagicNames.ANT_FILE, myBuildFile.getAbsolutePath());
             ProjectHelper.configureProject(project, myBuildFile);
         }
 

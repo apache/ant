@@ -19,6 +19,7 @@ package org.apache.tools.ant.types.resources;
 
 import java.io.File;
 
+import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class FileResourceTest {
 
     @Before
     public void setUp() {
-        root = new File(System.getProperty("root"));
+        root = new File(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY));
     }
 
     @Test

@@ -25,6 +25,7 @@ import java.io.PrintStream;
 
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
+import org.apache.tools.ant.MagicTestNames;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,11 +40,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class InitializeClassTest {
 
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
+
     @Rule
     public final BuildFileRule buildRule = new BuildFileRule();
 
-    private File f1 = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/forkedout");
-    private File f2 = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/unforkedout");
+    private File f1 = new File(ROOT, "src/etc/testcases/taskdefs/forkedout");
+    private File f2 = new File(ROOT, "src/etc/testcases/taskdefs/unforkedout");
 
 
     @Before

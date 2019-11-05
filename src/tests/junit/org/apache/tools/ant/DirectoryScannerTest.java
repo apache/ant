@@ -44,6 +44,8 @@ import org.junit.Test;
  */
 public class DirectoryScannerTest {
 
+    private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
+
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
@@ -235,7 +237,7 @@ public class DirectoryScannerTest {
     @Test
     public void testSetFollowLinks() throws IOException, InterruptedException {
         if (supportsSymlinks) {
-            File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
+            File linkFile = new File(ROOT, "src/main/org/apache/tools/ThisIsALink");
             System.err.println("link exists pre-test? " + linkFile.exists());
 
             try {
@@ -244,7 +246,7 @@ public class DirectoryScannerTest {
                 Process process = Runtime.getRuntime().exec(command);
                 assertEquals("0 return code expected for external process", 0, process.waitFor());
 
-                File dir = new File(System.getProperty("root"), "src/main/org/apache/tools");
+                File dir = new File(ROOT, "src/main/org/apache/tools");
 
                 DirectoryScanner ds = new DirectoryScanner();
 
