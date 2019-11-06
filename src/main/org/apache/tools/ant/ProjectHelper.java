@@ -38,7 +38,7 @@ import org.xml.sax.AttributeList;
  */
 public class ProjectHelper {
     /** The URI for ant name space */
-    public static final String ANT_CORE_URI    = "antlib:org.apache.tools.ant";
+    public static final String ANT_CORE_URI = MagicNames.ANTLIB_PREFIX + "org.apache.tools.ant";
 
     /** The URI for antlib current definitions */
     public static final String ANT_CURRENT_URI      = "ant:current";
@@ -49,7 +49,7 @@ public class ProjectHelper {
     public static final String ANT_ATTRIBUTE_URI      = "ant:attribute";
 
     /** The URI for defined types/tasks - the format is antlib:&lt;package&gt; */
-    public static final String ANTLIB_URI     = "antlib:";
+    public static final String ANTLIB_URI = MagicNames.ANTLIB_PREFIX;
 
     /** Polymorphic attribute  */
     public static final String ANT_TYPE = "ant-type";
