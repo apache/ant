@@ -218,7 +218,7 @@ public final class MagicNames {
      * Value: {@value}
      */
     public static final String PROJECT_HELPER_SERVICE =
-        "META-INF/services/org.apache.tools.ant.ProjectHelper";
+        "META-INF/services/" + PROJECT_HELPER_CLASS;
 
     /**
      * Name of ProjectHelper reference that we add to a project.

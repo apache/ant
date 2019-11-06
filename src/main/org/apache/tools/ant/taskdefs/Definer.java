@@ -465,7 +465,7 @@ public abstract class Definer extends DefBase {
         }
         if (!antlib.startsWith(MagicNames.ANTLIB_PREFIX)) {
             throw new BuildException(
-                "Invalid antlib attribute - it must start with antlib:");
+                "Invalid antlib attribute - it must start with " + MagicNames.ANTLIB_PREFIX);
         }
         setURI(antlib);
         this.resource = antlib.substring(MagicNames.ANTLIB_PREFIX.length()).replace('.', '/')

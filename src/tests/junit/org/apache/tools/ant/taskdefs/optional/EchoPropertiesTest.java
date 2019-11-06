@@ -37,6 +37,7 @@ import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -182,7 +183,7 @@ public class EchoPropertiesTest {
         buildRule.executeTarget("testWithRegex");
         // the following line has been changed from checking ant.home to ant.version
         // so the test will still work when run outside of an Ant script
-        assertThat(buildRule.getFullLog(), containsString("ant.version="));
+        assertThat(buildRule.getFullLog(), containsString(MagicNames.ANT_VERSION + "="));
     }
 
     private void testEchoPrefixVarious(String target) throws Exception {
