@@ -53,7 +53,7 @@ public class CommandlineJavaTest {
         if (System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY) != null) {
             project.setBasedir(System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY));
         }
-        project.setProperty("build.sysclasspath", "ignore");
+        project.setProperty(MagicNames.BUILD_SYSCLASSPATH, "ignore");
         cloneVm = System.getProperty("ant.build.clonevm");
         if (cloneVm != null) {
             System.setProperty("ant.build.clonevm", "false");
