@@ -28,6 +28,7 @@ import java.util.Iterator;
 import org.apache.tools.ant.AntAssert;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
@@ -172,7 +173,7 @@ public class ModifiedSelectorTest {
 
     @Test
     public void testCustomClasses() {
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty(MagicNames.ANT_HOME));
         BFT bft = new BFT();
         bft.setUp();
         // don't catch the JUnit exceptions
@@ -584,7 +585,7 @@ public class ModifiedSelectorTest {
     @Test
     public void testResourceSelectorScenarioSimple() {
 
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty(MagicNames.ANT_HOME));
         BFT bft = new BFT();
         bft.doTarget("modifiedselectortest-scenario-resourceSimple");
         bft.doTarget("modifiedselectortest-scenario-clean");
@@ -804,19 +805,19 @@ public class ModifiedSelectorTest {
 
     @Test
     public void testScenarioCoreSelectorDefaults() {
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty(MagicNames.ANT_HOME));
         doScenarioTest("modifiedselectortest-scenario-coreselector-defaults", "cache.properties");
     }
 
     @Test
     public void testScenarioCoreSelectorSettings() {
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty(MagicNames.ANT_HOME));
         doScenarioTest("modifiedselectortest-scenario-coreselector-settings", "core.cache.properties");
     }
 
     @Test
     public void testScenarioCustomSelectorSettings() {
-        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty("ant.home"));
+        Assume.assumeNotNull("Ant home not set", selectorRule.getProject().getProperty(MagicNames.ANT_HOME));
         doScenarioTest("modifiedselectortest-scenario-customselector-settings", "core.cache.properties");
     }
 

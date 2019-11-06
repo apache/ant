@@ -588,7 +588,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
         if (JavaEnvUtils.isKaffe()) {
             // newer versions of Kaffe (1.1.1+) won't have this,
             // but this will be sorted by FileSet anyway.
-            File kaffeShare = new File(System.getProperty("java.home")
+            File kaffeShare = new File(JavaEnvUtils.getJavaHome()
                                        + File.separator + "share"
                                        + File.separator + "kaffe");
             if (kaffeShare.isDirectory()) {
@@ -605,57 +605,44 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             // TODO is this code still necessary? is there any 1.2+ port?
             // Pull in *.zip from packages directory
             FileSet msZipFiles = new FileSet();
-            msZipFiles.setDir(new File(System.getProperty("java.home")
-                + File.separator + "Packages"));
+            msZipFiles.setDir(new File(JavaEnvUtils.getJavaHome()
+                    + File.separator + "Packages"));
             msZipFiles.setIncludes("*.ZIP");
             addFileset(msZipFiles);
         } else {
             // JDK 1.2+ seems to set java.home to the JRE directory.
-            addExisting(new Path(null,
-                                 System.getProperty("java.home")
-                                 + File.separator + "lib"
-                                 + File.separator + "rt.jar"));
+            addExisting(new Path(null, JavaEnvUtils.getJavaHome()
+                    + File.separator + "lib" + File.separator + "rt.jar"));
             // Just keep the old version as well and let addExisting
             // sort it out.
-            addExisting(new Path(null,
-                                 System.getProperty("java.home")
-                                 + File.separator + "jre"
-                                 + File.separator + "lib"
-                                 + File.separator + "rt.jar"));
+            addExisting(new Path(null, JavaEnvUtils.getJavaHome()
+                    + File.separator + "jre" + File.separator + "lib"
+                    + File.separator + "rt.jar"));
 
             // Sun's and Apple's 1.4 have JCE and JSSE in separate jars.
             for (String secJar : Arrays.asList("jce", "jsse")) {
-                addExisting(new Path(null,
-                        System.getProperty("java.home")
-                                + File.separator + "lib"
-                                + File.separator + secJar + ".jar"));
-                addExisting(new Path(null,
-                        System.getProperty("java.home")
-                                + File.separator + ".."
-                                + File.separator + "Classes"
-                                + File.separator + secJar + ".jar"));
+                addExisting(new Path(null, JavaEnvUtils.getJavaHome()
+                        + File.separator + "lib"
+                        + File.separator + secJar + ".jar"));
+                addExisting(new Path(null, JavaEnvUtils.getJavaHome()
+                        + File.separator + ".." + File.separator + "Classes"
+                        + File.separator + secJar + ".jar"));
             }
 
             // IBM's 1.4 has rt.jar split into 4 smaller jars and a combined
             // JCE/JSSE in security.jar.
             for (String ibmJar : Arrays.asList("core", "graphics", "security", "server", "xml")) {
-                addExisting(new Path(null,
-                        System.getProperty("java.home")
-                                + File.separator + "lib"
-                                + File.separator + ibmJar + ".jar"));
+                addExisting(new Path(null, JavaEnvUtils.getJavaHome()
+                        + File.separator + "lib" + File.separator + ibmJar + ".jar"));
             }
 
             // Added for MacOS X
-            addExisting(new Path(null,
-                                 System.getProperty("java.home")
-                                 + File.separator + ".."
-                                 + File.separator + "Classes"
-                                 + File.separator + "classes.jar"));
-            addExisting(new Path(null,
-                                 System.getProperty("java.home")
-                                 + File.separator + ".."
-                                 + File.separator + "Classes"
-                                 + File.separator + "ui.jar"));
+            addExisting(new Path(null, JavaEnvUtils.getJavaHome()
+                    + File.separator + ".." + File.separator + "Classes"
+                    + File.separator + "classes.jar"));
+            addExisting(new Path(null, JavaEnvUtils.getJavaHome()
+                    + File.separator + ".." + File.separator + "Classes"
+                    + File.separator + "ui.jar"));
         }
     }
 

@@ -473,12 +473,12 @@ public abstract class Definer extends DefBase {
         if (definerSet) {
             tooManyDefinitions();
         }
-        if (!antlib.startsWith("antlib:")) {
+        if (!antlib.startsWith(MagicNames.ANTLIB_PREFIX)) {
             throw new BuildException(
                 "Invalid antlib attribute - it must start with antlib:");
         }
         setURI(antlib);
-        this.resource = antlib.substring("antlib:".length()).replace('.', '/')
+        this.resource = antlib.substring(MagicNames.ANTLIB_PREFIX.length()).replace('.', '/')
             + "/antlib.xml";
         definerSet = true;
     }

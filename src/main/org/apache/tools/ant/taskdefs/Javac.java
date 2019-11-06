@@ -1365,9 +1365,9 @@ public class Javac extends MatchingTask {
                                      + "\" does not exist "
                                      + "or is not a directory", getLocation());
         }
-        if (includeAntRuntime == null && getProject().getProperty("build.sysclasspath") == null) {
-            log(getLocation() + "warning: 'includeantruntime' was not set, " +
-                    "defaulting to build.sysclasspath=last; set to false for repeatable builds",
+        if (includeAntRuntime == null && getProject().getProperty(MagicNames.BUILD_SYSCLASSPATH) == null) {
+            log(getLocation() + "warning: 'includeantruntime' was not set, defaulting to "
+                            + MagicNames.BUILD_SYSCLASSPATH + "=last; set to false for repeatable builds",
                     Project.MSG_WARN);
         }
     }

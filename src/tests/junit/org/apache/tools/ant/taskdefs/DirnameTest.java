@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.Assume;
 import org.junit.Before;
@@ -84,7 +85,7 @@ public class DirnameTest {
     @Test
     public void test5() {
         buildRule.executeTarget("test5");
-        String expected = buildRule.getProject().getProperty("basedir");
+        String expected = buildRule.getProject().getProperty(MagicNames.PROJECT_BASEDIR);
         String checkprop = buildRule.getProject().getProperty("base.dir");
         assertEquals("dirname failed", expected, checkprop);
     }

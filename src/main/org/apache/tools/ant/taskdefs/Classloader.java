@@ -163,10 +163,10 @@ public class Classloader extends Task {
     public void execute() {
         try {
             // Gump friendly - don't mess with the core loader if only classpath
-            if ("only".equals(getProject().getProperty("build.sysclasspath"))
+            if ("only".equals(getProject().getProperty(MagicNames.BUILD_SYSCLASSPATH))
                 && (name == null || SYSTEM_LOADER_REF.equals(name))) {
-                log("Changing the system loader is disabled "
-                    + "by build.sysclasspath=only", Project.MSG_WARN);
+                log("Changing the system loader is disabled by "
+                    + MagicNames.BUILD_SYSCLASSPATH + "=only", Project.MSG_WARN);
                 return;
             }
 
