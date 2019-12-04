@@ -49,7 +49,7 @@ wget https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u23
 tar -zxf ./*.tar.gz
 # set JAVA_HOME to point to the newly extracted tar's content
 export JAVA_HOME="`echo \`pwd\`/\`echo */\``"
-export PATH="${JAVA_HOME}"/bin:$PATH
+export PATH="${JAVA_HOME}"/bin:"${PATH}"
 cd ../..
 
 echo "Using \"${JAVA_HOME}\" to run Ant tests"
