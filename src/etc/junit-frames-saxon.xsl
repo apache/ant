@@ -3,7 +3,42 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="xs"
     version="2.0">
-    <xsl:output method="html" indent="yes" encoding="UTF-8"/>
+    <xsl:character-map name="no-control-characters">
+        <xsl:output-character character="&#127;" string="&amp;#127;"/>
+        <xsl:output-character character="&#128;" string="&amp;#128;"/>
+        <xsl:output-character character="&#129;" string="&amp;#129;"/>
+        <xsl:output-character character="&#130;" string="&amp;#130;"/>
+        <xsl:output-character character="&#131;" string="&amp;#131;"/>
+        <xsl:output-character character="&#132;" string="&amp;#132;"/>
+        <xsl:output-character character="&#133;" string="&amp;#133;"/>
+        <xsl:output-character character="&#134;" string="&amp;#134;"/>
+        <xsl:output-character character="&#135;" string="&amp;#135;"/>
+        <xsl:output-character character="&#136;" string="&amp;#136;"/>
+        <xsl:output-character character="&#137;" string="&amp;#137;"/>
+        <xsl:output-character character="&#138;" string="&amp;#138;"/>
+        <xsl:output-character character="&#139;" string="&amp;#139;"/>
+        <xsl:output-character character="&#140;" string="&amp;#140;"/>
+        <xsl:output-character character="&#141;" string="&amp;#141;"/>
+        <xsl:output-character character="&#142;" string="&amp;#142;"/>
+        <xsl:output-character character="&#143;" string="&amp;#143;"/>
+        <xsl:output-character character="&#144;" string="&amp;#144;"/>
+        <xsl:output-character character="&#145;" string="&amp;#145;"/>
+        <xsl:output-character character="&#146;" string="&amp;#146;"/>
+        <xsl:output-character character="&#147;" string="&amp;#147;"/>
+        <xsl:output-character character="&#148;" string="&amp;#148;"/>
+        <xsl:output-character character="&#149;" string="&amp;#149;"/>
+        <xsl:output-character character="&#150;" string="&amp;#150;"/>
+        <xsl:output-character character="&#151;" string="&amp;#151;"/>
+        <xsl:output-character character="&#152;" string="&amp;#152;"/>
+        <xsl:output-character character="&#153;" string="&amp;#153;"/>
+        <xsl:output-character character="&#154;" string="&amp;#154;"/>
+        <xsl:output-character character="&#155;" string="&amp;#155;"/>
+        <xsl:output-character character="&#156;" string="&amp;#156;"/>
+        <xsl:output-character character="&#157;" string="&amp;#157;"/>
+        <xsl:output-character character="&#158;" string="&amp;#158;"/>
+        <xsl:output-character character="&#159;" string="&amp;#159;"/>
+    </xsl:character-map>
+    <xsl:output method="html" indent="yes" encoding="UTF-8" use-character-maps="no-control-characters"/>
     <xsl:decimal-format decimal-separator="." grouping-separator=","/>
     <!--
        Licensed to the Apache Software Foundation (ASF) under one or more
