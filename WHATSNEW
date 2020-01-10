@@ -26,6 +26,8 @@ Fixed bugs:
    optional dependencies were missing. This has now been fixed.
    Bugzilla Report 63438
 
+ * Fixes a potential ConcurrentModificationException in XMLLogger.
+   Bugzilla Report 63921
 
 Other changes:
 --------------

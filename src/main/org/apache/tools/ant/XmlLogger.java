@@ -25,8 +25,10 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -346,9 +348,13 @@ public class XmlLogger implements BuildLogger {
         if (element != null) {
             return element;
         }
-        return tasks.keySet().stream().filter(UnknownElement.class::isInstance)
-                .filter(key -> ((UnknownElement) key).getTask() == task).findFirst()
-                .map(key -> tasks.get(key)).orElse(null);
+        final Set<Task> knownTasks = new HashSet<>(tasks.keySet());
+        for (final Task t : knownTasks) {
+            if (t instanceof UnknownElement && ((UnknownElement) t).getTask() == task) {
+                return tasks.get(t);
+            }
+        }
+        return null;
     }
 
     /**
