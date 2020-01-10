@@ -574,6 +574,17 @@
         <parsersupports feature="http://java.sun.com/xml/jaxp/properties/schemaSource"/>
       </or>
     </condition>
+
+    <!--
+    Java8 introduced a HTML checker 'doclint' which is very strict and breaks
+    the build if there is a HTML error in the JavaDoc.
+    -->
+    <condition
+            property="javadoc.doclint.none"
+            value="-Xdoclint:none"
+            else="">
+      <not><isset property="withDoclint"/></not>
+    </condition>
   </target>
 
   <!--
@@ -1541,7 +1552,8 @@
              windowtitle="${Name} API"
              doctitle="${Name}"
              maxmemory="1000M"
-             verbose="${javadoc.verbose}">
+             verbose="${javadoc.verbose}"
+             additionalparam="${javadoc.doclint.none}">
 
       <packageset dir="${java.dir}"/>
 
@@ -1572,7 +1584,8 @@
              version="true"
              locale="en"
              windowtitle="${Name} Test Utilities"
-             doctitle="${Name}">
+             doctitle="${Name}"
+             additionalparam="${javadoc.doclint.none}">
 
       <!-- hide some meta information for javadoc -->
       <tag name="pre" description="Precondition:" scope="all"/>

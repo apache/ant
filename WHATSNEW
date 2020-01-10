@@ -22,6 +22,11 @@ Fixed bugs:
    exceptions that happen in @BeforeAll method of a test. This is now fixed.
    Bugzilla Report 63850
 
+ * Building Ant from source could result in the javadocs target failing if the
+   optional dependencies were missing. This has now been fixed.
+   Bugzilla Report 63438
+
+
 Other changes:
 --------------
 
