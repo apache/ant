@@ -28,6 +28,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_CLASS_NAME;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_LISTENER_RESULT_FILE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_SEND_SYS_ERR;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_SEND_SYS_OUT;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ELM_LISTENER;
@@ -156,6 +157,9 @@ public class ListenerDefinition {
         writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, this.className);
         writer.writeAttribute(LD_XML_ATTR_SEND_SYS_ERR, Boolean.toString(this.sendSysErr));
         writer.writeAttribute(LD_XML_ATTR_SEND_SYS_OUT, Boolean.toString(this.sendSysOut));
+        if (this.outputDir != null) {
+            writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, this.outputDir);
+        }
         if (this.resultFile != null) {
             writer.writeAttribute(LD_XML_ATTR_LISTENER_RESULT_FILE, this.resultFile);
         }
@@ -174,6 +178,10 @@ public class ListenerDefinition {
         final String sendSysOut = reader.getAttributeValue(null, LD_XML_ATTR_SEND_SYS_OUT);
         if (sendSysOut != null) {
             listenerDef.setSendSysOut(Boolean.parseBoolean(sendSysOut));
+        }
+        final String outputDir = reader.getAttributeValue(null, LD_XML_ATTR_OUTPUT_DIRECTORY);
+        if (outputDir != null) {
+            listenerDef.setOutputDir(outputDir);
         }
         final String resultFile = reader.getAttributeValue(null, LD_XML_ATTR_LISTENER_RESULT_FILE);
         if (resultFile != null) {

@@ -465,6 +465,21 @@ public class JUnitLauncherTaskTest {
         Files.deleteIfExists(tracker);
     }
 
+
+    /**
+     * Tests that the forked test works fine when the {@code testclasses} element is used
+     * as a sibling of a {@code listener} element
+     */
+    @Test
+    public void testBz63958() throws Exception {
+        final String targetName = "bz-63958";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+
+        Assert.assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
+                ForkedTest.class.getName(), "testSysProp"));
+    }
+
     private Path setupTrackerProperty(final String targetName) {
         final String filename = targetName + "-tracker.txt";
         buildRule.getProject().setProperty(targetName + ".tracker", filename);

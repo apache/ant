@@ -351,5 +351,24 @@
             </testclasses>
         </junitlauncher>
     </target>
+
+    <target name="bz-63958">
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <testclasses>
+                <listener classname="org.example.junitlauncher.Tracker"
+                          outputDir="${output.dir}"
+                          resultFile="${bz-63958.tracker}"
+                          if="bz-63958.tracker"/>
+                <fileset dir="${build.classes.dir}">
+                    <include name="**/ForkedTest.class"/>
+                </fileset>
+                <fork>
+                    <sysproperty key="junitlauncher.test.sysprop.one" value="forked"/>
+                </fork>
+            </testclasses>
+            <listener type="legacy-plain" sendSysOut="true" />
+        </junitlauncher>
+    </target>
 </project>
 

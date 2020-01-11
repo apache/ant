@@ -156,24 +156,26 @@ public class StandaloneLauncher {
             if (printSummary != null) {
                 forkedLaunch.setPrintSummary(Boolean.parseBoolean(printSummary));
             }
-            reader.nextTag();
-            reader.require(START_ELEMENT, null, null);
-            final String elementName = reader.getLocalName();
-            switch (elementName) {
-                case LD_XML_ELM_TEST: {
-                    forkedLaunch.addTests(Collections.singletonList(SingleTestClass.fromForkedRepresentation(reader)));
-                    break;
+            int nextTag = reader.nextTag();
+            while (nextTag == START_ELEMENT) {
+                reader.require(START_ELEMENT, null, null);
+                final String elementName = reader.getLocalName();
+                switch (elementName) {
+                    case LD_XML_ELM_TEST: {
+                        forkedLaunch.addTests(Collections.singletonList(SingleTestClass.fromForkedRepresentation(reader)));
+                        break;
+                    }
+                    case LD_XML_ELM_TEST_CLASSES: {
+                        forkedLaunch.addTests(TestClasses.fromForkedRepresentation(reader));
+                        break;
+                    }
+                    case LD_XML_ELM_LISTENER: {
+                        forkedLaunch.addListener(ListenerDefinition.fromForkedRepresentation(reader));
+                        break;
+                    }
                 }
-                case LD_XML_ELM_TEST_CLASSES: {
-                    forkedLaunch.addTests(TestClasses.fromForkedRepresentation(reader));
-                    break;
-                }
-                case LD_XML_ELM_LISTENER: {
-                    forkedLaunch.addListener(ListenerDefinition.fromForkedRepresentation(reader));
-                    break;
-                }
+                nextTag = reader.nextTag();
             }
-            reader.nextTag();
             reader.require(END_ELEMENT, null, LD_XML_ELM_LAUNCH_DEF);
             reader.next();
             reader.require(END_DOCUMENT, null, null);

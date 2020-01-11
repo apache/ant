@@ -29,6 +29,11 @@ Fixed bugs:
  * Fixes a potential ConcurrentModificationException in XMLLogger.
    Bugzilla Report 63921
 
+ * Fixes a bug in junitlauncher task in forked mode, where if a listener element
+   was used as a sibling element for either the test or testclasses element,
+   then the forked mode launch would fail.
+   Bugzilla Report 63958
+
 Other changes:
 --------------
 
