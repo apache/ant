@@ -147,8 +147,9 @@
             value="${htmlcheck.report.dir}/report.txt"
             description="Report file of the HTML-Check"/>
 
+  <available classname="org.apache.ivy.Ivy" property="ivy.present"/>
 
-  <target name="init-ivy">
+  <target name="init-ivy" unless="ivy.present">
     <property name="ivy.version"  value="2.5.0"/>
     <property name="ivy.jar.url"  value="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"/>
     <property name="ivy.jar.dir"  value="${build.dir}/ivy"/>
