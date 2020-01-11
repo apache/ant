@@ -49,7 +49,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/m
       See https://eclipse-ee4j.github.io/mail/ -->
       <groupId>com.sun.mail</groupId>
       <artifactId>jakarta.mail</artifactId>
-      <version>1.6.3</version>
+      <version>1.6.4</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
