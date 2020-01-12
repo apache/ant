@@ -64,6 +64,10 @@ class ConstantPool {
                 break;
 
             case INTEGER :
+            case FIELDREF :
+            case METHODREF :
+            case INTERFACEMETHODREF :
+            case NAMEANDTYPE :
                 values[i] = data.readInt();
                 break;
 
@@ -86,12 +90,6 @@ class ConstantPool {
                 values[i] = data.readUnsignedShort();
                 break;
 
-            case FIELDREF :
-            case METHODREF :
-            case INTERFACEMETHODREF :
-            case NAMEANDTYPE :
-                values[i] = data.readInt();
-                break;
             default:
                 // Do nothing
             }

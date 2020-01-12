@@ -561,9 +561,6 @@ public class FTP extends Task implements FTPTaskConfig {
 
                 }
                 ftp.changeToParentDirectory();
-            } catch (FTPConnectionClosedException ftpcce) {
-                throw new BuildException("Error while communicating with FTP "
-                                         + "server: ", ftpcce);
             } catch (IOException e) {
                 throw new BuildException("Error while communicating with FTP "
                                          + "server: ", e);
@@ -2535,16 +2532,12 @@ public class FTP extends Task implements FTPTaskConfig {
 
             if (binary) {
                 ftp.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-                if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                    throw new BuildException("could not set transfer type: %s",
-                        ftp.getReplyString());
-                }
             } else {
                 ftp.setFileType(org.apache.commons.net.ftp.FTP.ASCII_FILE_TYPE);
-                if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                    throw new BuildException("could not set transfer type: %s",
-                        ftp.getReplyString());
-                }
+            }
+            if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
+                throw new BuildException("could not set transfer type: %s",
+                    ftp.getReplyString());
             }
 
             if (passive) {

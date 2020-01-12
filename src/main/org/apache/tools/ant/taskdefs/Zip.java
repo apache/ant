@@ -623,10 +623,8 @@ public class Zip extends MatchingTask {
             skipWriting = true;
             executeMain();
             skipWriting = false;
-            executeMain();
-        } else {
-            executeMain();
         }
+        executeMain();
     }
 
     /**

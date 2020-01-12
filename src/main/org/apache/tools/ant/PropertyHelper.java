@@ -1048,12 +1048,11 @@ public class PropertyHelper implements GetProperty {
                 if (value.charAt(pos + 1) == '$') {
                     //backwards compatibility two $ map to one mode
                     fragments.addElement("$");
-                    prev = pos + 2;
                 } else {
                     //new behaviour: $X maps to $X for all values of X!='$'
                     fragments.addElement(value.substring(pos, pos + 2));
-                    prev = pos + 2;
                 }
+                prev = pos + 2;
             } else {
                 //property found, extract its name or bail on a typo
                 int endName = value.indexOf('}', pos);

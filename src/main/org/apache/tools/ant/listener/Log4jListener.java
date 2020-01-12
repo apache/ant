@@ -155,8 +155,6 @@ public class Log4jListener implements BuildListener {
                 log.info(event.getMessage());
                 break;
             case Project.MSG_VERBOSE:
-                log.debug(event.getMessage());
-                break;
             case Project.MSG_DEBUG:
                 log.debug(event.getMessage());
                 break;
