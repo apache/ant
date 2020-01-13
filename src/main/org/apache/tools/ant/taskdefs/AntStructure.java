@@ -324,7 +324,7 @@ public class AntStructure extends Task {
                             || !areNmtokens(values)) {
                             sb.append("CDATA ");
                         } else {
-                            sb.append(Stream.of(values).collect(joinAlts));
+                            sb.append(Stream.of(values).collect(joinAlts)).append(" ");
                         }
                     } catch (final InstantiationException | IllegalAccessException ie) {
                         sb.append("CDATA ");
@@ -337,7 +337,7 @@ public class AntStructure extends Task {
                             sb.append("CDATA ");
                         } else {
                             sb.append(Stream.of(values).map(Enum::name)
-                                .collect(joinAlts));
+                                .collect(joinAlts)).append(" ");
                         }
                     } catch (final Exception x) {
                         sb.append("CDATA ");

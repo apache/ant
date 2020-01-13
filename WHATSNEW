@@ -34,6 +34,9 @@ Fixed bugs:
    then the forked mode launch would fail.
    Bugzilla Report 63958
 
+ * Fixes an issue in AntStructure where an incorrect DTD was being generated.
+   Github Pull Request #116
+
 Other changes:
 --------------
 
