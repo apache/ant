@@ -85,13 +85,13 @@
             <frame src="all-cycles.html" name="classListFrame"/>
          </frameset>
          <frame src="overview-summary.html" name="classFrame"/>
+          <noframes>
+              <h2>Frame Alert</h2>
+              <p>
+                  This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
+              </p>
+          </noframes>
       </frameset>
-      <noframes>
-         <h2>Frame Alert</h2>
-         <p>
-            This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
-         </p>
-      </noframes>
 </html>
 </xsl:template>
 

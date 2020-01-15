@@ -131,22 +131,22 @@
 
 
 <xsl:template name="index.html">
-<HTML>
-  <HEAD><TITLE>Metrics Results.</TITLE></HEAD>
-  <FRAMESET cols="20%,80%">
-    <FRAMESET rows="30%,70%">
-      <FRAME src="overview-frame.html" name="packageListFrame"/>
-      <FRAME src="allclasses-frame.html" name="classListFrame"/>
-    </FRAMESET>
-    <FRAME src="overview-summary.html" name="classFrame"/>
-  </FRAMESET>
-  <noframes>
-    <H2>Frame Alert</H2>
-    <P>
-    This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
-    </P>
-  </noframes>
-</HTML>
+<html>
+  <head><title>Metrics Results.</title></head>
+  <frameset cols="20%,80%">
+    <frameset rows="30%,70%">
+      <frame src="overview-frame.html" name="packageListFrame"/>
+      <frame src="allclasses-frame.html" name="classListFrame"/>
+    </frameset>
+    <frame src="overview-summary.html" name="classFrame"/>
+    <noframes>
+      <h2>Frame Alert</h2>
+      <p>
+        This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
+      </p>
+    </noframes>
+  </frameset>
+</html>
 </xsl:template>
 
 <!-- this is the stylesheet css to use for nearly everything -->
@@ -517,64 +517,63 @@ will increase this number.
 <xsl:template match="class" mode="class.details">
   <!--xsl:variable name="package.name" select="(ancestor::package)[last()]/@name"/-->
   <xsl:variable name="package.name" select="@package"/>
-  <HTML>
-    <HEAD>
+  <html>
+    <head>
       <xsl:call-template name="create.stylesheet.link">
         <xsl:with-param name="package.name" select="$package.name"/>
       </xsl:call-template>
-    </HEAD>
-    <BODY>
+    </head>
+    <body>
       <xsl:call-template name="pageHeader"/>
 
-      <H3>Class <xsl:if test="not($package.name = 'unnamed package')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></H3>
+      <h3>Class <xsl:if test="not($package.name = 'unnamed package')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></h3>
       <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
         <xsl:call-template name="all.metrics.header"/>
         <xsl:apply-templates select="." mode="print.metrics"/>
       </table>
 
-      <H3>Methods</H3>
+      <h3>Methods</h3>
       <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
         <xsl:call-template name="method.metrics.header"/>
         <xsl:apply-templates select="method" mode="print.metrics"/>
       </table>
 
       <xsl:call-template name="pageFooter"/>
-    </BODY>
-  </HTML>
+    </body>
+  </html>
 </xsl:template>
 
 
 <!-- list of classes in a package -->
 <xsl:template match="package" mode="classes.list">
-  <HTML>
-    <HEAD>
+  <html>
+    <head>
       <xsl:call-template name="create.stylesheet.link">
         <xsl:with-param name="package.name" select="@name"/>
       </xsl:call-template>
-    </HEAD>
-    <BODY>
+    </head>
+    <body>
       <table width="100%">
         <tr>
           <td nowrap="nowrap">
-            <H2><a href="package-summary.html" target="classFrame"><xsl:value-of select="@name"/></a></H2>
+            <h2><a href="package-summary.html" target="classFrame"><xsl:value-of select="@name"/></a></h2>
           </td>
         </tr>
       </table>
 
-      <H2>Classes</H2>
-      <TABLE WIDTH="100%">
-        <!-- xalan-nodeset:nodeset for Xalan 1.2.2 -->
-            <xsl:for-each select="$doctree/classes/class[@package = current()/@name]">
-                <xsl:sort select="@name"/>
+      <h2>Classes</h2>
+      <table width="100%">
+        <xsl:for-each select="$doctree/classes/class[@package = current()/@name]">
+          <xsl:sort select="@name"/>
           <tr>
             <td nowrap="nowrap">
               <a href="{@name}.html" target="classFrame"><xsl:value-of select="@name"/></a>
             </td>
           </tr>
-            </xsl:for-each>
-      </TABLE>
-    </BODY>
-  </HTML>
+        </xsl:for-each>
+      </table>
+    </body>
+  </html>
 </xsl:template>
 
 
@@ -717,12 +716,12 @@ will increase this number.
 </xsl:template>
 
 <xsl:template match="package" mode="package.summary">
-  <HTML>
-    <HEAD>
+  <html>
+    <head>
       <xsl:call-template name="create.stylesheet.link">
         <xsl:with-param name="package.name" select="@name"/>
       </xsl:call-template>
-    </HEAD>
+    </head>
     <body onload="open('package-frame.html','classListFrame')">
       <xsl:call-template name="pageHeader"/>
       <!-- create an anchor to this package name -->
@@ -755,7 +754,7 @@ will increase this number.
 
       <xsl:variable name="classes-in-package" select="$doctree/classes/class[@package = current()/@name]"/>
       <xsl:if test="count($classes-in-package) &gt; 0">
-        <H3>Classes</H3>
+        <h3>Classes</h3>
         <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
           <xsl:call-template name="all.metrics.header"/>
           <xsl:for-each select="$classes-in-package">
@@ -767,7 +766,7 @@ will increase this number.
 
       <xsl:call-template name="pageFooter"/>
     </body>
-  </HTML>
+  </html>
 </xsl:template>
 
 
@@ -792,7 +791,7 @@ will increase this number.
 <!-- create the link to the stylesheet based on the package name -->
 <xsl:template name="create.stylesheet.link">
   <xsl:param name="package.name"/>
-  <LINK REL ="stylesheet" TYPE="text/css" TITLE="Style"><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>stylesheet.css</xsl:attribute></LINK>
+  <link rel ="stylesheet" type="text/css" title="Style"><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>stylesheet.css</xsl:attribute></link>
 </xsl:template>
 
 
