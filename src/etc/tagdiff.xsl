@@ -16,9 +16,8 @@
    limitations under the License.
 -->
 <!-- a stylesheet to display changelogs ala netbeans -->
-<xsl:stylesheet
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+                xmlns="http://www.w3.org/1999/xhtml">
   <xsl:param name="title"/>
   <xsl:param name="module"/>
   <xsl:param name="cvsweb"/>

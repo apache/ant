@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-    xmlns:lxslt="http://xml.apache.org/xslt"
-    xmlns:redirect="http://xml.apache.org/xalan/redirect"
-    xmlns:string="xalan://java.lang.String"
-    extension-element-prefixes="redirect">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:redirect="http://xml.apache.org/xalan/redirect"
+                xmlns:string="xalan://java.lang.String"
+                extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes" encoding="UTF-8"/>
 <xsl:decimal-format decimal-separator="." grouping-separator=","/>
 <!--
