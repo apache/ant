@@ -360,7 +360,7 @@
         <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
             <xsl:call-template name="class.audit.header"/>
             <xsl:for-each select="class[not(./@package = preceding-sibling::class/@package)]">
-                <xsl:sort select="@package" order="ascending"/>
+                <xsl:sort select="@package"/>
                 <tr>
           <xsl:call-template name="alternate-row"/>
                     <td><a href="{translate(@package,'.','/')}/package-summary.html"><xsl:value-of select="@package"/></a></td>
