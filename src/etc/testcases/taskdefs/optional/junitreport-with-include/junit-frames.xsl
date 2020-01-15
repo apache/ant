@@ -785,8 +785,7 @@ h6 {
 	<xsl:if test="boolean($show.class)">
 	    <td><a href="{$class.href}"><xsl:value-of select="../@name"/></a></td>
 	</xsl:if>
-        <td>
-	    <a name="{@name}"/>
+        <td id="{@name}">
 	    <xsl:choose>
 		<xsl:when test="boolean($show.class)">
 		    <a href="{concat($class.href, '#', @name)}"><xsl:value-of select="@name"/></a>
@@ -795,7 +794,7 @@ h6 {
 		    <xsl:value-of select="@name"/>
 		</xsl:otherwise>
 	    </xsl:choose>
-	</td>
+	    </td>
         <xsl:choose>
             <xsl:when test="failure">
                 <td>Failure</td>

@@ -60,14 +60,11 @@
 	  </style> 
       </head>
       <body link="#000000" alink="#000000" vlink="#000000" text="#000000">       
-          <h1>
-            <a name="top"><xsl:value-of select="$title"/></a>
-          </h1>
+          <h1 id="top"><xsl:value-of select="$title"/></h1>
           Tagdiff between <xsl:value-of select="@startTag"/> <xsl:value-of select="@startDate"/> and
 			<xsl:value-of select="@endTag"/> <xsl:value-of select="@endDate"/>
           <p align="right">Designed for use with <a href="https://ant.apache.org/">Ant</a>.</p>
           <hr size="2"/>
-	<a name="TOP"/>
 	<table width="100%">
 		<tr>
 			<td align="right">
@@ -112,7 +109,7 @@
 				<xsl:attribute name="name"><xsl:value-of select="$anchor"/></xsl:attribute>
 				<xsl:value-of select="$title"/> - <xsl:value-of select="count($entries)"/> entries
 			</a>
-			<a href="#TOP">(back to top)</a>
+			<a href="#top">(back to top)</a>
 		</td>
 	</tr>
 	<tr>

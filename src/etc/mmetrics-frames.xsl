@@ -171,34 +171,36 @@
 <a href="#LCOM">LCOM</a> |
 <a href="#NOC">NOC</a>
 
-<a name="V(G)"/>
-<h3>Cyclomatic Complexity - V(G)</h3>
+<h3 id="V(G)">Cyclomatic Complexity - V(G)</h3>
+<p>
 This metric was introduced in the 1970s to measure the amount of control
 flow complexity or branching complexity in a module such as a
 subroutine. It gives the number of paths that may be taken through the
 code, and was initially developed to give some measure of the cost of
 producing a test case for the module by executing each path.
-<p/>
+</p>
+<p>
 Methods with a high cyclomatic complexity tend to be more difficult to
 understand and maintain. In general the more complex the methods of an
 application, the more difficult it will be to test it, and this will adversely
 affect its reliability.
-<p/>
+</p>
+<p>
 V(G) is a measure of the control flow complexity of a method or
 constructor.  It counts the number of branches in the body of the method,
 defined as:
+</p>
 <ul>
 <li>while statements;</li>
 <li>if statements;</li>
 <li>for statements.</li>
 </ul>
-
+<p>
 The metric can also be configured to count each case of a switch
 statement as well.
-
-<a name="LOC"/>
-<h3>Lines of Code - LOC</h3>
-
+</p>
+<h3 id="LOC">Lines of Code - LOC</h3>
+<p>
 This is perhaps the simplest of all the metrics to define and compute.
 Counting lines has a long history as a software metric dating from before
 the rise of structured programming, and it is still in widespread use today.
@@ -207,159 +209,163 @@ reusability and its maintainability. There are a variety of ways that the size
 can be calculated. These include counting all the lines of code, the number
 of statements, the blank lines of code, the lines of commentary, and the
 lines consisting only of syntax such as block delimiters.
-<p/>
+</p>
+<p>
 This metric can also be used for sizing other constructs as well, for
 example, the overall size of a Java class or package can be measured by
 counting the number of source lines it consists of.
-<p/>
+</p>
+<p>
 LOC can be used to determine the size of a compilation unit (source file),
 class or interface, method, constructor, or field.  It can be configured to
 ignore:
+</p>
 <ul>
 <li>blank lines;</li>
 <li>lines consisting only of comments;</li>
 <li>lines consisting only of opening and closing braces.</li>
 </ul>
-
-<a name="DIT"/>
-<h3>Depth of Inheritance Hierarchy - DIT</h3>
-
+<h3 id="DIT">Depth of Inheritance Hierarchy - DIT</h3>
+<p>
 This metric calculates how far down the inheritance hierarchy a class is
 declared. In Java all classes have java.lang.Object as their ultimate
 superclass, which is defined to have a depth of 1. So a class that
 immediately extends java.lang.Object has a metric value of 2; any of its
 subclasses will have a value of 3, and so on.
-<p/>
+</p>
+<p>
 A class that is deep within the tree inherits more methods and state
 variables, thereby increasing its complexity and making it difficult to
 predict its behavior. It can be harder to understand a system with many
 inheritance layers.
-<p/>
+</p>
+<p>
 DIT is defined for classes and interfaces:
+</p>
 <ul>
 <li>all interface types have a depth of 1;</li>
 <li>the class java.lang.Object has a depth of 1;</li>
 <li>all other classes have a depth of 1 + the depth of their super class.</li>
 </ul>
-
-<a name="NOA"/>
-<h3>Number of Attributes - NOA</h3>
-
+<h3 id="NOA">Number of Attributes - NOA</h3>
+<p>
 The number of distinct state variables in a class serves as one measure of
 its complexity. The more state a class represents the more difficult it is to
 maintain invariants for it. It also hinders comprehensibility and reuse.
-<p/>
+</p>
+<p>
 In Java, state can be exposed to subclasses through protected fields, which
 entails that the subclass also be aware of and maintain any invariants. This
 interference with the class's data encapsulation can be a source of defects
 and hidden dependencies between the state variables.
-<p/>
+</p>
+<p>
 NOA is defined for classes and interfaces.  It counts the number of fields
 declared in the class or interface.
-
-<a name="NRM"/>
-<h3>Number of Remote Methods - NRM</h3>
-
+</p>
+<h3 id="NRM">Number of Remote Methods - NRM</h3>
+<p>
 NRM is defined for classes.  A remote method call is defined as an
 invocation of a method that is not declared in any of:
+</p>
 <ul>
 <li>the class itself;</li>
 <li>a class or interface that the class extends or implements;</li>
 <li>a class or method that extends the class.</li>
 </ul>
-
+<p>
 The value is the count of all the remote method calls in all of the methods
 and constructors of the class.
-
-<a name="NLM"/>
-<h3>Number of Local Methods - NLM</h3>
-
+</p>
+<h3 id="NLM">Number of Local Methods - NLM</h3>
+<p>
 NLM is defined for classes and interfaces.  A local method is defined as a
 method that is declared in the class or interface. NLM can be configured to
 include the local methods of all of the class's superclasses.  Methods with
 public, protected, package and private visibility can be independently
 counted by setting configuration parameters.
-
-<a name="WMC"/>
-<h3>Weighted Methods per Class - WMC</h3>
-
+</p>
+<h3 id="WMC">Weighted Methods per Class - WMC</h3>
+<p>
 If the number of methods in a class can be determined during the design
 and modeling phase of a project, it can be used as a predictor of how
 much time and effort is needed to develop, debug and maintain it. This
 metric can be further refined by incorporating a weighting for the
 complexity of each method. The usual weighting is given by the cyclomatic
 complexity of the method.
-<p/>
+</p>
+<p>
 The subclasses of a class inherit all of its public and protected methods,
 and possibly its package methods as well, so the number of methods a
 class has directly impacts the complexity of its subclasses. Classes with
 large numbers of methods are often specific to a particular application,
 reducing the ability to reuse them.
-<p/>
+</p>
+<p>
 The definition of WMC is based upon NLM, and it provides the same
 configuration parameters for counting inherited methods and of varying
 visibility. The main difference is that NLM always counts each method as 1,
 whereas WMC will weight each method. There are two weighting schemes:
+</p>
 <ul>
 <li>V(G) the cyclomatic complexity of the method is used as its weight.
    Methods from class files are given a V(G) of 1.</li>
 <li>the arity, or the number of parameters of the method are used to
    determine the weight.</li>
 </ul>
-
-<a name="RFC"/>
-<h3>Response For Class - RFC</h3>
-
+<h3 id="RFC">Response For Class - RFC</h3>
+<p>
 The response set of a class is the set of all methods that can be invoked as
 a result of a message sent to an object of the class. This includes methods
 in the class's inheritance hierarchy and methods that can be invoked on
 other objects. The Response For Class metric is defined to be size of the
 response set for the class. A class which provides a larger response set is
 considered to be more complex than one with a smaller response set.
-<p/>
+</p>
+<p>
 One reason for this is that if a method call on a class can result in a large
 number of different method calls on the target and other classes, then it
 can be harder to test the behavior of the class and debug problems. It will
 typically require a deeper understanding of the potential interactions that
 objects of the class can have with the rest of the system.
-<p/>
+</p>
+<p>
 RFC is defined as the sum of NLM and NRM for the class.  The local methods
 include all of the public, protected, package and private methods, but not
 methods declared only in a superclass.
-
-<a name="DAC"/>
-<h3>Data Abstraction Coupling - DAC</h3>
-
+</p>
+<h3 id="DAC">Data Abstraction Coupling - DAC</h3>
+<p>
 DAC is defined for classes and interfaces.  It counts the number of reference
 types that are used in the field declarations of the class or interface.  The
 component types of arrays are also counted.  Any field with a type that is
 either a supertype or a subtype of the class is not counted.
-
-<a name="FANOUT"/>
-<h3>Fan Out - FANOUT</h3>
-
+</p>
+<h3 id="FANOUT">Fan Out - FANOUT</h3>
+<p>
 FANOUT is defined for classes and interfaces, constructors and methods. It
 counts the number of reference types that are used in:
+</p>
 <ul>
 <li>field declarations;</li>
 <li>formal parameters and return types;</li>
 <li>throws declarations;</li>
 <li>local variables.</li>
 </ul>
-
+<p>
 The component types of arrays are also counted. Any type that is either a
 supertype or a subtype of the class is not counted.
-
-<a name="CBO"/>
-<h3>Coupling Between Objects - CBO</h3>
-
+</p>
+<h3 id="CBO">Coupling Between Objects - CBO</h3>
+<p>
 When one object or class uses another object or class they are said to be
 coupled. One major source of coupling is that between a superclass and a
 subclass. A coupling is also introduced when a method or field in another
 class is accessed, or when an object of another class is passed into or out
 of a method invocation. Coupling Between Objects is a measure of the
 non-inheritance coupling between two objects.
-<p/>
+</p>
+<p>
 A high value of coupling reduces the modularity of the class and makes
 reuse more difficult. The more independent a class is the more likely it is
 that it will be possible to reuse it in another part of the system. When a
@@ -367,34 +373,37 @@ class is coupled to another class it becomes sensitive to changes in that
 class, thereby making maintenance for difficult. In addition, a class that is
 overly dependent on other classes can be difficult to understand and test in
 isolation.
-<p/>
+</p>
+<p>
 CBO is defined for classes and interfaces, constructors and methods. It
 counts the number of reference types that are used in:
+</p>
 <ul>
 <li>field declarations</li>
 <li>formal parameters and return types</li>
 <li>throws declarations</li>
 <li>local variables</li>
 </ul>
-
+<p>
 It also counts:
+</p>
 <ul>
 <li>types from which field and method selections are made</li>
 </ul>
-
+<p>
 The component types of arrays are also counted. Any type that is either a
 supertype or a subtype of the class is not counted.
-
-<a name="LCOM"/>
-<h3>Lack of Cohesion Of Methods - LCOM</h3>
-
+</p>
+<h3 id="LCOM">Lack of Cohesion Of Methods - LCOM</h3>
+<p>
 The cohesion of a class is the degree to which its methods are related to
 each other. It is determined by examining the pattern of state variable
 accesses within the set of methods. If all the methods access the same state
 variables then they have high cohesion; if they access disjoint sets of
 variables then the cohesion is low. An extreme example of low cohesion
 would be if none of the methods accessed any of the state variables.
-
+</p>
+<p>
 If a class exhibits low method cohesion it indicates that the design of the
 class has probably been partitioned incorrectly, and could benefit by being
 split into more classes with individually higher cohesion. On the other
@@ -402,41 +411,47 @@ hand, a high value of cohesion (a low lack of cohesion) implies that the
 class is well designed. A cohesive class will tend to provide a high degree
 of encapsulation, whereas a lack of cohesion decreases encapsulation and
 increases complexity.
-<p/>
+</p>
+<p>
 Another form of cohesion that is useful for Java programs is cohesion
 between nested and enclosing classes. A nested class that has very low
 cohesion with its enclosing class would probably better designed as a peer
 class rather than a nested class.
-<p/>
+</p>
+<p>
 LCOM is defined for classes. Operationally, LCOM takes each pair of
 methods in the class and determines the set of fields they each access. If
 they have disjoint sets of field accesses increase the count P by one. If they
 share at least one field access then increase Q by one. After considering
 each pair of methods,
 LCOM = (P > Q) ? (P - Q) : 0
-<p/>
+</p>
+<p>
 Indirect access to fields via local methods can be considered by setting a
 metric configuration parameter.
-
-<a name="NOC"/>
-<h3>Number Of Classes - NOC</h3>
-
+</p>
+<h3 id="NOC">Number Of Classes - NOC</h3>
+<p>
 The overall size of the system can be estimated by calculating the number
 of classes it contains. A large system with more classes is more complex
 than a smaller one because the number of potential interactions between
 objects is higher. This reduces the comprehensibility of the system which
 in turn makes it harder to test, debug and maintain.
-<p/>
+</p>
+<p>
 If the number of classes in the system can be projected during the initial
 design phase of the project it can serve as a base for estimating the total
 effort and cost of developing, debugging and maintaining the system.
-<p/>
+</p>
+<p>
 The NOC metric can also usefully be applied at the package and class level
 as well as the total system.
-<p/>
+</p>
+<p>
 NOCL is defined for class and interfaces. It counts the number of classes or
 interfaces that are declared. This is usually 1, but nested class declarations
 will increase this number.
+</p>
 </body>
 </html>
 </xsl:template>
@@ -668,20 +683,23 @@ will increase this number.
     <xsl:apply-templates select="." mode="print.metrics"/>
     </table>
     <table border="0" width="100%">
-    <tr>
-    <td style="text-align: justify;">
+      <tr>
+        <td style="text-align: justify;">
+          <p>
     Note: Metrics evaluate the quality of software by analyzing the program source and quantifying
     various kind of complexity. Complexity is a common source of problems and defects in software.
     High complexity makes it more difficult to develop, understand, maintain, extend, test and debug
     a program.
-    <p/>
+          </p>
+          <p>
     The primary use of metrics is to focus your attention on those parts of code that potentially are
     complexity hot spots. Once the complex areas your program have been uncovered, you can take remedial
     actions.
     For additional information about metrics and their meaning, please consult
     Metamata Metrics manual.
-    </td>
-    </tr>
+          </p>
+        </td>
+      </tr>
     </table>
 
     <h3>Packages</h3>
@@ -716,20 +734,23 @@ will increase this number.
       </table>
 
       <table border="0" width="100%">
-      <tr>
-      <td style="text-align: justify;">
+        <tr>
+          <td style="text-align: justify;">
+            <p>
       Note: Metrics evaluate the quality of software by analyzing the program source and quantifying
       various kind of complexity. Complexity is a common source of problems and defects in software.
       High complexity makes it more difficult to develop, understand, maintain, extend, test and debug
       a program.
-      <p/>
+            </p>
+            <p>
       The primary use of metrics is to focus your attention on those parts of code that potentially are
       complexity hot spots. Once the complex areas your program have been uncovered, you can take remedial
       actions.
       For additional information about metrics and their meaning, please consult
       Metamata Metrics manual.
-      </td>
-      </tr>
+            </p>
+          </td>
+        </tr>
       </table>
 
       <xsl:variable name="classes-in-package" select="$doctree/classes/class[@package = current()/@name]"/>
