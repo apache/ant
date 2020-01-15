@@ -650,14 +650,12 @@ h6 {
             <xsl:variable name="insamedirectory" select="/testsuites/testsuite[./@package = $name]"/>
             <xsl:if test="count($insamedirectory) &gt; 0">
                 <h2>Projects</h2>
-                <p>
                 <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                     <xsl:call-template name="testsuite.test.header"/>
                     <xsl:apply-templates select="$insamedirectory" mode="print.test">
                         <xsl:sort select="@name"/>
                     </xsl:apply-templates>
                 </table>
-                </p>
             </xsl:if>
         </body>
     </html>
