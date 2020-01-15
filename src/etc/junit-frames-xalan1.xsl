@@ -730,7 +730,7 @@ h6 {
 <xsl:template name="br-replace">
     <xsl:param name="word"/>
     <xsl:param name="br"><br/></xsl:param>
-    <xsl:value-of select='stringutils:replace(string($word),"&#xA;",$br)'/>
+    <xsl:value-of select='string:replaceAll(string:new(string($word)),"&#xA;",$br)'/>
 </xsl:template>
 
 <xsl:template name="display-time">
