@@ -595,7 +595,7 @@ h6 {
         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
             <xsl:call-template name="testsuite.test.header"/>
             <xsl:for-each select="testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
-                <xsl:sort select="@package" order="ascending"/>
+                <xsl:sort select="@package"/>
                 <!-- get the node set containing all testsuites that have the same directory -->
                 <xsl:variable name="insamedirectory" select="/testsuites/testsuite[./@package = current()/@package]"/>
                 <tr valign="top">
@@ -786,8 +786,7 @@ h6 {
 	<xsl:if test="boolean($show.project)">
 	    <td><a href="{$project.href}"><xsl:value-of select="../@name"/></a></td>
 	</xsl:if>
-        <td>
-	    <a name="{@name}"/>
+        <td id="{@name}">
 	    <xsl:choose>
 		<xsl:when test="boolean($show.project)">
 		    <a href="{concat($project.href, '#', @name)}"><xsl:value-of select="@name"/></a>
@@ -796,7 +795,7 @@ h6 {
 		    <xsl:value-of select="@name"/>
 		</xsl:otherwise>
 	    </xsl:choose>
-	</td>
+	    </td>
         <xsl:choose>
             <xsl:when test="failure">
                 <td>Failure</td>

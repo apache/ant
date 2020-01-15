@@ -125,7 +125,6 @@ under the License.
       -->
         </head>
         <body>
-            <a name="top"></a>
             <xsl:call-template name="pageHeader"/>
 
             <!-- Summary part -->
@@ -202,8 +201,7 @@ under the License.
         <!-- create an anchor to this directory name -->
         <xsl:for-each select="/testsuites/testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
             <xsl:sort select="@package"/>
-                <a name="{@package}"></a>
-                <h3>Directory <xsl:value-of select="@package"/></h3>
+                <h3 id="{@package}">Directory <xsl:value-of select="@package"/></h3>
 
                 <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                     <xsl:call-template name="testsuite.test.header"/>
@@ -221,8 +219,7 @@ under the License.
         <xsl:for-each select="testsuite">
             <xsl:sort select="@name"/>
             <!-- create an anchor to this class name -->
-            <a name="{@name}"></a>
-            <h3>Project <xsl:value-of select="@name"/></h3>
+            <h3 id="{@name}">Project <xsl:value-of select="@name"/></h3>
 
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
               <xsl:call-template name="testcase.test.header"/>
@@ -314,7 +311,7 @@ under the License.
 
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
-    <h1>Unit Test Results</h1>
+    <h1 id="top">Unit Test Results</h1>
     <table width="100%">
     <tr>
         <td align="left"></td>

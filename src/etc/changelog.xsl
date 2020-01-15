@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<xsl:stylesheet
-    xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
-    version='1.0'>
+<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' version='1.0'
+                xmlns="http://www.w3.org/1999/xhtml">
 
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -73,9 +72,7 @@
         </style>
       </head>
       <body>
-        <h1>
-          <a name="top"><xsl:value-of select="$title"/></a>
-        </h1>
+        <h1 id="top"><xsl:value-of select="$title"/></h1>
         <p style="text-align: right">Designed for use with <a href="https://ant.apache.org/">Apache Ant</a>.</p>
         <hr/>
         <table border="0" width="100%" cellspacing="1">
