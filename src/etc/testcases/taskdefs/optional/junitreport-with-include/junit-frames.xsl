@@ -651,14 +651,12 @@ h6 {
             <xsl:variable name="insamepackage" select="/testsuites/testsuite[./@package = $name]"/>
             <xsl:if test="count($insamepackage) &gt; 0">
                 <h2>Classes</h2>
-                <p>
                 <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                     <xsl:call-template name="testsuite.test.header"/>
                     <xsl:apply-templates select="$insamepackage" mode="print.test">
                         <xsl:sort select="@name"/>
                     </xsl:apply-templates>
                 </table>
-                </p>
             </xsl:if>
         </body>
     </html>
