@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-  xmlns:lxslt="http://xml.apache.org/xslt"
-  xmlns:xalan="http://xml.apache.org/xalan"
-  xmlns:redirect="org.apache.xalan.lib.Redirect"
-  exclude-result-prefixes="xalan"
-  extension-element-prefixes="redirect">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:exsl="http://exslt.org/common"
+                xmlns:redirect="http://xml.apache.org/xalan/redirect"
+                exclude-result-prefixes="exsl"
+                extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
@@ -59,7 +59,7 @@
   </xsl:element>
 </xsl:variable>
 
-<xsl:variable name="doctree" select="xalan:nodeset($doctree.var)"/>
+<xsl:variable name="doctree" select="exsl:node-set($doctree.var)"/>
 
 <xsl:template match="metrics">
 
