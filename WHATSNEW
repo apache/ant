@@ -37,6 +37,9 @@ Fixed bugs:
  * Fixes an issue in AntStructure where an incorrect DTD was being generated.
    Github Pull Request #116
 
+ * Fixes an incorrect variable name usage in junit-frames-xalan1.xsl.
+   Github Pull Request #117
+
 Other changes:
 --------------
 
