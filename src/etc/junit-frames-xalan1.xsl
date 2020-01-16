@@ -3,6 +3,7 @@
     xmlns:lxslt="http://xml.apache.org/xslt"
     xmlns:redirect="org.apache.xalan.lib.Redirect"
     xmlns:string="xalan://java.lang.String"
+    xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
     extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes" encoding="UTF-8"/>
 <xsl:decimal-format decimal-separator="." grouping-separator=","/>
