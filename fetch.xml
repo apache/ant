@@ -242,6 +242,7 @@ Set -Ddest=LOCATION on the command line
           description="load junit jupiter engine libraries (necessary only for internal Ant project tests)"
           depends="init">
     <f2 project="org.junit.jupiter" archive="junit-jupiter-engine" />
+    <f2 project="org.junit.jupiter" archive="junit-jupiter-params" />
   </target>
 
   <target name="junit-engine-vintage"
