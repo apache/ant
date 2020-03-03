@@ -263,13 +263,13 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
             }
             
             if (!parentClassSource.isPresent()) {
-            	parentClassSource = findFirstParentClassSource(testId);
+                parentClassSource = findFirstParentClassSource(testId);
             }
             
             return parentClassSource.map(ClassSource::getClassName).orElse(testId.getUniqueId());
-		}
+        }
 
-		private void writeSkipped(final XMLStreamWriter writer, final TestIdentifier testIdentifier) throws XMLStreamException {
+        private void writeSkipped(final XMLStreamWriter writer, final TestIdentifier testIdentifier) throws XMLStreamException {
             if (!skipped.containsKey(testIdentifier)) {
                 return;
             }
