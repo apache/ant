@@ -1453,7 +1453,7 @@ public class JUnitTask extends Task {
      */
     private File createTempPropertiesFile(final String prefix) {
         final File propsFile =
-            FILE_UTILS.createTempFile(prefix, ".properties",
+            FILE_UTILS.createTempFile(getProject(), prefix, ".properties",
                 tmpDir != null ? tmpDir : getProject().getBaseDir(), true, true);
         return propsFile;
     }

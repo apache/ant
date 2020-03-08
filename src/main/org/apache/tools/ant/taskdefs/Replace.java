@@ -665,7 +665,7 @@ public class Replace extends MatchingTask {
         logFilterChain(src.getPath());
 
         try {
-            File temp = FILE_UTILS.createTempFile("rep", ".tmp",
+            File temp = FILE_UTILS.createTempFile(getProject(), "rep", ".tmp",
                     src.getParentFile(), false, true);
             try {
                 FileInput in = new FileInput(src);

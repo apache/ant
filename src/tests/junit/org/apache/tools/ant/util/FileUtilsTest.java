@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.After;
 import org.junit.Before;
@@ -342,9 +343,16 @@ public class FileUtilsTest {
      */
     @Test
     public void testCreateTempFile() {
-        // null parent dir
-        File tmp1 = FILE_UTILS.createTempFile("pre", ".suf", null, false, true);
-        String tmploc = System.getProperty("java.io.tmpdir");
+        final String tmploc = System.getProperty("java.io.tmpdir");
+        final Project projectWithoutTempDir = new Project();
+        final Project projectWithTempDir = new Project();
+        final File projectTmpDir = new File(tmploc, "subdir");
+        projectTmpDir.mkdir();
+        removeThis = projectTmpDir;
+        projectWithTempDir.setProperty("ant.tmpdir", projectTmpDir.getAbsolutePath());
+
+        // null parent dir, null project
+        File tmp1 = FILE_UTILS.createTempFile(null, "pre", ".suf", null, false, true);
         String name = tmp1.getName();
         assertTrue("starts with pre", name.startsWith("pre"));
         assertTrue("ends with .suf", name.endsWith(".suf"));
@@ -353,12 +361,49 @@ public class FileUtilsTest {
                 .getAbsolutePath());
         tmp1.delete();
 
+        // null parent dir, project without magic property
+        tmp1 = FILE_UTILS.createTempFile(projectWithoutTempDir, "pre", ".suf", null, false, true);
+        name = tmp1.getName();
+        assertTrue("starts with pre", name.startsWith("pre"));
+        assertTrue("ends with .suf", name.endsWith(".suf"));
+        assertTrue("File was created", tmp1.exists());
+        assertEquals((new File(tmploc, tmp1.getName())).getAbsolutePath(), tmp1
+                .getAbsolutePath());
+        tmp1.delete();
+
+        // null parent dir, project with magic property
+        tmp1 = FILE_UTILS.createTempFile(projectWithTempDir, "pre", ".suf", null, false, true);
+        name = tmp1.getName();
+        assertTrue("starts with pre", name.startsWith("pre"));
+        assertTrue("ends with .suf", name.endsWith(".suf"));
+        assertTrue("File was created", tmp1.exists());
+        assertEquals((new File(projectTmpDir, tmp1.getName())).getAbsolutePath(), tmp1
+                .getAbsolutePath());
+        tmp1.delete();
+
         File dir2 = new File(tmploc + "/ant-test");
         dir2.mkdir();
-        removeThis = dir2;
 
-        File tmp2 = FILE_UTILS.createTempFile("pre", ".suf", dir2, true, true);
+        File tmp2 = FILE_UTILS.createTempFile(null, "pre", ".suf", dir2, true, true);
         String name2 = tmp2.getName();
+        assertTrue("starts with pre", name2.startsWith("pre"));
+        assertTrue("ends with .suf", name2.endsWith(".suf"));
+        assertTrue("File was created", tmp2.exists());
+        assertEquals((new File(dir2, tmp2.getName())).getAbsolutePath(), tmp2
+                .getAbsolutePath());
+        tmp2.delete();
+
+        tmp2 = FILE_UTILS.createTempFile(projectWithoutTempDir, "pre", ".suf", dir2, true, true);
+        name2 = tmp2.getName();
+        assertTrue("starts with pre", name2.startsWith("pre"));
+        assertTrue("ends with .suf", name2.endsWith(".suf"));
+        assertTrue("File was created", tmp2.exists());
+        assertEquals((new File(dir2, tmp2.getName())).getAbsolutePath(), tmp2
+                .getAbsolutePath());
+        tmp2.delete();
+
+        tmp2 = FILE_UTILS.createTempFile(projectWithTempDir, "pre", ".suf", dir2, true, true);
+        name2 = tmp2.getName();
         assertTrue("starts with pre", name2.startsWith("pre"));
         assertTrue("ends with .suf", name2.endsWith(".suf"));
         assertTrue("File was created", tmp2.exists());
@@ -380,12 +425,6 @@ public class FileUtilsTest {
         tmp2 = FILE_UTILS.createTempFile("pre", ".suf", parent, false);
         assertTrue("files are different", !tmp1.getAbsolutePath().equals(
                 tmp2.getAbsolutePath()));
-
-        // null parent dir
-        File tmp3 = FILE_UTILS.createTempFile("pre", ".suf", null, false);
-        tmploc = System.getProperty("java.io.tmpdir");
-        assertEquals((new File(tmploc, tmp3.getName())).getAbsolutePath(), tmp3
-                .getAbsolutePath());
     }
 
     /**

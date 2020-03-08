@@ -179,7 +179,7 @@ public class Cab extends MatchingTask {
      */
     protected File createListFile(Vector files)
         throws IOException {
-        File listFile = FILE_UTILS.createTempFile("ant", "", null, true, true);
+        File listFile = FILE_UTILS.createTempFile(getProject(), "ant", "", null, true, true);
 
         BufferedWriter writer = null;
         try {
@@ -319,7 +319,7 @@ public class Cab extends MatchingTask {
                 exec.setDir(baseDir);
 
                 if (!doVerbose) {
-                    outFile = FILE_UTILS.createTempFile("ant", "", null, true, true);
+                    outFile = FILE_UTILS.createTempFile(getProject(), "ant", "", null, true, true);
                     exec.setOutput(outFile);
                 }
 

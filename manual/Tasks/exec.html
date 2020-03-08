@@ -97,6 +97,8 @@ OpenJDK build instructions for cygwin</a>.
 <code>&lt;arg&gt;</code> elements is executed exactly as specified
 inside a temporary DCL script.  This has some implications:
 <ul>
+  <li>the DCL script will be created inside
+  the <a href="../running.html#tmpdir">temporary directory</a>.</li>
 <li>paths have to be written in VMS style</li>
 <li>if your <code>executable</code> points to a DCL script remember to
 prefix it with an <code>@</code>-sign

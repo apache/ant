@@ -1880,7 +1880,7 @@ public class Javadoc extends Task {
              */
             BufferedWriter srcListWriter = null;
             if (useExternalFile) {
-                tmpList = FILE_UTILS.createTempFile("javadoc", "", null, true, true);
+                tmpList = FILE_UTILS.createTempFile(getProject(), "javadoc", "", null, true, true);
                 toExecute.createArgument()
                     .setValue("@" + tmpList.getAbsolutePath());
                 wr = new FileWriter(tmpList.getAbsolutePath(), true);
@@ -2065,7 +2065,7 @@ public class Javadoc extends Task {
         BufferedWriter optionsListWriter = null;
         try {
             optionsTmpFile = FILE_UTILS.createTempFile(
-                "javadocOptions", "", null, true, true);
+                getProject(), "javadocOptions", "", null, true, true);
             final String[] listOpt = toExecute.getArguments();
             toExecute.clearArgs();
             toExecute.createArgument().setValue(

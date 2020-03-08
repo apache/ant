@@ -52,7 +52,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
     @Override
     public Process exec(Project project, String[] cmd, String[] env)
         throws IOException {
-        File cmdFile = createCommandFile(cmd, env);
+        File cmdFile = createCommandFile(project, cmd, env);
         Process p = super.exec(project, new String[] {cmdFile.getPath()}, env);
         deleteAfter(cmdFile, p);
         return p;
@@ -79,7 +79,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
     @Override
     public Process exec(Project project, String[] cmd, String[] env,
                         File workingDir) throws IOException {
-        File cmdFile = createCommandFile(cmd, env);
+        File cmdFile = createCommandFile(project, cmd, env);
         Process p = super.exec(project, new String[] {cmdFile.getPath()}, env, workingDir);
         deleteAfter(cmdFile, p);
         return p;
@@ -93,9 +93,9 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
      * @return the command File.
      * @throws IOException if errors are encountered creating the file.
      */
-    private File createCommandFile(String[] cmd, String[] env)
+    private File createCommandFile(final Project project, String[] cmd, String[] env)
         throws IOException {
-        File script = FILE_UTILS.createTempFile("ANT", ".COM", null, true, true);
+        File script = FILE_UTILS.createTempFile(project, "ANT", ".COM", null, true, true);
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new FileWriter(script));

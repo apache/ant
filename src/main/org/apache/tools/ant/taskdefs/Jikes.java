@@ -87,7 +87,7 @@ public class Jikes {
                 && args.length > MAX_FILES_ON_COMMAND_LINE) {
                 BufferedWriter out = null;
                 try {
-                    tmpFile = FileUtils.getFileUtils().createTempFile("jikes",
+                    tmpFile = FileUtils.getFileUtils().createTempFile(project, "jikes",
                             "tmp", null, false, true);
                     out = new BufferedWriter(new FileWriter(tmpFile));
                     for (String arg : args) {

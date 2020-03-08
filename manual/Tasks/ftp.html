@@ -150,7 +150,12 @@ try to set up a new connection.</p>
     <td valign="top">set to <code>"true"</code>
     to make ant calculate the time difference between client and server.<br>
     <em>requires write access in the remote directory</em><br>
-    Since ant 1.6</td>
+    Since ant 1.6<br/>
+    If this is set to <code>true</code> then Ant will create an empty
+    file inside of the <a href="../running.html#tmpdir">temporary
+    directory</a> and transfer it to the remote server - deleting it on
+    both sides once the difference has been determined.
+    </td>
     <td valign="top" align="center">No</td>
   </tr>
   <a name="timestampGranularity"/>

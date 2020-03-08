@@ -58,7 +58,9 @@
     The output file is only written if it is a new file, or if it
     differs from the existing file.  This prevents spurious
     rebuilds based on unchanged files which have been regenerated
-    by this task.
+    by this task. In order to assess whether a file has changed, this
+    task will create a pre-processed version of the source file inside of
+    the <a href="../running.html#tmpdir">temporary directory</a>.
   </p>
 
   <p>
