@@ -75,7 +75,7 @@ public class AntClassLoaderTest {
         String extjarstring = buildRule.getProject().getProperty("ext.jar");
         Path myPath = new Path(buildRule.getProject());
         myPath.setLocation(new File(mainjarstring));
-        buildRule.getProject().setUserProperty("build.sysclasspath", "ignore");
+        buildRule.getProject().setUserProperty(MagicNames.BUILD_SYSCLASSPATH, "ignore");
         loader = buildRule.getProject().createClassLoader(myPath);
         String path = loader.getClasspath();
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
@@ -87,7 +87,7 @@ public class AntClassLoaderTest {
         String extjarstring = buildRule.getProject().getProperty("ext.jar.nonascii");
         Path myPath = new Path(buildRule.getProject());
         myPath.setLocation(new File(mainjarstring));
-        buildRule.getProject().setUserProperty("build.sysclasspath", "ignore");
+        buildRule.getProject().setUserProperty(MagicNames.BUILD_SYSCLASSPATH, "ignore");
         loader = buildRule.getProject().createClassLoader(myPath);
         String path = loader.getClasspath();
         assertEquals(mainjarstring + File.pathSeparator + extjarstring, path);
@@ -135,7 +135,7 @@ public class AntClassLoaderTest {
         buildRule.executeTarget("prepareGetPackageTest");
         Path myPath = new Path(buildRule.getProject());
         myPath.setLocation(new File(buildRule.getProject().getProperty("test.jar")));
-        buildRule.getProject().setUserProperty("build.sysclasspath", "ignore");
+        buildRule.getProject().setUserProperty(MagicNames.BUILD_SYSCLASSPATH, "ignore");
         loader = buildRule.getProject().createClassLoader(myPath);
         assertNotNull("should find class", loader.findClass("org.example.Foo"));
         assertNotNull("should find package",
@@ -148,7 +148,7 @@ public class AntClassLoaderTest {
         Path myPath = new Path(buildRule.getProject());
         File testJar = new File(buildRule.getProject().getProperty("test.jar"));
         myPath.setLocation(testJar);
-        buildRule.getProject().setUserProperty("build.sysclasspath", "ignore");
+        buildRule.getProject().setUserProperty(MagicNames.BUILD_SYSCLASSPATH, "ignore");
         loader = buildRule.getProject().createClassLoader(myPath);
         Class<?> foo = loader.findClass("org.example.Foo");
         URL codeSourceLocation =
@@ -164,7 +164,7 @@ public class AntClassLoaderTest {
 
         Path myPath = new Path(buildRule.getProject());
         myPath.setLocation(jar);
-        buildRule.getProject().setUserProperty("build.sysclasspath", "ignore");
+        buildRule.getProject().setUserProperty(MagicNames.BUILD_SYSCLASSPATH, "ignore");
         loader = buildRule.getProject().createClassLoader(myPath);
         Class<?> foo = loader.findClass("org.example.Foo");
 
@@ -188,7 +188,7 @@ public class AntClassLoaderTest {
 
         Path myPath = new Path(buildRule.getProject());
         myPath.setLocation(jar);
-        buildRule.getProject().setUserProperty("build.sysclasspath", "ignore");
+        buildRule.getProject().setUserProperty(MagicNames.BUILD_SYSCLASSPATH, "ignore");
         loader = buildRule.getProject().createClassLoader(myPath);
         PrintStream sysErr = System.err;
         try {
