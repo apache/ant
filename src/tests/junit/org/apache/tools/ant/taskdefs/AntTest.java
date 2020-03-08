@@ -235,7 +235,7 @@ public class AntTest {
                 buildRule.getProject().resolveFile("ant/test3.log"),
                 buildRule.getProject().resolveFile("ant/test4.log"));
 
-        logFiles.forEach(logFile -> assertFalse(logFile.getName() + " doesn\'t exist",
+        logFiles.forEach(logFile -> assertFalse(logFile.getName() + " doesn't exist",
                 logFile.exists()));
 
         buildRule.executeTarget("testLogfilePlacement");
@@ -461,7 +461,7 @@ public class AntTest {
             }
             if (error == null) {
                 try {
-                    String msg = "Call " + calls + " refid=\'" + keys[calls] + "\'";
+                    String msg = "Call " + calls + " refid='" + keys[calls] + "'";
                     if (value == null) {
                         Object o = event.getProject().getReference(keys[calls]);
                         if (expectSame[calls++]) {

@@ -55,7 +55,7 @@ public class TaskOutputStream extends OutputStream {
             + "TaskOutputStream class");
         System.err.println("is considered to be dead code by the Ant "
             + "developers and is unmaintained.");
-        System.err.println("Don\'t use it!");
+        System.err.println("Don't use it!");
 
         this.task = task;
         this.msgOutputLevel = msgOutputLevel;

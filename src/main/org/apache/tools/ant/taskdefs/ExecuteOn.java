@@ -251,7 +251,7 @@ public class ExecuteOn extends ExecTask {
      */
     public Commandline.Marker createSrcfile() {
         if (srcFilePos != null) {
-            throw new BuildException(getTaskType() + " doesn\'t support multiple "
+            throw new BuildException(getTaskType() + " doesn't support multiple "
                                      + "srcfile elements.", getLocation());
         }
         srcFilePos = cmdl.createMarker();
@@ -265,7 +265,7 @@ public class ExecuteOn extends ExecTask {
      */
     public Commandline.Marker createTargetfile() {
         if (targetFilePos != null) {
-            throw new BuildException(getTaskType() + " doesn\'t support multiple "
+            throw new BuildException(getTaskType() + " doesn't support multiple "
                                      + "targetfile elements.", getLocation());
         }
         targetFilePos = cmdl.createMarker();

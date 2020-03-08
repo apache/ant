@@ -83,7 +83,7 @@ public class ZipFileSet extends ArchiveFileSet {
             configureFileSet(zfs);
             return zfs;
         }
-        String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset or a fileset";
+        String msg = getRefid().getRefId() + " doesn't denote a zipfileset or a fileset";
         throw new BuildException(msg);
     }
 

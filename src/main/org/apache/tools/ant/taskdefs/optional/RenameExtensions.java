@@ -122,7 +122,7 @@ public class RenameExtensions extends MatchingTask {
         log("          from=\"*" + fromExtension + "\"", Project.MSG_INFO);
         log("          to=\"*" + toExtension + "\" />", Project.MSG_INFO);
         log("</move>", Project.MSG_INFO);
-        log("using the same patterns on <fileset> as you\'ve used here",
+        log("using the same patterns on <fileset> as you've used here",
             Project.MSG_INFO);
 
         Move move = new Move();

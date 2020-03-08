@@ -273,7 +273,7 @@ public class ANTLR extends Task {
             log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
             createClasspath().setLocation(f);
         } else {
-            log("Couldn\'t find " + resource, Project.MSG_VERBOSE);
+            log("Couldn't find " + resource, Project.MSG_VERBOSE);
         }
     }
 

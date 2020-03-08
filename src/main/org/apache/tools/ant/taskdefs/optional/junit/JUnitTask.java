@@ -1838,7 +1838,7 @@ public class JUnitTask extends Task {
             antRuntimeClasses.createPath().setLocation(f);
             return true;
         } else {
-            log("Couldn\'t find " + resource, Project.MSG_DEBUG);
+            log("Couldn't find " + resource, Project.MSG_DEBUG);
             return false;
         }
     }

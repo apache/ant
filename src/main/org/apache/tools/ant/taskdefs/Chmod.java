@@ -217,7 +217,7 @@ public class Chmod extends ExecuteOn {
     @Override
     public void setExecutable(String e) {
         throw new BuildException(getTaskType()
-            + " doesn\'t support the executable attribute", getLocation());
+            + " doesn't support the executable attribute", getLocation());
     }
 
     /**
@@ -230,7 +230,7 @@ public class Chmod extends ExecuteOn {
     @Override
     public void setCommand(Commandline cmdl) {
         throw new BuildException(getTaskType()
-            + " doesn\'t support the command attribute", getLocation());
+            + " doesn't support the command attribute", getLocation());
     }
 
     /**
@@ -242,7 +242,7 @@ public class Chmod extends ExecuteOn {
     @Override
     public void setSkipEmptyFilesets(boolean skip) {
         throw new BuildException(getTaskType()
-            + " doesn\'t support the skipemptyfileset attribute", getLocation());
+            + " doesn't support the skipemptyfileset attribute", getLocation());
     }
 
     /**
@@ -254,7 +254,7 @@ public class Chmod extends ExecuteOn {
     @Override
     public void setAddsourcefile(boolean b) {
         throw new BuildException(getTaskType()
-            + " doesn\'t support the addsourcefile attribute", getLocation());
+            + " doesn't support the addsourcefile attribute", getLocation());
     }
 
     /**

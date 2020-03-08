@@ -436,13 +436,13 @@ public class Commandline implements Cloneable {
      */
     public static String quoteArgument(String argument) {
         if (argument.contains("\"")) {
-            if (argument.contains("\'")) {
-                throw new BuildException("Can\'t handle single and double"
+            if (argument.contains("'")) {
+                throw new BuildException("Can't handle single and double"
                         + " quotes in same argument");
             }
             return '\'' + argument + '\'';
         }
-        if (argument.contains("\'") || argument.contains(" ")
+        if (argument.contains("'") || argument.contains(" ")
                 // WIN9x uses a bat file for executing commands
                 || (IS_WIN_9X && argument.contains(";"))) {
             return '\"' + argument + '\"';
@@ -490,7 +490,7 @@ public class Commandline implements Cloneable {
         final int inQuote = 1;
         final int inDoubleQuote = 2;
         int state = normal;
-        final StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
+        final StringTokenizer tok = new StringTokenizer(toProcess, "\"' ", true);
         final ArrayList<String> result = new ArrayList<>();
         final StringBuilder current = new StringBuilder();
         boolean lastTokenHasBeenQuoted = false;
@@ -499,7 +499,7 @@ public class Commandline implements Cloneable {
             String nextTok = tok.nextToken();
             switch (state) {
             case inQuote:
-                if ("\'".equals(nextTok)) {
+                if ("'".equals(nextTok)) {
                     lastTokenHasBeenQuoted = true;
                     state = normal;
                 } else {
@@ -515,7 +515,7 @@ public class Commandline implements Cloneable {
                 }
                 break;
             default:
-                if ("\'".equals(nextTok)) {
+                if ("'".equals(nextTok)) {
                     state = inQuote;
                 } else if ("\"".equals(nextTok)) {
                     state = inDoubleQuote;
@@ -648,7 +648,7 @@ public class Commandline implements Cloneable {
         if (args == null || args.length == 0) {
             return "";
         }
-        StringBuilder buf = new StringBuilder("Executing \'").append(args[0]).append("\'");
+        StringBuilder buf = new StringBuilder("Executing '").append(args[0]).append("'");
         if (args.length > 1) {
             buf.append(" with ");
             buf.append(describeArguments(args, 1));
@@ -686,7 +686,7 @@ public class Commandline implements Cloneable {
         StringBuilder buf = new StringBuilder();
         buf.append(String.format("argument%s:%n", args.length > offset ? "s" : ""));
         for (int i = offset; i < args.length; i++) {
-            buf.append(String.format("\'%s\'%n", args[i]));
+            buf.append(String.format("'%s'%n", args[i]));
         }
         buf.append(DISCLAIMER);
         return buf.toString();
