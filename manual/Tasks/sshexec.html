@@ -228,6 +228,28 @@ JSCh earlier than 0.1.28.</p>
       not <q>0</q>.  <em>since Ant 1.9.7</em></td>
     <td>No; defaults to <q>3</q></td>
   </tr>
+  <tr>
+    <td>hideSensitive</td>
+    <td>Allows to hide sensitive data in logs without output supressing. It makes easier debugging
+      with sensitive data hiding.
+    </td>
+    <td>No; defaults to <q>false</q></td>
+  </tr>
+  <tr>
+    <td>bindSensitive</td>
+    <td>Contains string with key=values pairs are divided by <var>sensitiveDelimiter</var></td>
+    <td>Yes if <var>hideSensitive</var> set to <q>true</q></td>
+  </tr>
+  <tr>
+    <td>sensitiveDelimiter</td>
+    <td>Sensitive data delimiter of key=values pairs</td>
+    <td>No, defaults to <q>;</q></td>
+  </tr>
+  <tr>
+    <td>placeholderBrackets</td>
+    <td>Contains symbols to destinguish placeholder are needed to replace with sensitive data</td>
+    <td>No, defaults to <q>:</q></td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
