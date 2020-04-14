@@ -386,8 +386,10 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
 
         private Optional<ClassSource> findFirstParentClassSource(final TestIdentifier testId) {
             final Optional<TestIdentifier> parent = testPlan.getParent(testId);
-            if (!parent.isPresent() || !parent.get().getSource().isPresent()) {
+            if (!parent.isPresent()) {
                 return Optional.empty();
+            } else if (!parent.get().getSource().isPresent()) {
+                return findFirstParentClassSource(parent.get());
             }
             final TestSource parentSource = parent.get().getSource().get();
             return parentSource instanceof ClassSource ? Optional.of((ClassSource) parentSource)
