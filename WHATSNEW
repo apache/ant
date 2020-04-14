@@ -19,6 +19,10 @@ Fixed bugs:
    and system-out
    Bugzilla Report 63436
 
+ * Fixes a bug in junitlauncher task's legacy-xml formatter, where the testcase
+   representing a @Parameterized JUnit4 test wasn't being reported in the XML.
+   Bugzilla Report 64952
+
 Other changes:
 --------------
 
