@@ -28,6 +28,7 @@ import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
@@ -224,8 +225,9 @@ public class JUnitLauncherTask extends Task {
     }
 
     private java.nio.file.Path dumpProjectProperties() throws IOException {
-        final java.nio.file.Path propsPath = Files.createTempFile(null, "properties");
-        propsPath.toFile().deleteOnExit();
+        final java.nio.file.Path propsPath = FileUtils.getFileUtils()
+            .createTempFile(null, "properties", null, true, true)
+            .toPath();
         final Hashtable<String, Object> props = this.getProject().getProperties();
         final Properties projProperties = new Properties();
         projProperties.putAll(props);
@@ -364,14 +366,9 @@ public class JUnitLauncherTask extends Task {
     }
 
     private java.nio.file.Path newLaunchDefinitionXml() {
-        final java.nio.file.Path xmlFilePath;
-        try {
-            xmlFilePath = Files.createTempFile(null, ".xml");
-        } catch (IOException e) {
-            throw new BuildException("Failed to construct command line for test", e);
-        }
-        xmlFilePath.toFile().deleteOnExit();
-        return xmlFilePath;
+        return FileUtils.getFileUtils()
+            .createTempFile(null, ".xml", null, true, true)
+            .toPath();
     }
 
     private final class InVMLaunch implements LaunchDefinition {

@@ -260,8 +260,9 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
         }
 
         private FileOutputStream createFileStore() throws IOException {
-            this.filePath = Files.createTempFile(null, this.tmpFileSuffix);
-            this.filePath.toFile().deleteOnExit();
+            this.filePath = FileUtils.getFileUtils()
+                .createTempFile(null, this.tmpFileSuffix, null, true, true)
+                .toPath();
             return new FileOutputStream(this.filePath.toFile());
         }
 
