@@ -36,9 +36,14 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -99,6 +104,13 @@ public class FileUtils {
      * than 1 millisecond, so we round this up to 1 millisecond.
      */
     public static final long NTFS_FILE_TIMESTAMP_GRANULARITY = 1;
+
+    private static final FileAttribute[] TMPFILE_ATTRIBUTES =
+        new FileAttribute[] {
+            PosixFilePermissions.asFileAttribute(EnumSet.of(PosixFilePermission.OWNER_READ,
+                PosixFilePermission.OWNER_WRITE))
+        };
+    private static final FileAttribute[] NO_TMPFILE_ATTRIBUTES = new FileAttribute[0];
 
     /**
      * A one item cache for fromUri.
@@ -893,6 +905,10 @@ public class FileUtils {
      * yield a different file name.
      * </p>
      *
+     * <p>If the filesystem where the temporary file is created
+     * supports POSIX permissions, the file will only be readable and
+     * writable by the current user.</p>
+     *
      * @param prefix file name prefix.
      * @param suffix
      *            file extension; include the '.'.
@@ -915,6 +931,10 @@ public class FileUtils {
      * <p>The file denoted by the returned abstract pathname did not
      * exist before this method was invoked, any subsequent invocation
      * of this method will yield a different file name.</p>
+     *
+     * <p>If the filesystem where the temporary file is created
+     * supports POSIX permissions, the file will only be readable and
+     * writable by the current user.</p>
      *
      * @param prefix file name prefix.
      * @param suffix file extension; include the '.'.
@@ -946,6 +966,10 @@ public class FileUtils {
      * <p>The file denoted by the returned abstract pathname did not
      * exist before this method was invoked, any subsequent invocation
      * of this method will yield a different file name.</p>
+     *
+     * <p>If the filesystem where the temporary file is created
+     * supports POSIX permissions, the file will only be readable and
+     * writable by the current user.</p>
      *
      * @param project reference to the current Ant project.
      * @param prefix file name prefix.
@@ -984,7 +1008,12 @@ public class FileUtils {
 
         if (createFile) {
             try {
-                result = File.createTempFile(prefix, suffix, new File(parent));
+                final Path parentPath = new File(parent).toPath();
+                final PosixFileAttributeView parentPosixAttributes =
+                    Files.getFileAttributeView(parentPath, PosixFileAttributeView.class);
+                result = Files.createTempFile(parentPath, prefix, suffix,
+                    parentPosixAttributes != null ? TMPFILE_ATTRIBUTES : NO_TMPFILE_ATTRIBUTES)
+                    .toFile();
             } catch (IOException e) {
                 throw new BuildException("Could not create tempfile in "
                         + parent, e);
@@ -1014,6 +1043,10 @@ public class FileUtils {
      * this method was invoked, any subsequent invocation of this method will
      * yield a different file name.
      * </p>
+     *
+     * <p>If the filesystem where the temporary file is created
+     * supports POSIX permissions, the file will only be readable and
+     * writable by the current user.</p>
      *
      * @param prefix file name prefix.
      * @param suffix

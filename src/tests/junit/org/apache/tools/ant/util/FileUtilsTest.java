@@ -24,8 +24,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicTestNames;
@@ -40,7 +43,9 @@ import org.junit.rules.TemporaryFolder;
 import static org.apache.tools.ant.util.FileUtils.getFileUtils;
 import static org.apache.tools.ant.util.FileUtils.isCaseSensitiveFileSystem;
 import static org.apache.tools.ant.util.FileUtils.isContextRelativePath;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -370,6 +375,14 @@ public class FileUtilsTest {
         assertTrue("File was created", tmp1.exists());
         assertEquals((new File(tmploc, tmp1.getName())).getAbsolutePath(),
                 tmp1.getAbsolutePath());
+        final PosixFileAttributeView attributes =
+            Files.getFileAttributeView(tmp1.toPath(), PosixFileAttributeView.class);
+        if (attributes != null) {
+            final Set<PosixFilePermission> perm = attributes.readAttributes().permissions();
+            assertThat(perm,
+                containsInAnyOrder(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+            assertThat(perm, hasSize(2));
+        }
         tmp1.delete();
 
         // null parent dir, project without magic property
