@@ -27,6 +27,11 @@
 <h2 id="rmic">Rmic</h2>
 <h3>Description</h3>
 <p>Runs the <kbd>rmic</kbd> compiler for a certain class.</p>
+
+<p><b>Note</b> <kbd>rmic</kbd> has been deprecated as of Java 13 and
+  removed as of Java 15. Trying to use it with Java15 will fail unless
+  you specifiy the execxutable or rmic-adapter explicitly.</p>
+
 <p><code>Rmic</code> can be run on a single class (as specified with the classname attribute) or a
 number of classes at once (all classes below base that are neither <code>_Stub</code>
 nor <code>_Skel</code> classes).  If you want to <code>rmic</code> a single class and this class is

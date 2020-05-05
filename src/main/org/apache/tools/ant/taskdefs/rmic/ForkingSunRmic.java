@@ -72,6 +72,11 @@ public class ForkingSunRmic extends DefaultRmicAdapter {
         Project project = owner.getProject();
         String executable = owner.getExecutable();
         if (executable == null) {
+            if (JavaEnvUtils.isAtLeastJavaVersion("15")) {
+                throw new BuildException("rmic does not exist under Java 15 and higher,"
+                    + " use rmic of an older JDK and explicitly set the executable attribute");
+            }
+
             // no explicitly specified executable
             // rely on RMIC being on the path
             executable = JavaEnvUtils.getJdkExecutable(getExecutableName());

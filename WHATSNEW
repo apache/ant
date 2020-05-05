@@ -54,6 +54,9 @@ Other changes:
    reproducible builds (https://reproducible-builds.org/specs/source-date-epoch/#idm55)
    Bugzilla Report 62617
 
+ * rmic has been removed from Java 15. The task will now throw an
+   exception if you try to use it while running Java 15 or newer.
+
 Changes from Ant 1.10.6 TO Ant 1.10.7
 =====================================
 

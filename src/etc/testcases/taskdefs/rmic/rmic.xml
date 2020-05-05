@@ -201,67 +201,75 @@
   <target name="probe-rmic">
     <available property="kaffe.present" classname="jkaffe.rmi.rmic.RMIC"/>
     <condition property="rmic.present">
-      <or>
-        <available classname="sun.rmi.rmic.Main"/>
-        <!-- we'll use forking as default for Java9 -->
-        <available classname="java.lang.module.ModuleDescriptor"/>
-      </or>
+      <and>
+        <or>
+          <available classname="sun.rmi.rmic.Main"/>
+          <!-- we'll use forking as default for Java9 -->
+          <available classname="java.lang.module.ModuleDescriptor"/>
+        </or>
+        <not>
+          <javaversion atleast="15"/>
+        </not>
+      </and>
     </condition>
     <condition property="rmic.compiler" value="forking">
       <available classname="java.lang.module.ModuleDescriptor"/>
     </condition>
     <property name="rmic.compiler" value="sun"/>
     <available property="wlrmic.present" classname="weblogic.rmic"/>
+    <condition property="java15+">
+      <javaversion atleast="15"/>
+    </condition>
   </target>
 
-  <target name="testDefault" depends="init">
+  <target name="testDefault" depends="init" unless="java15+">
     <base-rmic compiler="default" listfiles="true"/>
     <assertBaseCompiled/>
   </target>
 
-  <target name="testDefaultDest" depends="init">
+  <target name="testDefaultDest" depends="init" unless="java15+">
     <dest-rmic compiler="default"/>
     <assertBaseCompiledInDest/>
   </target>
 
-  <target name="testEmpty" depends="init">
+  <target name="testEmpty" depends="init" unless="java15+">
     <base-rmic compiler=""/>
     <assertBaseCompiled/>
   </target>
 
-  <target name="testEmptyDest" depends="init">
+  <target name="testEmptyDest" depends="init" unless="java15+">
     <dest-rmic compiler=""/>
     <assertBaseCompiledInDest/>
   </target>
 
-  <target name="testVersion11" depends="init">
+  <target name="testVersion11" depends="init" unless="java15+">
     <base-rmic compiler="default" stubversion="1.1" />
     <assertBaseCompiled/>
   </target>
 
-  <target name="testVersion11Dest" depends="init">
+  <target name="testVersion11Dest" depends="init" unless="java15+">
     <dest-rmic compiler="default" stubversion="1.1" />
     <assertBaseCompiledInDest/>
   </target>
 
-  <target name="testVersion12" depends="init">
+  <target name="testVersion12" depends="init" unless="java15+">
     <base-rmic compiler="default" stubversion="1.2" />
     <assertStubCompiled/>
     <assertSkelAbsent/>
   </target>
   
-  <target name="testVersion12Dest" depends="init">
+  <target name="testVersion12Dest" depends="init" unless="java15+">
     <dest-rmic compiler="default" stubversion="1.2" />
     <assertStubCompiledInDest/>
     <assertSkelAbsentInDest/>
   </target>
   
-  <target name="testVersionCompat" depends="init">
+  <target name="testVersionCompat" depends="init" unless="java15+">
     <base-rmic compiler="default" stubversion="compat" />
     <assertBaseCompiled/>
   </target>
   
-  <target name="testVersionCompatDest" depends="init">
+  <target name="testVersionCompatDest" depends="init" unless="java15+">
     <dest-rmic compiler="default" stubversion="compat" />
     <assertBaseCompiledInDest/>
   </target>
@@ -379,35 +387,35 @@
     </javac>
   </target>
 
-  <target name="testAntClasspath" depends="compileAntTimestamp">
+  <target name="testAntClasspath" depends="compileAntTimestamp" unless="java15+">
     <base-rmic
       compiler="default"
       />
     <assertAntCompiled/>
   </target>
 
-  <target name="testAntClasspathDest" depends="compileAntTimestamp">
+  <target name="testAntClasspathDest" depends="compileAntTimestamp" unless="java15+">
     <dest-rmic
       compiler="default"
       />
     <assertAntCompiledInDest/>
   </target>
 
-  <target name="testForkingAntClasspath" depends="compileAntTimestamp">
+  <target name="testForkingAntClasspath" depends="compileAntTimestamp" unless="java15+">
     <base-rmic
       compiler="forking"
       />
     <assertAntCompiled />
   </target>
 
-  <target name="testForkingAntClasspathDest" depends="compileAntTimestamp">
+  <target name="testForkingAntClasspathDest" depends="compileAntTimestamp" unless="java15+">
     <dest-rmic
       compiler="forking"
       />
     <assertAntCompiledInDest />
   </target>
 
-  <target name="testDefaultBadClass" depends="init">
+  <target name="testDefaultBadClass" depends="init" unless="java15+">
     <rmic-bad-class compiler="default"/>
   </target>
 
@@ -423,7 +431,7 @@
       />
   </target>
 
-  <target name="testMagicPropertyIsEmptyString" depends="init">
+  <target name="testMagicPropertyIsEmptyString" depends="init" unless="java15+">
     <property name="build.rmic" value=""/>
     <base-rmic />
     <assertBaseCompiled/>
@@ -455,23 +463,23 @@
     <assertBaseCompiledInDest/>
   </target>
 
-  <target name="testIDL" depends="init">
+  <target name="testIDL" depends="init" unless="java15+">
     <base-rmic compiler="default" idl="true"/>
     <assertFileCreated file="RemoteTimestamp.idl"/>
   </target>
 
-  <target name="testIDLDest" depends="init">
+  <target name="testIDLDest" depends="init" unless="java15+">
     <dest-rmic compiler="default" idl="true"/>
     <assertFileCreatedInDest file="RemoteTimestamp.idl"/>
   </target>
 
-  <target name="testIIOP" depends="init">
+  <target name="testIIOP" depends="init" unless="java15+">
     <base-rmic compiler="default" iiop="true"/>
     <assertFileCreated file="_RemoteTimestamp_Stub.class"/>
     <assertFileCreated file="_RemoteTimestampImpl_Tie.class"/>
   </target>
 
-  <target name="testIIOPDest" depends="init">
+  <target name="testIIOPDest" depends="init" unless="java15+">
     <dest-rmic compiler="default" iiop="true"/>
     <assertFileCreatedInDest file="_RemoteTimestamp_Stub.class"/>
     <assertFileCreatedInDest file="_RemoteTimestampImpl_Tie.class"/>
