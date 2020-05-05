@@ -226,7 +226,7 @@ public class JUnitLauncherTask extends Task {
 
     private java.nio.file.Path dumpProjectProperties() throws IOException {
         final java.nio.file.Path propsPath = FileUtils.getFileUtils()
-            .createTempFile(null, "properties", null, true, true)
+            .createTempFile(getProject(), null, "properties", null, true, true)
             .toPath();
         final Hashtable<String, Object> props = this.getProject().getProperties();
         final Properties projProperties = new Properties();
@@ -367,7 +367,7 @@ public class JUnitLauncherTask extends Task {
 
     private java.nio.file.Path newLaunchDefinitionXml() {
         return FileUtils.getFileUtils()
-            .createTempFile(null, ".xml", null, true, true)
+            .createTempFile(getProject(), null, ".xml", null, true, true)
             .toPath();
     }
 

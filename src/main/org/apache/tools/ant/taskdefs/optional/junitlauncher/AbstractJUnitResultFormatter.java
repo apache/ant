@@ -53,7 +53,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
     @Override
     public void sysOutAvailable(final byte[] data) {
         if (this.sysOutStore == null) {
-            this.sysOutStore = new SysOutErrContentStore(true);
+            this.sysOutStore = new SysOutErrContentStore(context, true);
         }
         try {
             this.sysOutStore.store(data);
@@ -65,7 +65,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
     @Override
     public void sysErrAvailable(final byte[] data) {
         if (this.sysErrStore == null) {
-            this.sysErrStore = new SysOutErrContentStore(false);
+            this.sysErrStore = new SysOutErrContentStore(context, false);
         }
         try {
             this.sysErrStore.store(data);
@@ -212,13 +212,15 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
             }
         };
 
+        private final TestExecutionContext context;
         private final String tmpFileSuffix;
         private ByteBuffer inMemoryStore = ByteBuffer.allocate(DEFAULT_CAPACITY_IN_BYTES);
         private boolean usingFileStore = false;
         private Path filePath;
         private FileOutputStream fileOutputStream;
 
-        private SysOutErrContentStore(final boolean isSysOut) {
+        private SysOutErrContentStore(final TestExecutionContext context, final boolean isSysOut) {
+            this.context = context;
             this.tmpFileSuffix = isSysOut ? ".sysout" : ".syserr";
         }
 
@@ -261,7 +263,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
 
         private FileOutputStream createFileStore() throws IOException {
             this.filePath = FileUtils.getFileUtils()
-                .createTempFile(null, this.tmpFileSuffix, null, true, true)
+                .createTempFile(context.getProject().orElse(null), null, this.tmpFileSuffix, null, true, true)
                 .toPath();
             return new FileOutputStream(this.filePath.toFile());
         }
