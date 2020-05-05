@@ -7,6 +7,9 @@ Other changes:
  * The runant.py script should now work with Python 3.
    Github Pull Request #96
 
+ * rmic has been removed from Java 15. The task will now throw an
+   exception if you try to use it while running Java 15 or newer.
+
 Changes from Ant 1.9.13 TO Ant 1.9.14
 =====================================
 

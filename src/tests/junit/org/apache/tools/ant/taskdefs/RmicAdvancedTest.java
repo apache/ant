@@ -25,6 +25,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.taskdefs.rmic.DefaultRmicAdapter;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -232,6 +233,7 @@ public class RmicAdvancedTest {
      */
     @Test
     public void testDefaultBadClass() throws Exception {
+        Assume.assumeFalse(JavaEnvUtils.isAtLeastJavaVersion("15"));
         try {
             buildRule.executeTarget("testDefaultBadClass");
             fail("expected the class to fail");
@@ -445,7 +447,9 @@ public class RmicAdvancedTest {
     }
 
     private void xnewTest(String target) {
-        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+        if (!JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)
+            || JavaEnvUtils.isAtLeastJavaVersion("15")) {
+            // target is skipped with Java 15+
             buildRule.executeTarget(target);
         } else {
             try {
@@ -458,7 +462,9 @@ public class RmicAdvancedTest {
     }
 
     private void corbaTest(String target) {
-        if (!JavaEnvUtils.isAtLeastJavaVersion("11")) {
+        if (!JavaEnvUtils.isAtLeastJavaVersion("11")
+            || JavaEnvUtils.isAtLeastJavaVersion("15")) {
+            // target is skipped with Java 15+
             buildRule.executeTarget(target);
         } else {
             try {

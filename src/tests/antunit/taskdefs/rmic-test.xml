@@ -76,8 +76,13 @@ public class Adapter implements RmicAdapter {
     <au:assertLogContains text="adapter called"/>
   </target>
 
-  <target name="testSourceBase"
-          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=48970">
+  <target name="-check-jdk">
+    <condition property="java15+">
+      <javaversion atleast="15"/>
+    </condition>
+  </target>
+
+  <target name="-setup-real-test">
     <mkdir dir="${input}/org/example"/>
     <mkdir dir="${output}"/>
     <echo file="${input}/org/example/Foo.java"><![CDATA[
@@ -96,10 +101,23 @@ public class FooImpl implements Foo {
     }
 }]]></echo>
     <javac srcdir="${input}" destdir="${output}"/>
+  </target>
+
+  <target name="testSourceBase" depends="-check-jdk, -setup-real-test" unless="java15+"
+          description="https://issues.apache.org/bugzilla/show_bug.cgi?id=48970">
     <rmic sourcebase="${input}" base="${output}">
       <include name="**/*Impl.class"/>
     </rmic>
     <au:assertFileExists file="${input}/org/example/FooImpl_Stub.java"/>
     <au:assertFileDoesntExist file="${output}/org/example/FooImpl_Stub.java"/>
+  </target>
+
+  <target name="testSimpleCompileFailsOnJava15+" depends="-check-jdk, -setup-real-test"
+          if="java15+">
+    <au:expectfailure>
+      <rmic sourcebase="${input}" base="${output}">
+        <include name="**/*Impl.class"/>
+      </rmic>
+    </au:expectfailure>
   </target>
 </project>
