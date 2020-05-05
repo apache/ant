@@ -260,7 +260,7 @@ public class CvsTagDiff extends AbstractCvsTask {
         try {
             handlePackageNames();
 
-            tmpFile = FILE_UTILS.createTempFile("cvstagdiff", ".log", null,
+            tmpFile = FILE_UTILS.createTempFile(getProject(), "cvstagdiff", ".log", null,
                                                 true, true);
             setOutput(tmpFile);
 

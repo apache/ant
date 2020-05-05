@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 
@@ -240,9 +241,9 @@ public class SymbolicLinkUtils {
         if (task == null || target.getParentFile().canWrite()) {
 
             // rename the resource, thus breaking the link:
-            final File temp = FILE_UTILS.createTempFile("symlink", ".tmp",
-                                                  target.getParentFile(), false,
-                                                  false);
+            final Project project = task == null ? null : task.getProject();
+            final File temp = FILE_UTILS.createTempFile(project, "symlink", ".tmp",
+                target.getParentFile(), false, false);
 
             if (FILE_UTILS.isLeadingPath(target, link)) {
                 // link points to a parent directory, renaming the parent

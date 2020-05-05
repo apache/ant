@@ -83,6 +83,8 @@ target="_top">OpenJDK build instructions for cygwin</a>.</p>
 <p>The command specified using <var>executable</var> and <code>&lt;arg&gt;</code> elements is
 executed exactly as specified inside a temporary DCL script.  This has some implications:</p>
 <ul>
+  <li>the DCL script will be created inside
+  the <a href="../running.html#tmpdir">temporary directory</a>.</li>
   <li>paths have to be written in VMS style</li>
   <li>if your <var>executable</var> points to a DCL script remember to prefix it with
     an <q>@</q>-sign (e.g. <var>executable</var>=<q>@[FOO]BAR.COM</q>), just as you would in a DCL

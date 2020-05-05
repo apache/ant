@@ -460,6 +460,22 @@ And I filtered out the <code>getPropertyHelper</code> access.</p>
   <td><code>ant.tstamp.now.iso</code></td>
   <td>ISO-8601 timestamp string like <code>1972-04-17T08:07:00Z</code></td>
 </tr>
+<tr>
+  <td><code>java.io.tmpdir</code></td>
+  <td>Some tasks need to create temporary files and will write them to
+  the directory specified by this property. This property is set by
+  the Java VM but can be overridden when Ant is started.<br/>
+  See also <a href="#tmpdir">Temporary Directories</a>.</td>
+</table>
+<tr>
+  <td><code>ant.tmpdir</code></td>
+  <td><em>Since Ant 1.10.8</em><br/>
+  Some tasks need to create temporary files and will write them to
+  the directory specified by this property. This property takes
+  precedence over <code>java.io.tmpdir</code> if it has been
+  set. Unlike <code>java.io.tmpdir</code> this property can be set
+  from within the build file.<br/>
+  See also <a href="#tmpdir">Temporary Directories</a>.</td>
 </table>
 
 <p>
@@ -477,6 +493,37 @@ return code of the <code>java</code> program. So a successful build
 returns <q>0</q>, failed builds return other values.
 </p>
 
+<h2 id="tmpdir">Temporary Directories</h2>
+
+Some Ant tasks and types need to create temporary files. By default
+they use the default temporary directory of the Java VM they are
+running in - which can be set by setting the system
+property <code>java.io.tmpdir</code>. The default value of it depends
+on the platform and the JVM implementation.</p>
+
+<p>Setting a system property when invoking Ant is not straight forward
+  as the corresponding command line arguments must be sent to the Java
+  executable rather than Ant's main class. When using
+  the <code>ant(.cmd)</code> wrapper scripts you can do so with the
+  help of the <code>ANT_OPTS</code> environment variable.</p>
+
+<p>Starting with Ant 1.10.8 we've introduced a new Ant
+  property <code>ant.tmpdir</code> that takes precedence
+  over <code>java.io.tmpdir</code> when set. As this is a normal Ant
+  property it can be set via the command line or even from within a
+  build file.</p>
+
+<p>Tasks and types using the temporary directory will state the fact
+  inside of their respective manual page. In addition every execution
+  of an external command on OpenVMS will create a temporary file
+  holding a DCL script that invokes the actual command.</p>
+
+<p>Tasks not provided with the Ant distribution will ignore
+  the <code>ant.tmpdir</code> property and
+  use <code>java.io.tmpdir</code> unless they have been adapted to the
+  changed API of Ant 1.10.8.</p>
+
+
 <h2 id="cygwin">Cygwin Users</h2>
 <p>
 Unix launch script that come with Ant works correctly with Cygwin. You
@@ -489,7 +536,6 @@ task, executable names such as <q>/bin/sh</q> will not work, even
 though these work from the Cygwin shell from which Ant was
 launched. You can use an executable name such as <q>sh</q> and rely on
 that command being available in the Windows path.
-</p>
 
 <h2 id="os2">OS/2 Users</h2>
 <p>

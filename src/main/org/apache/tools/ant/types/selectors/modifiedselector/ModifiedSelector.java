@@ -446,7 +446,7 @@ public class ModifiedSelector extends BaseExtendSelector
             // How to handle non-file-Resources? I copy temporarily the
             // resource to a file and use the file-implementation.
             FileUtils fu = FileUtils.getFileUtils();
-            File tmpFile = fu.createTempFile("modified-", ".tmp", null, true, false);
+            File tmpFile = fu.createTempFile(getProject(), "modified-", ".tmp", null, true, false);
             Resource tmpResource = new FileResource(tmpFile);
             ResourceUtils.copyResource(resource, tmpResource);
             boolean isSelected = isSelected(tmpFile.getParentFile(),

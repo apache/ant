@@ -800,7 +800,7 @@ public class Zip extends MatchingTask {
     /** rename the zip file. */
     private File renameFile() {
         final File renamedFile = FILE_UTILS.createTempFile(
-            "zip", ".tmp", zipFile.getParentFile(), true, false);
+            getProject(), "zip", ".tmp", zipFile.getParentFile(), true, false);
         try {
             FILE_UTILS.rename(zipFile, renamedFile);
         } catch (final SecurityException | IOException e) {

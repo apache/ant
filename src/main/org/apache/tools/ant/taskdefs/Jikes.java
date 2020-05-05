@@ -81,7 +81,7 @@ public class Jikes {
             // Windows has a 32k limit on total arg size, so
             // create a temporary file to store all the arguments
             if (Os.isFamily(Os.FAMILY_WINDOWS) && args.length > MAX_FILES_ON_COMMAND_LINE) {
-                tmpFile = FileUtils.getFileUtils().createTempFile("jikes",
+                tmpFile = FileUtils.getFileUtils().createTempFile(project, "jikes",
                         "tmp", null, false, true);
                 try (BufferedWriter out = new BufferedWriter(new FileWriter(tmpFile))) {
                     for (String arg : args) {

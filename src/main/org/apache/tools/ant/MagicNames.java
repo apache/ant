@@ -322,5 +322,13 @@ public final class MagicNames {
      */
     public static final String TSTAMP_NOW_ISO = "ant.tstamp.now.iso";
 
+    /**
+     * Magic property that can be set to override the java.io.tmpdir
+     * system property as the location for Ant's default temporary
+     * directory.
+     * Value: {@value}
+     * @since Ant 1.10.8
+     */
+    public static final String TMPDIR = "ant.tmpdir";
 }
 

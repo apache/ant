@@ -154,7 +154,7 @@ public class TempFile extends Task {
         if (destDir == null) {
             destDir = getProject().resolveFile(".");
         }
-        File tfile = FILE_UTILS.createTempFile(prefix, suffix, destDir,
+        File tfile = FILE_UTILS.createTempFile(getProject(), prefix, suffix, destDir,
                     deleteOnExit, createFile);
         getProject().setNewProperty(property, tfile.toString());
     }

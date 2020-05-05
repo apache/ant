@@ -545,7 +545,7 @@ public abstract class DefaultCompilerAdapter
                 && firstFileName >= 0) {
                 try {
                     tmpFile = FILE_UTILS.createTempFile(
-                        "files", "", getJavac().getTempdir(), true, true);
+                        getProject(), "files", "", getJavac().getTempdir(), true, true);
                     try (BufferedWriter out =
                         new BufferedWriter(new FileWriter(tmpFile))) {
                         for (int i = firstFileName; i < args.length; i++) {

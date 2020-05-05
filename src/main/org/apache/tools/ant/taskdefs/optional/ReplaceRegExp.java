@@ -350,7 +350,7 @@ public class ReplaceRegExp extends Task {
      */
     protected void doReplace(File f, int options)
          throws IOException {
-        File temp = FILE_UTILS.createTempFile("replace", ".txt", null, true, true);
+        File temp = FILE_UTILS.createTempFile(getProject(), "replace", ".txt", null, true, true);
         try {
             boolean changes = false;
 

@@ -129,7 +129,12 @@ connection.</p>
     <td>timediffauto</td>
     <td>set to <q>true</q> to make Ant calculate the time difference between client and
     server.<br/><em>requires write access in the remote directory</em><br/><em>Since Ant
-    1.6</em></td>
+    1.6</em><br/>
+    If this is set to <code>true</code> then Ant will create an empty
+    file inside of the <a href="../running.html#tmpdir">temporary
+    directory</a> and transfer it to the remote server - deleting it on
+    both sides once the difference has been determined.
+    </td>
     <td>No</td>
   </tr>
   <tr id="timestampGranularity">
