@@ -21,6 +21,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import org.junit.rules.ExpectedException;
 import java.io.File;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -155,6 +157,7 @@ public class ScriptDefTest {
 
     @Test
     public void testUseCompiled() {
+        assumeFalse("Current system is Java 15 or newer", JavaEnvUtils.isAtLeastJavaVersion("15"));
 
         final long duration;
         {
