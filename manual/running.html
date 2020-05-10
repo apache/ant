@@ -523,6 +523,15 @@ on the platform and the JVM implementation.</p>
   use <code>java.io.tmpdir</code> unless they have been adapted to the
   changed API of Ant 1.10.8.</p>
 
+<p><b>Security Note:</b> Using the default temporary directory
+specified by <code>java.io.tmpdir</code> can result in the leakage of
+sensitive information or possibly allow an attacker to execute
+arbitrary code. This is especially true in multi-user environments. It
+is recommended that <code>ant.tmpdir</code> be set to a directory
+owned by the user running Ant with 0700 permissions. Ant 1.10.8 and
+later will try to make temporary files created by it only
+readable/writable by the current user but may silently fail to do so
+depending on the OS and filesystem.</p>
 
 <h2 id="cygwin">Cygwin Users</h2>
 <p>
