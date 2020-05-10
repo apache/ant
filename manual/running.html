@@ -551,6 +551,13 @@ on the platform and the JVM implementation.</p>
   use <code>java.io.tmpdir</code> unless they have been adapted to the
   changed API of Ant 1.9.15.</p>
 
+<p><b>Security Note:</b> Using the default temporary directory
+specified by <code>java.io.tmpdir</code> can result in the leakage of
+sensitive information or possibly allow an attacker to execute
+arbitrary code. This is especially true in multi-user environments. It
+is recommended that <code>ant.tmpdir</code> be set to a directory
+owned by the user running Ant with 0700 permissions.</p>
+
 <h2><a name="cygwin">Cygwin Users</a></h2>
 <p>The Unix launch script that come with Ant works correctly with Cygwin. You
 should not have any problems launching Ant from the Cygwin shell. It is
