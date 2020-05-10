@@ -75,7 +75,8 @@ Note: This document was updated in the context of releasing Ant
     * ivy.xml in release subdirectory (version should already be correct here)
     * WHATSNEW (version should already be correct here)
     * src/etc/testcases/taskdefs/conditions/antversion.xml (version should already be correct here)
-    * snap/snapcraft.yml
+    * snap/snapcraft.yaml - change the value for "version" attribute. Plus, change the value for "grade"
+      to "stable".
 
 6.  Next bootstrap, build and run the tests.
 
