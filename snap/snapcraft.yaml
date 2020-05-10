@@ -14,7 +14,7 @@
 # limitations under the License.
 
 name: ant
-version: "1.10.8alpha"
+version: "1.10.8"
 summary: Apache Ant
 description: |
   Apache Ant™ is a Java library and command-line tool whose mission is
@@ -32,7 +32,7 @@ description: |
   will need a Java Development Kit rather than just a Java Runtime
   Environment.
 confinement: classic
-grade: devel
+grade: stable
 base: core18
 license: Apache-2.0
 architectures:
