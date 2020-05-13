@@ -553,8 +553,8 @@ on the platform and the JVM implementation.</p>
 
 <p><b>Security Note:</b> Using the default temporary directory
 specified by <code>java.io.tmpdir</code> can result in the leakage of
-sensitive information or possibly allow an attacker to execute
-arbitrary code. This is especially true in multi-user environments. It
+sensitive information or possibly allow an attacker to inject source
+files into the build process. This is especially true in multi-user
 is recommended that <code>ant.tmpdir</code> be set to a directory
 owned by the user running Ant with 0700 permissions.</p>
 
