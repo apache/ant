@@ -1,6 +1,12 @@
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
 
+Fixed bugs:
+-----------
+
+ * the ftp task could throw a NullPointerException if an error occured
+   Bugzilla Report 64438
+
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
 
