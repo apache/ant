@@ -129,5 +129,15 @@
     <delete file="test.xml" failonerror="no" />
   </target>
 
+    <target name="testEchoLocalPropertyset">
+        <local name="loc"/>
+        <property name="loc" value="foo"/>
+        <echoproperties>
+            <propertyset>
+                <propertyref name="loc"/>
+            </propertyset>
+        </echoproperties>
+    </target>
+
 </project>
 

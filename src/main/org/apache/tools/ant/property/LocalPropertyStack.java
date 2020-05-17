@@ -128,6 +128,7 @@ public class LocalPropertyStack {
         Object currValue = map.get(property);
         if (currValue == NullReturn.NULL) {
             map.put(property, value);
+            return false;
         }
         return true;
     }

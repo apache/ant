@@ -21,9 +21,11 @@ package org.apache.tools.ant.types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -34,6 +36,7 @@ import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.resources.MappedResource;
 import org.apache.tools.ant.types.resources.PropertyResource;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -334,7 +337,17 @@ public class PropertySet extends DataType implements ResourceCollection {
 
     private Map<String, Object> getEffectiveProperties() {
         final Project prj = getProject();
-        final Map<String, Object> result = prj == null ? getAllSystemProperties() : prj.getProperties();
+        final Map<String, Object> result;
+        if(prj == null) {
+            result = getAllSystemProperties();
+        } else {
+            final Hashtable<String, Object> properties = prj.getProperties();
+            final Map<String, Object> evaluatedProperties = properties.entrySet().stream()
+                    .collect(HashMap::new, (m,e) -> m.put(e.getKey(),PropertyHelper
+                            .getPropertyHelper(prj).getProperty(e.getKey())), HashMap::putAll);
+            evaluatedProperties.values().removeIf(Objects::isNull);
+            result = new Hashtable<>(evaluatedProperties);
+        }
         //quick & dirty, to make nested mapped p-sets work:
         for (PropertySet set : setRefs) {
             result.putAll(set.getPropertyMap());
