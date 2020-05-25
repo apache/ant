@@ -17,7 +17,7 @@ use github issues, so if you are reporting a bug, please raise a
 
 Before reporting a bug, please also review https://ant.apache.org/problems.html
 
-If you're planning to implement a new feature please discuss you're
+If you're planning to implement a new feature please discuss your
 changes on the
 [dev list](https://ant.apache.org/mail.html#Developer%20List:%20dev@ant.apache.org)
 first. This way you can make sure you're not wasting your time on
