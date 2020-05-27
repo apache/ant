@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import javax.script.Bindings;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.SimpleBindings;
@@ -191,10 +192,20 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
         }
         ScriptEngine result =
             new ScriptEngineManager().getEngineByName(getLanguage());
+        maybeApplyGraalJsProperties(result);
         if (result != null && getKeepEngine()) {
             this.keptEngine = result;
         }
         return result;
+    }
+
+    private static final String DROP_GRAAL_SECURITY_RESTRICTIONS = "polyglot.js.allowAllAccess";
+
+    private void maybeApplyGraalJsProperties(final ScriptEngine engine) {
+        if (engine != null && engine.getClass().getName().contains("Graal")) {
+            engine.getBindings(ScriptContext.ENGINE_SCOPE)
+                .put(DROP_GRAAL_SECURITY_RESTRICTIONS, true);
+        }
     }
 
     /**
