@@ -319,9 +319,15 @@ Set -Ddest=LOCATION on the command line
     <f2 project="org.mozilla" archive="rhino"/>
   </target>
 
+  <target name="graal.js"
+          description="load Graal.js">
+    <f2 project="org.graalvm.js" archive="js"/>
+    <f2 project="org.graalvm.js" archive="js-scriptengine"/>
+  </target>
+
   <target name="script"
           description="load script languages (except Jython)"
-          depends="bsf,jruby,beanshell,rhino"/>
+          depends="bsf,jruby,beanshell,rhino,graal.js"/>
 
   <target name="debugging"
     description="internal Ant debugging"
