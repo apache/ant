@@ -27,10 +27,10 @@ import org.junit.platform.launcher.TestPlan;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.BufferOverflowException;
@@ -217,7 +217,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
         private ByteBuffer inMemoryStore = ByteBuffer.allocate(DEFAULT_CAPACITY_IN_BYTES);
         private boolean usingFileStore = false;
         private Path filePath;
-        private FileOutputStream fileOutputStream;
+        private OutputStream fileOutputStream;
 
         private SysOutErrContentStore(final TestExecutionContext context, final boolean isSysOut) {
             this.context = context;
@@ -261,11 +261,11 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
             this.fileOutputStream.write(data, offset, length);
         }
 
-        private FileOutputStream createFileStore() throws IOException {
+        private OutputStream createFileStore() throws IOException {
             this.filePath = FileUtils.getFileUtils()
                 .createTempFile(context.getProject().orElse(null), null, this.tmpFileSuffix, null, true, true)
                 .toPath();
-            return new FileOutputStream(this.filePath.toFile());
+            return Files.newOutputStream(this.filePath);
         }
 
         /*
