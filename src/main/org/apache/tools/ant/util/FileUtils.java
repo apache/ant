@@ -110,6 +110,11 @@ public class FileUtils {
             PosixFilePermissions.asFileAttribute(EnumSet.of(PosixFilePermission.OWNER_READ,
                 PosixFilePermission.OWNER_WRITE))
         };
+    private static final FileAttribute[] TMPDIR_ATTRIBUTES =
+        new FileAttribute[] {
+            PosixFilePermissions.asFileAttribute(EnumSet.of(PosixFilePermission.OWNER_READ,
+                PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE))
+        };
     private static final FileAttribute[] NO_TMPFILE_ATTRIBUTES = new FileAttribute[0];
 
     /**
@@ -991,14 +996,35 @@ public class FileUtils {
     public File createTempFile(final Project project, String prefix, String suffix,
             final File parentDir, final boolean deleteOnExit, final boolean createFile) {
         File result;
-        final String parent;
+        String p = null;
         if (parentDir != null) {
-            parent = parentDir.getPath();
+            p = parentDir.getPath();
         } else if (project != null && project.getProperty(MagicNames.TMPDIR) != null) {
-            parent = project.getProperty(MagicNames.TMPDIR);
-        } else {
-            parent = System.getProperty("java.io.tmpdir");
+            p = project.getProperty(MagicNames.TMPDIR);
+        } else if (project != null && deleteOnExit) {
+            if (project.getProperty(MagicNames.AUTO_TMPDIR) != null) {
+                p = project.getProperty(MagicNames.AUTO_TMPDIR);
+            } else {
+                final Path systemTempDirPath =
+                    new File(System.getProperty("java.io.tmpdir")).toPath();
+                final PosixFileAttributeView systemTempDirPosixAttributes =
+                    Files.getFileAttributeView(systemTempDirPath, PosixFileAttributeView.class);
+                if (systemTempDirPosixAttributes != null) {
+                    // no reason to create an extra temp dir if we cannot set permissions
+                    try {
+                        final File projectTempDir = Files.createTempDirectory(systemTempDirPath,
+                            "ant", TMPDIR_ATTRIBUTES)
+                            .toFile();
+                        projectTempDir.deleteOnExit();
+                        p = projectTempDir.getAbsolutePath();
+                        project.setProperty(MagicNames.AUTO_TMPDIR, p);
+                    } catch (IOException ex) {
+                        // silently fall back to system temp directory
+                    }
+                }
+            }
         }
+        final String parent = p != null ? p : System.getProperty("java.io.tmpdir");
         if (prefix == null) {
             prefix = NULL_PLACEHOLDER;
         }

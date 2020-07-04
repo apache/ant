@@ -337,5 +337,15 @@ public final class MagicNames {
      * @since Ant 1.10.8
      */
     public static final String TMPDIR = "ant.tmpdir";
+
+    /**
+     * Magic property that will be set to override java.io.tmpdir
+     * system property as the location for Ant's default temporary
+     * directory if a temp file is created and {@link #TMPDIR} is not
+     * set.
+     * Value: {@value}
+     * @since Ant 1.10.9
+     */
+    public static final String AUTO_TMPDIR = "ant.auto.tmpdir";
 }
 
