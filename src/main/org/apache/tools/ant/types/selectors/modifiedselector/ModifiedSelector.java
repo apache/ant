@@ -407,7 +407,7 @@ public class ModifiedSelector extends BaseExtendSelector
                 clazz = Class.forName(classname);
             }
 
-            Object rv = clazz.newInstance();
+            Object rv = clazz.getDeclaredConstructor().newInstance();
 
             if (!type.isInstance(rv)) {
                 throw new BuildException("Specified class (%s) %s", classname, msg);

@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.Vector;
 
@@ -392,8 +393,9 @@ public class XMLValidateTask extends Task {
                     readerClass = Class.forName(readerClassName);
                 }
 
-                reader = readerClass.newInstance();
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                reader = readerClass.getDeclaredConstructor().newInstance();
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException
+                    | NoSuchMethodException | InvocationTargetException e) {
                 throw new BuildException(INIT_FAILED_MSG + readerClassName, e);
             }
         }

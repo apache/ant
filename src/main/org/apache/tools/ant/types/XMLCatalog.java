@@ -522,7 +522,7 @@ public class XMLCatalog extends DataType
                 // if it can see it - doesn't use the context loader.
                 clazz = Class.forName(APACHE_RESOLVER, true, baseResolverLoader);
 
-                Object obj  = clazz.newInstance();
+                Object obj  = clazz.getDeclaredConstructor().newInstance();
                 //
                 // Success!  The xml-commons resolver library is
                 // available, so use it.

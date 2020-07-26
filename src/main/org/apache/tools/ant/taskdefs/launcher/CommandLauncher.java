@@ -22,6 +22,7 @@ import static org.apache.tools.ant.MagicNames.ANT_VM_LAUNCHER_REF_ID;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import org.apache.tools.ant.Project;
@@ -173,10 +174,11 @@ public class CommandLauncher {
         String launcherClass = System.getProperty(launcherRefId);
         if (launcherClass != null) {
             try {
-                return Class.forName(launcherClass)
-                    .asSubclass(CommandLauncher.class).newInstance();
+                return Class.forName(launcherClass).asSubclass(CommandLauncher.class)
+                        .getDeclaredConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException
-                    | ClassNotFoundException e) {
+                    | ClassNotFoundException
+                    | NoSuchMethodException | InvocationTargetException e) {
                 System.err.println("Could not instantiate launcher class "
                     + launcherClass + ": " + e.getMessage());
             }

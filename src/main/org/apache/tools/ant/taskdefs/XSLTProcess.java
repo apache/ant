@@ -702,7 +702,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         } else {
             //anything else is a classname
             final Class<? extends XSLTLiaison> clazz = loadClass(proc).asSubclass(XSLTLiaison.class);
-            liaison = clazz.newInstance();
+            liaison = clazz.getDeclaredConstructor().newInstance();
         }
     }
 

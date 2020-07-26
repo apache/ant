@@ -71,7 +71,7 @@ public class PosixGroupSelectorTest {
     @Test
     public void posixGroupIsTrueForSelf() throws Exception {
         long gid = (long) jaasProviderClass.getMethod(GROUP_GETTER)
-                .invoke(jaasProviderClass.newInstance());
+                .invoke(jaasProviderClass.getDeclaredConstructor().newInstance());
 
         File file = folder.newFile("f.txt");
         Map<String, Object> fileAttributes = Files.readAttributes(file.toPath(),
@@ -87,7 +87,7 @@ public class PosixGroupSelectorTest {
     @Test
     public void posixGroupFollowSymlinks() throws Exception {
         long gid = (long) jaasProviderClass.getMethod(GROUP_GETTER)
-                .invoke(jaasProviderClass.newInstance());
+                .invoke(jaasProviderClass.getDeclaredConstructor().newInstance());
 
         File target = new File(folder.getRoot(), "link");
         Path symbolicLink = Files.createSymbolicLink(target.toPath(), TEST_FILE.toPath());

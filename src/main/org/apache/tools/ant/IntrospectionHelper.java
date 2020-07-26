@@ -1122,10 +1122,11 @@ public final class IntrospectionHelper {
                 public void set(final Project p, final Object parent, final String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
                     try {
-                        final EnumeratedAttribute ea = (EnumeratedAttribute) reflectedArg.newInstance();
+                        final EnumeratedAttribute ea =
+                                (EnumeratedAttribute) reflectedArg.getDeclaredConstructor().newInstance();
                         ea.setValue(value);
                         m.invoke(parent, ea);
-                    } catch (final InstantiationException ie) {
+                    } catch (final InstantiationException | NoSuchMethodException ie) {
                         throw new BuildException(ie);
                     }
                 }

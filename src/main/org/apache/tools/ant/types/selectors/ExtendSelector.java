@@ -19,6 +19,7 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,7 +68,7 @@ public class ExtendSelector extends BaseSelector {
                             = getProject().createClassLoader(classpath);
                     c = Class.forName(classname, true, al);
                 }
-                dynselector = c.asSubclass(FileSelector.class).newInstance();
+                dynselector = c.asSubclass(FileSelector.class).getDeclaredConstructor().newInstance();
                 final Project p = getProject();
                 if (p != null) {
                     p.setProjectReference(dynselector);
@@ -75,7 +76,8 @@ public class ExtendSelector extends BaseSelector {
             } catch (ClassNotFoundException cnfexcept) {
                 setError("Selector " + classname
                     + " not initialized, no such class");
-            } catch (InstantiationException iexcept) {
+            } catch (InstantiationException | NoSuchMethodException
+                    | InvocationTargetException iexcept) {
                 setError("Selector " + classname
                     + " not initialized, could not create class");
             } catch (IllegalAccessException iaexcept) {

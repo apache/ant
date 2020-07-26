@@ -1014,7 +1014,7 @@ public class Tar extends MatchingTask {
                     .asSubclass(OutputStream.class);
                 Constructor<? extends OutputStream> c =
                     sClazz.getConstructor(OutputStream.class, fClazz);
-                return c.newInstance(ostream, oClazz.newInstance());
+                return c.newInstance(ostream, oClazz.getDeclaredConstructor().newInstance());
             } catch (ClassNotFoundException ex) {
                 throw new BuildException("xz compression requires the XZ for Java library",
                                          ex);

@@ -137,7 +137,7 @@ public class TearDownOnVmCrash implements JUnitResultFormatter {
             try {
                 Method td = testClass.getMethod("tearDown");
                 if (td.getReturnType() == Void.TYPE) {
-                    td.invoke(testClass.newInstance());
+                    td.invoke(testClass.getDeclaredConstructor().newInstance());
                 }
             } catch (NoSuchMethodException nsme) {
                 // no tearDown, fine

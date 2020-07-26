@@ -323,19 +323,17 @@ public final class SortFilter extends BaseParamFilterReader
                         String className = param.getValue();
                         @SuppressWarnings("unchecked")
                         final Comparator<? super String> comparatorInstance
-                                = (Comparator<? super String>) (Class.forName(className).newInstance());
+                                = (Comparator<? super String>) (Class.forName(className).getDeclaredConstructor().newInstance());
                         setComparator(comparatorInstance);
-                    } catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
-                        /*
-                         * IAE probably means an inner non-static class, that case is not considered
-                         */
-                        throw new BuildException(e);
                     } catch (ClassCastException e) {
                         throw new BuildException("Value of comparator attribute"
                                                  + " should implement"
                                                  + " java.util.Comparator"
                                                  + " interface");
                     } catch (Exception e) {
+                        /*
+                         * IAE probably means an inner non-static class, that case is not considered
+                         */
                         throw new BuildException(e);
                     }
                 }

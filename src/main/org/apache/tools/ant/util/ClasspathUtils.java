@@ -25,6 +25,8 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
+import java.lang.reflect.InvocationTargetException;
+
 // CheckStyle:HideUtilityClassConstructorCheck OFF - bc
 
 /**
@@ -249,7 +251,7 @@ public class ClasspathUtils {
         try {
             @SuppressWarnings("unchecked")
             Class<T> clazz = (Class<T>) Class.forName(className, true, userDefinedLoader);
-            T o = clazz.newInstance();
+            T o = clazz.getDeclaredConstructor().newInstance();
             if (!expectedType.isInstance(o)) {
                 throw new BuildException(
                     "Class of unexpected Type: %s expected : %s", className,
@@ -261,7 +263,7 @@ public class ClasspathUtils {
         } catch (InstantiationException e) {
             throw new BuildException("Could not instantiate " + className
                     + ". Specified class should have a no " + "argument constructor.", e);
-        } catch (IllegalAccessException e) {
+        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new BuildException("Could not instantiate " + className
                     + ". Specified class should have a " + "public constructor.", e);
         } catch (LinkageError e) {

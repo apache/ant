@@ -231,7 +231,7 @@ public class Mapper extends DataType {
         }
 
         try {
-            FileNameMapper m = getImplementationClass().newInstance();
+            FileNameMapper m = getImplementationClass().getDeclaredConstructor().newInstance();
             final Project p = getProject();
             if (p != null) {
                 p.setProjectReference(m);

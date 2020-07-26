@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -425,7 +426,7 @@ public abstract class JDBCTask extends Task {
                     Project.MSG_VERBOSE);
                 dc = Class.forName(driver).asSubclass(Driver.class);
             }
-            driverInstance = dc.newInstance();
+            driverInstance = dc.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException e) {
             throw new BuildException(
                     "Class Not Found: JDBC driver " + driver + " could not be loaded",
@@ -436,9 +437,9 @@ public abstract class JDBCTask extends Task {
                     "Illegal Access: JDBC driver " + driver + " could not be loaded",
                     e,
                     getLocation());
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw new BuildException(
-                    "Instantiation Exception: JDBC driver " + driver + " could not be loaded",
+                    e.getClass().getSimpleName() + ": JDBC driver " + driver + " could not be loaded",
                     e,
                     getLocation());
         }

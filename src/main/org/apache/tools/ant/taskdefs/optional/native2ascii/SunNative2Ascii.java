@@ -55,7 +55,7 @@ public final class SunNative2Ascii extends DefaultNative2Ascii {
         try {
             Class<?> n2aMain = Class.forName(SUN_TOOLS_NATIVE2ASCII_MAIN);
             Method convert = n2aMain.getMethod("convert", String[].class);
-            return Boolean.TRUE.equals(convert.invoke(n2aMain.newInstance(),
+            return Boolean.TRUE.equals(convert.invoke(n2aMain.getDeclaredConstructor().newInstance(),
                 (Object) cmd.getArguments()));
         } catch (BuildException ex) {
             //rethrow
