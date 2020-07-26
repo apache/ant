@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.ProjectHelperRepository;
@@ -138,8 +139,7 @@ public class ImportTask extends Task {
             throw new BuildException("import only allowed as a top-level task");
         }
 
-        ProjectHelper helper = getProject().
-                    getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
+        ProjectHelper helper = getProject().getReference(MagicNames.REFID_PROJECT_HELPER);
 
         if (helper == null) {
             // this happens if the projecthelper was not registered with the project.
@@ -216,12 +216,12 @@ public class ImportTask extends Task {
             // push current stacks into the sub helper
             subHelper.getImportStack().addAll(helper.getImportStack());
             subHelper.getExtensionStack().addAll(helper.getExtensionStack());
-            getProject().addReference(ProjectHelper.PROJECTHELPER_REFERENCE, subHelper);
+            getProject().addReference(MagicNames.REFID_PROJECT_HELPER, subHelper);
 
             subHelper.parse(getProject(), importedResource);
 
             // push back the stack from the sub helper to the main one
-            getProject().addReference(ProjectHelper.PROJECTHELPER_REFERENCE, helper);
+            getProject().addReference(MagicNames.REFID_PROJECT_HELPER, helper);
             helper.getImportStack().clear();
             helper.getImportStack().addAll(subHelper.getImportStack());
             helper.getExtensionStack().clear();

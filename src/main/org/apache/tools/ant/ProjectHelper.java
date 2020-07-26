@@ -38,17 +38,22 @@ import org.xml.sax.AttributeList;
  */
 public class ProjectHelper {
     /** The URI for ant name space */
-    public static final String ANT_CORE_URI = MagicNames.ANTLIB_PREFIX + "org.apache.tools.ant";
+    public static final String ANT_CORE_URI = MagicNames.ANTLIB_PREFIX
+            + MagicNames.ANT_CORE_PACKAGE;
 
     /** The URI for antlib current definitions */
     public static final String ANT_CURRENT_URI      = "ant:current";
 
     /** The URI for ant specific attributes
      * @since Ant 1.9.1
-     * */
+     */
     public static final String ANT_ATTRIBUTE_URI      = "ant:attribute";
 
-    /** The URI for defined types/tasks - the format is antlib:&lt;package&gt; */
+    /**
+     * The URI for defined types/tasks - the format is antlib:&lt;package&gt;
+     * @deprecated use MagicNames.ANTLIB_PREFIX
+     */
+    @Deprecated
     public static final String ANTLIB_URI = MagicNames.ANTLIB_PREFIX;
 
     /** Polymorphic attribute  */
@@ -57,18 +62,24 @@ public class ProjectHelper {
     /**
      * Name of JVM system property which provides the name of the
      * ProjectHelper class to use.
+     * @deprecated use MagicNames.PROJECT_HELPER_CLASS
      */
+    @Deprecated
     public static final String HELPER_PROPERTY = MagicNames.PROJECT_HELPER_CLASS;
 
     /**
      * The service identifier in jars which provide Project Helper
      * implementations.
+     * @deprecated use MagicNames.PROJECT_HELPER_SERVICE
      */
+    @Deprecated
     public static final String SERVICE_ID = MagicNames.PROJECT_HELPER_SERVICE;
 
     /**
      * name of project helper reference that we add to a project
+     * @deprecated use MagicNames.REFID_PROJECT_HELPER
      */
+    @Deprecated
     public static final String PROJECTHELPER_REFERENCE = MagicNames.REFID_PROJECT_HELPER;
 
     /**
@@ -89,7 +100,7 @@ public class ProjectHelper {
     public static void configureProject(Project project, File buildFile) throws BuildException {
         FileResource resource = new FileResource(buildFile);
         ProjectHelper helper = ProjectHelperRepository.getInstance().getProjectHelperForBuildFile(resource);
-        project.addReference(PROJECTHELPER_REFERENCE, helper);
+        project.addReference(MagicNames.REFID_PROJECT_HELPER, helper);
         helper.parse(project, buildFile);
     }
 

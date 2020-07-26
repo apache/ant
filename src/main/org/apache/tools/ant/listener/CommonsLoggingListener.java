@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.BuildLogger;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.UnknownElement;
@@ -61,11 +62,11 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     /**
      * name of the category under which target events are logged
      */
-    public static final String TARGET_LOG = "org.apache.tools.ant.Target";
+    public static final String TARGET_LOG = MagicNames.ANT_CORE_PACKAGE + ".Target";
     /**
      * name of the category under which project events are logged
      */
-    public static final String PROJECT_LOG = "org.apache.tools.ant.Project";
+    public static final String PROJECT_LOG = MagicNames.ANT_CORE_PACKAGE + ".Project";
 
     /**
      * Construct the listener and make sure that a LogFactory

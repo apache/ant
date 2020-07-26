@@ -23,8 +23,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.ProjectHelperRepository;
@@ -77,7 +79,7 @@ public class Antlib extends Task implements TaskContainer {
             // Should be safe to parse
             ProjectHelper parser = null;
             Object p =
-                project.getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
+                project.getReference(MagicNames.REFID_PROJECT_HELPER);
             if (p instanceof ProjectHelper) {
                 parser = (ProjectHelper) p;
                 if (!parser.canParseAntlibDescriptor(antlibResource)) {

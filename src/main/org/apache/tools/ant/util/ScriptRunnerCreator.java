@@ -18,6 +18,7 @@
 package org.apache.tools.ant.util;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 
 /**
@@ -26,8 +27,7 @@ import org.apache.tools.ant.Project;
  */
 public class ScriptRunnerCreator {
     private static final String AUTO = "auto";
-    private static final String OATAU = "org.apache.tools.ant.util";
-    private static final String UTIL_OPT = OATAU + ".optional";
+    private static final String UTIL_OPT = MagicNames.ANT_CORE_PACKAGE + ".util.optional";
 
     private static final String BSF = "bsf";
     private static final String BSF_PACK = "org.apache.bsf";

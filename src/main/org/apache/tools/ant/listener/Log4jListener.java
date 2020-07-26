@@ -20,6 +20,7 @@ package org.apache.tools.ant.listener;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
@@ -36,8 +37,10 @@ public class Log4jListener implements BuildListener {
 
     /**
      * log category we log into
+     * @deprecated use MagicNames.ANT_CORE_PACKAGE
      */
-    public static final String LOG_ANT = "org.apache.tools.ant";
+    @Deprecated
+    public static final String LOG_ANT = MagicNames.ANT_CORE_PACKAGE;
 
     /**
      * Construct the listener
@@ -45,7 +48,7 @@ public class Log4jListener implements BuildListener {
     public Log4jListener() {
         // trigger the log4j initialization (if at all it's not yet initialized)
         @SuppressWarnings("unused")
-        final Logger log = Logger.getLogger(LOG_ANT);
+        final Logger log = Logger.getLogger(MagicNames.ANT_CORE_PACKAGE);
     }
 
     /**

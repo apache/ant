@@ -49,6 +49,7 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.util.FileUtils;
@@ -85,7 +86,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             "junit.textui.TestRunner",
             "java.lang.reflect.Method.invoke(",
             "sun.reflect.",
-            "org.apache.tools.ant.",
+            MagicNames.ANT_CORE_PACKAGE + ".",
             // JUnit 4 support:
             "org.junit.",
             "junit.framework.JUnit4TestAdapter",

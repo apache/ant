@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.ProjectHelper.OnMissingExtensionPoint;
 import org.apache.tools.ant.Task;
@@ -72,8 +73,7 @@ public class BindTargets extends Task {
         if (onMissingExtensionPoint == null) {
             onMissingExtensionPoint = OnMissingExtensionPoint.FAIL;
         }
-        final ProjectHelper helper = getProject().getReference(
-                ProjectHelper.PROJECTHELPER_REFERENCE);
+        final ProjectHelper helper = getProject().getReference(MagicNames.REFID_PROJECT_HELPER);
 
         for (String target : targets) {
             helper.getExtensionStack().add(new String[] {extensionPoint,

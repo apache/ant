@@ -215,7 +215,7 @@ public class Classloader extends Task {
                 if (name == null) {
                     // This allows the core loader to load optional tasks
                     // without delegating
-                    acl.addLoaderPackageRoot("org.apache.tools.ant.taskdefs.optional");
+                    acl.addLoaderPackageRoot(MagicNames.ANT_CORE_PACKAGE + ".taskdefs.optional");
                     getProject().setCoreLoader(acl);
                 }
             }

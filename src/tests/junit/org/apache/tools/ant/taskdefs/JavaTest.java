@@ -31,6 +31,7 @@ import java.io.PipedOutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.taskdefs.condition.JavaVersion;
 import org.apache.tools.ant.util.FileUtils;
@@ -346,7 +347,7 @@ public class JavaTest {
 
         Java java = new Java();
         java.setProject(buildRule.getProject());
-        java.setClassname("org.apache.tools.ant.Main");
+        java.setClassname(MagicNames.ANT_CORE_PACKAGE + ".Main");
         java.setArgs("-version");
         java.setFork(true);
         // note: due to the missing classpath it will fail, but the input stream

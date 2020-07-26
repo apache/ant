@@ -907,9 +907,9 @@ public class ComponentHelper  {
         } else {
             //we are defined, so it is an instantiation problem
             final String classname = def.getClassName();
-            antTask = classname.startsWith("org.apache.tools.ant.");
-            boolean optional = classname.startsWith("org.apache.tools.ant.taskdefs.optional");
-            optional |= classname.startsWith("org.apache.tools.ant.types.optional");
+            antTask = classname.startsWith(MagicNames.ANT_CORE_PACKAGE + ".");
+            boolean optional = classname.startsWith(MagicNames.ANT_CORE_PACKAGE + ".types.optional")
+                    || classname.startsWith(MagicNames.ANT_CORE_PACKAGE + ".taskdefs.optional");
 
             //start with instantiating the class.
             Class<?> clazz = null;
