@@ -54,16 +54,16 @@ import org.apache.tools.ant.util.ResourceUtils;
  * <p>The ModifiedSelector is implemented as a <b>CoreSelector</b> and uses default
  * values for all its attributes therefore the simplest example is</p><pre>
  *   &lt;copy todir="dest"&gt;
- *       &lt;filelist dir="src"&gt;
+ *       &lt;fileset dir="src"&gt;
  *           &lt;modified/&gt;
- *       &lt;/filelist&gt;
+ *       &lt;/fileset&gt;
  *   &lt;/copy&gt;
  * </pre>
  *
  * <p>The same example rewritten as CoreSelector with setting the all values
  * (same as defaults are) would be</p><pre>
  *   &lt;copy todir="dest"&gt;
- *       &lt;filelist dir="src"&gt;
+ *       &lt;fileset dir="src"&gt;
  *           &lt;modified update="true"
  *                     cache="propertyfile"
  *                     algorithm="digest"
@@ -71,13 +71,13 @@ import org.apache.tools.ant.util.ResourceUtils;
  *               &lt;param name="cache.cachefile"     value="cache.properties"/&gt;
  *               &lt;param name="algorithm.algorithm" value="MD5"/&gt;
  *           &lt;/modified&gt;
- *       &lt;/filelist&gt;
+ *       &lt;/fileset&gt;
  *   &lt;/copy&gt;
  * </pre>
  *
  * <p>And the same rewritten as CustomSelector would be</p><pre>
  *   &lt;copy todir="dest"&gt;
- *       &lt;filelist dir="src"&gt;
+ *       &lt;fileset dir="src"&gt;
  *           &lt;custom class="org.apache.tools.ant.type.selectors.ModifiedSelector"&gt;
  *               &lt;param name="update"     value="true"/&gt;
  *               &lt;param name="cache"      value="propertyfile"/&gt;
@@ -86,7 +86,7 @@ import org.apache.tools.ant.util.ResourceUtils;
  *               &lt;param name="cache.cachefile"     value="cache.properties"/&gt;
  *               &lt;param name="algorithm.algorithm" value="MD5"/&gt;
  *           &lt;/custom&gt;
- *       &lt;/filelist&gt;
+ *       &lt;/fileset&gt;
  *   &lt;/copy&gt;
  * </pre>
  *
