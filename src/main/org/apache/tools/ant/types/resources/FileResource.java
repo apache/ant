@@ -255,7 +255,8 @@ public class FileResource extends Resource implements Touchable, FileProvider,
     private OutputStream getOutputStream(boolean append) throws IOException {
         File f = getNotNullFile();
         if (f.exists()) {
-            if (f.isFile() && !append) {
+            if (Files.isSymbolicLink(f.toPath()) && f.isFile() && !append) {
+                // https://bz.apache.org/bugzilla/show_bug.cgi?id=624
                 f.delete();
             }
         } else {
