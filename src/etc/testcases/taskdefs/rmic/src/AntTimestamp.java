@@ -31,8 +31,8 @@ public class AntTimestamp implements RemoteTimestamp {
      * which goes to show why signature is an inadequate way of verifying
      * how well an interface is implemented.
      *
-     * @return
-     * @throws RemoteException
+     * @return the phase of the moon
+     * @throws RemoteException hopefully never
      */
     public long when() throws RemoteException {
         Calendar cal = Calendar.getInstance();
