@@ -66,13 +66,8 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
             sb.append(", Failures: ").append(stats.numTestsFailed.get());
             sb.append(", Skipped: ").append(stats.numTestsSkipped.get());
             sb.append(", Aborted: ").append(stats.numTestsAborted.get());
-            final long timeElapsed = stats.endedAt - stats.startedAt;
             sb.append(", Time elapsed: ");
-            if (timeElapsed < 1000) {
-                sb.append(timeElapsed).append(" milli sec(s)");
-            } else {
-                sb.append(TimeUnit.SECONDS.convert(timeElapsed, TimeUnit.MILLISECONDS)).append(" sec(s)");
-            }
+            stats.appendElapsed(sb);
             try {
                 this.writer.write(sb.toString());
                 this.writer.newLine();
@@ -117,13 +112,8 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
             final StringBuilder sb = new StringBuilder();
             sb.append("Test: ");
             sb.append(testIdentifier.getLegacyReportingName());
-            final long timeElapsed = stats.endedAt - stats.startedAt;
             sb.append(" took ");
-            if (timeElapsed < 1000) {
-                sb.append(timeElapsed).append(" milli sec(s)");
-            } else {
-                sb.append(TimeUnit.SECONDS.convert(timeElapsed, TimeUnit.MILLISECONDS)).append(" sec(s)");
-            }
+            stats.appendElapsed(sb);
             sb.append(" SKIPPED");
             if (reason != null && !reason.isEmpty()) {
                 sb.append(": ").append(reason);
@@ -187,13 +177,8 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
             sb.append("Test: ");
             sb.append(testIdentifier.getLegacyReportingName());
             if (stats != null) {
-                final long timeElapsed = stats.endedAt - stats.startedAt;
                 sb.append(" took ");
-                if (timeElapsed < 1000) {
-                    sb.append(timeElapsed).append(" milli sec(s)");
-                } else {
-                    sb.append(TimeUnit.SECONDS.convert(timeElapsed, TimeUnit.MILLISECONDS)).append(" sec(s)");
-                }
+                stats.appendElapsed(sb);
             }
             switch (testExecutionResult.getStatus()) {
                 case ABORTED: {
@@ -285,6 +270,15 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
 
         private void setEndedAt(final long endedAt) {
             this.endedAt = endedAt;
+        }
+
+        private void appendElapsed(StringBuilder sb) {
+            final long timeElapsed = endedAt - startedAt;
+            if (timeElapsed < 1000) {
+                sb.append(timeElapsed).append(" milli sec(s)");
+            } else {
+                sb.append(TimeUnit.SECONDS.convert(timeElapsed, TimeUnit.MILLISECONDS)).append(" sec(s)");
+            }
         }
     }
 }
