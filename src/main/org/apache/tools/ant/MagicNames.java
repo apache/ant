@@ -210,6 +210,7 @@ public final class MagicNames {
     /**
      * Name of Ant core package
      * Value: {@value}
+     * @since Ant 1.10.9
      */
     public static final String ANT_CORE_PACKAGE = "org.apache.tools.ant";
 
