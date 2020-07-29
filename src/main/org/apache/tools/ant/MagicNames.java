@@ -208,10 +208,17 @@ public final class MagicNames {
     public static final String REFID_LOCAL_PROPERTIES = "ant.LocalProperties";
 
     /**
+     * Name of Ant core package
+     * Value: {@value}
+     * @since Ant 1.10.9
+     */
+    public static final String ANT_CORE_PACKAGE = "org.apache.tools.ant";
+
+    /**
      * Name of JVM system property which provides the name of the ProjectHelper class to use.
      * Value: {@value}
      */
-    public static final String PROJECT_HELPER_CLASS = "org.apache.tools.ant.ProjectHelper";
+    public static final String PROJECT_HELPER_CLASS = ANT_CORE_PACKAGE + ".ProjectHelper";
 
     /**
      * The service identifier in jars which provide ProjectHelper implementations.

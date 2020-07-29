@@ -86,7 +86,7 @@ public class ProjectHelperRepository {
         try {
             ClassLoader classLoader = LoaderUtils.getContextClassLoader();
             if (classLoader != null) {
-                for (URL resource : Collections.list(classLoader.getResources(ProjectHelper.SERVICE_ID))) {
+                for (URL resource : Collections.list(classLoader.getResources(MagicNames.PROJECT_HELPER_SERVICE))) {
                     URLConnection conn = resource.openConnection();
                     conn.setUseCaches(false);
                     registerProjectHelper(getProjectHelperByService(conn.getInputStream()));
@@ -94,13 +94,13 @@ public class ProjectHelperRepository {
             }
 
             InputStream systemResource =
-                ClassLoader.getSystemResourceAsStream(ProjectHelper.SERVICE_ID);
+                ClassLoader.getSystemResourceAsStream(MagicNames.PROJECT_HELPER_SERVICE);
             if (systemResource != null) {
                 registerProjectHelper(getProjectHelperByService(systemResource));
             }
         } catch (Exception e) {
             System.err.println("Unable to load ProjectHelper from service "
-                               + ProjectHelper.SERVICE_ID + " ("
+                               + MagicNames.PROJECT_HELPER_SERVICE + " ("
                                + e.getClass().getName()
                                + ": " + e.getMessage() + ")");
             if (DEBUG) {
@@ -160,7 +160,7 @@ public class ProjectHelperRepository {
     }
 
     private Constructor<? extends ProjectHelper> getProjectHelperBySystemProperty() {
-        String helperClass = System.getProperty(ProjectHelper.HELPER_PROPERTY);
+        String helperClass = System.getProperty(MagicNames.PROJECT_HELPER_CLASS);
         try {
             if (helperClass != null) {
                 return getHelperConstructor(helperClass);
@@ -168,7 +168,7 @@ public class ProjectHelperRepository {
         } catch (SecurityException e) {
             System.err.println("Unable to load ProjectHelper class \""
                                + helperClass + " specified in system property "
-                               + ProjectHelper.HELPER_PROPERTY + " ("
+                               + MagicNames.PROJECT_HELPER_CLASS + " ("
                                + e.getMessage() + ")");
             if (DEBUG) {
                 e.printStackTrace(System.err); //NOSONAR
@@ -191,7 +191,7 @@ public class ProjectHelperRepository {
             }
         } catch (Exception e) {
             System.out.println("Unable to load ProjectHelper from service "
-                    + ProjectHelper.SERVICE_ID + " (" + e.getMessage() + ")");
+                    + MagicNames.PROJECT_HELPER_SERVICE + " (" + e.getMessage() + ")");
             if (DEBUG) {
                 e.printStackTrace(System.err); //NOSONAR
             }

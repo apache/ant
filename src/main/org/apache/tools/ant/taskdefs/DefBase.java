@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -145,7 +146,7 @@ public abstract class DefBase extends AntlibDefinition {
             // task we want to define will never be a Task but always
             // be wrapped into a TaskAdapter.
             ((AntClassLoader) createdLoader)
-                .addSystemPackageRoot("org.apache.tools.ant");
+                .addSystemPackageRoot(MagicNames.ANT_CORE_PACKAGE);
         }
         return createdLoader;
     }

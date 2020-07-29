@@ -1026,7 +1026,7 @@ public class ProjectHelper2 extends ProjectHelper {
             }
             if (extensionPoint != null) {
                 ProjectHelper helper =
-                        context.getProject().getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
+                        context.getProject().getReference(MagicNames.REFID_PROJECT_HELPER);
                 for (String extPointName : Target.parseDepends(extensionPoint, name, "extensionOf")) {
                     if (extensionPointMissing == null) {
                         extensionPointMissing = OnMissingExtensionPoint.FAIL;

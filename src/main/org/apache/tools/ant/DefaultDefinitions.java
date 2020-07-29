@@ -25,7 +25,6 @@ package org.apache.tools.ant;
 public final class DefaultDefinitions {
     private static final String IF_NAMESPACE = "ant:if";
     private static final String UNLESS_NAMESPACE = "ant:unless";
-    private static final String OATA = "org.apache.tools.ant.";
 
     private final ComponentHelper componentHelper;
 
@@ -52,14 +51,14 @@ public final class DefaultDefinitions {
     private void attributeNamespaceDef(String ns) {
         AntTypeDefinition def = new AntTypeDefinition();
         def.setName(ProjectHelper.nsToComponentName(ns));
-        def.setClassName(OATA + "attribute.AttributeNamespace");
+        def.setClassName(MagicNames.ANT_CORE_PACKAGE + ".attribute.AttributeNamespace");
         def.setClassLoader(getClass().getClassLoader());
         def.setRestrict(true);
         componentHelper.addDataTypeDefinition(def);
     }
 
     private void ifUnlessDef(String name, String base) {
-        String classname =  OATA + "attribute." + base;
+        String classname = MagicNames.ANT_CORE_PACKAGE + ".attribute." + base;
         componentDef(IF_NAMESPACE, name, classname);
         componentDef(UNLESS_NAMESPACE, name, classname + "$Unless");
     }

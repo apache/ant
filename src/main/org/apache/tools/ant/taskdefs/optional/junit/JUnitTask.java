@@ -48,6 +48,7 @@ import java.util.stream.Stream;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -1972,7 +1973,7 @@ public class JUnitTask extends Task {
                 // make sure the test annotation are accepted
                 classLoader.addSystemPackageRoot("org.junit");
                 // will cause trouble in JDK 1.1 if omitted
-                classLoader.addSystemPackageRoot("org.apache.tools.ant");
+                classLoader.addSystemPackageRoot(MagicNames.ANT_CORE_PACKAGE);
             }
         }
     }

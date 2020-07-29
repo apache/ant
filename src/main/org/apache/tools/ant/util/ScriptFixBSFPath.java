@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 
 
 /**
@@ -31,7 +32,7 @@ import org.apache.tools.ant.BuildException;
  */
 public class ScriptFixBSFPath {
     private static final String UTIL_OPTIONAL_PACKAGE
-        = "org.apache.tools.ant.util.optional";
+        = MagicNames.ANT_CORE_PACKAGE + ".util.optional";
 
     private static final String BSF_PACKAGE = "org.apache.bsf";
     private static final String BSF_MANAGER = BSF_PACKAGE + ".BSFManager";

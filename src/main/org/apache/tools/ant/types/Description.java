@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Target;
@@ -52,7 +53,7 @@ public class Description extends DataType {
      */
     public void addText(String text) {
 
-        ProjectHelper ph = getProject().getReference(ProjectHelper.PROJECTHELPER_REFERENCE);
+        ProjectHelper ph = getProject().getReference(MagicNames.REFID_PROJECT_HELPER);
         if (!(ph instanceof ProjectHelperImpl)) {
             // New behavior for delayed task creation. Description
             // will be evaluated in Project.getDescription()
