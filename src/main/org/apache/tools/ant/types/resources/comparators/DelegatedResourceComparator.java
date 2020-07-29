@@ -64,7 +64,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
             return true;
         }
         if (isReference()) {
-            return getCheckedRef(DelegatedResourceComparator.class).equals(o);
+            return getRef().equals(o);
         }
         if (o instanceof DelegatedResourceComparator) {
             List<ResourceComparator> ov = ((DelegatedResourceComparator) o).resourceComparators;
@@ -80,7 +80,7 @@ public class DelegatedResourceComparator extends ResourceComparator {
     @Override
     public synchronized int hashCode() {
         if (isReference()) {
-            return getCheckedRef(DelegatedResourceComparator.class).hashCode();
+            return getRef().hashCode();
         }
         return resourceComparators == null ? 0 : resourceComparators.hashCode();
     }
@@ -116,6 +116,10 @@ s.
             }
             setChecked(true);
         }
+    }
+
+    private DelegatedResourceComparator getRef() {
+        return getCheckedRef(DelegatedResourceComparator.class);
     }
 
     private static Comparator<Resource> composite(List<? extends Comparator<Resource>> foo) {
