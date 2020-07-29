@@ -115,16 +115,11 @@ public class DependencyVisitor extends EmptyVisitor {
                     // is upper case ascii. so according to the spec it's an inner class
                     classname = classname.substring(0, index) + "$"
                         + classname.substring(index + 1);
-                    addClass(classname);
-                } else {
-                    // Add the class in dotted notation 'com.company.Class'
-                    addClass(classname);
                 }
                 // CheckStyle:MagicNumber ON
-            } else {
-                // Add a class with no package 'Class'
-                addClass(classname);
             }
+            // Add the class, with or without the package name
+            addClass(classname);
         }
     }
 

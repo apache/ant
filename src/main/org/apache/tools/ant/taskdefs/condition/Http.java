@@ -136,8 +136,6 @@ public class Http extends ProjectComponent implements Condition {
             } catch (ProtocolException pe) {
                 throw new BuildException("Invalid HTTP protocol: "
                                          + requestMethod, pe);
-            } catch (SocketTimeoutException ste) {
-                return false;
             } catch (IOException e) {
                 return false;
             }

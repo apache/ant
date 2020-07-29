@@ -72,13 +72,11 @@ public class KeySubst extends Task {
             String newline = null;
             line = br.readLine();
             while (line != null) {
-                if (line.isEmpty()) {
-                    bw.newLine();
-                } else {
+                if (!line.isEmpty()) {
                     newline = KeySubst.replace(line, replacements);
                     bw.write(newline);
-                    bw.newLine();
                 }
+                bw.newLine();
                 line = br.readLine();
             }
             bw.flush();

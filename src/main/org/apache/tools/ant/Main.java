@@ -440,9 +440,6 @@ public class Main implements AntMain {
             if (searchForFile) {
                 if (searchForThis != null) {
                     buildFile = findBuildFile(System.getProperty("user.dir"), searchForThis);
-                    if (buildFile == null) {
-                        throw new BuildException("Could not locate a build file!");
-                    }
                 } else {
                     // no search file specified: so search an existing default file
                     final Iterator<ProjectHelper> it = ProjectHelperRepository.getInstance().getHelpers();
@@ -454,9 +451,9 @@ public class Main implements AntMain {
                         }
                         buildFile = findBuildFile(System.getProperty("user.dir"), searchForThis);
                     } while (buildFile == null && it.hasNext());
-                    if (buildFile == null) {
-                        throw new BuildException("Could not locate a build file!");
-                    }
+                }
+                if (buildFile == null) {
+                    throw new BuildException("Could not locate a build file!");
                 }
             } else {
                 // no build file specified: so search an existing default file

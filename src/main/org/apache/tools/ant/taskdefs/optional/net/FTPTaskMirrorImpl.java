@@ -1812,16 +1812,12 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
 
             if (task.isBinary()) {
                 ftp.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-                if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                    throw new BuildException("could not set transfer type: %s",
-                        ftp.getReplyString());
-                }
             } else {
                 ftp.setFileType(org.apache.commons.net.ftp.FTP.ASCII_FILE_TYPE);
-                if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                    throw new BuildException("could not set transfer type: %s",
-                        ftp.getReplyString());
-                }
+            }
+            if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
+                throw new BuildException("could not set transfer type: %s",
+                    ftp.getReplyString());
             }
 
             if (task.isPassive()) {

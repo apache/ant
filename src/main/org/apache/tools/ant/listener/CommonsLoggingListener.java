@@ -282,8 +282,6 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
                 }
                 break;
             case Project.MSG_VERBOSE:
-                log.debug(message);
-                break;
             case Project.MSG_DEBUG:
                 log.debug(message);
                 break;
