@@ -219,7 +219,7 @@ public class TarFileSet extends ArchiveFileSet {
             configureFileSet(zfs);
             return zfs;
         }
-        String msg = getRefid().getRefId() + " doesn\'t denote a tarfileset or a fileset";
+        String msg = getRefid().getRefId() + " doesn't denote a tarfileset or a fileset";
         throw new BuildException(msg);
     }
 

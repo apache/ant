@@ -458,10 +458,10 @@ public class FileUtilsTest {
         assertTrue("Non existing files",
                 getFileUtils().contentEquals(new File(ROOT, "foo"),
                         new File(ROOT, "bar")));
-        assertFalse("One exists, the other one doesn\'t",
+        assertFalse("One exists, the other one doesn't",
                 getFileUtils().contentEquals(new File(ROOT, "foo"),
                         new File(ROOT, "build.xml")));
-        assertFalse("Don\'t compare directories",
+        assertFalse("Don't compare directories",
                 getFileUtils().contentEquals(new File(ROOT, "src"),
                         new File(ROOT, "src")));
         assertTrue("File equals itself",

@@ -316,7 +316,7 @@ public class Os implements Condition {
                         break;
                     default:
                         throw new BuildException(
-                                "Don\'t know how to detect os family \""
+                                "Don't know how to detect os family \""
                                         + family + "\"");
                 }
             }

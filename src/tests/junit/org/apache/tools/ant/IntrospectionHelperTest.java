@@ -103,7 +103,7 @@ public class IntrospectionHelperTest {
     public void testSupportsCharacters() {
         assertTrue("IntrospectionHelperTest supports addText", ih.supportsCharacters());
         ih = IntrospectionHelper.getHelper(String.class);
-        assertFalse("String doesn\'t support addText", ih.supportsCharacters());
+        assertFalse("String doesn't support addText", ih.supportsCharacters());
     }
 
     public void addText(String text) {

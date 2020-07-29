@@ -48,7 +48,7 @@ public class CommandlineTest {
         s = Commandline.translateCommandline(null);
         assertEquals("null", 0, s.length);
 
-        s = Commandline.translateCommandline("1 \'2\' 3");
+        s = Commandline.translateCommandline("1 '2' 3");
         assertEquals("Simple case with single quotes", 3, s.length);
         assertEquals("Single quotes have been stripped", "2", s[1]);
 
@@ -60,15 +60,15 @@ public class CommandlineTest {
         assertEquals("Case with double quotes and whitespace", 3, s.length);
         assertEquals("Double quotes stripped, space included", "2 3", s[1]);
 
-        s = Commandline.translateCommandline("1 \"2\'3\" 4");
+        s = Commandline.translateCommandline("1 \"2'3\" 4");
         assertEquals("Case with double quotes around single quote", 3, s.length);
-        assertEquals("Double quotes stripped, single quote included", "2\'3", s[1]);
+        assertEquals("Double quotes stripped, single quote included", "2'3", s[1]);
 
-        s = Commandline.translateCommandline("1 \'2 3\' 4");
+        s = Commandline.translateCommandline("1 '2 3' 4");
         assertEquals("Case with single quotes and whitespace", 3, s.length);
         assertEquals("Single quotes stripped, space included", "2 3", s[1]);
 
-        s = Commandline.translateCommandline("1 \'2\"3\' 4");
+        s = Commandline.translateCommandline("1 '2\"3' 4");
         assertEquals("Case with single quotes around double quote", 3, s.length);
         assertEquals("Single quotes stripped, double quote included", "2\"3", s[1]);
 
@@ -93,15 +93,15 @@ public class CommandlineTest {
         assertEquals("Doublequoted null arg", 1, s.length);
         assertEquals("Doublequoted null arg", "", s[0]);
 
-        s = Commandline.translateCommandline("\'\' a");
+        s = Commandline.translateCommandline("'' a");
         assertEquals("Singlequoted null arg prepend", 2, s.length);
         assertEquals("Singlequoted null arg prepend", "", s[0]);
         assertEquals("Singlequoted null arg prepend", "a", s[1]);
-        s = Commandline.translateCommandline("a \'\'");
+        s = Commandline.translateCommandline("a ''");
         assertEquals("Singlequoted null arg append", 2, s.length);
         assertEquals("Singlequoted null arg append", "a", s[0]);
         assertEquals("Singlequoted null arg append", "", s[1]);
-        s = Commandline.translateCommandline("\'\'");
+        s = Commandline.translateCommandline("''");
         assertEquals("Singlequoted null arg", 1, s.length);
         assertEquals("Singlequoted null arg", "", s[0]);
     }
@@ -112,8 +112,8 @@ public class CommandlineTest {
     @Test
     public void testTokenizerUnbalancedSingleQuote() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("unbalanced quotes in a \'b c");
-        Commandline.translateCommandline("a \'b c");
+        thrown.expectMessage("unbalanced quotes in a 'b c");
+        Commandline.translateCommandline("a 'b c");
     }
 
     /**
@@ -132,8 +132,8 @@ public class CommandlineTest {
         assertEquals("", Commandline.toString(null));
         assertEquals("1 2 3", Commandline.toString(new String[] {"1", "2", "3"}));
         assertEquals("1 \"2 3\"", Commandline.toString(new String[] {"1", "2 3"}));
-        assertEquals("1 \"2\'3\"", Commandline.toString(new String[] {"1", "2\'3"}));
-        assertEquals("1 \'2\"3\'", Commandline.toString(new String[] {"1", "2\"3"}));
+        assertEquals("1 \"2'3\"", Commandline.toString(new String[] {"1", "2'3"}));
+        assertEquals("1 '2\"3'", Commandline.toString(new String[] {"1", "2\"3"}));
     }
 
     @Test

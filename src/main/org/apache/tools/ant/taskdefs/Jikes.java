@@ -62,7 +62,7 @@ public class Jikes {
             + "the Jikes class");
         System.err.println("is considered to be dead code by the Ant "
             + "developers and is unmaintained.");
-        System.err.println("Don\'t use it!");
+        System.err.println("Don't use it!");
 
         this.jop = jop;
         this.command = command;

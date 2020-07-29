@@ -232,7 +232,7 @@ public class FixCrLfTest {
     // not used, but public so theoretically must remain for BC?
     @Deprecated
     public void assertEqualContent(File expect, File result) throws AssertionFailedError, IOException {
-        assertTrue("Expected file " + result + " doesn\'t exist", result.exists());
+        assertTrue("Expected file " + result + " doesn't exist", result.exists());
 
         try (InputStream inExpect = new BufferedInputStream(Files.newInputStream(expect.toPath()));
              InputStream inResult = new BufferedInputStream(Files.newInputStream(result.toPath()))) {

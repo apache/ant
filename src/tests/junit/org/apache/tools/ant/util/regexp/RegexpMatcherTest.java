@@ -53,26 +53,26 @@ public abstract class RegexpMatcherTest {
         reg.setPattern("aaaa");
         assertTrue("aaaa should match itself", reg.matches("aaaa"));
         assertTrue("aaaa should match xaaaa", reg.matches("xaaaa"));
-        assertFalse("aaaa shouldn\'t match xaaa", reg.matches("xaaa"));
+        assertFalse("aaaa shouldn't match xaaa", reg.matches("xaaa"));
         reg.setPattern("^aaaa");
-        assertFalse("^aaaa shouldn\'t match xaaaa", reg.matches("xaaaa"));
+        assertFalse("^aaaa shouldn't match xaaaa", reg.matches("xaaaa"));
         assertTrue("^aaaa should match aaaax", reg.matches("aaaax"));
         reg.setPattern("aaaa$");
-        assertFalse("aaaa$ shouldn\'t match aaaax", reg.matches("aaaax"));
+        assertFalse("aaaa$ shouldn't match aaaax", reg.matches("aaaax"));
         assertTrue("aaaa$ should match xaaaa", reg.matches("xaaaa"));
         reg.setPattern("[0-9]+");
         assertTrue("[0-9]+ should match 123", reg.matches("123"));
         assertTrue("[0-9]+ should match 1", reg.matches("1"));
-        assertFalse("[0-9]+ shouldn\'t match \'\'", reg.matches(""));
-        assertFalse("[0-9]+ shouldn\'t match a", reg.matches("a"));
+        assertFalse("[0-9]+ shouldn't match ''", reg.matches(""));
+        assertFalse("[0-9]+ shouldn't match a", reg.matches("a"));
         reg.setPattern("[0-9]*");
         assertTrue("[0-9]* should match 123", reg.matches("123"));
         assertTrue("[0-9]* should match 1", reg.matches("1"));
-        assertTrue("[0-9]* should match \'\'", reg.matches(""));
+        assertTrue("[0-9]* should match ''", reg.matches(""));
         assertTrue("[0-9]* should match a", reg.matches("a"));
         reg.setPattern("([0-9]+)=\\1");
         assertTrue("([0-9]+)=\\1 should match 1=1", reg.matches("1=1"));
-        assertFalse("([0-9]+)=\\1 shouldn\'t match 1=2", reg.matches("1=2"));
+        assertFalse("([0-9]+)=\\1 shouldn't match 1=2", reg.matches("1=2"));
     }
 
     @Test

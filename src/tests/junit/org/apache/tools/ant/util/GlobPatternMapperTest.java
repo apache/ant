@@ -42,7 +42,7 @@ public class GlobPatternMapperTest {
     public void testNoPatternAtAll() {
         m.setFrom("foobar");
         m.setTo("baz");
-        assertNull("Shouldn\'t match foobar", m.mapFileName("plonk"));
+        assertNull("Shouldn't match foobar", m.mapFileName("plonk"));
         String[] result = m.mapFileName("foobar");
         assertNotNull("Should match foobar", result);
         assertEquals("only one result for foobar", 1, result.length);
@@ -53,7 +53,7 @@ public class GlobPatternMapperTest {
     public void testPostfixOnly() {
         m.setFrom("*foo");
         m.setTo("*plonk");
-        assertNull("Shouldn\'t match *foo", m.mapFileName("bar.baz"));
+        assertNull("Shouldn't match *foo", m.mapFileName("bar.baz"));
         String[] result = m.mapFileName("bar.foo");
         assertNotNull("Should match *.foo", result);
         assertEquals("only one result for bar.foo", 1, result.length);
@@ -69,7 +69,7 @@ public class GlobPatternMapperTest {
     public void testPrefixOnly() {
         m.setFrom("foo*");
         m.setTo("plonk*");
-        assertNull("Shouldn\'t match foo*", m.mapFileName("bar.baz"));
+        assertNull("Shouldn't match foo*", m.mapFileName("bar.baz"));
         String[] result = m.mapFileName("foo.bar");
         assertNotNull("Should match foo*", result);
         assertEquals("only one result for foo.bar", 1, result.length);
@@ -85,7 +85,7 @@ public class GlobPatternMapperTest {
     public void testPreAndPostfix() {
         m.setFrom("foo*bar");
         m.setTo("plonk*pling");
-        assertNull("Shouldn\'t match foo*bar", m.mapFileName("bar.baz"));
+        assertNull("Shouldn't match foo*bar", m.mapFileName("bar.baz"));
         String[] result = m.mapFileName("foo.bar");
         assertNotNull("Should match foo*bar", result);
         assertEquals("only one result for foo.bar", 1, result.length);

@@ -2499,7 +2499,7 @@ public class Javadoc extends Task {
                 // Path.list does it for us.
                 sp.createPathElement().setLocation(baseDir);
             } else {
-                log(baseDir + " doesn\'t contain any packages, dropping it.",
+                log(baseDir + " doesn't contain any packages, dropping it.",
                     Project.MSG_VERBOSE);
             }
         }

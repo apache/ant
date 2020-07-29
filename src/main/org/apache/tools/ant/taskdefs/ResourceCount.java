@@ -61,7 +61,7 @@ public class ResourceCount extends Task implements Condition {
     public void setRefid(Reference r) {
         Object o = r.getReferencedObject();
         if (!(o instanceof ResourceCollection)) {
-            throw new BuildException("%s doesn\'t denote a ResourceCollection",
+            throw new BuildException("%s doesn't denote a ResourceCollection",
                 r.getRefId());
         }
         add((ResourceCollection) o);

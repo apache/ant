@@ -74,7 +74,7 @@ public class Patch extends Task {
      */
     public void setPatchfile(File file) {
         if (!file.exists()) {
-            throw new BuildException("patchfile " + file + " doesn\'t exist",
+            throw new BuildException("patchfile " + file + " doesn't exist",
                                      getLocation());
         }
         cmd.createArgument().setValue("-i");

@@ -278,7 +278,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
                         + " is not a subclass of "
                         + displayName(requiredClass),
                 Project.MSG_VERBOSE);
-        throw new BuildException(ref.getRefId() + " doesn\'t denote a " + dataTypeName);
+        throw new BuildException(ref.getRefId() + " doesn't denote a " + dataTypeName);
     }
 
     /**

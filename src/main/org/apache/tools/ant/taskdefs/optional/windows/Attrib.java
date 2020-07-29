@@ -111,7 +111,7 @@ public class Attrib extends ExecuteOn {
     @Override
     public void setExecutable(String e) {
         throw new BuildException(getTaskType()
-            + " doesn\'t support the executable attribute", getLocation());
+            + " doesn't support the executable attribute", getLocation());
     }
 
     /**
@@ -122,7 +122,7 @@ public class Attrib extends ExecuteOn {
      */
     public void setCommand(String e) {
         throw new BuildException(getTaskType()
-            + " doesn\'t support the command attribute", getLocation());
+            + " doesn't support the command attribute", getLocation());
     }
 
     /**
@@ -134,7 +134,7 @@ public class Attrib extends ExecuteOn {
     @Override
     public void setAddsourcefile(boolean b) {
         throw new BuildException(getTaskType()
-            + " doesn\'t support the addsourcefile attribute", getLocation());
+            + " doesn't support the addsourcefile attribute", getLocation());
     }
 
     /**
@@ -145,7 +145,7 @@ public class Attrib extends ExecuteOn {
      */
     @Override
     public void setSkipEmptyFilesets(boolean skip) {
-        throw new BuildException(getTaskType() + " doesn\'t support the "
+        throw new BuildException(getTaskType() + " doesn't support the "
                                  + "skipemptyfileset attribute",
                                  getLocation());
     }
@@ -159,7 +159,7 @@ public class Attrib extends ExecuteOn {
     @Override
     public void setParallel(boolean parallel) {
         throw new BuildException(getTaskType()
-                                 + " doesn\'t support the parallel attribute",
+                                 + " doesn't support the parallel attribute",
                                  getLocation());
     }
 
@@ -172,7 +172,7 @@ public class Attrib extends ExecuteOn {
     @Override
     public void setMaxParallel(int max) {
         throw new BuildException(getTaskType()
-                                 + " doesn\'t support the maxparallel attribute",
+                                 + " doesn't support the maxparallel attribute",
                                  getLocation());
     }
 

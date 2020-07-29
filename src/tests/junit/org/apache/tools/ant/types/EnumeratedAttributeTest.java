@@ -42,8 +42,8 @@ public class EnumeratedAttributeTest {
             assertFalse(value.toUpperCase() + " is in TestNormal",
                     t1.containsValue(value.toUpperCase()));
         }
-        assertFalse("TestNormal doesn\'t have \"d\" attribute", t1.containsValue("d"));
-        assertFalse("TestNull doesn\'t have \"d\" attribute and doesn\'t die",
+        assertFalse("TestNormal doesn't have \"d\" attribute", t1.containsValue("d"));
+        assertFalse("TestNull doesn't have \"d\" attribute and doesn't die",
                 (new TestNull()).containsValue("d"));
     }
 

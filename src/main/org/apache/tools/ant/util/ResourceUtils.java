@@ -191,7 +191,7 @@ public class ResourceUtils {
                     Project.MSG_VERBOSE);
             }
             if (targetnames == null || targetnames.length == 0) {
-                logTo.log(sr + " skipped - don\'t know how to handle it",
+                logTo.log(sr + " skipped - don't know how to handle it",
                       Project.MSG_VERBOSE);
                 continue;
             }
@@ -211,7 +211,7 @@ public class ResourceUtils {
                 result.add(sr);
                 final Resource t = r.iterator().next();
                 logTo.log(sr.getName() + " added as " + t.getName()
-                    + (t.isExists() ? " is outdated." : " doesn\'t exist."),
+                    + (t.isExists() ? " is outdated." : " doesn't exist."),
                     Project.MSG_VERBOSE);
                 continue;
             }

@@ -51,7 +51,7 @@ public class DirSetTest extends AbstractFileSetTest {
     @Test
     public void testDirSetFromFileSet() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("dummy doesn\'t denote a DirSet");
+        thrown.expectMessage("dummy doesn't denote a DirSet");
         fs.setProject(getProject());
         getProject().addReference("dummy", fs);
         ds.setRefid(new Reference(getProject(), "dummy"));
@@ -61,7 +61,7 @@ public class DirSetTest extends AbstractFileSetTest {
     @Test
     public void testFileSetFromDirSet() {
         thrown.expect(BuildException.class);
-        thrown.expectMessage("dummy doesn\'t denote a FileSet");
+        thrown.expectMessage("dummy doesn't denote a FileSet");
         getProject().addReference("dummy", ds);
         fs.setRefid(new Reference(getProject(), "dummy"));
         fs.getDir(getProject());

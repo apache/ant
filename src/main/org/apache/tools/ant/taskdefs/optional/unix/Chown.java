@@ -80,7 +80,7 @@ public class Chown extends AbstractAccessTask {
     @Override
     public void setExecutable(String e) {
         throw new BuildException(getTaskType()
-                                 + " doesn\'t support the executable"
+                                 + " doesn't support the executable"
                                  + " attribute", getLocation());
     }
 }

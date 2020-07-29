@@ -376,7 +376,7 @@ public class JDependTask extends Task {
         File f = LoaderUtils.getResourceSource(getClass().getClassLoader(),
                                                resource);
         if (f == null) {
-            log("Couldn\'t find " + resource, Project.MSG_DEBUG);
+            log("Couldn't find " + resource, Project.MSG_DEBUG);
         } else {
             log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
             runtimeClasses.createPath().setLocation(f);

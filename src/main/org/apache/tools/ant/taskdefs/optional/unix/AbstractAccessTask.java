@@ -72,7 +72,7 @@ public abstract class AbstractAccessTask extends ExecuteOn {
     @Override
     public void setCommand(Commandline cmdl) {
         throw new BuildException(getTaskType()
-                                 + " doesn\'t support the command attribute",
+                                 + " doesn't support the command attribute",
                                  getLocation());
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractAccessTask extends ExecuteOn {
      */
     @Override
     public void setSkipEmptyFilesets(boolean skip) {
-        throw new BuildException(getTaskType() + " doesn\'t support the "
+        throw new BuildException(getTaskType() + " doesn't support the "
                                  + "skipemptyfileset attribute",
                                  getLocation());
     }
@@ -98,7 +98,7 @@ public abstract class AbstractAccessTask extends ExecuteOn {
     @Override
     public void setAddsourcefile(boolean b) {
         throw new BuildException(getTaskType()
-            + " doesn\'t support the addsourcefile attribute", getLocation());
+            + " doesn't support the addsourcefile attribute", getLocation());
     }
 
     /**
