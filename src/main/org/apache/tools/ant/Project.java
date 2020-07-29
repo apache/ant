@@ -271,7 +271,7 @@ public class Project implements ResourceFactory {
     public Project createSubProject() {
         Project subProject = null;
         try {
-            subProject = (getClass().newInstance());
+            subProject = getClass().getDeclaredConstructor().newInstance();
         } catch (final Exception e) {
             subProject = new Project();
         }
@@ -1219,11 +1219,11 @@ public class Project implements ResourceFactory {
             }
             log("Attempting to create object of type " + classname, MSG_DEBUG);
             try {
-                o = Class.forName(classname, true, coreLoader).newInstance();
+                o = Class.forName(classname, true, coreLoader).getDeclaredConstructor().newInstance();
             } catch (final ClassNotFoundException seaEnEfEx) {
                 //try the current classloader
                 try {
-                    o = Class.forName(classname).newInstance();
+                    o = Class.forName(classname).getDeclaredConstructor().newInstance();
                 } catch (final Exception ex) {
                     log(ex.toString(), MSG_ERR);
                 }

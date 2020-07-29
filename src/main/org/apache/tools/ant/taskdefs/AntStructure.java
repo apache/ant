@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -318,7 +319,7 @@ public class AntStructure extends Task {
                 } else if (EnumeratedAttribute.class.isAssignableFrom(type)) {
                     try {
                         final EnumeratedAttribute ea =
-                            type.asSubclass(EnumeratedAttribute.class).newInstance();
+                            type.asSubclass(EnumeratedAttribute.class).getDeclaredConstructor().newInstance();
                         final String[] values = ea.getValues();
                         if (values == null || values.length == 0
                             || !areNmtokens(values)) {
@@ -326,7 +327,8 @@ public class AntStructure extends Task {
                         } else {
                             sb.append(Stream.of(values).collect(joinAlts)).append(" ");
                         }
-                    } catch (final InstantiationException | IllegalAccessException ie) {
+                    } catch (final InstantiationException | IllegalAccessException
+                            | NoSuchMethodException | InvocationTargetException ie) {
                         sb.append("CDATA ");
                     }
                 } else if (Enum.class.isAssignableFrom(type)) {

@@ -332,7 +332,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
                                       Thread.currentThread()
                                       .getContextClassLoader());
                     final XSLTTraceSupport ts =
-                        (XSLTTraceSupport) traceSupport.newInstance();
+                        (XSLTTraceSupport) traceSupport.getDeclaredConstructor().newInstance();
                     ts.configureTrace(transformer, traceConfiguration);
                 } catch (final Exception e) {
                     final String msg = "Failed to enable tracing because of " + e;
@@ -400,7 +400,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
                 if (clazz == null) {
                     clazz = Class.forName(factoryName);
                 }
-                tfactory = (TransformerFactory) clazz.newInstance();
+                tfactory = (TransformerFactory) clazz.getDeclaredConstructor().newInstance();
             } catch (final Exception e) {
                 throw new BuildException(e);
             }

@@ -280,7 +280,7 @@ public class Launcher {
         Throwable thrown = null;
         try {
             mainClass = loader.loadClass(mainClassname).asSubclass(AntMain.class);
-            final AntMain main = mainClass.newInstance();
+            final AntMain main = mainClass.getDeclaredConstructor().newInstance();
             main.startAnt(newArgs, null, null);
         } catch (final InstantiationException ex) {
             System.err.println(

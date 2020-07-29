@@ -151,7 +151,7 @@ public class MimeMailer extends Mailer {
                 try {
                     final Provider p =
                         Class.forName("com.sun.net.ssl.internal.ssl.Provider")
-                            .asSubclass(Provider.class).newInstance();
+                            .asSubclass(Provider.class).getDeclaredConstructor().newInstance();
                     Security.addProvider(p);
                 } catch (final Exception e) {
                     throw new BuildException(

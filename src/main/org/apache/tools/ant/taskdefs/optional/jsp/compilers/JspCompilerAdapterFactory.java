@@ -105,7 +105,7 @@ public final class JspCompilerAdapterFactory {
         throws BuildException {
         try {
             Class<? extends JspCompilerAdapter> c = classloader.findClass(className).asSubclass(JspCompilerAdapter.class);
-            return c.newInstance();
+            return c.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException cnfe) {
             throw new BuildException(className + " can't be found.", cnfe);
         } catch (ClassCastException cce) {

@@ -75,7 +75,7 @@ public abstract class EnumeratedAttribute {
         }
         EnumeratedAttribute ea;
         try {
-            ea = clazz.newInstance();
+            ea = clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new BuildException(e);
         }

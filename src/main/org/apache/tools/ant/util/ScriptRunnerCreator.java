@@ -127,7 +127,7 @@ public class ScriptRunnerCreator {
         }
         try {
             runner = (ScriptRunnerBase) Class.forName(
-                    runnerClass, true, scriptLoader).newInstance();
+                    runnerClass, true, scriptLoader).getDeclaredConstructor().newInstance();
             runner.setProject(project);
         } catch (Exception ex) {
             throw ReflectUtil.toBuildException(ex);

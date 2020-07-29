@@ -276,9 +276,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
         try {
             Class<? extends DependencyAnalyzer> analyzerClass =
-                Class.forName(analyzerClassName)
-                    .asSubclass(DependencyAnalyzer.class);
-            dependencyAnalyzer = analyzerClass.newInstance();
+                Class.forName(analyzerClassName).asSubclass(DependencyAnalyzer.class);
+            dependencyAnalyzer = analyzerClass.getDeclaredConstructor().newInstance();
             dependencyAnalyzer.addClassPath(new Path(task.getProject(),
                 config.srcDir.getPath()));
             dependencyAnalyzer.addClassPath(config.classpath);

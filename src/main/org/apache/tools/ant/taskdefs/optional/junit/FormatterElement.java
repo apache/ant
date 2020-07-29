@@ -302,11 +302,11 @@ public class FormatterElement {
 
         JUnitResultFormatterMirror r;
         try {
-            r = f.asSubclass(JUnitResultFormatterMirror.class).newInstance();
+            r = f.asSubclass(JUnitResultFormatterMirror.class).getDeclaredConstructor().newInstance();
         } catch (ClassCastException e) {
-            throw new BuildException("%s is not a JUnitResultFormatter",
-                classname);
-        } catch (InstantiationException | IllegalAccessException e) {
+            throw new BuildException("%s is not a JUnitResultFormatter", classname);
+        } catch (InstantiationException | IllegalAccessException
+                | NoSuchMethodException | InvocationTargetException e) {
             throw new BuildException(e);
         }
 
