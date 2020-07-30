@@ -50,12 +50,13 @@ import org.apache.tools.ant.taskdefs.Manifest.Section;
 import org.apache.tools.ant.types.ArchiveFileSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.spi.Service;
+import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.FlatFileNameMapper;
 import org.apache.tools.ant.util.StreamUtils;
 import org.apache.tools.zip.JarMarker;
 import org.apache.tools.zip.ZipExtraField;
@@ -149,7 +150,7 @@ public class Jar extends Zip {
      *
      * @since Ant 1.6.2
      */
-    private Path indexJars;
+    private List<IndexJars> indexJars;
 
     // CheckStyle:LineLength OFF - Link is too long.
     /**
@@ -398,11 +399,17 @@ public class Jar extends Zip {
      * @param p a path
      * @since Ant 1.6.2
      */
-    public void addConfiguredIndexJars(Path p) {
+    public void addConfiguredIndexJars(ResourceCollection rc) {
+        IndexJars indexJars = new IndexJars(getProject());
+        indexJars.add(rc);
+        addConfiguredIndexJars(indexJars);
+    }
+
+    public void addConfiguredIndexJars(IndexJars jars) {
         if (indexJars == null) {
-            indexJars = new Path(getProject());
+            indexJars = new ArrayList<>();
         }
-        indexJars.append(p);
+        indexJars.add(jars);
     }
 
     /**
@@ -596,28 +603,66 @@ public class Jar extends Zip {
                            rootEntries, writer);
         writer.println();
 
-        if (indexJars != null) {
+        if (indexJars != null && !indexJars.isEmpty()) {
             Manifest mf = createManifest();
             Manifest.Attribute classpath =
                 mf.getMainSection().getAttribute(Manifest.ATTRIBUTE_CLASSPATH);
-            String[] cpEntries = null;
+            FileNameMapper defaultMapper = null;
             if (classpath != null && classpath.getValue() != null) {
                 StringTokenizer tok = new StringTokenizer(classpath.getValue(),
                                                           " ");
-                cpEntries = new String[tok.countTokens()];
+                String[] cpEntries = new String[tok.countTokens()];
                 int c = 0;
                 while (tok.hasMoreTokens()) {
                     cpEntries[c++] = tok.nextToken();
                 }
+
+                defaultMapper = new FileNameMapper() {
+                    @Override
+                    public void setFrom(String from) {
+                        // ignored
+                    }
+
+                    @Override
+                    public void setTo(String to) {
+                        // ignored
+                    }
+
+                    @Override
+                    public String[] mapFileName(String sourceFileName) {
+                        String mapped = findJarName(sourceFileName, cpEntries);
+                        if (mapped == null) {
+                            return null;
+                        }
+                        return new String[] {mapped};
+                    }
+                };
+            } else {
+                defaultMapper = new FlatFileNameMapper();
             }
-            for (String indexJarEntry : indexJars.list()) {
-                String name = findJarName(indexJarEntry, cpEntries);
-                if (name != null) {
+
+            Set<String> writtenEntries = new HashSet<>();
+            for (IndexJars indexJar : indexJars) {
+                FileNameMapper mapper = indexJar.getMapper();
+                if (mapper == null) {
+                    mapper = defaultMapper;
+                }
+
+                for (String indexJarEntry : indexJar.list()) {
+                    if (!writtenEntries.add(indexJarEntry)) {
+                        continue;
+                    }
+
+                    String[] name = mapper.mapFileName(indexJarEntry);
+                    if (name == null || name.length == 0) {
+                        continue;
+                    }
+
                     ArrayList<String> dirs = new ArrayList<>();
                     ArrayList<String> files = new ArrayList<>();
                     grabFilesAndDirs(indexJarEntry, dirs, files);
                     if (dirs.size() + files.size() > 0) {
-                        writer.println(name);
+                        writer.println(name[0]);
                         writeIndexLikeList(dirs, files, writer);
                         writer.println();
                     }
