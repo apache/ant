@@ -18,6 +18,7 @@
 
 package org.apache.tools.ant.types;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +35,7 @@ import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.resources.MappedResource;
 import org.apache.tools.ant.types.resources.PropertyResource;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -334,7 +336,16 @@ public class PropertySet extends DataType implements ResourceCollection {
 
     private Map<String, Object> getEffectiveProperties() {
         final Project prj = getProject();
-        final Map<String, Object> result = prj == null ? getAllSystemProperties() : prj.getProperties();
+        final Map<String, Object> result;
+        if (prj == null) {
+            result = getAllSystemProperties();
+        } else {
+            final PropertyHelper ph = PropertyHelper.getPropertyHelper(prj);
+            result = prj.getPropertyNames().stream()
+                .map(n -> new AbstractMap.SimpleImmutableEntry<>(n, ph.getProperty(n)))
+                .filter(kv -> kv.getValue() != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
         //quick & dirty, to make nested mapped p-sets work:
         for (PropertySet set : setRefs) {
             result.putAll(set.getPropertyMap());
