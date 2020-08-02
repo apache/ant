@@ -161,7 +161,19 @@ public class PropertyHelper implements GetProperty {
             String property, Object value, PropertyHelper propertyHelper);
     }
 
-    //TODO PropertyEnumerator Delegate type, would improve PropertySet
+    /**
+     * Obtains the names of all known properties.
+     *
+     * @since 1.10.9
+     */
+    public interface PropertyEnumerator extends Delegate {
+        /**
+         * Returns the names of all properties known to this delegate.
+         *
+         * @return the names of all properties known to this delegate.
+         */
+        Set<String> getPropertyNames();
+    }
 
     //  --------------------------------------------------------
     //
@@ -843,6 +855,18 @@ public class PropertyHelper implements GetProperty {
     }
 
     /**
+     * Returns the names of all known properties.
+     * @since 1.10.9
+     * @return the names of all known properties.
+     */
+    public Set<String> getPropertyNames() {
+        final Set<String> names = new HashSet<>(properties.keySet());
+        getDelegates(PropertyEnumerator.class)
+            .forEach(e -> names.addAll(e.getPropertyNames()));
+        return Collections.unmodifiableSet(names);
+    }
+
+    /**
      * Returns the value of a user property, if it is set.
      *
      * <p>Delegates to the one-arg version ignoring the ns parameter.</p>
@@ -1014,7 +1038,7 @@ public class PropertyHelper implements GetProperty {
     // Moved from ProjectHelper. You can override the static method -
     // this is used for backward compatibility (for code that calls
     // the parse method in ProjectHelper).
-
+    
     /**
      * Default parsing method. It is here only to support backward compatibility
      * for the static ProjectHelper.parsePropertyString().

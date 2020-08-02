@@ -642,11 +642,21 @@ public class Project implements ResourceFactory {
 
     /**
      * Return a copy of the properties table.
-     * @return a hashtable containing all properties
-     *         (including user properties).
+     * @return a hashtable containing all properties (including user
+     *         properties) known to the project directly, does not
+     *         contain local properties.
      */
     public Hashtable<String, Object> getProperties() {
         return PropertyHelper.getPropertyHelper(this).getProperties();
+    }
+
+    /**
+     * Returns the names of all known properties.
+     * @since 1.10.9
+     * @return the names of all known properties including local user and local properties.
+     */
+    public Set<String> getPropertyNames() {
+        return PropertyHelper.getPropertyHelper(this).getPropertyNames();
     }
 
     /**
