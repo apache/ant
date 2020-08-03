@@ -353,6 +353,68 @@ public class JarTest {
     }
 
     @Test
+    public void testIndexJarsPlusJarMarkerWithMapping() throws IOException {
+        buildRule.executeTarget("testIndexJarsPlusJarMarkerWithMapping");
+        try (ZipFile archive = new ZipFile(new File(getOutputDir(), tempJar + "2"))) {
+            ZipEntry ze = archive.getEntry("META-INF/INDEX.LIST");
+            InputStream is = archive.getInputStream(ze);
+            BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+            // tmp.jar
+            boolean foundTmp = false;
+            boolean foundA = false;
+            boolean foundAB = false;
+            boolean foundABC = false;
+
+            // tmp2.jar
+            boolean foundTmp2 = false;
+            boolean foundD = false;
+            boolean foundDE = false;
+            boolean foundDEF = false;
+
+            String line = r.readLine();
+            while (line != null) {
+                System.out.println("line = " + line);
+                switch (line) {
+                    case "foo/tmp.jar":
+                        foundTmp = true;
+                        break;
+                    case "a":
+                        foundA = true;
+                        break;
+                    case "a/b":
+                        foundAB = true;
+                        break;
+                    case "a/b/c":
+                        foundABC = true;
+                        break;
+                    case "tmp.jar2":
+                        foundTmp2 = true;
+                        break;
+                    case "d":
+                        foundD = true;
+                        break;
+                    case "d/e":
+                        foundDE = true;
+                        break;
+                    case "d/e/f":
+                        foundDEF = true;
+                        break;
+                }
+                line = r.readLine();
+            }
+
+            assertTrue(foundTmp);
+            assertTrue(foundA);
+            assertTrue(foundAB);
+            assertTrue(foundABC);
+            assertTrue(foundTmp2);
+            assertTrue(foundD);
+            assertTrue(foundDE);
+            assertTrue(foundDEF);
+        }
+    }
+
+    @Test
     public void testNoVersionInfoFail() {
         thrown.expect(BuildException.class);
         thrown.expectMessage("No Implementation-Title set.");
