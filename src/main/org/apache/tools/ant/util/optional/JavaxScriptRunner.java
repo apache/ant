@@ -18,6 +18,8 @@
 
 package org.apache.tools.ant.util.optional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -34,6 +36,7 @@ import javax.script.SimpleBindings;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 
 /**
@@ -192,6 +195,14 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
         }
         ScriptEngine result =
             new ScriptEngineManager().getEngineByName(getLanguage());
+        if (result == null && JavaEnvUtils.isAtLeastJavaVersion("15")
+            && languageIsJavaScript()) {
+            getProject()
+                .log("Java 15 has removed Nashorn, you must provide an engine "
+                     + "for running JavaScript yourself. "
+                     + "GraalVM JavaScript currently is the preferred option.",
+                     Project.MSG_WARN);
+        }
         maybeApplyGraalJsProperties(result);
         if (result != null && getKeepEngine()) {
             this.keptEngine = result;
@@ -206,6 +217,12 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
             engine.getBindings(ScriptContext.ENGINE_SCOPE)
                 .put(DROP_GRAAL_SECURITY_RESTRICTIONS, true);
         }
+    }
+
+    private final static List<String> JS_LANGUAGES = Arrays.asList("js", "javascript");
+
+    private boolean languageIsJavaScript() {
+        return JS_LANGUAGES.contains(getLanguage());
     }
 
     /**
