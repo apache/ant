@@ -828,10 +828,25 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
            target="_top">https://www.ibm.com/software/awdtools/netrexx/library.html</a></td>
   </tr>
   <tr>
-    <td>rhino.jar<br/>(included in Java 7 runtime, replaced by Nashorn in Java&nbsp;8 and later)</td>
+    <td>rhino.jar<br/>(included in Java 7 runtime, replaced by Nashorn
+      in Java&nbsp;8 and later, dropped with Java 15)</td>
     <td>JavaScript with <a href="Tasks/script.html">script</a> task<br/><strong>Note</strong>: Apache BSF 2.4.0 works
       only with Rhino 1.5R4 and later versions.</td>
     <td><a href="https://www.mozilla.org/rhino/" target="_top">https://www.mozilla.org/rhino/</a></td>
+  </tr>
+  <tr>
+    <td>graalvm js.jar and js-scriptengine.jar<br/></td>
+    <td>JavaScript with <a href="Tasks/script.html">script</a> task for Java 15 and later<br/>
+    </td>
+    <td>Java 15 has dropped Nashorn
+      and <a href="https://github.com/graalvm/graaljs">GraalVM JavaScript</a>
+      is meant to replace it - outside of the Java class
+      library.<br/>
+      <strong>Note</strong> GraalVM JavaScript is not a drop-in
+      replacement for Nashorn, see the script task documentation for
+      details. Also GraakVM JavaScript requires a couple of more
+      dependencies, in particular GraalVM regex, truffle, the GraalVM
+      SDK and ICU.</td>
   </tr>
   <tr>
     <td>jython.jar</td>

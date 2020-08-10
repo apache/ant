@@ -274,11 +274,25 @@ with <code>importClass</code>/<code>importPackage</code>. For other packages you
 full classified name with <strong>Packages</strong>. For example
 Ant's <code class="code">FileUtils</code> class can be imported
 with <code class="code">importClass(<strong>Packages</strong>.org.apache.tools.ant.util.FileUtils)</code></p>
-<p>In Java 8+, you may use the built-in Nashorn JavaScript engine rather than Rhino (which is
+<p>In Java 8 up until Java 14, you may use the built-in Nashorn JavaScript engine rather than Rhino (which is
 available in Java 7 runtime). Then, use <code>Java.type</code> as import statement for any Java
 class
 or <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/prog_guide/javascript.html#A1147207">the
 compatibility script</a>: <code>load("nashorn:mozilla_compat.js");</code>.</p>
+
+<p>Starting with Java 15 Nashorn has been removed again and you need
+  to provide an external JavaScript engine. Your best option probably
+  is <a href="https://github.com/graalvm/graaljs">GraalVM
+  JavaScript</a> which requires you to add a lot of extra jars. For
+  GraalVM JavaScript 20.1 you'll
+  need <code>org.graalvm.js:js</code>, <code>org.graalvm.js:js-engine</code>
+  which in turn
+  require <code>org.graalvm.regex:regex</code>, <code>org.graalvm.truffle:truffle-api</code>, <code>org.graalvm.sdk:graal-sdk</code>,
+  and <code>com.ibm.icu:icu4j</code>. GraalVM JavaScript is not a
+  drop-in replacement for Nashorn, see
+  Graal's <a href="https://github.com/graalvm/graaljs/blob/master/docs/user/NashornMigrationGuide.md">Nashorn
+  Migration Guide</a> for more details.</p>
+
 <p>The <code>&lt;script&gt;</code> task populates the Project instance under the
 name <code class="code">project</code>, so we can use that reference. Another way is to use its
 given name or getting its reference from the task itself. The Project provides methods for accessing
