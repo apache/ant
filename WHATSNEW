@@ -7,6 +7,9 @@ Fixed bugs:
  * the ftp task could throw a NullPointerException if an error occured
    Bugzilla Report 64438
 
+ * propertyset now also sees in-scope local properties
+   Bugzilla Report 50179
+
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
 

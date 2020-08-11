@@ -186,6 +186,12 @@ public class EchoPropertiesTest {
         assertThat(buildRule.getFullLog(), containsString(MagicNames.ANT_VERSION + "="));
     }
 
+    @Test
+    public void testLocalPropertyset() {
+        buildRule.executeTarget("testEchoLocalPropertyset");
+        assertThat(buildRule.getLog(), containsString("loc=foo"));
+    }
+
     private void testEchoPrefixVarious(String target) throws Exception {
         buildRule.executeTarget(target);
         Properties props = loadPropFile(PREFIX_OUTFILE);

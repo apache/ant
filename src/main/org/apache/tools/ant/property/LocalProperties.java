@@ -21,6 +21,8 @@ import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 
+import java.util.Set;
+
 /**
  * Thread local class containing local properties.
  * @since Ant 1.8.0
@@ -28,7 +30,7 @@ import org.apache.tools.ant.PropertyHelper;
 public class LocalProperties
     extends InheritableThreadLocal<LocalPropertyStack>
     implements PropertyHelper.PropertyEvaluator,
-    PropertyHelper.PropertySetter {
+        PropertyHelper.PropertySetter, PropertyHelper.PropertyEnumerator {
 
     /**
      * Get a localproperties for the given project.
@@ -146,5 +148,10 @@ public class LocalProperties
     public boolean set(
         String property, Object value, PropertyHelper propertyHelper) {
         return get().set(property, value, propertyHelper);
+    }
+
+    @Override
+    public Set<String> getPropertyNames() {
+        return get().getPropertyNames();
     }
 }

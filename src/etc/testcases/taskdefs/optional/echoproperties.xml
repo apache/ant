@@ -123,6 +123,16 @@
     <echoproperties regex=".*ant.*"/>
   </target>
 
+  <target name="testEchoLocalPropertyset">
+    <local name="loc"/>
+    <property name="loc" value="foo"/>
+    <echoproperties>
+      <propertyset>
+        <propertyref name="loc"/>
+      </propertyset>
+    </echoproperties>
+  </target>
+
   <target name="cleanup">
     <delete file="test.properties" failonerror="no" />
     <delete file="test-prefix.properties" failonerror="no" />

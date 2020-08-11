@@ -17,10 +17,14 @@
  */
 package org.apache.tools.ant.property;
 
+import java.util.Collections;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collector;
 
 import org.apache.tools.ant.PropertyHelper;
 
@@ -146,6 +150,20 @@ public class LocalPropertyStack {
         }
         map.put(property, value);
         return true;
+    }
+
+    /**
+     * Returns the names of all known local properties.
+     * @since 1.10.9
+     * @return the names of all known local properties.
+     */
+    public Set<String> getPropertyNames() {
+        final Set<String> names = stack.stream().map(Map::keySet)
+            .collect(Collector.of(() -> new HashSet<String>(),
+                (ns, ks) -> ns.addAll(ks),
+                (ns1, ns2) -> { ns1.addAll(ns2); return ns1; },
+                Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
+        return Collections.unmodifiableSet(names);
     }
 
     private Map<String, Object> getMapForProperty(String property) {

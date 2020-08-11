@@ -154,6 +154,20 @@
         this would be <code class="code">org.apache.tools.ant.property.LocalProperties</code> which
         implements storage for <a href="Tasks/local.html">local properties</a>.</p>
     </li>
+
+    <li><code class="code">org.apache.tools.ant.PropertyHelper$PropertyEnumerator</code>
+      is responsible for enumerating property names.
+
+      <p>This is the interface you'd implement if you want to provide
+        your own storage independent of Ant's project
+        instance&mdash;the interface represents part of the reading
+        end.  An example for this would
+        be <code class="code">org.apache.tools.ant.property.LocalProperties</code>
+        which implements storage for <a href="Tasks/local.html">local
+        properties</a>.</p>
+
+      <p><em>This interface has been added with Ant 1.10.9.</em></p>
+    </li>
   </ul>
 
   <p>The default <code class="code">PropertyExpander</code> looks similar to:</p>
