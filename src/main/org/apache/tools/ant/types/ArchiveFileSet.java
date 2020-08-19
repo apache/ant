@@ -72,7 +72,7 @@ public abstract class ArchiveFileSet extends FileSet {
 
     private boolean errorOnMissingArchive = true;
 
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
 
     /** Constructor for ArchiveFileSet */
     public ArchiveFileSet() {
@@ -102,7 +102,7 @@ public abstract class ArchiveFileSet extends FileSet {
         fileModeHasBeenSet = fileset.fileModeHasBeenSet;
         dirModeHasBeenSet = fileset.dirModeHasBeenSet;
         errorOnMissingArchive = fileset.errorOnMissingArchive;
-        encoding = fileset.encoding;
+        charSet = fileset.charSet;
     }
 
     /**
@@ -269,26 +269,48 @@ public abstract class ArchiveFileSet extends FileSet {
     }
 
     /**
-     * Set the encoding used for this ZipFileSet.
+     * Set the encoding used for this ArchiveFileSet.
      * @param enc encoding as String.
      * @since Ant 1.9.5
      */
     public void setEncoding(String enc) {
-        checkAttributesAllowed();
-        this.encoding = enc;
+        setCharSet(new CharSet(enc));
     }
 
     /**
-     * Get the encoding used for this ZipFileSet.
+     * Get the encoding used for this ArchiveFileSet.
      * @return String encoding.
      * @since Ant 1.9.5
      */
     public String getEncoding() {
         if (isReference()) {
             AbstractFileSet ref = getRef();
-            return ref instanceof ArchiveFileSet ? ((ArchiveFileSet) ref).getEncoding() : null;
+            return ref instanceof ArchiveFileSet ? ((ArchiveFileSet) ref).getEncoding()
+                    : CharSet.getDefault().getValue();
         }
-        return encoding;
+        return charSet.getValue();
+    }
+
+    /**
+     * Set the encoding used for this ArchiveFileSet.
+     * @param charSet encoding as CharSet.
+     */
+    public void setCharSet(CharSet charSet) {
+        checkAttributesAllowed();
+        this.charSet = charSet;
+    }
+
+    /**
+     * Get the encoding used for this ArchiveFileSet.
+     * @return CharSet encoding.
+     */
+    public CharSet getCharSet() {
+        if (isReference()) {
+            AbstractFileSet ref = getRef(getProject());
+            return ref instanceof ArchiveFileSet ? ((ArchiveFileSet) ref).getCharSet()
+                    : CharSet.getDefault();
+        }
+        return charSet;
     }
 
     /**

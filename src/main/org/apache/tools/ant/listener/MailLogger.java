@@ -36,6 +36,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.email.EmailAddress;
 import org.apache.tools.ant.taskdefs.email.Mailer;
 import org.apache.tools.ant.taskdefs.email.Message;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.FileUtils;
@@ -96,6 +97,7 @@ import org.apache.tools.mail.MailMessage;
  */
 public class MailLogger extends DefaultLogger {
     private static final String DEFAULT_MIME_TYPE = "text/plain";
+    private static final String DEFAULT_CHARSET_NAME = "default";
 
     /** Buffer in which the message is constructed prior to sending */
     private StringBuffer buffer = new StringBuffer();
@@ -159,7 +161,7 @@ public class MailLogger extends DefaultLogger {
                 .toCcList(getValue(properties, prefix + ".cc", ""))
                 .toBccList(getValue(properties, prefix + ".bcc", ""))
                 .mimeType(getValue(properties, "mimeType", DEFAULT_MIME_TYPE))
-                .charset(getValue(properties, "charset", ""))
+                .charSet(new CharSet(getValue(properties, "charset", DEFAULT_CHARSET_NAME)))
                 .body(getValue(properties, prefix + ".body", ""))
                 .subject(getValue(
                              properties, prefix + ".subject",
@@ -267,12 +269,19 @@ public class MailLogger extends DefaultLogger {
             this.subject = subject;
             return this;
         }
-        private String charset;
+        private CharSet charSet;
         public String charset() {
-            return charset;
+            return charSet.getValue();
+        }
+        public CharSet charSet() {
+            return charSet;
         }
         public Values charset(String charset) {
-            this.charset = charset;
+            this.charSet = new CharSet(charset);
+            return this;
+        }
+        public Values charSet(CharSet charSet) {
+            this.charSet = charSet;
             return this;
         }
         private String mimeType;
@@ -365,7 +374,7 @@ public class MailLogger extends DefaultLogger {
 
         mailMessage.setSubject(values.subject());
 
-        if (values.charset().isEmpty()) {
+        if (DEFAULT_CHARSET_NAME.equals(values.charset())) {
             mailMessage.setHeader("Content-Type", values.mimeType());
         } else {
             mailMessage.setHeader("Content-Type", values.mimeType()
@@ -406,8 +415,8 @@ public class MailLogger extends DefaultLogger {
             new Message(!values.body().isEmpty() ? values.body() : message);
         mymessage.setProject(project);
         mymessage.setMimeType(values.mimeType());
-        if (!values.charset().isEmpty()) {
-            mymessage.setCharset(values.charset());
+        if (!DEFAULT_CHARSET_NAME.equals(values.charset())) {
+            mymessage.setCharSet(values.charSet());
         }
         mailer.setMessage(mymessage);
         mailer.setFrom(new EmailAddress(values.from()));

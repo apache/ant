@@ -26,6 +26,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.optional.native2ascii.Native2AsciiAdapter;
 import org.apache.tools.ant.taskdefs.optional.native2ascii.Native2AsciiAdapterFactory;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -42,7 +43,7 @@ import org.apache.tools.ant.util.facade.ImplementationSpecificArgument;
 public class Native2Ascii extends MatchingTask {
 
     private boolean reverse = false;  // convert from ascii back to native
-    private String encoding = null;   // encoding to convert to/from
+    private CharSet charSet = CharSet.getDefault();   // encoding to convert to/from
     private File srcDir = null;       // Where to find input files
     private File destDir = null;      // Where to put output files
     private String extension = null;  // Extension of output files if different
@@ -79,13 +80,13 @@ public class Native2Ascii extends MatchingTask {
 
     /**
      * Set the encoding to translate to/from.
-     * If unset, the default encoding for the JVM is used.
+     * If unset, the platform encoding is used.
      *
      * @param encoding String containing the name of the Native
      *                 encoding to convert from or to.
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
     }
 
     /**
@@ -95,7 +96,26 @@ public class Native2Ascii extends MatchingTask {
      * @since Ant 1.6.3
      */
     public String getEncoding() {
-        return encoding;
+        return charSet.getValue();
+    }
+
+    /**
+     * Set the charset to translate to/from.
+     * If unset, the platform charset is used.
+     *
+     * @param charSet CharSet of native encoding to convert from or to.
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
+    }
+
+    /**
+     * The value of the charset attribute.
+     *
+     * @return the charset attribute.
+     */
+    public CharSet getCharSet() {
+        return charSet;
     }
 
     /**

@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
@@ -33,6 +32,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.Reference;
@@ -49,7 +49,8 @@ public class ResourceList extends DataType implements ResourceCollection {
     private final ArrayList<ResourceCollection> textDocuments = new ArrayList<>();
     private final Union cachedResources = new Union();
     private volatile boolean cached = false;
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
+    private boolean isEncodingSet = false;
     private File baseDir;
 
     public ResourceList() {
@@ -83,8 +84,7 @@ public class ResourceList extends DataType implements ResourceCollection {
     }
 
     /**
-     * Encoding to use for input, defaults to the platform's default
-     * encoding.
+     * Encoding to use for input, defaults to the platform encoding.
      *
      * <p>
      * For a list of possible values see
@@ -98,7 +98,26 @@ public class ResourceList extends DataType implements ResourceCollection {
         if (isReference()) {
             throw tooManyAttributes();
         }
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Encoding to use for input, defaults to the platform encoding.
+     *
+     * <p>
+     * For a list of possible values see
+     * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
+     * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</a>.
+     * </p>
+     *
+     * @param charSet CharSet
+     */
+    public final void setCharSet(CharSet charSet) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        this.charSet = charSet;
+        isEncodingSet = true;
     }
 
     /**
@@ -124,7 +143,7 @@ public class ResourceList extends DataType implements ResourceCollection {
      */
     @Override
     public void setRefid(Reference r) throws BuildException {
-        if (encoding != null) {
+        if (isEncodingSet) {
             throw tooManyAttributes();
         }
         if (!filterChains.isEmpty() || !textDocuments.isEmpty()) {
@@ -231,9 +250,8 @@ public class ResourceList extends DataType implements ResourceCollection {
 
     private Reader open(Resource r) throws IOException {
         ChainReaderHelper crh = new ChainReaderHelper();
-        crh.setPrimaryReader(new InputStreamReader(
-            new BufferedInputStream(r.getInputStream()), encoding == null
-                ? Charset.defaultCharset() : Charset.forName(encoding)));
+        crh.setPrimaryReader(new InputStreamReader(new BufferedInputStream(r.getInputStream()),
+                charSet.getCharset()));
         crh.setFilterChains(filterChains);
         crh.setProject(getProject());
         return crh.getAssembledReader();

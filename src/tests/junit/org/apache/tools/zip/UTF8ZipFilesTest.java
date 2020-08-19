@@ -25,19 +25,28 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.zip.CRC32;
+
+import org.apache.tools.ant.types.CharSet;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class UTF8ZipFilesTest {
 
-    private static final String UTF_8 = "utf-8";
-    private static final String CP437 = "cp437";
-    private static final String US_ASCII = "US-ASCII";
+    private static final CharSet UTF_8 = CharSet.getUtf8();
+    private static final CharSet CP437 = new CharSet("cp437");
+    private static final CharSet US_ASCII = CharSet.getAscii();
     private static final String ASCII_TXT = "ascii.txt";
     private static final String EURO_FOR_DOLLAR_TXT = "\u20AC_for_Dollar.txt";
     private static final String OIL_BARREL_TXT = "\u00D6lf\u00E4sser.txt";
+
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
+    private File file;
 
     @Test
     public void testUtf8FileRoundtripExplicitUnicodeExtra()
@@ -93,7 +102,7 @@ public class UTF8ZipFilesTest {
         ZipFile zf = null;
         try {
             createTestFile(file, US_ASCII, false, true);
-            zf = new ZipFile(file, US_ASCII, true);
+            zf = new ZipFile(file, US_ASCII.getCharset(), true);
             assertCanRead(zf, ASCII_TXT);
             assertCanRead(zf, EURO_FOR_DOLLAR_TXT);
             assertCanRead(zf, OIL_BARREL_TXT);
@@ -105,30 +114,22 @@ public class UTF8ZipFilesTest {
         }
     }
 
-    private static void testFileRoundtrip(String encoding, boolean withEFS,
-                                          boolean withExplicitUnicodeExtra)
-        throws IOException {
-
-        File file = File.createTempFile(encoding + "-test", ".zip");
-        try {
-            createTestFile(file, encoding, withEFS, withExplicitUnicodeExtra);
-            testFile(file, encoding);
-        } finally {
-            if (file.exists()) {
-                file.delete();
-            }
-        }
+    private void testFileRoundtrip(CharSet encoding, boolean withEFS,
+                                   boolean withExplicitUnicodeExtra) throws IOException {
+        File file = folder.newFile(encoding.getValue() + "-test.zip");
+        createTestFile(file, encoding, withEFS, withExplicitUnicodeExtra);
+        testFile(file, encoding);
     }
 
-    private static void createTestFile(File file, String encoding,
+    private static void createTestFile(File file, CharSet charSet,
                                        boolean withEFS,
                                        boolean withExplicitUnicodeExtra)
         throws IOException {
 
-        ZipEncoding zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+        ZipEncoding zipEncoding = ZipEncodingHelper.getZipEncoding(charSet);
 
         try (ZipOutputStream zos = new ZipOutputStream(file)) {
-            zos.setEncoding(encoding);
+            zos.setCharSet(charSet);
             zos.setUseLanguageEncodingFlag(withEFS);
             zos.setCreateUnicodeExtraFields(withExplicitUnicodeExtra
                     ? ZipOutputStream.UnicodeExtraFieldPolicy.NEVER
@@ -185,11 +186,11 @@ public class UTF8ZipFilesTest {
         }
     }
 
-    private static void testFile(File file, String encoding)
+    private static void testFile(File file, CharSet encoding)
         throws IOException {
         ZipFile zf = null;
         try {
-            zf = new ZipFile(file, encoding, false);
+            zf = new ZipFile(file, encoding.getCharset(), false);
             for (ZipEntry ze : Collections.list(zf.getEntries())) {
                 if (ze.getName().endsWith("sser.txt")) {
                     assertUnicodeName(ze, OIL_BARREL_TXT, encoding);
@@ -213,13 +214,13 @@ public class UTF8ZipFilesTest {
 
     private static void assertUnicodeName(ZipEntry ze,
                                           String expectedName,
-                                          String encoding)
+                                          CharSet charSet)
         throws IOException {
         if (!expectedName.equals(ze.getName())) {
             UnicodePathExtraField ucpf = findUniCodePath(ze);
             assertNotNull(ucpf);
 
-            ZipEncoding enc = ZipEncodingHelper.getZipEncoding(encoding);
+            ZipEncoding enc = ZipEncodingHelper.getZipEncoding(charSet);
             ByteBuffer ne = enc.encode(ze.getName());
 
             CRC32 crc = new CRC32();

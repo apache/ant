@@ -21,6 +21,7 @@ import java.io.File;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.selectors.BaseSelector;
@@ -229,6 +230,15 @@ public class ScriptSelector extends BaseSelector {
      * @since Ant 1.10.2
      */
     public void setEncoding(String encoding) {
-        helper.setEncoding(encoding);
+        helper.setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Set the encoding of the script from an external file; optional.
+     *
+     * @param charSet the CharSet of the file containing the script source.
+     */
+    public void setEncoding(CharSet charSet) {
+        helper.setCharSet(charSet);
     }
 }

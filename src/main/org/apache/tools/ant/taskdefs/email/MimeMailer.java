@@ -52,6 +52,7 @@ import javax.mail.internet.MimeMultipart;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 
 
 /**
@@ -65,10 +66,6 @@ public class MimeMailer extends Mailer {
     private static final String GENERIC_ERROR =
         "Problem while sending mime mail:";
 
-    /** Default character set */
-    private static final String DEFAULT_CHARSET
-        = System.getProperty("file.encoding");
-
     // To work properly with national charsets we have to use
     // implementation of interface javax.activation.DataSource
     /**
@@ -78,7 +75,7 @@ public class MimeMailer extends Mailer {
     class StringDataSource implements javax.activation.DataSource {
         private String data = null;
         private String type = null;
-        private String charset = null;
+        private CharSet charSet = CharSet.getDefault();
         private ByteArrayOutputStream out;
 
         @Override
@@ -87,11 +84,11 @@ public class MimeMailer extends Mailer {
                 throw new IOException("No data");
             }
             if (out != null) {
-                final String encodedOut = out.toString(charset);
+                final String encodedOut = out.toString(charSet.getValue());
                 data = (data != null) ? data.concat(encodedOut) : encodedOut;
                 out = null;
             }
-            return new ByteArrayInputStream(data.getBytes(charset));
+            return new ByteArrayInputStream(data.getBytes(charSet.getCharset()));
         }
 
         @Override
@@ -112,7 +109,7 @@ public class MimeMailer extends Mailer {
             }
             // Must be like "text/plain; charset=windows-1251"
             return (type != null ? type : "text/plain") +
-                    "; charset=" + charset;
+                    "; charset=" + charSet.getValue();
         }
 
         @Override
@@ -121,11 +118,19 @@ public class MimeMailer extends Mailer {
         }
 
         public void setCharset(final String charset) {
-            this.charset = charset;
+            setCharSet(new CharSet(charset));
         }
 
         public String getCharset() {
-            return charset;
+            return charSet.getValue();
+        }
+
+        public void setCharSet(final CharSet charSet) {
+            this.charSet = charSet;
+        }
+
+        public CharSet getCharSet() {
+            return charSet;
         }
     }
 
@@ -198,26 +203,21 @@ public class MimeMailer extends Mailer {
 
             // Choosing character set of the mail message
             // First: looking it from MimeType
-            String charset = parseCharSetFromMimeType(message.getMimeType());
-            if (charset != null) {
-                // Assign/reassign message charset from MimeType
-                message.setCharset(charset);
+            CharSet charSet = parseCharSetFromMimeType(message.getMimeType());
+            if (charSet == null) {
+                // get charset from message
+                charSet = message.getCharSet();
             } else {
-                // Next: looking if charset having explicit definition
-                charset = message.getCharset();
-                if (charset == null) {
-                    // Using default
-                    charset = DEFAULT_CHARSET;
-                    message.setCharset(charset);
-                }
+                // Assign/reassign message charset from MimeType
+                message.setCharSet(charSet);
             }
             // Using javax.activation.DataSource paradigm
             final StringDataSource sds = new StringDataSource();
             sds.setContentType(message.getMimeType());
-            sds.setCharset(charset);
+            sds.setCharSet(charSet);
 
             if (subject != null) {
-                msg.setSubject(subject, charset);
+                msg.setSubject(subject, charSet.getValue());
             }
             msg.addHeader("Date", getDate());
 
@@ -297,7 +297,7 @@ public class MimeMailer extends Mailer {
         return addrs.toArray(new InternetAddress[addrs.size()]);
     }
 
-    private String parseCharSetFromMimeType(final String type) {
+    private CharSet parseCharSetFromMimeType(final String type) {
         if (type == null) {
             return null;
         }
@@ -308,7 +308,7 @@ public class MimeMailer extends Mailer {
         // Assuming mime type in form "text/XXXX; charset=XXXXXX"
         final StringTokenizer token = new StringTokenizer(type.substring(pos), "=; ");
         token.nextToken(); // Skip 'charset='
-        return token.nextToken();
+        return new CharSet(token.nextToken());
     }
 
     private void didntReach(final Address addr, final String category,

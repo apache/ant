@@ -24,11 +24,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -69,16 +68,17 @@ public class EchoTest {
     @Test
     public void testLogUTF8Echo() throws IOException {
         File removeThis = folder.newFile("abc.txt");
-        Charset cs = StandardCharsets.UTF_8;
+        CharSet cs = CharSet.getUtf8();
         String msg = "\u00e4\u00a9";
 
         echo.setTaskName("testLogUTF8Echo");
         echo.setMessage(msg);
         echo.setFile(removeThis);
-        echo.setEncoding(cs.name());
+        echo.setCharSet(cs);
         echo.execute();
 
-        assertEquals(msg, readFully(new InputStreamReader(new FileInputStream(removeThis), cs)));
+        assertEquals(msg, readFully(new InputStreamReader(new FileInputStream(removeThis),
+                cs.getCharset())));
     }
 
     private class EchoTestLogger extends DefaultLogger {

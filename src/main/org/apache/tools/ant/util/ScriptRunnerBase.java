@@ -31,6 +31,7 @@ import java.util.Map;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.PropertyResource;
@@ -52,7 +53,7 @@ public abstract class ScriptRunnerBase {
     /** Script content */
     private String script = "";
 
-    private String encoding;
+    private CharSet charSet = CharSet.getDefault();
 
     /** Enable script compilation. */
     private boolean compiled;
@@ -208,7 +209,15 @@ public abstract class ScriptRunnerBase {
      * @param encoding  encoding of the external file containing the script source.
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        this.charSet = new CharSet(encoding);
+    }
+
+    /**
+     * Set encoding of the script from an external file; optional.
+     * @param cs  encoding of the external file containing the script source.
+     */
+    public void setCharSet(CharSet cs) {
+        this.charSet = cs;
     }
 
     /**
@@ -222,10 +231,7 @@ public abstract class ScriptRunnerBase {
         }
 
         try (InputStream in = Files.newInputStream(file.toPath())) {
-            final Charset charset = null == encoding ? Charset.defaultCharset()
-                : Charset.forName(encoding);
-
-            readSource(in, filename, charset);
+            readSource(in, filename, charSet.getCharset());
         } catch (IOException e) {
             //this can only happen if the file got deleted a short moment ago
             throw new BuildException("file " + filename + " not found.", e);

@@ -33,6 +33,7 @@ import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.taskdefs.DefBase;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.ScriptRunnerBase;
@@ -193,7 +194,7 @@ public class ScriptDef extends DefBase {
                 "scriptdef requires a language attribute to specify the script language");
         }
 
-        if (helper.getSrc() == null && helper.getEncoding() != null) {
+        if (helper.getSrc() == null && helper.hasCharSet()) {
             throw new BuildException(
                 "scriptdef requires a src attribute if the encoding is set");
         }
@@ -392,7 +393,16 @@ public class ScriptDef extends DefBase {
      * @since Ant 1.10.2
      */
     public void setEncoding(String encoding) {
-        helper.setEncoding(encoding);
+        helper.setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Sets the charset of the script from an external file; optional.
+     *
+     * @param charSet the charset of the file containing the script source.
+     */
+    public void setCharSet(CharSet charSet) {
+        helper.setCharSet(charSet);
     }
 
     /**

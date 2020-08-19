@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -201,7 +202,7 @@ public class CopyPath extends Task {
                     log("Copying " + sourceFile + " to " + destFile, Project.MSG_VERBOSE);
 
                     FILE_UTILS.copyFile(sourceFile, destFile, null, null, false,
-                            preserveLastModified, null, null, getProject());
+                            preserveLastModified, CharSet.getDefault(), CharSet.getDefault(), getProject());
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + sourceFile + " to " + destFile + " due to "
                             + ioe.getMessage();

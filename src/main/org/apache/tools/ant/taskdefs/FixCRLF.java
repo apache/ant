@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -34,6 +33,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.filters.FixCrLfFilter;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.util.FileUtils;
@@ -101,13 +101,17 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
     /**
      * Encoding to assume for the files
      */
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
 
     /**
      * Encoding to use for output files
      */
-    private String outputEncoding = null;
+    private CharSet outputCharSet = CharSet.getDefault();
 
+    /**
+     * Is output encoding set explicitly?
+     */
+    private boolean hasOutputCharSet = false;
 
     /**
      * Chain this task as a reader.
@@ -246,11 +250,11 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
 
     /**
      * Specifies the encoding Ant expects the files to be
-     * in--defaults to the platforms default encoding.
+     * in--defaults to the platform encoding.
      * @param encoding String encoding name.
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
     }
 
     /**
@@ -259,7 +263,29 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
      * @param outputEncoding String outputEncoding name.
      */
     public void setOutputEncoding(String outputEncoding) {
-        this.outputEncoding = outputEncoding;
+        setOutputCharSet(new CharSet(outputEncoding));
+    }
+
+    /**
+     * Specifies the charset Ant expects the files to be
+     * in--defaults to the platform encoding.
+     * @param charSet CharSet charset.
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
+        if (!hasOutputCharSet) {
+            this.outputCharSet = charSet;
+        }
+    }
+
+    /**
+     * Specifies the charset that the files are
+     * to be written in--same as input charset by default.
+     * @param outputCharSet CharSet output charset.
+     */
+    public void setOutputCharSet(CharSet outputCharSet) {
+        this.outputCharSet = outputCharSet;
+        hasOutputCharSet = true;
     }
 
     /**
@@ -290,15 +316,13 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         validate();
 
         // log options used
-        String enc = encoding == null ? "default" : encoding;
         log("options:"
             + " eol=" + filter.getEol().getValue()
             + " tab=" + filter.getTab().getValue()
             + " eof=" + filter.getEof().getValue()
             + " tablength=" + filter.getTablength()
-            + " encoding=" + enc
-            + " outputencoding="
-            + (outputEncoding == null ? enc : outputEncoding),
+            + " encoding=" + charSet.getValue()
+            + " outputencoding=" + outputCharSet.getValue(),
             Project.MSG_VERBOSE);
 
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
@@ -357,8 +381,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
         File tmpFile = FILE_UTILS.createTempFile(getProject(), "fixcrlf", "", null, true, true);
         try {
             FILE_UTILS.copyFile(srcFile, tmpFile, null, fcv, true, false,
-                encoding, outputEncoding == null ? encoding : outputEncoding,
-                getProject());
+                    charSet, outputCharSet, getProject());
 
             File destFile = new File(destD, file);
 
@@ -420,11 +443,8 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
             throws BuildException {
             this.srcFile = srcFile;
             try {
-                reader = new BufferedReader(
-                    ((encoding == null) ? new FileReader(srcFile)
-                    : new InputStreamReader(
-                    Files.newInputStream(srcFile.toPath()), encoding)), INBUFLEN);
-
+                reader = new BufferedReader(new InputStreamReader(Files.newInputStream(
+                        srcFile.toPath()), charSet.getCharset()), INBUFLEN);
                 nextLine();
             } catch (IOException e) {
                 throw new BuildException(srcFile + ": " + e.getMessage(),

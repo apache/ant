@@ -19,7 +19,6 @@ package org.apache.tools.ant.types.resources;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +27,7 @@ import java.util.Stack;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
@@ -43,7 +43,7 @@ import org.apache.tools.ant.util.Tokenizer;
 public class Tokens extends BaseResourceCollectionWrapper {
 
     private Tokenizer tokenizer;
-    private String encoding;
+    private CharSet charSet = CharSet.getDefault();
 
     /**
      * Sort the contained elements.
@@ -58,9 +58,7 @@ public class Tokens extends BaseResourceCollectionWrapper {
             tokenizer = new LineTokenizer();
         }
         try (ConcatResourceInputStream cat = new ConcatResourceInputStream(rc);
-                InputStreamReader rdr = new InputStreamReader(cat,
-                    encoding == null ? Charset.defaultCharset()
-                        : Charset.forName(encoding))) {
+             InputStreamReader rdr = new InputStreamReader(cat, charSet.getCharset())) {
             cat.setManagingComponent(this);
             List<Resource> result = new ArrayList<>();
             for (String s = tokenizer.getToken(rdr); s != null; s =
@@ -83,8 +81,16 @@ public class Tokens extends BaseResourceCollectionWrapper {
      * Set the encoding used to create the tokens.
      * @param encoding the encoding to use.
      */
-    public synchronized void setEncoding(String encoding) {
-        this.encoding = encoding;
+    public void setEncoding(String encoding) {
+        setEncoding(new CharSet(encoding));
+    }
+
+    /**
+     * Set the encoding used to create the tokens.
+     * @param charSet the CharSet to use.
+     */
+    public synchronized void setEncoding(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**

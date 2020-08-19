@@ -31,6 +31,7 @@ import java.util.function.UnaryOperator;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.util.Native2AsciiUtils;
 
 /**
@@ -46,10 +47,9 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
     public final boolean convert(Native2Ascii args, File srcFile,
                                  File destFile) throws BuildException {
         boolean reverse = args.getReverse();
-        String encoding = args.getEncoding();
-        try (BufferedReader input = getReader(srcFile, encoding, reverse);
-                Writer output = getWriter(destFile, encoding, reverse)) {
-
+        CharSet charSet = args.getCharSet();
+        try (BufferedReader input = getReader(srcFile, charSet, reverse);
+             Writer output = getWriter(destFile, charSet, reverse)) {
             translate(input, output, reverse ? Native2AsciiUtils::ascii2native
                 : Native2AsciiUtils::native2ascii);
             return true;
@@ -58,26 +58,21 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
         }
     }
 
-    private BufferedReader getReader(File srcFile, String encoding,
+    private BufferedReader getReader(File srcFile, CharSet charSet,
                                      boolean reverse) throws IOException {
-        if (reverse || encoding == null) {
-            return new BufferedReader(new FileReader(srcFile));
-        }
-        return new BufferedReader(new InputStreamReader(
-            Files.newInputStream(srcFile.toPath()), encoding));
+        return reverse ? new BufferedReader(new FileReader(srcFile))
+                : new BufferedReader(new InputStreamReader(Files.newInputStream(srcFile.toPath()),
+                charSet.getCharset()));
     }
 
-    private Writer getWriter(File destFile, String encoding,
+    private Writer getWriter(File destFile, CharSet charSet,
                              boolean reverse) throws IOException {
         if (!reverse) {
-            encoding = "ASCII";
-        }
-        if (encoding == null) {
-            return new BufferedWriter(new FileWriter(destFile));
+            charSet = CharSet.getAscii();
         }
         return new BufferedWriter(
             new OutputStreamWriter(Files.newOutputStream(destFile.toPath()),
-                                   encoding));
+                                   charSet.getCharset()));
     }
 
     private void translate(BufferedReader input, Writer output,

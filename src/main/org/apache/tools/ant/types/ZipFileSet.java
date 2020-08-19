@@ -61,7 +61,7 @@ public class ZipFileSet extends ArchiveFileSet {
     @Override
     protected ArchiveScanner newArchiveScanner() {
         ZipScanner zs = new ZipScanner();
-        zs.setEncoding(getEncoding());
+        zs.setCharSet(getCharSet());
         return zs;
     }
 

@@ -19,6 +19,8 @@
 
 package org.apache.tools.zip;
 
+import org.apache.tools.ant.types.CharSet;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -40,24 +42,24 @@ import java.nio.ByteBuffer;
  * <p>The methods of this class are reentrant.</p>
  */
 class FallbackZipEncoding implements ZipEncoding {
-    private final String charset;
+    private final CharSet charSet;
 
     /**
-     * Construct a fallback zip encoding, which uses the platform's
-     * default charset.
+     * Construct a fallback zip encoding, which uses the platform
+     * character set.
      */
     public FallbackZipEncoding() {
-        this.charset = null;
+        this.charSet = CharSet.getDefault();
     }
 
     /**
      * Construct a fallback zip encoding, which uses the given charset.
      *
      * @param charset The name of the charset or {@code null} for
-     *                the platform's default character set.
+     *                the platform character set.
      */
     public FallbackZipEncoding(final String charset) {
-        this.charset = charset;
+        this.charSet = new CharSet(charset);
     }
 
     /**
@@ -71,21 +73,13 @@ class FallbackZipEncoding implements ZipEncoding {
      * @see org.apache.tools.zip.ZipEncoding#encode(java.lang.String)
      */
     public ByteBuffer encode(final String name) throws IOException {
-        if (this.charset == null) { // i.e. use default charset, see no-args constructor
-            return ByteBuffer.wrap(name.getBytes());
-        } else {
-            return ByteBuffer.wrap(name.getBytes(this.charset));
-        }
+        return ByteBuffer.wrap(name.getBytes(this.charSet.getCharset()));
     }
 
     /**
      * @see org.apache.tools.zip.ZipEncoding#decode(byte[])
      */
     public String decode(final byte[] data) throws IOException {
-        if (this.charset == null) { // i.e. use default charset, see no-args constructor
-            return new String(data);
-        } else {
-            return new String(data, this.charset);
-        }
+        return new String(data, this.charSet.getCharset());
     }
 }

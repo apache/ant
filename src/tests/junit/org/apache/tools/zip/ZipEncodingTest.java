@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.tools.ant.types.CharSet;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -45,13 +46,13 @@ public class ZipEncodingTest {
     @Test
     public void testSimpleCp437Encoding() throws IOException {
 
-        doSimpleEncodingTest("Cp437", null);
+        doSimpleEncodingTest(new CharSet("Cp437"), null);
     }
 
     @Test
     public void testSimpleCp850Encoding() throws IOException {
 
-        doSimpleEncodingTest("Cp850", null);
+        doSimpleEncodingTest(new CharSet("Cp850"), null);
     }
 
     @Test
@@ -108,7 +109,7 @@ public class ZipEncodingTest {
                          (byte) 0xF9, (byte) 0xFA, (byte) 0xFB, (byte) 0xFC,
                          (byte) 0xFD, (byte) 0xFE, (byte) 0xFF};
 
-        doSimpleEncodingTest("Cp1252", b);
+        doSimpleEncodingTest(new CharSet("Cp1252"), b);
     }
 
     private static void assertByteEquals(byte[] expected, ByteBuffer actual) {
@@ -121,10 +122,10 @@ public class ZipEncodingTest {
 
     }
 
-    private void doSimpleEncodingTest(String name, byte[] testBytes)
+    private void doSimpleEncodingTest(CharSet charSet, byte[] testBytes)
         throws IOException {
 
-        ZipEncoding enc = ZipEncodingHelper.getZipEncoding(name);
+        ZipEncoding enc = ZipEncodingHelper.getZipEncoding(charSet);
 
         if (testBytes == null) {
 

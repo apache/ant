@@ -39,6 +39,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ArchiveFileSet;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
@@ -125,10 +126,9 @@ public class Tar extends MatchingTask {
     private TarCompressionMethod compression = new TarCompressionMethod();
 
     /**
-     * Encoding to use for filenames, defaults to the platform's
-     * default encoding.
+     * Encoding to use for filenames, defaults to the platform encoding.
      */
-    private String encoding;
+    private CharSet charSet = CharSet.getDefault();
 
     /**
      * Add a new fileset with the option to specify permissions
@@ -239,8 +239,7 @@ public class Tar extends MatchingTask {
     }
 
     /**
-     * Encoding to use for filenames, defaults to the platform's
-     * default encoding.
+     * Encoding to use for filenames, defaults to the platform encoding.
      *
      * <p>For a list of possible values see <a
      * href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</a>.</p>
@@ -249,7 +248,20 @@ public class Tar extends MatchingTask {
      * @since Ant 1.9.5
      */
     public void setEncoding(final String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Charset to use for filenames, defaults to the platform charset.
+     *
+     * <p>For a list of possible values see
+     * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
+     * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
+     * </a>.</p>
+     * @param charSet the charset
+     */
+    public void setCharSet(final CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**
@@ -320,9 +332,8 @@ public class Tar extends MatchingTask {
             log("Building tar: " + tarFile.getAbsolutePath(), Project.MSG_INFO);
 
             try (TarOutputStream tOut = new TarOutputStream(
-                compression.compress(new BufferedOutputStream(
-                    Files.newOutputStream(tarFile.toPath()))),
-                encoding)) {
+                compression.compress(new BufferedOutputStream(Files.newOutputStream(tarFile.toPath()))),
+                    charSet)) {
                 tOut.setDebug(true);
                 if (longFileMode.isTruncateMode()) {
                     tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);

@@ -37,6 +37,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterExtension;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
@@ -115,7 +116,8 @@ public class Javac extends MatchingTask {
     private Path upgrademodulepath;
     private Path compileSourcepath;
     private Path moduleSourcepath;
-    private String encoding;
+    private CharSet charSet = CharSet.getDefault();
+    private boolean hasCharSet = false;
     private boolean debug = false;
     private boolean optimize = false;
     private boolean deprecation = false;
@@ -687,15 +689,32 @@ public class Javac extends MatchingTask {
      * @param encoding the source file encoding
      */
     public void setEncoding(final String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
     }
 
     /**
-     * Gets the java source file encoding name.
+     * Gets the Java source file encoding name.
      * @return the source file encoding name
      */
     public String getEncoding() {
-        return encoding;
+        return charSet.getValue();
+    }
+
+    /**
+     * Set the Java source file charset.
+     * @param encoding the source file charset
+     */
+    public void setCharSet(final CharSet encoding) {
+        this.charSet = encoding;
+        hasCharSet = true;
+    }
+
+    /**
+     * Gets the Java source file charset.
+     * @return the source file charset
+     */
+    public CharSet getCharSet() {
+        return charSet;
     }
 
     /**
@@ -1094,6 +1113,13 @@ public class Javac extends MatchingTask {
      */
     public void setCreateMissingPackageInfoClass(final boolean b) {
         createMissingPackageInfoClass = b;
+    }
+
+    /**
+     * @return boolean whether encoding attribute is set explicitly.
+     */
+    public boolean hasCharSet() {
+        return hasCharSet;
     }
 
     /**

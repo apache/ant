@@ -32,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.zip.ZipEncoding;
 import org.apache.tools.zip.ZipEncodingHelper;
 
@@ -91,6 +92,15 @@ public class TarInputStream extends FilterInputStream {
     /**
      * Constructor for TarInputStream.
      * @param is the input stream to use
+     * @param charSet name of the CharSet to use for file names
+     */
+    public TarInputStream(InputStream is, CharSet charSet) {
+        this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE, charSet);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
      * @param blockSize the block size to use
      */
     public TarInputStream(InputStream is, int blockSize) {
@@ -111,10 +121,20 @@ public class TarInputStream extends FilterInputStream {
      * Constructor for TarInputStream.
      * @param is the input stream to use
      * @param blockSize the block size to use
+     * @param charSet name of the CharSet to use for file names
+     */
+    public TarInputStream(InputStream is, int blockSize, CharSet charSet) {
+        this(is, blockSize, TarBuffer.DEFAULT_RCDSIZE, charSet);
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
      * @param recordSize the record size to use
      */
     public TarInputStream(InputStream is, int blockSize, int recordSize) {
-        this(is, blockSize, recordSize, null);
+        this(is, blockSize, recordSize, CharSet.getDefault());
     }
 
     /**
@@ -126,13 +146,25 @@ public class TarInputStream extends FilterInputStream {
      */
     public TarInputStream(InputStream is, int blockSize, int recordSize,
                           String encoding) {
+        this(is, blockSize, recordSize, new CharSet(encoding));
+    }
+
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     * @param charSet name of the CharSet to use for file names
+     */
+    public TarInputStream(InputStream is, int blockSize, int recordSize,
+                          CharSet charSet) {
         super(is);
         this.buffer = new TarBuffer(is, blockSize, recordSize);
         this.readBuf = null;
         this.oneBuf = new byte[1];
         this.debug = false;
         this.hasHitEOF = false;
-        this.encoding = ZipEncodingHelper.getZipEncoding(encoding);
+        this.encoding = ZipEncodingHelper.getZipEncoding(charSet);
     }
 
     /**

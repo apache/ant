@@ -22,6 +22,7 @@ import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.optional.Native2Ascii;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -69,9 +70,10 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
      */
     protected void setup(Commandline cmd, Native2Ascii args)
         throws BuildException {
-        if (args.getEncoding() != null) {
+        CharSet cs = args.getCharSet();
+        if (!cs.equivalent(CharSet.getDefault())) {
             cmd.createArgument().setValue("-encoding");
-            cmd.createArgument().setValue(args.getEncoding());
+            cmd.createArgument().setValue(cs.getValue());
         }
         cmd.addArguments(args.getCurrentArgs());
     }

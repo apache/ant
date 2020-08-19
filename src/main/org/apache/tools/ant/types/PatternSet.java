@@ -20,10 +20,8 @@ package org.apache.tools.ant.types;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -186,11 +184,10 @@ public class PatternSet extends DataType implements Cloneable {
      * @since Ant 1.10.4
      */
     public class PatternFileNameEntry extends NameEntry {
-        private String encoding;
+        private CharSet charSet = CharSet.getDefault();
 
         /**
-         * Encoding to use when reading the file, defaults to the platform's default
-         * encoding.
+         * Encoding to use when reading the file, defaults to the platform encoding.
          *
          * <p>
          * For a list of possible values see
@@ -201,24 +198,45 @@ public class PatternSet extends DataType implements Cloneable {
          * @param encoding String
          */
         public final void setEncoding(String encoding) {
-            this.encoding = encoding;
+            setCharSet(new CharSet(encoding));
         }
 
         /**
-         * Encoding to use when reading the file, defaults to the platform's default
-         * encoding.
+         * Encoding to use when reading the file, defaults to the platform encoding.
          *
          * @return the encoding name
          */
         public final String getEncoding() {
-            return encoding;
+            return charSet.getValue();
+        }
+
+        /**
+         * Encoding to use when reading the file, defaults to the platform encoding.
+         *
+         * <p>
+         * For a list of possible values see
+         * <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/intl/encoding.doc.html">
+         * https://docs.oracle.com/javase/1.5.0/docs/guide/intl/encoding.doc.html</a>.
+         * </p>
+         *
+         * @param charSet CharSet
+         */
+        public final void setCharSet(CharSet charSet) {
+            this.charSet = charSet;
+        }
+
+        /**
+         * Encoding to use when reading the file, defaults to the platform encoding.
+         *
+         * @return the encoding CharSet
+         */
+        public final CharSet getCharSet() {
+            return charSet;
         }
 
         @Override
         public String toString() {
-            String baseString = super.toString();
-            return encoding == null ? baseString
-                : baseString + ";encoding->" + encoding;
+            return super.toString() + ";encoding->" + charSet.getValue();
         }
     }
 
@@ -413,13 +431,10 @@ public class PatternSet extends DataType implements Cloneable {
      *  Reads path matching patterns from a file and adds them to the
      *  includes or excludes list (as appropriate).
      */
-    private void readPatterns(File patternfile, String encoding, List<NameEntry> patternlist, Project p)
+    private void readPatterns(File patternfile, CharSet encoding, List<NameEntry> patternlist, Project p)
             throws BuildException {
-
-        try (Reader r = encoding == null ? new FileReader(patternfile)
-             : new InputStreamReader(new FileInputStream(patternfile), encoding);
-             BufferedReader patternReader = new BufferedReader(r)) {
-
+        try (BufferedReader patternReader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(patternfile), encoding.getCharset()))) {
             // Create one NameEntry in the appropriate pattern list for each
             // line in the file.
             patternReader.lines()
@@ -532,7 +547,7 @@ public class PatternSet extends DataType implements Cloneable {
                         throw new BuildException("Includesfile " + inclFile.getAbsolutePath()
                                 + " not found.");
                     }
-                    readPatterns(inclFile, ne.getEncoding(), includeList, p);
+                    readPatterns(inclFile, ne.getCharSet(), includeList, p);
                 }
             }
             includesFileList.clear();
@@ -546,7 +561,7 @@ public class PatternSet extends DataType implements Cloneable {
                         throw new BuildException("Excludesfile " + exclFile.getAbsolutePath()
                                 + " not found.");
                     }
-                    readPatterns(exclFile, ne.getEncoding(), excludeList, p);
+                    readPatterns(exclFile, ne.getCharSet(), excludeList, p);
                 }
             }
             excludesFileList.clear();

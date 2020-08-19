@@ -34,6 +34,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSet;
@@ -100,8 +101,9 @@ public class Copy extends Task {
     //CheckStyle:VisibilityModifier ON
     private final Vector<FilterChain> filterChains = new Vector<>();
     private final Vector<FilterSet> filterSets = new Vector<>();
-    private String inputEncoding = null;
-    private String outputEncoding = null;
+    private CharSet inputCharSet = CharSet.getDefault();
+    private CharSet outputCharSet = CharSet.getDefault();
+    private boolean hasOutputCharSet = false;
     private long granularity = 0;
     private boolean force = false;
     private boolean quiet = false;
@@ -380,20 +382,36 @@ public class Copy extends Task {
      * @since 1.32, Ant 1.5
      */
     public void setEncoding(final String encoding) {
-        this.inputEncoding = encoding;
-        if (outputEncoding == null) {
-            outputEncoding = encoding;
-        }
+        setCharSet(new CharSet(encoding));
     }
 
     /**
      * Get the character encoding to be used.
-     * @return the character encoding, <code>null</code> if not set.
+     * @return the character encoding.
      *
      * @since 1.32, Ant 1.5
      */
     public String getEncoding() {
-        return inputEncoding;
+        return inputCharSet.getValue();
+    }
+
+    /**
+     * Set the charset.
+     * @param charSet the charset.
+     */
+    public void setCharSet(final CharSet charSet) {
+        this.inputCharSet = charSet;
+        if (!hasOutputCharSet) {
+            outputCharSet = charSet;
+        }
+    }
+
+    /**
+     * Get the charset to be used.
+     * @return the charset.
+     */
+    public CharSet getCharSet() {
+        return inputCharSet;
     }
 
     /**
@@ -402,18 +420,33 @@ public class Copy extends Task {
      * @since Ant 1.6
      */
     public void setOutputEncoding(final String encoding) {
-        this.outputEncoding = encoding;
+        setOutputCharSet(new CharSet(encoding));
     }
 
     /**
      * Get the character encoding for output files.
-     * @return the character encoding for output files,
-     * <code>null</code> if not set.
-     *
+     * @return the character encoding for output files
      * @since Ant 1.6
      */
     public String getOutputEncoding() {
-        return outputEncoding;
+        return outputCharSet.getValue();
+    }
+
+    /**
+     * Set the charset for output files.
+     * @param charSet the output CharSet.
+     */
+    public void setOutputCharSet(final CharSet charSet) {
+        this.outputCharSet = charSet;
+        hasOutputCharSet = true;
+    }
+
+    /**
+     * Get the charset for output files.
+     * @return the charset for output files,
+     */
+    public CharSet getOutputCharSet() {
+        return outputCharSet;
     }
 
     /**
@@ -883,8 +916,8 @@ public class Copy extends Task {
                                            executionFilters,
                                            filterChains, forceOverwrite,
                                            preserveLastModified,
-                                           /* append: */ false, inputEncoding,
-                                           outputEncoding, getProject(),
+                                           /* append: */ false, inputCharSet,
+                                           outputCharSet, getProject(),
                                            getForce());
                     } catch (final IOException ioe) {
                         String msg = "Failed to copy " + fromFile + " to " + toFile
@@ -965,8 +998,8 @@ public class Copy extends Task {
                                                    forceOverwrite,
                                                    preserveLastModified,
                                                    /* append: */ false,
-                                                   inputEncoding,
-                                                   outputEncoding,
+                                                   inputCharSet,
+                                                   outputCharSet,
                                                    getProject(),
                                                    getForce());
                     } catch (final IOException ioe) {
@@ -1085,7 +1118,7 @@ public class Copy extends Task {
             message.append(String.format(
                     "%nThis is normally due to the input file containing invalid"
                             + "%nbytes for the character encoding used : %s%n",
-                    inputEncoding == null ? fileUtils.getDefaultEncoding() : inputEncoding));
+                    inputCharSet.getCharset()));
         }
         return message.toString();
     }

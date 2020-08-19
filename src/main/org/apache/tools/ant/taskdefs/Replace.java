@@ -38,6 +38,7 @@ import java.util.Properties;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileProvider;
@@ -77,7 +78,7 @@ public class Replace extends MatchingTask {
     private boolean summary = false;
 
     /** The encoding used to read and write files - if null, uses default */
-    private String encoding = null;
+    private CharSet charSet = CharSet.getDefault();
 
     private Union resources;
 
@@ -367,9 +368,7 @@ public class Replace extends MatchingTask {
             buffer = new char[BUFF_SIZE];
             is = Files.newInputStream(source.toPath());
             try {
-                reader = new BufferedReader(
-                    encoding != null ? new InputStreamReader(is, encoding)
-                        : new InputStreamReader(is));
+                reader = new BufferedReader(new InputStreamReader(is, charSet.getCharset()));
             } finally {
                 if (reader == null) {
                     is.close();
@@ -429,9 +428,7 @@ public class Replace extends MatchingTask {
         FileOutput(File out) throws IOException {
             os = Files.newOutputStream(out.toPath());
             try {
-                writer = new BufferedWriter(
-                    encoding != null ? new OutputStreamWriter(os, encoding)
-                        : new OutputStreamWriter(os));
+                writer = new BufferedWriter(new OutputStreamWriter(os, charSet.getCharset()));
             } finally {
                 if (writer == null) {
                     os.close();
@@ -803,12 +800,22 @@ public class Replace extends MatchingTask {
 
     /**
      * Set the file encoding to use on the files read and written by the task;
-     * optional, defaults to default JVM encoding.
+     * optional, defaults to platform encoding.
      *
      * @param encoding the encoding to use on the files.
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
+    }
+
+    /**
+     * Set the charset to use on the files read and written by the task;
+     * optional, defaults to platform encoding.
+     *
+     * @param charSet the charset to use on the files.
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
     }
 
     /**

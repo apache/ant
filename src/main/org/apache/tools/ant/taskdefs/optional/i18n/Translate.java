@@ -35,6 +35,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LineTokenizer;
@@ -108,17 +109,17 @@ public class Translate extends MatchingTask {
     /**
      * Source file encoding scheme
      */
-    private String srcEncoding;
+    private CharSet srcCharSet = CharSet.getDefault();
 
     /**
      * Destination file encoding scheme
      */
-    private String destEncoding;
+    private CharSet destCharSet = CharSet.getDefault();
 
     /**
      * Resource Bundle file encoding scheme, defaults to srcEncoding
      */
-    private String bundleEncoding;
+    private CharSet bundleCharSet = CharSet.getDefault();
 
     /**
      * Starting token to identify keys
@@ -170,6 +171,10 @@ public class Translate extends MatchingTask {
      * Has at least one file from the bundle been loaded?
      */
     private boolean loaded = false;
+
+    private boolean hasDestCharSet = false;
+
+    private boolean hasBundleCharSet = false;
 
     /**
      * Sets Family name of resource bundle; required.
@@ -229,11 +234,11 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets source file encoding scheme; optional,
-     * defaults to encoding of local system.
+     * defaults to platform encoding.
      * @param srcEncoding source file encoding
      */
     public void setSrcEncoding(String srcEncoding) {
-        this.srcEncoding = srcEncoding;
+        setSrcCharSet(new CharSet(srcEncoding));
     }
 
     /**
@@ -242,7 +247,7 @@ public class Translate extends MatchingTask {
      * @param destEncoding destination file encoding scheme
      */
     public void setDestEncoding(String destEncoding) {
-        this.destEncoding = destEncoding;
+        setDestCharSet(new CharSet(destEncoding));
     }
 
     /**
@@ -251,7 +256,36 @@ public class Translate extends MatchingTask {
      * @param bundleEncoding bundle file encoding scheme
      */
     public void setBundleEncoding(String bundleEncoding) {
-        this.bundleEncoding = bundleEncoding;
+        setBundleCharSet(new CharSet(bundleEncoding));
+    }
+
+    /**
+     * Sets source file charset; optional,
+     * defaults to platform encoding.
+     * @param srcCharSet source file charset
+     */
+    public void setSrcCharSet(CharSet srcCharSet) {
+        this.srcCharSet = srcCharSet;
+    }
+
+    /**
+     * Sets destination file charset; optional.  Defaults to source file
+     * charset
+     * @param destCharSet destination file charset
+     */
+    public void setDestCharSet(CharSet destCharSet) {
+        this.destCharSet = destCharSet;
+        hasDestCharSet = true;
+    }
+
+    /**
+     * Sets Resource Bundle file charset; optional.  Defaults to source file
+     * charset
+     * @param bundleCharSet bundle file encoding scheme
+     */
+    public void setBundleCharSet(CharSet bundleCharSet) {
+        this.bundleCharSet = bundleCharSet;
+        hasBundleCharSet = true;
     }
 
     /**
@@ -324,16 +358,12 @@ public class Translate extends MatchingTask {
             throw new BuildException("%s is not a directory", toDir);
         }
 
-        if (srcEncoding == null) {
-            srcEncoding = System.getProperty("file.encoding");
+        if (!hasDestCharSet) {
+            destCharSet = srcCharSet;
         }
 
-        if (destEncoding == null) {
-            destEncoding = srcEncoding;
-        }
-
-        if (bundleEncoding == null) {
-            bundleEncoding = srcEncoding;
+        if (!hasBundleCharSet) {
+            bundleCharSet = srcCharSet;
         }
 
         loadResourceMaps();
@@ -381,7 +411,7 @@ public class Translate extends MatchingTask {
         language = locale.getLanguage().isEmpty() ? "" : "_" + locale.getLanguage();
         country = locale.getCountry().isEmpty() ? "" : "_" + locale.getCountry();
         variant = locale.getVariant().isEmpty() ? "" : "_" + locale.getVariant();
-        bundleEncoding = System.getProperty("file.encoding");
+        bundleCharSet = CharSet.getDefault();
 
         processBundle(bundle + language + country + variant, BUNDLE_DEFAULT_LANGUAGE_COUNTRY_VARIANT, false);
         processBundle(bundle + language + country, BUNDLE_DEFAULT_LANGUAGE_COUNTRY, false);
@@ -418,7 +448,7 @@ public class Translate extends MatchingTask {
      */
     private void loadResourceMap(InputStream ins) throws BuildException {
         try (BufferedReader in =
-            new BufferedReader(new InputStreamReader(ins, bundleEncoding))) {
+            new BufferedReader(new InputStreamReader(ins, bundleCharSet.getCharset()))) {
             String line;
             while ((line = in.readLine()) != null) {
                 //So long as the line isn't empty and isn't a comment...
@@ -524,9 +554,9 @@ public class Translate extends MatchingTask {
 
     private void translateOneFile(File src, File dest) throws IOException {
         try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-            Files.newOutputStream(dest.toPath()), destEncoding));
-                BufferedReader in = new BufferedReader(new InputStreamReader(
-                    Files.newInputStream(src.toPath()), srcEncoding))) {
+            Files.newOutputStream(dest.toPath()), destCharSet.getCharset()));
+             BufferedReader in = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(src.toPath()), srcCharSet.getCharset()))) {
             LineTokenizer lineTokenizer = new LineTokenizer();
             lineTokenizer.setIncludeDelims(true);
             String line = lineTokenizer.getToken(in);

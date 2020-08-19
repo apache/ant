@@ -49,6 +49,7 @@ import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -474,7 +475,7 @@ public class Javadoc extends Task {
     private String executable = null;
     private boolean docFilesSubDirs = false;
     private String excludeDocFilesSubDir = null;
-    private String docEncoding = null;
+    private CharSet docCharSet = CharSet.getDefault();
     private boolean postProcessGeneratedJavadocs = true;
 
     private final ResourceCollectionContainer nestedSourceFiles
@@ -1282,9 +1283,18 @@ public class Javadoc extends Task {
      * @param enc name of the encoding to use.
      */
     public void setDocencoding(final String enc) {
+        setDocCharSet(new CharSet(enc));
+    }
+
+    /**
+     * Output file charset.
+     *
+     * @param charSet charset to use.
+     */
+    public void setDocCharSet(final CharSet charSet) {
         cmd.createArgument().setValue("-docencoding");
-        cmd.createArgument().setValue(enc);
-        docEncoding = enc;
+        cmd.createArgument().setValue(charSet.getValue());
+        docCharSet = charSet;
     }
 
     /**
@@ -1647,7 +1657,15 @@ public class Javadoc extends Task {
      * @param src the name of the charset
      */
     public void setCharset(final String src) {
-        this.addArgIfNotEmpty("-charset", src);
+        setCharSet(new CharSet(src));
+    }
+
+    /**
+     * Charset for cross-platform viewing of generated documentation.
+     * @param cs CharSet
+     */
+    public void setCharSet(final CharSet cs) {
+        this.addArgIfNotEmpty("-charset", cs.getValue());
     }
 
     /**
@@ -2549,13 +2567,11 @@ public class Javadoc extends Task {
     }
 
     private int postProcess(final File file, final String fixData) throws IOException {
-        final String enc = docEncoding != null ? docEncoding
-            : FILE_UTILS.getDefaultEncoding();
         // we load the whole file as one String (toc/index files are
         // generally small, because they only contain frameset declaration):
         String fileContents;
         try (InputStreamReader reader =
-            new InputStreamReader(Files.newInputStream(file.toPath()), enc)) {
+            new InputStreamReader(Files.newInputStream(file.toPath()), docCharSet.getCharset())) {
             fileContents = fixLineFeeds(FileUtils.safeReadFully(reader));
         }
 
@@ -2566,7 +2582,7 @@ public class Javadoc extends Task {
             final String patchedFileContents = patchContent(fileContents, fixData);
             if (!patchedFileContents.equals(fileContents)) {
                 try (final OutputStreamWriter w =
-                    new OutputStreamWriter(Files.newOutputStream(file.toPath()), enc)) {
+                    new OutputStreamWriter(Files.newOutputStream(file.toPath()), docCharSet.getCharset())) {
                     w.write(patchedFileContents);
                     w.close();
                     return 1;

@@ -33,6 +33,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
@@ -69,7 +70,8 @@ public abstract class DefaultCompilerAdapter
 
     protected Path src;
     protected File destDir;
-    protected String encoding;
+    protected CharSet charSet = CharSet.getDefault();
+    private boolean hasCharSet = false;
     protected boolean debug = false;
     protected boolean optimize = false;
     protected boolean deprecation = false;
@@ -107,7 +109,8 @@ public abstract class DefaultCompilerAdapter
         this.attributes = attributes;
         src = attributes.getSrcdir();
         destDir = attributes.getDestdir();
-        encoding = attributes.getEncoding();
+        charSet = attributes.getCharSet();
+        hasCharSet = attributes.hasCharSet();
         debug = attributes.getDebug();
         optimize = attributes.getOptimize();
         deprecation = attributes.getDeprecation();
@@ -342,9 +345,9 @@ public abstract class DefaultCompilerAdapter
             }
         }
 
-        if (encoding != null) {
+        if (hasCharSet) {
             cmd.createArgument().setValue("-encoding");
-            cmd.createArgument().setValue(encoding);
+            cmd.createArgument().setValue(charSet.getValue());
         }
         if (debug) {
             if (useDebugLevel && assumeJava1_2Plus()) {
@@ -863,6 +866,10 @@ public abstract class DefaultCompilerAdapter
      */
     protected String getNoDebugArgument() {
     	return assumeJava1_2Plus() ? "-g:none" : null;
+    }
+
+    protected boolean hasCharset() {
+        return hasCharSet;
     }
 
     private void setImplicitSourceSwitch(final Commandline cmd,

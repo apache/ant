@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.util;
 
+import org.apache.tools.ant.types.CharSet;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -33,7 +35,7 @@ public class ReaderInputStream extends InputStream {
     /** Source Reader */
     private Reader in;
 
-    private String encoding = System.getProperty("file.encoding");
+    private Charset charset = Charset.defaultCharset();
 
     private byte[] slack;
 
@@ -62,7 +64,7 @@ public class ReaderInputStream extends InputStream {
         if (encoding == null) {
             throw new IllegalArgumentException("encoding must not be null");
         }
-        this.encoding = encoding;
+        this.charset = new CharSet(encoding).getCharset();
     }
 
     /**
@@ -72,14 +74,13 @@ public class ReaderInputStream extends InputStream {
      *
      * @param reader     non-null <code>Reader</code>.
      * @param charset    non-null <code>Charset</code> charset.
-     * @since Ant 1.10.6
      */
     public ReaderInputStream(Reader reader, Charset charset) {
         this(reader);
         if (charset == null) {
             throw new IllegalArgumentException("encoding must not be null");
         }
-        this.encoding = charset.name();
+        this.charset = charset;
     }
 
     /**
@@ -137,7 +138,7 @@ public class ReaderInputStream extends InputStream {
                 return -1;
             }
             if (n > 0) {
-                slack = new String(buf, 0, n).getBytes(encoding);
+                slack = new String(buf, 0, n).getBytes(charset);
                 begin = 0;
             }
         }

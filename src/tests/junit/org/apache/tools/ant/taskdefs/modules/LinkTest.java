@@ -782,7 +782,7 @@ public class LinkTest {
         ImageStructure image = verifyImageBuiltNormally();
 
         File release = new File(image.root, "release");
-        // Using FileReader here since 'release' file is in platform's charset.
+        // Using FileReader here since 'release' file is in platform charset.
         try (BufferedReader reader = new BufferedReader(
             new FileReader(release))) {
 

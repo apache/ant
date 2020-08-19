@@ -41,6 +41,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ArchiveFileSet;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
@@ -162,10 +163,9 @@ public class Zip extends MatchingTask {
     private boolean addingNewFiles = false;
 
     /**
-     * Encoding to use for filenames, defaults to the platform's
-     * default encoding.
+     * Encoding to use for filenames, defaults to the platform encoding.
      */
-    private String encoding;
+    private CharSet charSet = CharSet.getDefault();
 
     /**
      * Whether the original compression of entries coming from a ZIP
@@ -404,15 +404,14 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Encoding to use for filenames, defaults to the platform's
-     * default encoding.
+     * Encoding to use for filenames, defaults to the platform encoding.
      *
      * <p>For a list of possible values see <a
      * href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</a>.</p>
      * @param encoding the encoding name
      */
     public void setEncoding(final String encoding) {
-        this.encoding = encoding;
+        setCharSet(new CharSet(encoding));
     }
 
     /**
@@ -421,7 +420,28 @@ public class Zip extends MatchingTask {
      * @since Ant 1.5.2
      */
     public String getEncoding() {
-        return encoding;
+        return charSet.getValue();
+    }
+
+    /**
+     * charset to use for filenames, defaults to the platform charset.
+     *
+     * <p>For a list of possible values see
+     * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
+     * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html
+     * </a>.</p>
+     * @param charSet the charset
+     */
+    public void setCharSet(final CharSet charSet) {
+        this.charSet = charSet;
+    }
+
+    /**
+     * Encoding to use for filenames.
+     * @return the name of the encoding to use
+     */
+    public CharSet getCharSet() {
+        return charSet;
     }
 
     /**
@@ -705,7 +725,7 @@ public class Zip extends MatchingTask {
                 if (!skipWriting) {
                     zOut = new ZipOutputStream(zipFile);
 
-                    zOut.setEncoding(encoding);
+                    zOut.setCharSet(charSet);
                     zOut.setUseLanguageEncodingFlag(useLanguageEncodingFlag);
                     zOut.setCreateUnicodeExtraFields(createUnicodeExtraFields.
                                                      getPolicy());
@@ -736,7 +756,7 @@ public class Zip extends MatchingTask {
                     }
                     final DirectoryScanner ds =
                         oldFiles.getDirectoryScanner(getProject());
-                    ((ZipScanner) ds).setEncoding(encoding);
+                    ((ZipScanner) ds).setCharSet(charSet);
 
                     Stream<String> includedResourceNames =
                         Stream.of(ds.getIncludedFiles());
@@ -960,7 +980,7 @@ public class Zip extends MatchingTask {
                 dealingWithFiles = true;
                 base = fileset.getDir(getProject());
             } else if (zfs instanceof ZipFileSet) {
-                zf = new ZipFile(zfs.getSrc(getProject()), encoding);
+                zf = new ZipFile(zfs.getSrc(getProject()), charSet.getCharset());
             }
 
             for (Resource resource : resources) {
@@ -1207,7 +1227,7 @@ public class Zip extends MatchingTask {
     private synchronized ZipScanner getZipScanner() {
         if (zs == null) {
             zs = new ZipScanner();
-            zs.setEncoding(encoding);
+            zs.setCharSet(charSet);
             zs.setSrc(zipFile);
         }
         return zs;
@@ -1587,7 +1607,7 @@ public class Zip extends MatchingTask {
             final DirectoryScanner rs =
                 filesets[i].getDirectoryScanner(getProject());
             if (rs instanceof ZipScanner) {
-                ((ZipScanner) rs).setEncoding(encoding);
+                ((ZipScanner) rs).setCharSet(charSet);
             }
             final List<Resource> resources = new Vector<>();
             if (!doFilesonly) {
@@ -1986,7 +2006,7 @@ public class Zip extends MatchingTask {
         emptyBehavior = "skip";
         doUpdate = false;
         doFilesonly = false;
-        encoding = null;
+        charSet = CharSet.getDefault();
     }
 
     /**

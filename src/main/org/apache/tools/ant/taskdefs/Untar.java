@@ -29,6 +29,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileNameMapper;
@@ -59,7 +60,7 @@ public class Untar extends Expand {
     private UntarCompressionMethod compression = new UntarCompressionMethod();
 
     public Untar() {
-        super(null);
+        super(CharSet.getDefault());
     }
 
     /**
@@ -144,7 +145,7 @@ public class Untar extends Expand {
         throws IOException {
         try (TarInputStream tis = new TarInputStream(
             compression.decompress(name, new BufferedInputStream(stream)),
-            getEncoding())) {
+            getCharSet())) {
             log("Expanding: " + name + " into " + dir, Project.MSG_INFO);
             boolean empty = true;
             FileNameMapper mapper = getMapper();

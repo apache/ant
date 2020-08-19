@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.zip.ZipEncoding;
 import org.apache.tools.zip.ZipEncodingHelper;
 
@@ -40,7 +41,7 @@ public class TarUtils {
     private static final int BYTE_MASK = 255;
 
     static final ZipEncoding DEFAULT_ENCODING =
-        ZipEncodingHelper.getZipEncoding(null);
+        ZipEncodingHelper.getZipEncoding(CharSet.getDefault());
 
     /**
      * Encapsulates the algorithms used up to Ant 1.8 as ZipEncoding.

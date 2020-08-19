@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Vector;
@@ -36,6 +35,7 @@ import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Resource;
@@ -258,7 +258,7 @@ public class ResourceUtils {
     public static void copyResource(final Resource source, final Resource dest, final Project project)
         throws IOException {
         copyResource(source, dest, null, null, false,
-                     false, null, null, project);
+                     false, CharSet.getDefault(), CharSet.getDefault(), project);
     }
 
     // CheckStyle:ParameterNumberCheck OFF - bc
@@ -294,6 +294,39 @@ public class ResourceUtils {
                              final String inputEncoding, final String outputEncoding,
                              final Project project)
         throws IOException {
+        copyResource(source, dest, filters, filterChains, overwrite, preserveLastModified, false, inputEncoding, outputEncoding, project);
+    }
+
+    /**
+     * Convenience method to copy content from one Resource to another
+     * specifying whether token filtering must be used, whether filter chains
+     * must be used, whether newer destination files may be overwritten and
+     * whether the last modified time of <code>dest</code> file should be made
+     * equal to the last modified time of <code>source</code>.
+     *
+     * @param source the Resource to copy from.
+     *                   Must not be <code>null</code>.
+     * @param dest   the Resource to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination Resource should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the destination Resource should be set to that
+     *                             of the source.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance.
+     *
+     * @throws IOException if the copying fails.
+     */
+    public static void copyResource(final Resource source, final Resource dest,
+                                    final FilterSetCollection filters, final Vector<FilterChain> filterChains,
+                                    final boolean overwrite, final boolean preserveLastModified,
+                                    final CharSet inputEncoding, final CharSet outputEncoding,
+                                    final Project project)
+            throws IOException {
         copyResource(source, dest, filters, filterChains, overwrite, preserveLastModified, false, inputEncoding, outputEncoding, project);
     }
 
@@ -359,6 +392,43 @@ public class ResourceUtils {
      * @param inputEncoding the encoding used to read the files.
      * @param outputEncoding the encoding used to write the files.
      * @param project the project instance.
+     *
+     * @throws IOException if the copying fails.
+     */
+    public static void copyResource(final Resource source, final Resource dest,
+                                    final FilterSetCollection filters, final Vector<FilterChain> filterChains,
+                                    final boolean overwrite, final boolean preserveLastModified,
+                                    final boolean append,
+                                    final CharSet inputEncoding, final CharSet outputEncoding,
+                                    final Project project)
+            throws IOException {
+        copyResource(source, dest, filters, filterChains, overwrite,
+                preserveLastModified, append, inputEncoding,
+                outputEncoding, project, /* force: */ false);
+    }
+
+    /**
+     * Convenience method to copy content from one Resource to another
+     * specifying whether token filtering must be used, whether filter chains
+     * must be used, whether newer destination files may be overwritten and
+     * whether the last modified time of <code>dest</code> file should be made
+     * equal to the last modified time of <code>source</code>.
+     *
+     * @param source the Resource to copy from.
+     *                   Must not be <code>null</code>.
+     * @param dest   the Resource to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination Resource should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the destination Resource should be set to that
+     *                             of the source.
+     * @param append Whether to append to an Appendable Resource.
+     * @param inputEncoding the encoding used to read the files.
+     * @param outputEncoding the encoding used to write the files.
+     * @param project the project instance.
      * @param force whether read-only target files will be overwritten
      *
      * @throws IOException if the copying fails.
@@ -371,6 +441,43 @@ public class ResourceUtils {
                                     final boolean append,
                                     final String inputEncoding, final String outputEncoding,
                                     final Project project, final boolean force)
+            throws IOException {
+        copyResource(source, dest, filters, filterChains, overwrite, preserveLastModified, append,
+                new CharSet(inputEncoding), new CharSet(outputEncoding), project, force);
+    }
+
+    /**
+     * Convenience method to copy content from one Resource to another
+     * specifying whether token filtering must be used, whether filter chains
+     * must be used, whether newer destination files may be overwritten and
+     * whether the last modified time of <code>dest</code> file should be made
+     * equal to the last modified time of <code>source</code>.
+     *
+     * @param source the Resource to copy from.
+     *                   Must not be <code>null</code>.
+     * @param dest   the Resource to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filters the collection of filters to apply to this copy.
+     * @param filterChains filterChains to apply during the copy.
+     * @param overwrite Whether or not the destination Resource should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the destination Resource should be set to that
+     *                             of the source.
+     * @param append Whether to append to an Appendable Resource.
+     * @param inputCharSet the CharSet used to read the files.
+     * @param outputCharSet the CharSet used to write the files.
+     * @param project the project instance.
+     * @param force whether read-only target files will be overwritten
+     *
+     * @throws IOException if the copying fails.
+     */
+    public static void copyResource(final Resource source, final Resource dest,
+                                    final FilterSetCollection filters, final Vector<FilterChain> filterChains,
+                                    final boolean overwrite, final boolean preserveLastModified,
+                                    final boolean append,
+                                    final CharSet inputCharSet, final CharSet outputCharSet,
+                                    final Project project, final boolean force)
         throws IOException {
         if (!overwrite && !SelectorUtils.isOutOfDate(source, dest,
                 FileUtils.getFileUtils().getFileTimestampGranularity())) {
@@ -380,11 +487,11 @@ public class ResourceUtils {
                                              && filters.hasFilters());
         final boolean filterChainsAvailable = (filterChains != null
                                                && !filterChains.isEmpty());
-        String effectiveInputEncoding;
+        CharSet effectiveInputCharSet;
         if (source instanceof StringResource) {
-            effectiveInputEncoding = ((StringResource) source).getEncoding();
+            effectiveInputCharSet = ((StringResource) source).getCharSet();
         } else {
-            effectiveInputEncoding = inputEncoding;
+            effectiveInputCharSet = inputCharSet;
         }
         File destFile = null;
         if (dest.as(FileProvider.class) != null) {
@@ -402,15 +509,13 @@ public class ResourceUtils {
 
         if (filterSetsAvailable) {
             copyWithFilterSets(source, dest, filters, filterChains,
-                               append, effectiveInputEncoding,
-                               outputEncoding, project);
+                               append, effectiveInputCharSet,
+                               outputCharSet, project);
         } else if (filterChainsAvailable
-                   || (effectiveInputEncoding != null
-                       && !effectiveInputEncoding.equals(outputEncoding))
-                   || (effectiveInputEncoding == null && outputEncoding != null)) {
+                || !effectiveInputCharSet.equivalent(outputCharSet)) {
             copyWithFilterChainsOrTranscoding(source, dest, filterChains,
-                                              append, effectiveInputEncoding,
-                                              outputEncoding,
+                                              append, effectiveInputCharSet,
+                                              outputCharSet,
                                               project);
         } else {
             boolean copied = false;
@@ -639,7 +744,7 @@ public class ResourceUtils {
                                            final FilterSetCollection filters,
                                            final Vector<FilterChain> filterChains,
                                            final boolean append,
-                                           final String inputEncoding, final String outputEncoding,
+                                           final CharSet inputCharSet, final CharSet outputCharSet,
                                            final Project project)
         throws IOException {
 
@@ -649,11 +754,11 @@ public class ResourceUtils {
             return;
         }
 
-        try (Reader in = filterWith(project, inputEncoding, filterChains,
+        try (Reader in = filterWith(project, inputCharSet, filterChains,
                 source.getInputStream());
              BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
                      getOutputStream(dest, append, project),
-                     charsetFor(outputEncoding)))) {
+                     outputCharSet.getCharset()))) {
 
             final LineTokenizer lineTokenizer = new LineTokenizer();
             lineTokenizer.setIncludeDelims(true);
@@ -671,9 +776,9 @@ public class ResourceUtils {
         }
     }
 
-    private static Reader filterWith(Project project, String encoding,
+    private static Reader filterWith(Project project, CharSet charSet,
         Vector<FilterChain> filterChains, InputStream input) {
-        Reader r = new InputStreamReader(input, charsetFor(encoding));
+        Reader r = new InputStreamReader(input, charSet.getCharset());
         if (filterChains != null && !filterChains.isEmpty()) {
             final ChainReaderHelper crh = new ChainReaderHelper();
             crh.setBufferSize(FileUtils.BUF_SIZE);
@@ -685,16 +790,12 @@ public class ResourceUtils {
         return new BufferedReader(r);
     }
 
-    private static Charset charsetFor(String encoding) {
-        return encoding == null ? Charset.defaultCharset() : Charset.forName(encoding);
-    }
-
     private static void copyWithFilterChainsOrTranscoding(final Resource source,
                                                           final Resource dest,
                                                           final Vector<FilterChain> filterChains,
                                                           final boolean append,
-                                                          final String inputEncoding,
-                                                          final String outputEncoding,
+                                                          final CharSet inputCharSet,
+                                                          final CharSet outputCharSet,
                                                           final Project project)
         throws IOException {
 
@@ -704,11 +805,11 @@ public class ResourceUtils {
             return;
         }
 
-        try (Reader in = filterWith(project, inputEncoding, filterChains,
+        try (Reader in = filterWith(project, inputCharSet, filterChains,
                 source.getInputStream());
              BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
                      getOutputStream(dest, append, project),
-                     charsetFor(outputEncoding)))) {
+                     outputCharSet.getCharset()))) {
             final char[] buffer = new char[FileUtils.BUF_SIZE];
             while (true) {
                 final int nRead = in.read(buffer, 0, buffer.length);

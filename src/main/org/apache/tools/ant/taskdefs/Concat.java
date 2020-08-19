@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,6 +36,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterChain;
@@ -89,11 +89,11 @@ public class Concat extends Task implements ResourceCollection {
      * sub element points to a file or contains text
      */
     public static class TextElement extends ProjectComponent {
-        private String   value = "";
-        private boolean  trimLeading = false;
-        private boolean  trim = false;
-        private boolean  filtering = true;
-        private String   encoding = null;
+        private String  value = "";
+        private boolean trimLeading = false;
+        private boolean trim = false;
+        private boolean filtering = true;
+        private CharSet charSet = CharSet.getDefault();
 
         /**
          * whether to filter the text in this element
@@ -117,7 +117,16 @@ public class Concat extends Task implements ResourceCollection {
          * @param encoding the name of the charset used to encode
          */
         public void setEncoding(String encoding) {
-            this.encoding = encoding;
+            this.charSet = new CharSet(encoding);
+        }
+
+        /**
+         * The CharSet of the text element
+         *
+         * @param charSet the name of the charset used to encode
+         */
+        public void setEncoding(CharSet charSet) {
+            this.charSet = charSet;
         }
 
         /**
@@ -132,20 +141,11 @@ public class Concat extends Task implements ResourceCollection {
                 throw new BuildException("File %s does not exist.", file);
             }
 
-            BufferedReader reader = null;
-            try {
-                if (this.encoding == null) {
-                    reader = new BufferedReader(new FileReader(file));
-                } else {
-                    reader = new BufferedReader(
-                        new InputStreamReader(Files.newInputStream(file.toPath()),
-                                              this.encoding));
-                }
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    Files.newInputStream(file.toPath()), charSet.getCharset()))) {
                 value = FileUtils.safeReadFully(reader);
             } catch (IOException ex) {
                 throw new BuildException(ex);
-            } finally {
-                FileUtils.close(reader);
             }
         }
 
@@ -418,8 +418,7 @@ public class Concat extends Task implements ResourceCollection {
                 rdr = new MultiReader<>(Arrays.asList(readers).iterator(),
                         identityReaderFactory);
             }
-            return outputEncoding == null ? new ReaderInputStream(rdr)
-                    : new ReaderInputStream(rdr, outputEncoding);
+            return new ReaderInputStream(rdr, outputCharSet.getCharset());
         }
         @Override
         public String getName() {
@@ -444,12 +443,18 @@ public class Concat extends Task implements ResourceCollection {
     private boolean append;
 
     /**
-     * Stores the input file encoding.
+     * Stores the input file CharSet.
      */
-    private String encoding;
+    private CharSet charSet = CharSet.getDefault();
 
-    /** Stores the output file encoding. */
-    private String outputEncoding;
+    /** Indicates if attribute is set explicitly */
+    private boolean hasCharSet = false;
+
+    /** Stores the output file CharSet. */
+    private CharSet outputCharSet = CharSet.getDefault();
+
+    /** Indicates if attribute is set explicitly */
+    private boolean hasOutputCharSet = false;
 
     /** Stores the binary attribute */
     private boolean binary;
@@ -489,15 +494,9 @@ public class Concat extends Task implements ResourceCollection {
     /** exposed resource name */
     private String resourceName;
 
-    private ReaderFactory<Resource> resourceReaderFactory = new ReaderFactory<Resource>() {
-        @Override
-        public Reader getReader(Resource o) throws IOException {
-            InputStream is = o.getInputStream();
-            return new BufferedReader(encoding == null
-                ? new InputStreamReader(is)
-                : new InputStreamReader(is, encoding));
-        }
-    };
+    private ReaderFactory<Resource> resourceReaderFactory =
+            o -> new BufferedReader(new InputStreamReader(o.getInputStream(),
+            charSet.getCharset()));
 
     private ReaderFactory<Reader> identityReaderFactory = o -> o;
 
@@ -515,8 +514,10 @@ public class Concat extends Task implements ResourceCollection {
         append = false;
         forceOverwrite = true;
         dest = null;
-        encoding = null;
-        outputEncoding = null;
+        charSet = CharSet.getDefault();
+        hasCharSet = false;
+        outputCharSet = CharSet.getDefault();
+        hasOutputCharSet = false;
         fixLastLine = false;
         filterChains = null;
         footer = null;
@@ -566,10 +567,7 @@ public class Concat extends Task implements ResourceCollection {
      *        outputencoding is set, the outputstream.
      */
     public void setEncoding(String encoding) {
-        this.encoding = encoding;
-        if (outputEncoding == null) {
-            outputEncoding = encoding;
-        }
+        setCharSet(new CharSet(encoding));
     }
 
     /**
@@ -578,7 +576,30 @@ public class Concat extends Task implements ResourceCollection {
      * @since Ant 1.6
      */
     public void setOutputEncoding(String outputEncoding) {
-        this.outputEncoding = outputEncoding;
+        setOutputCharSet(new CharSet(outputEncoding));
+    }
+
+
+    /**
+     * Sets the charset
+     * @param charSet the charset of the input stream and unless
+     *        outputcharset is set, the outputstream.
+     */
+    public void setCharSet(CharSet charSet) {
+        this.charSet = charSet;
+        hasCharSet = true;
+        if (!hasOutputCharSet) {
+            outputCharSet = charSet;
+        }
+    }
+
+    /**
+     * Sets the charset for outputting
+     * @param outputCharSet the charset for the output file
+     */
+    public void setOutputCharSet(CharSet outputCharSet) {
+        this.outputCharSet = outputCharSet;
+        hasOutputCharSet = true;
     }
 
     /**
@@ -802,8 +823,8 @@ public class Concat extends Task implements ResourceCollection {
             ResourceUtils.copyResource(new ConcatResource(c), dest == null
                                        ? new LogOutputResource(this, Project.MSG_WARN)
                                        : dest,
-                                       null, null, true, false, append, null,
-                                       null, getProject(), force);
+                                       null, null, true, false, append, CharSet.getDefault(),
+                                       CharSet.getDefault(), getProject(), force);
         } catch (IOException e) {
             throw new BuildException("error concatenating content to " + dest, e);
         }
@@ -853,7 +874,7 @@ public class Concat extends Task implements ResourceCollection {
                 throw new BuildException(
                     "Nested text is incompatible with binary concatenation");
             }
-            if (encoding != null || outputEncoding != null) {
+            if (hasCharSet || hasOutputCharSet) {
                 throw new BuildException(
                     "Setting input or output encoding is incompatible with binary concatenation");
             }

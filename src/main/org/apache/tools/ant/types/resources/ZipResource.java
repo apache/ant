@@ -25,6 +25,7 @@ import java.io.OutputStream;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.CharSet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.FileUtils;
@@ -38,7 +39,8 @@ import org.apache.tools.zip.ZipFile;
  */
 public class ZipResource extends ArchiveResource {
 
-    private String encoding;
+    private CharSet charSet = CharSet.getDefault();
+    private boolean hasCharSet = false;
     private ZipExtraField[] extras;
     private int method;
 
@@ -56,8 +58,19 @@ public class ZipResource extends ArchiveResource {
      * @param e the ZipEntry.
      */
     public ZipResource(File z, String enc, ZipEntry e) {
+        this(z, new CharSet(enc), e);
+    }
+
+    /**
+     * Construct a ZipResource representing the specified
+     * entry in the specified zipfile.
+     * @param z the zipfile as File.
+     * @param charSet the CharSet used for filenames.
+     * @param e the ZipEntry.
+     */
+    public ZipResource(File z, CharSet charSet, ZipEntry e) {
         super(z, true);
-        setEncoding(enc);
+        setCharSet(charSet);
         setEntry(e);
     }
 
@@ -95,8 +108,7 @@ public class ZipResource extends ArchiveResource {
      * @param enc the String encoding.
      */
     public void setEncoding(String enc) {
-        checkAttributesAllowed();
-        encoding = enc;
+        setCharSet(new CharSet(enc));
     }
 
     /**
@@ -105,7 +117,26 @@ public class ZipResource extends ArchiveResource {
      */
     public String getEncoding() {
         return isReference()
-            ? getRef().getEncoding() : encoding;
+            ? getRef().getEncoding() : charSet.getValue();
+    }
+
+    /**
+     * Set the encoding to use with the zipfile.
+     * @param encoding the String encoding.
+     */
+    public void setCharSet(CharSet encoding) {
+        checkAttributesAllowed();
+        this.charSet = encoding;
+        hasCharSet = true;
+    }
+
+    /**
+     * Get the encoding to use with the zipfile.
+     * @return String encoding.
+     */
+    public CharSet getCharSet() {
+        return isReference()
+                ? getRef().getCharSet() : charSet;
     }
 
     /**
@@ -113,7 +144,7 @@ public class ZipResource extends ArchiveResource {
      * @param r the Reference to set.
      */
     public void setRefid(Reference r) {
-        if (encoding != null) {
+        if (hasCharSet) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
@@ -129,7 +160,7 @@ public class ZipResource extends ArchiveResource {
         if (isReference()) {
             return getRef().getInputStream();
         }
-        return getZipEntryStream(new ZipFile(getZipfile(), getEncoding()), getName());
+        return getZipEntryStream(new ZipFile(getZipfile(), getCharSet().getCharset()), getName());
     }
 
     /**
@@ -209,7 +240,7 @@ public class ZipResource extends ArchiveResource {
     protected void fetchEntry() {
         ZipFile z = null;
         try {
-            z = new ZipFile(getZipfile(), getEncoding());
+            z = new ZipFile(getZipfile(), getCharSet().getCharset());
             setEntry(z.getEntry(getName()));
         } catch (IOException e) {
             log(e.getMessage(), Project.MSG_DEBUG);

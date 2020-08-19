@@ -18,6 +18,8 @@
 
 package org.apache.tools.zip;
 
+import org.apache.tools.ant.types.CharSet;
+
 import static org.apache.tools.zip.ZipConstants.DWORD;
 import static org.apache.tools.zip.ZipConstants.SHORT;
 import static org.apache.tools.zip.ZipConstants.WORD;
@@ -30,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -105,9 +108,9 @@ public class ZipFile implements Closeable {
      * <p>For a list of possible values see <a
      * href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">
      * https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html</a>.
-     * Defaults to the platform's default character encoding.</p>
+     * Defaults to the platform character encoding.</p>
      */
-    private final String encoding;
+    private final Charset charset;
 
     /**
      * The zip encoding to use for filenames and the file comment.
@@ -141,27 +144,27 @@ public class ZipFile implements Closeable {
     private final byte[] SHORT_BUF = new byte[SHORT];
 
     /**
-     * Opens the given file for reading, assuming the platform's
-     * native encoding for file names.
+     * Opens the given file for reading, assuming the platform
+     * encoding for file names.
      *
      * @param f the archive.
      *
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(final File f) throws IOException {
-        this(f, null);
+        this(f, Charset.defaultCharset());
     }
 
     /**
-     * Opens the given file for reading, assuming the platform's
-     * native encoding for file names.
+     * Opens the given file for reading, assuming the platform
+     * encoding for file names.
      *
      * @param name name of the archive.
      *
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(final String name) throws IOException {
-        this(new File(name), null);
+        this(new File(name), Charset.defaultCharset());
     }
 
     /**
@@ -170,12 +173,25 @@ public class ZipFile implements Closeable {
      *
      * @param name name of the archive.
      * @param encoding the encoding to use for file names, use null
-     * for the platform's default encoding
+     * for the platform encoding
      *
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(final String name, final String encoding) throws IOException {
-        this(new File(name), encoding, true);
+        this(new File(name), Charset.forName(encoding), true);
+    }
+
+    /**
+     * Opens the given file for reading, assuming the specified
+     * encoding for file names, scanning unicode extra fields.
+     *
+     * @param name name of the archive.
+     * @param charset the Charset to use for file names
+     *
+     * @throws IOException if an error occurs while reading the file.
+     */
+    public ZipFile(final String name, final Charset charset) throws IOException {
+        this(new File(name), charset, true);
     }
 
     /**
@@ -184,12 +200,26 @@ public class ZipFile implements Closeable {
      *
      * @param f the archive.
      * @param encoding the encoding to use for file names, use null
-     * for the platform's default encoding
+     * for the platform encoding
      *
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(final File f, final String encoding) throws IOException {
-        this(f, encoding, true);
+        this(f, Charset.forName(encoding), true);
+    }
+
+    /**
+     * Opens the given file for reading, assuming the specified
+     * encoding for file names and scanning for unicode extra fields.
+     *
+     * @param f the archive.
+     * @param charset the encoding to use for file names, use null
+     * for the platform encoding
+     *
+     * @throws IOException if an error occurs while reading the file.
+     */
+    public ZipFile(final File f, final Charset charset) throws IOException {
+        this(f, charset, true);
     }
 
     /**
@@ -198,17 +228,34 @@ public class ZipFile implements Closeable {
      *
      * @param f the archive.
      * @param encoding the encoding to use for file names, use null
-     * for the platform's default encoding
+     * for the platform encoding
      * @param useUnicodeExtraFields whether to use InfoZIP Unicode
      * Extra Fields (if present) to set the file names.
      *
      * @throws IOException if an error occurs while reading the file.
      */
     public ZipFile(final File f, final String encoding, final boolean useUnicodeExtraFields)
+            throws IOException {
+        this(f, Charset.forName(encoding), useUnicodeExtraFields);
+    }
+
+    /**
+     * Opens the given file for reading, assuming the specified
+     * encoding for file names.
+     *
+     * @param f the archive.
+     * @param charset the Charset to use for file names, use null
+     * for the platform encoding
+     * @param useUnicodeExtraFields whether to use InfoZIP Unicode
+     * Extra Fields (if present) to set the file names.
+     *
+     * @throws IOException if an error occurs while reading the file.
+     */
+    public ZipFile(final File f, final Charset charset, final boolean useUnicodeExtraFields)
         throws IOException {
         this.archiveName = f.getAbsolutePath();
-        this.encoding = encoding;
-        this.zipEncoding = ZipEncodingHelper.getZipEncoding(encoding);
+        this.charset = charset;
+        this.zipEncoding = ZipEncodingHelper.getZipEncoding(getCharSet());
         this.useUnicodeExtraFields = useUnicodeExtraFields;
         archive = new RandomAccessFile(f, "r");
         boolean success = false;
@@ -230,12 +277,17 @@ public class ZipFile implements Closeable {
     }
 
     /**
-     * The encoding to use for filenames and the file comment.
-     *
-     * @return null if using the platform's default character encoding.
+     * @return the CharSet to use for filenames and the file comment.
+     */
+    public CharSet getCharSet() {
+        return new CharSet(charset.name());
+    }
+
+    /**
+     * @return the encoding to use for filenames and the file comment.
      */
     public String getEncoding() {
-        return encoding;
+        return charset.name();
     }
 
     /**
