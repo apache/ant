@@ -18,11 +18,45 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../antunit-base.xml" />
 
-  <target name="testMagicProperty">
+  <target name="-adjust-for-offset-at-epoch">
+    <property name="ant-package" location="${input}/org/apache/ant"/>
+    <mkdir dir="${ant-package}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${ant-package}/IsEpochIn1969Here.java"><![CDATA[
+package org.apache.ant;
+
+import org.apache.tools.ant.taskdefs.condition.Condition;
+import java.util.Calendar;
+import java.util.Date;
+
+public class IsEpochIn1969Here implements Condition {
+    @Override
+    public boolean eval() {
+        final Calendar c = Calendar.getInstance();
+        c.setTime(new Date(0));
+        final int offset = (c.get(Calendar.ZONE_OFFSET) + c.get(Calendar.DST_OFFSET));
+        return offset < 0;
+    }
+}
+]]></echo>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <typedef name="isepochin1969here" classname="org.apache.ant.IsEpochIn1969Here">
+      <classpath>
+        <pathelement location="${output}"/>
+      </classpath>
+    </typedef>
+    <condition property="expected-dstamp" value="19700101">
+      <isepochin1969here/>
+    </condition>
+    <property name="expected-dstamp" value="19700102"/>
+    <echo>${expected-dstamp}</echo>
+  </target>
+
+  <target name="testMagicProperty" depends="-adjust-for-offset-at-epoch">
     <local name="ant.tstamp.now"/>
-    <property name="ant.tstamp.now" value="100000"/>
+    <property name="ant.tstamp.now" value="86400"/>
     <tstamp/>
-    <au:assertPropertyEquals name="DSTAMP" value="19700102"/>
+    <au:assertPropertyEquals name="DSTAMP" value="${expected-dstamp}"/>
   </target>
 
   <target name="testMagicPropertyIso">
