@@ -20,24 +20,68 @@ package org.apache.tools.ant.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CoderResult;
+import java.nio.charset.CodingErrorAction;
+import java.util.Objects;
 
 /**
  * Adapts a <code>Reader</code> as an <code>InputStream</code>.
- * Adapted from <code>StringInputStream</code>.
- *
+ * <p>This is a stripped down version of {@code org.apache.commons.io.input.ReaderInputStream} of Apache Commons IO 2.7.</p>
  */
 public class ReaderInputStream extends InputStream {
-    private static final int BYTE_MASK = 0xFF;
+    private static final int EOF = -1;
+    private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-    /** Source Reader */
-    private Reader in;
+    private final Reader reader;
+    private final CharsetEncoder encoder;
 
-    private String encoding = System.getProperty("file.encoding");
+    /**
+     * CharBuffer used as input for the decoder. It should be reasonably
+     * large as we read data from the underlying Reader into this buffer.
+     */
+    private final CharBuffer encoderIn;
 
-    private byte[] slack;
+    /**
+     * ByteBuffer used as output for the decoder. This buffer can be small
+     * as it is only used to transfer data from the decoder to the
+     * buffer provided by the caller.
+     */
+    private final ByteBuffer encoderOut;
 
-    private int begin;
+    private CoderResult lastCoderResult;
+    private boolean endOfInput;
+
+    /**
+     * Construct a new {@link ReaderInputStream}.
+     *
+     * @param reader the target {@link Reader}
+     * @param encoder the charset encoder
+     * @since 1.10.9
+     */
+    public ReaderInputStream(final Reader reader, final CharsetEncoder encoder) {
+        this(reader, encoder, DEFAULT_BUFFER_SIZE);
+    }
+
+    /**
+     * Construct a new {@link ReaderInputStream}.
+     *
+     * @param reader the target {@link Reader}
+     * @param encoder the charset encoder
+     * @param bufferSize the size of the input buffer in number of characters
+     * @since 1.10.9
+     */
+    public ReaderInputStream(final Reader reader, final CharsetEncoder encoder, final int bufferSize) {
+        this.reader = reader;
+        this.encoder = encoder;
+        this.encoderIn = CharBuffer.allocate(bufferSize);
+        this.encoderIn.flip();
+        this.encoderOut = ByteBuffer.allocate(128);
+        this.encoderOut.flip();
+    }
 
     /**
      * Construct a <code>ReaderInputStream</code>
@@ -46,7 +90,7 @@ public class ReaderInputStream extends InputStream {
      * @param reader   <code>Reader</code>.  Must not be <code>null</code>.
      */
     public ReaderInputStream(Reader reader) {
-        in = reader;
+        this(reader, Charset.defaultCharset());
     }
 
     /**
@@ -58,11 +102,7 @@ public class ReaderInputStream extends InputStream {
      * @param encoding   non-null <code>String</code> encoding.
      */
     public ReaderInputStream(Reader reader, String encoding) {
-        this(reader);
-        if (encoding == null) {
-            throw new IllegalArgumentException("encoding must not be null");
-        }
-        this.encoding = encoding;
+        this(reader, Charset.forName(encoding));
     }
 
     /**
@@ -75,153 +115,116 @@ public class ReaderInputStream extends InputStream {
      * @since Ant 1.10.6
      */
     public ReaderInputStream(Reader reader, Charset charset) {
-        this(reader);
-        if (charset == null) {
-            throw new IllegalArgumentException("encoding must not be null");
-        }
-        this.encoding = charset.name();
+        this(reader,
+             charset.newEncoder()
+                 .onMalformedInput(CodingErrorAction.REPLACE)
+                 .onUnmappableCharacter(CodingErrorAction.REPLACE));
     }
 
     /**
-     * Reads from the <code>Reader</code>, returning the same value.
+     * Fills the internal char buffer from the reader.
      *
-     * @return the value of the next character in the <code>Reader</code>.
-     *
-     * @exception IOException if the original <code>Reader</code> fails to be read
+     * @throws IOException
+     *             If an I/O error occurs
      */
-    @Override
-    public synchronized int read() throws IOException {
-        if (in == null) {
-            throw new IOException("Stream Closed");
-        }
-
-        byte result;
-        if (slack != null && begin < slack.length) {
-            result = slack[begin];
-            if (++begin == slack.length) {
-                slack = null;
-            }
-        } else {
-            byte[] buf = new byte[1];
-            if (read(buf, 0, 1) <= 0) {
-                return -1;
+    private void fillBuffer() throws IOException {
+        if (!endOfInput && (lastCoderResult == null || lastCoderResult.isUnderflow())) {
+            encoderIn.compact();
+            final int position = encoderIn.position();
+            // We don't use Reader#read(CharBuffer) here because it is more efficient
+            // to write directly to the underlying char array (the default implementation
+            // copies data to a temporary char array).
+            final int c = reader.read(encoderIn.array(), position, encoderIn.remaining());
+            if (c == EOF) {
+                endOfInput = true;
             } else {
-                result = buf[0];
+                encoderIn.position(position+c);
             }
+            encoderIn.flip();
         }
-        return result & BYTE_MASK;
+        encoderOut.compact();
+        lastCoderResult = encoder.encode(encoderIn, encoderOut, endOfInput);
+        encoderOut.flip();
     }
 
     /**
-     * Reads from the <code>Reader</code> into a byte array
+     * Read the specified number of bytes into an array.
      *
-     * @param b  the byte array to read into
-     * @param off the offset in the byte array
-     * @param len the length in the byte array to fill
-     * @return the actual number read into the byte array, -1 at
-     *         the end of the stream
-     * @exception IOException if an error occurs
+     * @param array the byte array to read into
+     * @param off the offset to start reading bytes into
+     * @param len the number of bytes to read
+     * @return the number of bytes read or <code>-1</code>
+     *         if the end of the stream has been reached
+     * @throws IOException if an I/O error occurs
      */
     @Override
-    public synchronized int read(byte[] b, int off, int len) throws IOException {
-        if (in == null) {
-            throw new IOException("Stream Closed");
+    public int read(final byte[] array, int off, int len) throws IOException {
+        Objects.requireNonNull(array, "array");
+        if (len < 0 || off < 0 || (off + len) > array.length) {
+            throw new IndexOutOfBoundsException("Array Size=" + array.length +
+                    ", offset=" + off + ", length=" + len);
         }
+        int read = 0;
         if (len == 0) {
-            return 0;
+            return 0; // Always return 0 if len == 0
         }
-        while (slack == null) {
-            char[] buf = new char[len]; // might read too much
-            int n = in.read(buf);
-            if (n == -1) {
-                return -1;
+        while (len > 0) {
+            if (encoderOut.hasRemaining()) {
+                final int c = Math.min(encoderOut.remaining(), len);
+                encoderOut.get(array, off, c);
+                off += c;
+                len -= c;
+                read += c;
+            } else {
+                fillBuffer();
+                if (endOfInput && !encoderOut.hasRemaining()) {
+                    break;
+                }
             }
-            if (n > 0) {
-                slack = new String(buf, 0, n).getBytes(encoding);
-                begin = 0;
+        }
+        return read == 0 && endOfInput ? EOF : read;
+    }
+
+    /**
+     * Read the specified number of bytes into an array.
+     *
+     * @param b the byte array to read into
+     * @return the number of bytes read or <code>-1</code>
+     *         if the end of the stream has been reached
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    public int read(final byte[] b) throws IOException {
+        return read(b, 0, b.length);
+    }
+
+    /**
+     * Read a single byte.
+     *
+     * @return either the byte read or <code>-1</code> if the end of the stream
+     *         has been reached
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    public int read() throws IOException {
+        for (;;) {
+            if (encoderOut.hasRemaining()) {
+                return encoderOut.get() & 0xFF;
+            }
+            fillBuffer();
+            if (endOfInput && !encoderOut.hasRemaining()) {
+                return EOF;
             }
         }
-
-        if (len > slack.length - begin) {
-            len = slack.length - begin;
-        }
-
-        System.arraycopy(slack, begin, b, off, len);
-
-        begin += len;
-        if (begin >= slack.length) {
-            slack = null;
-        }
-
-        return len;
     }
 
     /**
-     * Marks the read limit of the Reader.
-     *
-     * @param limit the maximum limit of bytes that can be read before the
-     *              mark position becomes invalid
+     * Close the stream. This method will cause the underlying {@link Reader}
+     * to be closed.
+     * @throws IOException if an I/O error occurs
      */
     @Override
-    public synchronized void mark(final int limit) {
-        try {
-            in.mark(limit);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe.getMessage()); //NOSONAR
-        }
-    }
-
-    /**
-     * @return   the current number of bytes ready for reading
-     * @exception IOException if an error occurs
-     */
-    @Override
-    public synchronized int available() throws IOException {
-        if (in == null) {
-            throw new IOException("Stream Closed");
-        }
-        if (slack != null) {
-            return slack.length - begin;
-        }
-        if (in.ready()) {
-            return 1;
-        }
-        return 0;
-    }
-
-    /**
-     * @return false - mark is not supported
-     */
-    @Override
-    public boolean markSupported() {
-        return false;   // would be imprecise
-    }
-
-    /**
-     * Resets the Reader.
-     *
-     * @exception IOException if the Reader fails to be reset
-     */
-    @Override
-    public synchronized void reset() throws IOException {
-        if (in == null) {
-            throw new IOException("Stream Closed");
-        }
-        slack = null;
-        in.reset();
-    }
-
-    /**
-     * Closes the Reader.
-     *
-     * @exception IOException if the original Reader fails to be closed
-     */
-    @Override
-    public synchronized void close() throws IOException {
-        if (in != null) {
-            in.close();
-            slack = null;
-            in = null;
-        }
+    public void close() throws IOException {
+        reader.close();
     }
 }

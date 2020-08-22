@@ -10,6 +10,11 @@ Fixed bugs:
  * propertyset now also sees in-scope local properties
    Bugzilla Report 50179
 
+ * replaced our version of ReaderInputStream with the battle-tested
+   version of Apache Commons IO as our version had problems with
+   surrogate pairs (and likely other edge cases as well).
+   Bugzilla Report 40455
+
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
 
