@@ -92,6 +92,14 @@ collections</a>.
     <td>The size of this resource</td>
     <td>No</td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>resource</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>resource</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h4 id="file">file</h4>
@@ -113,6 +121,14 @@ collections</a>.
     <td>basedir</td>
     <td>The base directory of this resource.  When this attribute is set, attempts to access the
       name of the resource will yield a path relative to this location.</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>file</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>file</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
     <td>No</td>
   </tr>
 </table>
@@ -157,6 +173,14 @@ collections</a>.
       <em>Since Ant 1.8.0</em></td>
     <td>No; defaults to <q>true</q></td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>javaresource</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>javaresource</code> defined elsewhere. If specified no
+      other attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <p>The classpath can also be specified as nested classpath element,
@@ -180,6 +204,14 @@ loaded.</p>
     <td>The name of the resource. Must be specified as full qualified
       field name.</td>
     <td>Yes</td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>javaconstant</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>javaconstant</code> defined elsewhere. If specified no
+      other attributes or nested elements are allowed.</td>
+    <td>No</td>
   </tr>
 </table>
 <h5>Examples</h5>
@@ -233,6 +265,14 @@ file system resources as nested elements.</p>
     <td>encoding</td>
     <td>The encoding of the zipfile</td>
     <td>No; defaults to default JVM character encoding</td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>propertyresource</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>propertyresource</code> defined elsewhere. If specified
+      no other attributes or nested elements are allowed.</td>
+    <td>No</td>
   </tr>
 </table>
 
@@ -313,6 +353,14 @@ more information.</p>
       <var>baseUrl</var></td>
     <td>If using <var>baseUrl</var></td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>url</code>
+      a <a href="../using.html#references">reference</a> to
+      an <code>url</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h4 id="string">string</h4>
@@ -329,6 +377,14 @@ error to write to again.</p>
   <tr>
     <td>value</td>
     <td>The value of this resource</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>string</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>string</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
     <td>No</td>
   </tr>
 </table>
@@ -442,6 +498,15 @@ duplicate resources (contrast with <a href="#union">union</a>).
       <td>Whether to cache results.  <em>since Ant 1.8.0</em></td>
       <td>No; default <q>false</q></td>
     </tr>
+    <tr>
+      <td>refid</td>
+      <td>Makes this <code>resourcecollection</code>
+        a <a href="../using.html#references">reference</a> to
+        a <code>resourcecollection</code> defined elsewhere. If
+        specified no other attributes or nested elements are
+        allowed.</td>
+      <td>No</td>
+    </tr>
   </table>
 
 <h4 id="files">files</h4>
@@ -508,6 +573,14 @@ selection.
     <td>Whether to follow symbolic links (see note <a href="#symlink">below</a>)</td>
     <td>No; default <q>true</q></td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>files</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>files</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <p id="symlink"><a href="#followsymlinks"><strong>Note</strong></a>: All files/directories for which
@@ -528,6 +601,14 @@ platforms.</p>
     <td>Whether to cache results; disabling
       may seriously impact performance</td>
     <td>No; default <q>true</q></td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>restrict</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>restrict</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
+    <td>No</td>
   </tr>
 </table>
 <h5>Parameters specified as nested elements</h5>
@@ -831,6 +912,14 @@ more nested <a href="#rcmp">resource comparators</a>:</p>
     <td>Whether to cache results; disabling may seriously impact performance</td>
     <td>No; default <q>true</q></td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>sort</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>sort</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 <h5>Parameters specified as nested elements</h5>
 <p>A single resource collection is required.</p>
@@ -933,6 +1022,14 @@ first few oldest, largest, etc. resources from a larger collection.</p>
     <td>Whether to cache results; disabling may seriously impact performance</td>
     <td>No; default <q>true</q></td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>first</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>first</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 <h5>Parameters specified as nested elements</h5>
 <p>A single resource collection is required.</p>
@@ -957,6 +1054,14 @@ last few oldest, largest, etc. resources from a larger collection.</p>
     <td>cache</td>
     <td>Whether to cache results; disabling may seriously impact performance</td>
     <td>No; default <q>true</q></td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>last</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>last</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
+    <td>No</td>
   </tr>
 </table>
 <h5>Parameters specified as nested elements</h5>
@@ -984,6 +1089,14 @@ collection.</p>
     <td>Whether to cache results; disabling may seriously impact performance</td>
     <td>No; default <q>true</q></td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>allbutfirst</code>
+      a <a href="../using.html#references">reference</a> to
+      an <code>allbutfirst</code> defined elsewhere. If specified no
+      other attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 <h5>Parameters specified as nested elements</h5>
 <p>A single resource collection is required.</p>
@@ -1010,6 +1123,14 @@ collection.</p>
     <td>Whether to cache results; disabling may seriously impact performance</td>
     <td>No; default <q>true</q></td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>allbutlast</code>
+      a <a href="../using.html#references">reference</a> to
+      an <code>allbutlast</code> defined elsewhere. If specified no
+      other attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 <h5>Parameters specified as nested elements</h5>
 <p>A single resource collection is required.</p>
@@ -1035,6 +1156,14 @@ collection can implement equivalents for such Unix functions as <kbd>sort</kbd>,
     <td>cache</td>
     <td>Whether to cache results; disabling may seriously impact performance</td>
     <td>No; default <q>true</q></td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>tokens</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>tokens</code> defined elsewhere. If specified no other
+      attributes or nested elements are allowed.</td>
+    <td>No</td>
   </tr>
 </table>
 <h5>Parameters specified as nested elements</h5>
@@ -1069,8 +1198,20 @@ collection can implement equivalents for such Unix functions as <kbd>sort</kbd>,
 <h4 id="union">union</h4>
 <p>Union of nested resource collections.</p>
 
+<p>The only supported attribute is <code>refid</code> which makes this
+  <code>union</code>
+  a <a href="../using.html#references">reference</a> to
+  an <code>union</code> defined elsewhere. If specified no other
+  attributes or nested elements are allowed.</p>
+
 <h4 id="intersect">intersect</h4>
 <p>Intersection of nested resource collections.</p>
+
+<p>The only supported attribute is <code>refid</code> which makes this
+  <code>intersect</code>
+  a <a href="../using.html#references">reference</a> to
+  an <code>intersect</code> defined elsewhere. If specified no other
+  attributes or nested elements are allowed.</p>
 
 <h4 id="difference">difference</h4>
 <p>Difference of nested resource collections.</p>
@@ -1086,6 +1227,14 @@ collection can implement equivalents for such Unix functions as <kbd>sort</kbd>,
     <td>cache</td>
     <td>Whether to cache results; disabling may seriously impact performance</td>
     <td>No; default <q>true</q></td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>difference</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>difference</code> defined elsewhere. If specified no
+      other attributes or nested elements are allowed.</td>
+    <td>No</td>
   </tr>
 </table>
 
@@ -1144,6 +1293,14 @@ resources.</p>
       <em>since Ant 1.8.1</em></td>
     <td>No; defaults to <q>false</q></td>
   </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>mappedresources</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>mappedresources</code> defined elsewhere. If specified
+      no other attributes or nested elements are allowed.</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h5>Parameters specified as nested elements</h5>
@@ -1194,7 +1351,11 @@ by <code>&lt;archives&gt;</code> are the contents of the nested archives.</p>
 of <a href="../Tasks/zip.html#zipgroupfileset">zipgroupfileset</a> which is only supported by
 the zip family of tasks.</p>
 
-<p><code>archives</code> doesn't support any attributes.</p>
+<p>The only supported attribute is <code>refid</code> which makes this
+  <code>archives</code>
+  a <a href="../using.html#references">reference</a> to
+  an <code>archives</code> defined elsewhere. If specified no other
+  attributes or nested elements are allowed.</p>
 
 <h5>Parameters specified as nested elements</h5>
 
@@ -1256,6 +1417,14 @@ of <a href="filelist.html"><code>&lt;filelist&gt;</code></a>.</p>
       FileResources created by this resource collection. <em>Since Ant
       1.10.4</em>
     </td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>refid</td>
+    <td>Makes this <code>resourcelist</code>
+      a <a href="../using.html#references">reference</a> to
+      a <code>resourcelist</code> defined elsewhere. If specified no
+      other attributes or nested elements are allowed.</td>
     <td>No</td>
   </tr>
 </table>
