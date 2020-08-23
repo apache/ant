@@ -15,6 +15,12 @@ Fixed bugs:
    surrogate pairs (and likely other edge cases as well).
    Bugzilla Report 40455
 
+Other changes:
+--------------
+
+ * Ant will no longer log a warning if it doesn't find tools.jar
+   Bugzilla Report 63577
+
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
 

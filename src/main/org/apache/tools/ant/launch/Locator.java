@@ -380,8 +380,6 @@ public final class Locator {
             toolsJar = new File(javaHome + libToolsJar);
         }
         if (!toolsJar.exists()) {
-            System.out.println("Unable to locate tools.jar. "
-                 + "Expected to find it in " + toolsJar.getPath());
             return null;
         }
         return toolsJar;
