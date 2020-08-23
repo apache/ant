@@ -277,7 +277,9 @@ public abstract class SSHBase extends Task implements LogListener {
                 throw new BuildException("Failed to load the SSH configuration file " + sshConfig, e);
             }
             
-            host = config.getHostname();
+            if (config.getHostname() != null) {
+                host = config.getHostname();
+            }
             
             if (userInfo.getName() == null) {
                 userInfo.setName(config.getUser());
