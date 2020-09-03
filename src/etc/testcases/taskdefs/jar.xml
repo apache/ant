@@ -257,8 +257,10 @@
     <jar destfile="${tmp.jar}2" basedir="${tmp.dir}" index="true">
       <indexjars>
         <fileset file="${tmp.jar}"/>
-        <globmapper from="${output}/*" to="foo/*" handledirsep="true"/>
       </indexjars>
+      <indexjarsmapper>
+        <globmapper from="${output}/*" to="foo/*" handledirsep="true"/>
+      </indexjarsmapper>
     </jar>
   </target>
 

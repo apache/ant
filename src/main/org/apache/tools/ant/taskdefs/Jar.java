@@ -47,16 +47,10 @@ import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Manifest.Section;
-import org.apache.tools.ant.types.ArchiveFileSet;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Resource;
-import org.apache.tools.ant.types.ResourceCollection;
-import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.types.spi.Service;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.FlatFileNameMapper;
 import org.apache.tools.ant.util.StreamUtils;
 import org.apache.tools.zip.JarMarker;
 import org.apache.tools.zip.ZipExtraField;
@@ -150,7 +144,15 @@ public class Jar extends Zip {
      *
      * @since Ant 1.6.2
      */
-    private List<IndexJars> indexJars;
+    private Path indexJars;
+
+    /**
+     * A mapper used to convert the jars to entries in the index.
+     *
+     * @since Ant 1.10.9
+     */
+    private FileNameMapper indexJarsMapper = null;
+
 
     // CheckStyle:LineLength OFF - Link is too long.
     /**
@@ -399,18 +401,36 @@ public class Jar extends Zip {
      * @param p a path
      * @since Ant 1.6.2
      */
-    public void addConfiguredIndexJars(ResourceCollection rc) {
-        IndexJars indexJars = new IndexJars(getProject());
-        indexJars.add(rc);
-        addConfiguredIndexJars(indexJars);
+    public void addConfiguredIndexJars(Path p) {
+        if (indexJars == null) {
+            indexJars = new Path(getProject());
+        }
+        indexJars.append(p);
     }
 
-    public void addConfiguredIndexJars(IndexJars jars) {
-        if (indexJars == null) {
-            indexJars = new ArrayList<>();
+    /**
+     * Add a mapper used to convert the jars to entries in the index.
+     *
+     * @param mapper a mapper
+     * @since Ant 1.10.9
+     */
+    public void addConfiguredIndexJarsMapper(Mapper mapper) {
+        if (indexJarsMapper != null) {
+            throw new BuildException("Cannot define more than one indexjar-mapper",
+                    getLocation());
         }
-        indexJars.add(jars);
+        indexJarsMapper = mapper.getImplementation();
     }
+
+    /**
+     * Returns the mapper used to convert the jars to entries in the index. May be null.
+     *
+     * @since Ant 1.10.9
+     */
+    public FileNameMapper getIndexJarsMapper() {
+        return indexJarsMapper;
+    }
+
 
     /**
      * A nested SPI service element.
@@ -603,66 +623,19 @@ public class Jar extends Zip {
                            rootEntries, writer);
         writer.println();
 
-        if (indexJars != null && !indexJars.isEmpty()) {
-            Manifest mf = createManifest();
-            Manifest.Attribute classpath =
-                mf.getMainSection().getAttribute(Manifest.ATTRIBUTE_CLASSPATH);
-            FileNameMapper defaultMapper = null;
-            if (classpath != null && classpath.getValue() != null) {
-                StringTokenizer tok = new StringTokenizer(classpath.getValue(),
-                                                          " ");
-                String[] cpEntries = new String[tok.countTokens()];
-                int c = 0;
-                while (tok.hasMoreTokens()) {
-                    cpEntries[c++] = tok.nextToken();
-                }
-
-                defaultMapper = new FileNameMapper() {
-                    @Override
-                    public void setFrom(String from) {
-                        // ignored
-                    }
-
-                    @Override
-                    public void setTo(String to) {
-                        // ignored
-                    }
-
-                    @Override
-                    public String[] mapFileName(String sourceFileName) {
-                        String mapped = findJarName(sourceFileName, cpEntries);
-                        if (mapped == null) {
-                            return null;
-                        }
-                        return new String[] {mapped};
-                    }
-                };
-            } else {
-                defaultMapper = new FlatFileNameMapper();
+        if (indexJars != null) {
+            FileNameMapper mapper = indexJarsMapper;
+            if (mapper == null) {
+                mapper = createDefaultIndexJarsMapper();
             }
-
-            Set<String> writtenEntries = new HashSet<>();
-            for (IndexJars indexJar : indexJars) {
-                FileNameMapper mapper = indexJar.getMapper();
-                if (mapper == null) {
-                    mapper = defaultMapper;
-                }
-
-                for (String indexJarEntry : indexJar.list()) {
-                    if (!writtenEntries.add(indexJarEntry)) {
-                        continue;
-                    }
-
-                    String[] name = mapper.mapFileName(indexJarEntry);
-                    if (name == null || name.length == 0) {
-                        continue;
-                    }
-
+            for (String indexJarEntry : indexJars.list()) {
+                String[] names = mapper.mapFileName(indexJarEntry);
+                if (names != null && names.length > 0) {
                     ArrayList<String> dirs = new ArrayList<>();
                     ArrayList<String> files = new ArrayList<>();
                     grabFilesAndDirs(indexJarEntry, dirs, files);
                     if (dirs.size() + files.size() > 0) {
-                        writer.println(name[0]);
+                        writer.println(names[0]);
                         writeIndexLikeList(dirs, files, writer);
                         writer.println();
                     }
@@ -679,6 +652,31 @@ public class Jar extends Zip {
             super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis(),
                           null, ZipFileSet.DEFAULT_FILE_MODE);
         }
+    }
+
+    /**
+     * Creates a mapper for the index based on the classpath attribute in the manifest.
+     * See {@link #findJarName(String, String[])} for more details.
+     *
+     * @return a mapper
+     * @since Ant 1.10.9
+     */
+    private FileNameMapper createDefaultIndexJarsMapper() {
+        Manifest mf = createManifest();
+        Manifest.Attribute classpath =
+                mf.getMainSection().getAttribute(Manifest.ATTRIBUTE_CLASSPATH);
+        String[] cpEntries = null;
+        if (classpath != null && classpath.getValue() != null) {
+            StringTokenizer tok = new StringTokenizer(classpath.getValue(),
+                    " ");
+            cpEntries = new String[tok.countTokens()];
+            int c = 0;
+            while (tok.hasMoreTokens()) {
+                cpEntries[c++] = tok.nextToken();
+            }
+        }
+
+        return new IndexJarsFilenameMapper(cpEntries);
     }
 
     /**
@@ -1205,6 +1203,41 @@ public class Jar extends Zip {
          */
         public int getLogLevel() {
             return "ignore".equals(getValue()) ? Project.MSG_VERBOSE : Project.MSG_WARN;
+        }
+    }
+
+    /**
+     * A mapper for the index based on the classpath attribute in the manifest.
+     * See {@link #findJarName(String, String[])} for more details.
+     *
+     * @since Ant 1.10.9
+     */
+    private static class IndexJarsFilenameMapper implements FileNameMapper {
+
+        private String[] classpath;
+
+        IndexJarsFilenameMapper(String[] classpath) {
+            this.classpath = classpath;
+        }
+
+        /**
+         * Empty implementation.
+         */
+        @Override
+        public void setFrom(String from) {
+        }
+
+        /**
+         * Empty implementation.
+         */
+        @Override
+        public void setTo(String to) {
+        }
+
+        @Override
+        public String[] mapFileName(String sourceFileName) {
+            String result = findJarName(sourceFileName, classpath);
+            return result == null ? null : new String[] {result};
         }
     }
 }
