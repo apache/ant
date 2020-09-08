@@ -248,7 +248,22 @@
       </indexjars>
     </jar>
   </target>
-    
+
+  <target name="testIndexJarsPlusJarMarkerWithMapping">
+    <mkdir dir="${tmp.dir}/a/b/c"/>
+    <jar destfile="${tmp.jar}" basedir="${tmp.dir}"/>
+    <delete dir="${tmp.dir}/a" quiet="true"/>
+    <mkdir dir="${tmp.dir}/d/e/f"/>
+    <jar destfile="${tmp.jar}2" basedir="${tmp.dir}" index="true">
+      <indexjars>
+        <fileset file="${tmp.jar}"/>
+      </indexjars>
+      <indexjarsmapper>
+        <globmapper from="${output}/*" to="foo/*" handledirsep="true"/>
+      </indexjarsmapper>
+    </jar>
+  </target>
+
   <target name="testNoVersionInfoNoStrict">
     <mkdir dir="${tmp.dir}"/>
     <jar destfile="${tmp.jar}" basedir="${tmp.dir}"/>
