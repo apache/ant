@@ -21,6 +21,10 @@ Other changes:
  * Ant will no longer log a warning if it doesn't find tools.jar
    Bugzilla Report 63577
 
+ * the <jar> task accepts now a nested <indexjarsmapper> element
+   that can be used to perform custom filename transformations
+   for the <indexjars> archives.
+
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
 
