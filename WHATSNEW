@@ -24,6 +24,7 @@ Other changes:
  * the <jar> task accepts now a nested <indexjarsmapper> element
    that can be used to perform custom filename transformations
    for the <indexjars> archives.
+   Github Pull Request #134
 
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
