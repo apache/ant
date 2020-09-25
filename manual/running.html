@@ -462,13 +462,15 @@ And I filtered out the <code>getPropertyHelper</code> access.</p>
 </tr>
 <tr>
   <td><code>java.io.tmpdir</code></td>
+  <td>path</td>
   <td>Some tasks need to create temporary files and will write them to
   the directory specified by this property. This property is set by
   the Java VM but can be overridden when Ant is started.<br/>
   See also <a href="#tmpdir">Temporary Directories</a>.</td>
-</table>
+</tr>
 <tr>
   <td><code>ant.tmpdir</code></td>
+  <td>path</td>
   <td><em>Since Ant 1.10.8</em><br/>
   Some tasks need to create temporary files and will write them to
   the directory specified by this property. This property takes
@@ -476,6 +478,7 @@ And I filtered out the <code>getPropertyHelper</code> access.</p>
   set. Unlike <code>java.io.tmpdir</code> this property can be set
   from within the build file.<br/>
   See also <a href="#tmpdir">Temporary Directories</a>.</td>
+</tr>
 </table>
 
 <p>
@@ -518,8 +521,14 @@ on the platform and the JVM implementation.</p>
   of an external command on OpenVMS will create a temporary file
   holding a DCL script that invokes the actual command.</p>
 
+<p>Starting with Ant 1.10.9 Ant will try to create a build process
+  specific temporary directory inside <code>java.io.tmpdir</code> wiht
+  permissions set to be accessible by the current user only and use
+  that if <code>ant.tmpdir</code> has not been set and Ant is able to
+  set permissions on the filesystem in question.</p>
+
 <p>Tasks not provided with the Ant distribution will ignore
-  the <code>ant.tmpdir</code> property and
+  the <code>ant.tmpdir</code> property or the process subdirectory and
   use <code>java.io.tmpdir</code> unless they have been adapted to the
   changed API of Ant 1.10.8.</p>
 
