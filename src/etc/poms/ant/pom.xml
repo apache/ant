@@ -243,6 +243,8 @@
             <exclude>org/apache/tools/ant/Include*</exclude>
             <!-- dependent on JUnit 5 -->
             <exclude>org/example/junitlauncher/</exclude>
+            <!-- requires Graal.js and forking tests per class -->
+            <exclude>org/apache/tools/ant/taskdefs/optional/script/graal/</exclude>
             <!-- requires structure of a binary distribution of Ant in ANT_HOME -->
             <exclude>org/apache/tools/ant/types/CommandlineJavaTest*</exclude>
             <exclude>org/apache/tools/ant/types/selectors/ModifiedSelectorTest*</exclude>
