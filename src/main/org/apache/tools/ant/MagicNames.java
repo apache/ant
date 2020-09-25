@@ -347,5 +347,17 @@ public final class MagicNames {
      * @since Ant 1.10.9
      */
     public static final String AUTO_TMPDIR = "ant.auto.tmpdir";
+
+    /**
+     * Magic property that can be used to disable Nashorn compatibility mode when using GraalVM JavaScript as script
+     * engine.
+     *
+     * <p>Set this to "true" if you want to disable Nashorn compatibility mode.</p>
+     *
+     * Value: {@value}
+     * @since Ant 1.10.9
+     */
+    public static final String DISABLE_NASHORN_COMPAT = "ant.disable.graal.nashorn.compat";
+
 }
 

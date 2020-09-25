@@ -336,6 +336,10 @@
     </or>
   </selector>
 
+  <selector id="needs.graaljs">
+    <filename name="${optional.package}/script/graal/*"/>
+  </selector>
+
   <selector id="ant.launcher">
     <filename name="${ant.package}/launch/"/>
   </selector>
@@ -502,6 +506,9 @@
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="javamail.present"
                classname="javax.mail.Transport"
+               classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
+    <available property="graaljs.present"
+               classname="com.oracle.truffle.js.scriptengine.GraalJSScriptEngine"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
 
     <condition property="tests.and.ant.share.classloader">
@@ -1870,7 +1877,41 @@ ${antunit.reports}
     </junitreport>
   </target>
 
-  <target name="junit-tests" depends="junit-batch,junit-single-test"/>
+  <target name="junit-tests" depends="junit-batch,graaljs-tests,junit-single-test"/>
+
+  <target name="graaljs-tests" depends="compile-tests,test-init"
+          if="graaljs.present">
+    <junit printsummary="${junit.summary}"
+           haltonfailure="${test.haltonfailure}"
+           fork="true"
+           forkmode="perTest"
+           tempdir="${build.dir}"
+           failureproperty="junit.failed"
+           errorproperty="junit.failed"
+           filtertrace="${junit.filtertrace}">
+      <sysproperty key="ant.home" value="${ant.home}"/>
+      <sysproperty key="build.classes.value" value="${build.classes.value}"/>
+      <sysproperty key="build.tests.value" value="${build.tests.value}"/>
+      <sysproperty key="offline" value="${offline}"/>
+      <sysproperty key="tests-classpath.value"
+                   value="${toString:tests-runtime-classpath}"/>
+      <sysproperty key="root" file="${basedir}"/>
+      <sysproperty key="build.compiler" value="${build.compiler}"/>
+      <sysproperty key="tests.and.ant.share.classloader"
+                   value="${tests.and.ant.share.classloader}"/>
+      <sysproperty key="java.io.tmpdir" file="${build.junit.tmpdir}"/>
+      <classpath>
+        <path refid="tests-runtime-classpath"/>
+        <pathelement location="${junit.collector.dir}"/>
+      </classpath>
+      <formatter type="xml"/>
+      <batchtest todir="${build.junit.xml}" unless="hasFailingTests">
+        <fileset dir="${src.junit}" excludes="**/Abstract*">
+          <selector refid="needs.graaljs" if="graaljs.present"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
 
   <target name="junit-batch" depends="compile-tests,test-init" if="junit.batch">
 
@@ -1906,6 +1947,9 @@ ${antunit.reports}
           <!-- interactive tests -->
           <exclude name="${taskdefs.package}/TestProcess.java"/>
           <exclude name="${optional.package}/splash/SplashScreenTest.java"/>
+
+          <!-- GraalVM JavaScript Nashorn compat tests influencing current JVM -->
+          <exclude name="${optional.package}/script/graal/"/>
 
           <!-- only run these tests if their required libraries are installed -->
           <selector refid="conditional-patterns"/>

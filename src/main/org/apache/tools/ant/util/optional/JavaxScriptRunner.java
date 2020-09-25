@@ -193,7 +193,10 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
         if (keptEngine != null) {
             return keptEngine;
         }
-        ScriptEngine result =
+        if (languageIsJavaScript()) {
+            maybeEnableNashornCompatibility();
+        }
+        final ScriptEngine result =
             new ScriptEngineManager().getEngineByName(getLanguage());
         if (result == null && JavaEnvUtils.isAtLeastJavaVersion("15")
             && languageIsJavaScript()) {
@@ -216,6 +219,16 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
         if (engine != null && engine.getClass().getName().contains("Graal")) {
             engine.getBindings(ScriptContext.ENGINE_SCOPE)
                 .put(DROP_GRAAL_SECURITY_RESTRICTIONS, true);
+        }
+    }
+
+    private static final String ENABLE_NASHORN_COMPAT_IN_GRAAL = "polyglot.js.nashorn-compat";
+
+    private void maybeEnableNashornCompatibility() {
+        if (getProject() != null) {
+            System.setProperty(ENABLE_NASHORN_COMPAT_IN_GRAAL,
+                Project.toBoolean(getProject().getProperty(MagicNames.DISABLE_NASHORN_COMPAT))
+                ? "false" : "true");
         }
     }
 

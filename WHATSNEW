@@ -39,7 +39,13 @@ Other changes:
  * added some special code to support GraalVM JavaScript as
    javax.script scripting engine for JavaScript. In particular we
    relax some security settings of GraalVM so that scripts can access
-   Ant objects. See the script task manual for additional details.
+   Ant objects.
+
+   Also Ant enables Nashorn compatibility mode by default, you can
+   disable that by setting the magic Ant property
+   ant.disable.graal.nashorn.compat to true.
+
+   See the script task manual for additional details.
 
  * If the magic property ant.tmpdir hasn't been set and Ant can
    control the permissions of directories it creates it will create an

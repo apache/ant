@@ -293,6 +293,13 @@ compatibility script</a>: <code>load("nashorn:mozilla_compat.js");</code>.</p>
   Graal's <a href="https://github.com/graalvm/graaljs/blob/master/docs/user/NashornMigrationGuide.md">Nashorn
   Migration Guide</a> for more details.</p>
 
+<p>When using GraalVM JavaScript Ant will enable the
+  feature <code>polyglot.js.allowAllAccess</code> in order to allow
+  scripts to use Ant objects. By default it will also enable Nashorn
+  compatibility mode, but you can disable this by setting the magic
+  Ant property <code>ant.disable.graal.nashorn.compat</code>
+  to <code>true</code>.</p>
+
 <p>The <code>&lt;script&gt;</code> task populates the Project instance under the
 name <code class="code">project</code>, so we can use that reference. Another way is to use its
 given name or getting its reference from the task itself. The Project provides methods for accessing

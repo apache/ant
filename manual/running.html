@@ -479,6 +479,15 @@ And I filtered out the <code>getPropertyHelper</code> access.</p>
   from within the build file.<br/>
   See also <a href="#tmpdir">Temporary Directories</a>.</td>
 </tr>
+<tr>
+  <td><code>ant.disable.graal.nashorn.compat</code></td>
+  <td>boolean (default <q>false</q>)</td>
+  <td><em>Since Ant 1.10.9</em><br/>
+  By default Ant will enable GraalVM JavaScript's Nashorn
+  compatibility mode for <code>script</code> and friends. You can
+  disable this beahvior by setting this property to <q>true</q>.<br/>
+  See also the <a href="Tasks/script.html">script task manual</a>.</td>
+</tr>
 </table>
 
 <p>
