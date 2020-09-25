@@ -15,6 +15,13 @@ Fixed bugs:
    surrogate pairs (and likely other edge cases as well).
    Bugzilla Report 40455
 
+ * <fixcrlf> will no longer remove the temporary file it just created
+   before writing to it.
+
+ * <sshexec> and <scp> didn't deal with wildcard hostnames in shs
+   config files properly.
+   Bugzilla Report 64530
+
 Other changes:
 --------------
 
@@ -25,6 +32,19 @@ Other changes:
    that can be used to perform custom filename transformations
    for the <indexjars> archives.
    Github Pull Request #134
+
+ * added a new PropertyEnumerator interface that extensions can
+   provide if they are managing properties unknown to the Ant project.
+
+ * added some special code to support GraalVM JavaScript as
+   javax.script scripting engine for JavaScript. In particular we
+   relax some security settings of GraalVM so that scripts can access
+   Ant objects. See the script task manual for additional details.
+
+ * If the magic property ant.tmpdir hasn't been set and Ant can
+   control the permissions of directories it creates it will create an
+   owner-owned temporary directory unaccessible to others as default
+   tempdir as soon as a temporary file is created for the first time,
 
 Changes from Ant 1.10.7 TO Ant 1.10.8
 =====================================
