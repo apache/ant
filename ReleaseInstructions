@@ -201,7 +201,7 @@ Note: This document was updated in the context of releasing Ant
 
       $ snapcraft clean
       $ snapcraft snap
-      $ snapcraft push --release 1.9/candidate ant_*.snap
+      $ snapcraft upload --release=1.9/candidate ant_*.snap
 
     This will publish the new release snap to the 1.9 track on the
     candidate risk level. It will be moved to stable, once the vote
