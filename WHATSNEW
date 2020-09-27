@@ -18,7 +18,7 @@ Fixed bugs:
  * <fixcrlf> will no longer remove the temporary file it just created
    before writing to it.
 
- * <sshexec> and <scp> didn't deal with wildcard hostnames in shs
+ * <sshexec> and <scp> didn't deal with wildcard hostnames in ssh
    config files properly.
    Bugzilla Report 64530
 
