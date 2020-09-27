@@ -215,7 +215,7 @@ Note: This document was adapted from the one created in the context of
 
       $ snapcraft clean
       $ snapcraft snap
-      $ snapcraft push --release candidate ant_*.snap
+      $ snapcraft upload --release=candidate ant_*.snap
 
     This will publish the new release snap to the latest track on the
     candidate risk level. It will be moved to stable, once the vote
