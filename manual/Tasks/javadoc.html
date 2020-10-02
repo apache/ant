@@ -50,12 +50,6 @@ listed in <var>packagelist</var> are not checked, so the task performs even if s
 missing or broken. Use this option if you wish to convert from an existing makefile. Once things are
 running you should then switch to the regular notation.</p>
 
-<p>In the table below, 1.2 means available if your current JVM is exactly of version 1.2 (not 1.3 or
-later), 1.4+ for any JVM of at least version 1.4, otherwise any JVM of at least version 1.2 is
-acceptable. <em>JDKs prior to 1.4 are no longer supported.</em>  If you specify
-the <var>executable</var> attribute it is up to you to ensure that this command supports the
-attributes you wish to use.</p>
-
 <p><strong>Note</strong>: When generating the JavaDocs for classes which contains annotations you
 maybe get a <code class="output">java.lang.ClassCastException:
 com.sun.tools.javadoc.ClassDocImpl</code>.  This is
@@ -82,13 +76,11 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
   <tr>
     <th scope="col">Attribute</th>
     <th scope="col">Description</th>
-    <th scope="col">Availability on Java</th>
     <th scope="col">Required</th>
   </tr>
   <tr>
     <td>sourcepath</td>
     <td>Specify where to find source files</td>
-    <td>all</td>
     <td rowspan="4">At least one of the four or
       nested <code>&lt;sourcepath&gt;</code>, <code>&lt;fileset&gt;</code>,
       <code>module</code> or <code>&lt;packageset&gt;</code></td>
@@ -97,62 +89,52 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>sourcepathref</td>
     <td>Specify where to find source files by <a href="../using.html#references">reference</a> to a
       <var>sourcepath</var> defined elsewhere.</td>
-    <td class="left">all</td>
   </tr>
   <tr>
     <td>sourcefiles</td>
     <td>Comma separated list of source files&mdash;see also the nested <code>source</code>
       element.</td>
-    <td class="left">all</td>
   </tr>
   <tr>
     <td>modulenames</td>
     <td>Comma separated list of module names -- see also
     the nested <code>module</code> element. <em>since Ant 1.10.6</em></td>
-    <td>all</td>
   </tr>
   <tr>
     <td>destdir</td>
     <td>Destination directory for output files</td>
-    <td>all</td>
     <td>Yes, unless a <var>doclet</var> has been specified.</td>
   </tr>
   <tr>
     <td>maxmemory</td>
     <td>Max amount of memory to allocate to the <kbd>javadoc</kbd> JVM</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>packagenames</td>
     <td>Comma separated list of package files (with terminating wildcard)&mdash;see also the
       nested <code>package</code> element.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>packageList</td>
     <td>The name of a file containing the packages to process</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>classpath</td>
     <td>Specify where to find user class files</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Bootclasspath</td>
     <td>Override location of class files loaded by the bootstrap class loader</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>classpathref</td>
     <td>Specify where to find user class files by <a href="../using.html#references">reference</a>
       to a <var>classpath</var> defined elsewhere.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
@@ -160,136 +142,114 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>Override location of class files loaded by the bootstrap class loader
       by <a href="../using.html#references">reference</a> to a <var>bootclasspath</var> defined
       elsewhere.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Extdirs</td>
     <td>Override location of installed extensions</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Overview</td>
     <td>Read overview documentation from HTML file</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>access</td>
     <td>Access mode: one of <q>public</q>, <q>protected</q>, <q>package</q>, or <q>private</q></td>
-    <td>all</td>
     <td>No; default is <q>protected</q></td>
   </tr>
   <tr>
     <td>Public</td>
     <td>Show only public classes and members</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Protected</td>
     <td>Show protected/public classes and members (default)</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Package</td>
     <td>Show package/protected/public classes and members</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Private</td>
     <td>Show all classes and members</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Old</td>
-    <td>Generate output using JDK 1.1 emulating doclet.<br/><strong>Note</strong>: <em>Since Ant
-      1.8.0</em> this attribute has no effect because <kbd>javadoc</kbd> of Java 1.4 and later
-      does not support the <kbd>-1.1</kbd> switch anymore.</td>
-    <td>1.2</td>
+    <td>Generate output using JDK 1.1 emulating doclet.<br/><strong>Note</strong>:
+      This attribute has no effect unless you're using an pre jdk 1.4 external <kbd>javadoc</kbd> 
+   </td>
     <td>No</td>
   </tr>
   <tr>
     <td>Verbose</td>
     <td>Output messages about what <kbd>javadoc</kbd> is doing</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Locale</td>
     <td>Locale to be used, e.g. <q>en_US</q> or <q>en_US_WIN</q></td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Encoding</td>
     <td>Source file encoding name</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Version</td>
     <td>Include <code>@version</code> paragraphs</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Use</td>
     <td>Create class and package usage pages</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Author</td>
     <td>Include <code>@author</code> paragraphs</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Splitindex</td>
     <td>Split index into one file per letter</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Windowtitle</td>
     <td>Browser window title for the documentation (text)</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Doctitle</td>
     <td>Include title for the package index (first) page (HTML code)</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Header</td>
     <td>Include header text for each page (HTML code)</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>Footer</td>
     <td>Include footer text for each page (HTML code)</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>bottom</td>
     <td>Include bottom text for each page (HTML code)</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>link</td>
     <td>Create links to <code>javadoc</code> output at the given URL&mdash;see also the
       nested <code>link</code> element.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
@@ -298,7 +258,6 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
       at <samp><em>alt-url</em></samp> by specifying a
       value <q><em>url</em>&nbsp;<em>alt-url</em></q> (space as separator). A shorthand for the
       nested <code>link</code> element with <var>offline</var>=<q>true</q>.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
@@ -306,94 +265,79 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>Group specified packages together in overview page.  The format is as
       described <a href="#groupattribute">below</a>&mdash;see also the nested <code>group</code>
       element.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>nodeprecated</td>
     <td>Do not include <code>@deprecated</code> information</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>nodeprecatedlist</td>
     <td>Do not generate deprecated list</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>notree</td>
     <td>Do not generate class hierarchy</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>noindex</td>
     <td>Do not generate index</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>nohelp</td>
     <td>Do not generate help link</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>nonavbar</td>
     <td>Do not generate navigation bar</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>serialwarn</td>
     <td>Generate warning about <code>@serial</code> tag</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>helpfile</td>
     <td>Specifies the HTML help file to use</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>stylesheetfile</td>
     <td>Specifies the CSS stylesheet to use</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>charset</td>
     <td>Charset for cross-platform viewing of generated documentation</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>docencoding</td>
     <td>Output file encoding name</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>doclet</td>
     <td>Specifies the class file that starts the doclet used in generating the
       documentation&mdash;see also the nested <code>doclet</code> element.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>docletpath</td>
     <td>Specifies the path to the doclet class file that is specified with the <kbd>-doclet</kbd>
       option.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>docletpathref</td>
     <td>Specifies the path to the doclet class file that is specified with the <kbd>-doclet</kbd>
       option by <a href="../using.html#references">reference</a> to a path defined elsewhere.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
@@ -401,33 +345,28 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>Lets you add additional parameters to the <kbd>javadoc</kbd> command line. Useful for
       doclets. Parameters containing spaces need to be quoted using &amp;quot;&mdash;see also the
       nested <code>arg</code> element.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>failonerror</td>
     <td>Stop the build process if the command exits with a return code other than <q>0</q>.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>failonwarning</td>
     <td>Stop the build process if a warning is emitted&mdash;i.e. if <kbd>javadoc</kbd>'s output
       contains the word <q>warning</q>.  <em>since Ant 1.9.4</em></td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>excludepackagenames</td>
     <td>comma separated list of packages you don't want docs for&mdash;see also the
       nested <code>excludepackage</code> element.</td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>defaultexcludes</td>
     <td>indicates whether default excludes should be used (<q>yes|no</q>).</td>
-    <td>all</td>
     <td>No; defaults to <q>yes</q></td>
   </tr>
   <tr>
@@ -440,62 +379,54 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
       If enabled, the file will be written to
       the <a href="../running.html#tmpdir">temporary
       directory</a>.</td>
-    <td>all</td>
     <td>No; default is <q>no</q></td>
   </tr>
   <tr>
     <td>source</td>
     <td>Enable <kbd>javadoc</kbd> to handle Java language features.  Set this to <q>1.4</q> to
       document code that compiles using <kbd>javac -source 1.4</kbd>, etc.</td>
-    <td>1.4+</td>
     <td>No; default can be provided using the magic
     <a href="../javacprops.html#source"><code>ant.build.javac.source</code></a> property.</td>
   </tr>
   <tr>
     <td>linksource</td>
     <td>Generate hyperlinks to source files.  <em>since Ant 1.6</em>.  (<q>yes|no</q>).</td>
-    <td>1.4+</td>
     <td>No; default is <q>no</q></td>
   </tr>
   <tr>
     <td>breakiterator</td>
     <td>Use the new break iterator algorithm.  <em>since Ant 1.6</em>.  (<q>yes|no</q>).</td>
-    <td>1.4+</td>
     <td>No; default is <q>no</q></td>
   </tr>
   <tr>
     <td>noqualifier</td>
     <td>Enables the <kbd>-noqualifier</kbd> argument&mdash;must be <q>all</q> or a colon separated
       list of packages.  <em>since Ant 1.6</em>.</td>
-    <td>1.4+</td>
     <td>No</td>
   </tr>
   <tr>
     <td>includenosourcepackages</td>
     <td>If set to <q>true</q>, packages that don't contain Java source but
       a <samp>package.html</samp> will get documented as well.  <em>since Ant 1.6.3</em>.</td>
-    <td>all</td>
     <td>No; default is <q>false</q></td>
   </tr>
   <tr>
     <td>executable</td>
     <td>Specify a particular <kbd>javadoc</kbd> executable to use in place of the default binary
-      (found in the same JDK as Ant is running in).  <em>since Ant 1.6.3</em>.</td>
-    <td>all</td>
+      (found in the same JDK as Ant is running in).  <em>since Ant 1.6.3</em>. <b>Note:</b>
+      <em>It is up to you to ensure that this command supports the attributes you wish to use.</em></td>
     <td>No</td>
   </tr>
   <tr>
     <td>docfilessubdirs</td>
     <td>Enables deep-copying of <samp>doc-files</samp> subdirectories. <em>since Ant
       1.8.0</em>.</td>
-    <td>1.4</td>
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
     <td>excludedocfilessubdir</td>
     <td>Colon-separated list of <samp>doc-files</samp> subdirectories to exclude
       if <var>docfilessubdirs</var> is true. <em>since Ant 1.8.0</em>.</td>
-    <td>1.4</td>
     <td>No</td>
   </tr>
   <tr>
@@ -506,14 +437,12 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
       (<a href="https://www.oracle.com/technetwork/java/javase/7u25-relnotes-1955741.html#jpi-upt"
       target="_top">details</a>).  When this flag is set to <q>true</q>, Ant will check whether the
       docs are vulnerable and will try to fix them.</td>
-    <td>1.4</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
     <td>modulesourcepath</td>
     <td>Specify where to find module source files
       <em>since Ant 1.10.6</em></td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
@@ -521,14 +450,12 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>Specify where to find module source files by <a
       href="../using.html#references">reference</a> to a PATH defined elsewhere.
       <em>since Ant 1.10.6</em></td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
     <td>modulepath</td>
     <td>Specify where to find module files
       <em>since Ant 1.10.6</em></td>
-    <td>all</td>
     <td>No</td>
   </tr>
   <tr>
@@ -536,7 +463,6 @@ with the <var>exclude</var> patterns of the <code>packageset</code> (and vice ve
     <td>Specify where to find module files by <a
       href="../using.html#references">reference</a> to a PATH defined elsewhere.
       <em>since Ant 1.10.6</em></td>
-    <td>all</td>
     <td>No</td>
   </tr>
 </table>

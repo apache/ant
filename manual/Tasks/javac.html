@@ -73,7 +73,7 @@ for either the <code>build.compiler</code> property or the <var>compiler</var> a
   <li><q>sj</q> (Symantec Java compiler) &ndash; <q>symantec</q> can be used as an alias.</li>
   <li><q>extJavac</q> (run either modern or classic in a JVM of its own).</li>
 </ul>
-<p>The default is <q>javac1.x</q> with <q>x</q> depending on the JDK version you use while you are
+<p>The default is <q>javacX</q> with <q>X</q> depending on the JDK version you use while you are
 running Ant.  If you wish to use a different compiler interface than those supplied, you can write a
 class that implements the CompilerAdapter interface
 (package <code>org.apache.tools.ant.taskdefs.compilers</code>). Supply the full classname in
@@ -93,7 +93,7 @@ it passes to the compiler.</p>
 locks up the files present in the classpath of the <code>&lt;javac&gt;</code> task, and does not
 release them.  The side effect of this is that you will not be able to delete or move those files
 later on in the build.  The workaround is to fork when invoking the compiler.</p>
-<p>If you are using Java 8 or above and your source contains native methods or fields annotated with
+<p>If your source contains native methods or fields annotated with
 the <code>@Native</code> annotation you can set the <var>nativeheaderdir</var> attribute in order to
 use the <kbd>-h</kbd> switch of <kbd>javac</kbd> to generate the native header files. Note that
 the logic Ant uses to determine which files to compile does not take native headers into account,
@@ -404,14 +404,14 @@ file will not get compiled even if a native header file generated for it would b
   <tr>
     <td>nativeheaderdir</td>
     <td>Specify where to place generated native header files.  <em>Since Ant 1.9.8</em>.
-    <td>No, ignored when running on JDK 7 or earlier</td>
+    <td>No, ignored when compiling on JDK 7 or earlier</td>
   </tr>
   <tr>
     <td>release</td>
     <td>Specify the value for the <kbd>--release</kbd> switch.<br/>When set and running on JDK 9+
       the <var>source</var> and <var>target</var> attributes as well as the <var>bootclasspath</var>
       will be ignored.  <em>Since Ant 1.9.8</em>.
-    <td>No, ignored when running on JDK 8 or earlier</td>
+    <td>No, ignored when compiling on JDK 8 or earlier</td>
   </tr>
 </table>
 
@@ -590,10 +590,6 @@ log, that these settings are fix.</p>
        executable=&quot;path-to-java14-home/bin/javac&quot;
        fork=&quot;true&quot;
        taskname=&quot;javac1.4&quot;/&gt;</pre>
-
-<p><strong>Note</strong>: If you are using Ant on Windows and a new DOS window pops up for every use
-of an external compiler, this may be a problem of the JDK you are using.  This problem may occur
-with all JDKs prior to 1.2.</p>
 
 <p>If you want to activate other compiler options like <code>lint</code> you could use
 the <code>&lt;compilerarg&gt;</code> element:</p>

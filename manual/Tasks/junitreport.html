@@ -33,26 +33,6 @@ results.</p>
 distribution. See <a href="../install.html#librarydependencies">Library Dependencies</a> for more
 information.</p>
 
-<h3>Requirements</h3>
-
-<p>The task needs Apache <a href="https://xml.apache.org/xalan-j/" target="_top">Xalan 2.4.1+ or
-Xalan XSLTC</a> (JDK 1.4 contains a version of Xalan 2.x, while JDK 1.5 ships with a version of
-XSLTC). JDK 1.4.2-01 and later ships with a bundled Xalan 2.4.1+, meaning that JDKs prior to version
-1.4.2-01 won't work out of the box. The table below summarize the compatibility status.</p>
-<table>
-<tr><th scope="col">Xalan</th><th scope="col">Sun JDK Bundle</th><th scope="col">Status</th></tr>
-<tr><td>2.4.1+</td><td>JDK 1.4.2-01+</td><td>OK</td></tr>
-<tr><td>XSLTC</td><td>JDK 1.5.x</td><td>OK</td></tr>
-<tr><td>2.x</td><td>JDK 1.4.x</td><td><em><u>Deprecated</u>,
-use <samp>${ant.home}/etc/junit-frames-xalan1.xsl</samp><br/>Upgrade Xalan using the JDK endorsement
-mechanism</em></td></tr>
-</table>
-
-<p>In Ant 1.6.2, we had to decide between supporting Xalan 1/Xalan 2.4.1- and Xalan 2.4.1+/XSLTC,
-because there was no way to support both couples at the same time.</p>
-<p><em>Since Ant 1.7</em>, we dropped support for Xalan 1, because Xalan 1 was not available anymore
-for quite some time.</p>
-
 <h3>Parameters</h3>
 <table class="attr">
   <tr>

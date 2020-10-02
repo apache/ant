@@ -128,44 +128,6 @@ MacOS X a.k.a. macOS is the first of the Apple platforms that Ant supports compl
 like any other Unix.
 </p>
 
-<h2>Novell Netware</h2>
-<p>
-To give the same level of sophisticated control as Ant's startup scripts on other platforms, it was
-decided to make the main ant startup on NetWare be via a Perl Script, <code>runant.pl</code>.  This
-is found in the <samp>bin</samp> directory (for instance&mdash;<samp>bootstrap\bin</samp>
-or <samp>dist\bin</samp>).
-</p>
-
-<p>One important item of note is that you need to set up the following to run Ant:</p>
-<ul>
-  <li><code>CLASSPATH</code>&mdash;put <samp>ant.jar</samp> and any other needed jars on the system
-    classpath.</li>
-  <li><code>ANT_OPTS</code>&mdash;On NetWare, <code>ANT_OPTS</code> needs to include a parameter of
-    the form, <kbd>-envCWD=<i>ANT_HOME</i></kbd>, with <kbd><i>ANT_HOME</i></kbd> being the
-    fully expanded location of Ant, <strong>not</strong> an environment variable.  This is due to
-    the fact that the NetWare System Console has no notion of a current working directory.</li>
-</ul>
-<p>It is suggested that you create up an <samp>ant.ncf</samp> that sets up these parameters, and
-calls <samp>perl ANT_HOME/dist/bin/runant.pl</samp></p>
-<p>The following is an example of such an NCF file (assuming Ant is installed
-in <samp>sys:/apache-ant/</samp>):</p>
-<pre>
-envset CLASSPATH=sys:/apache-ant/bootstrap/lib/ant.jar
-envset CLASSPATH=$CLASSPATH;sys:/apache-ant/lib/optional/junit.jar
-envset CLASSPATH=$CLASSPATH;sys:/apache-ant/bootstrap/lib/optional.jar
-
-setenv ANT_OPTS=-envCWD=sys:/apache-ant
-envset ANT_OPTS=-envCWD=sys:/apache-ant
-setenv ANT_HOME=sys:/apache-ant/dist/lib
-envset ANT_HOME=sys:/apache-ant/dist/lib
-
-perl sys:/apache-ant/dist/bin/runant.pl</pre>
-
-<p>Ant works on JVM version 1.3 or higher.  You may have some luck running it on JVM 1.2, but
-serious problems have been found running Ant on JVM 1.1.7B.  These problems are caused by JVM bugs
-that will not be fixed.</p>
-<p>JVM 1.3 is supported on Novell NetWare versions 5.1 and higher.</p>
-
 <h2>Other platforms</h2>
 <p>
 Support for other platforms is not guaranteed to be complete, as certain techniques to hide platform

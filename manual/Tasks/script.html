@@ -33,8 +33,8 @@ target="_top">JSR 223</a> supported language.
 <p><strong>Note</strong>: This task depends on external libraries not included in the Apache Ant
 distribution.  See <a href="../install.html#librarydependencies">Library Dependencies</a> for more
 information.</p>
-<p>The task may use the BSF scripting manager or the JSR 223 manager that is included in JDK 6 and
-higher. This is controlled by the <var>manager</var> attribute. The JSR 223 scripting manager is
+<p>The task may use the BSF scripting manager or the JSR 223 manager that is included in the JDK.
+This is controlled by the <var>manager</var> attribute. The JSR 223 scripting manager is
 indicated by <q>javax</q>.</p>
 <p>All items (tasks, targets, etc) of the running project are accessible from the script, using
 either their <var>name</var> or <var>id</var> attributes (as long as their names are considered
@@ -81,8 +81,7 @@ In particular all targets should have different location values.</p>
       values: <q>auto</q>, <q>bsf</q> or <q>javax</q>.
       <ul>
         <li><q>bsf</q> use the BSF scripting manager to run the language.</li>
-        <li><q>javax</q> use the <code>javax.scripting</code> manager to run the language. (This
-          will only work for JDK 6 and higher).</li>
+        <li><q>javax</q> use the <code>javax.scripting</code> manager to run the language.</li>
         <li><q>auto</q> use the BSF engine if it exists, otherwise use
           the <code>javax.scripting</code> manager.</li>
       </ul>

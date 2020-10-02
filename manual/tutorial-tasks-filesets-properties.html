@@ -658,7 +658,7 @@ After that it prints out the result (e.g. &lt;samp&gt;C:/ant-1.5.4/bin/ant.jar;C
 <li>is the right package used?</li>
 <li>does the code conform to the styleguide?</li>
 <li>do all tests pass?</li>
-<li>does the code compile on JDK 5 (and passes all tests there)?</li>
+<li>does the code compile on the minimal and current JDK for the Ant distribution (and passes all tests there)?</li>
 <li>code under Apache license</li>
 <li>create a patch file</li>
 <li>publishing that patch file</li>
@@ -671,12 +671,12 @@ additional information on that.</p>
 <li>Java file begins with Apache license statement. <strong><em>must do that</em></strong></li>
 <li>Task does not depend on GPL or LGPL code. <strong><em>ok</em></strong></li>
 <li>Source code complies with style guidelines <strong><em>have to check (checkstyle)</em></strong></li>
-<li>Code compiles and runs on Java 5 <strong><em>have to try</em></strong></li>
+<li>Code compiles and runs on minimal support java version <strong><em>have to try</em></strong></li>
 <li>Member variables are private, and provide public accessor methods if access is actually needed. <strong><em>have to
 check (checkstyle)</em></strong></li>
 <li><em>Maybe</em> Task has <var>failonerror</var> attribute to control failure
 behaviour <strong><em>hasn't</em></strong></li>
-<li>New test cases written and succeed <strong><em>passed on JDK 8, have to try on JDK 5</em></strong></li>
+<li>New test cases written and succeed <strong><em>passed on newest jdk version, have to try on oldest supported jdk version</em></strong></li>
 <li>Documentation page written <strong><em>ok</em></strong></li>
 <li>Example task declarations in the documentation tested. <strong><em>ok (used in tests)</em></strong></li>
 <li>Message to dev contains [SUBMIT] and task name in subject <strong><em>to do</em></strong></li>
@@ -764,9 +764,10 @@ after <code>git clone</code> (without our modifications).</p>
 <h3>Apache license statement</h3>
 <p>Simply copy the license text from one the other source from the Ant source tree.</p>
 
-<h3>Test on JDK 5</h3>
-<p>Ant 1.10 uses Java 8 for development, but Ant 1.9 is actively maintained, too.  That means that Ant code must be able
-to run on a JDK 5. So we have to test that. You can download older JDKs
+<h3>Test on the minimal JDK version</h3>
+<p>Ant 1.10 uses Java 8 for development, but Ant 1.9 is actively maintained, too. That means that updates to Ant code 
+present in Ant 1.9 must be able to run on a JDK 5. (It is fine to address only ant 1.10 and above for new teasks.)
+So we have to test that. You can download older JDKs
 from <a href="https://www.oracle.com/technetwork/java/archive-139210.html" target="_top">Oracle [8]</a>.</p>
 
 <p>Clean the <code>ANT_HOME</code> variable, delete the <samp>build</samp>, <samp>bootstrap</samp> and <samp>dist</samp>
