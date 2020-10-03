@@ -337,8 +337,7 @@ public class SOSTest {
         int length = sTestCmdLine.length;
         assertEquals("number of arguments doesn't match", length, sGeneratedCmdLine.length);
         for (int i = 0; i < length; i++) {
-            assertEquals("arg # " + String.valueOf(i),
-                    sTestCmdLine[i], sGeneratedCmdLine[i]);
+            assertEquals("arg # " + i, sTestCmdLine[i], sGeneratedCmdLine[i]);
         }
     }
 }

@@ -317,7 +317,7 @@ public final class SortFilter extends BaseParamFilterReader
             for (Parameter param : params) {
                 final String paramName = param.getName();
                 if (REVERSE_KEY.equals(paramName)) {
-                    setReverse(Boolean.valueOf(param.getValue()));
+                    setReverse(Boolean.parseBoolean(param.getValue()));
                 } else if (COMPARATOR_KEY.equals(paramName)) {
                     try {
                         String className = param.getValue();

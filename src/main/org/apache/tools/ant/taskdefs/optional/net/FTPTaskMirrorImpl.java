@@ -1372,7 +1372,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         final int maxIterations = 1000;
         for (int counter = 1; counter < maxIterations; counter++) {
             File localFile = FILE_UTILS.createTempFile(task.getProject(),
-                                                       "ant" + Integer.toString(counter), ".tmp",
+                                                       "ant" + counter, ".tmp",
                                                        null, false, false);
             String fileName = localFile.getName();
             boolean found = false;

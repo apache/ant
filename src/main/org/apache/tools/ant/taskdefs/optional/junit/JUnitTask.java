@@ -1174,7 +1174,7 @@ public class JUnitTask extends Task {
             cmd.createArgument().setValue(Constants.TESTSFILE + casesFile);
         }
 
-        cmd.createArgument().setValue(Constants.SKIP_NON_TESTS + String.valueOf(test.isSkipNonTests()));
+        cmd.createArgument().setValue(Constants.SKIP_NON_TESTS + test.isSkipNonTests());
         cmd.createArgument().setValue(Constants.FILTERTRACE + test.getFiltertrace());
         cmd.createArgument().setValue(Constants.HALT_ON_ERROR + test.getHaltonerror());
         cmd.createArgument().setValue(Constants.HALT_ON_FAILURE
@@ -1184,17 +1184,17 @@ public class JUnitTask extends Task {
         checkIncludeSummary(cmd);
 
         cmd.createArgument().setValue(Constants.SHOWOUTPUT
-                                      + String.valueOf(showOutput));
+                                      + showOutput);
         cmd.createArgument().setValue(Constants.OUTPUT_TO_FORMATTERS
-                                      + String.valueOf(outputToFormatters));
+                                      + outputToFormatters);
         cmd.createArgument().setValue(Constants.LOG_FAILED_TESTS
-                                      + String.valueOf(logFailedTests));
+                                      + logFailedTests);
         cmd.createArgument().setValue(Constants.THREADID
-                                      + String.valueOf(test.getThread()));
+                                      + test.getThread());
 
         // #31885
         cmd.createArgument().setValue(Constants.LOGTESTLISTENEREVENTS
-                                      + String.valueOf(getEnableTestListenerEvents()));
+                                      + getEnableTestListenerEvents());
 
         StringBuilder formatterArg = new StringBuilder(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
