@@ -46,7 +46,7 @@ public class AugmentReference extends Task implements TypeAdapter {
         hijackId();
         if (getProject().hasReference(id)) {
             Object result = getProject().getReference(id);
-            log("project reference " + id + "=" + String.valueOf(result), Project.MSG_DEBUG);
+            log("project reference " + id + "=" + result, Project.MSG_DEBUG);
             return result;
         }
         throw new BuildException("Unknown reference \"" + id + "\"");

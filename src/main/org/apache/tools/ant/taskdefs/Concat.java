@@ -504,7 +504,7 @@ public class Concat extends Task implements ResourceCollection {
         @Override
         public String getName() {
             return resourceName == null
-                    ? "concat (" + String.valueOf(c) + ")" : resourceName;
+                    ? "concat (" + c + ")" : resourceName;
         }
     }
 

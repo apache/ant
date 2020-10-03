@@ -49,7 +49,7 @@ public class ExecStreamRedirectorTest {
     @Before
     public void setUp() throws IOException {
         buildRule.configureProject("src/etc/testcases/taskdefs/exec/exec-with-redirector.xml");
-        outputDir = folder.newFolder(String.valueOf("temp-" + System.nanoTime()));
+        outputDir = folder.newFolder("temp-" + System.nanoTime());
         buildRule.getProject().setUserProperty("output", outputDir.toString());
         buildRule.executeTarget("setUp");
     }
