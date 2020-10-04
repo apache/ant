@@ -28,11 +28,7 @@
 <h3>Description</h3>
 <p>Generates JNI headers from a Java class.</p>
 <p>When this task executes, it will generate the C header and source files that are needed to
-implement native methods. JNI operates differently depending on
-whether <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javah.html"
-target="_top">JDK 1.2+</a>
-or <a href="https://web.archive.org/web/20021018232717/http://java.sun.com/products/jdk/1.1/docs/tooldocs/win32/javah.html"
-target="_top">pre-1.2 JDK</a> systems are used.</p>
+implement native methods.
 
 <p>If you are building with Java 8 or above consider
 using <a href="javac.html"><code>javac</code></a>'s <var>nativeheaderdir</var> attribute instead
@@ -86,13 +82,15 @@ done is breaking the amount of classes to compile into smaller chunks.</p>
   </tr>
   <tr>
     <td>force</td>
-    <td>specifies that output files should always be written (JDK 1.2 only)</td>
+    <td>specifies that output files should always be written 
+    (only when using an external javah of JDK 1.2)</td>
     <td>No</td>
   </tr>
   <tr>
     <td>old</td>
     <td>specifies that old JDK 1.0-style header files should be generated (otherwise output file
-      contain JNI-style native method function prototypes) (JDK 1.2 only)</td>
+      contain JNI-style native method function prototypes) 
+      (only when using an external javah of JDK 1.2)</td>
     <td>No</td>
   </tr>
   <tr>

@@ -202,7 +202,7 @@ e.g. decreasing the size by deleting 'same' classes from the versions-branches, 
     <td>index</td>
     <td>whether to create
       an <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#JAR_Index"
-      target="_top">index list</a> to speed up classloading.  This is a JDK 1.3+ specific feature.
+      target="_top">index list</a> to speed up classloading.
       Unless you specify additional jars with nested <a href="#indexjars"><code>indexjars</code></a>
       elements, only the contents of this jar will be included in the index.</td>
     <td>No; defaults to <q>false</q></td>
@@ -508,7 +508,7 @@ Sealed: false</pre>
 <h4>Service Provider</h4>
 
 <p>The following shows how to create a jar file specifying a service with an implementation of the
-JDK 6 scripting interface:</p>
+scripting interface:</p>
 <pre>
 &lt;jar destfile="pinky.jar"&gt;
     &lt;fileset dir="build/classes"/&gt;
@@ -517,7 +517,7 @@ JDK 6 scripting interface:</p>
 &lt;/jar&gt;</pre>
 
 <p>The following shows how to create a jar file specifying a service with two implementations of the
-JDK 6 scripting interface:</p>
+scripting interface:</p>
 <pre>
 &lt;jar destfile="pinkyandbrain.jar"&gt;
     &lt;fileset dir="classes"/&gt;

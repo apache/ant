@@ -338,13 +338,6 @@ case).</p>
 
 <p>Note that you need to escape a dollar-sign (<q>$</q>) with another dollar-sign in Ant.</p>
 
-<p>The regexp mapper needs a supporting library and an implementation
-of <code class="code">org.apache.tools.ant.util.regexp.RegexpMatcher</code> that hides the specifics
-of the library. <em>Since Ant 1.8.0</em>, Java 1.4 or later is required, so the implementation based
-on the <code class="code">java.util.regex</code> package is always be available.  You can still use
-the now retired Jakarta ORO or Jakarta Regex instead if your provide the corresponding jar in
-your <code>CLASSPATH</code>.</p>
-
 <p>For information about using <a href="https://savannah.gnu.org/projects/gnu-regexp/"
 target="_top">gnu.regexp</a> or <a href="https://github.com/kzn/regex4j/" target="_top">gnu.rex</a>
 with Ant, see <a href="https://marc.info/?l=ant-dev&m=97550753813481&w=2" target="_top">this</a>
@@ -364,7 +357,7 @@ in a nested <code>&lt;classpath&gt;</code>.</p>
 <li>If the system property <code>ant.regexp.matcherimpl</code> has been set, it is taken as the name
 of the class implementing <code class="code">org.apache.tools.ant.util.regexp.RegexpMatcher</code>
 that should be used.</li>
-<li>If it has not been set, uses the JDK 1.4 classes.</li>
+<li>If it has not been set, uses the default from the <code>java.util.regex</code> package.</li>
 </ul>
 
 <h5>Examples</h5>

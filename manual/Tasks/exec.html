@@ -90,9 +90,6 @@ executed exactly as specified inside a temporary DCL script.  This has some impl
     an <q>@</q>-sign (e.g. <var>executable</var>=<q>@[FOO]BAR.COM</q>), just as you would in a DCL
     script</li>
 </ul>
-<p>For <code>&lt;exec&gt;</code> to work in an environment with a JVM older than version 1.4.1-2 it
-is also <em>required</em> that the logical <code>JAVA$FORK_SUPPORT_CHDIR</code> is set
-to <code>TRUE</code> in the job table (see the <em>JDK Release Notes</em>).</p>
 
 <p>Please note that JVM provided by HP doesn't follow OpenVMS' conventions of exit codes.  If you
 run a JVM with this task, the task may falsely claim that an error occurred (or silently ignore an

@@ -242,6 +242,7 @@ The more up-to-date the version of Java, the more Ant tasks you get.
 </p>
 <p>
   <strong>Note</strong>:
+    Ant 1.10.* works with JDK 8 and higher,
     Ant 1.9.* works with JDK 1.5 and higher, Ant 1.8.* works with JDK 1.4 and higher, Ant 1.7.* works with JDK 1.3 and higher,
     Ant 1.6.* works with JDK 1.2 and higher, Ant 1.2 to Ant 1.5.* work with JDK 1.1 and higher.
 </p>
@@ -573,19 +574,19 @@ have to spend much time configuring the JVM properties until they are happy.
 <p>Assume Ant is installed in <samp>c:\ant\</samp>. The following sets up the
 environment:</p>
 <pre class="input">set ANT_HOME=c:\ant
-set JAVA_HOME=c:\jdk1.7.0_51
+set JAVA_HOME=c:\jdk11.0.8_10
 set PATH=%PATH%;%ANT_HOME%\bin</pre>
 
 <h3 id="bash">Linux/Unix (bash)</h3>
 <p>Assume Ant is installed in <samp>/usr/local/ant</samp>. The following sets up
 the environment:</p>
 <pre class="input">export ANT_HOME=/usr/local/ant
-export JAVA_HOME=/usr/local/jdk1.7.0_51
+export JAVA_HOME=/usr/local/jdk-11.0.8+10
 export PATH=${PATH}:${ANT_HOME}/bin</pre>
 
 <h3 id="tcshcsh">Linux/Unix (csh)</h3>
 <pre class="input">setenv ANT_HOME /usr/local/ant
-setenv JAVA_HOME /usr/local/jdk/jdk1.7.0_51
+setenv JAVA_HOME=/usr/local/jdk-11.0.8+10
 set path=( $path $ANT_HOME/bin )</pre>
 
 <p>
@@ -777,14 +778,14 @@ these tasks available. Please refer to the <a href="#optionalTasks">Installing A
   <tr>
     <td>jakarta-regexp-1.4.jar</td>
     <td><a href="Types/mapper.html#regexp-mapper">regexp</a> type with mappers (if you do not wish to use
-      java.util.regex)</td>
+      <code>java.util.regex</code>)</td>
     <td><a href="https://attic.apache.org/projects/jakarta-regexp.html"
            target="_top">https://attic.apache.org/projects/jakarta-regexp.html</a></td>
   </tr>
   <tr>
     <td>jakarta-oro-2.0.8.jar</td>
     <td><a href="Types/mapper.html#regexp-mapper">regexp</a> type with mappers (if you do not wish to use
-      java.util.regex) or <a href="Tasks/ftp.html">ftp</a> task with <a href="#commons-net">commons-net</a> 1.4.1</td>
+      <code>java.util.regex</code>) or <a href="Tasks/ftp.html">ftp</a> task with <a href="#commons-net">commons-net</a> 1.4.1</td>
     <td><a href="https://attic.apache.org/projects/jakarta-oro.html"
            target="_top">https://attic.apache.org/projects/jakarta-oro.html</a></td>
   </tr>
