@@ -40,7 +40,7 @@ import org.apache.tools.ant.types.ResourceCollection;
  * making no attempt to remove duplicates, or references another ResourceCollection.
  * @since Ant 1.7
  */
-public class Resources extends DataType implements ResourceCollection {
+public class Resources extends DataType implements AppendableResourceCollection {
     /** static empty ResourceCollection */
     public static final ResourceCollection NONE = new ResourceCollection() {
         @Override
@@ -156,6 +156,7 @@ public class Resources extends DataType implements ResourceCollection {
      * Add a ResourceCollection.
      * @param c the ResourceCollection to add.
      */
+    @Override
     public synchronized void add(ResourceCollection c) {
         if (isReference()) {
             throw noChildrenAllowed();

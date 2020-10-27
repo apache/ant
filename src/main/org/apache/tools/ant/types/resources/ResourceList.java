@@ -47,14 +47,10 @@ import org.apache.tools.ant.types.ResourceCollection;
 public class ResourceList extends DataType implements ResourceCollection {
     private final Vector<FilterChain> filterChains = new Vector<>();
     private final ArrayList<ResourceCollection> textDocuments = new ArrayList<>();
-    private final Union cachedResources = new Union();
-    private volatile boolean cached = false;
+    private AppendableResourceCollection cachedResources = null;
     private String encoding = null;
     private File baseDir;
-
-    public ResourceList() {
-        cachedResources.setCache(true);
-    }
+    private boolean preserveDuplicates = false;
 
     /**
      * Adds a source.
@@ -114,6 +110,22 @@ public class ResourceList extends DataType implements ResourceCollection {
             throw tooManyAttributes();
         }
         this.baseDir = baseDir;
+    }
+
+    /**
+     * Makes this <code>resourcelist</code> return all resources as
+     * many times as they are specified. Otherwise
+     * <code>resourcelist</code> will only return each resource, in the
+     * order they first appear.
+     *
+     * @param preserveDuplicates boolean
+     * @since Ant 1.10.10
+     */
+    public final void setPreserveDuplicates(boolean preserveDuplicates) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        this.preserveDuplicates = preserveDuplicates;
     }
 
     /**
@@ -207,20 +219,31 @@ public class ResourceList extends DataType implements ResourceCollection {
         return getCheckedRef(ResourceList.class);
     }
 
+    private AppendableResourceCollection newResourceCollection() {
+        if (preserveDuplicates) {
+            final Resources resources = new Resources();
+            resources.setCache(true);
+            return resources;
+        } else {
+            final Union union = new Union();
+            union.setCache(true);
+            return union;
+        }
+    }
+
     private synchronized ResourceCollection cache() {
-        if (!cached) {
+        if (cachedResources == null) {
             dieOnCircularReference();
+            this.cachedResources = newResourceCollection();
             textDocuments.stream().flatMap(ResourceCollection::stream)
                 .map(this::read).forEach(cachedResources::add);
-            cached = true;
         }
         return cachedResources;
     }
 
     private ResourceCollection read(Resource r) {
         try (BufferedReader reader = new BufferedReader(open(r))) {
-            Union streamResources = new Union();
-            streamResources.setCache(true);
+            final AppendableResourceCollection streamResources = newResourceCollection();
             reader.lines().map(this::parse).forEach(streamResources::add);
             return streamResources;
         } catch (final IOException ioe) {
