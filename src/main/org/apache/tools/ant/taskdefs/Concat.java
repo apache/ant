@@ -212,27 +212,167 @@ public class Concat extends Task implements ResourceCollection {
     }
 
     /**
+     * This class reads a Reader and ensures it ends with the desired linebreak
+     * @since Ant 1.10.10
+     */
+    private final class LastLineFixingReader extends Reader {
+        private final Reader reader;
+        private int lastPos = 0;
+        private final char[] lastChars = new char[eolString.length()];
+        private boolean needAddSeparator = false;
+
+        private LastLineFixingReader(Reader reader) {
+            this.reader = reader;
+        }
+
+        /**
+         * Read a character from the current reader object. Advance
+         * to the next if the reader is finished.
+         * @return the character read, -1 for EOF on the last reader.
+         * @exception IOException - possibly thrown by the read for a reader
+         *            object.
+         */
+        @Override
+        public int read() throws IOException {
+            if (needAddSeparator) {
+                if (lastPos >= eolString.length()) {
+                    return -1;
+                } else {
+                    return eolString.charAt(lastPos++);
+                }
+            }
+            int ch = reader.read();
+            if (ch == -1) {
+                if (isMissingEndOfLine()) {
+                    needAddSeparator = true;
+                    lastPos = 1;
+                    return eolString.charAt(0);
+                }
+            } else {
+                addLastChar((char) ch);
+                return ch;
+            }
+            return -1;
+        }
+
+        /**
+         * Read into the buffer <code>cbuf</code>.
+         * @param cbuf The array to be read into.
+         * @param off The offset.
+         * @param len The length to read.
+         * @exception IOException - possibly thrown by the reads to the
+         *            reader objects.
+         */
+        @Override
+        public int read(char[] cbuf, int off, int len)
+            throws IOException {
+
+            int amountRead = 0;
+            while (true) {
+                if (needAddSeparator) {
+                    if (lastPos >= eolString.length()) {
+                        break;
+                    }
+                    cbuf[off] = eolString.charAt(lastPos++);
+                    len--;
+                    off++;
+                    amountRead++;
+                    if (len == 0) {
+                        return amountRead;
+                    }
+                    continue;
+                }
+                int nRead = reader.read(cbuf, off, len);
+                if (nRead == -1 || nRead == 0) {
+                    if (isMissingEndOfLine()) {
+                        needAddSeparator = true;
+                        lastPos = 0;
+                    } else {
+                        break;
+                    }
+                } else {
+                    for (int i = nRead;
+                         i > (nRead - lastChars.length);
+                         --i) {
+                        if (i <= 0) {
+                            break;
+                        }
+                        addLastChar(cbuf[off + i - 1]);
+                    }
+                    len -= nRead;
+                    off += nRead;
+                    amountRead += nRead;
+                    if (len == 0) {
+                        return amountRead;
+                    }
+                }
+            }
+            if (amountRead == 0) {
+                return -1;
+            }
+            return amountRead;
+        }
+
+        /**
+         * Close the current reader
+         */
+        @Override
+        public void close() throws IOException {
+            reader.close();
+        }
+
+        /**
+         * if checking for end of line at end of file
+         * add a character to the lastchars buffer
+         */
+        private void addLastChar(char ch) {
+            System.arraycopy(lastChars, 1, lastChars, 0, lastChars.length - 2 + 1);
+            lastChars[lastChars.length - 1] = ch;
+        }
+
+        /**
+         * return true if the lastchars buffer does
+         * not contain the line separator
+         */
+        private boolean isMissingEndOfLine() {
+            for (int i = 0; i < lastChars.length; ++i) {
+                if (lastChars[i] != eolString.charAt(i)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
      * This class reads from each of the source files in turn.
      * The concatenated result can then be filtered as
      * a single stream.
      */
     private final class MultiReader<S> extends Reader {
         private Reader reader = null;
-        private int    lastPos = 0;
-        private char[] lastChars = new char[eolString.length()];
-        private boolean needAddSeparator = false;
         private Iterator<S> readerSources;
         private ReaderFactory<S> factory;
+        private final boolean filterBeforeConcat;
 
-        private MultiReader(Iterator<S> readerSources, ReaderFactory<S> factory) {
+        private MultiReader(Iterator<S> readerSources, ReaderFactory<S> factory,
+                boolean filterBeforeConcat) {
             this.readerSources = readerSources;
             this.factory = factory;
+            this.filterBeforeConcat = filterBeforeConcat;
         }
 
         private Reader getReader() throws IOException {
             if (reader == null && readerSources.hasNext()) {
                 reader = factory.getReader(readerSources.next());
-                Arrays.fill(lastChars, (char) 0);
+                if(isFixLastLine())
+                {
+                    reader = new LastLineFixingReader(reader);
+                }
+                if(filterBeforeConcat)
+                {
+                    reader = getFilteredReader(reader);
+                }
             }
             return reader;
         }
@@ -251,25 +391,11 @@ public class Concat extends Task implements ResourceCollection {
          */
         @Override
         public int read() throws IOException {
-            if (needAddSeparator) {
-                if (lastPos >= eolString.length()) {
-                    lastPos = 0;
-                    needAddSeparator = false;
-                } else {
-                    return eolString.charAt(lastPos++);
-                }
-            }
             while (getReader() != null) {
                 int ch = getReader().read();
                 if (ch == -1) {
                     nextReader();
-                    if (isFixLastLine() && isMissingEndOfLine()) {
-                        needAddSeparator = true;
-                        lastPos = 1;
-                        return eolString.charAt(0);
-                    }
                 } else {
-                    addLastChar((char) ch);
                     return ch;
                 }
             }
@@ -289,39 +415,11 @@ public class Concat extends Task implements ResourceCollection {
             throws IOException {
 
             int amountRead = 0;
-            while (getReader() != null || needAddSeparator) {
-                if (needAddSeparator) {
-                    cbuf[off] = eolString.charAt(lastPos++);
-                    if (lastPos >= eolString.length()) {
-                        lastPos = 0;
-                        needAddSeparator = false;
-                    }
-                    len--;
-                    off++;
-                    amountRead++;
-                    if (len == 0) {
-                        return amountRead;
-                    }
-                    continue;
-                }
+            while (getReader() != null) {
                 int nRead = getReader().read(cbuf, off, len);
                 if (nRead == -1 || nRead == 0) {
                     nextReader();
-                    if (isFixLastLine() && isMissingEndOfLine()) {
-                        needAddSeparator = true;
-                        lastPos = 0;
-                    }
                 } else {
-                    if (isFixLastLine()) {
-                        for (int i = nRead;
-                                 i > (nRead - lastChars.length);
-                                 --i) {
-                            if (i <= 0) {
-                                break;
-                            }
-                            addLastChar(cbuf[off + i - 1]);
-                        }
-                    }
                     len -= nRead;
                     off += nRead;
                     amountRead += nRead;
@@ -346,28 +444,6 @@ public class Concat extends Task implements ResourceCollection {
             }
         }
 
-        /**
-         * if checking for end of line at end of file
-         * add a character to the lastchars buffer
-         */
-        private void addLastChar(char ch) {
-            System.arraycopy(lastChars, 1, lastChars, 0, lastChars.length - 2 + 1);
-            lastChars[lastChars.length - 1] = ch;
-        }
-
-        /**
-         * return true if the lastchars buffer does
-         * not contain the line separator
-         */
-        private boolean isMissingEndOfLine() {
-            for (int i = 0; i < lastChars.length; ++i) {
-                if (lastChars[i] != eolString.charAt(i)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         private boolean isFixLastLine() {
             return fixLastLine && textBuffer == null;
         }
@@ -386,8 +462,14 @@ public class Concat extends Task implements ResourceCollection {
                 result.setManagingComponent(this);
                 return result;
             }
-            Reader resourceReader = getFilteredReader(
-                    new MultiReader<>(c.iterator(), resourceReaderFactory));
+            Reader resourceReader;
+            if(filterBeforeConcat) {
+                resourceReader = new MultiReader<>(c.iterator(),
+                        resourceReaderFactory, true);
+            } else {
+                resourceReader = getFilteredReader(
+                        new MultiReader<>(c.iterator(), resourceReaderFactory, false));
+            }
             Reader rdr;
             if (header == null && footer == null) {
                 rdr = resourceReader;
@@ -416,7 +498,7 @@ public class Concat extends Task implements ResourceCollection {
                     }
                 }
                 rdr = new MultiReader<>(Arrays.asList(readers).iterator(),
-                        identityReaderFactory);
+                        identityReaderFactory, false);
             }
             return outputEncoding == null ? new ReaderInputStream(rdr)
                     : new ReaderInputStream(rdr, outputEncoding);
@@ -453,6 +535,9 @@ public class Concat extends Task implements ResourceCollection {
 
     /** Stores the binary attribute */
     private boolean binary;
+
+    /** Stores the filterBeforeConcat attribute */
+    private boolean filterBeforeConcat;
 
     // Child elements.
 
@@ -777,6 +862,17 @@ public class Concat extends Task implements ResourceCollection {
      */
     public void setBinary(boolean binary) {
         this.binary = binary;
+    }
+
+    /**
+     * Set the filterBeforeConcat attribute. If true, concat will filter each
+     * input through the filterchain before concatenating the results. This
+     * allows to e.g. use the FileTokenizer to tokenize each input.
+     * @param filterBeforeConcat if true, filter each input before concatenation
+     * @since Ant 1.10.10
+     */
+    public void setFilterBeforeConcat(final boolean filterBeforeConcat) {
+        this.filterBeforeConcat = filterBeforeConcat;
     }
 
     /**

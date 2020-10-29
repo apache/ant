@@ -118,6 +118,50 @@
     </au:assertTrue>
   </target>
 
+  <target name="testFilterIsAppliedToConcatenation"
+          depends="-fixlastline-setup"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=64855">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>1${line.separator}2${line.separator}1${line.separator}2${line.separator}</string>
+        <concat fixlastline="true">
+          <filelist dir="${input}">
+            <file name="1"/>
+            <file name="2"/>
+          </filelist>
+          <filterchain>
+	    <tokenfilter>
+          <filetokenizer/>
+          <replaceregex pattern="(.*)" flags="s" replace="\1\1"/>
+	    </tokenfilter>
+	  </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
+  <target name="testFilterBeforeConcatActuallyAppliesFilterToEachInput"
+          depends="-fixlastline-setup"
+          description="https://bz.apache.org/bugzilla/show_bug.cgi?id=64855">
+    <au:assertTrue>
+      <resourcesmatch>
+        <string>1${line.separator}1${line.separator}2${line.separator}2${line.separator}</string>
+        <concat fixlastline="true" filterbeforeconcat="true">
+          <filelist dir="${input}">
+            <file name="1"/>
+            <file name="2"/>
+          </filelist>
+          <filterchain>
+	    <tokenfilter>
+          <filetokenizer/>
+          <replaceregex pattern="(.*)" flags="s" replace="\1\1"/>
+	    </tokenfilter>
+	  </filterchain>
+        </concat>
+      </resourcesmatch>
+    </au:assertTrue>
+  </target>
+
   <target name="testIgnoreEmptyFalseFileIsCreated">
     <mkdir dir="${input}" />
     <mkdir dir="${output}" />
