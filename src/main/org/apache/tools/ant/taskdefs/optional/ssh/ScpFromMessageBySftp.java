@@ -134,9 +134,16 @@ public class ScpFromMessageBySftp extends ScpFromMessage {
                         final String remoteFile,
                         final File localFile) throws SftpException {
         String pwd = remoteFile;
-        if (remoteFile.lastIndexOf('/') != -1) {
+        final int lastIndexOfFileSeparator = remoteFile.lastIndexOf('/');
+        if (lastIndexOfFileSeparator != -1) {
             if (remoteFile.length() > 1) {
-                pwd = remoteFile.substring(0, remoteFile.lastIndexOf('/'));
+                if (lastIndexOfFileSeparator == 0) {
+                    // the file path is of the form "/foo....." i.e. the file separator
+                    // occurs at the start (and only there).
+                    pwd = "/";
+                } else {
+                    pwd = remoteFile.substring(0, lastIndexOfFileSeparator);
+                }
             }
         }
         channel.cd(pwd);

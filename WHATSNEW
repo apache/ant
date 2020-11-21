@@ -1,5 +1,11 @@
 Changes from Ant 1.10.9 TO Ant 1.10.10
 ======================================
+Fixed bugs:
+-----------
+
+ * SCP (with sftp=true) task would fail if fetching file located in root directory
+   Bugzilla Report 64742
+
 
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
