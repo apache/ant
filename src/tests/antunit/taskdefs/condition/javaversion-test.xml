@@ -25,6 +25,20 @@
     </au:assertTrue>
   </target>
 
+  <target name="test-atmost">
+    <au:assertTrue message="Expected javaversion ${java.version} to be at most 1000.111.211">
+      <!-- a high version value so that the check passes -->
+      <javaversion atmost="1000.111.211" />
+    </au:assertTrue>
+  </target>
+
+  <target name="test-atmost-negative">
+    <au:assertFalse message="Expected javaversion ${java.version} to be at most 1.4.0">
+      <!-- Ant 1.10.x requires Java 8 at runtime - so this check is expected to return false -->
+      <javaversion atmost="1.4.0" />
+    </au:assertFalse>
+  </target>
+
   <target name="test-exactly">
     <au:assertTrue message="Expected javaversion of ${ant.java.version}">
       <javaversion exactly="${ant.java.version}" />

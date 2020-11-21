@@ -945,11 +945,19 @@ are supported, the <var>property</var> attribute is redundant and will be ignore
     <th scope="col">Required</th>
   </tr>
   <tr>
-    <td>atleast</td>
+    <td class="left">atleast</td>
     <td>The version that this JVM is of at least. The format
       is <code>major.minor.point</code>. Starting with Java 9 really only the major number is
       determined.</td>
-    <td rowspan="2">Exactly one of the two</td>
+    <td rowspan="3">Exactly one of the three</td>
+  </tr>
+  <tr>
+    <td>atmost</td>
+    <td class="left">The version that this JVM is of at most. The format
+      is <code>major.minor.point</code>. Starting with Java 9 really only the major number is
+      determined.<br/>
+      <em>Since Ant 1.10.10</em>
+    </td>
   </tr>
   <tr>
     <td>exactly</td>

@@ -23,10 +23,11 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * An Java version condition.
- * @since Java 1.10.2
+ * @since Ant 1.10.2
  */
 public class JavaVersion implements Condition {
 
+    private String atMost = null;
     private String atLeast = null;
     private String exactly = null;
 
@@ -44,16 +45,19 @@ public class JavaVersion implements Condition {
         if (null != exactly) {
             return actual.isEqual(new DeweyDecimal(exactly));
         }
+        if (atMost != null) {
+            return actual.isLessThanOrEqual(new DeweyDecimal(atMost));
+        }
         //default
         return false;
     }
 
     private void validate() throws BuildException {
-        if (atLeast != null && exactly != null) {
-            throw new BuildException("Only one of atleast or exactly may be set.");
+        if (atLeast != null && exactly != null && atMost != null) {
+            throw new BuildException("Only one of atleast or atmost or exactly may be set.");
         }
-        if (null == atLeast && null == exactly) {
-            throw new BuildException("One of atleast or exactly must be set.");
+        if (null == atLeast && null == exactly && atMost == null) {
+            throw new BuildException("One of atleast or atmost or exactly must be set.");
         }
         if (atLeast != null) {
             try {
@@ -63,6 +67,14 @@ public class JavaVersion implements Condition {
                 throw new BuildException(
                     "The 'atleast' attribute is not a Dewey Decimal eg 1.1.0 : "
                     + atLeast);
+            }
+        } else if (atMost != null) {
+            try {
+                new DeweyDecimal(atMost); //NOSONAR
+            } catch (NumberFormatException e) {
+                throw new BuildException(
+                        "The 'atmost' attribute is not a Dewey Decimal eg 1.1.0 : "
+                                + atMost);
             }
         } else {
             try {
@@ -88,10 +100,30 @@ public class JavaVersion implements Condition {
      * Set the atleast attribute.
      * This is of the form major.minor.point.
      * For example 1.7.0.
-     * @param atLeast the version to check against.
+     * @param atLeast the version to set
      */
     public void setAtLeast(String atLeast) {
         this.atLeast = atLeast;
+    }
+
+    /**
+     * Get the atmost attribute.
+     * @return the atmost attribute.
+     * @since Ant 1.10.10
+     */
+    public String getAtMost() {
+        return atMost;
+    }
+
+    /**
+     * Set the atmost attribute.
+     * This is of the form major.minor.point.
+     * For example 11.0.2
+     * @param atMost the version to set
+     * @since Ant 1.10.10
+     */
+    public void setAtMost(String atMost) {
+        this.atMost = atMost;
     }
 
     /**

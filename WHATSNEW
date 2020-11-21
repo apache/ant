@@ -6,6 +6,11 @@ Fixed bugs:
  * SCP (with sftp=true) task would fail if fetching file located in root directory
    Bugzilla Report 64742
 
+Other changes:
+--------------
+
+ * javaversion condition now has a new "atmost" attribute. See the javaversion
+   manual for more details
 
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
