@@ -20,7 +20,9 @@ package org.apache.tools.ant.taskdefs.optional.script;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.JavaVersion;
 import org.apache.tools.ant.types.FileSet;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -155,7 +157,11 @@ public class ScriptDefTest {
 
     @Test
     public void testUseCompiled() {
-
+        final JavaVersion atMostJava14 = new JavaVersion();
+        atMostJava14.setAtMost("14");
+        // skip execution since this compilation timing based test consistently fails starting Java 15 (where we use
+        // Graal libraries for Javascript engine)
+        Assume.assumeTrue("Skipping test execution since Java version is greater than Java 14", atMostJava14.eval());
         final long duration;
         {
             long start = System.nanoTime();
