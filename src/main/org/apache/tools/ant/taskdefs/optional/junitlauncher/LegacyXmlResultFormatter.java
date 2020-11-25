@@ -252,7 +252,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 final String classname = (parentClassSource.get()).getClassName();
                 writer.writeStartElement(ELEM_TESTCASE);
                 writer.writeAttribute(ATTR_CLASSNAME, classname);
-                writer.writeAttribute(ATTR_NAME, testId.getLegacyReportingName());
+                writer.writeAttribute(ATTR_NAME, testId.getDisplayName());
                 final Stats stats = entry.getValue();
                 writer.writeAttribute(ATTR_TIME, String.valueOf((stats.endedAt - stats.startedAt) / ONE_SECOND));
                 // skipped element if the test was skipped
