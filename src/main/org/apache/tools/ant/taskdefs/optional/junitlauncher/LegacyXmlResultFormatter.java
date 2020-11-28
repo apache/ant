@@ -63,6 +63,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
     private final AtomicLong numTestsFailed = new AtomicLong(0);
     private final AtomicLong numTestsSkipped = new AtomicLong(0);
     private final AtomicLong numTestsAborted = new AtomicLong(0);
+    private boolean useLegacyReportingName = true;
 
 
     @Override
@@ -139,6 +140,11 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
     @Override
     public void setDestination(final OutputStream os) {
         this.outputStream = os;
+    }
+
+    @Override
+    public void setUseLegacyReportingName(final boolean useLegacyReportingName) {
+        this.useLegacyReportingName = useLegacyReportingName;
     }
 
     private final class Stats {
@@ -252,7 +258,8 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 final String classname = (parentClassSource.get()).getClassName();
                 writer.writeStartElement(ELEM_TESTCASE);
                 writer.writeAttribute(ATTR_CLASSNAME, classname);
-                writer.writeAttribute(ATTR_NAME, testId.getLegacyReportingName());
+                writer.writeAttribute(ATTR_NAME, useLegacyReportingName ? testId.getLegacyReportingName()
+                        : testId.getDisplayName());
                 final Stats stats = entry.getValue();
                 writer.writeAttribute(ATTR_TIME, String.valueOf((stats.endedAt - stats.startedAt) / ONE_SECOND));
                 // skipped element if the test was skipped

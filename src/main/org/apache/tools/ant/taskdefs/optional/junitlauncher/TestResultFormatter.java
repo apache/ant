@@ -51,6 +51,17 @@ public interface TestResultFormatter extends TestExecutionListener, Closeable {
     void setContext(TestExecutionContext context);
 
     /**
+     * This method will be invoked by the {@code junitlauncher} to let the result formatter implementation
+     * know whether or not to use JUnit 4 style, legacy reporting names for test identifiers that get
+     * displayed in the test reports. Result formatter implementations are allowed to default to a specific
+     * reporting style for test identifiers, if this method isn't invoked.
+     * @param useLegacyReportingName {@code true} if legacy reporting name is to be used, {@code false}
+     *                               otherwise.
+     * @since Ant 1.10.10
+     */
+    void setUseLegacyReportingName(boolean useLegacyReportingName);
+
+    /**
      * This method will be invoked by the <code>junitlauncher</code>, <strong>regularly/multiple times</strong>,
      * as and when any content is generated on the standard output stream during the test execution.
      * This method will be only be called if the <code>sendSysOut</code> attribute of the <code>listener</code>,

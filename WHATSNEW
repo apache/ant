@@ -12,6 +12,16 @@ Other changes:
  * javaversion condition now has a new "atmost" attribute. See the javaversion
    manual for more details
 
+ * The "listener" nested element of the "junitlauncher" task now has a new
+   "useLegacyReportingName" attribute which can be used to control the test
+   identifiers names that get reported by the listener. See the junitlauncher
+   manual for more details.
+   Note that this change also introduces a new "setUseLegacyReportingName" method
+   on the org.apache.tools.ant.taskdefs.optional.junitlauncher.TestResultFormatter
+   interface. This will break backward compatibility with any of your custom
+   result formatters which implemented this interface and such implementations
+   are now expected to implement this new method.
+
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
 

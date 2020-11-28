@@ -47,6 +47,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
     private final Map<TestIdentifier, Stats> testIds = new ConcurrentHashMap<>();
     private TestPlan testPlan;
     private BufferedWriter writer;
+    private boolean useLegacyReportingName = true;
 
     @Override
     public void testPlanExecutionStarted(final TestPlan testPlan) {
@@ -111,7 +112,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
         if (testIdentifier.isTest()) {
             final StringBuilder sb = new StringBuilder();
             sb.append("Test: ");
-            sb.append(testIdentifier.getLegacyReportingName());
+            sb.append(this.useLegacyReportingName ? testIdentifier.getLegacyReportingName() : testIdentifier.getDisplayName());
             sb.append(" took ");
             stats.appendElapsed(sb);
             sb.append(" SKIPPED");
@@ -175,7 +176,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
         if (testIdentifier.isTest() && shouldReportExecutionFinished(testIdentifier, testExecutionResult)) {
             final StringBuilder sb = new StringBuilder();
             sb.append("Test: ");
-            sb.append(testIdentifier.getLegacyReportingName());
+            sb.append(this.useLegacyReportingName ? testIdentifier.getLegacyReportingName() : testIdentifier.getDisplayName());
             if (stats != null) {
                 sb.append(" took ");
                 stats.appendElapsed(sb);
@@ -228,6 +229,11 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
     public void setDestination(final OutputStream os) {
         this.outputStream = os;
         this.writer = new BufferedWriter(new OutputStreamWriter(this.outputStream, StandardCharsets.UTF_8));
+    }
+
+    @Override
+    public void setUseLegacyReportingName(final boolean useLegacyReportingName) {
+        this.useLegacyReportingName = useLegacyReportingName;
     }
 
     protected boolean shouldReportExecutionFinished(final TestIdentifier testIdentifier, final TestExecutionResult testExecutionResult) {

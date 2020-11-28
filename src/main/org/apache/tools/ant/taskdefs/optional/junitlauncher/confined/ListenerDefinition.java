@@ -28,6 +28,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_CLASS_NAME;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_LISTENER_RESULT_FILE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_LISTENER_USE_LEGACY_REPORTING_NAME;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_SEND_SYS_ERR;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_SEND_SYS_OUT;
@@ -51,6 +52,7 @@ public class ListenerDefinition {
     private boolean sendSysOut;
     private boolean sendSysErr;
     private String outputDir;
+    private boolean useLegacyReportingName = true;
 
     public ListenerDefinition() {
 
@@ -135,6 +137,26 @@ public class ListenerDefinition {
         return this.outputDir;
     }
 
+    /**
+     *
+     * @return Returns {@code true} if legacy reporting name (JUnit 4 style) is to be used.
+     *         Else returns {@code false}.
+     * @since Ant 1.10.10
+     */
+    public boolean isUseLegacyReportingName() {
+        return useLegacyReportingName;
+    }
+
+    /**
+     * Set the test identifier reporting style
+     * @param useLegacyReportingName {@code true} if legacy reporting name (JUnit 4 style) is to
+     *                               be used. Else {@code false}.
+     * @since Ant 1.10.10
+     */
+    public void setUseLegacyReportingName(final boolean useLegacyReportingName) {
+        this.useLegacyReportingName = useLegacyReportingName;
+    }
+
     public boolean shouldUse(final Project project) {
         final PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
         return propertyHelper.testIfCondition(this.ifProperty) && propertyHelper.testUnlessCondition(this.unlessProperty);
@@ -157,6 +179,7 @@ public class ListenerDefinition {
         writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, this.className);
         writer.writeAttribute(LD_XML_ATTR_SEND_SYS_ERR, Boolean.toString(this.sendSysErr));
         writer.writeAttribute(LD_XML_ATTR_SEND_SYS_OUT, Boolean.toString(this.sendSysOut));
+        writer.writeAttribute(LD_XML_ATTR_LISTENER_USE_LEGACY_REPORTING_NAME, Boolean.toString(this.useLegacyReportingName));
         if (this.outputDir != null) {
             writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, this.outputDir);
         }
@@ -186,6 +209,11 @@ public class ListenerDefinition {
         final String resultFile = reader.getAttributeValue(null, LD_XML_ATTR_LISTENER_RESULT_FILE);
         if (resultFile != null) {
             listenerDef.setResultFile(resultFile);
+        }
+        final String useLegacyReportingName = reader.getAttributeValue(null,
+                LD_XML_ATTR_LISTENER_USE_LEGACY_REPORTING_NAME);
+        if (useLegacyReportingName != null) {
+            listenerDef.setUseLegacyReportingName(Boolean.parseBoolean(useLegacyReportingName));
         }
         reader.nextTag();
         reader.require(XMLStreamConstants.END_ELEMENT, null, LD_XML_ELM_LISTENER);

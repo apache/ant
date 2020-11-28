@@ -226,6 +226,7 @@ public class LauncherSupport {
         testRequest.closeUponCompletion(resultFormatter);
         // set the execution context
         resultFormatter.setContext(this.testExecutionContext);
+        resultFormatter.setUseLegacyReportingName(formatterDefinition.isUseLegacyReportingName());
         // set the destination output stream for writing out the formatted result
         final java.nio.file.Path resultOutputFile = getListenerOutputFile(testRequest, formatterDefinition);
         try {

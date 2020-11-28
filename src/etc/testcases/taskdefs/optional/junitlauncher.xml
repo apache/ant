@@ -161,7 +161,7 @@
                     <sysproperty key="junitlauncher.test.sysprop.one" value="forked"/>
                 </fork>
 
-                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
+                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true" useLegacyReportingName="false"/>
             </test>
         </junitlauncher>
     </target>
@@ -368,6 +368,7 @@
                 </fork>
             </testclasses>
             <listener type="legacy-plain" sendSysOut="true" />
+            <listener type="legacy-brief" sendSysOut="true" useLegacyReportingName="true"/>
         </junitlauncher>
     </target>
 </project>

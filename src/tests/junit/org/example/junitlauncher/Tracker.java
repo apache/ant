@@ -74,6 +74,11 @@ public class Tracker implements TestResultFormatter {
     }
 
     @Override
+    public void setUseLegacyReportingName(final boolean useLegacyReportingName) {
+        // do nothing
+    }
+
+    @Override
     public void close() throws IOException {
         this.writer.flush();
         if (this.appendModeFile != null) {
