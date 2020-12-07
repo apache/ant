@@ -125,6 +125,15 @@
         <td>No; default is <q>false</q></td>
       </tr>
       <tr>
+        <td>filterbeforeconcat</td>
+        <td>If this attribute is set to <q>true</q>, the task applies the filterchain to each
+          input after applying <code>fixlastline</code>. If this attribute is <q>false</q>, concat
+          will apply the filterchain only once to the already concatenated inputs. Filtering of
+          <code>header</code> and <code>footer</code> is not affected by this setting.
+          <em>Since Ant 1.10.10</em></td>
+        <td>No; default is <q>false</q></td>
+      </tr>
+      <tr>
         <td>ignoreempty</td>
         <td><em>Since Ant 1.8.0</em> Specifies whether or not the file specified
           by <var>destfile</var> should be created if the source resource list is empty.
