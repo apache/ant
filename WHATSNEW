@@ -1,5 +1,6 @@
 Changes from Ant 1.10.9 TO Ant 1.10.10
 ======================================
+
 Fixed bugs:
 -----------
 
@@ -21,6 +22,10 @@ Other changes:
    interface. This will break backward compatibility with any of your custom
    result formatters which implemented this interface and such implementations
    are now expected to implement this new method.
+
+ * a new attribute preserveduplicates allows <resourcelist> to return
+   the same resource multiple times when set to true.
+   Bugzilla Report 64854
 
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
