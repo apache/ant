@@ -101,4 +101,41 @@ ${input}/c.txt</echo>
     </copy>
     <au:assertFileExists file="${output}/antlib.xml"/>
   </target>
+
+  <target name="testDuplicatesRemoved" depends="setUp">
+    <echo file="${input}/a.txt">${input}/b.txt
+${input}/b.txt</echo>
+    <echo file="${input}/b.txt">Demo content</echo>
+    <echo file="${input}/c.txt">${input}/b.txt
+${input}/b.txt</echo>
+    <pathconvert property="1b" pathsep="|" preserveduplicates="true">
+      <flattenmapper/>
+      <resourcelist>
+        <resources>
+          <file file="${input}/a.txt"/>
+          <file file="${input}/c.txt"/>
+        </resources>
+      </resourcelist>
+    </pathconvert>
+    <au:assertPropertyEquals name="1b" value="b.txt"/>
+  </target>
+
+  <target name="testDuplicatesPreserved" depends="setUp">
+    <echo file="${input}/a.txt">${input}/b.txt
+${input}/b.txt</echo>
+    <echo file="${input}/b.txt">Demo content</echo>
+    <echo file="${input}/c.txt">${input}/b.txt
+${input}/b.txt</echo>
+    <pathconvert property="4bs" pathsep="|" preserveduplicates="true">
+      <flattenmapper/>
+      <resourcelist preserveduplicates="true">
+        <resources>
+          <file file="${input}/a.txt"/>
+          <file file="${input}/a.txt"/>
+          <file file="${input}/c.txt"/>
+        </resources>
+      </resourcelist>
+    </pathconvert>
+    <au:assertPropertyEquals name="4bs" value="b.txt|b.txt|b.txt|b.txt|b.txt|b.txt"/>
+  </target>
 </project>

@@ -37,7 +37,7 @@ import org.apache.tools.ant.types.ResourceCollection;
  * @since Ant 1.7
  */
 public abstract class BaseResourceCollectionContainer
-        extends DataType implements ResourceCollection, Cloneable {
+        extends DataType implements AppendableResourceCollection, Cloneable {
     private List<ResourceCollection> rc = new ArrayList<>();
     private Collection<Resource> coll = null;
     private boolean cache = true;
@@ -92,6 +92,7 @@ public abstract class BaseResourceCollectionContainer
      * @param c the ResourceCollection to add.
      * @throws BuildException on error.
      */
+    @Override
     public synchronized void add(ResourceCollection c) throws BuildException {
         if (isReference()) {
             throw noChildrenAllowed();
