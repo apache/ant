@@ -27,6 +27,12 @@ Other changes:
    the same resource multiple times when set to true.
    Bugzilla Report 64854
 
+ * a new attribute filterbeforeconcat in <concat> can be used to
+   decide whether the filterchain should be applied to the
+   concatenated content (the default) or each nested resource
+   individually before concatenating them.
+   Bugzilla Report 64855
+
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
 
