@@ -365,12 +365,10 @@ public class Concat extends Task implements ResourceCollection {
         private Reader getReader() throws IOException {
             if (reader == null && readerSources.hasNext()) {
                 reader = factory.getReader(readerSources.next());
-                if(isFixLastLine())
-                {
+                if (isFixLastLine()) {
                     reader = new LastLineFixingReader(reader);
                 }
-                if(filterBeforeConcat)
-                {
+                if (filterBeforeConcat) {
                     reader = getFilteredReader(reader);
                 }
             }
@@ -463,7 +461,7 @@ public class Concat extends Task implements ResourceCollection {
                 return result;
             }
             Reader resourceReader;
-            if(filterBeforeConcat) {
+            if (filterBeforeConcat) {
                 resourceReader = new MultiReader<>(c.iterator(),
                         resourceReaderFactory, true);
             } else {
