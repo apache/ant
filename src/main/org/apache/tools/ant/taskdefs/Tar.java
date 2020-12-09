@@ -459,6 +459,14 @@ public class Tar extends MatchingTask {
                 te.setUserId(tr.getLongUid());
                 te.setGroupName(tr.getGroup());
                 te.setGroupId(tr.getLongGid());
+                String linkName = tr.getLinkName();
+                byte linkFlag = tr.getLinkFlag();
+                if (linkFlag == TarConstants.LF_LINK &&
+                    linkName != null && linkName.length() > 0 && !linkName.startsWith("/")) {
+                    linkName = getCanonicalPrefix(tarFileSet, this.getProject()) + linkName;
+                }
+                te.setLinkName(linkName);
+                te.setLinkFlag(linkFlag);
             }
         }
 
