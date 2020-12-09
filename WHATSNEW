@@ -7,6 +7,10 @@ Fixed bugs:
  * SCP (with sftp=true) task would fail if fetching file located in root directory
    Bugzilla Report 64742
 
+ * javac task would fail if the arguments file it (internally) created didn't quote
+   the # character. This has now been fixed.
+   Bugzilla Reports 64912, 64790
+
 Other changes:
 --------------
 

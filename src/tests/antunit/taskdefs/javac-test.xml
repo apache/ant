@@ -193,6 +193,26 @@ public class Adapter implements CompilerAdapter {
     <au:assertLogContains text="adapter called" />
   </target>
 
+  <target name="testSpaceCharInArgs" depends="setup" description="https://bz.apache.org/bugzilla/show_bug.cgi?id=64912">
+    <delete dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/src" />
+    <echo file="${javac-dir}/src/Foo.java">
+      public class Foo { }
+    </echo>
+    <mkdir dir="${output}/foo with space bar" />
+    <javac srcdir="${javac-dir}/src" destdir="${output}/foo with space bar" fork="yes" failOnError="true"/>
+  </target>
+
+  <target name="test#CharInArgs" depends="setup" description="https://bz.apache.org/bugzilla/show_bug.cgi?id=64912">
+    <delete dir="${javac-dir}/src" />
+    <mkdir dir="${javac-dir}/src" />
+    <echo file="${javac-dir}/src/Foo.java">
+      public class Foo { }
+    </echo>
+    <mkdir dir="${output}/foo#bar" />
+    <javac srcdir="${javac-dir}/src" destdir="${output}/foo#bar" fork="yes" failOnError="true"/>
+  </target>
+
   <target name="testCompilerAsNestedElement" depends="-create-javac-adapter">
     <componentdef classname="org.example.Adapter" name="myjavac">
       <classpath location="${resources}" />

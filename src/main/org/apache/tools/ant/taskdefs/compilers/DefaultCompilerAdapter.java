@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,6 +67,8 @@ public abstract class DefaultCompilerAdapter
     @Deprecated
     protected static final String lSep = StringUtils.LINE_SEP;
     // CheckStyle:ConstantNameCheck ON
+
+    private static final Pattern JAVAC_ARG_FILE_CHARS_TO_QUOTE = Pattern.compile("[ #]"); // space or # character
 
     protected Path src;
     protected File destDir;
@@ -549,7 +552,7 @@ public abstract class DefaultCompilerAdapter
                     try (BufferedWriter out =
                         new BufferedWriter(new FileWriter(tmpFile))) {
                         for (int i = firstFileName; i < args.length; i++) {
-                            if (quoteFiles && args[i].contains(" ")) {
+                            if (quoteFiles && JAVAC_ARG_FILE_CHARS_TO_QUOTE.matcher(args[i]).find()) {
                                 args[i] =
                                     args[i].replace(File.separatorChar, '/');
                                 out.write("\"" + args[i] + "\"");
