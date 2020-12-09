@@ -396,6 +396,24 @@ public class TarEntry implements TarConstants {
     }
 
     /**
+     * Get this entry's link flag.
+     *
+     * @return This entry's link flag.
+     */
+    public byte getLinkFlag() {
+        return linkFlag;
+    }
+
+    /**
+     * Set this entry's link flag.
+     *
+     * @param link the link flag to use.
+     */
+    public void setLinkFlag(byte linkFlag) {
+        this.linkFlag = linkFlag;
+    }
+
+    /**
      * Get this entry's link name.
      *
      * @return This entry's link name.
