@@ -79,6 +79,7 @@ public class AvailableTest {
     /**
      * File does exist -&gt; property 'test' == 'true'
      */
+    @Test
     public void test5() {
         buildRule.executeTarget("test5");
         assertEquals("true", buildRule.getProject().getProperty("test"));

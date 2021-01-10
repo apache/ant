@@ -90,6 +90,7 @@ public class LocatorTest {
     /**
      * this isn't really a valid URI, except maybe in IE
      */
+    @Test
     public void testNetworkURI() {
         resolveTo("file:\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar", ""
                 + "\\\\PC03\\jclasses\\lib\\ant-1.7.0.jar",
