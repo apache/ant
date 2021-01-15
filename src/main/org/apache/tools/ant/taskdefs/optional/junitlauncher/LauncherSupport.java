@@ -37,6 +37,7 @@ import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestExecutionListener;
+import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
@@ -49,7 +50,6 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -128,7 +128,7 @@ public class LauncherSupport {
                     final List<TestExecutionListener> testExecutionListeners = new ArrayList<>();
                     // a listener that we always put at the front of list of listeners
                     // for this request.
-                    final Listener firstListener = new Listener();
+                    final Listener firstListener = new Listener(System.out);
                     // we always enroll the summary generating listener, to the request, so that we
                     // get to use some of the details of the summary for our further decision making
                     testExecutionListeners.add(firstListener);
@@ -301,10 +301,6 @@ public class LauncherSupport {
     }
 
     private void handleTestExecutionCompletion(final TestDefinition test, final TestExecutionSummary summary) {
-        if (this.launchDefinition.isPrintSummary()) {
-            // print the summary to System.out
-            summary.printTo(new PrintWriter(System.out, true));
-        }
         final boolean hasTestFailures = summary.getTotalFailureCount() != 0;
         if (hasTestFailures) {
             // keep track of the test failure(s) for the entire launched instance
@@ -596,12 +592,41 @@ public class LauncherSupport {
     }
 
     private final class Listener extends SummaryGeneratingListener {
+        private final PrintStream originalSysOut;
+
         private Optional<SwitchedStreamHandle> switchedSysOutHandle;
         private Optional<SwitchedStreamHandle> switchedSysErrHandle;
+
+        private Listener(final PrintStream originalSysOut) {
+            this.originalSysOut = originalSysOut;
+        }
+
+        @Override
+        public void executionStarted(final TestIdentifier testIdentifier) {
+            super.executionStarted(testIdentifier);
+            AbstractJUnitResultFormatter.isTestClass(testIdentifier).ifPresent(testClass -> {
+                this.originalSysOut.println("Running " + testClass.getClassName());
+            });
+        }
 
         @Override
         public void testPlanExecutionFinished(final TestPlan testPlan) {
             super.testPlanExecutionFinished(testPlan);
+            if (launchDefinition.isPrintSummary()) {
+                final TestExecutionSummary summary = this.getSummary();
+                // Keep the summary as close to as the old junit task summary
+                // tests run, failed, skipped, duration
+                final StringBuilder sb = new StringBuilder("Tests run: ");
+                sb.append(summary.getTestsStartedCount());
+                sb.append(", Failures: ");
+                sb.append(summary.getTestsFailedCount());
+                sb.append(", Skipped: ");
+                sb.append(summary.getTestsSkippedCount());
+                sb.append(", Time elapsed: ");
+                sb.append((summary.getTimeFinished() - summary.getTimeStarted()) / 1000f);
+                sb.append(" sec");
+                this.originalSysOut.println(sb.toString());
+            }
             // now that the test plan execution is finished, close the switched sysout/syserr output streams
             // and wait for the sysout and syserr content delivery, to result formatters, to finish
             if (this.switchedSysOutHandle.isPresent()) {

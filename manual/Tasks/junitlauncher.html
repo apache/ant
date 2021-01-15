@@ -166,8 +166,9 @@
     <tr>
         <td>printSummary</td>
         <td>If the value is set to <code>true</code> then this task, upon completion of the test execution,
-            prints the summary of the execution to <code>System.out</code>. The summary itself is generated
-            by the JUnit 5 platform and not by this task.
+            prints the summary of the execution to <code>System.out</code>. Starting Ant 1.10.10, unlike
+            in previous versions, this task itself generates the summary instead of using the one generated
+            by the JUnit 5 platform.
         </td>
         <td>No; defaults to <code>false</code></td>
     </tr>
