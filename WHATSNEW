@@ -11,6 +11,14 @@ Fixed bugs:
    the # character. This has now been fixed.
    Bugzilla Reports 64912, 64790
 
+ * made sure LegacyXmlResultFormatter encodes characters illegal in
+   XML the same way JUnit5's built-in formatter would.
+   Bugzilla Report 65030
+
+ * LegacyXmlResultFormatter no longer double-encodes <>& in system-err
+   and system-out
+   Bugzilla Report 63436
+
 Other changes:
 --------------
 

@@ -199,16 +199,16 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
             // write the testsuite element
             writer.writeStartElement(ELEM_TESTSUITE);
             final String testsuiteName = determineTestSuiteName();
-            writer.writeAttribute(ATTR_NAME, testsuiteName);
+            writeAttribute(writer, ATTR_NAME, testsuiteName);
             // time taken for the tests execution
-            writer.writeAttribute(ATTR_TIME, String.valueOf((testPlanEndedAt - testPlanStartedAt) / ONE_SECOND));
+            writeAttribute(writer, ATTR_TIME, String.valueOf((testPlanEndedAt - testPlanStartedAt) / ONE_SECOND));
             // add the timestamp of report generation
             final String timestamp = DateUtils.format(new Date(), DateUtils.ISO8601_DATETIME_PATTERN);
-            writer.writeAttribute(ATTR_TIMESTAMP, timestamp);
-            writer.writeAttribute(ATTR_NUM_TESTS, String.valueOf(numTestsRun.longValue()));
-            writer.writeAttribute(ATTR_NUM_FAILURES, String.valueOf(numTestsFailed.longValue()));
-            writer.writeAttribute(ATTR_NUM_SKIPPED, String.valueOf(numTestsSkipped.longValue()));
-            writer.writeAttribute(ATTR_NUM_ABORTED, String.valueOf(numTestsAborted.longValue()));
+            writeAttribute(writer, ATTR_TIMESTAMP, timestamp);
+            writeAttribute(writer, ATTR_NUM_TESTS, String.valueOf(numTestsRun.longValue()));
+            writeAttribute(writer, ATTR_NUM_FAILURES, String.valueOf(numTestsFailed.longValue()));
+            writeAttribute(writer, ATTR_NUM_SKIPPED, String.valueOf(numTestsSkipped.longValue()));
+            writeAttribute(writer, ATTR_NUM_ABORTED, String.valueOf(numTestsAborted.longValue()));
 
             // write the properties
             writeProperties(writer);
@@ -228,8 +228,8 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
             writer.writeStartElement(ELEM_PROPERTIES);
             for (final String prop : properties.stringPropertyNames()) {
                 writer.writeStartElement(ELEM_PROPERTY);
-                writer.writeAttribute(ATTR_NAME, prop);
-                writer.writeAttribute(ATTR_VALUE, properties.getProperty(prop));
+                writeAttribute(writer, ATTR_NAME, prop);
+                writeAttribute(writer, ATTR_VALUE, properties.getProperty(prop));
                 writer.writeEndElement();
             }
             writer.writeEndElement();
@@ -257,11 +257,11 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 }
                 final String classname = (parentClassSource.get()).getClassName();
                 writer.writeStartElement(ELEM_TESTCASE);
-                writer.writeAttribute(ATTR_CLASSNAME, classname);
-                writer.writeAttribute(ATTR_NAME, useLegacyReportingName ? testId.getLegacyReportingName()
+                writeAttribute(writer, ATTR_CLASSNAME, classname);
+                writeAttribute(writer, ATTR_NAME, useLegacyReportingName ? testId.getLegacyReportingName()
                         : testId.getDisplayName());
                 final Stats stats = entry.getValue();
-                writer.writeAttribute(ATTR_TIME, String.valueOf((stats.endedAt - stats.startedAt) / ONE_SECOND));
+                writeAttribute(writer, ATTR_TIME, String.valueOf((stats.endedAt - stats.startedAt) / ONE_SECOND));
                 // skipped element if the test was skipped
                 writeSkipped(writer, testId);
                 // failed element if the test failed
@@ -280,7 +280,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
             writer.writeStartElement(ELEM_SKIPPED);
             final Optional<String> reason = skipped.get(testIdentifier);
             if (reason.isPresent()) {
-                writer.writeAttribute(ATTR_MESSAGE, reason.get());
+                writeAttribute(writer, ATTR_MESSAGE, reason.get());
             }
             writer.writeEndElement();
         }
@@ -295,9 +295,9 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 final Throwable t = cause.get();
                 final String message = t.getMessage();
                 if (message != null && !message.trim().isEmpty()) {
-                    writer.writeAttribute(ATTR_MESSAGE, message);
+                    writeAttribute(writer, ATTR_MESSAGE, message);
                 }
-                writer.writeAttribute(ATTR_TYPE, t.getClass().getName());
+                writeAttribute(writer, ATTR_TYPE, t.getClass().getName());
                 // write out the stacktrace
                 writer.writeCData(StringUtils.getStackTrace(t));
             }
@@ -314,9 +314,9 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 final Throwable t = cause.get();
                 final String message = t.getMessage();
                 if (message != null && !message.trim().isEmpty()) {
-                    writer.writeAttribute(ATTR_MESSAGE, message);
+                    writeAttribute(writer, ATTR_MESSAGE, message);
                 }
-                writer.writeAttribute(ATTR_TYPE, t.getClass().getName());
+                writeAttribute(writer, ATTR_TYPE, t.getClass().getName());
                 // write out the stacktrace
                 writer.writeCData(StringUtils.getStackTrace(t));
             }
@@ -349,13 +349,27 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
             final char[] chars = new char[1024];
             int numRead = -1;
             while ((numRead = reader.read(chars)) != -1) {
-                // although it's called a DOMElementWriter, the encode method is just a
-                // straight forward XML util method which doesn't concern about whether
-                // DOM, SAX, StAX semantics.
-                // TODO: Perhaps make it a static method
-                final String encoded = new DOMElementWriter().encode(new String(chars, 0, numRead));
-                writer.writeCharacters(encoded);
+                writer.writeCharacters(encode(new String(chars, 0, numRead)));
             }
+        }
+
+        private void writeAttribute(final XMLStreamWriter writer, final String name, final String value)
+            throws XMLStreamException {
+            writer.writeAttribute(name, encode(value));
+        }
+
+        private String encode(final String s) {
+            boolean changed = false;
+            final StringBuilder sb = new StringBuilder();
+            for (char c : s.toCharArray()) {
+                if (!DOMElementWriter.isLegalXmlCharacter(c)) {
+                    changed = true;
+                    sb.append("&#").append((int) c).append(';');
+                } else {
+                    sb.append(c);
+                }
+            }
+            return changed ? sb.toString() : s;
         }
 
         private String determineTestSuiteName() {

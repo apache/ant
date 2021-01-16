@@ -588,6 +588,20 @@ public class DOMElementWriter {
      * @since 1.10, Ant 1.5
      */
     public boolean isLegalCharacter(final char c) {
+        return isLegalXmlCharacter(c);
+    }
+
+    /**
+     * Is the given character allowed inside an XML document?
+     *
+     * <p>See XML 1.0 2.2 <a
+     * href="https://www.w3.org/TR/1998/REC-xml-19980210#charsets">
+     * https://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
+     * @param c the character to test.
+     * @return true if the character is allowed.
+     * @since 1.10.10
+     */
+    public static boolean isLegalXmlCharacter(final char c) {
         // CheckStyle:MagicNumber OFF
         if (c == 0x9 || c == 0xA || c == 0xD) {
             return true;
