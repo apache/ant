@@ -53,6 +53,7 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -609,6 +610,14 @@ public class LauncherSupport {
             });
         }
 
+
+        private static final double ONE_SECOND = 1000.0;
+        // We use this only in the testPlanExecutionFinished method, which
+        // as per the JUnit5 platform semantics won't be called concurrently
+        // by multiple threads (https://github.com/junit-team/junit5/issues/2539#issuecomment-766325555).
+        // So it's safe to use this without any additional thread safety access controls.
+        private NumberFormat timeFormatter = NumberFormat.getInstance();
+
         @Override
         public void testPlanExecutionFinished(final TestPlan testPlan) {
             super.testPlanExecutionFinished(testPlan);
@@ -629,7 +638,8 @@ public class LauncherSupport {
                 sb.append(", Skipped: ");
                 sb.append(summary.getTestsSkippedCount());
                 sb.append(", Time elapsed: ");
-                sb.append((summary.getTimeFinished() - summary.getTimeStarted()) / 1000f);
+                final long elapsedMs = summary.getTimeFinished() - summary.getTimeStarted();
+                sb.append(timeFormatter.format(elapsedMs / ONE_SECOND));
                 sb.append(" sec");
                 this.originalSysOut.println(sb.toString());
             }
