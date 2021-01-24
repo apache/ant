@@ -624,6 +624,8 @@ public class LauncherSupport {
                 sb.append(summary.getTestsStartedCount());
                 sb.append(", Failures: ");
                 sb.append(summary.getTestsFailedCount());
+                sb.append(", Aborted: ");
+                sb.append(summary.getTestsAbortedCount());
                 sb.append(", Skipped: ");
                 sb.append(summary.getTestsSkippedCount());
                 sb.append(", Time elapsed: ");
