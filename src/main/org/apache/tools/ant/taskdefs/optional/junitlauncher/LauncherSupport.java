@@ -612,6 +612,10 @@ public class LauncherSupport {
         @Override
         public void testPlanExecutionFinished(final TestPlan testPlan) {
             super.testPlanExecutionFinished(testPlan);
+            if (!testPlan.containsTests()) {
+                // we print the summary only if any tests are present
+                return;
+            }
             if (launchDefinition.isPrintSummary()) {
                 final TestExecutionSummary summary = this.getSummary();
                 // Keep the summary as close to as the old junit task summary
