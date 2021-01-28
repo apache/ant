@@ -23,6 +23,10 @@ Fixed bugs:
    representing a @Parameterized JUnit4 test wasn't being reported in the XML.
    Bugzilla Report 64952
 
+ * Fixes a bug where the ant-testutil-sources.jar that gets published to Maven
+   central repository didn't contain any source files.
+   Bugzilla Report 65110
+
 Other changes:
 --------------
 
