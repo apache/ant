@@ -980,7 +980,7 @@
           description="--> creates the Apache Ant Test Utilities source jar">
     <mkdir dir="${build.lib-src}"/>
     <jar destfile="${build.lib-src}/${name}-testutil.jar"
-         basedir="${java.dir}">
+         basedir="${src.junit}">
       <patternset refid="useful.tests"/>
       <metainf dir="${build.dir}">
         <include name="LICENSE.txt"/>
