@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<project name="http-test" default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
+  <import file="../../antunit-base.xml" />
+
+  <property name="location" value="https://ant.apache.org/webtest/gettest" />
+  <property name="unsecurelocation" value="http://ant.apache.org/webtest/gettest/http-to-https.txt" />
+
+  <target name="testSeeOtherRedirect">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${location}/other.txt"/>
+    </au:assertTrue>
+    <au:assertLogContains level="verbose"
+        text="Result code for ${location}/other.txt was 200" />
+  </target>
+
+  <target name="testPermanentRedirect">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${location}/permanent.txt"/>
+    </au:assertTrue>
+    <au:assertLogContains level="verbose"
+        text="Result code for ${location}/permanent.txt was 200" />
+  </target>
+
+  <target name="testTemporaryRedirect">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${location}/temp.txt"/>
+    </au:assertTrue>
+    <au:assertLogContains level="verbose"
+        text="Result code for ${location}/temp.txt was 200" />
+  </target>
+
+  <target name="testStatusCode307Redirect">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${location}/307.txt"/>
+    </au:assertTrue>
+    <au:assertLogContains level="verbose"
+        text="Result code for ${location}/307.txt was 200" />
+  </target>
+
+  <target name="testHttpToHttpsRedirect" description="Tests that a resource that's redirected
+        from HTTP to HTTPS works without an error. See bugzilla-65105 for details">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${unsecurelocation}"/>
+    </au:assertTrue>
+    <au:assertLogContains level="verbose"
+        text="Result code for ${unsecurelocation} was 200" />
+  </target>
+
+</project>

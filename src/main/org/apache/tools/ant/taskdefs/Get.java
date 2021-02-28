@@ -534,6 +534,18 @@ public class Get extends Task {
     }
 
     /**
+     * Does the response code represent a redirection?
+     *
+     * @since 1.10.10
+     */
+    public static boolean isMoved(final int responseCode) {
+        return responseCode == HttpURLConnection.HTTP_MOVED_PERM
+            || responseCode == HttpURLConnection.HTTP_MOVED_TEMP
+            || responseCode == HttpURLConnection.HTTP_SEE_OTHER
+            || responseCode == HTTP_MOVED_TEMP;
+    }
+
+    /**
      * Interface implemented for reporting
      * progress of downloading.
      */
@@ -813,13 +825,6 @@ public class Get extends Task {
             //newer. Some protocols (FTP) don't include dates, of
             //course.
             return connection;
-        }
-
-        private boolean isMoved(final int responseCode) {
-            return responseCode == HttpURLConnection.HTTP_MOVED_PERM
-                    || responseCode == HttpURLConnection.HTTP_MOVED_TEMP
-                    || responseCode == HttpURLConnection.HTTP_SEE_OTHER
-                    || responseCode == HTTP_MOVED_TEMP;
         }
 
         private boolean downloadFile() throws IOException {

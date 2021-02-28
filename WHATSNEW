@@ -27,6 +27,9 @@ Fixed bugs:
    central repository didn't contain any source files.
    Bugzilla Report 65110
 
+ * The <http> condition didn't follow redirects from http to https.
+   Bugzilla Report 65105
+
 Other changes:
 --------------
 

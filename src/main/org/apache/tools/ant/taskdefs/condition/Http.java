@@ -30,6 +30,7 @@ import java.util.Locale;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.taskdefs.Get;
 
 /**
  * Condition to wait for a HTTP request to succeed. Its attribute(s) are:
@@ -42,6 +43,8 @@ import org.apache.tools.ant.ProjectComponent;
 public class Http extends ProjectComponent implements Condition {
     private static final int ERROR_BEGINS = 400;
     private static final String DEFAULT_REQUEST_METHOD = "GET";
+    private static final String HTTP = "http";
+    private static final String HTTPS = "https";
 
     private String spec = null;
     private String requestMethod = DEFAULT_REQUEST_METHOD;
@@ -124,11 +127,7 @@ public class Http extends ProjectComponent implements Condition {
             try {
                 URLConnection conn = url.openConnection();
                 if (conn instanceof HttpURLConnection) {
-                    HttpURLConnection http = (HttpURLConnection) conn;
-                    http.setRequestMethod(requestMethod);
-                    http.setInstanceFollowRedirects(followRedirects);
-                    http.setReadTimeout(readTimeout);
-                    int code = http.getResponseCode();
+                    int code = request((HttpURLConnection) conn, url);
                     log("Result code for " + spec + " was " + code,
                         Project.MSG_VERBOSE);
                     return code > 0 && code < errorsBeginAt;
@@ -141,6 +140,41 @@ public class Http extends ProjectComponent implements Condition {
             }
         } catch (MalformedURLException e) {
             throw new BuildException("Badly formed URL: " + spec, e);
+        }
+        return true;
+    }
+
+    private int request(final HttpURLConnection http, final URL url) throws IOException {
+        http.setRequestMethod(requestMethod);
+        http.setInstanceFollowRedirects(followRedirects);
+        http.setReadTimeout(readTimeout);
+        final int firstStatusCode = http.getResponseCode();
+        if (Get.isMoved(firstStatusCode)) {
+            final String newLocation = http.getHeaderField("Location");
+            final URL newURL = new URL(newLocation);
+            if (redirectionAllowed(url, newURL)) {
+                final URLConnection newConn = newURL.openConnection();
+                if (newConn instanceof HttpURLConnection) {
+                    log("Following redirect from " + url + " to " + newURL);
+                    return request((HttpURLConnection) newConn, newURL);
+                }
+            }
+        }
+        return firstStatusCode;
+    }
+
+    private boolean redirectionAllowed(final URL from, final URL to) {
+        if (from.equals(to)) {
+            // most simple case of an infinite redirect loop
+            return false;
+        }
+        if (!(from.getProtocol().equals(to.getProtocol())
+              || (HTTP.equals(from.getProtocol())
+                  && HTTPS.equals(to.getProtocol())))) {
+            log("Redirection detected from "
+                + from.getProtocol() + " to " + to.getProtocol()
+                + ". Protocol switch unsafe, not allowed.");
+            return false;
         }
         return true;
     }
