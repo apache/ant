@@ -277,6 +277,12 @@
     </or>
   </selector>
 
+  <selector id="needs.jakartamail">
+    <or>
+      <filename name="${ant.package}/taskdefs/email/JakartaMimeMailer*"/>
+    </or>
+  </selector>
+
   <selector id="needs.netrexx">
     <filename name="${optional.package}/NetRexxC*"/>
   </selector>
@@ -507,6 +513,9 @@
     <available property="javamail.present"
                classname="javax.mail.Transport"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
+    <available property="jakartamail.present"
+               classname="jakarta.mail.Transport"
+               classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="graaljs.present"
                classname="com.oracle.truffle.js.scriptengine.GraalJSScriptEngine"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
@@ -704,6 +713,7 @@
             <selector refid="needs.commons-logging" unless="commons.logging.present"/>
             <selector refid="needs.apache-bsf" unless="bsf.present"/>
             <selector refid="needs.javamail" unless="javamail.present"/>
+            <selector refid="needs.jakartamail" unless="jakartamail.present"/>
             <selector refid="needs.netrexx" unless="netrexx.present"/>
             <selector refid="needs.commons-net" unless="commons.net.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>

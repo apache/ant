@@ -26,6 +26,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 
 // CheckStyle:HideUtilityClassConstructorCheck OFF - bc
 
@@ -251,6 +252,9 @@ public class ClasspathUtils {
         try {
             @SuppressWarnings("unchecked")
             Class<T> clazz = (Class<T>) Class.forName(className, true, userDefinedLoader);
+            if (Modifier.isAbstract(clazz.getModifiers())) {
+                throw new BuildException("Abstract class " + className);
+            }
             T o = clazz.getDeclaredConstructor().newInstance();
             if (!expectedType.isInstance(o)) {
                 throw new BuildException(
@@ -262,10 +266,10 @@ public class ClasspathUtils {
             throw new BuildException("Class not found: " + className, e);
         } catch (InstantiationException e) {
             throw new BuildException("Could not instantiate " + className
-                    + ". Specified class should have a no " + "argument constructor.", e);
+                    + ". Specified class should have a no argument constructor.", e);
         } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new BuildException("Could not instantiate " + className
-                    + ". Specified class should have a " + "public constructor.", e);
+                    + ". Specified class should have a public constructor.", e);
         } catch (LinkageError e) {
             throw new BuildException("Class " + className
                     + " could not be loaded because of an invalid dependency.", e);

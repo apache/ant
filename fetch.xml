@@ -335,6 +335,12 @@ Set -Ddest=LOCATION on the command line
     <f2 project="which"/>
   </target>
 
+  <target name="javamail"
+          description="load Java Mail"
+          depends="init">
+    <f2 project="com.sun.mail" archive="javax.mail"/>
+  </target>
+
   <target name="jakartamail"
           description="load Jakarta Mail"
           depends="init">
