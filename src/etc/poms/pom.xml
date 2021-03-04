@@ -95,6 +95,7 @@
     <module>ant-imageio</module>
     <module>ant-jai</module>
     <module>ant-javamail</module>
+    <module>ant-jakartamail</module>
     <module>ant-jdepend</module>
     <module>ant-jmf</module>
     <module>ant-jsch</module>

@@ -449,16 +449,9 @@ public class EmailTask extends Task {
             // prepare for the auto select mechanism
             boolean autoFound = false;
             // try MIME format
-            if (MIME.equals(encoding)
-                 || (AUTO.equals(encoding) && !autoFound)) {
+            if (MIME.equals(encoding) || AUTO.equals(encoding)) {
                 try {
-                    //check to make sure that activation.jar
-                    //and mail.jar are available - see bug 31969
-                    Class.forName("javax.activation.DataHandler");
-                    Class.forName("javax.mail.internet.MimeMessage");
-
-                    mailer = ClasspathUtils.newInstance(
-                            "org.apache.tools.ant.taskdefs.email.MimeMailer",
+                    mailer = ClasspathUtils.newInstance(getMailerImplementation(),
                             EmailTask.class.getClassLoader(), Mailer.class);
                     autoFound = true;
 
@@ -598,6 +591,32 @@ public class EmailTask extends Task {
         } finally {
             message = savedMessage;
         }
+    }
+
+    private String getMailerImplementation() {
+        //check to make sure that activation.jar
+        //and mail.jar are available - see bug 31969
+        try {
+            Class.forName("jakarta.activation.DataHandler");
+            Class.forName("jakarta.mail.internet.MimeMessage");
+
+            return "org.apache.tools.ant.taskdefs.email.JakartaMimeMailer";
+        } catch (ClassNotFoundException cnfe) {
+            logBuildException("Could not find Jakarta MIME mail: ",
+                    new BuildException(cnfe));
+        }
+
+        try {
+            Class.forName("javax.activation.DataHandler");
+            Class.forName("javax.mail.internet.MimeMessage");
+
+            return "org.apache.tools.ant.taskdefs.email.MimeMailer";
+        } catch (ClassNotFoundException cnfe) {
+            logBuildException("Could not find MIME mail: ",
+                    new BuildException(cnfe));
+        }
+
+        return "org.apache.tools.ant.taskdefs.email.Mailer";
     }
 
     private void logBuildException(String reason, BuildException e) {

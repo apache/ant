@@ -26,6 +26,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 
 // CheckStyle:HideUtilityClassConstructorCheck OFF - bc
 
@@ -251,6 +252,9 @@ public class ClasspathUtils {
         try {
             @SuppressWarnings("unchecked")
             Class<T> clazz = (Class<T>) Class.forName(className, true, userDefinedLoader);
+            if (Modifier.isAbstract(clazz.getModifiers())) {
+                throw new BuildException("Abstract class " + className);
+            }
             T o = clazz.getDeclaredConstructor().newInstance();
             if (!expectedType.isInstance(o)) {
                 throw new BuildException(
