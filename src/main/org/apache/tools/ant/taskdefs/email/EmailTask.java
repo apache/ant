@@ -454,8 +454,8 @@ public class EmailTask extends Task {
                 try {
                     //check to make sure that activation.jar
                     //and mail.jar are available - see bug 31969
-                    Class.forName("javax.activation.DataHandler");
-                    Class.forName("javax.mail.internet.MimeMessage");
+                    Class.forName("jakarta.activation.DataHandler");
+                    Class.forName("jakarta.mail.internet.MimeMessage");
 
                     mailer = ClasspathUtils.newInstance(
                             "org.apache.tools.ant.taskdefs.email.MimeMailer",
