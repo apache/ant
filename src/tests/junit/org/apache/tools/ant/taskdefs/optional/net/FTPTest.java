@@ -748,6 +748,7 @@ public class FTPTest {
         }
     }
 
+    @Test
     public void testGetWithSelectorRetryable1() {
         buildRule.getProject().addTaskDefinition("ftp", oneFailureFTP.class);
         buildRule.getProject().executeTarget("ftp-get-with-selector-retryable");

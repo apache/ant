@@ -44,6 +44,7 @@ public class LinkedHashtableTest {
     private static final Object V2 = new Object();
     private Hashtable<Object, Object> h = new LinkedHashtable<>();
 
+    @Test
     public void testClear() {
         h.put(K1, V1);
         h.clear();
@@ -51,6 +52,7 @@ public class LinkedHashtableTest {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testClone() {
         h.put(K1, V1);
         Hashtable<Object, Object> h2 = (Hashtable<Object, Object>) h.clone();
