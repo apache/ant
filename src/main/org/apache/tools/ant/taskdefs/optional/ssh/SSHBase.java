@@ -20,12 +20,15 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.jcraft.jsch.ConfigRepository;
 import com.jcraft.jsch.OpenSSHConfig;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Environment.Variable;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -50,6 +53,7 @@ public abstract class SSHBase extends Task implements LogListener {
     private String sshConfig;
     private int serverAliveCountMax = 3;
     private int serverAliveIntervalSeconds = 0;
+    private final Map<String, String> additionalConfig = new HashMap<>();
 
     /**
      * Constructor for SSHBase.
@@ -247,6 +251,10 @@ public abstract class SSHBase extends Task implements LogListener {
         return port;
     }
 
+    public void addConfiguredAdditionalConfig(final Variable v) {
+        additionalConfig.put(v.getKey(), v.getValue());
+    }
+
     /**
      * Initialize the task.
      * This initializes the known hosts and sets the default port.
@@ -268,7 +276,7 @@ public abstract class SSHBase extends Task implements LogListener {
             if (!new File(sshConfig).exists()) {
                 throw new BuildException("The SSH configuration file specified doesn't exist: " + sshConfig);
             }
-            
+
             log("Loading SSH configuration file " + sshConfig, Project.MSG_DEBUG);
             ConfigRepository.Config config = null;
             try {
@@ -276,15 +284,15 @@ public abstract class SSHBase extends Task implements LogListener {
             } catch (IOException e) {
                 throw new BuildException("Failed to load the SSH configuration file " + sshConfig, e);
             }
-            
+
             if (config.getHostname() != null) {
                 host = config.getHostname();
             }
-            
+
             if (userInfo.getName() == null) {
                 userInfo.setName(config.getUser());
             }
-            
+
             if (userInfo.getKeyfile() == null) {
                 log("Using SSH key file " + config.getValue("IdentityFile") + " for host " + host, Project.MSG_INFO);
                 userInfo.setKeyfile(config.getValue("IdentityFile"));
@@ -331,6 +339,11 @@ public abstract class SSHBase extends Task implements LogListener {
             session.setServerAliveCountMax(getServerAliveCountMax());
             session.setServerAliveInterval(getServerAliveIntervalSeconds() * 1000);
         }
+
+        additionalConfig.forEach((k,v) -> {
+            log("Setting additional config value " + k, Project.MSG_DEBUG);
+            session.setConfig(k, v);
+        });
 
         log("Connecting to " + host + ":" + port);
         session.connect();

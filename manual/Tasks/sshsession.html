@@ -186,6 +186,31 @@ both sets of tunnels will be established.</p>
   </tr>
 </table>
 
+<h4 id="additionalConfig">additionalConfig</h4>
+
+<p><em>since Ant 1.10.10</em></p>
+
+<p>Adds configuration settings for the JSch Session created that are
+  not directly supported by specific Ant attributes.</p>
+
+<table class="attr">
+  <tr>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
+  </tr>
+  <tr>
+    <td>key</td>
+    <td>The key of the configuration setting.</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>The value of the configuration setting.</td>
+    <td>Yes</td>
+  </tr>
+</table>
+
 <h4 id="Sequential">sequential</h4>
 <p>The <code>sequential</code> element is a required parameter.  It is a container for nested Tasks
 which are to be executed once the SSH connection is established and all local and/or remote tunnels

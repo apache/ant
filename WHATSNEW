@@ -56,6 +56,11 @@ Other changes:
    individually before concatenating them.
    Bugzilla Report 64855
 
+ * the ssh tasks now share a new nested element additionalConfig that
+   can be used to set config values for the jsch Session used by the
+   task.
+   Bugzilla Report 65089
+
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
 

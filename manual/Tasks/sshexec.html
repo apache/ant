@@ -230,6 +230,33 @@ JSCh earlier than 0.1.28.</p>
   </tr>
 </table>
 
+<h3>Parameters specified as nested elements</h3>
+
+<h4 id="additionalConfig">additionalConfig</h4>
+
+<p><em>since Ant 1.10.10</em></p>
+
+<p>Adds configuration settings for the JSch Session created that are
+  not directly supported by specific Ant attributes.</p>
+
+<table class="attr">
+  <tr>
+    <th scope="col">Attribute</th>
+    <th scope="col">Description</th>
+    <th scope="col">Required</th>
+  </tr>
+  <tr>
+    <td>key</td>
+    <td>The key of the configuration setting.</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>The value of the configuration setting.</td>
+    <td>Yes</td>
+  </tr>
+</table>
+
 <h3>Examples</h3>
 
 <p>Run a command on a remote machine using password authentication</p>
