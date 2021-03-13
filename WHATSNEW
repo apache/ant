@@ -30,6 +30,10 @@ Fixed bugs:
  * The <http> condition didn't follow redirects from http to https.
    Bugzilla Report 65105
 
+ * ZipOutputStream now overrides write(int) in order to make sure
+   single byte writes get the same treatment as array writes.
+   Github Pull Request #145
+
 Other changes:
 --------------
 
