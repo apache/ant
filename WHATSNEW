@@ -34,6 +34,10 @@ Fixed bugs:
    single byte writes get the same treatment as array writes.
    Github Pull Request #145
 
+ * Fixes a potential deadlock in junitlauncher task when using legacy-xml
+   reporter.
+   Bugzilla Report 64733
+
 Other changes:
 --------------
 

@@ -50,6 +50,7 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -137,8 +138,8 @@ public class LauncherSupport {
                     final PrintStream originalSysOut = System.out;
                     final PrintStream originalSysErr = System.err;
                     try {
-                        firstListener.switchedSysOutHandle = trySwitchSysOutErr(testRequest, StreamType.SYS_OUT);
-                        firstListener.switchedSysErrHandle = trySwitchSysOutErr(testRequest, StreamType.SYS_ERR);
+                        firstListener.switchedSysOutHandle = trySwitchSysOutErr(testRequest, StreamType.SYS_OUT, originalSysErr);
+                        firstListener.switchedSysErrHandle = trySwitchSysOutErr(testRequest, StreamType.SYS_ERR, originalSysErr);
                         launcher.execute(request, testExecutionListeners.toArray(new TestExecutionListener[testExecutionListeners.size()]));
                     } finally {
                         // switch back sysout/syserr to the original
@@ -331,7 +332,8 @@ public class LauncherSupport {
         }
     }
 
-    private Optional<SwitchedStreamHandle> trySwitchSysOutErr(final TestRequest testRequest, final StreamType streamType) {
+    private Optional<SwitchedStreamHandle> trySwitchSysOutErr(final TestRequest testRequest, final StreamType streamType,
+                                                              final PrintStream originalSysErr) {
         switch (streamType) {
             case SYS_OUT: {
                 if (!testRequest.interestedInSysOut()) {
@@ -365,22 +367,32 @@ public class LauncherSupport {
             case SYS_OUT: {
                 System.setOut(new PrintStream(printStream));
                 streamer = new SysOutErrStreamReader(this, pipedInputStream,
-                        StreamType.SYS_OUT, testRequest.getSysOutInterests());
+                        StreamType.SYS_OUT, testRequest.getSysOutInterests(), originalSysErr);
                 final Thread sysOutStreamer = new Thread(streamer);
                 sysOutStreamer.setDaemon(true);
                 sysOutStreamer.setName("junitlauncher-sysout-stream-reader");
-                sysOutStreamer.setUncaughtExceptionHandler((t, e) -> this.log("Failed in sysout streaming", e, Project.MSG_INFO));
+                sysOutStreamer.setUncaughtExceptionHandler((t, e) -> {
+                    // skip the logging redirection infrastructure of junitlauncher task (which is what has
+                    // failed here) and instead directly write out the error to the original System.err
+                    originalSysErr.println("Failed in sysout streaming");
+                    e.printStackTrace(originalSysErr);
+                });
                 sysOutStreamer.start();
                 break;
             }
             case SYS_ERR: {
                 System.setErr(new PrintStream(printStream));
                 streamer = new SysOutErrStreamReader(this, pipedInputStream,
-                        StreamType.SYS_ERR, testRequest.getSysErrInterests());
+                        StreamType.SYS_ERR, testRequest.getSysErrInterests(), originalSysErr);
                 final Thread sysErrStreamer = new Thread(streamer);
                 sysErrStreamer.setDaemon(true);
                 sysErrStreamer.setName("junitlauncher-syserr-stream-reader");
-                sysErrStreamer.setUncaughtExceptionHandler((t, e) -> this.log("Failed in syserr streaming", e, Project.MSG_INFO));
+                sysErrStreamer.setUncaughtExceptionHandler((t, e) -> {
+                    // skip the logging redirection infrastructure of junitlauncher task (which is what has
+                    // failed here) and instead directly write out the error to the original System.err
+                    originalSysErr.println("Failed in syserr streaming");
+                    e.printStackTrace(originalSysErr);
+                });
                 sysErrStreamer.start();
                 break;
             }
@@ -477,20 +489,26 @@ public class LauncherSupport {
         SYS_ERR
     }
 
+    // Implementation note: Logging from this class is prohibited since it can lead
+    // to deadlocks (see bz-64733 for details)
     private static final class SysOutErrStreamReader implements Runnable {
         private static final byte[] EMPTY = new byte[0];
 
         private final LauncherSupport launchManager;
+        private final PrintStream originalSysErr;
         private final InputStream sourceStream;
         private final StreamType streamType;
         private final Collection<TestResultFormatter> resultFormatters;
         private volatile SysOutErrContentDeliverer contentDeliverer;
 
-        SysOutErrStreamReader(final LauncherSupport launchManager, final InputStream source, final StreamType streamType, final Collection<TestResultFormatter> resultFormatters) {
+        SysOutErrStreamReader(final LauncherSupport launchManager, final InputStream source,
+                              final StreamType streamType, final Collection<TestResultFormatter> resultFormatters,
+                              final PrintStream originalSysErr) {
             this.launchManager = launchManager;
             this.sourceStream = source;
             this.streamType = streamType;
             this.resultFormatters = resultFormatters;
+            this.originalSysErr = originalSysErr;
         }
 
         @Override
@@ -509,8 +527,8 @@ public class LauncherSupport {
                     streamContentDeliver.availableData.offer(copy);
                 }
             } catch (IOException e) {
-                this.launchManager.log("Failed while streaming " + (this.streamType == StreamType.SYS_OUT ? "sysout" : "syserr") + " data",
-                        e, Project.MSG_INFO);
+                // let the UncaughtExceptionHandler of this thread deal with this exception
+                throw new UncheckedIOException(e);
             } finally {
                 streamContentDeliver.stop = true;
                 // just "wakeup" the delivery thread, to take into account
