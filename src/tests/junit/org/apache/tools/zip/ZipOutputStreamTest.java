@@ -21,8 +21,14 @@ package org.apache.tools.zip;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+import java.util.zip.ZipInputStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -70,4 +76,18 @@ public class ZipOutputStreamTest {
                      ZipUtil.adjustToLong(2 * Integer.MAX_VALUE));
     }
 
+    @Test
+    public void testWriteAndReadManifest() throws IOException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            try (ZipOutputStream zos = new ZipOutputStream(baos)) {
+                zos.putNextEntry(new ZipEntry(JarFile.MANIFEST_NAME));
+                new Manifest().write(zos);
+            }
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                 ZipInputStream zis = new ZipInputStream(bais)) {
+                zis.getNextEntry();
+                zis.closeEntry();
+            }
+        }
+    }
 }

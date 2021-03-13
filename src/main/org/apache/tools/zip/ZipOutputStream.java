@@ -326,6 +326,11 @@ public class ZipOutputStream extends FilterOutputStream {
     private final Calendar calendarInstance = Calendar.getInstance();
 
     /**
+     * Temporary buffer used for the {@link #write(int)} method.
+     */
+    private final byte[] oneByte = new byte[1];
+
+    /**
      * Creates a new ZIP OutputStream filtering the underlying stream.
      * @param out the outputstream to zip
      * @since 1.1
@@ -899,6 +904,19 @@ public class ZipOutputStream extends FilterOutputStream {
      */
     public boolean canWriteEntryData(ZipEntry ae) {
         return ZipUtil.canHandleEntryData(ae);
+    }
+
+    /**
+     * Writes a byte to ZIP entry.
+     *
+     * @param b the byte to write
+     * @throws IOException on error
+     * @since Ant 1.10.10
+     */
+    @Override
+    public void write(int b) throws IOException {
+        oneByte[0] = (byte) (b & 0xff);
+        write(oneByte, 0, 1);
     }
 
     /**
