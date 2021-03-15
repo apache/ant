@@ -44,6 +44,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -150,6 +151,29 @@ public class LauncherSupport {
                         }
                         try {
                             System.setErr(originalSysErr);
+                        } catch (Exception e) {
+                            // ignore
+                        }
+                        // close the streams that we had used to redirect System.out/System.err
+                        try {
+                            firstListener.switchedSysOutHandle.ifPresent((h) -> {
+                                try {
+                                    h.close();
+                                } catch (Exception e) {
+                                    // ignore
+                                }
+                            });
+                        } catch (Exception e) {
+                            // ignore
+                        }
+                        try {
+                            firstListener.switchedSysErrHandle.ifPresent((h) -> {
+                                try {
+                                    h.close();
+                                } catch (Exception e) {
+                                    // ignore
+                                }
+                            });
                         } catch (Exception e) {
                             // ignore
                         }
@@ -600,13 +624,19 @@ public class LauncherSupport {
         }
     }
 
-    private final class SwitchedStreamHandle {
+    private final class SwitchedStreamHandle implements AutoCloseable {
         private final PipedOutputStream outputStream;
         private final SysOutErrStreamReader streamReader;
 
         SwitchedStreamHandle(final PipedOutputStream outputStream, final SysOutErrStreamReader streamReader) {
             this.streamReader = streamReader;
             this.outputStream = outputStream;
+        }
+
+        @Override
+        public void close() throws Exception {
+            outputStream.close();
+            streamReader.sourceStream.close();
         }
     }
 
