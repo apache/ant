@@ -218,6 +218,27 @@ because it tries to read from the standard input.</p>
       forked JVM will be the same as those of the JVM running Ant. <em>since Ant 1.7</em></td>
     <td>No; default is <q>false</q>, ignored if <var>fork</var> is <q>false</q></td>
   </tr>
+  <tr>
+    <td>discardOutput</td>
+    <td>Whether output should completely be discarded. This setting is
+      incompatible with any setting that redirects output to files or
+      properties.<br/>
+      If you set this to <q>true</q> error output will be discared as
+      well unless you redirect error output to files, properties or
+      enable <q>logError</q>.
+      <em>Since Ant 1.10.10</em>
+    </td>
+    <td>No; defaults to <q>false</q></td>
+  </tr>
+  <tr>
+    <td>discardError</td>
+    <td>Whether error output should completely be discarded. This
+      setting is incompatible with any setting that redirects error
+      output to files or properties as well as <q>logError</q>.
+      <em>Since Ant 1.10.10</em>
+    </td>
+    <td>No; defaults to <q>false</q></td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>arg and jvmarg</h4>

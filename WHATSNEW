@@ -69,6 +69,11 @@ Other changes:
    task.
    Bugzilla Report 65089
 
+ * added new disardOutput and discardError properties to redirector
+   and the exec, apply and java tasks which can be used to completely
+   discard any (error) output. This is a platform independent
+   alternative to directiong output to any kind of null device.
+
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
 

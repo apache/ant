@@ -262,6 +262,27 @@ standard input.</p>
       when resolving the location of the executable. <em>since Ant 1.6.3</em></td>
     <td>No; default is <q>false</q></td>
   </tr>
+  <tr>
+    <td>discardOutput</td>
+    <td>Whether output should completely be discarded. This setting is
+      incompatible with any setting that redirects output to files or
+      properties.<br/>
+      If you set this to <q>true</q> error output will be discared as
+      well unless you redirect error output to files, properties or
+      enable <q>logError</q>.
+      <em>Since Ant 1.10.10</em>
+    </td>
+    <td>No; defaults to <q>false</q></td>
+  </tr>
+  <tr>
+    <td>discardError</td>
+    <td>Whether error output should completely be discarded. This
+      setting is incompatible with any setting that redirects error
+      output to files or properties as well as <q>logError</q>.
+      <em>Since Ant 1.10.10</em>
+    </td>
+    <td>No; defaults to <q>false</q></td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>

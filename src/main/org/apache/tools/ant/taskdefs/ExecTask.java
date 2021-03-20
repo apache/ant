@@ -381,6 +381,36 @@ public class ExecTask extends Task {
     }
 
     /**
+     * Whether output should be discarded.
+     *
+     * <p>Defaults to false.</p>
+     *
+     * @param discard
+     *            if true output streams are discarded.
+     *
+     * @since Ant 1.10.10
+     * @see #setDiscardError
+     */
+    public void setDiscardOutput(final boolean discard) {
+        redirector.setDiscardOutput(discard);
+    }
+
+    /**
+     * Whether error output should be discarded.
+     *
+     * <p>Defaults to false.</p>
+     *
+     * @param discard
+     *            if true error streams are discarded.
+     *
+     * @since Ant 1.10.10
+     * @see #setDiscardOutput
+     */
+    public void setDiscardError(final boolean discard) {
+        redirector.setDiscardError(discard);
+    }
+
+    /**
      * Add a <code>RedirectorElement</code> to this task.
      *
      * @param redirectorElement   <code>RedirectorElement</code>.

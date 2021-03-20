@@ -707,4 +707,31 @@ public class Hello {
         </au:assertTrue>
     </target>
 
+    <target name="test-discard-output" depends="setUp" if="test.can.run">
+        <exec executable="sh" discardOutput="true">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertLogDoesntContain text="${ant.file} out" />
+        <au:assertLogDoesntContain text="${ant.file} err" />
+    </target>
+
+    <target name="test-discard-output-only" depends="setUp" if="test.can.run">
+        <exec executable="sh" discardOutput="true" logError="true">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertLogDoesntContain text="${ant.file} out" />
+        <au:assertLogContains text="${ant.file} err" />
+    </target>
+
+    <target name="test-discard-error" depends="setUp" if="test.can.run">
+        <exec executable="sh" discardError="true">
+            <arg value="parrot.sh" />
+            <arg value="${ant.file}" />
+        </exec>
+        <au:assertLogContains text="${ant.file} out" />
+        <au:assertLogDoesntContain text="${ant.file} err" />
+    </target>
+
 </project>

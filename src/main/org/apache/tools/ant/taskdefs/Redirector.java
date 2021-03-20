@@ -45,6 +45,7 @@ import org.apache.tools.ant.util.KeepAliveOutputStream;
 import org.apache.tools.ant.util.LazyFileOutputStream;
 import org.apache.tools.ant.util.LeadPipeInputStream;
 import org.apache.tools.ant.util.LineOrientedOutputStreamRedirector;
+import org.apache.tools.ant.util.NullOutputStream;
 import org.apache.tools.ant.util.OutputStreamFunneler;
 import org.apache.tools.ant.util.ReaderInputStream;
 import org.apache.tools.ant.util.TeeOutputStream;
@@ -196,6 +197,11 @@ public class Redirector {
 
     /** Is the output binary or can we safely split it into lines? */
     private boolean outputIsBinary = false;
+
+    /** Flag which indicates if error and output files are to be discarded. */
+    private boolean discardOut = false;
+
+    private boolean discardErr = false;
 
     /**
      * Create a redirector instance for the given task
@@ -439,6 +445,40 @@ public class Redirector {
         }
         synchronized (errMutex) {
             appendErr = append;
+        }
+    }
+
+    /**
+     * Whether output should be discarded.
+     *
+     * <p>Defaults to false.</p>
+     *
+     * @param discard
+     *            if true output streams are discarded.
+     *
+     * @since Ant 1.10.10
+     * @see #setDiscardError
+     */
+    public void setDiscardOutput(final boolean discard) {
+        synchronized (outMutex) {
+            discardOut = discard;
+        }
+    }
+
+    /**
+     * Whether error output should be discarded.
+     *
+     * <p>Defaults to false.</p>
+     *
+     * @param discard
+     *            if true error streams are discarded.
+     *
+     * @since Ant 1.10.10
+     * @see #setDiscardOutput
+     */
+    public void setDiscardError(final boolean discard) {
+        synchronized (errMutex) {
+            discardErr = discard;
         }
     }
 
@@ -694,7 +734,17 @@ public class Redirector {
 
     /** outStreams */
     private void outStreams() {
-        if (out != null && out.length > 0) {
+        final boolean haveOutputFiles = out != null && out.length > 0;
+        if (discardOut) {
+            if (haveOutputFiles || outputProperty != null) {
+                throw new BuildException("Cant discard output when output or outputProperty"
+                        + " are set");
+            }
+            managingTask.log("Discarding output", Project.MSG_VERBOSE);
+            outputStream = NullOutputStream.INSTANCE;
+            return;
+        }
+        if (haveOutputFiles) {
             final String logHead = "Output "
                     + ((appendOut) ? "appended" : "redirected") + " to ";
             outputStream = foldFiles(out, logHead, Project.MSG_VERBOSE,
@@ -716,7 +766,17 @@ public class Redirector {
     }
 
     private void errorStreams() {
-        if (error != null && error.length > 0) {
+        final boolean haveErrorFiles = error != null && error.length > 0;
+        if (discardErr) {
+            if (haveErrorFiles || errorProperty != null || logError) {
+                throw new BuildException("Cant discard error output when error, errorProperty"
+                        + " or logError are set");
+            }
+            managingTask.log("Discarding error output", Project.MSG_VERBOSE);
+            errorStream = NullOutputStream.INSTANCE;
+            return;
+        }
+        if (haveErrorFiles) {
             final String logHead = "Error "
                     + ((appendErr) ? "appended" : "redirected") + " to ";
             errorStream = foldFiles(error, logHead, Project.MSG_VERBOSE,
