@@ -33,6 +33,8 @@ public class NullOutputStream extends OutputStream {
      */
     public static NullOutputStream INSTANCE = new NullOutputStream();
 
+    private NullOutputStream() { }
+
     /**
      * Doesn't do anything.
      */
