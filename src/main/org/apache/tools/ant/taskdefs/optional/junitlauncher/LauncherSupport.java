@@ -30,6 +30,7 @@ import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestClasses
 import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestDefinition;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.KeepAliveOutputStream;
+import org.apache.tools.ant.util.LeadPipeInputStream;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.EngineFilter;
@@ -44,7 +45,6 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -380,7 +380,7 @@ public class LauncherSupport {
         final PipedOutputStream pipedOutputStream = new PipedOutputStream();
         final PipedInputStream pipedInputStream;
         try {
-            pipedInputStream = new PipedInputStream(pipedOutputStream);
+            pipedInputStream = new LeadPipeInputStream(pipedOutputStream);
         } catch (IOException ioe) {
             // log and return
             return Optional.empty();
