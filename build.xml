@@ -1077,7 +1077,7 @@
     <mkdir dir="${dist.etc}"/>
 
     <copy todir="${dist.lib}" file="${lib.dir}/README"/>
-    <copy todir="${dist.lib}" file="${lib.dir}/libraries.properties"/>
+    <copy todir="${dist.lib}" file="${basedir}/ivy.xml"/>
 
     <copy todir="${dist.lib}">
       <fileset dir="${src.dir}/etc/poms">
@@ -1192,7 +1192,7 @@
         <include name="optional/junit*.jar"/>
         <include name="optional/hamcrest*.jar"/>
         <include name="README"/>
-        <include name="libraries.properties"/>
+        <include name="ivy.xml"/>
       </fileset>
     </copy>
 

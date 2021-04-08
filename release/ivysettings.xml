@@ -17,13 +17,45 @@
 <ivysettings>
   <credentials host="repository.apache.org" realm="Sonatype Nexus Repository Manager" username="${upload.user}" passwd="${upload.password}"/>
   <caches defaultCacheDir="${user.home}/.ivy2/cache"/>
+  <signers>
+    <pgp name="apache-sig" secring="${gpg.dir}/secring.gpg" password="${gpg.password}" keyId="${gpg.keyid}"/>
+  </signers>
+  <settings defaultResolver="default"/>
   <resolvers>
     <ibiblio name="public" m2compatible="true"/>
-    <url name="nexus">
-      <artifact pattern="${upload.url}/[organisation]/[module]/[artifact]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
+    <ibiblio name="jboss" m2compatible="true" root="https://repository.jboss.org/nexus/content/groups/public/"/>
+    <bintray name="bintray"/>
+    <chain name="default" returnFirst="true">
+      <resolver ref="public"/>
+      <resolver ref="jboss"/>
+      <resolver ref="bintray"/>
+    </chain>
+    <url name="nexus" signer="apache-sig">
+      <artifact pattern="${upload.url}/[orgPath]/[artifact]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
     </url>
   </resolvers>
   <modules>
-   <module organisation="org.apache" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-antlr" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-apache-bcel" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-apache-bsf" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-apache-log4j" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-apache-oro" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-apache-regexp" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-apache-resolver" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-apache-xalan2" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-commons-logging" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-commons-net" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-jai" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-javamail" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-jdepend" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-jmf" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-jsch" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-junit" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-launcher" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-netrexx" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-swing" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-testutil" resolver="nexus"/>
+    <module organisation="org.apache.ant" name="ant-xz" resolver="nexus"/>
   </modules>
 </ivysettings>
