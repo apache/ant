@@ -78,6 +78,10 @@ Other changes:
    discard any (error) output. This is a platform independent
    alternative to directiong output to any kind of null device.
 
+ * junitlauncher now prints a more useful and instantaneous summary of
+   tests being run, closely matching the junit task's summary.
+   Bugzilla Report 64836
+
 Changes from Ant 1.10.8 TO Ant 1.10.9
 =====================================
 
