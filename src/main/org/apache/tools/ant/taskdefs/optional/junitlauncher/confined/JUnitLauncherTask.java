@@ -344,7 +344,8 @@ public class JUnitLauncherTask extends Task {
     private int executeForkedTest(final ForkDefinition forkDefinition, final CommandlineJava commandlineJava) {
         final LogOutputStream outStream = new LogOutputStream(this, Project.MSG_INFO);
         final LogOutputStream errStream = new LogOutputStream(this, Project.MSG_WARN);
-        final ExecuteWatchdog watchdog = forkDefinition.getTimeout() > 0 ? new ExecuteWatchdog(forkDefinition.getTimeout()) : null;
+        final ExecuteWatchdog watchdog = forkDefinition.getTimeout() > 0
+                ? createExecuteWatchdog(forkDefinition.getTimeout()) : null;
         final Execute execute = new Execute(new PumpStreamHandler(outStream, errStream), watchdog);
         execute.setCommandline(commandlineJava.getCommandline());
         execute.setAntRun(getProject());
@@ -363,6 +364,10 @@ public class JUnitLauncherTask extends Task {
             throw new BuildException("Process fork failed", e, getLocation());
         }
         return (watchdog != null && watchdog.killedProcess()) ? Constants.FORK_EXIT_CODE_TIMED_OUT : exitCode;
+    }
+
+    protected ExecuteWatchdog createExecuteWatchdog(long timeout) {
+        return new ExecuteWatchdog(timeout);
     }
 
     private java.nio.file.Path newLaunchDefinitionXml() {
