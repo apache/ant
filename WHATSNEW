@@ -1,6 +1,17 @@
 Changes from Ant 1.10.10 TO Ant 1.10.11
 ======================================
 
+Fixed bugs:
+-----------
+
+
+Other changes:
+--------------
+
+ * org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask now
+   has a new protected createExecuteWatchdog() method for allowing it to be overriden.
+   Github Pull Request #147
+
 
 Changes from Ant 1.10.9 TO Ant 1.10.10
 ======================================
