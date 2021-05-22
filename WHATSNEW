@@ -4,6 +4,9 @@ Changes from Ant 1.10.10 TO Ant 1.10.11
 Fixed bugs:
 -----------
 
+ * a race condition could lead to NullPointerExceptions when running
+   tasks in parallel.
+   Bugzilla Report 65316
 
 Other changes:
 --------------

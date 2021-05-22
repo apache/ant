@@ -159,7 +159,8 @@ public class UnknownElement extends Task {
      * @exception BuildException if the configuration fails
      */
     public void maybeConfigure() throws BuildException {
-        if (realThing != null) {
+        final Object copy = realThing;
+        if (copy != null) {
             return;
         }
         configure(makeObject(this, getWrapper()));
@@ -177,10 +178,10 @@ public class UnknownElement extends Task {
         }
         realThing = realObject;
 
-        getWrapper().setProxy(realThing);
+        getWrapper().setProxy(realObject);
         Task task = null;
-        if (realThing instanceof Task) {
-            task = (Task) realThing;
+        if (realObject instanceof Task) {
+            task = (Task) realObject;
 
             task.setRuntimeConfigurableWrapper(getWrapper());
 
@@ -188,7 +189,7 @@ public class UnknownElement extends Task {
             // targets to work. *very* Ugly
             // The reference is replaced by RuntimeConfigurable
             if (getWrapper().getId() != null) {
-                this.getOwningTarget().replaceChild(this, (Task) realThing);
+                this.getOwningTarget().replaceChild(this, (Task) realObject);
             }
        }
 
@@ -203,7 +204,7 @@ public class UnknownElement extends Task {
             getWrapper().maybeConfigure(getProject());
         }
 
-        handleChildren(realThing, getWrapper());
+        handleChildren(realObject, getWrapper());
     }
 
     /**
@@ -212,8 +213,9 @@ public class UnknownElement extends Task {
      * @param output The output to log. Should not be <code>null</code>.
      */
     protected void handleOutput(String output) {
-        if (realThing instanceof Task) {
-            ((Task) realThing).handleOutput(output);
+        final Object copy = realThing;
+        if (copy instanceof Task) {
+            ((Task) copy).handleOutput(output);
         } else {
             super.handleOutput(output);
         }
@@ -233,8 +235,9 @@ public class UnknownElement extends Task {
      */
     protected int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
-        if (realThing instanceof Task) {
-            return ((Task) realThing).handleInput(buffer, offset, length);
+        final Object copy = realThing;
+        if (copy instanceof Task) {
+            return ((Task) copy).handleInput(buffer, offset, length);
         }
         return super.handleInput(buffer, offset, length);
     }
@@ -245,8 +248,9 @@ public class UnknownElement extends Task {
      * @param output The output to log. Should not be <code>null</code>.
      */
     protected void handleFlush(String output) {
-        if (realThing instanceof Task) {
-            ((Task) realThing).handleFlush(output);
+        final Object copy = realThing;
+        if (copy instanceof Task) {
+            ((Task) copy).handleFlush(output);
         } else {
             super.handleFlush(output);
         }
@@ -258,8 +262,9 @@ public class UnknownElement extends Task {
      * @param output The error output to log. Should not be <code>null</code>.
      */
     protected void handleErrorOutput(String output) {
-        if (realThing instanceof Task) {
-            ((Task) realThing).handleErrorOutput(output);
+        final Object copy = realThing;
+        if (copy instanceof Task) {
+            ((Task) copy).handleErrorOutput(output);
         } else {
             super.handleErrorOutput(output);
         }
@@ -271,8 +276,9 @@ public class UnknownElement extends Task {
      * @param output The error output to log. Should not be <code>null</code>.
      */
     protected void handleErrorFlush(String output) {
-        if (realThing instanceof Task) {
-            ((Task) realThing).handleErrorFlush(output);
+        final Object copy = realThing;
+        if (copy instanceof Task) {
+            ((Task) copy).handleErrorFlush(output);
         } else {
             super.handleErrorFlush(output);
         }
@@ -283,13 +289,14 @@ public class UnknownElement extends Task {
      * (e.g. a data type) then this method does nothing.
      */
     public void execute() {
-        if (realThing == null) {
+        final Object copy = realThing;
+        if (copy == null) {
             // Got here if the runtimeconfigurable is not enabled.
             return;
         }
         try {
-            if (realThing instanceof Task) {
-                ((Task) realThing).execute();
+            if (copy instanceof Task) {
+                ((Task) copy).execute();
             }
         } finally {
             // Finished executing the task
@@ -503,8 +510,9 @@ public class UnknownElement extends Task {
      * @return the name to use in logging messages.
      */
     public String getTaskName() {
-        return !(realThing instanceof Task) ? super.getTaskName()
-                                            : ((Task) realThing).getTaskName();
+        final Object copy = realThing;
+        return !(copy instanceof Task) ? super.getTaskName()
+            : ((Task) copy).getTaskName();
     }
 
     /**
@@ -514,8 +522,9 @@ public class UnknownElement extends Task {
      *         a task.
      */
     public Task getTask() {
-        if (realThing instanceof Task) {
-            return (Task) realThing;
+        final Object copy = realThing;
+        if (copy instanceof Task) {
+            return (Task) copy;
         }
         return null;
     }
