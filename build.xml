@@ -613,7 +613,7 @@
          Build the code
        ===================================================================
   -->
-  <target name="build" depends="prepare, compile, compile-jdk9+" unless="skip.build"
+  <target name="build" depends="compile,compile-jdk9+" unless="skip.build"
           description="--> compiles the source code">
 
     <!-- Builds and verifies that the classes belonging in the confined package of
@@ -1715,7 +1715,7 @@ ${antunit.reports}
     <fail if="tests.failed" message="Unit tests failed"/>
   </target>
 
-  <target name="test-init" depends="probe-offline,check-optional-packages,dump-info">
+  <target name="test-init" depends="probe-offline,dump-info">
     <mkdir dir="${build.junit.tmpdir}"/>
     <condition property="sun.io.useCanonCaches" value="false">
       <not>
