@@ -179,6 +179,7 @@ public class JUnitLauncherTaskTest {
 
         verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll.xml", "<failure message=\"Intentional failure\" type=\"java.lang.RuntimeException\">");
         verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingStatic.xml", "Caused by: java.lang.RuntimeException: Intentional exception from static init block");
+        verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterDynamicSampleTestFailingBeforeEach.xml", "<failure message=\"Intentional failure in @BeforeEach\" type=\"java.lang.RuntimeException\">");
     }
 
     private void verifyLegacyXMLFile(final String fileName, final String expectedContentExtract) throws IOException {

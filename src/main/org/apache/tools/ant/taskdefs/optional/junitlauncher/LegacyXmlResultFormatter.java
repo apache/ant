@@ -244,18 +244,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                     // (https://bz.apache.org/bugzilla/show_bug.cgi?id=63850)
                     continue;
                 }
-                // find the associated class of this test
-                final Optional<ClassSource> parentClassSource;
-                if (testId.isTest()) {
-                    parentClassSource = findFirstParentClassSource(testId);
-                }
-                else {
-                    parentClassSource = findFirstClassSource(testId);
-                }
-                if (!parentClassSource.isPresent()) {
-                    continue;
-                }
-                final String classname = (parentClassSource.get()).getClassName();
+                final String classname = findClassnameOrId(testId);
                 writer.writeStartElement(ELEM_TESTCASE);
                 writeAttribute(writer, ATTR_CLASSNAME, classname);
                 writeAttribute(writer, ATTR_NAME, useLegacyReportingName ? testId.getLegacyReportingName()
@@ -271,6 +260,20 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
 
                 writer.writeEndElement();
             }
+        }
+
+        private String findClassnameOrId(TestIdentifier testId) {
+            // try to find the associated class of this test, if not found use some id to see test in the reports 
+            Optional<ClassSource> parentClassSource = Optional.empty();
+            if (!testId.isTest()) {
+                parentClassSource = findFirstClassSource(testId);
+            }
+            
+            if (!parentClassSource.isPresent()) {
+                parentClassSource = findFirstParentClassSource(testId);
+            }
+            
+            return parentClassSource.map(ClassSource::getClassName).orElse(testId.getUniqueId());
         }
 
         private void writeSkipped(final XMLStreamWriter writer, final TestIdentifier testIdentifier) throws XMLStreamException {
