@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+                xmlns="http://www.w3.org/1999/xhtml">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
@@ -149,7 +150,7 @@
       <td colspan="2">
         <xsl:if test="@error">
           <tt><xsl:value-of select="@error"/></tt><br/>
-          <i style="font-size:80%">See the <a href="#stacktrace" alt="Click for details">stacktrace</a>.</i>
+          <i style="font-size:80%">See the <a href="#stacktrace">stacktrace</a>.</i>
         </xsl:if>
       </td>
     </tr>
@@ -173,8 +174,7 @@
   <p>
   <!-- stacktrace -->
   <xsl:if test="stacktrace">
-  <a name="stacktrace"/>
-  <h3>Error details</h3>
+  <h3 id="stacktrace">Error details</h3>
   <table width="100%">
     <tr><td>
       <pre><xsl:value-of select="stacktrace"/></pre>

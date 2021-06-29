@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-    xmlns:lxslt="http://xml.apache.org/xslt"
-    xmlns:redirect="org.apache.xalan.lib.Redirect"
-    xmlns:string="xalan://java.lang.String"
-    xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:redirect="org.apache.xalan.lib.Redirect"
+                xmlns:string="xalan://java.lang.String"
+                xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
     extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes" encoding="UTF-8"/>
 <xsl:decimal-format decimal-separator="." grouping-separator=","/>
@@ -548,14 +548,12 @@ h6 {
             <xsl:variable name="insamepackage" select="/testsuites/testsuite[./@package = $name]"/>
             <xsl:if test="count($insamepackage) &gt; 0">
                 <h2>Classes</h2>
-                <p>
                 <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                     <xsl:call-template name="testsuite.test.header"/>
                     <xsl:apply-templates select="$insamepackage" mode="print.test">
                         <xsl:sort select="@name"/>
                     </xsl:apply-templates>
                 </table>
-                </p>
             </xsl:if>
         </body>
     </html>

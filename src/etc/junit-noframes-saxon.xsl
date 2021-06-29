@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="xs"
-    version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+                xmlns="http://www.w3.org/1999/xhtml">
     <xsl:character-map name="no-control-characters">
         <xsl:output-character character="&#127;" string="&amp;#127;"/>
         <xsl:output-character character="&#128;" string="&amp;#128;"/>
@@ -160,7 +158,6 @@
       </script>
         </head>
         <body>
-            <a name="top"></a>
             <xsl:call-template name="pageHeader"/>
 
             <!-- Summary part -->
@@ -239,8 +236,7 @@
         <!-- create an anchor to this package name -->
         <xsl:for-each select="/testsuites/testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
             <xsl:sort select="@package"/>
-                <a name="{@package}"></a>
-                <h3>Package <xsl:value-of select="@package"/></h3>
+                <h3 id="{@package}">Package <xsl:value-of select="@package"/></h3>
 
                 <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                     <xsl:call-template name="testsuite.test.header"/>
@@ -258,8 +254,7 @@
         <xsl:for-each select="testsuite">
             <xsl:sort select="@name"/>
             <!-- create an anchor to this class name -->
-            <a name="{@name}"></a>
-            <h3>TestCase <xsl:value-of select="@name"/></h3>
+            <h3 id="{@name}">TestCase <xsl:value-of select="@name"/></h3>
 
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
               <xsl:call-template name="testcase.test.header"/>
@@ -350,7 +345,7 @@
 
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
-    <h1><xsl:value-of select="$TITLE"/></h1>
+    <h1 id="top"><xsl:value-of select="$TITLE"/></h1>
     <table width="100%">
     <tr>
         <td align="left"></td>
