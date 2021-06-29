@@ -34,21 +34,22 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.Address;
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.SendFailedException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.Address;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.SendFailedException;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -70,12 +71,12 @@ public class MimeMailer extends Mailer {
         = System.getProperty("file.encoding");
 
     // To work properly with national charsets we have to use
-    // implementation of interface javax.activation.DataSource
+    // implementation of interface jakarta.activation.DataSource
     /**
      * String data source implementation.
      * @since Ant 1.6
      */
-    class StringDataSource implements javax.activation.DataSource {
+    class StringDataSource implements DataSource {
         private String data = null;
         private String type = null;
         private String charset = null;
@@ -211,7 +212,7 @@ public class MimeMailer extends Mailer {
                     message.setCharset(charset);
                 }
             }
-            // Using javax.activation.DataSource paradigm
+            // Using jakarta.activation.DataSource paradigm
             final StringDataSource sds = new StringDataSource();
             sds.setContentType(message.getMimeType());
             sds.setCharset(charset);

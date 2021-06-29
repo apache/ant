@@ -505,7 +505,7 @@
                classname="org.apache.bcel.Constants"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="javamail.present"
-               classname="javax.mail.Transport"
+               classname="jakarta.mail.Transport"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="graaljs.present"
                classname="com.oracle.truffle.js.scriptengine.GraalJSScriptEngine"
