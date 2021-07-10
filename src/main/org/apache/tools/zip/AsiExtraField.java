@@ -307,14 +307,18 @@ public class AsiExtraField implements ZipExtraField, UnixStat, Cloneable {
 
         int newMode = ZipShort.getValue(tmp, 0);
         // CheckStyle:MagicNumber OFF
-        byte[] linkArray = new byte[(int) ZipLong.getValue(tmp, 2)];
+        final int linkArrayLength = (int) ZipLong.getValue(tmp, 2);
+        if (linkArrayLength < 0 || linkArrayLength > tmp.length - 10) {
+            throw new ZipException("Bad symbolic link name length " + linkArrayLength
+                + " in ASI extra field");
+        }
         uid = ZipShort.getValue(tmp, 6);
         gid = ZipShort.getValue(tmp, 8);
-
-        if (linkArray.length == 0) {
+        if (linkArrayLength == 0) {
             link = "";
         } else {
-            System.arraycopy(tmp, 10, linkArray, 0, linkArray.length);
+            final byte[] linkArray = new byte[linkArrayLength];
+            System.arraycopy(tmp, 10, linkArray, 0, linkArrayLength);
             link = new String(linkArray); // Uses default charset - see class Javadoc
         }
         // CheckStyle:MagicNumber ON

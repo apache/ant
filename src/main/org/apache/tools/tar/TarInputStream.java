@@ -438,11 +438,13 @@ public class TarInputStream extends FilterInputStream {
                             String keyword = coll.toString("UTF-8");
                             // Get rest of entry
                             final int restLen = len - read;
-                            byte[] rest = new byte[restLen];
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
                             int got = 0;
                             while (got < restLen && (ch = i.read()) != -1) {
-                                rest[got++] = (byte) ch;
+                                bos.write((byte) ch);
+                                got++;
                             }
+                            bos.close();
                             if (got != restLen) {
                                 throw new IOException("Failed to read "
                                                       + "Paxheader. Expected "
@@ -450,6 +452,7 @@ public class TarInputStream extends FilterInputStream {
                                                       + " bytes, read "
                                                       + got);
                             }
+                            byte[] rest = bos.toByteArray();
                             // Drop trailing NL
                             String value = new String(rest, 0,
                                                       restLen - 1, "UTF-8");
