@@ -103,7 +103,7 @@ Note: This document was adapted from the one created in the context of
     build.
 
     # clean
-    $ rm -rf bootstrap build dist distribution java-repository target
+    $ rm -rf bootstrap build dist distribution java-repository target ant_*.snap
     $ ./build.sh dist-lite
     $ ./dist/bin/ant -nouserlib -lib lib/optional distribution
 
