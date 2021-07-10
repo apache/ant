@@ -15,6 +15,8 @@ Other changes:
    has a new protected createExecuteWatchdog() method for allowing it to be overriden.
    Github Pull Request #147
 
+ * Upgraded AntUnit to 1.4.1.
+
 
 Changes from Ant 1.10.9 TO Ant 1.10.10
 ======================================
