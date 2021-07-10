@@ -90,7 +90,7 @@ Note: This document was updated in the context of releasing Ant
     build.
 
     # clean
-    $ rm -rf bootstrap build dist distribution java-repository target
+    $ rm -rf bootstrap build dist distribution java-repository target ant_*.snap
     $ ./build.sh dist-lite
     $ ./dist/bin/ant -nouserlib -lib lib/optional distribution
 
@@ -143,7 +143,7 @@ Note: This document was updated in the context of releasing Ant
 
     b. Using gpg
 
-    $ for i in distribution/*/*.zip distribution/*/*.gz distribution/*/*.bz2 distribution/*/*.xz; do gpg --use-agent --detach-sign --armor $i; done
+    $ for i in distribution/*/*.zip distribution/*/*.gz distribution/*/*.bz2; do gpg --use-agent --detach-sign --armor $i; done
     $ for i in java-repository/org/apache/ant/ant*/*/*.jar java-repository/org/apache/ant/ant*/*/*.pom; do gpg --use-agent --detach-sign --armor $i; done
 
 11. Convert the part of the WHATSNEW file covering the changes
