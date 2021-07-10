@@ -1,6 +1,11 @@
 Changes from Ant 1.9.15 TO Ant 1.9.16
 =====================================
 
+Other changes:
+--------------
+
+ * Upgraded AntUnit to 1.4.1.
+
 Fixed bugs:
 -----------
 
