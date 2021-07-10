@@ -541,6 +541,9 @@ public class ZipFile implements Closeable {
         ze.setExternalAttributes(ZipLong.getValue(CFH_BUF, off));
         off += WORD;
 
+        if (archive.length() - archive.getFilePointer() < fileNameLen) {
+            throw new EOFException();
+        }
         final byte[] fileName = new byte[fileNameLen];
         archive.readFully(fileName);
         ze.setName(entryEncoding.decode(fileName), fileName);
@@ -550,12 +553,18 @@ public class ZipFile implements Closeable {
         // data offset will be filled later
         entries.add(ze);
 
+        if (archive.length() - archive.getFilePointer() < extraLen) {
+            throw new EOFException();
+        }
         final byte[] cdExtraData = new byte[extraLen];
         archive.readFully(cdExtraData);
         ze.setCentralDirectoryExtra(cdExtraData);
 
         setSizesAndOffsetFromZip64Extra(ze, offset, diskStart);
 
+        if (archive.length() - archive.getFilePointer() < commentLen) {
+            throw new EOFException();
+        }
         final byte[] comment = new byte[commentLen];
         archive.readFully(comment);
         ze.setComment(entryEncoding.decode(comment));
@@ -881,9 +890,18 @@ public class ZipFile implements Closeable {
                 }
                 lenToSkip -= skipped;
             }
+            if (archive.length() - archive.getFilePointer() < extraFieldLen) {
+                throw new EOFException();
+            }
             final byte[] localExtraData = new byte[extraFieldLen];
             archive.readFully(localExtraData);
-            ze.setExtra(localExtraData);
+            try {
+                ze.setExtra(localExtraData);
+            } catch (RuntimeException ex) {
+                final ZipException z = new ZipException("Invalid extra data in entry " + ze.getName());
+                z.initCause(ex);
+                throw z;
+            }
             offsetEntry.dataOffset = offset + LFH_OFFSET_FOR_FILENAME_LENGTH
                 + SHORT + SHORT + fileNameLen + extraFieldLen;
 
