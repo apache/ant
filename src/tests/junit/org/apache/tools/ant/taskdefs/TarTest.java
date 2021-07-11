@@ -19,16 +19,21 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
+import org.apache.tools.tar.TarEntry;
+import org.apache.tools.tar.TarInputStream;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TarTest {
@@ -185,5 +190,28 @@ public class TarTest {
     @Test
     public void testtestTarFilesetWithReference() {
         buildRule.executeTarget("testTarFilesetWithReference");
+    }
+
+    @Test
+    public void testTarFilesetWithSymlinks() throws IOException {
+        buildRule.executeTarget("testTarFilesetWithSymlinks");
+        final File f = new File(buildRule.getProject().getProperty("output"), "result.tar");
+        final TarInputStream tis = new TarInputStream(new FileInputStream(f));
+        try {
+            final TarEntry e1 = tis.getNextEntry();
+            assertEquals("pre/dir/file", e1.getName());
+            assertEquals("", e1.getLinkName());
+            assertEquals(48, e1.getLinkFlag());
+
+            final TarEntry e2 = tis.getNextEntry();
+            assertEquals("pre/sub/file", e2.getName());
+            assertEquals("../dir/file", e2.getLinkName());
+            assertEquals(50, e2.getLinkFlag());
+
+            assertNull(tis.getNextEntry());
+        }
+        finally {
+            tis.close();
+        }
     }
 }
