@@ -8,6 +8,9 @@ Fixed bugs:
    tasks in parallel.
    Bugzilla Report 65316
 
+ * fixed potential OutOfMemory errors when reading broken archives
+   using the tar or zip formats or formats derived from zip.
+
 Other changes:
 --------------
 
