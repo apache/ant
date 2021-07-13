@@ -1,3 +1,6 @@
+Changes from Ant 1.9.16 TO Ant 1.9.17
+=====================================
+
 Changes from Ant 1.9.15 TO Ant 1.9.16
 =====================================
 
@@ -13,6 +16,8 @@ Fixed bugs:
    central repository didn't contain any source files.
    Bugzilla Report 65110
 
+ * fixed potential OutOfMemory errors when reading broken archives
+   using the tar or zip formats or formats derived from zip.
 
 Changes from Ant 1.9.14 TO Ant 1.9.15
 =====================================

@@ -14,7 +14,7 @@
 # limitations under the License.
 
 name: ant
-version: "1.9.16alpha"
+version: "1.9.17alpha"
 summary: Apache Ant
 description: |
   Apache Ant™ is a Java library and command-line tool whose mission is
