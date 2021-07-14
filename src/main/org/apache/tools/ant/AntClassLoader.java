@@ -273,6 +273,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * @param classpath The classpath to use to load classes.
      */
     public AntClassLoader(final ClassLoader parent, final Project project, final Path classpath) {
+        super(parent);
         setParent(parent);
         setClassPath(classpath);
         setProject(project);
@@ -297,6 +298,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *                elements are set up to start with.
      */
     public AntClassLoader(final Project project, final Path classpath) {
+        super(parent);
         setParent(null);
         setProject(project);
         setClassPath(classpath);
