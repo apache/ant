@@ -889,15 +889,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         if (url != null) {
             log("Resource " + name + " loaded from parent loader", Project.MSG_DEBUG);
         } else {
-            // try and load from this loader if the parent either didn't find
-            // it or wasn't consulted.
-            for (final File pathComponent : pathComponents) {
-                url = getResourceURL(pathComponent, name);
-                if (url != null) {
-                    log("Resource " + name + " loaded from ant loader", Project.MSG_DEBUG);
-                    break;
-                }
-            }
+            url = getUrl(name);
         }
         if (url == null && !isParentFirst(name)) {
             // this loader was first but it didn't find it - try the parent
@@ -913,6 +905,29 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
         if (url == null) {
             log("Couldn't load Resource " + name, Project.MSG_DEBUG);
         }
+        return url;
+    }
+
+    /**
+     * Finds a matching file by iterating through path components.
+     *
+     * @param name File to find
+     * @return A <code>URL</code> object for reading the resource, or <code>null</code> if the
+     *     resource could not be found
+     */
+    private URL getUrl(String name) {
+        URL url = null;
+
+        // try and load from this loader if the parent either didn't find
+        // it or wasn't consulted.
+        for (final File pathComponent : pathComponents) {
+            url = getResourceURL(pathComponent, name);
+            if (url != null) {
+                log("Resource " + name + " loaded from ant loader", Project.MSG_DEBUG);
+                break;
+            }
+        }
+
         return url;
     }
 
@@ -933,6 +948,18 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     public Enumeration<URL> getNamedResources(final String name)
         throws IOException {
         return findResources(name, false);
+    }
+
+    /**
+     * Finds the resource with the given name.
+     *
+     * @param name The resource name
+     * @return A <code>URL</code> object for reading the resource, or <code>null</code> if the
+     *     resource could not be found
+     */
+    @Override
+    protected URL findResource(final String name) {
+        return getUrl(name);
     }
 
     /**
