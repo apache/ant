@@ -860,10 +860,18 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      */
     private ClassLoader getRootLoader() {
         ClassLoader ret = getClass().getClassLoader();
-        while (ret != null && ret.getParent() != null) {
-            ret = ret.getParent();
+        while (ret != null && getParent(ret) != null) {
+            ret = getParent(ret);
         }
         return ret;
+    }
+
+    private static ClassLoader getParent(ClassLoader cl) {
+        if (cl instanceof AntClassLoader) {
+            return ((AntClassLoader) cl).getConfiguredParent();
+        } else {
+            return cl.getParent();
+        }
     }
 
     /**
