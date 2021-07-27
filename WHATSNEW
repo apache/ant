@@ -1,6 +1,15 @@
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
 
+Other changes:
+--------------
+
+ * The implementation of AntClassLoader#findResources() has been changed to optimize
+   it for potential performance issues, as those noted at
+   https://issues.jenkins.io/browse/JENKINS-22310?focusedCommentId=197405&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-197405
+   Github Pull Request #151
+
+
 Changes from Ant 1.10.10 TO Ant 1.10.11
 =======================================
 
