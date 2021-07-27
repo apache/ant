@@ -936,9 +936,6 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * data (images, audio, text, etc) that can be accessed by class
      * code in a way that is independent of the location of the code.
      *
-     * <p>Would override getResources if that wasn't final in Java
-     * 1.4.</p>
-     *
      * @param name name of the resource
      * @return possible URLs as enumeration
      * @throws IOException if something goes wrong
@@ -982,26 +979,21 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *
      * @param name The resource name to search for.
      *             Must not be <code>null</code>.
-     * @param parentHasBeenSearched whether ClassLoader.this.parent
-     * has been searched - will be true if the method is (indirectly)
-     * called from ClassLoader.getResources
+     * @param skipParent whether to skip searching the parent first - will be false if the method is
+     *     invoked from {@link #getResources(String)} or {@link #getNamedResources(String)} and true
+     *     if the method is invoked from {@link #findResources(String)}.
      * @return an enumeration of URLs for the resources
      * @exception IOException if I/O errors occurs (can't happen)
      */
     protected Enumeration<URL> findResources(final String name,
-                                             final boolean parentHasBeenSearched)
+                                             final boolean skipParent)
         throws IOException {
         final Enumeration<URL> mine = new ResourceEnumeration(name);
         Enumeration<URL> base;
-        if (parent != null && (!parentHasBeenSearched || parent != getParent())) {
+        if (parent != null && !skipParent) {
             // Delegate to the parent:
             base = parent.getResources(name);
-            // Note: could cause overlaps in case
-            // ClassLoader.this.parent has matches and
-            // parentHasBeenSearched is true
         } else {
-            // ClassLoader.this.parent is already delegated to for example from
-            // ClassLoader.getResources, no need:
             base = Collections.emptyEnumeration();
         }
         if (isParentFirst(name)) {
