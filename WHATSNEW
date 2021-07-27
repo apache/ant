@@ -9,6 +9,9 @@ Other changes:
    https://issues.jenkins.io/browse/JENKINS-22310?focusedCommentId=197405&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-197405
    Github Pull Request #151
 
+ * AntClassLoader now implements the ClassLoader#findResource(String) method.
+   Github Pull Request #150
+
 
 Changes from Ant 1.10.10 TO Ant 1.10.11
 =======================================
