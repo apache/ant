@@ -68,4 +68,38 @@
         text="Result code for ${unsecurelocation} was 200" />
   </target>
 
+  <target name="testDontFollowPermanentRedirect">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${location}/permanent.txt" followRedirects="false"/>
+    </au:assertTrue>
+    <au:assertLogContains level="verbose"
+                          text="Result code for ${location}/permanent.txt was 301" />
+  </target>
+
+  <target name="testDontFollowTemporaryRedirect">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${location}/temp.txt" followRedirects="false"/>
+    </au:assertTrue>
+    <au:assertLogContains level="verbose"
+                          text="Result code for ${location}/temp.txt was 302" />
+  </target>
+
+  <target name="testDontFollowStatusCode307Redirect">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${location}/307.txt" followRedirects="false"/>
+    </au:assertTrue>
+    <au:assertLogContains level="verbose"
+                          text="Result code for ${location}/307.txt was 307" />
+  </target>
+
+  <target name="testDontFollowHttpToHttpsRedirect">
+    <sleep milliseconds="250"/>
+    <au:assertTrue>
+      <http url="${unsecurelocation}" followRedirects="false"/>
+    </au:assertTrue>
+  </target>
+
 </project>

@@ -1,6 +1,13 @@
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
 
+Fixed bugs:
+-----------
+
+ * The http condition would follow redirects even when "followRedirects" attribute
+   was set to "false". This has now been fixed.
+   Bugzilla Report 65489
+
 Other changes:
 --------------
 

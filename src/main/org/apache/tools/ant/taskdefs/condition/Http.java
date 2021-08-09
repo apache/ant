@@ -149,7 +149,7 @@ public class Http extends ProjectComponent implements Condition {
         http.setInstanceFollowRedirects(followRedirects);
         http.setReadTimeout(readTimeout);
         final int firstStatusCode = http.getResponseCode();
-        if (Get.isMoved(firstStatusCode)) {
+        if (this.followRedirects && Get.isMoved(firstStatusCode)) {
             final String newLocation = http.getHeaderField("Location");
             final URL newURL = new URL(newLocation);
             if (redirectionAllowed(url, newURL)) {
