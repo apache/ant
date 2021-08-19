@@ -595,7 +595,7 @@ public final class SelectorUtils {
      *
      * @param src the original file
      * @param target the file being compared against
-     * @param granularity the amount in seconds of slack we will give in
+     * @param granularity the amount in milliseconds of slack we will give in
      *        determining out of dateness
      * @return whether the target is out of date
      */
@@ -622,7 +622,7 @@ public final class SelectorUtils {
      *
      * @param src the original resource
      * @param target the resource being compared against
-     * @param granularity the int amount in seconds of slack we will give in
+     * @param granularity the int amount in milliseconds of slack we will give in
      *        determining out of dateness
      * @return whether the target is out of date
      */
@@ -641,7 +641,7 @@ public final class SelectorUtils {
      *
      * @param src the original resource
      * @param target the resource being compared against
-     * @param granularity the long amount in seconds of slack we will give in
+     * @param granularity the long amount in milliseconds of slack we will give in
      *        determining out of dateness
      * @return whether the target is out of date
      */
