@@ -19,6 +19,8 @@ Other changes:
  * AntClassLoader now implements the ClassLoader#findResource(String) method.
    Github Pull Request #150
 
+ * Ant tries to avoid file name canonicalization whne possible.
+   Bugzilla Report 65499
 
 Changes from Ant 1.10.10 TO Ant 1.10.11
 =======================================

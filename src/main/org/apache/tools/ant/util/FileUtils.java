@@ -1421,10 +1421,21 @@ public class FileUtils {
         if (f1 == null || f2 == null) {
             return false;
         }
+        return fileNameEquals(f1, f2) || isSameFile(f1, f2);
+    }
+
+    private boolean isSameFile(File f1, File f2) throws IOException {
+        if (f1.exists()) {
+            try {
+                return f2.exists() && Files.isSameFile(f1.toPath(), f2.toPath());
+            } catch (NoSuchFileException e) {
+                // file has been removed between exists check and isSameFile?
+                return false;
+            }
+        }
         File f1Normalized = normalize(f1.getAbsolutePath());
         File f2Normalized = normalize(f2.getAbsolutePath());
-        return f1Normalized.equals(f2Normalized)
-            || f1Normalized.getCanonicalFile().equals(f2Normalized
+        return f1Normalized.getCanonicalFile().equals(f2Normalized
                                                       .getCanonicalFile());
     }
 
