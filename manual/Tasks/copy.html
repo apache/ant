@@ -28,7 +28,8 @@
 <h3>Description</h3>
 <p>Copies a file or resource collection to a new file or directory.  By default, files are only
 copied if the source file is newer than the destination file, or when the destination file does not
-exist.  However, you can explicitly overwrite files with the <var>overwrite</var> attribute.</p>
+exist - please see the <var>granularity</var> attribute for Ant's idea of <em>newer</em>.
+However, you can explicitly overwrite files with the <code>overwrite</code> attribute.</p>
 
 <p><a href="../Types/resources.html#collection">Resource collections</a> are used to select a group
 of files to copy.  To use a resource collection, the <var>todir</var> attribute must be
