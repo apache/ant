@@ -505,7 +505,8 @@ public class JUnitTaskTest {
             }
             assertTrue("No exports", resExports.isEmpty());
             if (project.getProperty(MagicNames.BUILD_SYSCLASSPATH) == null
-                && System.getProperty(MagicNames.BUILD_SYSCLASSPATH) == null) {
+                && System.getProperty(MagicNames.BUILD_SYSCLASSPATH) == null
+                && project.getProperty("tests.and.ant.share.classloader") == null) {
                 assertEquals("Expected classpath", cp.toString(), resCp);
             }
             assertEquals("Expected modulepath", mp.toString(), resMp);
@@ -562,7 +563,8 @@ public class JUnitTaskTest {
             }
             assertTrue("No exports", resExports.isEmpty());
             if (project.getProperty(MagicNames.BUILD_SYSCLASSPATH) == null
-                && System.getProperty(MagicNames.BUILD_SYSCLASSPATH) == null) {
+                && System.getProperty(MagicNames.BUILD_SYSCLASSPATH) == null
+                && project.getProperty("tests.and.ant.share.classloader") == null) {
                 assertNull("No classpath", resCp);
             }
             assertEquals("Expected modulepath", mp.toString(), resMp);
@@ -576,6 +578,8 @@ public class JUnitTaskTest {
                 LoaderUtils.classNameToResource(Project.class.getName());
         final File antclasses = LoaderUtils.getResourceSource(
                 Project.class.getClassLoader(), projectResourceName);
+        assumeTrue("skipping test as ant is found inside of a jar rather than a directory",
+                   antclasses.isDirectory());
         final String testResourceName =
                 LoaderUtils.classNameToResource(junit.framework.Test.class.getName());
         final File junitJar = LoaderUtils.getResourceSource(
