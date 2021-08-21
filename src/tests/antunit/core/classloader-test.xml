@@ -48,7 +48,8 @@ public class A {
 
   <target name="testLoadClass"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=44103"
-          depends="setUp">
+          depends="setUp"
+          unless="gump">
     <echo file="${input}/A.java"><![CDATA[
 public class A {
     public static void main(String[] args) {
