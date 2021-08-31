@@ -19,7 +19,6 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.Project;
 import org.junit.Test;
-import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 import java.io.ByteArrayOutputStream;

@@ -24,7 +24,6 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.SocketTimeoutException;
 import java.util.Locale;
 
 import org.apache.tools.ant.BuildException;
