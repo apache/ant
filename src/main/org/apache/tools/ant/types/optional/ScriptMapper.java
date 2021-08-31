@@ -86,6 +86,6 @@ public class ScriptMapper extends AbstractScriptComponent implements FileNameMap
         if (files.isEmpty()) {
             return null;
         }
-        return files.toArray(new String[files.size()]);
+        return files.toArray(new String[0]);
     }
 }

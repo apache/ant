@@ -570,8 +570,7 @@ public class DirectoryScanner
      */
     public static String[] getDefaultExcludes() {
         synchronized (defaultExcludes) {
-            return defaultExcludes.toArray(new String[defaultExcludes
-                                                                 .size()]);
+            return defaultExcludes.toArray(new String[0]);
         }
     }
 
@@ -1228,7 +1227,7 @@ public class DirectoryScanner
                     noLinks.add(newFile);
                 }
             }
-            newFiles = noLinks.toArray(new String[noLinks.size()]);
+            newFiles = noLinks.toArray(new String[0]);
         } else {
             directoryNamesFollowed.addFirst(dir.getName());
         }
@@ -1522,7 +1521,7 @@ public class DirectoryScanner
             if (filesIncluded == null) {
                 throw new IllegalStateException("Must call scan() first");
             }
-            files = filesIncluded.toArray(new String[filesIncluded.size()]);
+            files = filesIncluded.toArray(new String[0]);
         }
         Arrays.sort(files);
         return files;
@@ -1553,7 +1552,7 @@ public class DirectoryScanner
     @Override
     public synchronized String[] getNotIncludedFiles() {
         slowScan();
-        return filesNotIncluded.toArray(new String[filesNotIncluded.size()]);
+        return filesNotIncluded.toArray(new String[0]);
     }
 
     /**
@@ -1570,7 +1569,7 @@ public class DirectoryScanner
     @Override
     public synchronized String[] getExcludedFiles() {
         slowScan();
-        return filesExcluded.toArray(new String[filesExcluded.size()]);
+        return filesExcluded.toArray(new String[0]);
     }
 
     /**
@@ -1587,7 +1586,7 @@ public class DirectoryScanner
     @Override
     public synchronized String[] getDeselectedFiles() {
         slowScan();
-        return filesDeselected.toArray(new String[filesDeselected.size()]);
+        return filesDeselected.toArray(new String[0]);
     }
 
     /**
@@ -1605,7 +1604,7 @@ public class DirectoryScanner
             if (dirsIncluded == null) {
                 throw new IllegalStateException("Must call scan() first");
             }
-            directories = dirsIncluded.toArray(new String[dirsIncluded.size()]);
+            directories = dirsIncluded.toArray(new String[0]);
         }
         Arrays.sort(directories);
         return directories;
@@ -1636,7 +1635,7 @@ public class DirectoryScanner
     @Override
     public synchronized String[] getNotIncludedDirectories() {
         slowScan();
-        return dirsNotIncluded.toArray(new String[dirsNotIncluded.size()]);
+        return dirsNotIncluded.toArray(new String[0]);
     }
 
     /**
@@ -1653,7 +1652,7 @@ public class DirectoryScanner
     @Override
     public synchronized String[] getExcludedDirectories() {
         slowScan();
-        return dirsExcluded.toArray(new String[dirsExcluded.size()]);
+        return dirsExcluded.toArray(new String[0]);
     }
 
     /**
@@ -1670,7 +1669,7 @@ public class DirectoryScanner
     @Override
     public synchronized String[] getDeselectedDirectories() {
         slowScan();
-        return dirsDeselected.toArray(new String[dirsDeselected.size()]);
+        return dirsDeselected.toArray(new String[0]);
     }
 
     /**
@@ -1685,7 +1684,7 @@ public class DirectoryScanner
     public synchronized String[] getNotFollowedSymlinks() {
         String[] links;
         synchronized (this) {
-            links = notFollowedSymlinks.toArray(new String[notFollowedSymlinks.size()]);
+            links = notFollowedSymlinks.toArray(new String[0]);
         }
         Arrays.sort(links);
         return links;
@@ -1783,7 +1782,7 @@ public class DirectoryScanner
                 map.put(s, new TokenizedPath(s));
             }
         }
-        return al.toArray(new TokenizedPattern[al.size()]);
+        return al.toArray(new TokenizedPattern[0]);
     }
 
     /**

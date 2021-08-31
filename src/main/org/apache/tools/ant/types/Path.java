@@ -420,7 +420,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
             }
             result.add(element.toString());
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     /**

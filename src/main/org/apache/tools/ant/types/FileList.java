@@ -133,7 +133,7 @@ public class FileList extends DataType implements ResourceCollection {
             throw new BuildException("No files specified for filelist.");
         }
 
-        return filenames.toArray(new String[filenames.size()]);
+        return filenames.toArray(new String[0]);
     }
 
     /**
@@ -184,7 +184,7 @@ public class FileList extends DataType implements ResourceCollection {
             return getRef().iterator();
         }
         return new FileResourceIterator(getProject(), dir,
-            filenames.toArray(new String[filenames.size()]));
+            filenames.toArray(new String[0]));
     }
 
     /**

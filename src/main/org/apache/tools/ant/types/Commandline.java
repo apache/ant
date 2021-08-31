@@ -372,7 +372,7 @@ public class Commandline implements Cloneable {
     public String[] getCommandline() {
         final List<String> commands = new LinkedList<>();
         addCommandToList(commands.listIterator());
-        return commands.toArray(new String[commands.size()]);
+        return commands.toArray(new String[0]);
     }
 
     /**
@@ -395,7 +395,7 @@ public class Commandline implements Cloneable {
     public String[] getArguments() {
         List<String> result = new ArrayList<>(arguments.size() * 2);
         addArgumentsToList(result.listIterator());
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     /**
@@ -537,7 +537,7 @@ public class Commandline implements Cloneable {
         if (state == inQuote || state == inDoubleQuote) {
             throw new BuildException("unbalanced quotes in " + toProcess);
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     /**

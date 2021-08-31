@@ -138,7 +138,7 @@ public final class AntFilterReader extends DataType {
             getRef().getParams();
         }
         dieOnCircularReference();
-        return parameters.toArray(new Parameter[parameters.size()]);
+        return parameters.toArray(new Parameter[0]);
     }
 
     /**

@@ -140,7 +140,7 @@ public abstract class TestDefinition {
             }
             parts.add(part);
         }
-        return parts.toArray(new String[parts.size()]);
+        return parts.toArray(new String[0]);
     }
 
     protected abstract void toForkedRepresentation(JUnitLauncherTask task, XMLStreamWriter writer) throws XMLStreamException;

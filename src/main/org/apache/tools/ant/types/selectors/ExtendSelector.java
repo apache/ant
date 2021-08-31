@@ -188,7 +188,7 @@ public class ExtendSelector extends BaseSelector {
         if (!parameters.isEmpty() && dynselector instanceof ExtendFileSelector) {
             // We know that dynselector must be non-null if no error message
             ((ExtendFileSelector) dynselector).setParameters(
-                parameters.toArray(new Parameter[parameters.size()]));
+                parameters.toArray(new Parameter[0]));
         }
         return dynselector.isSelected(basedir, filename, file);
     }

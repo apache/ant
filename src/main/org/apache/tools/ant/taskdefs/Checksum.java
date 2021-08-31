@@ -544,7 +544,7 @@ public class Checksum extends MatchingTask implements Condition {
             if (totalproperty != null) {
                 // Calculate the total checksum
                 // Convert the keys (source files) into a sorted array.
-                File[] keyArray = allDigests.keySet().toArray(new File[allDigests.size()]);
+                File[] keyArray = allDigests.keySet().toArray(new File[0]);
                 // File is Comparable, but sort-order is platform
                 // dependent (case-insensitive on Windows)
                 Arrays.sort(keyArray, Comparator.nullsFirst(

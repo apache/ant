@@ -97,7 +97,7 @@ public class CommandlineJava implements Cloneable {
             if (definitions.isEmpty()) {
                 return null;
             }
-            return definitions.toArray(new String[definitions.size()]);
+            return definitions.toArray(new String[0]);
         }
 
         /**
@@ -500,7 +500,7 @@ public class CommandlineJava implements Cloneable {
         //fill it
         addCommandsToList(commands.listIterator());
         //convert to an array
-        return commands.toArray(new String[commands.size()]);
+        return commands.toArray(new String[0]);
     }
 
     /**

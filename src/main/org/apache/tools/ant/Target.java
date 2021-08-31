@@ -232,7 +232,7 @@ public class Target implements TaskContainer {
                 tasks.add((Task) o);
             }
         }
-        return tasks.toArray(new Task[tasks.size()]);
+        return tasks.toArray(new Task[0]);
     }
 
     /**

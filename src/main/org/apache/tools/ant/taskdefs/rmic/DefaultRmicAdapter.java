@@ -336,7 +336,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                 args.add(arg);
             }
         }
-        return args.toArray(new String[args.size()]);
+        return args.toArray(new String[0]);
     }
 
 

@@ -78,7 +78,7 @@ public abstract class AbstractSelectorContainer extends DataType
             return getRef(p).getSelectors(p);
         }
         dieOnCircularReference(p);
-        return selectorsList.toArray(new FileSelector[selectorsList.size()]);
+        return selectorsList.toArray(new FileSelector[0]);
     }
 
     /**

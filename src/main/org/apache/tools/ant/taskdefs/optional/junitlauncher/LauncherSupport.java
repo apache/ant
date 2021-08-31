@@ -141,7 +141,7 @@ public class LauncherSupport {
                     try {
                         firstListener.switchedSysOutHandle = trySwitchSysOutErr(testRequest, StreamType.SYS_OUT, originalSysErr);
                         firstListener.switchedSysErrHandle = trySwitchSysOutErr(testRequest, StreamType.SYS_ERR, originalSysErr);
-                        launcher.execute(request, testExecutionListeners.toArray(new TestExecutionListener[testExecutionListeners.size()]));
+                        launcher.execute(request, testExecutionListeners.toArray(new TestExecutionListener[0]));
                     } finally {
                         // switch back sysout/syserr to the original
                         try {

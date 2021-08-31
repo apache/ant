@@ -85,7 +85,7 @@ class ChangeLogParser {
         }
         modules.stream().map(Module::getName).forEach(names::add);
 
-        moduleNames = names.toArray(new String[names.size()]);
+        moduleNames = names.toArray(new String[0]);
         moduleNameLengths = new int[moduleNames.length];
         for (int i = 0; i < moduleNames.length; i++) {
             moduleNameLengths[i] = moduleNames[i].length();
@@ -102,7 +102,7 @@ class ChangeLogParser {
      * @return a list of rcs entries as an array
      */
     public CVSEntry[] getEntrySetAsArray() {
-        return entries.values().toArray(new CVSEntry[entries.size()]);
+        return entries.values().toArray(new CVSEntry[0]);
     }
 
     /**

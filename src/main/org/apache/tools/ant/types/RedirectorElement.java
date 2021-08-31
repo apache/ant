@@ -578,7 +578,7 @@ public class RedirectorElement extends DataType {
                 list.add(getProject().resolveFile(n));
             }
         }
-        return list.toArray(new File[list.size()]);
+        return list.toArray(new File[0]);
     }
 
     /**

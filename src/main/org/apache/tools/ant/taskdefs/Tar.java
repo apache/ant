@@ -660,7 +660,7 @@ public class Tar extends MatchingTask {
      * @since Ant 1.9.5
      */
     protected boolean check(final File basedir, final Collection<String> files) {
-        return check(basedir, files.toArray(new String[files.size()]));
+        return check(basedir, files.toArray(new String[0]));
     }
 
     /**

@@ -905,7 +905,7 @@ public class NetRexxC extends MatchingTask {
         options.add(utf8 ? "-utf8" : "-noutf8");
         options.add("-" + verbose);
 
-        return options.toArray(new String[options.size()]);
+        return options.toArray(new String[0]);
     }
 
     /**
