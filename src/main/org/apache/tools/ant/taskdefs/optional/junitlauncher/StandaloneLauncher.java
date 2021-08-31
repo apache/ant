@@ -146,11 +146,11 @@ public class StandaloneLauncher {
             }
             final String includeTags = reader.getAttributeValue(null, LD_XML_ATTR_INCLUDE_TAGS);
             if (includeTags != null) {
-                Stream.of(includeTags.split(",")).forEach(i -> forkedLaunch.addIncludeTag(i));
+                Stream.of(includeTags.split(",")).forEach(forkedLaunch::addIncludeTag);
             }
             final String excludeTags = reader.getAttributeValue(null, LD_XML_ATTR_EXCLUDE_TAGS);
             if (excludeTags != null) {
-                Stream.of(excludeTags.split(",")).forEach(e -> forkedLaunch.addExcludeTag(e));
+                Stream.of(excludeTags.split(",")).forEach(forkedLaunch::addExcludeTag);
             }
             final String printSummary = reader.getAttributeValue(null, LD_XML_ATTR_PRINT_SUMMARY);
             if (printSummary != null) {

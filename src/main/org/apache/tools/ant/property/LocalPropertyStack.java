@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.property;
 
+import java.util.AbstractCollection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
@@ -159,8 +160,8 @@ public class LocalPropertyStack {
      */
     public Set<String> getPropertyNames() {
         final Set<String> names = stack.stream().map(Map::keySet)
-            .collect(Collector.of(() -> new HashSet<String>(),
-                (ns, ks) -> ns.addAll(ks),
+            .collect(Collector.of(HashSet::new,
+                    AbstractCollection::addAll,
                 (ns1, ns2) -> { ns1.addAll(ns2); return ns1; },
                 Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
         return Collections.unmodifiableSet(names);
