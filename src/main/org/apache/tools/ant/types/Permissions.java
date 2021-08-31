@@ -207,10 +207,7 @@ public class Permissions {
         public void checkPermission(final java.security.Permission perm) {
             if (active) {
                 if (delegateToOldSM && !perm.getName().equals("exitVM")) {
-                    boolean permOK = false;
-                    if (granted.implies(perm)) {
-                        permOK = true;
-                    }
+                    boolean permOK = granted.implies(perm);
                     checkRevoked(perm);
                     /*
                      if the permission was not explicitly granted or revoked
