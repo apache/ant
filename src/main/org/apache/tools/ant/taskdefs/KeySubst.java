@@ -167,7 +167,7 @@ public class KeySubst extends Task {
      */
     public static String replace(String origString, Hashtable<String, String> keys)
         throws BuildException {
-        StringBuffer finalString = new StringBuffer();
+        final StringBuilder finalString = new StringBuilder();
         int index = 0;
         int i = 0;
         String key = null;

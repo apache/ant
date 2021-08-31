@@ -550,7 +550,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             return;
         }
 
-        final StringBuffer msg = new StringBuffer();
+        final StringBuilder msg = new StringBuilder();
         final SourceLocator locator = e.getLocator();
         if (locator != null) {
             final String systemid = locator.getSystemId();

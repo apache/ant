@@ -188,7 +188,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     public void messageLogged(BuildEvent event) {
         log("--- MESSAGE LOGGED", Project.MSG_DEBUG);
 
-        StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
 
         if (event.getTask() != null) {
             String name = event.getTask().getTaskName();

@@ -173,7 +173,7 @@ public abstract class BaseFilterReader extends FilterReader {
             return null;
         }
 
-        StringBuffer line = new StringBuffer();
+        final StringBuilder line = new StringBuilder();
 
         while (ch != -1) {
             line.append((char) ch);

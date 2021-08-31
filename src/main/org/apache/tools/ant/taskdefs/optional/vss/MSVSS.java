@@ -745,7 +745,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * @return The command line as a string with out the password
      */
     private String formatCommandLine(Commandline cmd) {
-        StringBuffer sBuff = new StringBuffer(cmd.toString());
+        final StringBuilder sBuff = new StringBuilder(cmd.toString());
         int indexUser = sBuff.substring(0).indexOf(FLAG_LOGIN);
         if (indexUser > 0) {
             int indexPass = sBuff.substring(0).indexOf(",", indexUser);
