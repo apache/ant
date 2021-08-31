@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
@@ -107,10 +108,10 @@ public class DeweyDecimalTest {
     @Test
     public void equals() {
          DeweyDecimal dd = new DeweyDecimal("1.2.3");
-         assertFalse(dd.equals("other"));
-         assertFalse(dd.equals(null));
-         assertTrue(dd.equals(new DeweyDecimal("1.2.3")));
-         assertTrue(dd.equals(new DeweyDecimal("1.2.3.0")));
+        assertNotEquals("other", dd);
+        assertNotNull(dd);
+        assertEquals(dd, new DeweyDecimal("1.2.3"));
+        assertEquals(dd, new DeweyDecimal("1.2.3.0"));
     }
 
     @Test
