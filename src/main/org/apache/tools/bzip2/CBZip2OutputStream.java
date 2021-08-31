@@ -1210,6 +1210,7 @@ public class CBZip2OutputStream extends OutputStream
             for (int j = 16; --j >= 0;) {
                 if (inUse[i16 + j]) {
                     inUse16[i] = true;
+                    break;
                 }
             }
         }

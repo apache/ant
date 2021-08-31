@@ -88,7 +88,7 @@ public class NoBannerLogger extends DefaultLogger {
 
         synchronized (this) {
             if (null != targetName) {
-                out.println(String.format("%n%s:", targetName));
+                out.printf("%n%s:%n", targetName);
                 targetName = null;
             }
         }
