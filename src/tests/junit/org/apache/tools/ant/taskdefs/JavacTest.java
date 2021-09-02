@@ -19,21 +19,24 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.taskdefs.compilers.Javac13;
 import org.apache.tools.ant.taskdefs.compilers.JavacExternal;
+import org.apache.tools.ant.types.Path;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Path;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -73,6 +76,11 @@ public class JavacTest {
         javac.setFork(false);
         assertNotNull("fork via property", javac.getJavacExecutable());
         assertContains("name should contain \"javac\"", "javac", javac.getJavacExecutable());
+
+        project.setProperty("build.compiler", "org.apache.tools.ant.taskdefs.compilers.JavacExternal");
+        javac.setFork(false);
+        assertNotNull("fork via property", javac.getJavacExecutable());
+        assertThat("name should contain \"javac\"", javac.getJavacExecutable(), containsString("javac"));
 
         project.setProperty("build.compiler", "whatever");
         assertNull("no fork and not extJavac means no executable",

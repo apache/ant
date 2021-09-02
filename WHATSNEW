@@ -1,6 +1,14 @@
 Changes from Ant 1.9.16 TO Ant 1.9.17
 =====================================
 
+Fixed bugs:
+-----------
+
+ * Made sure setting build.compiler to the fully qualified classname
+   that corresponds to extJavac or modern has the same effect as using
+   the shorter alias names.
+   Bugzilla Report 65539
+
 Changes from Ant 1.9.15 TO Ant 1.9.16
 =====================================
 

@@ -25,17 +25,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.apache.tools.ant.AntAssert.assertContains;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.FileUtils;
-import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DefaultCompilerAdapterTest {
 
@@ -447,6 +451,47 @@ public class DefaultCompilerAdapterTest {
         assertEquals("-g:none", args[2]);
         assertEquals("--release", args[3]);
         assertEquals("6", args[4]);
+    }
+
+    /**
+     * @see "https://bz.apache.org/bugzilla/show_bug.cgi?id=65539"
+     */
+    @Test
+    public void assumeJavaXPlusWorksWithBuildCompilerSetToExplicitAdapterName() {
+    	LogCapturingJavac javac = new LogCapturingJavac();
+        Project p = new Project();
+        p.setProperty("build.compiler", "org.apache.tools.ant.taskdefs.compilers.JavacExternal");
+        javac.setProject(p);
+        javac.setFork(true);
+        javac.setSourcepath(new Path(p));
+        SourceTargetHelperNoOverride ca = new SourceTargetHelperNoOverride();
+        ca.setJavac(javac);
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
+            assertTrue(ca.assumeJava9Plus());
+            assertTrue(ca.assumeJava9());
+            assertTrue(ca.assumeJava19());
+            assertFalse(ca.assumeJava18());
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
+            assertFalse(ca.assumeJava9Plus());
+            assertFalse(ca.assumeJava9());
+            assertTrue(ca.assumeJava18());
+            assertFalse(ca.assumeJava17());
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7)) {
+            assertFalse(ca.assumeJava9Plus());
+            assertFalse(ca.assumeJava18());
+            assertTrue(ca.assumeJava17());
+            assertFalse(ca.assumeJava16());
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6)) {
+            assertFalse(ca.assumeJava9Plus());
+            assertFalse(ca.assumeJava17());
+            assertTrue(ca.assumeJava16());
+            assertFalse(ca.assumeJava15());
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
+            assertFalse(ca.assumeJava9Plus());
+            assertFalse(ca.assumeJava16());
+            assertTrue(ca.assumeJava15());
+            assertFalse(ca.assumeJava14());
+        }
     }
 
     private void commonSourceDowngrades(String javaVersion) {

@@ -86,21 +86,6 @@ public class Javac extends MatchingTask {
     private static final String FAIL_MSG
         = "Compile failed; see the compiler error output for details.";
 
-    private static final String JAVAC10_PLUS = "javac10+";
-    private static final String JAVAC9 = "javac9";
-    private static final String JAVAC19 = "javac1.9";
-    private static final String JAVAC18 = "javac1.8";
-    private static final String JAVAC17 = "javac1.7";
-    private static final String JAVAC16 = "javac1.6";
-    private static final String JAVAC15 = "javac1.5";
-    private static final String JAVAC14 = "javac1.4";
-    private static final String JAVAC13 = "javac1.3";
-    private static final String JAVAC12 = "javac1.2";
-    private static final String JAVAC11 = "javac1.1";
-    private static final String MODERN = "modern";
-    private static final String CLASSIC = "classic";
-    private static final String EXTJAVAC = "extJavac";
-
     private static final char GROUP_START_MARK = '{';   //modulesourcepath group start character
     private static final char GROUP_END_MARK = '}';   //modulesourcepath group end character
     private static final char GROUP_SEP_MARK = ',';   //modulesourcepath group element separator character
@@ -162,21 +147,21 @@ public class Javac extends MatchingTask {
 
     private String assumedJavaVersion() {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
-            return JAVAC14;
+            return CompilerAdapterFactory.COMPILER_JAVAC_1_4;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
-            return JAVAC15;
+            return CompilerAdapterFactory.COMPILER_JAVAC_1_5;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_6)) {
-            return JAVAC16;
+            return CompilerAdapterFactory.COMPILER_JAVAC_1_6;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_7)) {
-            return JAVAC17;
+            return CompilerAdapterFactory.COMPILER_JAVAC_1_7;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
-            return JAVAC18;
+            return CompilerAdapterFactory.COMPILER_JAVAC_1_8;
         } else if (JavaEnvUtils.isAtLeastJavaVersion("10")) {
-            return JAVAC10_PLUS;
+            return CompilerAdapterFactory.COMPILER_JAVAC_10_PLUS;
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
-            return JAVAC9;
+            return CompilerAdapterFactory.COMPILER_JAVAC_9;
         } else {
-            return CLASSIC;
+            return CompilerAdapterFactory.COMPILER_CLASSIC;
         }
     }
 
@@ -886,7 +871,7 @@ public class Javac extends MatchingTask {
      * @return true if this is a forked invocation
      */
     public boolean isForkedJavac() {
-        return fork || EXTJAVAC.equalsIgnoreCase(getCompiler());
+        return fork || CompilerAdapterFactory.isForkedJavac(getCompiler());
     }
 
     /**
@@ -965,38 +950,22 @@ public class Javac extends MatchingTask {
     }
 
     private String getAltCompilerName(final String anImplementation) {
-        if (JAVAC10_PLUS.equalsIgnoreCase(anImplementation)
-                || JAVAC9.equalsIgnoreCase(anImplementation)
-                || JAVAC19.equalsIgnoreCase(anImplementation)
-                || JAVAC18.equalsIgnoreCase(anImplementation)
-                || JAVAC17.equalsIgnoreCase(anImplementation)
-                || JAVAC16.equalsIgnoreCase(anImplementation)
-                || JAVAC15.equalsIgnoreCase(anImplementation)
-                || JAVAC14.equalsIgnoreCase(anImplementation)
-                || JAVAC13.equalsIgnoreCase(anImplementation)) {
-            return MODERN;
+        if (CompilerAdapterFactory.isModernJdkCompiler(anImplementation)) {
+            return CompilerAdapterFactory.COMPILER_MODERN;
         }
-        if (JAVAC12.equalsIgnoreCase(anImplementation)
-                || JAVAC11.equalsIgnoreCase(anImplementation)) {
-            return CLASSIC;
+        if (CompilerAdapterFactory.isClassicJdkCompiler(anImplementation)) {
+            return CompilerAdapterFactory.COMPILER_CLASSIC;
         }
-        if (MODERN.equalsIgnoreCase(anImplementation)) {
+        if (CompilerAdapterFactory.COMPILER_MODERN.equalsIgnoreCase(anImplementation)) {
             final String nextSelected = assumedJavaVersion();
-            if (JAVAC10_PLUS.equalsIgnoreCase(anImplementation)
-                    || JAVAC9.equalsIgnoreCase(nextSelected)
-                    || JAVAC18.equalsIgnoreCase(nextSelected)
-                    || JAVAC17.equalsIgnoreCase(nextSelected)
-                    || JAVAC16.equalsIgnoreCase(nextSelected)
-                    || JAVAC15.equalsIgnoreCase(nextSelected)
-                    || JAVAC14.equalsIgnoreCase(nextSelected)
-                    || JAVAC13.equalsIgnoreCase(nextSelected)) {
+            if (CompilerAdapterFactory.isModernJdkCompiler(nextSelected)) {
                 return nextSelected;
             }
         }
-        if (CLASSIC.equalsIgnoreCase(anImplementation)) {
+        if (CompilerAdapterFactory.COMPILER_CLASSIC.equalsIgnoreCase(anImplementation)) {
             return assumedJavaVersion();
         }
-        if (EXTJAVAC.equalsIgnoreCase(anImplementation)) {
+        if (CompilerAdapterFactory.isForkedJavac(anImplementation)) {
             return assumedJavaVersion();
         }
         return null;
@@ -1256,18 +1225,7 @@ public class Javac extends MatchingTask {
      * "javac1.6", "javac1.7", "javac1.8", "javac1.9", "javac9" or "javac10+".
      */
     protected boolean isJdkCompiler(final String compilerImpl) {
-        return MODERN.equals(compilerImpl)
-            || CLASSIC.equals(compilerImpl)
-            || JAVAC10_PLUS.equals(compilerImpl)
-            || JAVAC9.equals(compilerImpl)
-            || JAVAC18.equals(compilerImpl)
-            || JAVAC17.equals(compilerImpl)
-            || JAVAC16.equals(compilerImpl)
-            || JAVAC15.equals(compilerImpl)
-            || JAVAC14.equals(compilerImpl)
-            || JAVAC13.equals(compilerImpl)
-            || JAVAC12.equals(compilerImpl)
-            || JAVAC11.equals(compilerImpl);
+        return CompilerAdapterFactory.isJdkCompiler(compilerImpl);
     }
 
     /**
@@ -1304,7 +1262,7 @@ public class Javac extends MatchingTask {
         String compilerImpl = getCompilerVersion();
         if (fork) {
             if (isJdkCompiler(compilerImpl)) {
-                compilerImpl = EXTJAVAC;
+                compilerImpl = CompilerAdapterFactory.COMPILER_EXTJAVAC;
             } else {
                 log("Since compiler setting isn't classic or modern, "
                     + "ignoring fork setting.", Project.MSG_WARN);

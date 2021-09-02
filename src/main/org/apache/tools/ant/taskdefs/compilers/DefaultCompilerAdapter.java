@@ -632,7 +632,8 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.5
      */
     protected boolean assumeJava11() {
-        return "javac1.1".equals(attributes.getCompilerVersion());
+        return CompilerAdapterFactory.COMPILER_JAVAC_1_1
+            .equalsIgnoreCase(attributes.getCompilerVersion());
     }
 
     /**
@@ -641,7 +642,8 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.5
      */
     protected boolean assumeJava12() {
-        return "javac1.2".equals(attributes.getCompilerVersion());
+        return CompilerAdapterFactory.COMPILER_JAVAC_1_2
+            .equalsIgnoreCase(attributes.getCompilerVersion());
     }
 
     /**
@@ -650,7 +652,8 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.5
      */
     protected boolean assumeJava13() {
-        return "javac1.3".equals(attributes.getCompilerVersion());
+        return CompilerAdapterFactory.COMPILER_JAVAC_1_3
+            .equalsIgnoreCase(attributes.getCompilerVersion());
     }
 
     /**
@@ -659,7 +662,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.6.3
      */
     protected boolean assumeJava14() {
-        return assumeJavaXY("javac1.4", JavaEnvUtils.JAVA_1_4);
+        return assumeJavaXY(CompilerAdapterFactory.COMPILER_JAVAC_1_4, JavaEnvUtils.JAVA_1_4);
     }
 
     /**
@@ -668,7 +671,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.6.3
      */
     protected boolean assumeJava15() {
-        return assumeJavaXY("javac1.5", JavaEnvUtils.JAVA_1_5);
+        return assumeJavaXY(CompilerAdapterFactory.COMPILER_JAVAC_1_5, JavaEnvUtils.JAVA_1_5);
     }
 
     /**
@@ -677,7 +680,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.7
      */
     protected boolean assumeJava16() {
-        return assumeJavaXY("javac1.6", JavaEnvUtils.JAVA_1_6);
+        return assumeJavaXY(CompilerAdapterFactory.COMPILER_JAVAC_1_6, JavaEnvUtils.JAVA_1_6);
     }
 
     /**
@@ -686,7 +689,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.8.2
      */
     protected boolean assumeJava17() {
-        return assumeJavaXY("javac1.7", JavaEnvUtils.JAVA_1_7);
+        return assumeJavaXY(CompilerAdapterFactory.COMPILER_JAVAC_1_7, JavaEnvUtils.JAVA_1_7);
     }
 
     /**
@@ -695,7 +698,7 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.8.3
      */
     protected boolean assumeJava18() {
-        return assumeJavaXY("javac1.8", JavaEnvUtils.JAVA_1_8);
+        return assumeJavaXY(CompilerAdapterFactory.COMPILER_JAVAC_1_8, JavaEnvUtils.JAVA_1_8);
     }
 
     /**
@@ -705,8 +708,8 @@ public abstract class DefaultCompilerAdapter
      * @deprecated use #assumeJava9 instead
      */
     protected boolean assumeJava19() {
-        return assumeJavaXY("javac1.9", JavaEnvUtils.JAVA_9)
-            || assumeJavaXY("javac9", JavaEnvUtils.JAVA_9);
+        return assumeJavaXY(CompilerAdapterFactory.COMPILER_JAVAC_9, JavaEnvUtils.JAVA_9)
+            || assumeJavaXY(CompilerAdapterFactory.COMPILER_JAVAC_9_ALIAS, JavaEnvUtils.JAVA_9);
     }
 
     /**
@@ -724,13 +727,11 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.9.10
      */
     protected boolean assumeJava9Plus() {
-        return "javac1.9".equals(attributes.getCompilerVersion())
-            || "javac9".equals(attributes.getCompilerVersion())
-            || "javac10+".equals(attributes.getCompilerVersion())
+        return CompilerAdapterFactory.COMPILER_JAVAC_9.equalsIgnoreCase(attributes.getCompilerVersion())
+            || CompilerAdapterFactory.COMPILER_JAVAC_9_ALIAS.equalsIgnoreCase(attributes.getCompilerVersion())
+            || CompilerAdapterFactory.COMPILER_JAVAC_10_PLUS.equalsIgnoreCase(attributes.getCompilerVersion())
             || (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)
-                && ("classic".equals(attributes.getCompilerVersion())
-                || "modern".equals(attributes.getCompilerVersion())
-                || "extJavac".equals(attributes.getCompilerVersion())));
+                && CompilerAdapterFactory.isJdkCompilerNickname(attributes.getCompilerVersion()));
     }
 
     /**
@@ -738,11 +739,9 @@ public abstract class DefaultCompilerAdapter
      * @since Ant 1.8.3
      */
     private boolean assumeJavaXY(final String javacXY, final String javaEnvVersionXY) {
-        return javacXY.equals(attributes.getCompilerVersion())
+        return javacXY.equalsIgnoreCase(attributes.getCompilerVersion())
             || (JavaEnvUtils.isJavaVersion(javaEnvVersionXY)
-                && ("classic".equals(attributes.getCompilerVersion())
-                 || "modern".equals(attributes.getCompilerVersion())
-                 || "extJavac".equals(attributes.getCompilerVersion())));
+                && CompilerAdapterFactory.isJdkCompilerNickname(attributes.getCompilerVersion()));
     }
 
     /**
