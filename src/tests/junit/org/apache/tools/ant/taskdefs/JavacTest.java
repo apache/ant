@@ -77,6 +77,11 @@ public class JavacTest {
         assertNotNull("fork via property", javac.getJavacExecutable());
         assertThat("name should contain \"javac\"", javac.getJavacExecutable(), containsString("javac"));
 
+        project.setProperty("build.compiler", "org.apache.tools.ant.taskdefs.compilers.JavacExternal");
+        javac.setFork(false);
+        assertNotNull("fork via property", javac.getJavacExecutable());
+        assertThat("name should contain \"javac\"", javac.getJavacExecutable(), containsString("javac"));
+
         project.setProperty("build.compiler", "whatever");
         assertNull("no fork and not extJavac means no executable", javac.getJavacExecutable());
 

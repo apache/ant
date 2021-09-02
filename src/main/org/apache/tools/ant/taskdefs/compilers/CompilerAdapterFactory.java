@@ -18,6 +18,9 @@
 
 package org.apache.tools.ant.taskdefs.compilers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -32,6 +35,83 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  */
 public final class CompilerAdapterFactory {
     private static final String MODERN_COMPILER = "com.sun.tools.javac.Main";
+
+    public static final String COMPILER_JIKES = "jikes";
+    public static final String COMPILER_GCJ = "gcj";
+    public static final String COMPILER_SYMANTEC_ALIAS = "sj";
+    public static final String COMPILER_SYMANTEC = "symantec";
+    public static final String COMPILER_JVC_ALIAS = "microsoft";
+    public static final String COMPILER_JVC = "jvc";
+    public static final String COMPILER_KJC = "kjc";
+
+    public static final String COMPILER_JAVAC_1_1 = "javac1.1";
+    public static final String COMPILER_JAVAC_1_2 = "javac1.2";
+    public static final String COMPILER_JAVAC_1_3 = "javac1.3";
+    public static final String COMPILER_JAVAC_1_4 = "javac1.4";
+    public static final String COMPILER_JAVAC_1_5 = "javac1.5";
+    public static final String COMPILER_JAVAC_1_6 = "javac1.6";
+    public static final String COMPILER_JAVAC_1_7 = "javac1.7";
+    public static final String COMPILER_JAVAC_1_8 = "javac1.8";
+    public static final String COMPILER_JAVAC_9_ALIAS = "javac1.9";
+    public static final String COMPILER_JAVAC_9 = "javac9";
+    public static final String COMPILER_JAVAC_10_PLUS = "javac10+";
+
+    public static final String COMPILER_CLASSIC = "classic";
+    public static final String COMPILER_MODERN = "modern";
+    public static final String COMPILER_EXTJAVAC = "extJavac";
+
+    public static final String COMPILER_MODERN_CLASSNAME = Javac13.class.getName();
+    public static final String COMPILER_EXTJAVAC_CLASSNAME = JavacExternal.class.getName();
+
+    private static final List<String> JDK_COMPILERS = Arrays.asList(
+        COMPILER_JAVAC_1_1,
+        COMPILER_JAVAC_1_2,
+        COMPILER_JAVAC_1_3,
+        COMPILER_JAVAC_1_4,
+        COMPILER_JAVAC_1_5,
+        COMPILER_JAVAC_1_6,
+        COMPILER_JAVAC_1_7,
+        COMPILER_JAVAC_1_8,
+        COMPILER_JAVAC_9_ALIAS,
+        COMPILER_JAVAC_9,
+        COMPILER_JAVAC_10_PLUS,
+        COMPILER_CLASSIC,
+        COMPILER_MODERN,
+        COMPILER_EXTJAVAC,
+        COMPILER_MODERN_CLASSNAME,
+        COMPILER_EXTJAVAC_CLASSNAME
+    );
+
+    private static final List<String> FORKED_JDK_COMPILERS = Arrays.asList(
+        COMPILER_EXTJAVAC,
+        COMPILER_EXTJAVAC_CLASSNAME
+    );
+
+    private static final List<String> JDK_COMPILER_NICKNAMES = Arrays.asList(
+        COMPILER_CLASSIC,
+        COMPILER_MODERN,
+        COMPILER_EXTJAVAC,
+        COMPILER_MODERN_CLASSNAME,
+        COMPILER_EXTJAVAC_CLASSNAME
+    );
+
+    private static final List<String> CLASSIC_JDK_COMPILERS = Arrays.asList(
+        COMPILER_JAVAC_1_1,
+        COMPILER_JAVAC_1_2
+    );
+
+    private static final List<String> MODERN_JDK_COMPILERS = Arrays.asList(
+        COMPILER_JAVAC_1_3,
+        COMPILER_JAVAC_1_4,
+        COMPILER_JAVAC_1_5,
+        COMPILER_JAVAC_1_6,
+        COMPILER_JAVAC_1_7,
+        COMPILER_JAVAC_1_8,
+        COMPILER_JAVAC_9_ALIAS,
+        COMPILER_JAVAC_9,
+        COMPILER_JAVAC_10_PLUS,
+        COMPILER_MODERN_CLASSNAME
+    );
 
     /** This is a singleton -- can't create instances!! */
     private CompilerAdapterFactory() {
@@ -97,32 +177,21 @@ public final class CompilerAdapterFactory {
      */
     public static CompilerAdapter getCompiler(String compilerType, Task task,
         Path classpath) throws BuildException {
-        if ("jikes".equalsIgnoreCase(compilerType)) {
+        if (COMPILER_JIKES.equalsIgnoreCase(compilerType)) {
             return new Jikes();
         }
-        if ("extjavac".equalsIgnoreCase(compilerType)) {
+        if (isForkedJavac(compilerType)) {
             return new JavacExternal();
         }
-        if ("classic".equalsIgnoreCase(compilerType)
-            || "javac1.1".equalsIgnoreCase(compilerType)
-            || "javac1.2".equalsIgnoreCase(compilerType)) {
+        if (COMPILER_CLASSIC.equalsIgnoreCase(compilerType)
+            || isClassicJdkCompiler(compilerType)) {
             task.log(
                 "This version of java does not support the classic compiler; upgrading to modern",
                 Project.MSG_WARN);
-            compilerType = "modern";
+            compilerType = COMPILER_MODERN;
         }
-        //on java<=1.3 the modern falls back to classic if it is not found
-        //but on java>=1.4 we just bail out early
-        if ("modern".equalsIgnoreCase(compilerType)
-            || "javac1.3".equalsIgnoreCase(compilerType)
-            || "javac1.4".equalsIgnoreCase(compilerType)
-            || "javac1.5".equalsIgnoreCase(compilerType)
-            || "javac1.6".equalsIgnoreCase(compilerType)
-            || "javac1.7".equalsIgnoreCase(compilerType)
-            || "javac1.8".equalsIgnoreCase(compilerType)
-            || "javac1.9".equalsIgnoreCase(compilerType)
-            || "javac9".equalsIgnoreCase(compilerType)
-            || "javac10+".equalsIgnoreCase(compilerType)) {
+        if (COMPILER_MODERN.equalsIgnoreCase(compilerType)
+            || isModernJdkCompiler(compilerType)) {
             // does the modern compiler exist?
             if (doesModernCompilerExist()) {
                 return new Javac13();
@@ -132,18 +201,18 @@ public final class CompilerAdapterFactory {
                 MODERN_COMPILER, JavaEnvUtils.getJavaHome());
         }
 
-        if ("jvc".equalsIgnoreCase(compilerType)
-            || "microsoft".equalsIgnoreCase(compilerType)) {
+        if (COMPILER_JVC.equalsIgnoreCase(compilerType)
+            || COMPILER_JVC_ALIAS.equalsIgnoreCase(compilerType)) {
             return new Jvc();
         }
-        if ("kjc".equalsIgnoreCase(compilerType)) {
+        if (COMPILER_KJC.equalsIgnoreCase(compilerType)) {
             return new Kjc();
         }
-        if ("gcj".equalsIgnoreCase(compilerType)) {
+        if (COMPILER_GCJ.equalsIgnoreCase(compilerType)) {
             return new Gcj();
         }
-        if ("sj".equalsIgnoreCase(compilerType)
-            || "symantec".equalsIgnoreCase(compilerType)) {
+        if (COMPILER_SYMANTEC_ALIAS.equalsIgnoreCase(compilerType)
+            || COMPILER_SYMANTEC.equalsIgnoreCase(compilerType)) {
             return new Sj();
         }
         return resolveClassName(compilerType,
@@ -191,4 +260,57 @@ public final class CompilerAdapterFactory {
                 CompilerAdapter.class);
     }
 
+    /**
+     * Is the compiler implementation a forked jdk compiler?
+     *
+     * @param compilerImpl the name of the compiler implementation
+     * @since 1.10.12
+     */
+    public static boolean isForkedJavac(final String compilerName) {
+        return containsIgnoreCase(FORKED_JDK_COMPILERS, compilerName);
+    }
+
+    /**
+     * Is the compiler implementation a jdk compiler?
+     *
+     * @param compilerImpl the name of the compiler implementation
+     * @since 1.10.12
+     */
+    public static boolean isJdkCompiler(final String compilerName) {
+        return containsIgnoreCase(JDK_COMPILERS, compilerName);
+    }
+
+    /**
+     * Is the compiler implementation a jdk compiler without specified version?
+     *
+     * @param compilerImpl the name of the compiler implementation
+     * @since 1.10.12
+     */
+    public static boolean isJdkCompilerNickname(final String compilerName) {
+        return containsIgnoreCase(JDK_COMPILER_NICKNAMES, compilerName);
+    }
+
+    /**
+     * Does the compiler correspond to "classic"?
+     *
+     * @param compilerImpl the name of the compiler implementation
+     * @since 1.10.12
+     */
+    public static boolean isClassicJdkCompiler(final String compilerName) {
+        return containsIgnoreCase(CLASSIC_JDK_COMPILERS, compilerName);
+    }
+
+    /**
+     * Does the compiler correspond to "modern"?
+     *
+     * @param compilerImpl the name of the compiler implementation
+     * @since 1.10.12
+     */
+    public static boolean isModernJdkCompiler(final String compilerName) {
+        return containsIgnoreCase(MODERN_JDK_COMPILERS, compilerName);
+    }
+
+    private static boolean containsIgnoreCase(final List<String> compilers, final String compilerName) {
+        return compilerName != null && compilers.stream().anyMatch(compilerName::equalsIgnoreCase);
+    }
 }

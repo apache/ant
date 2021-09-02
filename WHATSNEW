@@ -8,6 +8,11 @@ Fixed bugs:
    was set to "false". This has now been fixed.
    Bugzilla Report 65489
 
+ * Made sure setting build.compiler to the fully qualified classname
+   that corresponds to extJavac or modern has the same effect as using
+   the shorter alias names.
+   Bugzilla Report 65539
+
 Other changes:
 --------------
 

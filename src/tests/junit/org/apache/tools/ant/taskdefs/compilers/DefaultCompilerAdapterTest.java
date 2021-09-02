@@ -540,7 +540,33 @@ public class DefaultCompilerAdapterTest {
     }
     
 
-    
+    /**
+     * @see "https://bz.apache.org/bugzilla/show_bug.cgi?id=65539"
+     */
+    @Test
+    public void assumeJavaXPlusWorksWithBuildCompilerSetToExplicitAdapterName() {
+    	LogCapturingJavac javac = new LogCapturingJavac();
+        Project p = new Project();
+        p.setProperty("build.compiler", "org.apache.tools.ant.taskdefs.compilers.JavacExternal");
+        javac.setProject(p);
+        javac.setFork(true);
+        javac.setSourcepath(new Path(p));
+        SourceTargetHelperNoOverride ca = new SourceTargetHelperNoOverride();
+        ca.setJavac(javac);
+        if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_10)) {
+            assertTrue(ca.assumeJava10Plus());
+            assertTrue(ca.assumeJava9Plus());
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_9)) {
+            assertFalse(ca.assumeJava10Plus());
+            assertTrue(ca.assumeJava9Plus());
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
+            assertFalse(ca.assumeJava10Plus());
+            assertFalse(ca.assumeJava9Plus());
+        }
+        assertTrue(ca.assumeJava1_8Plus());
+        assertTrue(ca.assumeJava1_7Plus());
+        assertTrue(ca.assumeJava1_2Plus());
+    }
 
     private void commonSourceDowngrades(String javaVersion) {
         testSource("1.3", javaVersion,
