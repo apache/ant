@@ -1918,7 +1918,7 @@ public class Javadoc extends Task {
                 throw new BuildException("Javadoc returned " + ret,
                                          getLocation());
             }
-            if (out.sawWarnings() && failOnWarning) {
+            if (failOnWarning && (out.sawWarnings() || err.sawWarnings())) {
                 throw new BuildException("Javadoc issued warnings.",
                                          getLocation());
             }
@@ -2623,7 +2623,7 @@ public class Javadoc extends Task {
 
         @Override
         protected void processLine(final String line, final int messageLevel) {
-            if (line.contains("warning")) {
+            if (line.matches("(\\d) warning[s]?$")) {
                 sawWarnings = true;
             }
             if (messageLevel == Project.MSG_INFO
