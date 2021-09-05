@@ -94,7 +94,7 @@ public class CharSetTest {
         // requires JUnit 4.12
         @Parameterized.Parameters(name = "non-equivalent argument: |{0}|")
         public static Collection<String> data() {
-            return Arrays.asList("us", "ISO-8859-1", "default");
+            return Arrays.asList("us", "ISO-8859-1", "US-ASCII");
         }
 
         @Parameterized.Parameter
