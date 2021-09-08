@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -16,13 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!--
-  =======================================================================
-    Build file to fetch optional libraries for Apache Ant
-  =======================================================================
--->
-<project name="fetch" default="all" basedir=".">
-
+<project name="upload" default="fetch" xmlns:ivy="antlib:org.apache.ivy.ant">
   <description>
 This build file downloads JAR files that optional Ant tasks use,
 and installs them in a location that is accessible the next time Ant runs.
@@ -42,12 +35,12 @@ For example, to set the proxy up in the tcsh shell, the command would
 be something like:
 
 For csh/tcsh:
- setenv ANT_OPTS "-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"
+setenv ANT_OPTS "-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"
 For bash:
- export ANT_OPTS="-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"
+export ANT_OPTS="-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"
 For Windows, set the environment variable in the appropriate dialog box
-and open a new console. or, by hand
- set ANT_OPTS = -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
+and open a new console or, by hand
+set ANT_OPTS = -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080
   </description>
 
   <!-- Give user a chance to override without editing this file
@@ -57,16 +50,14 @@ and open a new console. or, by hand
   <property name="optional.dir" location="${lib.dir}/optional"/>
   <property name="userlib.dir" location="${user.home}/.ant/lib"/>
 
-  <!-- Load in our properties table -->
-  <property file="${lib.dir}/libraries.properties"/>
+  <!-- Ivy -->
+  <property name="ivy.version" value="2.5.0"/>
+  <property name="ivy.dir" value="${user.home}/.ivy2/cache/org.apache.ivy/jars"/>
+  <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
+  <property name="ivy.jar.name" value="ivy-${ivy.version}.jar"/>
+  <available property="has.ivy" file="${ivy.dir}/${ivy.jar.name}" type="file"/>
 
-  <!-- Temporary cache for working files -->
-  <property name="temp.dir" location="${user.home}/.ant/tempcache"/>
-  <property name="keep.temp.dir" value="true"/>
-
-  <import file="get-m2.xml"/>
-
-  <target name="pick-dest">
+  <target name="pick-dest" unless="dest.dir">
     <fail>
       <condition>
         <not>
@@ -79,329 +70,62 @@ Set -Ddest=LOCATION on the command line
   -Ddest=optional optional dir  $${basedir}/lib/optional  (for Ant developers)
     </fail>
 
-    <condition property="dest.dir"
-               value="${lib.dir}">
+    <condition property="dest.dir" value="${lib.dir}">
       <equals arg1="${dest}" arg2="system"/>
     </condition>
-    <condition property="dest.dir"
-               value="${optional.dir}">
+    <condition property="dest.dir" value="${optional.dir}">
       <equals arg1="${dest}" arg2="optional"/>
     </condition>
-    <condition property="dest.dir"
-               value="${userlib.dir}">
+    <condition property="dest.dir" value="${userlib.dir}">
       <equals arg1="${dest}" arg2="user"/>
     </condition>
     <fail unless="dest.dir">Unknown destination : ${dest}</fail>
+  </target>
+
+  <target name="get-ivy" depends="pick-dest" unless="has.ivy">
+    <mkdir dir="${ivy.dir}"/>
+    <get usetimestamp="true" src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/${ivy.jar.name}"
+         skipexisting="true"
+         dest="${ivy.dir}/${ivy.jar.name}"/>
+  </target>
+
+  <target name="init-ivy" depends="get-ivy">
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${ivy.dir}/${ivy.jar.name}"/>
+    <ivy:configure file="${basedir}/ivysettings.xml" override="true"/>
+  </target>
+
+  <target name="fetch" depends="init-ivy">
+    <condition property="configurations" value="*" else="${ant.project.invoked-targets}">
+      <equals arg1="${ant.project.invoked-targets}" arg2="fetch" trim="true"/>
+    </condition>
+    <ivy:resolve file="ivy.xml"/>
     <echo>Downloading to ${dest.dir}</echo>
-    <property name="m2.dest.dir" value="${dest.dir}"/>
+    <ivy:retrieve pattern="${dest.dir}/[artifact]-[revision].[ext]" conf="${configurations}"/>
   </target>
 
-
-  <target name="macros" depends="pick-dest,get-m2"
-          xmlns:artifact="antlib:org.apache.maven.artifact.ant">
-    <fail>
-      Cannot execute multiple targets due to the bug in Maven Ant tasks
-      <condition>
-        <contains string="${ant.project.invoked-targets}" substring=","/>
-      </condition>
-    </fail>
-    <macrodef name="f2">
-      <attribute name="project"/>
-      <attribute name="archive" default="@{project}"/>
-      <attribute name="repository" default="${m2.repo}"/>
-      <attribute name="id" default="central"/>
-      <sequential>
-        <fail>
-          Unknown archive @{archive} -no property @{archive}.version defined in ${lib.dir}/libraries.properties.
-          <condition>
-            <not>
-              <isset property="@{archive}.version"/>
-            </not>
-          </condition>
-        </fail>
-        <artifact:dependencies pathID="@{archive}.path" useScope="runtime">
-          <dependency groupId="@{project}"
-                      artifactId="@{archive}"
-                      version="${@{archive}.version}">
-            <!-- exclude dependencies of ant-antunit (they should be in optional scope) -->
-            <exclusion groupId="org.apache.ant" artifactId="ant"/>
-            <exclusion groupId="org.apache.ant" artifactId="ant-launcher"/>
-          </dependency>
-          <artifact:remoteRepository url="@{repository}" id="@{id}"/>
-        </artifact:dependencies>
-        <!-- now we are left with the problem of getting the files into our directory -->
-        <copy todir="${dest.dir}">
-          <path refid="@{archive}.path"/>
-          <flattenmapper/>
-        </copy>
-      </sequential>
-    </macrodef>
-  </target>
-
-  <target name="nonm2-macros" depends="pick-dest">
-    <macrodef name="get-ftp-file">
-      <attribute name="host"/>
-      <attribute name="port" default="21"/>
-      <attribute name="remotedir"/>
-      <attribute name="filename"/>
-      <attribute name="localdir" default="${dest.dir}"/>
-      <attribute name="user" default="anonymous"/>
-      <attribute name="pw" default="anonymous"/>
-      <sequential>
-        <ftp server="@{host}" port="@{port}" userid="@{user}" password="@{pw}" passive="true"
-             remotedir="@{remotedir}" action="get" depends="true" preserveLastModified="true"
-             skipFailedTransfers="true">
-          <fileset dir="@{localdir}">
-            <include name="@{filename}"/>
-          </fileset>
-        </ftp>
-      </sequential>
-    </macrodef>
-  </target>
-
-
-  <!-- any init stuff -->
-  <target name="init" depends="macros"/>
-
-  <target name="init-no-m2" depends="nonm2-macros"/>
-
-  <target name="init-cache">
-    <available property="temp.cache.already.exists" file="${temp.dir}" type="dir"/>
-    <condition property="user.wants.temp.cache">
-      <and>
-        <isset property="keep.temp.dir"/>
-        <not>
-          <or>
-            <equals arg1="${keep.temp.dir}" arg2="false" casesensitive="false"/>
-            <equals arg1="${keep.temp.dir}" arg2="no" casesensitive="false"/>
-            <equals arg1="${keep.temp.dir}" arg2="off" casesensitive="false"/>
-          </or>
-        </not>
-      </and>
-    </condition>
-    <condition property="delete.temp.cache">
-      <and>
-        <not>
-          <isset property="temp.cache.already.exists"/>
-        </not>
-        <not>
-          <isset property="user.wants.temp.cache"/>
-        </not>
-      </and>
-    </condition>
-  </target>
-
-  <target name="-setup-temp-cache" depends="init-cache" unless="temp.cache.already.exists"
-          description="Set up temporary cache for downloaded files">
-    <mkdir dir="${temp.dir}"/>
-  </target>
-
-  <target name="-cleanup-temp-cache" depends="init-cache" if="delete.temp.cache"
-          description="Get rid of the temporary cache directory">
-    <delete dir="${temp.dir}"/>
-  </target>
-
-
-  <target name="diag" depends="init">
-    <echoproperties/>
-  </target>
-
-  <target name="antunit"
-          description="load AntUnit library"
-          depends="init">
-    <f2 project="org.apache.ant" archive="ant-antunit"/>
-  </target>
-
-  <target name="ivy"
-          description="load Ivy dependency manager"
-          depends="init">
-    <f2 project="org.apache.ivy" archive="ivy"/>
-  </target>
-
-  <target name="logging"
-          description="load logging libraries (Commons and Log4j)"
-          depends="init">
-    <f2 project="log4j"/>
-    <f2 project="commons-logging" archive="commons-logging-api"/>
-  </target>
-
-  <target name="junit"
-          description="load JUnit libraries"
-          depends="init">
-    <f2 project="junit"/>
-    <f2 project="org.hamcrest" archive="hamcrest-library"/>
-  </target>
-
-  <target name="junitlauncher"
-    description="load junitlauncher libraries"
-    depends="init">
-    <f2 project="org.junit.platform" archive="junit-platform-launcher" />
-  </target>
-
-  <target name="junit-engine-jupiter"
-          description="load junit jupiter engine libraries (necessary only for internal Ant project tests)"
-          depends="init">
-    <f2 project="org.junit.jupiter" archive="junit-jupiter-engine" />
-  </target>
-
-  <target name="junit-engine-vintage"
-          description="load junit vintage engine libraries (necessary only for internal Ant project tests)"
-          depends="init">
-    <f2 project="org.junit.vintage" archive="junit-vintage-engine" />
-  </target>
-
-  <target name="xml"
-          description="load full XML libraries (Xalan and xml-resolver)"
-          depends="init">
-    <f2 project="xalan"/>
-    <f2 project="xml-resolver"/>
-  </target>
-
-  <target name="networking"
-          description="load networking libraries (commons-net and JSch)"
-          depends="init">
-    <f2 project="commons-net"/>
-    <f2 project="com.jcraft" archive="jsch"/>
-  </target>
-
-  <target name="regexp"
-          description="load regexp libraries"
-          depends="init">
-    <f2 project="jakarta-regexp"/>
-    <f2 project="oro"/>
-  </target>
-
-  <target name="antlr"
-          description="load ANother Tool for Language Recognition (ANTLR)"
-          depends="init">
-    <f2 project="antlr"/>
-  </target>
-
-  <target name="bcel"
-          description="load Byte Code Engineering Library (BCEL)"
-          depends="init">
-    <f2 project="org.apache.bcel" archive="bcel"/>
-  </target>
-
-  <target name="jdepend"
-          description="load JDepend libraries"
-          depends="init">
-    <f2 project="jdepend"/>
-  </target>
-
-  <target name="bsf"
-          description="load Bean Scripting Framework"
-          depends="init">
-    <f2 project="bsf"/>
-  </target>
-
-  <target name="jruby"
-          description="load JRuby"
-          depends="bsf">
-    <f2 project="org.jruby" archive="jruby"/>
-  </target>
-
-  <target name="beanshell"
-          description="load BeanShell support"
-          depends="bsf">
-    <f2 project="org.beanshell" archive="bsh"/>
-  </target>
-
-  <target name="jython"
-          description="load Jython"
-          depends="bsf">
-    <f2 project="org.python" archive="jython"/>
-  </target>
-
-  <target name="rhino"
-          description="load Rhino"
-          depends="bsf">
-    <f2 project="org.mozilla" archive="rhino"/>
-  </target>
-
-  <target name="graal.js"
-          description="load Graal.js">
-    <f2 project="org.graalvm.js" archive="js"/>
-    <f2 project="org.graalvm.js" archive="js-scriptengine"/>
-  </target>
-
-  <target name="script"
-          description="load script languages (except Jython)"
-          depends="bsf,jruby,beanshell,rhino,graal.js"/>
-
-  <target name="debugging"
-    description="internal Ant debugging"
-    depends="init">
-    <f2 project="which"/>
-  </target>
-
-  <target name="jakartamail"
-          description="load Jakarta Mail"
-          depends="init">
-    <!-- We only need this one dependency as per
-      the project doc https://eclipse-ee4j.github.io/mail/
-      This alone should bring in all necessary dependencies (including the API
-       jars and the activation jars -->
-    <f2 project="com.sun.mail" archive="jakarta.mail"/>
-  </target>
-
-  <target name="jspc"
-          description="load Jasper"
-          depends="init">
-    <f2 project="tomcat" archive="jasper-compiler"/>
-    <f2 project="tomcat" archive="jasper-runtime"/>
-    <f2 project="javax.servlet" archive="servlet-api"/>
-  </target>
-
-  <target name="jai"
-          description="load Java Advanced Imaging"
-          depends="init">
-    <f2 project="javax.media" archive="jai-core" id="jboss"
-        repository="https://repository.jboss.org/nexus/content/groups/public/"/>
-    <f2 project="com.sun.media" archive="jai-codec" id="jboss"
-        repository="https://repository.jboss.org/nexus/content/groups/public/"/>
-  </target>
-
-  <target name="netrexx"
-          description="load NetRexx compiler"
-          depends="init-no-m2,-setup-temp-cache,-fetch-netrexx,-fetch-netrexx-no-commons-net">
-    <checksum file="${temp.dir}/NetRexx.zip" algorithm="SHA-256" property="${netrexx.sha256}" verifyProperty="netrexx.hash.matches"/>
-    <fail message="NetRexx.zip fetched via ftp has an unexpected SHA-256 checksum, the file may have been tampered with">
-       <condition>
-         <not>
-           <istrue value="${netrexx.hash.matches}"/>
-         </not>
-      </condition>
-    </fail>
-    <copy todir="${dest.dir}" flatten="true">
-      <zipfileset src="${temp.dir}/NetRexx.zip">
-        <include name="NetRexx\lib\NetRexxC.jar"/>
-        <include name="NetRexx\browse\license.txt"/>
-      </zipfileset>
-    </copy>
-    <antcall target="-cleanup-temp-cache"/>
-  </target>
-
-  <available property="have.commons.net" classname="org.apache.commons.net.ftp.FTPClientConfig"/>
-
-  <target name="-fetch-netrexx" if="have.commons.net">
-    <get-ftp-file host="ftp.software.ibm.com" remotedir="/software/awdtools/netrexx"
-            filename="NetRexx.zip" localdir="${temp.dir}"/>
-  </target>
-
-  <target name="-fetch-netrexx-no-commons-net" unless="have.commons.net">
-    <get src="ftp://ftp.software.ibm.com/software/awdtools/netrexx/NetRexx.zip"
-         dest="${temp.dir}/NetRexx.zip" skipexisting="true"/>
-  </target>
-
-  <target name="xz"
-          description="load XZ for Java"
-          depends="init">
-    <f2 project="org.tukaani" archive="xz"/>
-  </target>
-
-  <target name="all"
-    description="load all the libraries (except jython)"
-    depends="antunit,ivy,logging,junit,junitlauncher,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,
-      jakartamail,jspc,jai,xz,netrexx,junit-engine-vintage,junit-engine-jupiter"/>
+  <target name="antlr" depends="fetch" description="load ANother Tool for Language Recognition (ANTLR)"/>
+  <target name="antunit" depends="fetch" description="load AntUnit library"/>
+  <target name="bcel" depends="fetch" description="load Byte Code Engineering Library (BCEL)"/>
+  <target name="debugging" depends="fetch" description="internal Ant debugging"/>
+  <target name="ivy" depends="fetch" description="load Ivy dependency manager"/>
+  <target name="imageio" depends="fetch" description="load additional ImageIO readers"/>
+  <target name="jai" depends="fetch" description="load Java Advanced Imaging"/>
+  <target name="javamail" depends="fetch" description="load Jakarta Mail"/>
+  <target name="jdepend" depends="fetch" description="load JDepend libraries"/>
+  <target name="jspc" depends="fetch" description="load Jasper from Tomcat 4"/>
+  <target name="junit" depends="fetch" description="load JUnit 3 and 4 libraries"/>
+  <target name="logging" depends="fetch" description="load logging libraries (Commons and Log4j)"/>
+  <target name="netrexx" depends="fetch" description="load NetRexx compiler"/>
+  <target name="networking" depends="fetch" description="load networking libraries (Commons Net and JSch)"/>
+  <target name="regexp" depends="fetch" description="load regexp libraries"/>
+  <target name="graal.js" depends="fetch" description="load Graal.js libraries"/>
+  <target name="script" depends="fetch" description="load script languages"/>
+  <target name="groovy" depends="fetch" description="load Groovy"/>
+  <target name="jruby" depends="fetch" description="load JRuby"/>
+  <target name="jython" depends="fetch" description="load Jython"/>
+  <target name="rhino" depends="fetch" description="load Rhino"/>
+  <target name="xml" depends="fetch" description="load XML libraries (Xalan and XML Resolver)"/>
+  <target name="xz" depends="fetch" description="load XZ for Java"/>
+  <target name="junit-engine-jupiter" depends="fetch" description="load JUnit 5 libraries"/>
+  <target name="junit-engine-vintage" depends="fetch" description="load JUnit 5 libraries for JUnit 4 tests"/>
 </project>
