@@ -405,12 +405,7 @@ public class Tar extends MatchingTask {
                     return;
                 }
 
-                String prefix = tarFileSet.getPrefix(this.getProject());
-                // '/' is appended for compatibility with the zip task.
-                if (!prefix.isEmpty() && !prefix.endsWith("/")) {
-                    prefix += "/";
-                }
-                vPath = prefix + vPath;
+                vPath = getCanonicalPrefix(tarFileSet, this.getProject()) + vPath;
             } else {
                 vPath = fullpath;
             }
@@ -464,6 +459,14 @@ public class Tar extends MatchingTask {
                 te.setUserId(tr.getLongUid());
                 te.setGroupName(tr.getGroup());
                 te.setGroupId(tr.getLongGid());
+                String linkName = tr.getLinkName();
+                byte linkFlag = tr.getLinkFlag();
+                if (linkFlag == TarConstants.LF_LINK &&
+                    linkName != null && linkName.length() > 0 && !linkName.startsWith("/")) {
+                    linkName = getCanonicalPrefix(tarFileSet, this.getProject()) + linkName;
+                }
+                te.setLinkName(linkName);
+                te.setLinkFlag(linkFlag);
             }
         }
 
@@ -783,6 +786,15 @@ public class Tar extends MatchingTask {
             }
         }
         return tfs;
+    }
+
+    private static String getCanonicalPrefix(TarFileSet tarFileSet, Project project) {
+        String prefix = tarFileSet.getPrefix(project);
+        // '/' is appended for compatibility with the zip task.
+        if (prefix.isEmpty() || prefix.endsWith("/")) {
+            return prefix;
+        }
+        return prefix += "/";
     }
 
     /**

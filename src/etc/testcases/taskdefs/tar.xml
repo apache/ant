@@ -203,4 +203,12 @@
     <untar src="${output}/testout/test.tar" dest="${output}/untar"/>
   </target>
 
+  <target name="testTarFilesetWithSymlinks">
+    <gunzip src="../testtarwithsymlinks.tar.gz" dest="${output}/source.tar"/>
+    <tar destfile="${output}/result.tar">
+      <tarfileset prefix="pre" src="${output}/source.tar"/>
+    </tar>
+    <echo message="asd ${output}"/>
+  </target>
+
 </project>
