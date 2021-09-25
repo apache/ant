@@ -822,7 +822,7 @@ public class FileUtils {
             //remove the initial separator; the root has it.
             next = (ca[next] == sep) ? next + 1 : next;
 
-            StringBuffer sbPath = new StringBuffer();
+            final StringBuilder sbPath = new StringBuilder();
             // Eliminate consecutive slashes after the drive spec:
             for (int i = next; i < ca.length; i++) {
                 if (ca[i] != sep || ca[i - 1] != sep) {

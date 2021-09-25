@@ -370,7 +370,7 @@ public class TokenFilter extends BaseFilterReader
             if (from == null) {
                 throw new BuildException("Missing from in stringreplace");
             }
-            StringBuffer ret = new StringBuffer();
+            final StringBuilder ret = new StringBuilder();
             int start = 0;
             int found = line.indexOf(from);
             while (found >= 0) {
@@ -620,7 +620,7 @@ public class TokenFilter extends BaseFilterReader
          * @return the converted string
          */
         public String filter(String string) {
-            StringBuffer output = new StringBuffer(string.length());
+            StringBuilder output = new StringBuilder(string.length());
             for (int i = 0; i < string.length(); ++i) {
                 char ch = string.charAt(i);
                 if (!(isDeleteCharacter(ch))) {

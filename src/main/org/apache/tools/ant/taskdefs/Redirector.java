@@ -704,7 +704,7 @@ public class Redirector {
                 }
                 ((ConcatFileInputStream) inputStream).setManagingComponent(managingTask);
             } else if (inputString != null) {
-                final StringBuffer buf = new StringBuffer("Using input ");
+                final StringBuilder buf = new StringBuilder("Using input ");
                 if (logInputString) {
                     buf.append('"').append(inputString).append('"');
                 } else {
