@@ -434,7 +434,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 log("building "
                               + jarFile.getName()
                               + " with "
-                              + String.valueOf(ejbFiles.size())
+                              + ejbFiles.size()
                               + " files",
                               Project.MSG_INFO);
 

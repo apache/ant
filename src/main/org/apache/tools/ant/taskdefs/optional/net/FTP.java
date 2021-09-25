@@ -2056,7 +2056,7 @@ public class FTP extends Task implements FTPTaskConfig {
         final int maxIterations = 1000;
         for (int counter = 1; counter < maxIterations; counter++) {
             File localFile = FILE_UTILS.createTempFile(getProject(),
-                                                       "ant" + Integer.toString(counter), ".tmp",
+                                                       "ant" + counter, ".tmp",
                                                        null, false, false);
             String fileName = localFile.getName();
             boolean found = false;

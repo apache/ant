@@ -87,7 +87,7 @@ public class Mapper extends DataType {
                 if (m instanceof ContainerMapper) {
                     container = (ContainerMapper) m;
                 } else {
-                    throw new BuildException(String.valueOf(m)
+                    throw new BuildException(m
                         + " mapper implementation does not support nested mappers!");
                 }
             }

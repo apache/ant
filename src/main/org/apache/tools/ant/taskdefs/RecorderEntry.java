@@ -272,12 +272,12 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
 
         if (minutes > 0) {
-            return Long.toString(minutes) + " minute"
+            return minutes + " minute"
                  + (minutes == 1 ? " " : "s ")
-                 + Long.toString(seconds % 60) + " second"
+                 + seconds % 60 + " second"
                  + (seconds % 60 == 1 ? "" : "s");
         } else {
-            return Long.toString(seconds) + " second"
+            return seconds + " second"
                  + (seconds % 60 == 1 ? "" : "s");
         }
         // CheckStyle:MagicNumber ON

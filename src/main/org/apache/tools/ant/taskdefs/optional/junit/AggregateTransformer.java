@@ -260,7 +260,7 @@ public class AggregateTransformer {
         xsltTask.setIn(((XMLResultAggregator) task).getDestinationFile());
         File outputFile;
         if (FRAMES.equals(format)) {
-            String tempFileProperty = getClass().getName() + String.valueOf(counter++); //NOSONAR
+            String tempFileProperty = getClass().getName() + counter++; //NOSONAR
             File tmp = FILE_UTILS.resolveFile(project.getBaseDir(), project
                     .getProperty("java.io.tmpdir"));
             tempFileTask.setDestDir(tmp);

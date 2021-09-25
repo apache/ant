@@ -306,14 +306,14 @@ public abstract class AbstractCvsTask extends Task {
                 var.setKey("CVS_PASSFILE");
                 var.setValue(String.valueOf(passFile));
                 env.addVariable(var);
-                log("Using cvs passfile: " + String.valueOf(passFile),
+                log("Using cvs passfile: " + passFile,
                     Project.MSG_VERBOSE);
             } else if (!passFile.canRead()) {
-                log("cvs passfile: " + String.valueOf(passFile)
+                log("cvs passfile: " + passFile
                     + " ignored as it is not readable",
                     Project.MSG_WARN);
             } else {
-                log("cvs passfile: " + String.valueOf(passFile)
+                log("cvs passfile: " + passFile
                     + " ignored as it is not a file",
                     Project.MSG_WARN);
             }
