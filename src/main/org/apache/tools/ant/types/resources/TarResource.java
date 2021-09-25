@@ -26,6 +26,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.tar.TarConstants;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarInputStream;
 
@@ -39,6 +40,8 @@ public class TarResource extends ArchiveResource {
     private String groupName = "";
     private int    uid;
     private int    gid;
+    private byte   linkFlag = TarConstants.LF_NORMAL;
+    private String linkName = "";
 
     /**
      * Default constructor.
@@ -153,6 +156,22 @@ public class TarResource extends ArchiveResource {
     }
 
     /**
+     * @return the link "name" (=path) of this entry; an empty string if this is no link
+     * @since 1.9.17
+     */
+    public String getLinkName() {
+        return linkName;
+    }
+
+    /**
+     * @return the link "flag" (=type) of this entry
+     * @since 1.9.17
+     */
+    public byte getLinkFlag() {
+        return linkFlag;
+    }
+
+    /**
      * fetches information from the named entry inside the archive.
      */
     protected void fetchEntry() {
@@ -191,6 +210,8 @@ public class TarResource extends ArchiveResource {
         groupName = e.getGroupName();
         uid = e.getUserId();
         gid = e.getGroupId();
+        linkName = e.getLinkName();
+        linkFlag = e.getLinkFlag();
     }
 
 }

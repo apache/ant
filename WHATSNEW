@@ -9,6 +9,12 @@ Fixed bugs:
    the shorter alias names.
    Bugzilla Report 65539
 
+Other changes:
+--------------
+
+ * The tar task now preserves symlinks of nested tarfilesets.
+   Github Pull Request #142
+
 Changes from Ant 1.9.15 TO Ant 1.9.16
 =====================================
 
