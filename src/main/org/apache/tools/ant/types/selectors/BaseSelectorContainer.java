@@ -66,7 +66,7 @@ public abstract class BaseSelectorContainer extends BaseSelector
      */
     public FileSelector[] getSelectors(Project p) {
         dieOnCircularReference();
-        return selectorsList.toArray(new FileSelector[selectorsList.size()]);
+        return selectorsList.toArray(new FileSelector[0]);
     }
 
     /**

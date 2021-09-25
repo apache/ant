@@ -577,7 +577,7 @@ public class Copy extends Task {
 
             if (!nonFileResources.isEmpty() || singleResource != null) {
                 final Resource[] nonFiles =
-                    nonFileResources.toArray(new Resource[nonFileResources.size()]);
+                    nonFileResources.toArray(new Resource[0]);
                 // restrict to out-of-date resources
                 final Map<Resource, String[]> map = scan(nonFiles, destDir);
                 if (singleResource != null) {
@@ -779,7 +779,7 @@ public class Copy extends Task {
                     v.add(name);
                 }
             }
-            toCopy = v.toArray(new String[v.size()]);
+            toCopy = v.toArray(new String[0]);
         } else {
             final SourceFileScanner ds = new SourceFileScanner(this);
             toCopy = ds.restrict(names, fromDir, toDir, mapper, granularity);
@@ -824,7 +824,7 @@ public class Copy extends Task {
                     v.add(rc);
                 }
             }
-            toCopy = v.toArray(new Resource[v.size()]);
+            toCopy = v.toArray(new Resource[0]);
         } else {
             toCopy = ResourceUtils.selectOutOfDateSources(this, fromResources, mapper,
                     name -> new FileResource(toDir, name), granularity);

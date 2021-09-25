@@ -663,7 +663,7 @@ public class Zip extends MatchingTask {
         vfss.addAll(resources);
 
         final ResourceCollection[] fss =
-            vfss.toArray(new ResourceCollection[vfss.size()]);
+            vfss.toArray(new ResourceCollection[0]);
 
         boolean success = false;
         try {
@@ -1255,11 +1255,11 @@ public class Zip extends MatchingTask {
             }
         }
         final ResourceCollection[] rc =
-            rest.toArray(new ResourceCollection[rest.size()]);
+            rest.toArray(new ResourceCollection[0]);
         ArchiveState as = getNonFileSetResourcesToAdd(rc, zipFile,
                                                       needsUpdate);
 
-        final FileSet[] fs = filesets.toArray(new FileSet[filesets.size()]);
+        final FileSet[] fs = filesets.toArray(new FileSet[0]);
         final ArchiveState as2 = getResourcesToAdd(fs, zipFile, as.isOutOfDate());
         if (!as.isOutOfDate() && as2.isOutOfDate()) {
             /*
@@ -1602,7 +1602,7 @@ public class Zip extends MatchingTask {
                     resources.add(rs.getResource(f));
                 }
             }
-            result[i] = resources.toArray(new Resource[resources.size()]);
+            result[i] = resources.toArray(new Resource[0]);
         }
         return result;
     }
@@ -1632,7 +1632,7 @@ public class Zip extends MatchingTask {
             dirs.sort(Comparator.comparing(Resource::getName));
             final List<Resource> rs = new ArrayList<>(dirs);
             rs.addAll(files);
-            result[i] = rs.toArray(new Resource[rs.size()]);
+            result[i] = rs.toArray(new Resource[0]);
         }
         return result;
     }

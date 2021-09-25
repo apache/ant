@@ -542,7 +542,7 @@ public final class Extension {
         manifest.getEntries().values()
             .forEach(attributes -> getExtension(attributes, results, listKey));
 
-        return results.toArray(new Extension[results.size()]);
+        return results.toArray(new Extension[0]);
     }
 
     /**

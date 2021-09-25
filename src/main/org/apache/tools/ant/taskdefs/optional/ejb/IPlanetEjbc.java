@@ -539,7 +539,7 @@ public class IPlanetEjbc {
         arguments.add(ejb.getImplementation().getQualifiedClassName());
 
         /* Convert the List into an Array and return it */
-        return arguments.toArray(new String[arguments.size()]);
+        return arguments.toArray(new String[0]);
     }
 
     /**
@@ -634,7 +634,7 @@ public class IPlanetEjbc {
          *         parsing.
          */
         public EjbInfo[] getEjbs() {
-            return ejbs.values().toArray(new EjbInfo[ejbs.size()]);
+            return ejbs.values().toArray(new EjbInfo[0]);
         }
 
         /**

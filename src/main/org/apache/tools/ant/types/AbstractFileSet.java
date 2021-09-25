@@ -640,7 +640,7 @@ public abstract class AbstractFileSet extends DataType
             return getRef(getProject()).getSelectors(p);
         }
         dieOnCircularReference(p);
-        return selectors.toArray(new FileSelector[selectors.size()]);
+        return selectors.toArray(new FileSelector[0]);
     }
 
     /**

@@ -87,7 +87,7 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
         if (!hasMethodsSpecified()) {
             return null;
         }
-        return this.testMethods.toArray(new String[this.testMethods.size()]);
+        return this.testMethods.toArray(new String[0]);
     }
 
     @Override

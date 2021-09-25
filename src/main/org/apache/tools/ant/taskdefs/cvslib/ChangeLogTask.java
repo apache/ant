@@ -391,7 +391,7 @@ public class ChangeLogTask extends AbstractCvsTask {
             results.add(cvsEntry);
         }
 
-        return results.toArray(new CVSEntry[results.size()]);
+        return results.toArray(new CVSEntry[0]);
     }
 
     /**

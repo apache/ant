@@ -100,7 +100,7 @@ public class ExtensionSet
         dieOnCircularReference();
         final List<Extension> extensionsList = ExtensionUtil.toExtensions(extensions);
         ExtensionUtil.extractExtensions(proj, extensionsList, extensionsFilesets);
-        return extensionsList.toArray(new Extension[extensionsList.size()]);
+        return extensionsList.toArray(new Extension[0]);
     }
 
     /**

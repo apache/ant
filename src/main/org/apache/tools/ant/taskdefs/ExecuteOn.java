@@ -539,7 +539,7 @@ public class ExecuteOn extends ExecTask {
                 }
             }
         }
-        String[] targetFiles = targets.toArray(new String[targets.size()]);
+        String[] targetFiles = targets.toArray(new String[0]);
 
         if (!addSourceFile) {
             srcFiles = new String[0];
@@ -687,8 +687,8 @@ public class ExecuteOn extends ExecTask {
     protected void runParallel(Execute exe, Vector<String> fileNames,
                                Vector<File> baseDirs)
         throws IOException, BuildException {
-        String[] s = fileNames.toArray(new String[fileNames.size()]);
-        File[] b = baseDirs.toArray(new File[baseDirs.size()]);
+        String[] s = fileNames.toArray(new String[0]);
+        File[] b = baseDirs.toArray(new File[0]);
 
         if (maxParallel <= 0 || s.length == 0 /* this is skipEmpty == false */) {
             String[] command = getCommandline(s, b);

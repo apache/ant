@@ -100,7 +100,7 @@ public final class ExtensionUtil {
                 loadExtensions(file, extensions, includeImpl, includeURL);
             }
         }
-        return extensions.toArray(new Extension[extensions.size()]);
+        return extensions.toArray(new Extension[0]);
     }
 
     /**

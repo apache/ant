@@ -329,7 +329,7 @@ public class CvsTagDiff extends AbstractCvsTask {
                 line = reader.readLine();
             }
 
-            return entries.toArray(new CvsTagEntry[entries.size()]);
+            return entries.toArray(new CvsTagEntry[0]);
         } catch (IOException e) {
             throw new BuildException("Error in parsing", e);
         }

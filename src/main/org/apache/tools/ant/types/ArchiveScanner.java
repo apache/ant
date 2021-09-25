@@ -158,7 +158,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
             return super.getIncludedFiles();
         }
         scanme();
-        return matchFileEntries.keySet().toArray(new String[matchFileEntries.size()]);
+        return matchFileEntries.keySet().toArray(new String[0]);
     }
 
     /**
@@ -187,7 +187,7 @@ public abstract class ArchiveScanner extends DirectoryScanner {
             return super.getIncludedDirectories();
         }
         scanme();
-        return matchDirEntries.keySet().toArray(new String[matchDirEntries.size()]);
+        return matchDirEntries.keySet().toArray(new String[0]);
     }
 
     /**

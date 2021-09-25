@@ -245,7 +245,7 @@ public class Launcher {
         if (argList.size() == args.length) {
             newArgs = args;
         } else {
-            newArgs = argList.toArray(new String[argList.size()]);
+            newArgs = argList.toArray(new String[0]);
         }
 
         final URL[] libURLs    = getLibPathURLs(
@@ -327,7 +327,7 @@ public class Launcher {
             addPath(libPath, true, libPathURLs);
         }
 
-        return libPathURLs.toArray(new URL[libPathURLs.size()]);
+        return libPathURLs.toArray(new URL[0]);
     }
 
     /**

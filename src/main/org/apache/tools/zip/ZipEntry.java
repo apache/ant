@@ -316,7 +316,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
                 newFields.add(field);
             }
         }
-        extraFields = newFields.toArray(new ZipExtraField[newFields.size()]);
+        extraFields = newFields.toArray(new ZipExtraField[0]);
         setExtra();
     }
 
@@ -467,7 +467,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         if (extraFields.length == newResult.size()) {
             throw new NoSuchElementException();
         }
-        extraFields = newResult.toArray(new ZipExtraField[newResult.size()]);
+        extraFields = newResult.toArray(new ZipExtraField[0]);
         setExtra();
     }
 

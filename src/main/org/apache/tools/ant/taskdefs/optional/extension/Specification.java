@@ -178,7 +178,7 @@ public final class Specification {
                 .ifPresent(results::add);
         }
         return removeDuplicates(results)
-            .toArray(new Specification[removeDuplicates(results).size()]);
+            .toArray(new Specification[0]);
     }
 
     /**
