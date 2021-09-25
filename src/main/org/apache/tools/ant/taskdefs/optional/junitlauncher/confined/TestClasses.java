@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
-import org.apache.tools.ant.types.resources.StringResource;
 
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
