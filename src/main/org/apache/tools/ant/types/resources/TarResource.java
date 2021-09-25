@@ -177,7 +177,7 @@ public class TarResource extends ArchiveResource {
 
     /**
      * @return the link "name" (=path) of this entry; an empty string if this is no link
-     * @since 1.10.10
+     * @since 1.10.12
      */
     public String getLinkName() {
         return linkName;
@@ -185,7 +185,7 @@ public class TarResource extends ArchiveResource {
 
     /**
      * @return the link "flag" (=type) of this entry
-     * @since 1.10.10
+     * @since 1.10.12
      */
     public byte getLinkFlag() {
         return linkFlag;

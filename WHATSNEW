@@ -30,6 +30,9 @@ Other changes:
  * javadoc task will now look for warning messages in the STDERR stream too
    when "failonwarning" is set to true to account for changes in JDK 17+
 
+ * The tar task now preserves symlinks of nested tarfilesets.
+   Github Pull Request #142
+
 Changes from Ant 1.10.10 TO Ant 1.10.11
 =======================================
 

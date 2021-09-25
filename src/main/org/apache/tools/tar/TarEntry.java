@@ -399,6 +399,7 @@ public class TarEntry implements TarConstants {
      * Get this entry's link flag.
      *
      * @return This entry's link flag.
+     * @since 1.10.12
      */
     public byte getLinkFlag() {
         return linkFlag;
@@ -408,6 +409,7 @@ public class TarEntry implements TarConstants {
      * Set this entry's link flag.
      *
      * @param link the link flag to use.
+     * @since 1.10.12
      */
     public void setLinkFlag(byte linkFlag) {
         this.linkFlag = linkFlag;
