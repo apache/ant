@@ -199,7 +199,7 @@ public class DateSelector extends BaseExtendSelector {
         if (dateTime == null && millis < 0) {
             setError("You must provide a datetime or the number of "
                     + "milliseconds.");
-        } else if (millis < 0 && dateTime != null) {
+        } else if (millis < 0) {
             String p = pattern == null ? "MM/dd/yyyy hh:mm a" : pattern;
             DateFormat df = pattern == null
                 ? new SimpleDateFormat(p, Locale.US)

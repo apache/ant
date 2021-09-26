@@ -49,9 +49,7 @@ public class FullAnalyzer extends AbstractAnalyzer {
         } catch (Exception e) {
             // all released versions of BCEL may throw an IOException
             // here, but BCEL's trunk does no longer declare to do so
-            if (!(e instanceof IOException)) {
-                throw new BuildException(e);
-            }
+            throw new BuildException(e);
             // ignore IOException like we've always done
         }
     }

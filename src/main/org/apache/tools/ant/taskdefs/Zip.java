@@ -996,13 +996,12 @@ public class Zip extends MatchingTask {
                         zipFile(f, zOut, prefix + name, fileMode);
                     } else {
                         final int thisFileMode =
-                            zfs != null && zfs.hasFileModeBeenSet()
+                            zfs.hasFileModeBeenSet()
                             ? fileMode : getUnixMode(resource, zf,
                                                      fileMode);
                         addResource(resource, name, prefix,
                                     zOut, thisFileMode, zf,
-                                    zfs == null
-                                    ? null : zfs.getSrc(getProject()));
+                                    zfs.getSrc(getProject()));
                     }
                 }
             }

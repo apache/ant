@@ -533,12 +533,12 @@ public class FTP extends Task implements FTPTaskConfig {
                                 dirsNotIncluded.addElement(name);
                                 if (fast && couldHoldIncluded(name)) {
                                     scandir(file.getName(),
-                                            name + File.separator, fast);
+                                            name + File.separator, true);
                                 }
                             }
                             if (!fast && slowScanAllowed) {
                                 scandir(file.getName(),
-                                        name + File.separator, fast);
+                                        name + File.separator, false);
                             }
                         } else {
                             if (!isFollowSymlinks() && file.isSymbolicLink()) {
@@ -607,7 +607,7 @@ public class FTP extends Task implements FTPTaskConfig {
                                 throw new BuildException("could not change directory to curpwd");
                             }
                             scandir(file.getLink(),
-                                    name + File.separator, fast);
+                                    name + File.separator, true);
                         } else {
                             try {
                                 file.getClient().changeWorkingDirectory(file.curpwd);
@@ -628,7 +628,7 @@ public class FTP extends Task implements FTPTaskConfig {
                             throw new BuildException("could not change directory to curpwd");
                         }
                         scandir(file.getName(),
-                                name + File.separator, fast);
+                                name + File.separator, true);
                     }
                 }
             }

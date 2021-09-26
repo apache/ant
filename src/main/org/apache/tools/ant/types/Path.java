@@ -477,7 +477,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     public Object clone() {
         try {
             Path result = (Path) super.clone();
-            result.union = union == null ? union : (Union) union.clone();
+            result.union = union == null ? null : (Union) union.clone();
             return result;
         } catch (CloneNotSupportedException e) {
             throw new BuildException(e);

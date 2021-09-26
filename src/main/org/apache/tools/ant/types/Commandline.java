@@ -76,7 +76,7 @@ public class Commandline implements Cloneable {
     public Commandline(String toProcess) {
         super();
         String[] tmp = translateCommandline(toProcess);
-        if (tmp != null && tmp.length > 0) {
+        if (tmp.length > 0) {
             setExecutable(tmp[0]);
             for (int i = 1; i < tmp.length; i++) {
                 createArgument().setValue(tmp[i]);
@@ -684,7 +684,7 @@ public class Commandline implements Cloneable {
             return "";
         }
         StringBuilder buf = new StringBuilder();
-        buf.append(String.format("argument%s:%n", args.length > offset ? "s" : ""));
+        buf.append(String.format("argument%s:%n", "s"));
         for (int i = offset; i < args.length; i++) {
             buf.append(String.format("'%s'%n", args[i]));
         }

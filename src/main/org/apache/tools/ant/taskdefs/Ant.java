@@ -569,10 +569,8 @@ public class Ant extends Task {
         Object copy = orig;
         try {
             Method cloneM = c.getMethod("clone");
-            if (cloneM != null) {
-                copy = cloneM.invoke(orig);
-                log("Adding clone of reference " + oldKey, Project.MSG_DEBUG);
-            }
+            copy = cloneM.invoke(orig);
+            log("Adding clone of reference " + oldKey, Project.MSG_DEBUG);
         } catch (Exception e) {
             // not Clonable
         }
@@ -583,9 +581,7 @@ public class Ant extends Task {
             try {
                 Method setProjectM =
                     c.getMethod("setProject", Project.class);
-                if (setProjectM != null) {
-                    setProjectM.invoke(copy, newProject);
-                }
+                setProjectM.invoke(copy, newProject);
             } catch (NoSuchMethodException e) {
                 // ignore this if the class being referenced does not have
                 // a set project method.

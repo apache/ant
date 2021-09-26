@@ -276,7 +276,7 @@ public class Scp extends SSHBase {
                 } else {
                     upload(fromUri, toUri);
                 }
-            } else if (isFromRemote && isToRemote) { //NOSONAR
+            } else if (isFromRemote) { //NOSONAR
                 throw new BuildException(
                     "Copying from a remote server to a remote server is not supported.");
             } else {
@@ -346,9 +346,7 @@ public class Scp extends SSHBase {
                     }
                 } else {
                     List<Directory> ds = createDirectoryCollection(rc);
-                    if (ds != null) {
-                        list.addAll(ds);
-                    }
+                    list.addAll(ds);
                 }
             }
             if (!list.isEmpty()) {

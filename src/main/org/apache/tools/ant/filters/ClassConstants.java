@@ -100,17 +100,15 @@ public final class ClassConstants
                 final byte[] bytes = clazz.getBytes(StandardCharsets.ISO_8859_1);
                 try {
                     final Class<?> javaClassHelper = Class.forName(JAVA_CLASS_HELPER);
-                    if (javaClassHelper != null) {
-                        final Method getConstants =
-                            javaClassHelper.getMethod("getConstants", byte[].class);
-                        // getConstants is a static method, no need to
-                        // pass in the object
-                        final StringBuffer sb = (StringBuffer)
-                                getConstants.invoke(null, (Object) bytes);
-                        if (sb.length() > 0) {
-                            queuedData = sb.toString();
-                            return read();
-                        }
+                    final Method getConstants =
+                        javaClassHelper.getMethod("getConstants", byte[].class);
+                    // getConstants is a static method, no need to
+                    // pass in the object
+                    final StringBuffer sb = (StringBuffer)
+                            getConstants.invoke(null, (Object) bytes);
+                    if (sb.length() > 0) {
+                        queuedData = sb.toString();
+                        return read();
                     }
                 } catch (NoClassDefFoundError | RuntimeException ex) {
                     throw ex;

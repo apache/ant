@@ -270,7 +270,7 @@ public abstract class JDBCTask extends Task {
                 String theVendor = dmd.getDatabaseProductName().toLowerCase();
 
                 log("RDBMS = " + theVendor, Project.MSG_VERBOSE);
-                if (theVendor == null || !theVendor.contains(rdbms)) {
+                if (!theVendor.contains(rdbms)) {
                     log("Not the required RDBMS: " + rdbms, Project.MSG_VERBOSE);
                     return false;
                 }
@@ -280,9 +280,7 @@ public abstract class JDBCTask extends Task {
                 String theVersion = dmd.getDatabaseProductVersion().toLowerCase(Locale.ENGLISH);
 
                 log("Version = " + theVersion, Project.MSG_VERBOSE);
-                if (theVersion == null
-                        || !(theVersion.startsWith(version)
-                        || theVersion.contains(" " + version))) {
+                if (!(theVersion.startsWith(version) || theVersion.contains(" " + version))) {
                     log("Not the required version: \"" + version + "\"", Project.MSG_VERBOSE);
                     return false;
                 }

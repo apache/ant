@@ -124,9 +124,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
         try {
             Method setLocationM =
                 proxy.getClass().getMethod("setLocation", Location.class);
-            if (setLocationM != null) {
-                setLocationM.invoke(proxy, getLocation());
-            }
+            setLocationM.invoke(proxy, getLocation());
         } catch (NoSuchMethodException e) {
             // ignore this if the class being used as a task does not have
             // a set location method.
@@ -139,9 +137,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
         try {
             Method setProjectM =
                 proxy.getClass().getMethod("setProject", Project.class);
-            if (setProjectM != null) {
-                setProjectM.invoke(proxy, getProject());
-            }
+            setProjectM.invoke(proxy, getProject());
         } catch (NoSuchMethodException e) {
             // ignore this if the class being used as a task does not have
             // a set project method.

@@ -248,7 +248,7 @@ public final class Locator {
                         sb.write((char) ((i1 << NIBBLE) + i2));
                     }
                 }
-            } else if (c >= 0x0000 && c < 0x0080) {
+            } else if (c < 0x0080) {
                 sb.write(c);
             } else { // #50543
                 byte[] bytes = String.valueOf(c).getBytes(StandardCharsets.UTF_8);

@@ -2069,9 +2069,7 @@ public class Javadoc extends Task {
                 }
             }
         } catch (final IOException ex) {
-            if (optionsTmpFile != null) {
-                optionsTmpFile.delete();
-            }
+            optionsTmpFile.delete();
             throw new BuildException(
                 "Error creating or writing temporary file for javadoc options",
                 ex, getLocation());

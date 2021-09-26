@@ -74,7 +74,7 @@ public final class DOMUtil {
                     matches.addElement(child);
                 }
                 if (recurse) {
-                    NodeList recmatches = listChildNodes(child, filter, recurse);
+                    NodeList recmatches = listChildNodes(child, filter, true);
                     final int reclength = recmatches.getLength();
                     for (int j = 0; j < reclength; j++) {
                         matches.addElement(recmatches.item(i));

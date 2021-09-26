@@ -169,7 +169,7 @@ class SplashScreen extends JWindow implements ActionListener, BuildListener {
         if (hasProgressPattern()) {
             String message = event.getMessage();
             Matcher matcher = progressRegExpPattern.matcher(message);
-            if (matcher != null && matcher.matches()) {
+            if (matcher.matches()) {
                 String gr = matcher.group(1);
                 try {
                     pb.setValue(Math.min(Integer.parseInt(gr) * 2, MAX));

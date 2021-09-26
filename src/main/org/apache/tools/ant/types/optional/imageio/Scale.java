@@ -161,8 +161,8 @@ public class Scale extends TransformOperation implements DrawOperation {
                 BufferedImage image = null;
                 // If this TransformOperation has DrawOperation children
                 // then Rotate the first child and return.
-                performScale(image);
-                return image;
+                performScale(null);
+                return null;
             }
         }
         return null;

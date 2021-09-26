@@ -471,11 +471,7 @@ public class Tar extends MatchingTask {
         }
 
         if (!r.isDirectory()) {
-            if (r.size() > TarConstants.MAXSIZE) {
-                throw new BuildException(
-                    "Resource: " + r + " larger than "
-                    + TarConstants.MAXSIZE + " bytes.");
-            }
+            r.size();
             te.setSize(r.getSize());
             // override permissions if set explicitly
             if (tarFileSet != null && tarFileSet.hasFileModeBeenSet()) {

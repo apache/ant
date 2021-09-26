@@ -449,8 +449,7 @@ public class EmailTask extends Task {
             // prepare for the auto select mechanism
             boolean autoFound = false;
             // try MIME format
-            if (MIME.equals(encoding)
-                 || (AUTO.equals(encoding) && !autoFound)) {
+            if (MIME.equals(encoding) || AUTO.equals(encoding)) {
                 try {
                     //check to make sure that activation.jar
                     //and mail.jar are available - see bug 31969

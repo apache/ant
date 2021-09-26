@@ -166,7 +166,7 @@ public class SoundTask extends Task {
                 }
             } else {
                 log(source + ": invalid path.", Project.MSG_WARN);
-                this.source = nofile;
+                this.source = null;
             }
             return this.source;
         }

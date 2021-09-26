@@ -143,10 +143,6 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     classname);
             }
             main = target.getMethod("main", String[].class);
-            if (main == null) {
-                throw new BuildException("Could not find main() method in %s",
-                    classname);
-            }
             if ((main.getModifiers() & Modifier.STATIC) == 0) {
                 throw new BuildException(
                     "main() method in %s is not declared static", classname);

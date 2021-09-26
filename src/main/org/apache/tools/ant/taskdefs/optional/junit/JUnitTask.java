@@ -857,7 +857,7 @@ public class JUnitTask extends Task {
             batchTests.stream().map(b -> executeOrQueue(b.elements(), false))
                 .forEach(testLists::addAll);
             testLists.addAll(
-                executeOrQueue(Collections.enumeration(tests), forkPerTest));
+                executeOrQueue(Collections.enumeration(tests), false));
         }
         try {
             /* prior to parallel the code in 'oneJunitThread' used to be here. */
@@ -2224,7 +2224,7 @@ public class JUnitTask extends Task {
                 if (errorOccurredHere && test.getErrorProperty() != null) {
                     getProject().setNewProperty(test.getErrorProperty(), "true");
                 }
-                if (failureOccurredHere && test.getFailureProperty() != null) {
+                if (test.getFailureProperty() != null) {
                     getProject().setNewProperty(test.getFailureProperty(), "true");
                 }
             }

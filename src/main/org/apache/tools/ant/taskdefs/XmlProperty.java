@@ -378,12 +378,10 @@ public class XmlProperty extends Task {
                     if (containingPath != null && PATH.equals(nodeName)) {
                         // A "path" attribute for a node within a Path object.
                         containingPath.setPath(attributeValue);
-                    } else if (containingPath != null
-                               && container instanceof Path && REF_ID.equals(nodeName)) {
+                    } else if (containingPath != null && REF_ID.equals(nodeName)) {
                         // A "refid" attribute for a node within a Path object.
                         containingPath.setPath(attributeValue);
-                    } else if (containingPath != null && container instanceof Path
-                               && LOCATION.equals(nodeName)) {
+                    } else if (containingPath != null && LOCATION.equals(nodeName)) {
                         // A "location" attribute for a node within a
                         // Path object.
                         containingPath.setLocation(resolveFile(attributeValue));

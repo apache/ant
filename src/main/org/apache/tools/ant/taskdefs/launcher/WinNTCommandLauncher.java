@@ -56,7 +56,7 @@ public class WinNTCommandLauncher extends CommandLauncherProxy {
             if (project != null) {
                 commandDir = project.getBaseDir();
             } else {
-                return exec(project, cmd, env);
+                return exec(null, cmd, env);
             }
         }
         // Use cmd.exe to change to the specified directory before running

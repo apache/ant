@@ -346,11 +346,9 @@ public class GenerateKey extends Task {
             sb.append("\" ");
         }
 
-        if (null != storepass) {
-            sb.append("-storepass \"");
-            sb.append(storepass);
-            sb.append("\" ");
-        }
+        sb.append("-storepass \"");
+        sb.append(storepass);
+        sb.append("\" ");
 
         if (null != storetype) {
             sb.append("-storetype \"");

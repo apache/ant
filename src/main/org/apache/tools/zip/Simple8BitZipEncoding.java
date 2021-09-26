@@ -137,7 +137,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
      */
     public boolean canEncodeChar(final char c) {
 
-        if (c >= 0 && c < 128) {
+        if (c < 128) {
             return true;
         }
 
@@ -156,7 +156,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
      */
     public boolean pushEncodedChar(final ByteBuffer bb, final char c) {
 
-        if (c >= 0 && c < 128) {
+        if (c < 128) {
             bb.put((byte) c);
             return true;
         }

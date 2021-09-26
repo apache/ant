@@ -778,11 +778,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         final ZipEntry other = (ZipEntry) obj;
         final String myName = getName();
         final String otherName = other.getName();
-        if (myName == null) {
-            if (otherName != null) {
-                return false;
-            }
-        } else if (!myName.equals(otherName)) {
+        if (!myName.equals(otherName)) {
             return false;
         }
         String myComment = getComment();

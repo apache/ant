@@ -56,7 +56,7 @@ public class PerlScriptCommandLauncher extends CommandLauncherProxy {
                         File workingDir) throws IOException {
         if (project == null) {
             if (workingDir == null) {
-                return exec(project, cmd, env);
+                return exec(null, cmd, env);
             }
             throw new IOException(
                 "Cannot locate antRun script: No project provided");

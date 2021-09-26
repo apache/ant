@@ -157,9 +157,7 @@ public class CvsVersion extends AbstractCvsTask {
                 }
                 server = false;
                 cvs = null;
-            } else if ("(client/server)".equals(currentToken)
-                       && cvs != null && cachedVersion != null
-                       && !client && !server) {
+            } else if ("(client/server)".equals(currentToken) && cvs != null && cachedVersion != null) {
                 client = server = true;
                 clientVersion = serverVersion = cachedVersion + cvs;
                 cachedVersion = cvs = null;

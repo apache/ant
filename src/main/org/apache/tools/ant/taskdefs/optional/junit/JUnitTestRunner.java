@@ -1018,7 +1018,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
                     errorOccurred = (code == ERRORS);
                     failureOccurred = (code != SUCCESS);
                     if (errorOccurred || failureOccurred) {
-                        if ((errorOccurred && haltError) || (failureOccurred && haltFail)) {
+                        if (errorOccurred && haltError || haltFail) {
                             registerNonCrash();
                             System.exit(code);
                         } else {

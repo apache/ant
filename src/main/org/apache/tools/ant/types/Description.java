@@ -96,9 +96,7 @@ public class Description extends DataType {
             if (task instanceof UnknownElement) {
                 UnknownElement ue = (UnknownElement) task;
                 String descComp = ue.getWrapper().getText().toString();
-                if (descComp != null) {
-                    description.append(project.replaceProperties(descComp));
-                }
+                description.append(project.replaceProperties(descComp));
             }
         }
     }

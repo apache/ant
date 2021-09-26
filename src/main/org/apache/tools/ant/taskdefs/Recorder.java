@@ -161,7 +161,7 @@ public class Recorder extends Task implements SubBuildListener {
                 recorder.reopenFile();
                 recorder.setRecordState(start);
             } else {
-                recorder.setRecordState(start);
+                recorder.setRecordState(false);
                 recorder.closeFile();
             }
         }

@@ -1264,11 +1264,11 @@ public class DirectoryScanner
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
                     if (fast && couldHoldIncluded(newPath) && !contentsExcluded(newPath)) {
-                        scandir(file, newPath, fast, children, directoryNamesFollowed);
+                        scandir(file, newPath, true, children, directoryNamesFollowed);
                     }
                 }
                 if (!fast) {
-                    scandir(file, newPath, fast, children, directoryNamesFollowed);
+                    scandir(file, newPath, false, children, directoryNamesFollowed);
                 }
             }
         }
@@ -1299,7 +1299,7 @@ public class DirectoryScanner
                                        final boolean fast) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
-            scandir(file, name, fast);
+            scandir(file, name, true);
         }
     }
 
@@ -1309,7 +1309,7 @@ public class DirectoryScanner
                                        final Deque<String> directoryNamesFollowed) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
         if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
-            scandir(file, name, fast, children, directoryNamesFollowed);
+            scandir(file, name, true, children, directoryNamesFollowed);
         }
     }
 
