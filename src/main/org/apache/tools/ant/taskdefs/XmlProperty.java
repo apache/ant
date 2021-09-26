@@ -404,17 +404,14 @@ public class XmlProperty extends Task {
         }
         String nodeText = null;
         boolean emptyNode = false;
-        boolean semanticEmptyOverride = false;
-        if (node.getNodeType() == Node.ELEMENT_NODE
+        boolean semanticEmptyOverride = node.getNodeType() == Node.ELEMENT_NODE
                 && semanticAttributes
                 && node.hasAttributes()
                 && (node.getAttributes().getNamedItem(VALUE) != null
                         || node.getAttributes().getNamedItem(LOCATION) != null
                         || node.getAttributes().getNamedItem(REF_ID) != null
                         || node.getAttributes().getNamedItem(PATH) != null || node.getAttributes()
-                        .getNamedItem(PATHID) != null)) {
-            semanticEmptyOverride = true;
-        }
+                        .getNamedItem(PATHID) != null);
         if (node.getNodeType() == Node.TEXT_NODE) {
             // For the text node, add a property.
             nodeText = getAttributeValue(node);

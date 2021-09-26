@@ -638,10 +638,7 @@ public class Tar extends MatchingTask {
      * @since Ant 1.7
      */
     protected boolean check(final File basedir, final String[] files) {
-        boolean upToDate = true;
-        if (!archiveIsUpToDate(files, basedir)) {
-            upToDate = false;
-        }
+        boolean upToDate = archiveIsUpToDate(files, basedir);
 
         for (String file : files) {
             if (tarFile.equals(new File(basedir, file))) {
