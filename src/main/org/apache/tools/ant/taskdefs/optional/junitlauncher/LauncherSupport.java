@@ -653,9 +653,8 @@ public class LauncherSupport {
         @Override
         public void executionStarted(final TestIdentifier testIdentifier) {
             super.executionStarted(testIdentifier);
-            AbstractJUnitResultFormatter.isTestClass(testIdentifier).ifPresent(testClass -> {
-                this.originalSysOut.println("Running " + testClass.getClassName());
-            });
+            AbstractJUnitResultFormatter.isTestClass(testIdentifier).ifPresent(testClass ->
+                    this.originalSysOut.println("Running " + testClass.getClassName()));
         }
 
 
