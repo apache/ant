@@ -320,7 +320,7 @@ public final class IntrospectionHelper {
      *
      * @return a helper for the specified class
      */
-    public static synchronized IntrospectionHelper getHelper(final Class<?> c) {
+    public static IntrospectionHelper getHelper(final Class<?> c) {
         return getHelper(null, c);
     }
 
@@ -337,19 +337,31 @@ public final class IntrospectionHelper {
      *
      * @return a helper for the specified class
      */
-    public static synchronized IntrospectionHelper getHelper(final Project p, final Class<?> c) {
-        IntrospectionHelper ih = HELPERS.get(c.getName());
-        // If a helper cannot be found, or if the helper is for another
-        // classloader, create a new IH
-        if (ih == null || ih.bean != c) {
-            ih = new IntrospectionHelper(c);
-            if (p != null) {
-                // #30162: do *not* cache this if there is no project, as we
-                // cannot guarantee that the cache will be cleared.
-                HELPERS.put(c.getName(), ih);
-            }
+    public static IntrospectionHelper getHelper(final Project p, final Class<?> c) {
+        if (p == null) {
+            // #30162: do *not* use cache if there is no project, as we
+            // cannot guarantee that the cache will be cleared.
+            return new IntrospectionHelper(c);
         }
-        return ih;
+        IntrospectionHelper ih = HELPERS.get(c.getName());
+        if (ih != null && ih.bean == c) {
+            return ih;
+        }
+        // If a helper cannot be found, or if the helper is for another
+        // classloader, create a new IH and cache it
+        // Note: This new instance of IntrospectionHelper is intentionally
+        // created without holding a lock, to prevent potential deadlocks.
+        // See bz-65424 for details
+        ih = new IntrospectionHelper(c);
+        synchronized (HELPERS) {
+            IntrospectionHelper cached = HELPERS.get(c.getName());
+            if (cached != null && cached.bean == c) {
+                return cached;
+            }
+            // cache the recently created one
+            HELPERS.put(c.getName(), ih);
+            return ih;
+        }
     }
 
     /**
@@ -1499,7 +1511,7 @@ public final class IntrospectionHelper {
     /**
      * Clears the static cache of on build finished.
      */
-    public static synchronized void clearCache() {
+    public static void clearCache() {
         HELPERS.clear();
     }
 

@@ -13,6 +13,9 @@ Fixed bugs:
    the shorter alias names.
    Bugzilla Report 65539
 
+ * Prevent potential deadlocks in org.apache.tools.ant.IntrospectionHelper.
+   Bugzilla Report 65424
+
 Other changes:
 --------------
 
