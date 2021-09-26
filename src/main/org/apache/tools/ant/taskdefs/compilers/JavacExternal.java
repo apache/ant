@@ -94,8 +94,8 @@ public class JavacExternal extends DefaultCompilerAdapter {
         for(int i = nonArgFileOptionIdx + 1; i < commandLine.length; i++) {
             if (!isArgFileEligible(commandLine[i])) {
                 String option = commandLine[i];
-                for(int j = i - 1; j >= nonArgFileOptionIdx; j--) {
-                    commandLine[j + 1] = commandLine[j];
+                if (i - nonArgFileOptionIdx >= 0) {
+                    System.arraycopy( commandLine, nonArgFileOptionIdx, commandLine, nonArgFileOptionIdx + 1, i - nonArgFileOptionIdx );
                 }
                 commandLine[nonArgFileOptionIdx] = option;
                 nonArgFileOptionIdx++;
