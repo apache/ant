@@ -448,8 +448,7 @@ public class FileUtilsTest {
                 .getParent());
 
         tmp2 = getFileUtils().createTempFile("pre", ".suf", parent, false);
-        assertTrue("files are different", !tmp1.getAbsolutePath().equals(
-                tmp2.getAbsolutePath()));
+        assertNotEquals("files are different", tmp1.getAbsolutePath(), tmp2.getAbsolutePath());
     }
 
     @Test
