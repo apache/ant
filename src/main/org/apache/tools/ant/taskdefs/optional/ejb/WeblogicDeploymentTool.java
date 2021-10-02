@@ -470,7 +470,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 try (InputStream in = Files.newInputStream(weblogicDD.toPath())) {
                     saxParser.parse(new InputSource(in), handler);
                 }
-                handler.getFiles().forEach(ejbFiles::put);
+                ejbFiles.putAll(handler.getFiles());
             } catch (Exception e) {
                 throw new BuildException(
                     "Exception while adding Vendor specific files: "

@@ -1220,7 +1220,7 @@ public class JUnitTask extends Task {
                                       + propsFile.getAbsolutePath());
         final Hashtable<String, Object> p = getProject().getProperties();
         final Properties props = new Properties();
-        p.forEach(props::put);
+        props.putAll(p);
         try {
             final OutputStream outstream = Files.newOutputStream(propsFile.toPath());
             props.store(outstream, "Ant JUnitTask generated properties file");

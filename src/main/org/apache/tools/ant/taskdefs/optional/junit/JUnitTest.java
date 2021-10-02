@@ -472,7 +472,7 @@ public class JUnitTest extends BaseTest implements Cloneable {
      */
     public void setProperties(Hashtable<?, ?> p) {
         props = new Properties();
-        p.forEach(props::put);
+        props.putAll(p);
     }
 
     /**
