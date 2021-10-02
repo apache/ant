@@ -44,7 +44,7 @@ public class Input extends Task {
     /**
      * Represents an InputHandler.
      */
-    public class Handler extends DefBase {
+    public static class Handler extends DefBase {
 
         private String refid = null;
         private HandlerType type = null;

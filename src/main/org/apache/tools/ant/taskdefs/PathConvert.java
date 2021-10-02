@@ -102,7 +102,7 @@ public class PathConvert extends Task {
      * When running on windows, the prefix comparison will be case
      * insensitive.
      */
-    public class MapEntry {
+    public static class MapEntry {
 
         // Members
         private String from = null;

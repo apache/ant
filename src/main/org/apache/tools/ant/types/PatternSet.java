@@ -53,7 +53,7 @@ public class PatternSet extends DataType implements Cloneable {
      * property (typically set through the use of the Available task)
      * or value of an expression.
      */
-    public class NameEntry {
+    public static class NameEntry {
         private String name;
         private Object ifCond;
         private Object unlessCond;

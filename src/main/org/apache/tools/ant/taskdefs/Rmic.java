@@ -821,7 +821,7 @@ public class Rmic extends MatchingTask {
      * filter command line attributes based on the current
      * implementation.
      */
-    public class ImplementationSpecificArgument extends
+    public static class ImplementationSpecificArgument extends
         org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
         /**
          * Only pass the specified argument if the

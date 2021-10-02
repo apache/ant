@@ -563,7 +563,7 @@ public class IPlanetEjbc {
      * the ejbc compiler.
      *
      */
-    public class EjbcException extends Exception {
+    public static class EjbcException extends Exception {
         private static final long serialVersionUID = 1L;
 
         /**
@@ -1019,24 +1019,24 @@ public class IPlanetEjbc {
             /* Check that the specified instance variables are valid */
             if (home == null) {
                 throw new EjbcException(
-                    "A home interface was not found for the " + name + " EJB.");
+                        "A home interface was not found for the " + name + " EJB.");
             }
             if (remote == null) {
                 throw new EjbcException(
-                    "A remote interface was not found for the " + name
-                        + " EJB.");
+                        "A remote interface was not found for the " + name
+                                + " EJB.");
             }
             if (implementation == null) {
                 throw new EjbcException(
-                    "An EJB implementation class was not found for the " + name
-                        + " EJB.");
+                        "An EJB implementation class was not found for the " + name
+                                + " EJB.");
             }
 
             if (!beantype.equals(ENTITY_BEAN)
                 && !beantype.equals(STATELESS_SESSION)
                 && !beantype.equals(STATEFUL_SESSION)) {
                 throw new EjbcException("The beantype found (" + beantype
-                    + ") isn't valid in the " + name + " EJB.");
+                        + ") isn't valid in the " + name + " EJB.");
             }
 
             if (cmp && !beantype.equals(ENTITY_BEAN)) {
@@ -1055,16 +1055,16 @@ public class IPlanetEjbc {
             /* Check that the EJB "source" classes all exist */
             if (!remote.getClassFile(buildDir).exists()) {
                 throw new EjbcException("The remote interface "
-                    + remote.getQualifiedClassName() + " could not be found.");
+                        + remote.getQualifiedClassName() + " could not be found.");
             }
             if (!home.getClassFile(buildDir).exists()) {
                 throw new EjbcException("The home interface "
-                    + home.getQualifiedClassName() + " could not be found.");
+                        + home.getQualifiedClassName() + " could not be found.");
             }
             if (!implementation.getClassFile(buildDir).exists()) {
                 throw new EjbcException("The EJB implementation class "
-                    + implementation.getQualifiedClassName()
-                    + " could not be found.");
+                        + implementation.getQualifiedClassName()
+                        + " could not be found.");
             }
         }
 

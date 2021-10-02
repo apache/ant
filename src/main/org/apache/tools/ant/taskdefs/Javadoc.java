@@ -93,7 +93,7 @@ public class Javadoc extends Task {
     /**
      * Inner class used to manage doclet parameters.
      */
-    public class DocletParam {
+    public static class DocletParam {
         /** The parameter name */
         private String name;
 
@@ -375,7 +375,7 @@ public class Javadoc extends Task {
      * contains special handling for FileSets that has to occur at
      * task runtime.</p>
      */
-    public class ResourceCollectionContainer
+    public static class ResourceCollectionContainer
         implements Iterable<ResourceCollection> {
 
         private final List<ResourceCollection> rcs = new ArrayList<>();
@@ -1311,7 +1311,7 @@ public class Javadoc extends Task {
      * Represents a link triplet (href, whether link is offline,
      * location of the package list if off line)
      */
-    public class LinkArgument {
+    public static class LinkArgument {
         private String href;
         private boolean offline = false;
         private File packagelistLoc;
@@ -1433,7 +1433,7 @@ public class Javadoc extends Task {
     /**
      * Class representing a -tag argument.
      */
-    public class TagArgument extends FileSet {
+    public static class TagArgument extends FileSet {
         /** Name of the tag. */
         private String name = null;
         /** Whether or not the tag is enabled. */
@@ -1580,7 +1580,7 @@ public class Javadoc extends Task {
     /**
      * A class corresponding to the group nested element.
      */
-    public class GroupArgument {
+    public static class GroupArgument {
         private Html title;
         private final List<PackageName> packages = new Vector<>();
 

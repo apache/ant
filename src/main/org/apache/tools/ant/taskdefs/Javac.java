@@ -910,7 +910,7 @@ public class Javac extends MatchingTask {
      */
     public ImplementationSpecificArgument createCompilerArg() {
         final ImplementationSpecificArgument arg =
-            new ImplementationSpecificArgument();
+                new ImplementationSpecificArgument();
         facade.addImplementationArgument(arg);
         return arg;
     }
@@ -1382,7 +1382,7 @@ public class Javac extends MatchingTask {
      * filter command line attributes based on the current
      * implementation.
      */
-    public class ImplementationSpecificArgument extends
+    public static class ImplementationSpecificArgument extends
         org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
 
         /**
