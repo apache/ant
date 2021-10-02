@@ -239,7 +239,7 @@ public class EmailTask extends Task {
     }
 
     /**
-     * Add a from address element.
+     * Add a "from" address element.
      *
      * @param address The address to send from.
      */
@@ -251,7 +251,7 @@ public class EmailTask extends Task {
     }
 
     /**
-     * Shorthand to set the from address element.
+     * Shorthand to set the "from" address element.
      *
      * @param address The address to send mail from.
      */
@@ -263,7 +263,7 @@ public class EmailTask extends Task {
     }
 
     /**
-     * Add a replyto address element.
+     * Add a "replyto" address element.
      *
      * @param address The address to reply to.
      * @since Ant 1.6
@@ -273,7 +273,7 @@ public class EmailTask extends Task {
     }
 
     /**
-     * Shorthand to set the replyto address element.
+     * Shorthand to set the "replyto" address element.
      *
      * @param address The address to which replies should be directed.
      * @since Ant 1.6
@@ -283,7 +283,7 @@ public class EmailTask extends Task {
     }
 
     /**
-     * Add a to address element.
+     * Add a "to" address element.
      *
      * @param address An email address.
      */
@@ -449,16 +449,9 @@ public class EmailTask extends Task {
             // prepare for the auto select mechanism
             boolean autoFound = false;
             // try MIME format
-            if (MIME.equals(encoding)
-                 || (AUTO.equals(encoding) && !autoFound)) {
+            if (MIME.equals(encoding) || AUTO.equals(encoding)) {
                 try {
-                    //check to make sure that activation.jar
-                    //and mail.jar are available - see bug 31969
-                    Class.forName("javax.activation.DataHandler");
-                    Class.forName("javax.mail.internet.MimeMessage");
-
-                    mailer = ClasspathUtils.newInstance(
-                            "org.apache.tools.ant.taskdefs.email.MimeMailer",
+                    mailer = ClasspathUtils.newInstance(getMailerImplementation(),
                             EmailTask.class.getClassLoader(), Mailer.class);
                     autoFound = true;
 
@@ -467,16 +460,16 @@ public class EmailTask extends Task {
                     logBuildException("Failed to initialise MIME mail: ", e);
                 }
             }
-            // SMTP auth only allowed with MIME mail
-            if (!autoFound && ((user != null) || (password != null))
-                && (UU.equals(encoding) || PLAIN.equals(encoding))) {
-                throw new BuildException("SMTP auth only possible with MIME mail");
+            if ((UU.equals(encoding) || PLAIN.equals(encoding))
+                    && !autoFound) {
+                // SMTP auth only allowed with MIME mail
+                if (user != null || password != null) {
+                    throw new BuildException("SMTP auth only possible with MIME mail");
+                }
+                // SSL only allowed with MIME mail
+                if (ssl || starttls) {
+                    throw new BuildException("SSL and STARTTLS only possible with MIME mail");
             }
-            // SSL only allowed with MIME mail
-            if (!autoFound  && (ssl || starttls)
-                && (UU.equals(encoding) || PLAIN.equals(encoding))) {
-                throw new BuildException(
-                    "SSL and STARTTLS only possible with MIME mail");
             }
             // try UU format
             if (UU.equals(encoding)
@@ -598,6 +591,32 @@ public class EmailTask extends Task {
         } finally {
             message = savedMessage;
         }
+    }
+
+    private String getMailerImplementation() {
+        //check to make sure that activation.jar
+        //and mail.jar are available - see bug 31969
+        try {
+            Class.forName("jakarta.activation.DataHandler");
+            Class.forName("jakarta.mail.internet.MimeMessage");
+
+            return "org.apache.tools.ant.taskdefs.email.JakartaMimeMailer";
+        } catch (ClassNotFoundException cnfe) {
+            logBuildException("Could not find Jakarta MIME mail: ",
+                    new BuildException(cnfe));
+        }
+
+        try {
+            Class.forName("javax.activation.DataHandler");
+            Class.forName("javax.mail.internet.MimeMessage");
+
+            return "org.apache.tools.ant.taskdefs.email.MimeMailer";
+        } catch (ClassNotFoundException cnfe) {
+            logBuildException("Could not find MIME mail: ",
+                    new BuildException(cnfe));
+        }
+
+        return "org.apache.tools.ant.taskdefs.email.Mailer";
     }
 
     private void logBuildException(String reason, BuildException e) {
