@@ -45,7 +45,7 @@ public abstract class AbstractClasspathResource extends Resource {
      * Set the classpath to use when looking up a resource.
      * @param classpath to add to any existing classpath
      */
-    public void setClasspath(Path classpath) {
+    public void setClasspath(final Path classpath) {
         checkAttributesAllowed();
         if (this.classpath == null) {
             this.classpath = classpath;
@@ -73,7 +73,7 @@ public abstract class AbstractClasspathResource extends Resource {
      * given as reference to a &lt;path&gt; defined elsewhere
      * @param r The reference value
      */
-    public void setClasspathRef(Reference r) {
+    public void setClasspathRef(final Reference r) {
         checkAttributesAllowed();
         createClasspath().setRefid(r);
     }
@@ -114,7 +114,7 @@ public abstract class AbstractClasspathResource extends Resource {
      *
      * @param r the reference to locate the loader.
      */
-    public void setLoaderRef(Reference r) {
+    public void setLoaderRef(final Reference r) {
         checkAttributesAllowed();
         loader = r;
     }
@@ -127,7 +127,7 @@ public abstract class AbstractClasspathResource extends Resource {
      * @param b boolean
      * @since Ant 1.8.0
      */
-    public void setParentFirst(boolean b) {
+    public void setParentFirst(final boolean b) {
         parentFirst = b;
     }
 
@@ -136,7 +136,7 @@ public abstract class AbstractClasspathResource extends Resource {
      *
      * @param r the Reference to set.
      */
-    public void setRefid(Reference r) {
+    public void setRefid(final Reference r) {
         if (loader != null || classpath != null) {
             throw tooManyAttributes();
         }
@@ -154,9 +154,9 @@ public abstract class AbstractClasspathResource extends Resource {
             return getRef().isExists();
         }
         dieOnCircularReference();
-        try (InputStream is = getInputStream()) {
+        try (final InputStream is = getInputStream()) {
             return is != null;
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             return false;
         }
     }
@@ -209,7 +209,7 @@ public abstract class AbstractClasspathResource extends Resource {
         boolean clNeedsCleanup = false;
         if (cl == null) {
             if (getClasspath() != null) {
-                Path p = getClasspath().concatSystemClasspath("ignore");
+                final Path p = getClasspath().concatSystemClasspath("ignore");
                 if (parentFirst) {
                     cl = getProject().createClassLoader(p);
                 } else {
@@ -238,7 +238,7 @@ public abstract class AbstractClasspathResource extends Resource {
      */
     protected abstract InputStream openInputStream(ClassLoader cl) throws IOException;
 
-    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
+    protected synchronized void dieOnCircularReference(final Stack<Object> stk, final Project p) {
         if (isChecked()) {
             return;
         }
@@ -261,7 +261,7 @@ public abstract class AbstractClasspathResource extends Resource {
         private final ClassLoader loader;
         private final boolean cleanup;
 
-        ClassLoaderWithFlag(ClassLoader l, boolean needsCleanup) {
+        ClassLoaderWithFlag(final ClassLoader l, final boolean needsCleanup) {
             loader = l;
             cleanup = needsCleanup && l instanceof AntClassLoader;
         }

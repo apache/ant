@@ -103,7 +103,7 @@ public abstract class AbstractJarSignerTask extends Task {
     /**
      * Java declarations -J-Dname=value
      */
-    private Environment sysProperties = new Environment();
+    private final Environment sysProperties = new Environment();
 
     /**
      * Path holding all non-filesets of filesystem resources we want to sign.
@@ -126,7 +126,7 @@ public abstract class AbstractJarSignerTask extends Task {
      */
     private String providerName, providerClass, providerArg;
 
-    private List<Commandline.Argument> additionalArgs = new ArrayList<>();
+    private final List<Commandline.Argument> additionalArgs = new ArrayList<>();
 
     /**
      * Set the maximum memory to be used by the jarsigner process
@@ -134,7 +134,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @param max a string indicating the maximum memory according to the JVM
      *            conventions (e.g. 128m is 128 Megabytes)
      */
-    public void setMaxmemory(String max) {
+    public void setMaxmemory(final String max) {
         maxMemory = max;
     }
 
@@ -206,7 +206,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @since Ant 1.9.1
      * @param strict boolean
      */
-    public void setStrict(boolean strict) {
+    public void setStrict(final boolean strict) {
         this.strict = strict;
     }
 
@@ -225,7 +225,7 @@ public abstract class AbstractJarSignerTask extends Task {
      *
      * @param sysp system property.
      */
-    public void addSysproperty(Environment.Variable sysp) {
+    public void addSysproperty(final Environment.Variable sysp) {
         sysProperties.addVariable(sysp);
     }
 
@@ -249,7 +249,7 @@ public abstract class AbstractJarSignerTask extends Task {
      *
      * @since Ant 1.10.6
      */
-    public void setProviderName(String providerName) {
+    public void setProviderName(final String providerName) {
         this.providerName = providerName;
     }
 
@@ -260,7 +260,7 @@ public abstract class AbstractJarSignerTask extends Task {
      *
      * @since Ant 1.10.6
      */
-    public void setProviderClass(String providerClass) {
+    public void setProviderClass(final String providerClass) {
         this.providerClass = providerClass;
     }
 
@@ -271,7 +271,7 @@ public abstract class AbstractJarSignerTask extends Task {
      *
      * @since Ant 1.10.6
      */
-    public void setProviderArg(String providerArg) {
+    public void setProviderArg(final String providerArg) {
         this.providerArg = providerArg;
     }
 
@@ -283,7 +283,7 @@ public abstract class AbstractJarSignerTask extends Task {
      *
      * @since Ant 1.10.6
      */
-    public void addArg(Commandline.Argument arg) {
+    public void addArg(final Commandline.Argument arg) {
         additionalArgs.add(arg);
     }
 
@@ -308,17 +308,17 @@ public abstract class AbstractJarSignerTask extends Task {
      * @return a configured RedirectorElement.
      */
     private RedirectorElement createRedirector() {
-        RedirectorElement result = new RedirectorElement();
+        final RedirectorElement result = new RedirectorElement();
         if (storepass != null) {
-            StringBuilder input = new StringBuilder(storepass).append('\n');
+            final StringBuilder input = new StringBuilder(storepass).append('\n');
             if (keypass != null) {
                 input.append(keypass).append('\n');
             }
             result.setInputString(input.toString());
             result.setLogInputString(false);
             // Try to avoid showing password prompts on log output, as they would be confusing.
-            LineContainsRegExp filter = new LineContainsRegExp();
-            RegularExpression rx = new RegularExpression();
+            final LineContainsRegExp filter = new LineContainsRegExp();
+            final RegularExpression rx = new RegularExpression();
             // TODO only handles English locale, not ja or zh_CN
             rx.setPattern("^(Enter Passphrase for keystore: |Enter key password for .+: )$");
             filter.addConfiguredRegexp(rx);
@@ -343,7 +343,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @param executable the command to invoke.
      * @since Ant 1.8.0
      */
-    public void setExecutable(String executable) {
+    public void setExecutable(final String executable) {
         this.executable = executable;
     }
 
@@ -365,11 +365,11 @@ public abstract class AbstractJarSignerTask extends Task {
         }
 
         //now patch in all system properties
-        for (Environment.Variable variable : sysProperties.getVariablesVector()) {
+        for (final Environment.Variable variable : sysProperties.getVariablesVector()) {
             declareSysProperty(cmd, variable);
         }
 
-        for (Commandline.Argument arg : additionalArgs) {
+        for (final Commandline.Argument arg : additionalArgs) {
             addArgument(cmd, arg);
         }
     }
@@ -381,7 +381,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @throws BuildException if the property is not correctly defined.
      */
     protected void declareSysProperty(
-        ExecTask cmd, Environment.Variable property) throws BuildException {
+            final ExecTask cmd, final Environment.Variable property) throws BuildException {
         addValue(cmd, "-J-D" + property.getContent());
     }
 
@@ -393,8 +393,8 @@ public abstract class AbstractJarSignerTask extends Task {
         if (null != keystore) {
             // is the keystore a file
             addValue(cmd, "-keystore");
-            String loc;
-            File keystoreFile = getProject().resolveFile(keystore);
+            final String loc;
+            final File keystoreFile = getProject().resolveFile(keystore);
             if (keystoreFile.exists()) {
                 loc = keystoreFile.getPath();
             } else {
@@ -447,12 +447,12 @@ public abstract class AbstractJarSignerTask extends Task {
      * @return a vector of FileSet instances
      */
     protected Vector<FileSet> createUnifiedSources() {
-        Vector<FileSet> sources = new Vector<>(filesets);
+        final Vector<FileSet> sources = new Vector<>(filesets);
         if (jar != null) {
             //we create a fileset with the source file.
             //this lets us combine our logic for handling output directories,
             //mapping etc.
-            FileSet sourceJar = new FileSet();
+            final FileSet sourceJar = new FileSet();
             sourceJar.setProject(getProject());
             sourceJar.setFile(jar);
             sources.add(sourceJar);
@@ -468,8 +468,8 @@ public abstract class AbstractJarSignerTask extends Task {
      * @since Ant 1.7
      */
     protected Path createUnifiedSourcePath() {
-        Path p = path == null ? new Path(getProject()) : (Path) path.clone();
-        for (FileSet fileSet : createUnifiedSources()) {
+        final Path p = path == null ? new Path(getProject()) : (Path) path.clone();
+        for (final FileSet fileSet : createUnifiedSources()) {
             p.add(fileSet);
         }
         return p;
@@ -489,7 +489,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @param cmd command to manipulate
      * @param value value to add
      */
-    protected void addValue(final ExecTask cmd, String value) {
+    protected void addValue(final ExecTask cmd, final String value) {
         cmd.createArg().setValue(value);
     }
 
@@ -498,7 +498,7 @@ public abstract class AbstractJarSignerTask extends Task {
      * @param cmd command to manipulate
      * @param arg argument to add
      */
-    protected void addArgument(final ExecTask cmd, Commandline.Argument arg) {
+    protected void addArgument(final ExecTask cmd, final Commandline.Argument arg) {
         cmd.createArg().copyFrom(arg);
     }
 }

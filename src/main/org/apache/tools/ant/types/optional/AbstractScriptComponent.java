@@ -34,7 +34,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
     /**
      * script runner helper
      */
-    private ScriptRunnerHelper helper = new ScriptRunnerHelper();
+    private final ScriptRunnerHelper helper = new ScriptRunnerHelper();
 
     /**
      * script runner.
@@ -46,7 +46,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * @param project the owner of this component.
      */
     @Override
-    public void setProject(Project project) {
+    public void setProject(final Project project) {
         super.setProject(project);
         helper.setProjectComponent(this);
     }
@@ -65,7 +65,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      *
      * @param file the file containing the script source.
      */
-    public void setSrc(File file) {
+    public void setSrc(final File file) {
         helper.setSrc(file);
     }
 
@@ -74,7 +74,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      *
      * @param text a component of the script text to be added.
      */
-    public void addText(String text) {
+    public void addText(final String text) {
         helper.addText(text);
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      *
      * @param manager the scripting manager.
      */
-    public void setManager(String manager) {
+    public void setManager(final String manager) {
         helper.setManager(manager);
     }
 
@@ -92,7 +92,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      *
      * @param language the scripting language name for the script.
      */
-    public void setLanguage(String language) {
+    public void setLanguage(final String language) {
         helper.setLanguage(language);
     }
 
@@ -111,7 +111,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      *
      * @param classpath an Ant Path object containing the search path.
      */
-    public void setClasspath(Path classpath) {
+    public void setClasspath(final Path classpath) {
         helper.setClasspath(classpath);
     }
 
@@ -130,7 +130,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * @param r a Reference to a Path instance to be used as the classpath
      *          value.
      */
-    public void setClasspathRef(Reference r) {
+    public void setClasspathRef(final Reference r) {
         helper.setClasspathRef(r);
     }
 
@@ -138,7 +138,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * Run a script
      * @param execName name of the script
      */
-    protected void executeScript(String execName) {
+    protected void executeScript(final String execName) {
         getRunner().executeScript(execName);
     }
 
@@ -153,7 +153,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * @param setBeans the value to set.
      * @since Ant 1.8.0
      */
-    public void setSetBeans(boolean setBeans) {
+    public void setSetBeans(final boolean setBeans) {
         helper.setSetBeans(setBeans);
     }
 
@@ -163,7 +163,7 @@ public abstract class AbstractScriptComponent extends ProjectComponent {
      * @param encoding the encoding of the file containing the script source.
      * @since Ant 1.10.2
      */
-    public void setEncoding(String encoding) {
+    public void setEncoding(final String encoding) {
         helper.setEncoding(encoding);
     }
 }

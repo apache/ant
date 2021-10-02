@@ -95,7 +95,7 @@ public abstract class AbstractFileSet extends DataType
      * from the specified <code>AbstractFileSet</code>.
      * @param fileset the <code>AbstractFileSet</code> to use as a template.
      */
-    protected AbstractFileSet(AbstractFileSet fileset) {
+    protected AbstractFileSet(final AbstractFileSet fileset) {
         this.dir = fileset.dir;
         this.defaultPatterns = fileset.defaultPatterns;
         this.additionalPatterns = fileset.additionalPatterns;
@@ -117,7 +117,7 @@ public abstract class AbstractFileSet extends DataType
      * @throws BuildException on error
      */
     @Override
-    public void setRefid(Reference r) throws BuildException {
+    public void setRefid(final Reference r) throws BuildException {
         if (dir != null || defaultPatterns.hasPatterns(getProject())) {
             throw tooManyAttributes();
         }
@@ -135,7 +135,7 @@ public abstract class AbstractFileSet extends DataType
      * @param dir the directory's <code>File</code> instance.
      * @throws BuildException on error
      */
-    public synchronized void setDir(File dir) throws BuildException {
+    public synchronized void setDir(final File dir) throws BuildException {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -160,7 +160,7 @@ public abstract class AbstractFileSet extends DataType
      *          reference is resolved, if set.
      * @return <code>File</code>.
      */
-    public synchronized File getDir(Project p) {
+    public synchronized File getDir(final Project p) {
         if (isReference()) {
             return getRef(p).getDir(p);
         }
@@ -176,7 +176,7 @@ public abstract class AbstractFileSet extends DataType
         if (isReference()) {
             throw noChildrenAllowed();
         }
-        PatternSet patterns = new PatternSet();
+        final PatternSet patterns = new PatternSet();
         additionalPatterns.add(patterns);
         directoryScanner = null;
         return patterns;
@@ -235,13 +235,13 @@ public abstract class AbstractFileSet extends DataType
      * @param file the single <code>File</code> included in this
      *             <code>AbstractFileSet</code>.
      */
-    public synchronized void setFile(File file) {
+    public synchronized void setFile(final File file) {
         if (isReference()) {
             throw tooManyAttributes();
         }
         if (fileAttributeUsed) {
             if (getDir().equals(file.getParentFile())) {
-                String[] includes = defaultPatterns.getIncludePatterns(getProject());
+                final String[] includes = defaultPatterns.getIncludePatterns(getProject());
                 if (includes.length == 1 && includes[0].equals(file.getName())) {
                     // NOOP, setFile has been invoked twice with the same parameter
                     return;
@@ -264,7 +264,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @param includes the <code>String</code> containing the include patterns.
      */
-    public synchronized void setIncludes(String includes) {
+    public synchronized void setIncludes(final String includes) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -279,12 +279,12 @@ public abstract class AbstractFileSet extends DataType
      * @param includes array containing the include patterns.
      * @since Ant 1.7
      */
-    public synchronized void appendIncludes(String[] includes) {
+    public synchronized void appendIncludes(final String[] includes) {
         if (isReference()) {
             throw tooManyAttributes();
         }
         if (includes != null) {
-            for (String include : includes) {
+            for (final String include : includes) {
                 defaultPatterns.createInclude().setName(include);
             }
             directoryScanner = null;
@@ -299,7 +299,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @param excludes the <code>String</code> containing the exclude patterns.
      */
-    public synchronized void setExcludes(String excludes) {
+    public synchronized void setExcludes(final String excludes) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -314,12 +314,12 @@ public abstract class AbstractFileSet extends DataType
      * @param excludes array containing the exclude patterns.
      * @since Ant 1.7
      */
-    public synchronized void appendExcludes(String[] excludes) {
+    public synchronized void appendExcludes(final String[] excludes) {
         if (isReference()) {
             throw tooManyAttributes();
         }
         if (excludes != null) {
-            for (String exclude : excludes) {
+            for (final String exclude : excludes) {
                 defaultPatterns.createExclude().setName(exclude);
             }
             directoryScanner = null;
@@ -332,7 +332,7 @@ public abstract class AbstractFileSet extends DataType
      * @param incl <code>File</code> instance.
      * @throws BuildException on error
      */
-    public synchronized void setIncludesfile(File incl) throws BuildException {
+    public synchronized void setIncludesfile(final File incl) throws BuildException {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -346,7 +346,7 @@ public abstract class AbstractFileSet extends DataType
      * @param excl <code>File</code> instance.
      * @throws BuildException on error
      */
-    public synchronized void setExcludesfile(File excl) throws BuildException {
+    public synchronized void setExcludesfile(final File excl) throws BuildException {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -359,7 +359,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @param useDefaultExcludes <code>boolean</code>.
      */
-    public synchronized void setDefaultexcludes(boolean useDefaultExcludes) {
+    public synchronized void setDefaultexcludes(final boolean useDefaultExcludes) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -385,7 +385,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @param caseSensitive <code>boolean</code>.
      */
-    public synchronized void setCaseSensitive(boolean caseSensitive) {
+    public synchronized void setCaseSensitive(final boolean caseSensitive) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -414,7 +414,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @param followSymlinks whether or not symbolic links should be followed.
      */
-    public synchronized void setFollowSymlinks(boolean followSymlinks) {
+    public synchronized void setFollowSymlinks(final boolean followSymlinks) {
         if (isReference()) {
             throw tooManyAttributes();
         }
@@ -445,7 +445,7 @@ public abstract class AbstractFileSet extends DataType
      * @param max int
      * @since Ant 1.8.0
      */
-    public void setMaxLevelsOfSymlinks(int max) {
+    public void setMaxLevelsOfSymlinks(final int max) {
         maxLevelsOfSymlinks = max;
     }
 
@@ -466,7 +466,7 @@ public abstract class AbstractFileSet extends DataType
      * @param errorOnMissingDir true if missing directories cause errors,
      *                        false if not.
      */
-     public void setErrorOnMissingDir(boolean errorOnMissingDir) {
+     public void setErrorOnMissingDir(final boolean errorOnMissingDir) {
          this.errorOnMissingDir = errorOnMissingDir;
      }
 
@@ -494,7 +494,7 @@ public abstract class AbstractFileSet extends DataType
      * @param p the Project against which the DirectoryScanner should be configured.
      * @return a <code>DirectoryScanner</code> instance.
      */
-    public DirectoryScanner getDirectoryScanner(Project p) {
+    public DirectoryScanner getDirectoryScanner(final Project p) {
         if (isReference()) {
             return getRef(p).getDirectoryScanner(p);
         }
@@ -534,7 +534,7 @@ public abstract class AbstractFileSet extends DataType
      * AbstractFileSet's Project.
      * @param ds a <code>FileScanner</code> instance.
      */
-    public void setupDirectoryScanner(FileScanner ds) {
+    public void setupDirectoryScanner(final FileScanner ds) {
         setupDirectoryScanner(ds, getProject());
     }
 
@@ -543,7 +543,7 @@ public abstract class AbstractFileSet extends DataType
      * @param ds a <code>FileScanner</code> instance.
      * @param p an Ant <code>Project</code> instance.
      */
-    public synchronized void setupDirectoryScanner(FileScanner ds, Project p) {
+    public synchronized void setupDirectoryScanner(final FileScanner ds, final Project p) {
         if (isReference()) {
             getRef(p).setupDirectoryScanner(ds, p);
             return;
@@ -554,14 +554,14 @@ public abstract class AbstractFileSet extends DataType
         }
         ds.setBasedir(dir);
 
-        PatternSet ps = mergePatterns(p);
+        final PatternSet ps = mergePatterns(p);
         p.log(getDataTypeName() + ": Setup scanner in dir " + dir
             + " with " + ps, Project.MSG_DEBUG);
 
         ds.setIncludes(ps.getIncludePatterns(p));
         ds.setExcludes(ps.getExcludePatterns(p));
         if (ds instanceof SelectorScanner) {
-            SelectorScanner ss = (SelectorScanner) ds;
+            final SelectorScanner ss = (SelectorScanner) ds;
             ss.setSelectors(getSelectors(p));
         }
         if (useDefaultExcludes) {
@@ -581,7 +581,7 @@ public abstract class AbstractFileSet extends DataType
      * @param p the current project
      * @return the dereferenced object.
      */
-    protected AbstractFileSet getRef(Project p) {
+    protected AbstractFileSet getRef(final Project p) {
         return getCheckedRef(AbstractFileSet.class, getDataTypeName(), p);
     }
 
@@ -635,7 +635,7 @@ public abstract class AbstractFileSet extends DataType
      * @return a <code>FileSelector[]</code> of the selectors in this container.
      */
     @Override
-    public synchronized FileSelector[] getSelectors(Project p) {
+    public synchronized FileSelector[] getSelectors(final Project p) {
         if (isReference()) {
             return getRef(getProject()).getSelectors(p);
         }
@@ -663,7 +663,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the new <code>FileSelector</code> to add.
      */
     @Override
-    public synchronized void appendSelector(FileSelector selector) {
+    public synchronized void appendSelector(final FileSelector selector) {
         if (isReference()) {
             throw noChildrenAllowed();
         }
@@ -679,7 +679,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>SelectSelector</code> to add.
      */
     @Override
-    public void addSelector(SelectSelector selector) {
+    public void addSelector(final SelectSelector selector) {
         appendSelector(selector);
     }
 
@@ -688,7 +688,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>AndSelector</code> to add.
      */
     @Override
-    public void addAnd(AndSelector selector) {
+    public void addAnd(final AndSelector selector) {
         appendSelector(selector);
     }
 
@@ -697,7 +697,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>OrSelector</code> to add.
      */
     @Override
-    public void addOr(OrSelector selector) {
+    public void addOr(final OrSelector selector) {
         appendSelector(selector);
     }
 
@@ -706,7 +706,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>NotSelector</code> to add.
      */
     @Override
-    public void addNot(NotSelector selector) {
+    public void addNot(final NotSelector selector) {
         appendSelector(selector);
     }
 
@@ -715,7 +715,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>NoneSelector</code> to add.
      */
     @Override
-    public void addNone(NoneSelector selector) {
+    public void addNone(final NoneSelector selector) {
         appendSelector(selector);
     }
 
@@ -724,7 +724,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>MajoritySelector</code> to add.
      */
     @Override
-    public void addMajority(MajoritySelector selector) {
+    public void addMajority(final MajoritySelector selector) {
         appendSelector(selector);
     }
 
@@ -733,7 +733,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>DateSelector</code> to add.
      */
     @Override
-    public void addDate(DateSelector selector) {
+    public void addDate(final DateSelector selector) {
         appendSelector(selector);
     }
 
@@ -742,7 +742,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>SizeSelector</code> to add.
      */
     @Override
-    public void addSize(SizeSelector selector) {
+    public void addSize(final SizeSelector selector) {
         appendSelector(selector);
     }
 
@@ -751,7 +751,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>DifferentSelector</code> to add.
      */
     @Override
-    public void addDifferent(DifferentSelector selector) {
+    public void addDifferent(final DifferentSelector selector) {
         appendSelector(selector);
     }
 
@@ -760,7 +760,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>FilenameSelector</code> to add.
      */
     @Override
-    public void addFilename(FilenameSelector selector) {
+    public void addFilename(final FilenameSelector selector) {
         appendSelector(selector);
     }
 
@@ -769,7 +769,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>TypeSelector</code> to add.
      */
     @Override
-    public void addType(TypeSelector selector) {
+    public void addType(final TypeSelector selector) {
         appendSelector(selector);
     }
 
@@ -778,7 +778,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>ExtendSelector</code> to add.
      */
     @Override
-    public void addCustom(ExtendSelector selector) {
+    public void addCustom(final ExtendSelector selector) {
         appendSelector(selector);
     }
 
@@ -787,7 +787,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>ContainsSelector</code> to add.
      */
     @Override
-    public void addContains(ContainsSelector selector) {
+    public void addContains(final ContainsSelector selector) {
         appendSelector(selector);
     }
 
@@ -796,7 +796,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>PresentSelector</code> to add.
      */
     @Override
-    public void addPresent(PresentSelector selector) {
+    public void addPresent(final PresentSelector selector) {
         appendSelector(selector);
     }
 
@@ -805,7 +805,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>DepthSelector</code> to add.
      */
     @Override
-    public void addDepth(DepthSelector selector) {
+    public void addDepth(final DepthSelector selector) {
         appendSelector(selector);
     }
 
@@ -814,7 +814,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>DependSelector</code> to add.
      */
     @Override
-    public void addDepend(DependSelector selector) {
+    public void addDepend(final DependSelector selector) {
         appendSelector(selector);
     }
 
@@ -823,7 +823,7 @@ public abstract class AbstractFileSet extends DataType
      * @param selector the <code>ContainsRegexpSelector</code> to add.
      */
     @Override
-    public void addContainsRegexp(ContainsRegexpSelector selector) {
+    public void addContainsRegexp(final ContainsRegexpSelector selector) {
         appendSelector(selector);
     }
 
@@ -833,15 +833,15 @@ public abstract class AbstractFileSet extends DataType
      * @since Ant 1.6
      */
     @Override
-    public void addModified(ModifiedSelector selector) {
+    public void addModified(final ModifiedSelector selector) {
         appendSelector(selector);
     }
 
-    public void addReadable(ReadableSelector r) {
+    public void addReadable(final ReadableSelector r) {
         appendSelector(r);
     }
 
-    public void addWritable(WritableSelector w) {
+    public void addWritable(final WritableSelector w) {
         appendSelector(w);
     }
 
@@ -849,7 +849,7 @@ public abstract class AbstractFileSet extends DataType
      * @param e ExecutableSelector
      * @since 1.10.0
      */
-    public void addExecutable(ExecutableSelector e) {
+    public void addExecutable(final ExecutableSelector e) {
         appendSelector(e);
     }
 
@@ -857,7 +857,7 @@ public abstract class AbstractFileSet extends DataType
      * @param e SymlinkSelector
      * @since 1.10.0
      */
-    public void addSymlink(SymlinkSelector e) {
+    public void addSymlink(final SymlinkSelector e) {
         appendSelector(e);
     }
 
@@ -865,7 +865,7 @@ public abstract class AbstractFileSet extends DataType
      * @param o OwnedBySelector
      * @since 1.10.0
      */
-    public void addOwnedBy(OwnedBySelector o) {
+    public void addOwnedBy(final OwnedBySelector o) {
         appendSelector(o);
     }
 
@@ -873,7 +873,7 @@ public abstract class AbstractFileSet extends DataType
      * @param o PosixGroupSelector
      * @since 1.10.4
      */
-    public void addPosixGroup(PosixGroupSelector o) {
+    public void addPosixGroup(final PosixGroupSelector o) {
         appendSelector(o);
     }
 
@@ -881,7 +881,7 @@ public abstract class AbstractFileSet extends DataType
      * @param o PosixPermissionsSelector
      * @since 1.10.4
      */
-    public void addPosixPermissions(PosixPermissionsSelector o) {
+    public void addPosixPermissions(final PosixPermissionsSelector o) {
         appendSelector(o);
     }
 
@@ -891,7 +891,7 @@ public abstract class AbstractFileSet extends DataType
      * @since Ant 1.6
      */
     @Override
-    public void add(FileSelector selector) {
+    public void add(final FileSelector selector) {
         appendSelector(selector);
     }
 
@@ -922,13 +922,13 @@ public abstract class AbstractFileSet extends DataType
             return (getRef(getProject())).clone();
         }
         try {
-            AbstractFileSet fs = (AbstractFileSet) super.clone();
+            final AbstractFileSet fs = (AbstractFileSet) super.clone();
             fs.defaultPatterns = (PatternSet) defaultPatterns.clone();
             fs.additionalPatterns = additionalPatterns.stream().map(PatternSet::clone)
                     .map(PatternSet.class::cast).collect(Collectors.toList());
             fs.selectors = new ArrayList<>(selectors);
             return fs;
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             throw new BuildException(e);
         }
     }
@@ -941,7 +941,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @since Ant 1.7
      */
-    public String[] mergeIncludes(Project p) {
+    public String[] mergeIncludes(final Project p) {
         return mergePatterns(p).getIncludePatterns(p);
     }
 
@@ -953,7 +953,7 @@ public abstract class AbstractFileSet extends DataType
      *
      * @since Ant 1.7
      */
-    public String[] mergeExcludes(Project p) {
+    public String[] mergeExcludes(final Project p) {
         return mergePatterns(p).getExcludePatterns(p);
     }
 
@@ -965,18 +965,18 @@ public abstract class AbstractFileSet extends DataType
      *
      * @since Ant 1.7
      */
-    public synchronized PatternSet mergePatterns(Project p) {
+    public synchronized PatternSet mergePatterns(final Project p) {
         if (isReference()) {
             return getRef(p).mergePatterns(p);
         }
         dieOnCircularReference();
-        PatternSet ps = (PatternSet) defaultPatterns.clone();
+        final PatternSet ps = (PatternSet) defaultPatterns.clone();
         additionalPatterns.forEach(pat -> ps.append(pat, p));
         return ps;
     }
 
     @Override
-    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
+    protected synchronized void dieOnCircularReference(final Stack<Object> stk, final Project p)
         throws BuildException {
         if (isChecked()) {
             return;

@@ -57,8 +57,8 @@ public abstract class AbstractAccessTask extends ExecuteOn {
      * Set the file which should have its access attributes modified.
      * @param src the file to modify
      */
-    public void setFile(File src) {
-        FileSet fs = new FileSet();
+    public void setFile(final File src) {
+        final FileSet fs = new FileSet();
         fs.setFile(src);
         addFileset(fs);
     }
@@ -70,7 +70,7 @@ public abstract class AbstractAccessTask extends ExecuteOn {
      * @param cmdl A user supplied command line that we won't accept.
      */
     @Override
-    public void setCommand(Commandline cmdl) {
+    public void setCommand(final Commandline cmdl) {
         throw new BuildException(getTaskType()
                                  + " doesn't support the command attribute",
                                  getLocation());
@@ -83,7 +83,7 @@ public abstract class AbstractAccessTask extends ExecuteOn {
      * @param skip A user supplied boolean we won't accept.
      */
     @Override
-    public void setSkipEmptyFilesets(boolean skip) {
+    public void setSkipEmptyFilesets(final boolean skip) {
         throw new BuildException(getTaskType() + " doesn't support the "
                                  + "skipemptyfileset attribute",
                                  getLocation());
@@ -96,7 +96,7 @@ public abstract class AbstractAccessTask extends ExecuteOn {
      * @param b A user supplied boolean we won't accept.
      */
     @Override
-    public void setAddsourcefile(boolean b) {
+    public void setAddsourcefile(final boolean b) {
         throw new BuildException(getTaskType()
             + " doesn't support the addsourcefile attribute", getLocation());
     }

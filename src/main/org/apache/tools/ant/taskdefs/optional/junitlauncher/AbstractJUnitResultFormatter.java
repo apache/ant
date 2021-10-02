@@ -57,7 +57,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
         }
         try {
             this.sysOutStore.store(data);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             handleException(e);
         }
     }
@@ -69,7 +69,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
         }
         try {
             this.sysErrStore.store(data);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             handleException(e);
         }
     }
@@ -234,7 +234,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
             try {
                 this.inMemoryStore.put(data);
                 return;
-            } catch (BufferOverflowException boe) {
+            } catch (final BufferOverflowException boe) {
                 // the buffer capacity can't hold this incoming data, so this
                 // incoming data hasn't been transferred to the buffer. let's
                 // now fall back to a file store
