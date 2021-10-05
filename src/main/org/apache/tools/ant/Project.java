@@ -1846,7 +1846,7 @@ public class Project implements ResourceFactory {
             final String st = state.get(curTarget);
             if (st == null) {
                 tsort(curTarget, targetTable, state, visiting, complete);
-            } else if (st == VISITING) {
+            } else if (st.equals(VISITING)) {
                 throw new BuildException("Unexpected node in visiting state: "
                     + curTarget);
             }
@@ -1925,13 +1925,13 @@ public class Project implements ResourceFactory {
             if (m == null) {
                 // Not been visited
                 tsort(cur, targetTable, state, visiting, ret);
-            } else if (m == VISITING) {
+            } else if (m.equals(VISITING)) {
                 // Currently visiting this node, so have a cycle
                 throw makeCircularException(cur, visiting);
             }
         }
         final String p = visiting.pop();
-        if (root != p) {
+        if (!root.equals(p)) {
             throw new BuildException("Unexpected internal error: expected to "
                 + "pop " + root + " but got " + p);
         }
