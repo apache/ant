@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -537,9 +538,7 @@ public class TarOutputStream extends FilterOutputStream {
      * An EOF record consists of a record of all zeros.
      */
     private void writeEOFRecord() throws IOException {
-        for (int i = 0; i < recordBuf.length; ++i) {
-            recordBuf[i] = 0;
-        }
+        Arrays.fill(recordBuf, (byte) 0);
 
         buffer.writeRecord(recordBuf);
     }

@@ -981,7 +981,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
         }
 
         // Add/overlay system properties on the properties from the Ant project
-        System.getProperties().forEach(props::put);
+        props.putAll(System.getProperties());
 
         int returnCode = SUCCESS;
         if (multipleTests) {
