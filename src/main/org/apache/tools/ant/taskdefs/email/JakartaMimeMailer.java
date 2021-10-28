@@ -58,7 +58,7 @@ import org.apache.tools.ant.Project;
 /**
  * Uses the JakartaMail classes to send Mime format email.
  *
- * @since Ant 1.10.12
+ * @since Ant 1.10.13
  */
 public class JakartaMimeMailer extends Mailer {
     private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
