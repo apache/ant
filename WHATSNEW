@@ -1,6 +1,13 @@
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================
 
+Other changes:
+--------------
+
+* added an implementation of the MIME Mail sender based on the
+  repackaged Jakarta Mail package rather than javax Mail.
+  Github Pull Request #161
+
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
 

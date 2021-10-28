@@ -29,7 +29,7 @@
 <p>A task to send SMTP email.</p>
 <p>This task can send mail using either plain text, UU encoding, or MIME format mail, depending on
 what is available.</p>
-<p>SMTP auth and SSL/TLS require JavaMail and are only available in MIME format.</p>
+<p>SMTP auth and SSL/TLS require JavaMail or JakartaMail and are only available in MIME format.</p>
 <p>Attachments may be sent using nested <code>&lt;attachments&gt;</code> elements, which
 are <a href="../using.html#path">path-like structures</a>.  This means any filesystem
 based <a href="../Types/resources.html">resource</a> or resource collection can be used to point to
@@ -39,6 +39,8 @@ container.</p>
 <p><strong>Note</strong>: This task may depend on external libraries that are not included in the
 Ant distribution.  See <a href="../install.html#librarydependencies">Library Dependencies</a> for
 more information.</p>
+<p>Starting with Ant 1.10.13 Ant supports either the modern <code>jakarta.mail</code> as well as the
+  older <code>javax.mail</code> implementations and will prefer <code>jakarta.mail</code> if both are available.</p>
 
 <h3>Parameters</h3>
 <table class="attr">
