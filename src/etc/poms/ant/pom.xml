@@ -160,7 +160,7 @@
             <exclude>org/apache/tools/ant/launch/</exclude>
             <exclude>org/apache/tools/ant/listener/CommonsLoggingListener*</exclude>
             <exclude>org/apache/tools/ant/listener/Log4jListener*</exclude>
-            <exclude>org/apache/tools/ant/taskdefs/email/MimeMailer*</exclude>
+            <exclude>org/apache/tools/ant/taskdefs/email/*MimeMailer*</exclude>
             <exclude>${modules.exclude}</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/NetRexxC*</exclude>
             <exclude>org/apache/tools/ant/taskdefs/optional/Xalan2TraceSupport*</exclude>
