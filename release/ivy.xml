@@ -109,6 +109,12 @@
     <artifact name="ant-javamail" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-javamail" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-javamail" type="source.asc" ext="jar.asc" e:classifier="sources"/>
+    <artifact name="ant-jakartamail" type="pom" ext="pom"/>
+    <artifact name="ant-jakartamail" type="pom.asc" ext="pom.asc"/>
+    <artifact name="ant-jakartamail" type="jar" ext="jar"/>
+    <artifact name="ant-jakartamail" type="jar.asc" ext="jar.asc"/>
+    <artifact name="ant-jakartamail" type="source" ext="jar" e:classifier="sources"/>
+    <artifact name="ant-jakartamail" type="source.asc" ext="jar.asc" e:classifier="sources"/>
     <artifact name="ant-jdepend" type="pom" ext="pom"/>
     <artifact name="ant-jdepend" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-jdepend" type="jar" ext="jar"/>
