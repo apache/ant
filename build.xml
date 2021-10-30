@@ -521,6 +521,25 @@
                classname="com.oracle.truffle.js.scriptengine.GraalJSScriptEngine"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
 
+    <condition property="javaxmail.complete">
+      <and>
+        <available classname="javax.activation.DataHandler"/>
+        <available classname="javax.mail.Transport"/>
+      </and>
+    </condition>
+    <condition property="jakartamail.complete">
+      <and>
+        <available classname="jakarta.activation.DataHandler"/>
+        <available classname="jakarta.mail.Transport"/>
+      </and>
+    </condition>
+    <condition property="javamail.complete">
+      <or>
+        <isset property="javaxmail.complete"/>
+        <isset property="jakartamail.complete"/>
+      </or>
+    </condition>
+
     <condition property="tests.and.ant.share.classloader">
       <or>
         <equals arg1="${junit.fork}" arg2="true"/>
