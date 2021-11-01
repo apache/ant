@@ -33,8 +33,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Logger;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
-import org.apache.tools.ant.taskdefs.XSLTLogger;
 import org.apache.tools.ant.util.JAXPUtils;
 import org.junit.After;
 import org.junit.Test;
@@ -42,7 +42,7 @@ import org.junit.Test;
 /**
  * TraX XSLTLiaison testcase
  */
-public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements XSLTLogger {
+public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements Logger {
 
     @After
     public void tearDown() {

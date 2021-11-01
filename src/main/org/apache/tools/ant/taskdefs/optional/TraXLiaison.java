@@ -50,6 +50,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Logger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.XSLTLiaison4;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
@@ -100,7 +101,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
     /** stylesheet to use for transformation */
     private Resource stylesheet;
 
-    private XSLTLogger logger;
+    private Logger logger;
 
     /** possible resolver for publicIds */
     private EntityResolver entityResolver;
@@ -514,8 +515,18 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
      * Set a logger.
      * @param l a logger.
      */
-    public void setLogger(final XSLTLogger l) {
+    public void setLogger(final Logger l) {
         logger = l;
+    }
+
+    /**
+     * Set a logger.
+     * @param l a logger.
+     * @deprecated XSLTLogger replaced by Logger
+     */
+    @Deprecated
+    public void setLogger(final XSLTLogger l) {
+        logger = (Logger) l;
     }
 
     /**

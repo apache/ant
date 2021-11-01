@@ -36,7 +36,7 @@ import org.apache.tools.ant.util.StringUtils;
  * any messages that get logged.
  *
  */
-public class DefaultLogger implements BuildLogger {
+public class DefaultLogger implements BuildLogger, Logger {
     /**
      * Size of left-hand column for right-justified task name.
      * @see #messageLogged(BuildEvent)
@@ -326,7 +326,7 @@ public class DefaultLogger implements BuildLogger {
      *
      * @param message Message being logged. Should not be <code>null</code>.
      */
-    protected void log(String message) {
+    public void log(String message) {
     }
 
     /**
