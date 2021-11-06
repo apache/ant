@@ -47,12 +47,12 @@ import org.apache.tools.mail.MailMessage;
  *  <ul>
  *    <li> MailLogger.mailhost [default: localhost] - Mail server to use</li>
  *    <li> MailLogger.port [default: 25] - Default port for SMTP </li>
- *    <li> Maillogger.user [no default] - user name for SMTP auth
- *    (requires JavaMail)</li>
- *    <li> Maillogger.password [no default] - password for SMTP auth
- *    (requires JavaMail)</li>
- *    <li> Maillogger.ssl [default: false] - on or true if ssl is
- *    needed (requires JavaMail)</li>
+ *    <li> MailLogger.user [no default] - user name for SMTP auth
+ *    (requires Java or Jakarta Mail)</li>
+ *    <li> MailLogger.password [no default] - password for SMTP auth
+ *    (requires Java or Jakarta Mail)</li>
+ *    <li> MailLogger.ssl [default: false] - on or true if ssl is
+ *    needed (requires Java or Jakarta Mail)</li>
  *    <li> MailLogger.from [required] - Mail "from" address</li>
  *    <li> MailLogger.from [no default] - Mail "replyto" address(es),
  *    comma-separated</li>
@@ -82,8 +82,8 @@ import org.apache.tools.mail.MailMessage;
  *    mail body for a successful build, default is to send the logfile</li>
  *    <li> MailLogger.mimeType [default: text/plain] - MIME-Type of email</li>
  *    <li> MailLogger.charset [no default] - character set of email</li>
- *    <li> Maillogger.starttls.enable [default: false] - on or true if
- *    STARTTLS should be supported (requires JavaMail)</li>
+ *    <li> MailLogger.starttls.enable [default: false] - on or true if
+ *    STARTTLS should be supported (requires Java or Jakarta Mail)</li>
  *    <li> MailLogger.properties.file [no default] - Filename of
  *    properties file that will override other values.</li>
  *  </ul>
@@ -386,15 +386,13 @@ public class MailLogger extends DefaultLogger {
     private void sendMimeMail(Project project, Values values, String message) {
         Mailer mailer = null;
         try {
-            mailer = ClasspathUtils.newInstance(
-                    "org.apache.tools.ant.taskdefs.email.MimeMailer",
+            mailer = ClasspathUtils.newInstance(getMailerImplementation(),
                     MailLogger.class.getClassLoader(), Mailer.class);
         } catch (BuildException e) {
-            Throwable t = e.getCause() == null ? e : e.getCause();
-            log("Failed to initialise MIME mail: " + t.getMessage());
+            logBuildException("Failed to initialise MIME mail: ", e);
             return;
         }
-        // convert the replyTo string into a vector of emailaddresses
+        // convert the replyTo string into a vector of EmailAddresses
         Vector<EmailAddress> replyToList = splitEmailAddresses(values.replytoList());
         mailer.setHost(values.mailhost());
         mailer.setPort(values.port());
@@ -427,5 +425,38 @@ public class MailLogger extends DefaultLogger {
     private Vector<EmailAddress> splitEmailAddresses(String listString) {
         return Stream.of(listString.split(",")).map(EmailAddress::new)
             .collect(Collectors.toCollection(Vector::new));
+    }
+
+    private String getMailerImplementation() {
+        //check to make sure that activation.jar
+        //and mail.jar are available - see bug 31969
+        try {
+            Class.forName("jakarta.activation.DataHandler");
+            Class.forName("jakarta.mail.internet.MimeMessage");
+
+            return "org.apache.tools.ant.taskdefs.email.JakartaMimeMailer";
+        } catch (ClassNotFoundException cnfe) {
+            logBuildException("Could not find Jakarta MIME mail: ",
+                    new BuildException(cnfe));
+        }
+
+        try {
+            Class.forName("javax.activation.DataHandler");
+            Class.forName("javax.mail.internet.MimeMessage");
+
+            return "org.apache.tools.ant.taskdefs.email.MimeMailer";
+        } catch (ClassNotFoundException cnfe) {
+            logBuildException("Could not find MIME mail: ",
+                    new BuildException(cnfe));
+        }
+
+        return "org.apache.tools.ant.taskdefs.email.Mailer";
+    }
+
+    private void logBuildException(String reason, BuildException e) {
+        Throwable t = e.getCause() == null ? e : e.getCause();
+        if (Project.MSG_WARN <= msgOutputLevel) {
+            log(reason + t.getMessage());
+        }
     }
 }
