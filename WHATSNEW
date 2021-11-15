@@ -8,6 +8,11 @@ Other changes:
   repackaged Jakarta Mail package rather than javax Mail.
   Github Pull Request #161
 
+* The "listener" element in the junitlauncher task now supports
+  an "extension" attribute to control the filename extension
+  of the generated output file from the listener.
+  Github Pull Request #168
+
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
 

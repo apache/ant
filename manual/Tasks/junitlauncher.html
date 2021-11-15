@@ -354,7 +354,7 @@
                 If no value is specified for this attribute and the listener implements
                 the <code>org.apache.tools.ant.taskdefs.optional.junitlauncher.TestResultFormatter</code>
                 then the file name will be defaulted to and will be of the
-                form <code>TEST-<i>testname</i>.<i>formatter-specific-extension</i></code>
+                form <code>TEST-<i>testname</i>.<i>extension</i></code>
                 (ex: <samp>TEST-org.myapp.SomeTest.xml</samp> for the <q>legacy-xml</q> type
                 formatter)
             </p>
@@ -365,6 +365,13 @@
             </p>
         </td>
         <td>No</td>
+    </tr>
+    <tr>
+        <td>extension</td>
+        <td>Extension to append to the output filename.
+            <p><em>Since Ant 1.10.13</em></p>
+        </td>
+        <td>No; defaults to <q>xml</q> for the <q>legacy-xml</q> formatter and to <q>txt</q> for the rest</td>
     </tr>
     <tr>
         <td>outputDir</td>
@@ -406,10 +413,10 @@
     <tr>
         <td>useLegacyReportingName</td>
         <td>Set to true, if the test identifiers reported by this listener should use legacy (JUnit4
-            style) names. Else set to false. Defaults to true.
+            style) names. Else set to false.
             <p><em>Since Ant 1.10.10</em></p>
         </td>
-        <td>No</td>
+        <td>No; defaults to <q>true</q></td>
     </tr>
 </table>
 
