@@ -49,6 +49,7 @@ public class ListenerDefinition {
     private String unlessProperty;
     private String className;
     private String resultFile;
+    private String extension = "txt";
     private boolean sendSysOut;
     private boolean sendSysErr;
     private String outputDir;
@@ -94,6 +95,7 @@ public class ListenerDefinition {
             }
             case LEGACY_XML: {
                 this.setClassName("org.apache.tools.ant.taskdefs.optional.junitlauncher.LegacyXmlResultFormatter");
+                this.setExtension("xml");
                 break;
             }
         }
@@ -105,6 +107,20 @@ public class ListenerDefinition {
 
     public String getResultFile() {
         return this.resultFile;
+    }
+
+    /**
+     * Sets the output file extension for this listener.
+     *
+     * @param extension file extension to use
+     * @since Ant 1.10.13
+     */
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
+    public String getExtension() {
+        return extension;
     }
 
     public void setSendSysOut(final boolean sendSysOut) {

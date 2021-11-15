@@ -282,13 +282,7 @@ public class LauncherSupport {
             final StringBuilder sb = new StringBuilder("TEST-");
             sb.append(testRequest.getName() == null ? "unknown" : testRequest.getName());
             sb.append(".");
-            final String suffix;
-            if ("org.apache.tools.ant.taskdefs.optional.junitlauncher.LegacyXmlResultFormatter".equals(listener.getClassName())) {
-                suffix = "xml";
-            } else {
-                suffix = "txt";
-            }
-            sb.append(suffix);
+            sb.append(listener.getExtension());
             filename = sb.toString();
         }
         if (listener.getOutputDir() != null) {
