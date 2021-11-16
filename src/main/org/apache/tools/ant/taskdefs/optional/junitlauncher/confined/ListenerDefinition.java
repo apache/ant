@@ -29,6 +29,7 @@ import javax.xml.stream.XMLStreamWriter;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_CLASS_NAME;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_LISTENER_EXTENSION;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_LISTENER_RESULT_FILE;
+import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_LISTENER_USE_FILE;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_LISTENER_USE_LEGACY_REPORTING_NAME;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_OUTPUT_DIRECTORY;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_SEND_SYS_ERR;
@@ -51,6 +52,7 @@ public class ListenerDefinition {
     private String className;
     private String resultFile;
     private String extension = "txt";
+    private boolean useFile = true;
     private boolean sendSysOut;
     private boolean sendSysErr;
     private String outputDir;
@@ -122,6 +124,19 @@ public class ListenerDefinition {
 
     public String getExtension() {
         return extension;
+    }
+
+    /**
+     * Sets whether the formatter should log to a file.
+     * @param useFile if true use a file, if false send to standard out.
+     * @since Ant 1.10.13
+     */
+    public void setUseFile(boolean useFile) {
+        this.useFile = useFile;
+    }
+
+    public boolean shouldUseFile() {
+        return useFile;
     }
 
     public void setSendSysOut(final boolean sendSysOut) {
@@ -206,6 +221,7 @@ public class ListenerDefinition {
         if (this.extension != null) {
             writer.writeAttribute(LD_XML_ATTR_LISTENER_EXTENSION, this.extension);
         }
+        writer.writeAttribute(LD_XML_ATTR_LISTENER_USE_FILE, Boolean.toString(this.useFile));
         writer.writeEndElement();
     }
 
@@ -233,6 +249,10 @@ public class ListenerDefinition {
         final String extension = reader.getAttributeValue(null, LD_XML_ATTR_LISTENER_EXTENSION);
         if (extension != null) {
             listenerDef.setExtension(extension);
+        }
+        final String useFile = reader.getAttributeValue(null, LD_XML_ATTR_LISTENER_USE_FILE);
+        if (useFile != null) {
+            listenerDef.setUseFile(Boolean.parseBoolean(useFile));
         }
         final String useLegacyReportingName = reader.getAttributeValue(null,
                 LD_XML_ATTR_LISTENER_USE_LEGACY_REPORTING_NAME);

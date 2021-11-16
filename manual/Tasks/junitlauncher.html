@@ -240,7 +240,7 @@
             &lt;/classpath&gt;
             &lt;testclasses outputdir="${output.dir}"&gt;
                 &lt;fileset dir="${build.classes.dir}"/&gt;
-                &lt;listener type="legacy-brief" sendSysOut="true"/&gt;
+                &lt;listener type="legacy-brief" sendSysOut="true" useFile="false"/&gt;
                 &lt;listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/&gt;
 
             &lt;/testclasses&gt;
@@ -379,6 +379,15 @@
             <p><em>Since Ant 1.10.6</em></p>
         </td>
         <td>No</td>
+    </tr>
+    <tr>
+        <td>useFile</td>
+        <td>If set to <q>true</q> then the listener's output will be saved to a file. Otherwise, the output will be sent
+            to <code>stdout</code> and <code>outputDir</code>, <code>resultFile</code>, <code>extension</code>
+            attributes will be ignored.
+            <p><em>Since Ant 1.10.13</em></p>
+        </td>
+        <td>No; defaults to <q>true</q></td>
     </tr>
     <tr>
         <td>sendSysOut</td>
