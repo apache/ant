@@ -2488,6 +2488,10 @@ public class FTP extends Task implements FTPTaskConfig {
         return result;
     }
 
+    protected FTPClient getFTPClient(){
+        return new FTPClient();
+    }
+
     /**
      * Runs the task.
      *
@@ -2503,7 +2507,7 @@ public class FTP extends Task implements FTPTaskConfig {
         try {
             log("Opening FTP connection to " + server, Project.MSG_VERBOSE);
 
-            ftp = new FTPClient();
+            ftp = getFTPClient();
             if (this.isConfigurationSet) {
                 ftp = FTPConfigurator.configure(ftp, this);
             }
