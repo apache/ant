@@ -48,6 +48,7 @@ public final class Constants {
     public static final String LD_XML_ATTR_SEND_SYS_ERR = "sendSysErr";
     public static final String LD_XML_ATTR_SEND_SYS_OUT = "sendSysOut";
     public static final String LD_XML_ATTR_LISTENER_RESULT_FILE = "resultFile";
+    public static final String LD_XML_ATTR_LISTENER_EXTENSION = "extension";
     public static final String LD_XML_ATTR_LISTENER_USE_LEGACY_REPORTING_NAME = "useLegacyReportingName";
 
 
