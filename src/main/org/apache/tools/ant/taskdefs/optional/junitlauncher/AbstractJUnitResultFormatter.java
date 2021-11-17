@@ -43,7 +43,7 @@ import java.util.Optional;
 /**
  * Contains some common behaviour that's used by our internal {@link TestResultFormatter}s
  */
-abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
+public abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
 
     protected TestExecutionContext context;
 
@@ -83,7 +83,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
      * @return Returns true if there's any stdout data, that was generated during the
      * tests, is available for use. Else returns false.
      */
-    boolean hasSysOut() {
+    protected boolean hasSysOut() {
         return this.sysOutStore != null && this.sysOutStore.hasData();
     }
 
@@ -91,7 +91,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
      * @return Returns true if there's any stderr data, that was generated during the
      * tests, is available for use. Else returns false.
      */
-    boolean hasSysErr() {
+    protected boolean hasSysErr() {
         return this.sysErrStore != null && this.sysErrStore.hasData();
     }
 
@@ -102,7 +102,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
      * be called
      * @throws IOException If there's any I/O problem while creating the {@link Reader}
      */
-    Reader getSysOutReader() throws IOException {
+    protected Reader getSysOutReader() throws IOException {
         return this.sysOutStore.getReader();
     }
 
@@ -113,7 +113,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
      * be called
      * @throws IOException If there's any I/O problem while creating the {@link Reader}
      */
-    Reader getSysErrReader() throws IOException {
+    protected Reader getSysErrReader() throws IOException {
         return this.sysErrStore.getReader();
     }
 
@@ -124,7 +124,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
      * @param writer The {@link Writer} to use. Cannot be null.
      * @throws IOException If any I/O problem occurs during writing the data
      */
-    void writeSysOut(final Writer writer) throws IOException {
+    protected void writeSysOut(final Writer writer) throws IOException {
         Objects.requireNonNull(writer, "Writer cannot be null");
         this.writeFrom(this.sysOutStore, writer);
     }
@@ -136,7 +136,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
      * @param writer The {@link Writer} to use. Cannot be null.
      * @throws IOException If any I/O problem occurs during writing the data
      */
-    void writeSysErr(final Writer writer) throws IOException {
+    protected void writeSysErr(final Writer writer) throws IOException {
         Objects.requireNonNull(writer, "Writer cannot be null");
         this.writeFrom(this.sysErrStore, writer);
     }
