@@ -64,6 +64,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Permissions;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.SplitClassLoader;
 import org.apache.tools.ant.util.StringUtils;
@@ -1163,6 +1164,15 @@ public class JUnitTask extends Task {
             cmd = (CommandlineJava) getCommandline().clone();
         } catch (final CloneNotSupportedException e) {
             throw new BuildException("This shouldn't happen", e, getLocation());
+        }
+        // if Java 18, then we set -Djava.security.manager=allow so as to allow
+        // Ant code to internally set the security manager
+        if (JavaEnvUtils.isAtLeastJavaVersion("18")) {
+            log("Setting -Djava.security.manager=allow on forked JVM of JUnit task", Project.MSG_VERBOSE);
+            final Environment.Variable securityManagerSysProp = new Environment.Variable();
+            securityManagerSysProp.setKey("java.security.manager");
+            securityManagerSysProp.setValue("allow");
+            cmd.addSysproperty(securityManagerSysProp);
         }
         if (casesFile == null) {
             cmd.createArgument().setValue(test.getName());
