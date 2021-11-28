@@ -1756,6 +1756,9 @@ ${antunit.reports}
         <javaversion atleast="9"/>
       </not>
     </condition>
+    <condition property="java.security.manager" value="allow">
+      <javaversion exactly="18"/>
+    </condition>
     <macrodef name="test-junit">
       <element name="junit-nested" implicit="true"/>
       <sequential>
@@ -1805,6 +1808,13 @@ ${antunit.reports}
                our symlink tests -->
           <syspropertyset>
             <propertyref name="sun.io.useCanonCaches"/>
+          </syspropertyset>
+          <!-- Many JUnit tests, in the Ant project, launch Java programs through Ant's
+           java task, which internally calls System.setSecurityManager(). In Java 18
+           an explicit system property value needs to be set to prevent exception from
+           being thrown from that call -->
+          <syspropertyset>
+            <propertyref name="java.security.manager"/>
           </syspropertyset>
           <classpath>
             <path refid="tests-runtime-classpath"/>
