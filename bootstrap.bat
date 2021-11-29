@@ -34,10 +34,8 @@ if "" == "%JAVAC%"                        set JAVAC=%JAVA_HOME%\bin\javac
 echo.
 echo ... Bootstrapping Ant Distribution
 
-if     "%OS%" == "Windows_NT" if exist bootstrap\nul rmdir/s/q bootstrap
-if not "%OS%" == "Windows_NT" if exist bootstrap\nul deltree/y bootstrap
-if     "%OS%" == "Windows_NT" if exist build\nul rmdir/s/q build
-if not "%OS%" == "Windows_NT" if exist build\nul deltree/y build
+if exist bootstrap\nul rmdir/s/q bootstrap
+if exist build\nul rmdir/s/q build
 
 SET LOCALCLASSPATH=
 for %%i in (lib\optional\*.jar) do call src\script\lcp.bat %%i
@@ -55,8 +53,7 @@ echo JAVAC=%JAVAC%
 echo CLASSPATH=%CLASSPATH%
 echo ANT_HOME=%ANT_HOME%
 
-if     "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
-if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
+if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
 
 if not exist build\nul mkdir build
 if not exist build\classes\nul mkdir build\classes
@@ -131,8 +128,7 @@ if not "%OS%"=="Windows_NT" goto mainEnd
 echo.
 echo ... Cleaning Up Build Directories
 
-if     "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
-if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
+if exist %CLASSDIR%\nul rmdir/s/q %CLASSDIR%
 
 echo.
 echo ... Done Bootstrapping Ant Distribution
