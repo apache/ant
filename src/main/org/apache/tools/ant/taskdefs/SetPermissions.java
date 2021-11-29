@@ -197,7 +197,7 @@ public class SetPermissions extends Task {
     }
 
     private void tryDos(Path p, boolean failIfDosIsNotSupported) {
-        log("Falling back to DosFileAttributeView");
+        log("Falling back to DosFileAttributeView", Project.MSG_DEBUG);
         boolean readOnly = !isWritable();
         DosFileAttributeView view = Files.getFileAttributeView(p, DosFileAttributeView.class);
         if (view != null) {
