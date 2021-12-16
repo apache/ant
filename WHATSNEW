@@ -13,6 +13,9 @@ Other changes:
   of the generated output file from the listener.
   Github Pull Request #168
 
+* <ftp> now supports FTPs.
+  Github Pull Request #170
+
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
 

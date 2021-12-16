@@ -115,7 +115,7 @@ public class FTP extends Task implements FTPTaskConfig {
     private String userid;
     private String password;
     private String account;
-    private boolean useFtps =false;
+    private boolean useFtps = false;
     private HostnameVerifier hostnameVerifier;
     private File listing;
     private boolean binary = true;
@@ -1268,15 +1268,16 @@ public class FTP extends Task implements FTPTaskConfig {
         this.userid = userid;
     }
 
+    /**
+     * Whether to use ftps instead of ftp.
+     *
+     * @since 1.10.13
+     */
     public void setUseFtps(boolean useFtps) {
         this.useFtps = useFtps;
     }
 
-    public HostnameVerifier getHostnameVerifier() {
-        return hostnameVerifier;
-    }
-
-    public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+    public void add(HostnameVerifier hostnameVerifier) {
         this.hostnameVerifier = hostnameVerifier;
     }
 
@@ -2517,13 +2518,16 @@ public class FTP extends Task implements FTPTaskConfig {
         FTPClient ftp = null;
 
         try {
-            log("Opening FTP connection to " + server, Project.MSG_VERBOSE);
-            if( useFtps) {
-                ftp = new FTPSClient();
-                if(hostnameVerifier != null){
-                    ((FTPSClient)ftp).setHostnameVerifier(hostnameVerifier);
+            if (useFtps) {
+                log("Opening FTPs connection to " + server, Project.MSG_VERBOSE);
+                FTPSClient ftps = new FTPSClient();
+                ftps.setEndpointCheckingEnabled(true);
+                if (hostnameVerifier != null) {
+                    ftps.setHostnameVerifier(hostnameVerifier);
                 }
-            }else{
+                ftp = ftps;
+            } else {
+                log("Opening FTP connection to " + server, Project.MSG_VERBOSE);
                 ftp = new FTPClient();
             }
             if (this.isConfigurationSet) {
