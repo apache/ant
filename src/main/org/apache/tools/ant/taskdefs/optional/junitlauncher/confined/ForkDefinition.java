@@ -22,6 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PropertySet;
@@ -42,6 +43,7 @@ public class ForkDefinition {
 
     private String dir;
     private long timeout = -1;
+    private Mode mode = new Mode("once");
 
     ForkDefinition() {
         this.commandLineJava = new CommandlineJava();
@@ -63,12 +65,35 @@ public class ForkDefinition {
         return this.timeout;
     }
 
+    /**
+     * Possible values are "once" and "perTest". If set to "once" (the default),
+     * only a single Java VM will be forked for all tests, with "perTest" each test
+     * will be run in a fresh Java VM.
+     * @param mode the mode to use.
+     * @since Ant 1.10.13
+     */
+    public void setMode(final Mode mode) {
+        this.mode = mode;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
     public void setIncludeJUnitPlatformLibraries(final boolean include) {
         this.includeJUnitPlatformLibraries = include;
     }
 
+    public boolean isIncludeJUnitPlatformLibraries() {
+        return includeJUnitPlatformLibraries;
+    }
+
     public void setIncludeAntRuntimeLibraries(final boolean include) {
         this.includeAntRuntimeLibraries = include;
+    }
+
+    public boolean isIncludeAntRuntimeLibraries() {
+        return includeAntRuntimeLibraries;
     }
 
     public Commandline.Argument createJvmArg() {
@@ -140,4 +165,39 @@ public class ForkDefinition {
         return cmdLine;
     }
 
+    /**
+     * Forking option. There are two available: "once" and "perTest".
+     * @since Ant 1.10.13
+     */
+    public static final class Mode extends EnumeratedAttribute {
+
+        /**
+         * fork once only
+         */
+        public static final String ONCE = "once";
+        /**
+         * fork once per test class
+         */
+        public static final String PER_TEST = "perTest";
+
+        /** No arg constructor. */
+        public Mode() {
+            super();
+        }
+
+        /**
+         * Constructor using a value.
+         * @param value the value to use - once or perTest.
+         */
+        public Mode(final String value) {
+            super();
+            setValue(value);
+        }
+
+        /** {@inheritDoc}. */
+        @Override
+        public String[] getValues() {
+            return new String[] {ONCE, PER_TEST};
+        }
+    }
 }

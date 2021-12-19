@@ -33,5 +33,6 @@ public class ForkedTest {
     public void testSysProp() {
         Assert.assertEquals("Unexpected value for system property",
                 "forked", System.getProperty(SYS_PROP_ONE));
+        System.setProperty(SYS_PROP_ONE, "changed_inside_fork");
     }
 }

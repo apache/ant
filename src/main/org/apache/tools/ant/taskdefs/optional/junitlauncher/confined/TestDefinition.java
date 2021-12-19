@@ -107,6 +107,10 @@ public abstract class TestDefinition {
         return this.forkDefinition;
     }
 
+    public void setForkDefinition(ForkDefinition forkDefinition) {
+        this.forkDefinition = forkDefinition;
+    }
+
     protected boolean shouldRun(final Project project) {
         final PropertyHelper propertyHelper = PropertyHelper.getPropertyHelper(project);
         return propertyHelper.testIfCondition(this.ifProperty) && propertyHelper.testUnlessCondition(this.unlessProperty);

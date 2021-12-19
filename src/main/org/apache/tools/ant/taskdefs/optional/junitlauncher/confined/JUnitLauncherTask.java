@@ -100,11 +100,39 @@ public class JUnitLauncherTask extends Task {
                 continue;
             }
             if (test.getForkDefinition() != null) {
-                forkTest(test);
+                if (test instanceof TestClasses
+                        && test.getForkDefinition().getMode().getValue().equals(ForkDefinition.Mode.PER_TEST)) {
+                    TestClasses testClasses = (TestClasses) test;
+                    for (String testClassName : testClasses.getTestClassNames()) {
+                        forkTest(convertToSingleTestClass(testClasses, testClassName));
+                    }
+                } else {
+                    forkTest(test);
+                }
             } else {
                 launchViaReflection(new InVMLaunch(Collections.singletonList(test)));
             }
         }
+    }
+
+    private SingleTestClass convertToSingleTestClass(TestClasses testClasses, String testClassName) {
+        SingleTestClass singleTestClass = new SingleTestClass();
+        singleTestClass.setName(testClassName);
+        singleTestClass.setIf(testClasses.ifProperty);
+        singleTestClass.setUnless(testClasses.unlessProperty);
+        singleTestClass.setHaltOnFailure(testClasses.haltOnFailure);
+        singleTestClass.setFailureProperty(testClasses.failureProperty);
+        singleTestClass.setOutputDir(testClasses.outputDir);
+        singleTestClass.setIncludeEngines(testClasses.includeEngines);
+        singleTestClass.setExcludeEngines(testClasses.excludeEngines);
+
+        for (ListenerDefinition listener : testClasses.getListeners()) {
+            singleTestClass.addConfiguredListener(listener);
+        }
+
+        singleTestClass.setForkDefinition(testClasses.getForkDefinition());
+
+        return singleTestClass;
     }
 
     /**

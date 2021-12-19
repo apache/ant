@@ -210,6 +210,26 @@ public class JUnitLauncherTaskTest {
     }
 
     /**
+     * Tests the execution of a forked test with "perTest" mode
+     */
+    @Test
+    public void testPerTestForkMode() throws Exception {
+        final String targetName = "test-per-test-fork-mode";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        // setup a dummy and incorrect value of a sysproperty that's used in the test being forked
+        System.setProperty(ForkedTest.SYS_PROP_ONE, "dummy");
+        buildRule.executeTarget(targetName);
+        // verify that our JVM's sysprop value didn't get changed
+        Assert.assertEquals("System property " + ForkedTest.SYS_PROP_ONE + " was unexpected updated",
+                "dummy", System.getProperty(ForkedTest.SYS_PROP_ONE));
+
+        Assert.assertTrue("At least one run of ForkedTest#testSysProp was expected to succeed",
+                verifySuccess(trackerFile, ForkedTest.class.getName(), "testSysProp"));
+        Assert.assertFalse("No runs of ForkedTest#testSysProp was expected to fail",
+                verifyFailed(trackerFile, ForkedTest.class.getName(), "testSysProp"));
+    }
+
+    /**
      * Tests that in a forked mode execution of tests, when the {@code includeJUnitPlatformLibraries} attribute
      * is set to false, then the execution of such tests fails with a classloading error for the JUnit platform
      * classes
