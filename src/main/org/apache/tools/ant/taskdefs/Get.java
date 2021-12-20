@@ -82,6 +82,7 @@ public class Get extends Task {
     private boolean ignoreErrors = false;
     private String uname = null;
     private String pword = null;
+    private boolean authenticateOnRedirect = true; // on by default for backward compatibility
     private long maxTime = 0;
     private int numberRetries = NUMBER_RETRIES;
     private boolean skipExisting = false;
@@ -406,6 +407,16 @@ public class Get extends Task {
     }
 
     /**
+     * If true, credentials are set when following a redirect to a new location.
+     *
+     * @param v "true" to enable sending the credentials on redirect; "false" otherwise
+     * @since Ant 1.10.13
+     */
+    public void setAuthenticateOnRedirect(final boolean v) {
+        this.authenticateOnRedirect = v;
+    }
+
+    /**
      * The time in seconds the download is allowed to take before
      * being terminated.
      *
@@ -685,7 +696,7 @@ public class Get extends Task {
 
         private boolean get() throws IOException, BuildException {
 
-            connection = openConnection(source);
+            connection = openConnection(source, uname, pword);
 
             if (connection == null) {
                 return false;
@@ -735,7 +746,8 @@ public class Get extends Task {
             return true;
         }
 
-        private URLConnection openConnection(final URL aSource) throws IOException {
+        private URLConnection openConnection(final URL aSource, final String uname,
+                                             final String pword) throws IOException {
 
             // set up the URL connection
             final URLConnection connection = aSource.openConnection();
@@ -795,7 +807,9 @@ public class Get extends Task {
                     if (!redirectionAllowed(aSource, newURL)) {
                         return null;
                     }
-                    return openConnection(newURL);
+                    return openConnection(newURL,
+                        authenticateOnRedirect ? uname : null,
+                        authenticateOnRedirect ? pword : null);
                 }
                 // next test for a 304 result (HTTP only)
                 final long lastModified = httpConnection.getLastModified();
