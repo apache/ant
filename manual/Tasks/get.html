@@ -92,6 +92,12 @@ the request is relayed to the proxy.</p>
     <td>Yes if <var>username</var> is set</td>
   </tr>
   <tr>
+    <td>authenticateOnRedirect</td>
+    <td>Whether the credentials should also be sent to the new location when a redirect is followed.<br/>
+    <em>since Ant 1.10.13</em></td>
+    <td>No; default is <q>true</q></td>
+  </tr>
+  <tr>
     <td>maxtime</td>
     <td>Maximum time in seconds a single download may take, otherwise it will be interrupted and
       treated like a download error.  <em>Since Ant 1.8.0</em></td>
