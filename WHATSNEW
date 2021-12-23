@@ -1,6 +1,15 @@
 Changes from Ant 1.9.16 TO Ant 1.9.17
 =====================================
 
+Changes that could break older environments:
+--------------------------------------------
+
+* <get> has a new attribute authenticateOnRedirect that can be used to
+  prevent Ant from sending the configured credentials when following a
+  redirect. It is false by default, which means builds that rely on
+  credentials being used on the redirected URI may break.
+  Github Pull Request #173
+
 Fixed bugs:
 -----------
 

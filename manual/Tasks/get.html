@@ -98,6 +98,12 @@ plain text' authentication is used. This is only secure over an HTTPS link.
     <td align="center" valign="top">if username is set</td>
   </tr>  
   <tr>
+    <td>authenticateOnRedirect</td>
+    <td>Whether the credentials should also be sent to the new location when a redirect is followed.<br/>
+    <em>since Ant 1.9.17</em></td>
+    <td>No; default is <q>false</q></td>
+  </tr>
+  <tr>
     <td valign="top">maxtime</td>
     <td valign="top">Maximum time in seconds a single download may take,
       otherwise it will be interrupted and treated like a download
