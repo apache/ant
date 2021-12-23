@@ -82,7 +82,7 @@ public class Get extends Task {
     private boolean ignoreErrors = false;
     private String uname = null;
     private String pword = null;
-    private boolean authenticateOnRedirect = true; // on by default for backward compatibility
+    private boolean authenticateOnRedirect = false;
     private long maxTime = 0;
     private int numberRetries = NUMBER_RETRIES;
     private boolean skipExisting = false;

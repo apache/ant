@@ -1,6 +1,15 @@
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================
 
+Changes that could break older environments:
+-------------------------------------------
+
+* <get> has a new attribute authenticateOnRedirect that can be used to
+  prevent Ant from sending the configured credentials when following a
+  redirect. It is false by default, which means builds that rely on
+  credentials being used on the redirected URI may break.
+  Github Pull Request #173
+
 Other changes:
 --------------
 
@@ -15,11 +24,6 @@ Other changes:
 
 * <ftp> now supports FTPs.
   Github Pull Request #170
-
-* <get> has a new attribute authenticateOnRedirect that can be used to
-  prevent Ant from sending the configured credentials when following a
-  redirect. It is true by default for backwards compatibility reasons.
-  Github Pull Request #173
 
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
