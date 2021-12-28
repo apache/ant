@@ -287,10 +287,10 @@ deploy.url=https://${deploy.server}:${deploy.port}/</pre>
   variables it ran on Java 1.2 where <code class="code">System.getEnv</code> didn't
   work. So we decided to start a command in a new process which prints
   the environment variables, analyzes the output and creates the
-  properties. Once Java 5 became our baseline we could have switched
-  to <code class="code">getEnv</code> but it returned different results on some
-  platforms so we stuck with the command approach to remain backwards
-  compatible.
+  properties. With Ant 1.9.0 when we started to require Java 5 we switched back
+  to <code class="code">System.getEnv</code> even though it returned different results on some
+  platforms. The commands described below are still used on OpenVMS or
+  if <code class="code">System.getEnv</code> throws an exception.
 </p>
 <p>
   There are commands for the following operating systems implemented in
