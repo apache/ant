@@ -13,7 +13,7 @@ Changes that could break older environments:
 Fixed bugs:
 -----------
 
-* the ProperyEnumerator change introduced in 1.10.9 proved to be not
+* the PropertyEnumerator change introduced in 1.10.9 proved to be not
   fully backwards compatible when combined with certain custom
   PropertyHelper implementations - for example when using AntXtras.
   Bugzilla Report 65799
