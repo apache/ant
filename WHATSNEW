@@ -10,6 +10,14 @@ Changes that could break older environments:
   credentials being used on the redirected URI may break.
   Github Pull Request #173
 
+Fixed bugs:
+-----------
+
+* the ProperyEnumerator change introduced in 1.10.9 proved to be not
+  fully backwards compatible when combined with certain custom
+  PropertyHelper implementations - for example when using AntXtras.
+  Bugzilla Report 65799
+
 Other changes:
 --------------
 

@@ -860,7 +860,7 @@ public class PropertyHelper implements GetProperty {
      * @return the names of all known properties.
      */
     public Set<String> getPropertyNames() {
-        final Set<String> names = new HashSet<>(properties.keySet());
+        final Set<String> names = new HashSet<>(getProperties().keySet());
         getDelegates(PropertyEnumerator.class)
             .forEach(e -> names.addAll(e.getPropertyNames()));
         return Collections.unmodifiableSet(names);
