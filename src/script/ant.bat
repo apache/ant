@@ -117,16 +117,16 @@ set _JAVACMD=%JAVACMD%
 if "%JAVA_HOME%" == "" goto noJavaHome
 if not exist "%JAVA_HOME%\bin\java.exe" goto noJavaHome
 if "%_JAVACMD%" == "" set _JAVACMD=%JAVA_HOME%\bin\java.exe
-goto checkJikes
+goto setSecurityManagerOpt
 
 :noJavaHome
 if "%_JAVACMD%" == "" set _JAVACMD=java.exe
 
 :setSecurityManagerOpt
 "%_JAVACMD%" -XshowSettings:properties 2>&1 | find "java.specification.version = 18"
-if "%ErrorLevel%" == "0" (
-    rem This is Java 18, so set -Djava.security.manager=allow
-    set ANT_OPTS="%ANT_OPTS% -Djava.security.manager=allow"
+if %errorlevel% EQU 0 (
+rem This is Java 18, so set -Djava.security.manager=allow
+set ANT_OPTS=%ANT_OPTS% -Djava.security.manager=allow
 )
 
 :checkJikes
