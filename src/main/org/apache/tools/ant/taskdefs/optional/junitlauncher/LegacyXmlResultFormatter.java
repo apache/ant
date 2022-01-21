@@ -299,7 +299,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 }
                 writeAttribute(writer, ATTR_TYPE, t.getClass().getName());
                 // write out the stacktrace
-                writer.writeCData(StringUtils.getStackTrace(t));
+                this.writeCDataSafely(writer, StringUtils.getStackTrace(t));
             }
             writer.writeEndElement();
         }
@@ -318,7 +318,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 }
                 writeAttribute(writer, ATTR_TYPE, t.getClass().getName());
                 // write out the stacktrace
-                writer.writeCData(StringUtils.getStackTrace(t));
+                this.writeCDataSafely(writer, StringUtils.getStackTrace(t));
             }
             writer.writeEndElement();
         }
@@ -343,6 +343,16 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 writeCharactersFrom(reader, writer);
             }
             writer.writeEndElement();
+        }
+
+        /**
+         * Write cdata safely (escape special sequence {@code "]]>"})
+         * @param writer The xml writer to use
+         * @param cdata The cdata to write
+         * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=65833">Bugzilla #65833</a>
+         */
+        private void writeCDataSafely(final XMLStreamWriter writer, final String cdata) throws XMLStreamException {
+            writer.writeCData(cdata.replace("]]>", "]]]]><![CDATA[>"));
         }
 
         private void writeCharactersFrom(final Reader reader, final XMLStreamWriter writer) throws IOException, XMLStreamException {
