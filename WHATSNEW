@@ -18,6 +18,9 @@ Fixed bugs:
   PropertyHelper implementations - for example when using AntXtras.
   Bugzilla Report 65799
 
+* legacy-xml reporter of the junitlauncher task now escapes ]]> when writing CDATA.
+  Bugzilla Report 65833
+
 Other changes:
 --------------
 
