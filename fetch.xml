@@ -236,6 +236,7 @@ Set -Ddest=LOCATION on the command line
     description="load junitlauncher libraries"
     depends="init">
     <f2 project="org.junit.platform" archive="junit-platform-launcher" />
+    <f2 project="org.junit.platform" archive="junit-platform-testkit" />
   </target>
 
   <target name="junit-engine-jupiter"

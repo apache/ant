@@ -19,42 +19,68 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.Project;
 import org.junit.Test;
+import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherConfig;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.launcher.core.LauncherFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Properties;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 public class LegacyXmlResultFormatterTest {
 
     private static final String KEY = "key";
     private static final String ORIG = "<\u0000&>foo";
     private static final String ENCODED = "&lt;&amp;#0;&amp;&gt;foo";
+    private static final String CDATA_START = "<![CDATA[";
+    private static final String CDATA_END = "]]>";
 
     private final LegacyXmlResultFormatter f = new LegacyXmlResultFormatter();
 
     @Test
     public void encodesAttributesProperly() throws Exception {
-        final TestPlan plan = startTest(true);
-        final String result = finishTest(plan);
+        final String result = this.runTest(true, "org.example.junitlauncher.jupiter.JupiterSampleTest");
         assertThat(result, containsString("=\"" + ENCODED + "\""));
     }
 
     @Test
     public void encodesSysOutProperly() throws Exception {
-        final TestPlan plan = startTest(false);
         f.sysOutAvailable(ORIG.getBytes(StandardCharsets.UTF_8));
-        final String result = finishTest(plan);
+        final String result = this.runTest(false, "org.example.junitlauncher.jupiter.JupiterSampleTest");
         assertThat(result, containsString(ENCODED));
     }
 
-    private TestPlan startTest(final boolean withProperties) {
+    @Test
+    public void testEncodesCDataProperly() {
+        final String result = assertDoesNotThrow(() -> this.runTest(false, "org.example.junitlauncher.jupiter.JupiterCDataTest"));
+        assertThat(result, containsString("]]" + CDATA_END + CDATA_START + ">"));
+        // Just in case someone decides fixing writeCData is worth breaking other projects.
+        assertThat(result, not(containsString("]]]]" + CDATA_END + CDATA_START + ">" + CDATA_START + ">")));
+    }
+
+    /**
+     * Create a {@link TestPlan} to pass to the formatter
+     * @param withProperties {@code true} if we want to set {@link #KEY} to {@link #ORIG}.
+     * @param testClass The class to test
+     */
+    private void startTest(final boolean withProperties, final String testClass) {
+        final Launcher launcher = LauncherFactory.create(LauncherConfig.builder().addTestExecutionListeners(this.f).build());
+        LauncherDiscoveryRequestBuilder request = LauncherDiscoveryRequestBuilder.request()
+                .selectors(selectClass(testClass));
+        if (withProperties) {
+            request.configurationParameter(KEY, ORIG);
+        }
+        final TestPlan testPlan = launcher.discover(request.build());
         f.setContext(new TestExecutionContext() {
             @Override
             public Properties getProperties() {
@@ -70,15 +96,13 @@ public class LegacyXmlResultFormatterTest {
                 return Optional.empty();
             }
         });
-        final TestPlan testPlan = TestPlan.from(Collections.emptySet());
-        f.testPlanExecutionStarted(testPlan);
-        return testPlan;
+        launcher.execute(testPlan, f);
     }
 
-    private String finishTest(final TestPlan testPlan) throws IOException {
+    private String runTest(final boolean withProperties, final String testClass) throws IOException {
         try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             f.setDestination(bos);
-            f.testPlanExecutionFinished(testPlan);
+            this.startTest(withProperties, testClass);
             return new String(bos.toByteArray(), StandardCharsets.UTF_8);
         }
     }
