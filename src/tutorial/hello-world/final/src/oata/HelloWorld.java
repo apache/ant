@@ -23,6 +23,6 @@ public class HelloWorld {
     static Logger logger = Logger.getLogger(HelloWorld.class);
 
     public static void main(String[] args) {
-        logger.info("Hello World");          // the old System.out-statement
+        logger.info("Charmi");          // the old System.out-statement
     }
 }
