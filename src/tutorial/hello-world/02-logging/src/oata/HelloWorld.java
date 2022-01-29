@@ -25,6 +25,6 @@ public class HelloWorld {
 
     public static void main(String[] args) {
         BasicConfigurator.configure();
-        logger.info("Hello World");          // the old System.out-statement
+        logger.info("Charmi");          // the old System.out-statement
     }
 }
