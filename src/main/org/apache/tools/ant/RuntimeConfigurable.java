@@ -488,14 +488,15 @@ public class RuntimeConfigurable implements Serializable {
             return;
         }
 
-        // Configure the object
-        Object target = (wrappedObject instanceof TypeAdapter)
-            ? ((TypeAdapter) wrappedObject).getProxy() : wrappedObject;
-
-        IntrospectionHelper ih =
-            IntrospectionHelper.getHelper(p, target.getClass());
-         ComponentHelper componentHelper = ComponentHelper.getComponentHelper(p);
         if (attributeMap != null) {
+            // Configure the object
+            Object target = (wrappedObject instanceof TypeAdapter)
+                    ? ((TypeAdapter) wrappedObject).getProxy() : wrappedObject;
+                    
+            IntrospectionHelper ih =
+                    IntrospectionHelper.getHelper(p, target.getClass());
+            ComponentHelper componentHelper = ComponentHelper.getComponentHelper(p);
+
             for (Map.Entry<String, Object> entry : attributeMap.entrySet()) {
                 String name = entry.getKey();
                 // skip restricted attributes such as if:set

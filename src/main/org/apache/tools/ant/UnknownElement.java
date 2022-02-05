@@ -339,6 +339,10 @@ public class UnknownElement extends Task {
         Object parent,
         RuntimeConfigurable parentWrapper)
         throws BuildException {
+
+        if (children == null || children.isEmpty()) {
+            return;
+        }
         if (parent instanceof TypeAdapter) {
             parent = ((TypeAdapter) parent).getProxy();
         }
@@ -347,38 +351,36 @@ public class UnknownElement extends Task {
         Class<?> parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getProject(), parentClass);
 
-        if (children != null) {
-            Iterator<UnknownElement> it = children.iterator();
-            for (int i = 0; it.hasNext(); i++) {
-                RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
-                UnknownElement child = it.next();
-                try {
-                    if (!childWrapper.isEnabled(child)) {
-                        if (ih.supportsNestedElement(
-                                parentUri, ProjectHelper.genComponentName(
-                                    child.getNamespace(), child.getTag()))) {
-                            continue;
-                        }
-                        // fall tru and fail in handlechild (unsupported element)
+        Iterator<UnknownElement> it = children.iterator();
+        for (int i = 0; it.hasNext(); i++) {
+            RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
+            UnknownElement child = it.next();
+            try {
+                if (!childWrapper.isEnabled(child)) {
+                    if (ih.supportsNestedElement(
+                            parentUri, ProjectHelper.genComponentName(
+                                child.getNamespace(), child.getTag()))) {
+                        continue;
                     }
-                    if (!handleChild(
-                            parentUri, ih, parent, child, childWrapper)) {
-                        if (!(parent instanceof TaskContainer)) {
-                            ih.throwNotSupported(getProject(), parent,
-                                                 child.getTag());
-                        } else {
-                            // a task container - anything could happen - just add the
-                            // child to the container
-                            TaskContainer container = (TaskContainer) parent;
-                            container.addTask(child);
-                        }
-                    }
-                } catch (UnsupportedElementException ex) {
-                    throw new BuildException(
-                        parentWrapper.getElementTag()
-                        + " doesn't support the nested \"" + ex.getElement()
-                        + "\" element.", ex);
+                    // fall thru and fail in handlechild (unsupported element)
                 }
+                if (!handleChild(
+                        parentUri, ih, parent, child, childWrapper)) {
+                    if (!(parent instanceof TaskContainer)) {
+                        ih.throwNotSupported(getProject(), parent,
+                                             child.getTag());
+                    } else {
+                        // a task container - anything could happen - just add the
+                        // child to the container
+                        TaskContainer container = (TaskContainer) parent;
+                        container.addTask(child);
+                    }
+                }
+            } catch (UnsupportedElementException ex) {
+                throw new BuildException(
+                    parentWrapper.getElementTag()
+                    + " doesn't support the nested \"" + ex.getElement()
+                    + "\" element.", ex);
             }
         }
     }
