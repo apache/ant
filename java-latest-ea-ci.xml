@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+
+<!-- This build file is here to help with the CI jobs in Jenkins where we
+	download and run the Ant tests against the latest early access binaries of
+	Java -->
+<project default="download-jdk">
+	<property environment="env"/>
+	<target name="download-jdk" depends="check-file-type, download-extract-zip, download-extract-tar"/>
+	<target name="check-file-type">
+		<condition property="zip-artifact">
+			<!-- check if it ends with .zip -->
+  			<matches string="${env.JDK_DOWNLOAD_URL}" pattern="\.zip$"/>
+		</condition>
+		<condition property="tar-artifact">
+			<!-- check if it ends with .tar.gz -->
+			<matches string="${env.JDK_DOWNLOAD_URL}" pattern="\.tar.gz$"/>
+		</condition>
+	</target>
+	<target name="download-extract-zip" if="zip-artifact">
+		<echo message="Downloading zip file from ${env.JDK_DOWNLOAD_URL}"/>
+		<get src="${env.JDK_DOWNLOAD_URL}" dest="${basedir}/jdk.zip"/>
+		<unzip src="jdk.zip" dest="${basedir}/java-latest-ea"/>
+	</target>
+	<target name="download-extract-tar" if="tar-artifact">
+		<echo message="Downloading tar.gz file from ${env.JDK_DOWNLOAD_URL}"/>
+		<get src="${env.JDK_DOWNLOAD_URL}" dest="${basedir}/jdk.tar.gz"/>
+		<untar src="jdk.tar.gz" dest="${basedir}/java-latest-ea" compression="gzip"/>
+		<!-- restore permission on the extracted tar's bin directory contents -->
+		<echo message="restoring permissions of files in directory ${basedir}/java-latest-ea/**/bin/*"/>
+		<chmod dir="${basedir}/java-latest-ea/" perm="a+x" includes="**/bin/*"/>
+	</target>
+
+</project>
