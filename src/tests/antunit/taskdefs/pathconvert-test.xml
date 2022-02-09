@@ -73,4 +73,30 @@
       <au:assertPropertyEquals name="pc" value="file2.txt" />
   </target>
 
+  <target name="testRef">
+      <pathconvert property="result" refid="testpath" />
+      <au:assertPropertyEquals name="result" value="${ant.file}" />
+  </target>
+
+  <target name="testConsole">
+      <pathconvert refid="testpath" />
+      <au:assertLogContains text="${ant.file}" />
+  </target>
+
+  <target name="testPreserveDuplicates">
+      <pathconvert property="result" pathsep=") " preserveduplicates="true">
+          <resources>
+              <path refid="testpath" />
+              <path refid="testpath" />
+          </resources>
+      </pathconvert>
+      <au:assertPropertyEquals name="result" value="${ant.file}) ${ant.file}" />
+  </target>
+
+  <target name="testDirsep">
+      <pathconvert property="result" dirsep="|">
+          <file file="/foo/bar/baz" />
+      </pathconvert>
+      <au:assertPropertyEquals name="result" value="|foo|bar|baz" />
+  </target>
 </project>
