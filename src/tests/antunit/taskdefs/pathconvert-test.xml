@@ -99,4 +99,13 @@
       </pathconvert>
       <au:assertPropertyEquals name="result" value="|foo|bar|baz" />
   </target>
+
+  <target name="testNoSetonempty">
+      <pathconvert property="result" setonempty="false">
+          <resources />
+      </pathconvert>
+      <au:assertFalse>
+          <isset property="result" />
+      </au:assertFalse>
+  </target>
 </project>
