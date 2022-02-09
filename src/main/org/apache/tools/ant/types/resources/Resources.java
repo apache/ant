@@ -58,20 +58,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
     };
 
     /** {@code static} empty {@link Iterator} */
-    public static final Iterator<Resource> EMPTY_ITERATOR = new Iterator<Resource>() {
-        @Override
-        public Resource next() {
-            throw new NoSuchElementException();
-        }
-        @Override
-        public boolean hasNext() {
-            return false;
-        }
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    };
+    public static final Iterator<Resource> EMPTY_ITERATOR = Collections.emptyIterator();
 
     private class MyCollection extends AbstractCollection<Resource> {
         private Collection<Resource> cached;
