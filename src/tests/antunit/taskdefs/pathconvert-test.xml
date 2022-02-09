@@ -28,4 +28,49 @@
     </au:assertTrue>
   </target>
 
+  <path id="testpath">
+      <pathelement path="${ant.file}" />
+  </path>
+
+  <basename property="basename" file="${ant.file}" />
+
+  <target name="testmap">
+      <pathconvert property="result" dirsep="#">
+          <path refid="testpath" />
+          <map from="${basedir}" to="test" />
+      </pathconvert>
+      <au:assertPropertyEquals name="result" value="test#${basename}" />
+  </target>
+
+  <target name="testmapper">
+      <pathconvert property="result" dirsep="#">
+          <path refid="testpath" />
+          <mapper type="glob" from="${basedir}*" to="test*" />
+      </pathconvert>
+      <au:assertPropertyEquals name="result" value="test#${basename}" />
+  </target>
+
+  <target name="testnotargetos">
+      <pathconvert property="result" refid="testpath" />
+      <au:assertPropertyEquals name="result" value="${ant.file}" />
+  </target>
+
+  <target name="test-nonmatching-mapper" description="test for bug fix bz-62076">
+      <mkdir dir="${output}/mapper-source-dir"/>
+      <!-- create 2 files, one of which will be matched/included by the globmapper
+      later in this target -->
+      <touch file="${output}/mapper-source-dir/file1.txt"/>
+      <touch file="${output}/mapper-source-dir/file2.log"/>
+
+      <pathconvert property="pc">
+          <mappedresources>
+              <fileset dir="${output}/mapper-source-dir"/>
+              <!-- we intentionally exclude one of the files -->
+              <globmapper from="*.log" to="*.txt"/>
+          </mappedresources>
+      </pathconvert>
+
+      <au:assertPropertyEquals name="pc" value="file2.txt" />
+  </target>
+
 </project>
