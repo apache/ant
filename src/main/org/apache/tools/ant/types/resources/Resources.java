@@ -36,12 +36,12 @@ import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 
 /**
- * Generic ResourceCollection: Either stores nested ResourceCollections,
- * making no attempt to remove duplicates, or references another ResourceCollection.
+ * Generic {@link ResourceCollection}: Either stores nested {@link ResourceCollection}s,
+ * making no attempt to remove duplicates, or references another {@link ResourceCollection}.
  * @since Ant 1.7
  */
 public class Resources extends DataType implements AppendableResourceCollection {
-    /** static empty ResourceCollection */
+    /** {@code static} empty {@link ResourceCollection} */
     public static final ResourceCollection NONE = new ResourceCollection() {
         @Override
         public boolean isFilesystemOnly() {
@@ -57,7 +57,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
         }
     };
 
-    /** static empty Iterator */
+    /** {@code static} empty {@link Iterator} */
     public static final Iterator<Resource> EMPTY_ITERATOR = new Iterator<Resource>() {
         @Override
         public Resource next() {
@@ -129,14 +129,14 @@ public class Resources extends DataType implements AppendableResourceCollection 
     private boolean cache = false;
 
     /**
-     * Create a new Resources.
+     * Create a new {@link Resources}.
      */
     public Resources() {
     }
 
     /**
-     * Create a new Resources.
-     * @param project Project
+     * Create a new {@link Resources}.
+     * @param project {@link Project}
      * @since Ant 1.8
      */
     public Resources(Project project) {
@@ -145,7 +145,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
 
     /**
      * Set whether to cache collections.
-     * @param b boolean cache flag.
+     * @param b {@code boolean} cache flag.
      * @since Ant 1.8.0
      */
     public synchronized void setCache(boolean b) {
@@ -153,8 +153,8 @@ public class Resources extends DataType implements AppendableResourceCollection 
     }
 
     /**
-     * Add a ResourceCollection.
-     * @param c the ResourceCollection to add.
+     * Add a {@link ResourceCollection}.
+     * @param c the {@link ResourceCollection} to add.
      */
     @Override
     public synchronized void add(ResourceCollection c) {
@@ -174,8 +174,8 @@ public class Resources extends DataType implements AppendableResourceCollection 
     }
 
     /**
-     * Fulfill the ResourceCollection contract.
-     * @return an Iterator of Resources.
+     * Fulfill the {@link ResourceCollection} contract.
+     * @return an {@link Iterator} of {@link Resources}.
      */
     @Override
     public synchronized Iterator<Resource> iterator() {
@@ -187,8 +187,8 @@ public class Resources extends DataType implements AppendableResourceCollection 
     }
 
     /**
-     * Fulfill the ResourceCollection contract.
-     * @return number of elements as int.
+     * Fulfill the {@link ResourceCollection} contract.
+     * @return number of elements as {@code int}.
      */
     @Override
     public synchronized int size() {
@@ -200,8 +200,8 @@ public class Resources extends DataType implements AppendableResourceCollection 
     }
 
     /**
-     * Fulfill the ResourceCollection contract.
-     * @return true if all Resources represent files.
+     * Fulfill the {@link ResourceCollection} contract.
+     * @return {@code true} if all {@link Resource}s represent files.
      */
     @Override
     public boolean isFilesystemOnly() {
@@ -214,7 +214,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
     }
 
     /**
-     * Format this <code>Resources</code> as a String.
+     * Format this <code>Resources</code> as a {@link String}.
      * @return a descriptive <code>String</code>.
      */
     @Override
@@ -231,10 +231,10 @@ public class Resources extends DataType implements AppendableResourceCollection 
     }
 
     /**
-     * Overrides the version of DataType to recurse on all DataType
+     * Overrides the base implementation to recurse on all {@link DataType}
      * child elements that may have been added.
      * @param stk the stack of data types to use (recursively).
-     * @param p   the project to use to dereference the references.
+     * @param p   the {@link Project} to use to dereference the references.
      * @throws BuildException on error.
      */
     @Override
@@ -263,8 +263,8 @@ public class Resources extends DataType implements AppendableResourceCollection 
     }
 
     /**
-     * Resolves references, allowing any ResourceCollection.
-     * @return the referenced ResourceCollection.
+     * Resolves references, allowing any {@link ResourceCollection}.
+     * @return the referenced {@link ResourceCollection}.
      */
     private ResourceCollection getRef() {
         return getCheckedRef(ResourceCollection.class);
