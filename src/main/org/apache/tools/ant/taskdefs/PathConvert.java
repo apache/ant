@@ -18,10 +18,16 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.Objects;
 import java.util.Vector;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -31,12 +37,12 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
+import org.apache.tools.ant.util.PropertyOutputStream;
 
 /**
  * Converts path and classpath information to a specific target OS
@@ -195,7 +201,7 @@ public class PathConvert extends Task {
     private synchronized Resources getPath() {
         if (path == null) {
             path = new Resources(getProject());
-            path.setCache(true);
+            path.setCache(false);
         }
         return path;
     }
@@ -344,62 +350,62 @@ public class PathConvert extends Task {
             }
             validateSetup(); // validate our setup
 
-            // Currently, we deal with only two path formats: Unix and Windows
-            // And Unix is everything that is not Windows
-            // (with the exception for NetWare and OS/2 below)
-
-            // for NetWare and OS/2, piggy-back on Windows, since here and
-            // in the apply code, the same assumptions can be made as with
-            // windows - that \\ is an OK separator, and do comparisons
-            // case-insensitive.
-            String fromDirSep = onWindows ? "\\" : "/";
-
-            StringBuilder rslt = new StringBuilder();
-
-            ResourceCollection resources = isPreserveDuplicates() ? path : new Union(path);
-            List<String> ret = new ArrayList<>();
-            FileNameMapper mapperImpl = mapper == null ? new IdentityMapper() : mapper.getImplementation();
-            for (Resource r : resources) {
-                String[] mapped = mapperImpl.mapFileName(String.valueOf(r));
-                for (int m = 0; mapped != null && m < mapped.length; ++m) {
-                    ret.add(mapped[m]);
-                }
-            }
             boolean first = true;
-            for (String string : ret) {
-                String elem = mapElement(string); // Apply the path prefix map
-
-                // Now convert the path and file separator characters from the
-                // current os to the target os.
-
-                if (!first) {
-                    rslt.append(pathSep);
+            try (Writer w = new OutputStreamWriter(createOutputStream())) {
+                for (String s : (Iterable<String>) streamResources()::iterator) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        w.write(pathSep);
+                    }
+                    w.write(s);
                 }
-                first = false;
-
-                StringTokenizer stDirectory = new StringTokenizer(elem, fromDirSep, true);
-
-                while (stDirectory.hasMoreTokens()) {
-                    String token = stDirectory.nextToken();
-                    rslt.append(fromDirSep.equals(token) ? dirSep : token);
-                }
-            }
-            // Place the result into the specified property,
-            // unless setonempty == false
-            if (setonempty || rslt.length() > 0) {
-                String value = rslt.toString();
-                if (property == null) {
-                    log(value);
-                } else {
-                    log("Set property " + property + " = " + value, Project.MSG_VERBOSE);
-                    getProject().setNewProperty(property, value);
-                }
+            } catch (IOException e) {
+                throw new BuildException(e);
             }
         } finally {
             path = savedPath;
             dirSep = savedDirSep;
             pathSep = savedPathSep;
         }
+    }
+
+    private OutputStream createOutputStream() {
+        if (property == null) {
+            return new LogOutputStream(this);
+        }
+        return new PropertyOutputStream(getProject(), property) {
+            @Override
+            public void close() {
+                if (setonempty || size() > 0) {
+                    super.close();
+                    log("Set property " + property + " = " + getProject().getProperty(property), Project.MSG_VERBOSE);
+                }
+            }
+        };
+    }
+
+    private Stream<String> streamResources() {
+        ResourceCollection resources = isPreserveDuplicates() ? path : Union.getInstance(path);
+        FileNameMapper mapperImpl = mapper == null ? new IdentityMapper() : mapper.getImplementation();
+
+        final boolean parallel = false;
+        Stream<String> result = StreamSupport.stream(resources.spliterator(), parallel).map(String::valueOf)
+            .map(mapperImpl::mapFileName).filter(Objects::nonNull).flatMap(Stream::of).map(this::mapElement);
+
+        // Currently, we deal with only two path formats: Unix and Windows
+        // And Unix is everything that is not Windows
+        // (with the exception for NetWare and OS/2 below)
+
+        // for NetWare and OS/2, piggy-back on Windows, since here and
+        // in the apply code, the same assumptions can be made as with
+        // windows - that \\ is an OK separator, and do comparisons
+        // case-insensitive.
+        final String fromDirSep = onWindows ? "\\" : "/";
+        if (fromDirSep.equals(dirSep)) {
+            return result;
+        }
+        return result.map(s -> s.replace(fromDirSep, dirSep));
     }
 
     /**
@@ -411,20 +417,8 @@ public class PathConvert extends Task {
      * @return String Updated element.
      */
     private String mapElement(String elem) {
-        // Iterate over the map entries and apply each one.
-        // Stop when one of the entries actually changes the element.
-
-        for (MapEntry entry : prefixMap) {
-            String newElem = entry.apply(elem);
-
-            // Note I'm using "!=" to see if we got a new object back from
-            // the apply method.
-
-            if (newElem != elem) {
-                return newElem;
-            }
-        }
-        return elem;
+        final Predicate<Object> changed = o -> o != elem;
+        return prefixMap.stream().map(e -> e.apply(elem)).filter(changed).findFirst().orElse(elem);
     }
 
     /**
