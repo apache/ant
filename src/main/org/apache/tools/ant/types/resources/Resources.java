@@ -126,7 +126,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
 
     private List<ResourceCollection> rc;
     private Collection<Resource> coll;
-    private boolean cache = false;
+    private volatile boolean cache = false;
 
     /**
      * Create a new {@link Resources}.
@@ -148,7 +148,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
      * @param b {@code boolean} cache flag.
      * @since Ant 1.8.0
      */
-    public synchronized void setCache(boolean b) {
+    public void setCache(boolean b) {
         cache = b;
     }
 
