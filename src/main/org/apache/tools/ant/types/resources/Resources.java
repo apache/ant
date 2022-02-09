@@ -26,8 +26,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.Stack;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -61,10 +66,8 @@ public class Resources extends DataType implements AppendableResourceCollection 
     public static final Iterator<Resource> EMPTY_ITERATOR = Collections.emptyIterator();
 
     private class MyCollection extends AbstractCollection<Resource> {
-        private Collection<Resource> cached;
+        private volatile Collection<Resource> cached;
 
-        MyCollection() {
-        }
         @Override
         public int size() {
             return getCache().size();
@@ -74,45 +77,41 @@ public class Resources extends DataType implements AppendableResourceCollection 
             return getCache().iterator();
         }
         private synchronized Collection<Resource> getCache() {
-            Collection<Resource> coll = cached;
-            if (coll == null) {
-                coll = new ArrayList<>();
-                new MyIterator().forEachRemaining(coll::add);
-                if (cache) {
-                    cached = coll;
-                }
+            if (cached == null) {
+                cached = internalResources().collect(Collectors.toList());
             }
-            return coll;
+            return cached;
         }
-        private class MyIterator implements Iterator<Resource> {
-            private Iterator<ResourceCollection> rci = getNested().iterator();
-            private Iterator<Resource> ri = null;
+    }
 
-            @Override
-            public boolean hasNext() {
-                boolean result = ri != null && ri.hasNext();
-                while (!result && rci.hasNext()) {
-                    ri = rci.next().iterator();
-                    result = ri.hasNext();
-                }
-                return result;
+    private class MyIterator implements Iterator<Resource> {
+        private Iterator<ResourceCollection> rci = getNested().iterator();
+        private Iterator<Resource> ri;
+
+        @Override
+        public boolean hasNext() {
+            boolean result = ri != null && ri.hasNext();
+            while (!result && rci.hasNext()) {
+                ri = rci.next().iterator();
+                result = ri.hasNext();
             }
-            @Override
-            public Resource next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
-                return ri.next();
+            return result;
+        }
+        @Override
+        public Resource next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
             }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
+            return ri.next();
+        }
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
         }
     }
 
     private List<ResourceCollection> rc;
-    private Collection<Resource> coll;
+    private Optional<Collection<Resource>> cacheColl = Optional.empty();
     private volatile boolean cache = false;
 
     /**
@@ -156,7 +155,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
         }
         rc.add(c);
         invalidateExistingIterators();
-        coll = null;
+        cacheColl = Optional.empty();
         setChecked(false);
     }
 
@@ -170,7 +169,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
             return getRef().iterator();
         }
         validate();
-        return new FailFast(this, coll.iterator());
+        return new FailFast(this, cacheColl.map(Iterable::iterator).orElseGet(MyIterator::new));
     }
 
     /**
@@ -183,7 +182,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
             return getRef().size();
         }
         validate();
-        return coll.size();
+        return cacheColl.isPresent() ? cacheColl.get().size() : (int) internalResources().count();
     }
 
     /**
@@ -196,8 +195,7 @@ public class Resources extends DataType implements AppendableResourceCollection 
             return getRef().isFilesystemOnly();
         }
         validate();
-        return getNested().stream()
-            .allMatch(ResourceCollection::isFilesystemOnly);
+        return getNested().stream().allMatch(ResourceCollection::isFilesystemOnly);
     }
 
     /**
@@ -210,11 +208,8 @@ public class Resources extends DataType implements AppendableResourceCollection 
             return getRef().toString();
         }
         validate();
-        if (coll == null || coll.isEmpty()) {
-            return "";
-        }
-        return coll.stream().map(Object::toString)
-            .collect(Collectors.joining(File.pathSeparator));
+        final Stream<?> stream = cache ? cacheColl.get().stream() : getNested().stream();
+        return stream.map(String::valueOf).collect(Collectors.joining(File.pathSeparator));
     }
 
     /**
@@ -227,17 +222,13 @@ public class Resources extends DataType implements AppendableResourceCollection 
     @Override
     protected void dieOnCircularReference(Stack<Object> stk, Project p)
         throws BuildException {
-        if (isChecked()) {
-            return;
-        }
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
-        } else {
-            for (ResourceCollection resourceCollection : getNested()) {
-                if (resourceCollection instanceof DataType) {
-                    pushAndInvokeCircularReferenceCheck((DataType) resourceCollection, stk, p);
-                }
-            }
+            return;
+        }
+        if (!isChecked()) {
+            getNested().stream().filter(DataType.class::isInstance).map(DataType.class::cast)
+                .forEach(dt -> pushAndInvokeCircularReferenceCheck(dt, stk, p));
             setChecked(true);
         }
     }
@@ -259,10 +250,17 @@ public class Resources extends DataType implements AppendableResourceCollection 
 
     private synchronized void validate() {
         dieOnCircularReference();
-        coll = (coll == null) ? new MyCollection() : coll;
+        if (cache && !cacheColl.isPresent()) {
+            cacheColl = Optional.of(new MyCollection());
+        }
     }
 
     private synchronized List<ResourceCollection> getNested() {
         return rc == null ? Collections.emptyList() : rc;
+    }
+
+    private synchronized Stream<Resource> internalResources() {
+        return StreamSupport.stream(
+            Spliterators.spliteratorUnknownSize(new MyIterator(), Spliterator.NONNULL), false);
     }
 }
