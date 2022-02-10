@@ -21,6 +21,8 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -29,6 +31,11 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
+import java.util.function.Supplier;
 
 import org.apache.tools.ant.taskdefs.PreSetDef;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -1031,19 +1038,71 @@ public final class IntrospectionHelper {
     private AttributeSetter createAttributeSetter(final Method m,
                                                   final Class<?> arg,
                                                   final String attrName) {
+        if (Optional.class.equals(arg)) {
+            Type gpt = m.getGenericParameterTypes()[0];
+            Class<?> payload = Object.class;
+            if (gpt instanceof ParameterizedType ) {
+                Type ata = ((ParameterizedType) gpt).getActualTypeArguments()[0];
+                if (ata instanceof Class<?>) {
+                    payload = (Class<?>) ata;
+                } else if (ata instanceof ParameterizedType) {
+                    payload = (Class<?>) ((ParameterizedType) ata).getRawType();
+                }
+            }
+            final AttributeSetter wrapped = createAttributeSetter(m, payload, attrName);
+            return new AttributeSetter(m, arg, Optional::empty) {
+                @Override
+                Optional<?> toTargetType(Project project, String value)
+                    throws BuildException {
+                    return Optional.ofNullable(wrapped.toTargetType(project, value));
+                }
+            };
+        }
+        if (OptionalInt.class.equals(arg)) {
+            final AttributeSetter wrapped = createAttributeSetter(m, Integer.class, attrName);
+            return new AttributeSetter(m, arg, OptionalInt::empty) {
+                @Override
+                OptionalInt toTargetType(Project project, String value)
+                    throws BuildException {
+                    return Optional.ofNullable((Integer) wrapped.toTargetType(project, value))
+                        .map(OptionalInt::of).orElseGet(OptionalInt::empty);
+                }
+            };
+        }
+        if (OptionalLong.class.equals(arg)) {
+            final AttributeSetter wrapped = createAttributeSetter(m, Long.class, attrName);
+            return new AttributeSetter(m, arg, OptionalLong::empty) {
+                @Override
+                OptionalLong toTargetType(Project project, String value)
+                    throws BuildException {
+                    return Optional.ofNullable((Long) wrapped.toTargetType(project, value))
+                        .map(OptionalLong::of).orElseGet(OptionalLong::empty);
+                }
+            };
+        }
+        if (OptionalDouble.class.equals(arg)) {
+            final AttributeSetter wrapped = createAttributeSetter(m, Double.class, attrName);
+            return new AttributeSetter(m, arg, OptionalDouble::empty) {
+                @Override
+                Object toTargetType(Project project, String value)
+                    throws BuildException {
+                    return Optional.ofNullable((Double) wrapped.toTargetType(project, value))
+                        .map(OptionalDouble::of).orElseGet(OptionalDouble::empty);
+                }
+            };
+        }
         // use wrappers for primitive classes, e.g. int and
         // Integer are treated identically
         final Class<?> reflectedArg = PRIMITIVE_TYPE_MAP.getOrDefault(arg, arg);
 
         // Object.class - it gets handled differently by AttributeSetter
-        if (java.lang.Object.class == reflectedArg) {
+        if (Object.class == reflectedArg) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException,
-                    IllegalAccessException {
+                Object toTargetType(Project project, String value)
+                    throws BuildException {
                     throw new BuildException(
-                        "Internal ant problem - this should not get called");
+                            "Internal ant problem - this should not get called");
                 }
             };
         }
@@ -1051,58 +1110,53 @@ public final class IntrospectionHelper {
         if (String.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                    m.invoke(parent, (Object[]) new String[] {value});
+                public String toTargetType(Project project, String t) {
+                    return t;
                 }
             };
         }
         // char and Character get special treatment - take the first character
-        if (java.lang.Character.class.equals(reflectedArg)) {
+        if (Character.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException {
+                public Character toTargetType(Project project, String value) {
                     if (value.isEmpty()) {
                         throw new BuildException("The value \"\" is not a "
                                 + "legal value for attribute \"" + attrName + "\"");
                     }
-                    m.invoke(parent, (Object[]) new Character[] {value.charAt(0)});
+                    return Character.valueOf(value.charAt(0));
                 }
             };
         }
         // boolean and Boolean get special treatment because we have a nice method in Project
-        if (java.lang.Boolean.class.equals(reflectedArg)) {
+        if (Boolean.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                    m.invoke(parent, (Object[]) new Boolean[] {
-                            Project.toBoolean(value) ? Boolean.TRUE : Boolean.FALSE });
+                public Boolean toTargetType(Project project, String value) {
+                    return Boolean.valueOf(Project.toBoolean(value));
                 }
             };
         }
         // Class doesn't have a String constructor but a decent factory method
-        if (java.lang.Class.class.equals(reflectedArg)) {
+        if (Class.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException, BuildException {
+                public Class<?> toTargetType(Project project, String value) {
                     try {
-                        m.invoke(parent, Class.forName(value));
-                    } catch (final ClassNotFoundException ce) {
-                        throw new BuildException(ce);
+                        return Class.forName(value);
+                    } catch (ClassNotFoundException e) {
+                        throw new BuildException(e);
                     }
                 }
             };
         }
         // resolve relative paths through Project
-        if (java.io.File.class.equals(reflectedArg)) {
+        if (File.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                    m.invoke(parent, p.resolveFile(value));
+                Object toTargetType(Project project, String value)
+                    throws BuildException {
+                    return project.resolveFile(value);
                 }
             };
         }
@@ -1110,20 +1164,19 @@ public final class IntrospectionHelper {
         if (java.nio.file.Path.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                    m.invoke(parent, p.resolveFile(value).toPath());
+                Object toTargetType(Project project, String value)
+                    throws BuildException {
+                    return project.resolveFile(value).toPath();
                 }
             };
         }
-
         // resolve Resources/FileProviders as FileResources relative to Project:
         if (Resource.class.equals(reflectedArg) || FileProvider.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException, BuildException {
-                    m.invoke(parent, new FileResource(p, p.resolveFile(value)));
+                Object toTargetType(Project project, String value)
+                    throws BuildException {
+                    return new FileResource(project.resolveFile(value));
                 }
             };
         }
@@ -1131,38 +1184,34 @@ public final class IntrospectionHelper {
         if (EnumeratedAttribute.class.isAssignableFrom(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException, BuildException {
+                public EnumeratedAttribute toTargetType(Project project, String value) {
+                    EnumeratedAttribute ea;
                     try {
-                        final EnumeratedAttribute ea =
-                                (EnumeratedAttribute) reflectedArg.getDeclaredConstructor().newInstance();
-                        ea.setValue(value);
-                        m.invoke(parent, ea);
-                    } catch (final InstantiationException | NoSuchMethodException ie) {
-                        throw new BuildException(ie);
+                        ea = (EnumeratedAttribute) reflectedArg.getDeclaredConstructor().newInstance();
+                    } catch (InstantiationException | IllegalAccessException
+                            | IllegalArgumentException | InvocationTargetException
+                            | NoSuchMethodException | SecurityException e) {
+                        throw BuildException.of(e);
                     }
+                    ea.setValue(value);
+                    return ea;
                 }
             };
         }
-
         final AttributeSetter setter = getEnumSetter(reflectedArg, m, arg);
         if (setter != null) {
             return setter;
         }
-
-        if (java.lang.Long.class.equals(reflectedArg)) {
+        if (Long.class.equals(reflectedArg)) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                        throws InvocationTargetException, IllegalAccessException, BuildException {
+                public Long toTargetType(Project project, String value) {
                     try {
-                        m.invoke(parent, StringUtils.parseHumanSizes(value));
+                        return Long.valueOf(StringUtils.parseHumanSizes(value));
                     } catch (final NumberFormatException e) {
-                        throw new BuildException("Can't assign non-numeric"
-                                                 + " value '" + value + "' to"
-                                                 + " attribute " + attrName);
-                    } catch (final InvocationTargetException | IllegalAccessException e) {
-                        throw e;
+                        throw new BuildException(
+                            String.format("Can't assign non-numeric value '%s' to attribute %s",
+                                value, attrName));
                     } catch (final Exception e) {
                         throw new BuildException(e);
                     }
@@ -1194,30 +1243,32 @@ public final class IntrospectionHelper {
 
         return new AttributeSetter(m, arg) {
             @Override
-            public void set(final Project p, final Object parent, final String value)
-                    throws InvocationTargetException, IllegalAccessException, BuildException {
+            public Object toTargetType(Project project, String value) {
                 try {
                     final Object[] args = finalIncludeProject
-                            ? new Object[] {p, value} : new Object[] {value};
+                            ? new Object[] {project, value} : new Object[] {value};
 
                     final Object attribute = finalConstructor.newInstance(args);
-                    if (p != null) {
-                        p.setProjectReference(attribute);
+                    if (project != null) {
+                        project.setProjectReference(attribute);
                     }
-                    m.invoke(parent, attribute);
-                } catch (final InvocationTargetException e) {
-                    final Throwable cause = e.getCause();
-                    if (cause instanceof IllegalArgumentException) {
-                        throw new BuildException("Can't assign value '" + value
-                                                 + "' to attribute " + attrName
-                                                 + ", reason: "
-                                                 + cause.getClass()
-                                                 + " with message '"
-                                                 + cause.getMessage() + "'");
+                    return attribute;
+                } catch (final Exception e) {
+                    Throwable thw = e;
+                    while (true) {
+                        if (thw instanceof IllegalArgumentException) {
+                            throw new BuildException(String.format(
+                                "Can't convert value '%s' to type %s, reason: %s with message '%s'",
+                                value, reflectedArg, thw.getClass(), thw.getMessage()));
+                        }
+                        final Throwable _thw = thw;
+                        Optional<Throwable> next = Optional.of(thw).map(Throwable::getCause).filter(t -> t != _thw);
+                        if (!next.isPresent()) {
+                            break;
+                        }
+                        thw = next.get();
                     }
-                    throw e;
-                } catch (final InstantiationException ie) {
-                    throw new BuildException(ie);
+                    throw BuildException.of(e);
                 }
             }
         };
@@ -1228,22 +1279,18 @@ public final class IntrospectionHelper {
         if (reflectedArg.isEnum()) {
             return new AttributeSetter(m, arg) {
                 @Override
-                public void set(final Project p, final Object parent, final String value)
-                    throws InvocationTargetException, IllegalAccessException,
-                    BuildException {
-                    Enum<?> setValue;
+                public Enum<?> toTargetType(Project project, String value) {
                     try {
                         @SuppressWarnings({ "unchecked", "rawtypes" })
-                        final Enum<?> enumValue = Enum.valueOf((Class<? extends Enum>) reflectedArg,
-                                value);
-                        setValue = enumValue;
+                        final Enum<?> result =
+                            Enum.valueOf((Class<? extends Enum>) reflectedArg, value);
+                        return result;
                     } catch (final IllegalArgumentException e) {
                         // there is a specific logic here for the value
                         // being out of the allowed set of enumerations.
                         throw new BuildException("'" + value + "' is not a permitted value for "
                                 + reflectedArg.getName());
                     }
-                    m.invoke(parent, setValue);
                 }
             };
         }
@@ -1480,32 +1527,44 @@ public final class IntrospectionHelper {
     private abstract static class AttributeSetter {
         private final Method method; // the method called to set the attribute
         private final Class<?> type;
+        private final Supplier<?> supplyWhenNull;
+
         protected AttributeSetter(final Method m, final Class<?> type) {
-            method = m;
-            this.type = type;
+            this(m, type, () -> null);
         }
-        void setObject(final Project p, final Object parent, final Object value)
+
+        protected AttributeSetter(final Method method, final Class<?> type,
+            final Supplier<?> supplyWhenNull) {
+            this.method = method;
+            this.type = type;
+            this.supplyWhenNull = supplyWhenNull;
+        }
+
+        final void setObject(final Project p, final Object parent, Object value)
                 throws InvocationTargetException, IllegalAccessException, BuildException {
             if (type != null) {
                 Class<?> useType = type;
                 if (type.isPrimitive()) {
                     if (value == null) {
-                        throw new BuildException(
-                            "Attempt to set primitive "
-                            + getPropertyName(method.getName(), "set")
-                            + " to null on " + parent);
+                        throw new BuildException("Attempt to set primitive %s to null on %s",
+                            getPropertyName(method.getName(), "set"), parent);
                     }
                     useType = PRIMITIVE_TYPE_MAP.get(type);
+                }
+                if (value == null ) {
+                    value = supplyWhenNull.get();
                 }
                 if (value == null || useType.isInstance(value)) {
                     method.invoke(parent, value);
                     return;
                 }
             }
-            set(p, parent, value.toString());
+            method.invoke(parent, toTargetType(p, value.toString()));
         }
-        abstract void set(Project p, Object parent, String value)
-                throws InvocationTargetException, IllegalAccessException, BuildException;
+
+        Object toTargetType(Project project, String value) {
+            throw new UnsupportedOperationException();
+        }
     }
 
     /**
