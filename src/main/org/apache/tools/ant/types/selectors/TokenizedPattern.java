@@ -23,10 +23,10 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * Provides reusable path pattern matching.  PathPattern is preferable
- * to equivalent SelectorUtils methods if you need to execute multiple
- * matching with the same pattern because here the pattern itself will
- * be parsed only once.
+ * Provides reusable path pattern matching. {@link TokenizedPattern}
+ * is preferable to equivalent {@link SelectorUtils} methods if you need to
+ * execute multiple matching with the same pattern because here the pattern
+ * itself will be parsed only once.
  * @see SelectorUtils#matchPath(String, String)
  * @see SelectorUtils#matchPath(String, String, boolean)
  * @since 1.8.0
@@ -43,10 +43,9 @@ public class TokenizedPattern {
     private final String[] tokenizedPattern;
 
     /**
-    * Initialize the PathPattern by parsing it.
-    * @param pattern The pattern to match against. Must not be
-    *                <code>null</code>.
-    */
+     * Initialize the {@link TokenizedPattern} by parsing it.
+     * @param pattern The pattern to match against. Must not be {@code null}.
+     */
     public TokenizedPattern(String pattern) {
         this(pattern, SelectorUtils.tokenizePathAsArray(pattern));
     }
@@ -59,13 +58,13 @@ public class TokenizedPattern {
     /**
      * Tests whether or not a given path matches a given pattern.
      *
-     * @param path    The path to match, as a String. Must not be
-     *                <code>null</code>.
+     * @param path    The path to match, as a {@link String}. Must not be
+     *                {@code null}.
      * @param isCaseSensitive Whether or not matching should be performed
      *                        case sensitively.
      *
-     * @return <code>true</code> if the pattern matches against the string,
-     *         or <code>false</code> otherwise.
+     * @return {@code true} if the pattern matches against the string,
+     *         or {@code false} otherwise.
      */
     public boolean matchPath(TokenizedPath path, boolean isCaseSensitive) {
         return SelectorUtils.matchPath(tokenizedPattern, path.getTokens(),
@@ -76,9 +75,9 @@ public class TokenizedPattern {
      * Tests whether or not this pattern matches the start of
      * a path.
      *
-     * @param path TokenizedPath
-     * @param caseSensitive boolean
-     * @return boolean
+     * @param path {@link TokenizedPath}
+     * @param caseSensitive {@code boolean}
+     * @return {@code boolean}
      */
     public boolean matchStartOf(TokenizedPath path,
                                 boolean caseSensitive) {
@@ -87,34 +86,45 @@ public class TokenizedPattern {
     }
 
     /**
-     * @return The pattern String
+     * {@inheritDoc}
+     *
+     * @return The pattern {@link String}
      */
     public String toString() {
         return pattern;
     }
 
+    /**
+     * Get the pattern.
+     *
+     * @return {@link String}
+     */
     public String getPattern() {
         return pattern;
     }
 
     /**
-     * true if the original patterns are equal.
+     * {@inheritDoc}
+     * {@code true} if the original patterns are equal.
      *
-     * @param o Object
+     * @param o {@link Object}
      */
     public boolean equals(Object o) {
         return o instanceof TokenizedPattern
             && pattern.equals(((TokenizedPattern) o).pattern);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public int hashCode() {
         return pattern.hashCode();
     }
 
     /**
-     * The depth (or length) of a pattern.
+     * Get the depth (or length) of a pattern.
      *
-     * @return int
+     * @return {@code int}
      */
     public int depth() {
         return tokenizedPattern.length;
@@ -123,16 +133,16 @@ public class TokenizedPattern {
     /**
      * Does the tokenized pattern contain the given string?
      *
-     * @param pat String
-     * @return boolean
+     * @param pat {@link String}
+     * @return {@code boolean}
      */
     public boolean containsPattern(String pat) {
         return Stream.of(tokenizedPattern).anyMatch(Predicate.isEqual(pat));
     }
 
     /**
-     * Returns a new TokenizedPath where all tokens of this pattern to
-     * the right containing wildcards have been removed
+     * Returns a new {@link TokenizedPath} where all tokens of this pattern to
+     * the right containing wildcards have been removed.
      *
      * @return the leftmost part of the pattern without wildcards
      */
@@ -158,10 +168,10 @@ public class TokenizedPattern {
     }
 
     /**
-     * true if the last token equals the given string.
+     * Learn whether the last token equals the given string.
      *
-     * @param s String
-     * @return boolean
+     * @param s {@link String}
+     * @return {@code boolean}
      */
     public boolean endsWith(String s) {
         return tokenizedPattern.length > 0
@@ -171,7 +181,7 @@ public class TokenizedPattern {
     /**
      * Returns a new pattern without the last token of this pattern.
      *
-     * @return TokenizedPattern
+     * @return {@link TokenizedPattern}
      */
     public TokenizedPattern withoutLastToken() {
         if (tokenizedPattern.length == 0) {
