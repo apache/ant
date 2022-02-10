@@ -95,9 +95,10 @@
 
   <target name="testDirsep">
       <pathconvert property="result" dirsep="|">
-          <file file="/foo/bar/baz" />
+          <file file="foo/bar/baz" />
+          <globmapper from="${basedir}/*" to="*" />
       </pathconvert>
-      <au:assertPropertyEquals name="result" value="|foo|bar|baz" />
+      <au:assertPropertyEquals name="result" value="foo|bar|baz" />
   </target>
 
   <target name="testNoSetonempty">
