@@ -96,7 +96,7 @@
   <target name="testDirsep">
       <pathconvert property="result" dirsep="|">
           <file file="foo/bar/baz" />
-          <globmapper from="${basedir}/*" to="*" />
+          <globmapper from="${basedir}/*" to="*" handledirsep="true" />
       </pathconvert>
       <au:assertPropertyEquals name="result" value="foo|bar|baz" />
   </target>
