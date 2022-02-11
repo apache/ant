@@ -105,17 +105,17 @@ public class FileUtils {
      */
     public static final long NTFS_FILE_TIMESTAMP_GRANULARITY = 1;
 
-    private static final FileAttribute[] TMPFILE_ATTRIBUTES =
+    private static final FileAttribute<?>[] TMPFILE_ATTRIBUTES =
         new FileAttribute[] {
             PosixFilePermissions.asFileAttribute(EnumSet.of(PosixFilePermission.OWNER_READ,
                 PosixFilePermission.OWNER_WRITE))
         };
-    private static final FileAttribute[] TMPDIR_ATTRIBUTES =
+    private static final FileAttribute<?>[] TMPDIR_ATTRIBUTES =
         new FileAttribute[] {
             PosixFilePermissions.asFileAttribute(EnumSet.of(PosixFilePermission.OWNER_READ,
                 PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE))
         };
-    private static final FileAttribute[] NO_TMPFILE_ATTRIBUTES = new FileAttribute[0];
+    private static final FileAttribute<?>[] NO_TMPFILE_ATTRIBUTES = new FileAttribute[0];
 
     /**
      * A one item cache for fromUri.
@@ -123,7 +123,7 @@ public class FileUtils {
      * files. It is a costly operation. This just caches the result
      * of the last call.
      */
-    private Object cacheFromUriLock = new Object();
+    private final Object cacheFromUriLock = new Object();
     private String cacheFromUriRequest = null;
     private String cacheFromUriResponse = null;
 
@@ -963,8 +963,6 @@ public class FileUtils {
         return createTempFile(null, prefix, suffix, parentDir, deleteOnExit, createFile);
     }
 
-    private static final String NULL_PLACEHOLDER = "null";
-
     /**
      * Create a temporary file in a given directory.
      *
@@ -1025,12 +1023,9 @@ public class FileUtils {
             }
         }
         final String parent = p != null ? p : System.getProperty("java.io.tmpdir");
-        if (prefix == null) {
-            prefix = NULL_PLACEHOLDER;
-        }
-        if (suffix == null) {
-            suffix = NULL_PLACEHOLDER;
-        }
+
+        prefix = String.valueOf(prefix);
+        suffix = String.valueOf(suffix);
 
         if (createFile) {
             try {
