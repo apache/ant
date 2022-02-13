@@ -409,5 +409,5 @@ Set -Ddest=LOCATION on the command line
   <target name="all"
     description="load all the libraries (except jython)"
     depends="antunit,ivy,logging,junit,junitlauncher,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,
-      javamail,jakartamail,jspc,jai,xz,netrexx,junit-engine-vintage,junit-engine-jupiter"/>
+      javamail,jakartamail,jspc,jai,xz,junit-engine-vintage,junit-engine-jupiter,netrexx"/>
 </project>
