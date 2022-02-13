@@ -169,7 +169,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     }
 
     /**
-     * Overwrite clone.
+     * Override clone.
      *
      * @return a cloned copy of this ZipEntry
      * @since 1.1
@@ -486,7 +486,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      * Looks up an extra field by its header id.
      *
      * @param type ZipShort
-     * @return null if no such field exists.
+     * @return {@code null} if no such field exists.
      */
     public ZipExtraField getExtraField(final ZipShort type) {
         if (extraFields != null) {
@@ -502,7 +502,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Looks up extra field data that couldn't be parsed correctly.
      *
-     * @return null if no such field exists.
+     * @return {@code null} if no such field exists.
      */
     public UnparseableExtraFieldData getUnparseableExtraFieldData() {
         return unparseableExtra;
@@ -546,7 +546,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Sets the central directory part of extra fields.
      *
-     * @param b boolean
+     * @param b {@code boolean}
      */
     public void setCentralDirectoryExtra(final byte[] b) {
         try {
@@ -587,7 +587,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
      *
      * @param size the size to use
      * @deprecated since 1.7.
-     *             Use setCompressedSize directly.
+     *             Use {@link #setCompressedSize(long)} directly.
      * @since 1.2
      */
     @Deprecated
@@ -609,7 +609,7 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
     /**
      * Is this entry a directory?
      *
-     * @return true if the entry is a directory
+     * @return {@code true} if the entry is a directory
      * @since 1.10
      */
     @Override
@@ -759,13 +759,17 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Get last modified time as {@link Date}.
+     *
+     * @return {@link Date}
+     */
     public Date getLastModifiedDate() {
         return new Date(getTime());
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public boolean equals(final Object obj) {
