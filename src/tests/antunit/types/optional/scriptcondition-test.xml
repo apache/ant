@@ -77,11 +77,11 @@
   </target>
 
   <target name="test-return-value-false">
-    <au:assertTrue>
+    <au:assertFalse>
       <scriptcondition language="beanshell" value="true">
         false
       </scriptcondition>
-    </au:assertTrue>
+    </au:assertFalse>
   </target>
 
 </project>
