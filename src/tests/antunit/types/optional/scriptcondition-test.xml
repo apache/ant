@@ -68,4 +68,20 @@
     </au:assertFalse>
   </target>
 
+  <target name="test-return-value-true">
+    <au:assertTrue>
+      <scriptcondition language="beanshell">
+        true
+      </scriptcondition>
+    </au:assertTrue>
+  </target>
+
+  <target name="test-return-value-false">
+    <au:assertTrue>
+      <scriptcondition language="beanshell" value="true">
+        false
+      </scriptcondition>
+    </au:assertTrue>
+  </target>
+
 </project>
