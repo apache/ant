@@ -45,7 +45,7 @@ public abstract class AbstractResourceCollectionWrapper
      * Set whether to cache collections.
      * @param b boolean cache flag.
      */
-    public synchronized void setCache(boolean b) {
+    public synchronized void setCache(final boolean b) {
         cache = b;
     }
 
@@ -62,7 +62,7 @@ public abstract class AbstractResourceCollectionWrapper
      * @param c the ResourceCollection to add.
      * @throws BuildException on error.
      */
-    public synchronized void add(ResourceCollection c) throws BuildException {
+    public synchronized void add(final ResourceCollection c) throws BuildException {
         if (isReference()) {
             throw noChildrenAllowed();
         }
@@ -74,7 +74,7 @@ public abstract class AbstractResourceCollectionWrapper
         }
         rc = c;
         if (Project.getProject(rc) == null) {
-            Project p = getProject();
+            final Project p = getProject();
             if (p != null) {
                 p.setProjectReference(rc);
             }
@@ -141,7 +141,7 @@ public abstract class AbstractResourceCollectionWrapper
         }
         /* now check each Resource in case the child only
            lets through files from any children IT may have: */
-        for (Resource r : this) {
+        for (final Resource r : this) {
             if (r.as(FileProvider.class) == null) {
                 return false;
             }
@@ -156,7 +156,7 @@ public abstract class AbstractResourceCollectionWrapper
      * @param p   the project to use to dereference the references.
      * @throws BuildException on error.
      */
-    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p)
+    protected synchronized void dieOnCircularReference(final Stack<Object> stk, final Project p)
         throws BuildException {
         if (isChecked()) {
             return;

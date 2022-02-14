@@ -108,7 +108,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  @ant.attribute ignore="true"
      */
     @Override
-    public void setTask(ServerDeploy task) {
+    public void setTask(final ServerDeploy task) {
         this.task = task;
     }
 
@@ -134,7 +134,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  The classpath may also be supplied as a nested element.
      *  @param classpath A Path object representing the "classpath" attribute.
      */
-    public void setClasspath(Path classpath) {
+    public void setClasspath(final Path classpath) {
         this.classpath = classpath;
     }
 
@@ -150,7 +150,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  The user with privileges to deploy applications to the server; optional.
      *  @param userName A String representing the "userName" attribute.
      */
-    public void setUserName(String userName) {
+    public void setUserName(final String userName) {
         this.userName = userName;
     }
 
@@ -166,7 +166,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  The password of the user; optional.
      *  @param password A String representing the "password" attribute.
      */
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -182,7 +182,7 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  The address or URL for the server where the component will be deployed.
      *  @param server A String representing the "server" attribute.
      */
-    public void setServer(String server) {
+    public void setServer(final String server) {
         this.server = server;
     }
 }

@@ -36,10 +36,10 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     public static final int MAX_LOOPS = 1000;
 
     /** The source path for the source files */
-    private Path sourcePath = new Path(null);
+    private final Path sourcePath = new Path(null);
 
     /** The classpath containing dirs and jars of class files */
-    private Path classPath = new Path(null);
+    private final Path classPath = new Path(null);
 
     /** The list of root classes */
     private final Vector<String> rootClasses = new VectorSet<>();
@@ -69,7 +69,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      *      indirect dependencies.
      */
     @Override
-    public void setClosure(boolean closure) {
+    public void setClosure(final boolean closure) {
         this.closure = closure;
     }
 
@@ -116,8 +116,8 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * @exception IOException if the files in the classpath cannot be read.
      */
     @Override
-    public File getClassContainer(String classname) throws IOException {
-        String classLocation = classname.replace('.', '/') + ".class";
+    public File getClassContainer(final String classname) throws IOException {
+        final String classLocation = classname.replace('.', '/') + ".class";
         // we look through the classpath elements. If the element is a dir
         // we look for the file. IF it is a zip, we look for the zip entry
         return getResourceContainer(classLocation, classPath.list());
@@ -132,8 +132,8 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * @exception IOException if the files in the sourcepath cannot be read.
      */
     @Override
-    public File getSourceContainer(String classname) throws IOException {
-        String sourceLocation = classname.replace('.', '/') + ".java";
+    public File getSourceContainer(final String classname) throws IOException {
+        final String sourceLocation = classname.replace('.', '/') + ".java";
 
         // we look through the source path elements. If the element is a dir
         // we look for the file. If it is a zip, we look for the zip entry.
@@ -150,7 +150,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      *      elements.
      */
     @Override
-    public void addSourcePath(Path sourcePath) {
+    public void addSourcePath(final Path sourcePath) {
         if (sourcePath == null) {
             return;
         }
@@ -167,7 +167,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * @param classPath the Path instance specifying the classpath elements
      */
     @Override
-    public void addClassPath(Path classPath) {
+    public void addClassPath(final Path classPath) {
         if (classPath == null) {
             return;
         }
@@ -184,7 +184,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * @param className the name of the class in Java dot notation.
      */
     @Override
-    public void addRootClass(String className) {
+    public void addRootClass(final String className) {
         if (className == null) {
             return;
         }
@@ -201,7 +201,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * @param info the configuration info.
      */
     @Override
-    public void config(String name, Object info) {
+    public void config(final String name, final Object info) {
         // do nothing by default
     }
 
@@ -264,21 +264,21 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      *         class or null if the class could not be found.
      * @exception IOException if the files in the given paths cannot be read.
      */
-    private File getResourceContainer(String resourceLocation, String[] paths)
+    private File getResourceContainer(final String resourceLocation, final String[] paths)
          throws IOException {
-        for (String path : paths) {
-            File element = new File(path);
+        for (final String path : paths) {
+            final File element = new File(path);
             if (!element.exists()) {
                 continue;
             }
             if (element.isDirectory()) {
-                File resource = new File(element, resourceLocation);
+                final File resource = new File(element, resourceLocation);
                 if (resource.exists()) {
                     return resource;
                 }
             } else {
                 // must be a zip of some sort
-                try (ZipFile zipFile = new ZipFile(element)) {
+                try (final ZipFile zipFile = new ZipFile(element)) {
                     if (zipFile.getEntry(resourceLocation) != null) {
                         return element;
                     }

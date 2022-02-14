@@ -73,7 +73,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param p the current project
      * @return an array of selectors
      */
-    public FileSelector[] getSelectors(Project p) {
+    public FileSelector[] getSelectors(final Project p) {
         if (isReference()) {
             return getRef(p).getSelectors(p);
         }
@@ -110,7 +110,7 @@ public abstract class AbstractSelectorContainer extends DataType
      *
      * @param selector the new selector to add
      */
-    public void appendSelector(FileSelector selector) {
+    public void appendSelector(final FileSelector selector) {
         if (isReference()) {
             throw noChildrenAllowed();
         }
@@ -150,7 +150,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a "Select" selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addSelector(SelectSelector selector) {
+    public void addSelector(final SelectSelector selector) {
         appendSelector(selector);
     }
 
@@ -158,7 +158,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add an "And" selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addAnd(AndSelector selector) {
+    public void addAnd(final AndSelector selector) {
         appendSelector(selector);
     }
 
@@ -166,7 +166,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add an "Or" selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addOr(OrSelector selector) {
+    public void addOr(final OrSelector selector) {
         appendSelector(selector);
     }
 
@@ -174,7 +174,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a "Not" selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addNot(NotSelector selector) {
+    public void addNot(final NotSelector selector) {
         appendSelector(selector);
     }
 
@@ -182,7 +182,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a "None" selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addNone(NoneSelector selector) {
+    public void addNone(final NoneSelector selector) {
         appendSelector(selector);
     }
 
@@ -190,7 +190,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a majority selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addMajority(MajoritySelector selector) {
+    public void addMajority(final MajoritySelector selector) {
         appendSelector(selector);
     }
 
@@ -198,7 +198,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a selector date entry on the selector list
      * @param selector the selector to add
      */
-    public void addDate(DateSelector selector) {
+    public void addDate(final DateSelector selector) {
         appendSelector(selector);
     }
 
@@ -206,7 +206,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a selector size entry on the selector list
      * @param selector the selector to add
      */
-    public void addSize(SizeSelector selector) {
+    public void addSize(final SizeSelector selector) {
         appendSelector(selector);
     }
 
@@ -214,7 +214,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a selector filename entry on the selector list
      * @param selector the selector to add
      */
-    public void addFilename(FilenameSelector selector) {
+    public void addFilename(final FilenameSelector selector) {
         appendSelector(selector);
     }
 
@@ -222,7 +222,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add an extended selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addCustom(ExtendSelector selector) {
+    public void addCustom(final ExtendSelector selector) {
         appendSelector(selector);
     }
 
@@ -230,7 +230,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a contains selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addContains(ContainsSelector selector) {
+    public void addContains(final ContainsSelector selector) {
         appendSelector(selector);
     }
 
@@ -238,7 +238,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a present selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addPresent(PresentSelector selector) {
+    public void addPresent(final PresentSelector selector) {
         appendSelector(selector);
     }
 
@@ -246,7 +246,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a depth selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addDepth(DepthSelector selector) {
+    public void addDepth(final DepthSelector selector) {
         appendSelector(selector);
     }
 
@@ -254,7 +254,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a depends selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addDepend(DependSelector selector) {
+    public void addDepend(final DependSelector selector) {
         appendSelector(selector);
     }
 
@@ -262,7 +262,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * adds a different selector to the selector list
      * @param selector the selector to add
      */
-    public void addDifferent(DifferentSelector selector) {
+    public void addDifferent(final DifferentSelector selector) {
         appendSelector(selector);
     }
 
@@ -270,7 +270,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * adds a type selector to the selector list
      * @param selector the selector to add
      */
-    public void addType(TypeSelector selector) {
+    public void addType(final TypeSelector selector) {
         appendSelector(selector);
     }
 
@@ -278,7 +278,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * add a regular expression selector entry on the selector list
      * @param selector the selector to add
      */
-    public void addContainsRegexp(ContainsRegexpSelector selector) {
+    public void addContainsRegexp(final ContainsRegexpSelector selector) {
         appendSelector(selector);
     }
 
@@ -287,15 +287,15 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param selector the selector to add
      * @since ant 1.6
      */
-    public void addModified(ModifiedSelector selector) {
+    public void addModified(final ModifiedSelector selector) {
         appendSelector(selector);
     }
 
-    public void addReadable(ReadableSelector r) {
+    public void addReadable(final ReadableSelector r) {
         appendSelector(r);
     }
 
-    public void addWritable(WritableSelector w) {
+    public void addWritable(final WritableSelector w) {
         appendSelector(w);
     }
 
@@ -303,7 +303,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param e ExecutableSelector
      * @since 1.10.0
      */
-    public void addExecutable(ExecutableSelector e) {
+    public void addExecutable(final ExecutableSelector e) {
         appendSelector(e);
     }
 
@@ -311,7 +311,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param e SymlinkSelector
      * @since 1.10.0
      */
-    public void addSymlink(SymlinkSelector e) {
+    public void addSymlink(final SymlinkSelector e) {
         appendSelector(e);
     }
 
@@ -319,7 +319,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param o OwnedBySelector
      * @since 1.10.0
      */
-    public void addOwnedBy(OwnedBySelector o) {
+    public void addOwnedBy(final OwnedBySelector o) {
         appendSelector(o);
     }
 
@@ -327,7 +327,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param o PosixGroupSelector
      * @since 1.10.4
      */
-    public void addPosixGroup(PosixGroupSelector o) {
+    public void addPosixGroup(final PosixGroupSelector o) {
         appendSelector(o);
     }
 
@@ -335,7 +335,7 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param o PosixPermissionsSelector
      * @since 1.10.4
      */
-    public void addPosixPermissions(PosixPermissionsSelector o) {
+    public void addPosixPermissions(final PosixPermissionsSelector o) {
         appendSelector(o);
     }
 
@@ -344,18 +344,18 @@ public abstract class AbstractSelectorContainer extends DataType
      * @param selector the selector to add
      * @since Ant 1.6
      */
-    public void add(FileSelector selector) {
+    public void add(final FileSelector selector) {
         appendSelector(selector);
     }
 
-    protected synchronized void dieOnCircularReference(Stack<Object> stk, Project p) {
+    protected synchronized void dieOnCircularReference(final Stack<Object> stk, final Project p) {
         if (isChecked()) {
             return;
         }
         if (isReference()) {
             super.dieOnCircularReference(stk, p);
         } else {
-            for (FileSelector fileSelector : selectorsList) {
+            for (final FileSelector fileSelector : selectorsList) {
                 if (fileSelector instanceof DataType) {
                     pushAndInvokeCircularReferenceCheck((DataType) fileSelector, stk, p);
                 }
@@ -373,17 +373,17 @@ public abstract class AbstractSelectorContainer extends DataType
             return getRef().clone();
         }
         try {
-            AbstractSelectorContainer sc =
+            final AbstractSelectorContainer sc =
                 (AbstractSelectorContainer) super.clone();
             sc.selectorsList = new Vector<>(selectorsList);
             return sc;
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             throw new BuildException(e);
         }
     }
 
 
-    private AbstractSelectorContainer getRef(Project p) {
+    private AbstractSelectorContainer getRef(final Project p) {
         return getCheckedRef(AbstractSelectorContainer.class, getDataTypeName(), p);
     }
 
