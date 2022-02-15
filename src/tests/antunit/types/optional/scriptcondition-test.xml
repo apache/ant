@@ -70,7 +70,7 @@
 
   <target name="test-return-value-true">
     <au:assertTrue>
-      <scriptcondition language="beanshell">
+      <scriptcondition language="javascript" manager="javax">
         true
       </scriptcondition>
     </au:assertTrue>
@@ -78,7 +78,7 @@
 
   <target name="test-return-value-false">
     <au:assertFalse>
-      <scriptcondition language="beanshell" value="true">
+      <scriptcondition language="javascript" manager="javax" value="true">
         false
       </scriptcondition>
     </au:assertFalse>
