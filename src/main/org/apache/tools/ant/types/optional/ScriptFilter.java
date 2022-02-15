@@ -25,6 +25,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.filters.TokenFilter;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.ScriptManager;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.util.ScriptRunnerHelper;
 
@@ -137,9 +138,19 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
      *
      * @param manager the scripting manager.
      */
+    @Deprecated
     public void setManager(String manager) {
         helper.setManager(manager);
     }
+
+    /**
+     * Set the script manager.
+     * @param manager
+     */
+    public void setManager(ScriptManager manager) {
+        helper.setManager(manager);
+    }
+
     /**
      * Set the classpath to be used when searching for classes and resources.
      *

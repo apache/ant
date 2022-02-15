@@ -32,9 +32,9 @@ public class ScriptRunnerHelper {
     private ClasspathUtils.Delegate cpDelegate = null;
     private File    srcFile;
     private String  encoding;
-    private String  manager = "auto";
     private String  language;
     private String  text;
+    private ScriptManager manager = ScriptManager.auto;
     private boolean compiled = false;
     private boolean setBeans = true;
     private ProjectComponent projectComponent;
@@ -157,8 +157,17 @@ public class ScriptRunnerHelper {
      *
      * @param manager the scripting manager - "bsf" or "javax" or "auto"
      */
+    @Deprecated
     public void setManager(String manager) {
-        this.manager = manager;
+        setManager(manager == null ? null : ScriptManager.valueOf(manager));
+    }
+
+    /**
+     * Set the manager.
+     * @param manager
+     */
+    public void setManager(ScriptManager manager) {
+        this.manager = manager == null ? ScriptManager.auto : manager;
     }
 
     /**

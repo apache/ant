@@ -17,6 +17,13 @@
  */
 package org.apache.tools.ant.util;
 
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
@@ -26,22 +33,74 @@ import org.apache.tools.ant.Project;
  * create a ScriptRunner based on a classloader and on a language.
  */
 public class ScriptRunnerCreator {
-    private static final String AUTO = "auto";
+    private static class ScriptRunnerFactory {
+        final String managerClass;
+        final String runnerClass;
+        
+        ScriptRunnerFactory(String managerClass, String runnerClass) {
+            this.managerClass = managerClass;
+            this.runnerClass = runnerClass;
+        }
+
+        boolean validateManager(Project project, String language, ClassLoader scriptLoader) {
+            try {
+                Class.forName(managerClass, true, scriptLoader);
+                return true;
+            } catch (Exception ex) {
+                return false;
+            }
+        }
+
+        ScriptRunnerBase getRunner(Project project, String language, ClassLoader scriptLoader) {
+            if (!validateManager(project, language, scriptLoader)) {
+                return null;
+            }
+            final ScriptRunnerBase runner;
+            try {
+                runner = Class.forName(runnerClass, true, scriptLoader)
+                    .asSubclass(ScriptRunnerBase.class).getDeclaredConstructor().newInstance();
+
+                runner.setProject(project);
+            } catch (Exception ex) {
+                throw ReflectUtil.toBuildException(ex);
+            }
+            runner.setLanguage(language);
+            runner.setScriptClassLoader(scriptLoader);
+            return runner;
+        }
+    }
+
+    private static final Map<ScriptManager, ScriptRunnerFactory> RUNNER_FACTORIES;
+
     private static final String UTIL_OPT = MagicNames.ANT_CORE_PACKAGE + ".util.optional";
 
-    private static final String BSF = "bsf";
     private static final String BSF_PACK = "org.apache.bsf";
     private static final String BSF_MANAGER = BSF_PACK + ".BSFManager";
     private static final String BSF_RUNNER = UTIL_OPT + ".ScriptRunner";
 
-    private static final String JAVAX = "javax";
     private static final String JAVAX_MANAGER = "javax.script.ScriptEngineManager";
     private static final String JAVAX_RUNNER = UTIL_OPT + ".JavaxScriptRunner";
 
-    private Project     project;
-    private String      manager;
-    private String      language;
-    private ClassLoader scriptLoader = null;
+    static {
+        final Map<ScriptManager, ScriptRunnerFactory> m = new EnumMap<>(ScriptManager.class);
+        
+        m.put(ScriptManager.bsf, new ScriptRunnerFactory(BSF_MANAGER, BSF_RUNNER) {
+            @Override
+            boolean validateManager(Project project, String language, ClassLoader scriptLoader) {
+                if (scriptLoader.getResource(LoaderUtils.classNameToResource(BSF_MANAGER)) == null) {
+                    return false;
+                }
+                new ScriptFixBSFPath().fixClassLoader(scriptLoader, language);
+                return true;
+            }
+        });
+
+        m.put(ScriptManager.javax, new ScriptRunnerFactory(JAVAX_MANAGER, JAVAX_RUNNER));
+
+        RUNNER_FACTORIES = Collections.unmodifiableMap(m);
+    }
+
+    private Project project;
 
     /**
      * Constructor for creator.
@@ -58,17 +117,29 @@ public class ScriptRunnerCreator {
      * @param classLoader  the classloader to use
      * @return the created script runner.
      * @throws BuildException if unable to create the ScriptRunner.
+     * @deprecated Use {@link #createRunner(ScriptManager,String,ClassLoader)} instead
      */
-    public synchronized ScriptRunnerBase createRunner(
-        String manager, String language, ClassLoader classLoader) {
-        this.manager      = manager;
-        this.language     = language;
-        this.scriptLoader = classLoader;
+    @Deprecated
+    public synchronized ScriptRunnerBase createRunner(String manager, String language,
+        ClassLoader classLoader) {
+        return createRunner(ScriptManager.valueOf(manager), language, classLoader);
+    }
+
+    /**
+     * Create a ScriptRunner.
+     * @param manager      the {@link ScriptManager}
+     * @param language     the language.
+     * @param classLoader  the classloader to use
+     * @return the created script runner.
+     * @throws BuildException if unable to create the ScriptRunner.
+     */
+    public synchronized ScriptRunnerBase createRunner(ScriptManager manager, String language,
+        ClassLoader classLoader) {
 
         if (language == null) {
             throw new BuildException("script language must be specified");
         }
-        if (!manager.equals(AUTO) && !manager.equals(JAVAX) && !manager.equals(BSF)) {
+        if (manager == null) {
             throw new BuildException("Unsupported language prefix " + manager);
         }
 
@@ -76,64 +147,16 @@ public class ScriptRunnerCreator {
         // This version does not check if the scriptManager
         // supports the language.
 
-        ScriptRunnerBase ret = null;
-        ret = createRunner(BSF, BSF_MANAGER, BSF_RUNNER);
-        if (ret == null) {
-            ret = createRunner(JAVAX, JAVAX_MANAGER, JAVAX_RUNNER);
-        }
-        if (ret != null) {
-            return ret;
-        }
-        if (JAVAX.equals(manager)) {
-            throw new BuildException(
-                    "Unable to load the script engine manager " + "(" + JAVAX_MANAGER + ")");
-        }
-        if (BSF.equals(manager)) {
-            throw new BuildException(
-                    "Unable to load the BSF script engine manager " + "(" + BSF_MANAGER + ")");
-        }
-        throw new BuildException("Unable to load a script engine manager "
-                + "(" + BSF_MANAGER + " or " + JAVAX_MANAGER + ")");
-    }
-
-    /**
-     * Create a script runner if the scriptManager matches the passed
-     * in manager.
-     * This checks if the script manager exists in the scriptLoader
-     * classloader and if so it creates and returns the script runner.
-     * @param checkManager check if the manager matches this value.
-     * @param managerClass the name of the script manager class.
-     * @param runnerClass   the name of ant's script runner for this manager.
-     * @return the script runner class.
-     * @throws BuildException if there is a problem creating the runner class.
-     */
-    private ScriptRunnerBase createRunner(
-        String checkManager, String managerClass, String runnerClass) {
-        ScriptRunnerBase runner = null;
-        if (!manager.equals(AUTO) && !manager.equals(checkManager)) {
-            return null;
-        }
-        if (managerClass.equals(BSF_MANAGER)) {
-            if (scriptLoader.getResource(LoaderUtils.classNameToResource(managerClass)) == null) {
-                return null;
-            }
-            new ScriptFixBSFPath().fixClassLoader(scriptLoader, language);
+        final Set<ScriptManager> managers;
+        if (manager == ScriptManager.auto) {
+            managers = EnumSet.complementOf(EnumSet.of(ScriptManager.auto));
         } else {
-            try {
-                Class.forName(managerClass, true, scriptLoader);
-            } catch (Exception ex) {
-                return null;
-            }
+            managers = EnumSet.of(manager);
         }
-        try {
-            runner = (ScriptRunnerBase) Class.forName(
-                    runnerClass, true, scriptLoader).getDeclaredConstructor().newInstance();
-            runner.setProject(project);
-        } catch (Exception ex) {
-            throw ReflectUtil.toBuildException(ex);
-        }
-        runner.setLanguage(language);
-        runner.setScriptClassLoader(scriptLoader);
-        return runner;
+        return managers.stream().map(RUNNER_FACTORIES::get)
+            .map(f -> f.getRunner(project, language, classLoader)).findFirst()
+            .orElseThrow(() -> new BuildException(
+                managers.stream().map(RUNNER_FACTORIES::get).map(f -> f.managerClass).collect(
+                    Collectors.joining("|", "Unable to load script engine manager (", ")"))));
     }
 }

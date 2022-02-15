@@ -35,6 +35,7 @@ import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.taskdefs.DefBase;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.util.ClasspathUtils;
+import org.apache.tools.ant.util.ScriptManager;
 import org.apache.tools.ant.util.ScriptRunnerBase;
 import org.apache.tools.ant.util.ScriptRunnerHelper;
 
@@ -353,7 +354,16 @@ public class ScriptDef extends DefBase {
      *
      * @param manager the scripting manager.
      */
+    @Deprecated
     public void setManager(String manager) {
+        helper.setManager(manager);
+    }
+
+    /**
+     * Set the script manager.
+     * @param manager
+     */
+    public void setManager(ScriptManager manager) {
         helper.setManager(manager);
     }
 
