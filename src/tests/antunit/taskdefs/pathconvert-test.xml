@@ -117,7 +117,7 @@
       </pathconvert>
       <au:assertFileExists file="${output}/destfile" />
       <au:assertTrue>
-        <resourcesmatch>
+        <resourcesmatch astext="true">
           <file file="${output}/destfile" />
           <string value="${basedir}/foo/bar/baz" />
         </resourcesmatch>
