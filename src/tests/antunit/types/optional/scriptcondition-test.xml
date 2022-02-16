@@ -18,13 +18,25 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../../antunit-base.xml" />
 
-  <target name="test-default-behavior">
+  <target name="setUp">
+    <condition property="expect-js">
+      <not>
+        <and>
+          <isset property="jenkins" />
+          <javaversion atleast="15" />
+        </and>
+      </not>
+    </condition>
+    <echo>$${expect-js}=${expect-js}</echo>
+  </target>
+
+  <target name="test-default-behavior" depends="setUp" if="expect-js">
     <au:assertFalse>
       <scriptcondition language="javascript" />
     </au:assertFalse>
   </target>
 
-  <target name="test-set-value-true">
+  <target name="test-set-value-true" depends="setUp" if="expect-js">
     <au:assertTrue>
       <scriptcondition language="javascript">
         self.setValue(true);
@@ -32,7 +44,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="test-set-value-false">
+  <target name="test-set-value-false" depends="setUp" if="expect-js">
     <au:assertFalse>
       <scriptcondition language="javascript">
         self.setValue(false);
@@ -40,19 +52,19 @@
     </au:assertFalse>
   </target>
 
-  <target name="test-default-value-true">
+  <target name="test-default-value-true" depends="setUp" if="expect-js">
     <au:assertTrue>
       <scriptcondition language="javascript" value="true" />
     </au:assertTrue>
   </target>
 
-  <target name="test-default-value-false">
+  <target name="test-default-value-false" depends="setUp" if="expect-js">
     <au:assertFalse>
       <scriptcondition language="javascript" value="false" />
     </au:assertFalse>
   </target>
 
-  <target name="test-default-value-override-true">
+  <target name="test-default-value-override-true" depends="setUp" if="expect-js">
     <au:assertTrue>
       <scriptcondition language="javascript" value="false">
         self.setValue(true);
@@ -60,7 +72,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="test-default-value-override-false">
+  <target name="test-default-value-override-false" depends="setUp" if="expect-js">
     <au:assertFalse>
       <scriptcondition language="javascript" value="true">
         self.setValue(false);
@@ -68,7 +80,7 @@
     </au:assertFalse>
   </target>
 
-  <target name="test-return-value-true">
+  <target name="test-return-value-true" depends="setUp" if="expect-js">
     <au:assertTrue>
       <scriptcondition language="javascript" manager="javax">
         true
@@ -76,7 +88,7 @@
     </au:assertTrue>
   </target>
 
-  <target name="test-return-value-false">
+  <target name="test-return-value-false" depends="setUp" if="expect-js">
     <au:assertFalse>
       <scriptcondition language="javascript" manager="javax" value="true">
         false
