@@ -51,6 +51,11 @@
     <antunit xmlns="antlib:org.apache.ant.antunit">
       <plainlistener />
       <file file="${ant.file}" xmlns="antlib:org.apache.tools.ant" />
+      <propertyset>
+        <propertyref name="antunit.tmpdir"/>
+        <propertyref name="ant.home"/>
+        <propertyref name="jenkins"/>
+      </propertyset>
     </antunit>
   </target>
 
