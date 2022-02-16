@@ -113,13 +113,13 @@
   <target name="testDest">
       <au:assertFileDoesntExist file="${output}/destfile" />
       <pathconvert dest="${output}/destfile">
-          <file file="foo/bar/baz" />
+          <file file="${ant.file}" />
       </pathconvert>
       <au:assertFileExists file="${output}/destfile" />
       <au:assertTrue>
         <resourcesmatch astext="true">
           <file file="${output}/destfile" />
-          <string value="${basedir}/foo/bar/baz" />
+          <string value="${ant.file}" />
         </resourcesmatch>
       </au:assertTrue>
   </target>
