@@ -102,6 +102,9 @@ public class PathConvert extends Task {
 
     private boolean preserveDuplicates;
 
+    /** Destination {@link Resource} */
+    private Resource dest;
+
     /**
      * Helper class, holds the nested &lt;map&gt; values. Elements will look like
      * this: &lt;map from=&quot;d:&quot; to=&quot;/foo&quot;/&gt;
@@ -329,6 +332,19 @@ public class PathConvert extends Task {
     }
 
     /**
+     * Set destination resource.
+     * @param dest
+     */
+    public void setDest(Resource dest) {
+        if (dest != null) {
+            if (this.dest != null) {
+                throw new BuildException("@dest already set");
+            }
+        }
+        this.dest = dest;
+    }
+
+    /**
      * Do the execution.
      * @throws BuildException if something is invalid.
      */
@@ -371,7 +387,10 @@ public class PathConvert extends Task {
         }
     }
 
-    private OutputStream createOutputStream() {
+    private OutputStream createOutputStream() throws IOException {
+        if (dest != null) {
+            return dest.getOutputStream();
+        }
         if (property == null) {
             return new LogOutputStream(this);
         }
@@ -452,9 +471,11 @@ public class PathConvert extends Task {
      * @throws BuildException if something is not set up properly.
      */
     private void validateSetup() throws BuildException {
-
         if (path == null) {
             throw new BuildException("You must specify a path to convert");
+        }
+        if (property != null && dest != null) {
+            throw new BuildException("@property and @dest are mutually exclusive");
         }
         // Determine the separator strings.  The dirsep and pathsep attributes
         // override the targetOS settings.

@@ -28,7 +28,8 @@
 <h3>Description</h3>
 <p>Converts nested <a href="../Types/resources.html#collection">resource collections</a>, or a
 reference to just one, into a path form for a particular platform, optionally storing the result
-into a given property. It can also be used when you need to convert a resource collection into a
+into a property or writing to an Ant <a href="../Types/resources.html">resource</a>.
+It can also be used when you need to convert a resource collection into a
 list, separated by a given character, such as a comma or space, or, conversely, e.g. to convert a
 list of files in a FileList into a path.</p>
 <p>Nested <code>&lt;map&gt;</code> elements can be specified to map Windows drive letters to Unix
@@ -65,7 +66,14 @@ nested <a href="../Types/mapper.html"><code>&lt;mapper&gt;</code></a> (<em>since
   <tr>
     <td>property</td>
     <td>The name of the property in which to place the converted path.</td>
-    <td>No, result will be logged if unset</td>
+    <td>No, result will be logged if neither <code>@property</code> nor <code>@dest</code> is set</td>
+  </tr>
+  <tr>
+    <td>dest</td>
+    <td>A destination resource into which to write the converted path (Ant interprets this as a
+        <code>File</code> by default).
+    </td>
+    <td>No, result will be logged if neither <code>@property</code> nor <code>@dest</code> is set</td>
   </tr>
   <tr>
     <td>refid</td>

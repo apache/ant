@@ -109,4 +109,24 @@
           <isset property="result" />
       </au:assertFalse>
   </target>
+
+  <target name="testDest">
+      <au:assertFileDoesntExist file="${output}/destfile" />
+      <pathconvert dest="${output}/destfile">
+          <file file="foo/bar/baz" />
+      </pathconvert>
+      <au:assertFileExists file="${output}/destfile" />
+      <au:assertTrue>
+        <resourcesmatch>
+          <file file="${output}/destfile" />
+          <string value="${basedir}/foo/bar/baz" />
+        </resourcesmatch>
+      </au:assertTrue>
+  </target>
+
+  <target name="testDestPropertyMutex">
+      <au:expectfailure message="@property and @dest are mutually exclusive">
+          <pathconvert property="someprop" dest="somefile" refid="testpath" />
+      </au:expectfailure>
+  </target>
 </project>
