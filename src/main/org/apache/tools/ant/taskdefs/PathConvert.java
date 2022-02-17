@@ -37,6 +37,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
@@ -62,19 +63,19 @@ public class PathConvert extends Task {
     /**
      * Path to be converted
      */
-    private Resources path = null;
+    private Resources path;
     /**
      * Reference to path/fileset to convert
      */
-    private Reference refid = null;
+    private Reference refid;
     /**
      * The target OS type
      */
-    private String targetOS = null;
+    private String targetOS;
     /**
      * Set when targetOS is set to windows
      */
-    private boolean targetWindows = false;
+    private boolean targetWindows;
     /**
      * Set if we should create a new property even if the result is empty
      */
@@ -82,7 +83,7 @@ public class PathConvert extends Task {
     /**
      * The property to receive the conversion
      */
-    private String property = null;
+    private String property;
     /**
      * Path prefix map
      */
@@ -90,16 +91,19 @@ public class PathConvert extends Task {
     /**
      * User override on path sep char
      */
-    private String pathSep = null;
+    private String pathSep;
     /**
      * User override on directory sep char
      */
-    private String dirSep = null;
+    private String dirSep;
 
     /** Filename mapper */
-    private Mapper mapper = null;
+    private Mapper mapper;
 
     private boolean preserveDuplicates;
+
+    /** Destination {@link Resource} */
+    private Resource dest;
 
     /**
      * Helper class, holds the nested &lt;map&gt; values. Elements will look like
@@ -328,6 +332,19 @@ public class PathConvert extends Task {
     }
 
     /**
+     * Set destination resource.
+     * @param dest
+     */
+    public void setDest(Resource dest) {
+        if (dest != null) {
+            if (this.dest != null) {
+                throw new BuildException("@dest already set");
+            }
+        }
+        this.dest = dest;
+    }
+
+    /**
      * Do the execution.
      * @throws BuildException if something is invalid.
      */
@@ -370,7 +387,10 @@ public class PathConvert extends Task {
         }
     }
 
-    private OutputStream createOutputStream() {
+    private OutputStream createOutputStream() throws IOException {
+        if (dest != null) {
+            return dest.getOutputStream();
+        }
         if (property == null) {
             return new LogOutputStream(this);
         }
@@ -451,9 +471,11 @@ public class PathConvert extends Task {
      * @throws BuildException if something is not set up properly.
      */
     private void validateSetup() throws BuildException {
-
         if (path == null) {
             throw new BuildException("You must specify a path to convert");
+        }
+        if (property != null && dest != null) {
+            throw new BuildException("@property and @dest are mutually exclusive");
         }
         // Determine the separator strings.  The dirsep and pathsep attributes
         // override the targetOS settings.
