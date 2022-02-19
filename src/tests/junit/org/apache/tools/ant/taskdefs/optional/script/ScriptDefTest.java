@@ -162,6 +162,10 @@ public class ScriptDefTest {
         // skip execution since this compilation timing based test consistently fails starting Java 15 (where we use
         // Graal libraries for Javascript engine)
         Assume.assumeTrue("Skipping test execution since Java version is greater than Java 14", atMostJava14.eval());
+
+        // warm everything up:
+        buildRule.executeTarget("useNotCompiled");
+
         final long duration;
         {
             long start = System.nanoTime();
