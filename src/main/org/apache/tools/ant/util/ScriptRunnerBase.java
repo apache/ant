@@ -27,6 +27,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -332,8 +334,9 @@ public abstract class ScriptRunnerBase {
      */
     public void bindToComponent(ProjectComponent component) {
         project = component.getProject();
-        addBeans(project.getProperties());
-        addBeans(project.getUserProperties());
+
+        addBeans(project.getPropertyNames().stream()
+            .collect(Collectors.toMap(Function.identity(), project::getProperty)));
         addBeans(project.getCopyOfTargets());
         addBeans(project.getCopyOfReferences());
         addBean("project", project);
