@@ -21,10 +21,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.BuildException;
@@ -104,13 +106,52 @@ public class ScriptDef extends DefBase {
         /** The attribute name */
         private String name;
 
+        /** The attribute's default value */
+        private String defaultValue;
+
         /**
-         * Sets the attribute name
+         * Sets the attribute name.
          *
          * @param name the attribute name
          */
         public void setName(String name) {
             this.name = name.toLowerCase(Locale.ENGLISH);
+        }
+
+        /**
+         * Get the name of this {@link Attribute}.
+         * 
+         * @return {@link String}
+         */
+        String getName() {
+            return name;
+        }
+
+        /**
+         * Set the default value of this {@link Attribute}.
+         *
+         * @param defaultValue {@link String}
+         */
+        public void setDefault(String defaultValue) {
+            this.defaultValue = defaultValue;
+        }
+
+        /**
+         * Get the default value of this {@link Attribute}, {@code null} if
+         * unset.
+         * 
+         * @return {@link String}
+         */
+        String getDefault() {
+            return defaultValue;
+        }
+
+        /**
+         * Learn whether this {@link Attribute} has a default value set.
+         * @return {@code boolean}
+         */
+        boolean hasDefault() {
+            return defaultValue != null;
         }
     }
 
@@ -340,7 +381,8 @@ public class ScriptDef extends DefBase {
     public void executeScript(Map<String, String> attributes,
         Map<String, List<Object>> elements, ScriptDefBase instance) {
         ScriptRunnerBase runner = helper.getScriptRunner();
-        runner.addBean("attributes", attributes);
+
+        runner.addBean("attributes", withDefault(attributes));
         runner.addBean("elements", elements);
         runner.addBean("project", getProject());
         if (instance != null) {
@@ -421,5 +463,29 @@ public class ScriptDef extends DefBase {
      */
     public void add(ResourceCollection resource) {
         helper.add(resource);
+    }
+
+    private Map<String, String> withDefault(Map<String, String> attributes) {
+        /*
+         * The following is checked in ScriptDefBase but some other caller to
+         * #executeScript() could pass in anything they like
+         */
+        final Set<String> unsupported =
+            attributeSet.stream().filter(a -> !this.isAttributeSupported(a)).map(s -> '@' + s)
+                .collect(Collectors.toSet());
+
+        if (!unsupported.isEmpty()) {
+            throw new BuildException("Found unsupported attributes " + unsupported);
+        }
+        if (this.attributes.isEmpty()) {
+            return attributes;
+        }
+        final Map<String, String> result =
+            this.attributes.stream().filter(Attribute::hasDefault).collect(Collectors
+                .toMap(Attribute::getName, Attribute::getDefault, (l, r) -> r, LinkedHashMap::new));
+
+        result.putAll(attributes);
+
+        return result;
     }
 }

@@ -60,6 +60,7 @@
     <scriptdef language="javascript" name="scripttest" manager="${script.manager}">
       <!-- optional property attribute-->
       <attribute name="property" />
+      <attribute name="propertywithdefault" default="prop_dv" />
     </scriptdef>
   </presetdef>
 
@@ -68,7 +69,6 @@
   <presetdef name="assertPropSet">
     <au:assertPropertyEquals name="property" value="live" />
   </presetdef>
-
 
   <!--purely to test that everything works -->
   <target name="testInline" if="prereqs-ok">
@@ -130,6 +130,29 @@
     </scriptdef>
     <au:expectfailure message="I failed!">
       <quickfail />
+    </au:expectfailure>
+  </target>
+
+  <target name="testAttribute" if="prereqs-ok">
+    <js>
+      project.setNewProperty(attributes.get('property'), 'live');
+    </js>
+    <scripttest property="property" />
+    <assertPropSet />
+  </target>
+
+  <target name="testAttributeDefaultValue" if="prereqs-ok">
+    <js>
+      project.setNewProperty(attributes.get('propertywithdefault'), 'live');
+    </js>
+    <scripttest />
+    <assertPropSet name="prop_dv" />
+  </target>
+
+  <target name="testInvalidAttribute" if="prereqs-ok">
+    <js />
+    <au:expectfailure message="Found unsupported attributes">
+      <scripttest foo="bar" />
     </au:expectfailure>
   </target>
 </project>
