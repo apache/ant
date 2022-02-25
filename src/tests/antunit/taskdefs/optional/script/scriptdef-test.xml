@@ -155,4 +155,14 @@
       <scripttest foo="bar" />
     </au:expectfailure>
   </target>
+
+  <target name="testSetbeans" if="prereqs-ok">
+    <js setbeans="true">
+      project.setNewProperty('property', sourceProperty)
+    </js>
+    <property name="sourceProperty" value="live" />
+    <scripttest />
+    <assertPropSet />
+  </target>
+
 </project>

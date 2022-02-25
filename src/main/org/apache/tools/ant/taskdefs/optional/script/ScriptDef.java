@@ -68,6 +68,13 @@ public class ScriptDef extends DefBase {
     private Map<String, NestedElement> nestedElementMap;
 
     /**
+     * Create a new {@link ScriptDef}.
+     */
+    public ScriptDef() {
+        helper.setSetBeans(false);
+    }
+
+    /**
      * Set the project.
      * @param project the project that this definition belongs to.
      */
@@ -75,7 +82,6 @@ public class ScriptDef extends DefBase {
     public void setProject(Project project) {
         super.setProject(project);
         helper.setProjectComponent(this);
-        helper.setSetBeans(false);
     }
 
     /**
@@ -445,6 +451,20 @@ public class ScriptDef extends DefBase {
      */
     public void setEncoding(String encoding) {
         helper.setEncoding(encoding);
+    }
+
+    /**
+     * Set the setbeans attribute.
+     * If this is true, &lt;script&gt; will create variables in the
+     * script instance for all
+     * properties, targets and references of the current project.
+     * It this is false, only the project and self variables will
+     * be set.
+     * The default is true.
+     * @param setBeans the value to set.
+     */
+    public void setSetBeans(boolean setBeans) {
+        helper.setSetBeans(setBeans);
     }
 
     /**
