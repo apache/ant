@@ -151,7 +151,7 @@
 
   <target name="testInvalidAttribute" if="prereqs-ok">
     <js />
-    <au:expectfailure message="Found unsupported attributes">
+    <au:expectfailure expectedMessage="does not support">
       <scripttest foo="bar" />
     </au:expectfailure>
   </target>
