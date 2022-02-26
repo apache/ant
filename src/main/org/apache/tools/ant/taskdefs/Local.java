@@ -17,15 +17,48 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Consumer;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.property.LocalProperties;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
- * Task to create a local property in the current scope.
+ * Task to create local properties in the current scope.
  */
 public class Local extends Task {
+    /**
+     * Nested {@code name} element.
+     */
+    public static class Name implements Consumer<LocalProperties> {
+        private String text;
+
+        /**
+         * Set the property name.
+         * @param text
+         */
+        public void addText(String text) {
+            this.text = text;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void accept(LocalProperties localProperties) {
+            if (text == null) {
+                throw new BuildException("nested name element is missing text");
+            }
+            localProperties.addLocal(text);
+        }
+    }
+
     private String name;
+    
+    private final Set<Name> nameElements = new LinkedHashSet<>();
 
     /**
      * Set the name attribute.
@@ -36,12 +69,27 @@ public class Local extends Task {
     }
 
     /**
+     * Create a nested {@code name} element.
+     * @return {@link Name}
+     */
+    public Name createName() {
+        final Name result = new Name();
+        nameElements.add(result);
+        return result;
+    }
+
+    /**
      * Run the task.
      */
     public void execute() {
-        if (name == null) {
-            throw new BuildException("Missing attribute name");
+        if (name == null && nameElements.isEmpty()) {
+            throw new BuildException("Found no configured local property names");
         }
-        LocalProperties.get(getProject()).addLocal(name);
+        final LocalProperties localProperties = LocalProperties.get(getProject());
+
+        if (name != null) {
+            localProperties.addLocal(name);
+        }
+        nameElements.forEach(n -> n.accept(localProperties));
     }
 }

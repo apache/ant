@@ -53,6 +53,12 @@ examples section.</p>
   </tr>
 </table>
 
+<h3>Parameters specified as nested elements</h3>
+<h4>Name</h4>
+<p>As an alternative to (or in conjunction with) the <code>name</code> attribute, the nested text of
+each of one or more nested <code>&lt;name&gt;</code> elements specifies a property name to declare in
+the local scope.
+
 <h3>Examples</h3>
 
 <h4>Temporarily shadow a global property's value</h4>
@@ -171,5 +177,15 @@ come up with unique names in some cases.</p>
 <p>Each invocation gets its own property named <code>parent</code> and there will be no global
 property of that name at all.</p>
 
+<h4>Use of nested name elements</h4>
+This style declares and executes a single task, as compensation for requiring more lines of XML than
+would individual invocations using <code>@name</code>:
+<pre>
+&lt;local&gt;
+  &lt;name&gt;foo&lt;/name&gt;
+  &lt;name&gt;bar&lt;/name&gt;
+  &lt;name&gt;baz&lt;/name&gt;
+&lt;/local&gt;
+</pre>
 </body>
 </html>

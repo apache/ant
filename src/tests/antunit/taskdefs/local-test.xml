@@ -93,4 +93,24 @@
     <au:assertPropertyEquals name="foo" value="foo" />
   </target>
 
+  <target name="testMulti">
+    <property name="bar" value="bar" />
+    <property name="baz" value="baz" />
+    <sequential>
+      <local>
+        <name>foo</name>
+        <name>bar</name>
+        <name>baz</name>
+      </local>
+      <property name="foo" value="FOO" />
+      <property name="bar" value="BAR" />
+      <property name="baz" value="BAZ" />
+      <au:assertPropertyEquals name="foo" value="FOO" />
+      <au:assertPropertyEquals name="bar" value="BAR" />
+      <au:assertPropertyEquals name="baz" value="BAZ" />
+    </sequential>
+    <au:assertPropertyEquals name="foo" value="foo" />
+    <au:assertPropertyEquals name="bar" value="bar" />
+    <au:assertPropertyEquals name="baz" value="baz" />
+  </target>
 </project>
