@@ -17,6 +17,7 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,6 +26,7 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -53,6 +55,29 @@ import org.apache.tools.ant.util.PropertyOutputStream;
  * @ant.task category="utility"
  */
 public class PathConvert extends Task {
+    private abstract class Output<T extends Closeable> implements Consumer<String>, Closeable {
+        final T target;
+
+        Output(T target) {
+            this.target = target;
+        }
+
+        @Override
+        public void close() throws IOException {
+            target.close();
+        }
+
+        @Override
+        public void accept(String t) {
+            try {
+                doAccept(t);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
+        abstract void doAccept(String t) throws Exception;
+    }
 
     /**
      * Set if we're running on windows
@@ -368,14 +393,14 @@ public class PathConvert extends Task {
             validateSetup(); // validate our setup
 
             boolean first = true;
-            try (Writer w = new OutputStreamWriter(createOutputStream())) {
+            try (Output<?> o = createOutput()) {
                 for (String s : (Iterable<String>) streamResources()::iterator) {
                     if (first) {
                         first = false;
                     } else {
-                        w.write(pathSep);
+                        o.accept(pathSep);
                     }
-                    w.write(s);
+                    o.accept(s);
                 }
             } catch (IOException e) {
                 throw new BuildException(e);
@@ -387,20 +412,38 @@ public class PathConvert extends Task {
         }
     }
 
-    private OutputStream createOutputStream() throws IOException {
+    @SuppressWarnings("resource")
+    private Output<?> createOutput() throws IOException {
         if (dest != null) {
-            return dest.getOutputStream();
-        }
-        if (property == null) {
-            return new LogOutputStream(this);
-        }
-        return new PropertyOutputStream(getProject(), property) {
-            @Override
-            public void close() {
-                if (setonempty || size() > 0) {
-                    super.close();
-                    log("Set property " + property + " = " + getProject().getProperty(property), Project.MSG_VERBOSE);
+            return new Output<Writer>(new OutputStreamWriter(dest.getOutputStream())) {
+
+                @Override
+                void doAccept(String t) throws IOException {
+                    target.write(t);
                 }
+            };
+        }
+        // avoid OutputStreamWriter's buffering:
+        final OutputStream out;
+        if (property == null) {
+            out = new LogOutputStream(this);
+        } else {
+            out = new PropertyOutputStream(getProject(), property) {
+                @Override
+                public void close() {
+                    if (setonempty || size() > 0) {
+                        super.close();
+                        log("Set property " + property + " = " + getProject().getProperty(property),
+                            Project.MSG_VERBOSE);
+                    }
+                }
+            };
+        }
+        return new Output<OutputStream>(out) {
+
+            @Override
+            void doAccept(String t) throws IOException {
+                target.write(t.getBytes());
             }
         };
     }
