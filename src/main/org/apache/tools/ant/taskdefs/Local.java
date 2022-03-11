@@ -24,7 +24,6 @@ import java.util.function.Consumer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.property.LocalProperties;
-import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Task to create local properties in the current scope.
@@ -32,6 +31,7 @@ import org.apache.tools.ant.util.StringUtils;
 public class Local extends Task {
     /**
      * Nested {@code name} element.
+     * @since Ant 1.10.13
      */
     public static class Name implements Consumer<LocalProperties> {
         private String text;
@@ -71,6 +71,7 @@ public class Local extends Task {
     /**
      * Create a nested {@code name} element.
      * @return {@link Name}
+     * @since Ant 1.10.13
      */
     public Name createName() {
         final Name result = new Name();

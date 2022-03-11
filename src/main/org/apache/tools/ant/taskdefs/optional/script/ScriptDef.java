@@ -137,6 +137,7 @@ public class ScriptDef extends DefBase {
          * Set the default value of this {@link Attribute}.
          *
          * @param defaultValue {@link String}
+         * @since Ant 1.10.13
          */
         public void setDefault(String defaultValue) {
             this.defaultValue = defaultValue;
@@ -147,6 +148,7 @@ public class ScriptDef extends DefBase {
          * unset.
          * 
          * @return {@link String}
+         * @since Ant 1.10.13
          */
         String getDefault() {
             return defaultValue;

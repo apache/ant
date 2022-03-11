@@ -19,6 +19,7 @@ package org.apache.tools.ant.util;
 
 /**
  * Script manager {@code enum}.
+ * @since Ant 1.10.13
  */
 public enum ScriptManager {
     auto, bsf, javax;

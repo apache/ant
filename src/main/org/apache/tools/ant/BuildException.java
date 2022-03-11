@@ -28,6 +28,7 @@ public class BuildException extends RuntimeException {
      * Get a {@link BuildException} for the specified {@link Throwable}.
      * @param t
      * @return {@link BuildException}
+     * @since Ant 1.10.13
      */
     public static BuildException of(Throwable t) {
         if (t instanceof BuildException) {

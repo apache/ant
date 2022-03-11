@@ -359,6 +359,7 @@ public class PathConvert extends Task {
     /**
      * Set destination resource.
      * @param dest
+     * @since Ant 1.10.13
      */
     public void setDest(Resource dest) {
         if (dest != null) {
