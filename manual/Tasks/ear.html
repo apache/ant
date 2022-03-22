@@ -243,6 +243,16 @@ attribute to a value other than its default, <q>add</q>.</strong></p>
       the <a href="zip.html#zip64">discussion in the zip task page</a></td>
     <td>No; default is <q>never</q></td>
   </tr>
+  <tr>
+    <td valign="top">modificationtime</td>
+    <td valign="top">Set all stored file modification times to the
+    given time. This can either be a number interpreted as
+    milliseconds since 1970-01-01T00:00:00Z or a string that can be
+    parsed as a ISO 8601 timestamp with optional timezone.
+      <em>Since Ant 1.10.2</em>.
+    </td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
