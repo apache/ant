@@ -380,16 +380,11 @@ public class ResourceUtils {
                                              && filters.hasFilters());
         final boolean filterChainsAvailable = (filterChains != null
                                                && !filterChains.isEmpty());
-        String effectiveInputEncoding;
-        if (source instanceof StringResource) {
-            effectiveInputEncoding = ((StringResource) source).getEncoding();
-        } else {
-            effectiveInputEncoding = inputEncoding;
-        }
-        File destFile = null;
-        if (dest.as(FileProvider.class) != null) {
-            destFile = dest.as(FileProvider.class).getFile();
-        }
+        final String effectiveInputEncoding = source.asOptional(StringResource.class)
+            .map(StringResource::getEncoding).orElse(inputEncoding);
+
+        File destFile = dest.asOptional(FileProvider.class).map(FileProvider::getFile).orElse(null);
+
         if (destFile != null && destFile.isFile() && !destFile.canWrite()) {
             if (!force) {
                 throw new ReadOnlyTargetFileException(destFile);
@@ -399,7 +394,6 @@ public class ResourceUtils {
                     "failed to delete read-only destination file " + destFile);
             }
         }
-
         if (filterSetsAvailable) {
             copyWithFilterSets(source, dest, filters, filterChains,
                                append, effectiveInputEncoding,
@@ -438,10 +432,8 @@ public class ResourceUtils {
             }
         }
         if (preserveLastModified) {
-            final Touchable t = dest.as(Touchable.class);
-            if (t != null) {
-                setLastModified(t, source.getLastModified());
-            }
+            dest.asOptional(Touchable.class)
+                .ifPresent(t -> setLastModified(t, source.getLastModified()));
         }
     }
     // CheckStyle:ParameterNumberCheck ON
