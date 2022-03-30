@@ -253,6 +253,8 @@ public class Parallel extends Task
      *
      * @exception BuildException if any of the threads failed.
      */
+
+    //FIXME: The following statement numTasks < numThreads ? numTasks : numThreads can be replaced using Math.min function.
     private void spinThreads() throws BuildException {
         stillRunning = true;
         timedOut = false;
