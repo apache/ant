@@ -163,7 +163,7 @@ public final class Locator {
      * @throws IllegalArgumentException if the URI is malformed or not a legal file: URL
      * @since Ant 1.6
      */
-    //FIXME: String path is redundant
+
     public static String fromURI(String uri) {
         URL url = null;
         try {
@@ -188,7 +188,7 @@ public final class Locator {
             && Character.isLetter(uri.charAt(1)) && uri.lastIndexOf(':') > -1) {
             uri = uri.substring(1);
         }
-        String path = null;
+        String path;
         try {
             path = decodeUri(uri);
             //consider adding the current directory. This is not done when
