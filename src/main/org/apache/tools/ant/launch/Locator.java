@@ -232,7 +232,6 @@ public final class Locator {
      * @since Ant 1.7
      */
 
-    //FIXME: Here the method returns always true on the elseif condition, need to reomve the '<=' sign and make it as '<'
     public static String decodeUri(String uri) throws UnsupportedEncodingException {
         if (!uri.contains("%")) {
             return uri;
