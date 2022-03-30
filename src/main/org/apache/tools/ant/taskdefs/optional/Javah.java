@@ -417,6 +417,7 @@ public class Javah extends Task {
      *
      * @throws BuildException is there is a problem in the task execution.
      */
+    //FIXME: Settings.values() needs to wrapped in Arrays.toString()
     @Override
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir
