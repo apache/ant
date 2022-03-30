@@ -141,8 +141,7 @@ public class SoundTask extends Task {
          * Gets the location of the file to get the audio.
          * @return the file location
          */
-        //TODO: Random object should be decalred final
-        //FIXME: final keyword added when random object instance is created
+
         public File getSource() {
             File nofile = null;
             // Check if source is a directory
@@ -160,7 +159,7 @@ public class SoundTask extends Task {
                         throw new BuildException("No files found in directory " + source);
                     }
                     int numfiles = files.size();
-                    Random rn = new Random();
+                    final Random rn = new Random();
                     int x = rn.nextInt(numfiles);
                     // set the source to the file at that location
                     this.source = files.elementAt(x);
