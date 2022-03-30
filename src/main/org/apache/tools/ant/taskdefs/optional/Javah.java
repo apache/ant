@@ -19,10 +19,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.File;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
@@ -417,7 +414,7 @@ public class Javah extends Task {
      *
      * @throws BuildException is there is a problem in the task execution.
      */
-    //FIXME: Settings.values() needs to wrapped in Arrays.toString()
+
     @Override
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir
@@ -433,7 +430,7 @@ public class Javah extends Task {
             settings.add(Settings.files);
         }
         if (settings.size() > 1) {
-            throw new BuildException("Exactly one of " + Settings.values()
+            throw new BuildException("Exactly one of " + Arrays.toString(Settings.values())
                     + " attributes is required", getLocation());
         }
 
