@@ -254,7 +254,6 @@ public class Parallel extends Task
      * @exception BuildException if any of the threads failed.
      */
 
-    //FIXME: The following statement numTasks < numThreads ? numTasks : numThreads can be replaced using Math.min function.
     private void spinThreads() throws BuildException {
         stillRunning = true;
         timedOut = false;
@@ -264,7 +263,7 @@ public class Parallel extends Task
             .toArray(TaskRunnable[]::new);
 
         final int numTasks = nestedTasks.size();
-        final int maxRunning = numTasks < numThreads ? numTasks : numThreads;
+        final int maxRunning = Math.min(numTasks, numThreads);
 
         TaskRunnable[] running = new TaskRunnable[maxRunning];
         ThreadGroup group = new ThreadGroup("parallel");
