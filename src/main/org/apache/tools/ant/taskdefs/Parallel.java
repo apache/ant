@@ -273,14 +273,6 @@ public class Parallel extends Task
         if (daemonTasks != null && !daemonTasks.tasks.isEmpty()) {
             daemons = new TaskRunnable[daemonTasks.tasks.size()];
         }
-        //FIXME: Need to delete the synchronized empty method
-        synchronized (semaphore) {
-            // When we leave this block we can be sure all data is really
-            // stored in main memory before the new threads start, the new
-            // threads will for sure load the data from main memory.
-            //
-            // This probably is slightly paranoid.
-        }
 
         synchronized (semaphore) {
             // start any daemon threads
