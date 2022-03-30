@@ -163,6 +163,7 @@ public final class Locator {
      * @throws IllegalArgumentException if the URI is malformed or not a legal file: URL
      * @since Ant 1.6
      */
+    //FIXME: String path is redundant
     public static String fromURI(String uri) {
         URL url = null;
         try {
