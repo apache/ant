@@ -422,7 +422,7 @@ public class LayoutPreservingProperties extends Properties {
      * @return <code>true</code> if the line is to be continued,
      * <code>false</code> otherwise
      */
-    //FIXME: Need to fix the return statement with tb % 2 != 0
+
     private boolean requiresContinuation(final String s) {
         final char[] ca = s.toCharArray();
         int i = ca.length - 1;
@@ -431,7 +431,7 @@ public class LayoutPreservingProperties extends Properties {
         }
         // trailing backslashes
         final int tb = ca.length - i - 1;
-        return tb % 2 == 1;
+        return tb % 2 != 0;
     }
 
     /**
