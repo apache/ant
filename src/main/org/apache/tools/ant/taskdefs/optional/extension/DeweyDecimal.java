@@ -37,6 +37,7 @@ public final class DeweyDecimal extends org.apache.tools.ant.util.DeweyDecimal {
      *
      * @param components an array of integer components.
      */
+    //TODO: We can delete the constructor becasue it is never used
     public DeweyDecimal(final int[] components) {
         super(components);
     }
@@ -47,6 +48,7 @@ public final class DeweyDecimal extends org.apache.tools.ant.util.DeweyDecimal {
      * @param string the string in dewey decimal format
      * @exception NumberFormatException if string is malformed
      */
+    //TODO: We can delete this constructor, because we are not using this
     public DeweyDecimal(final String string)
         throws NumberFormatException {
         super(string);
