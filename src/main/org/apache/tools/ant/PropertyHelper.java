@@ -1163,6 +1163,7 @@ public class PropertyHelper implements GetProperty {
      * @return Boolean
      * @since Ant 1.8.0
      */
+    //TODO: This method is returning null and it may create null pointer exception, we can change it to Boolean.False
     public static Boolean toBoolean(Object value) {
         if (value instanceof Boolean) {
             return (Boolean) value;
