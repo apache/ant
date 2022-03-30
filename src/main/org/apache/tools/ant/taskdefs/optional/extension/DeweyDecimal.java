@@ -30,6 +30,7 @@ package org.apache.tools.ant.taskdefs.optional.extension;
  * @deprecated use org.apache.tools.ant.util.DeweyDecimal instead.
  * Deprecated since ant 1.8
  */
+//FIXME: We can delete the entire class itself, becasue this class is not used
 public final class DeweyDecimal extends org.apache.tools.ant.util.DeweyDecimal {
 
     /**
@@ -37,7 +38,7 @@ public final class DeweyDecimal extends org.apache.tools.ant.util.DeweyDecimal {
      *
      * @param components an array of integer components.
      */
-    //TODO: We can delete the constructor becasue it is never used
+    //TODO: We can delete the constructor because it is never used
     public DeweyDecimal(final int[] components) {
         super(components);
     }
