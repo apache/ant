@@ -267,6 +267,7 @@ public final class Locator {
      * @return The encoded string, according to URI norms
      * @since Ant 1.7
      */
+    //FIXME: Need to delete the redundant variable ch
     public static String encodeURI(String path) {
         int i = 0;
         int len = path.length();
