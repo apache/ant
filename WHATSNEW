@@ -4,37 +4,41 @@ Changes from Ant 1.10.12 TO Ant 1.10.13
 Changes that could break older environments:
 -------------------------------------------
 
-* <get> has a new attribute authenticateOnRedirect that can be used to
-  prevent Ant from sending the configured credentials when following a
-  redirect. It is false by default, which means builds that rely on
-  credentials being used on the redirected URI may break.
-  Github Pull Request #173
+ * <get> has a new attribute authenticateOnRedirect that can be used to
+   prevent Ant from sending the configured credentials when following a
+   redirect. It is false by default, which means builds that rely on
+   credentials being used on the redirected URI may break.
+   Github Pull Request #173
 
 Fixed bugs:
 -----------
 
-* the PropertyEnumerator change introduced in 1.10.9 proved to be not
-  fully backwards compatible when combined with certain custom
-  PropertyHelper implementations - for example when using AntXtras.
-  Bugzilla Report 65799
+ * the PropertyEnumerator change introduced in 1.10.9 proved to be not
+   fully backwards compatible when combined with certain custom
+   PropertyHelper implementations - for example when using AntXtras.
+   Bugzilla Report 65799
 
-* legacy-xml reporter of the junitlauncher task now escapes ]]> when writing CDATA.
-  Bugzilla Report 65833
+ * legacy-xml reporter of the junitlauncher task now escapes ]]> when writing CDATA.
+   Bugzilla Report 65833
+
+ * <scp> may leak connections when trying to preserve the las modified
+   timestamps of files transferred recursively from a server.
+   Bugzilla Report 66001
 
 Other changes:
 --------------
 
-* added an implementation of the MIME Mail sender based on the
-  repackaged Jakarta Mail package rather than javax Mail.
-  Github Pull Request #161
+ * added an implementation of the MIME Mail sender based on the
+   repackaged Jakarta Mail package rather than javax Mail.
+   Github Pull Request #161
 
-* The "listener" element in the junitlauncher task now supports
-  an "extension" attribute to control the filename extension
-  of the generated output file from the listener.
-  Github Pull Request #168
+ * The "listener" element in the junitlauncher task now supports
+   an "extension" attribute to control the filename extension
+   of the generated output file from the listener.
+   Github Pull Request #168
 
-* <ftp> now supports FTPs.
-  Github Pull Request #170
+ * <ftp> now supports FTPs.
+   Github Pull Request #170
 
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================

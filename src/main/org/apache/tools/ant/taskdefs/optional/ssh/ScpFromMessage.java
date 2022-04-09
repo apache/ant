@@ -310,12 +310,16 @@ public class ScpFromMessage extends AbstractSshMessage {
     private void setLastModified(final File localFile) throws JSchException {
         SftpATTRS fileAttributes = null;
         final ChannelSftp channel = openSftpChannel();
-        channel.connect();
         try {
-            fileAttributes = channel.lstat(remoteDir(remoteFile)
-                                           + localFile.getName());
-        } catch (final SftpException e) {
-            throw new JSchException("failed to stat remote file", e);
+            channel.connect();
+            try {
+                fileAttributes = channel.lstat(remoteDir(remoteFile)
+                                               + localFile.getName());
+            } catch (final SftpException e) {
+                throw new JSchException("failed to stat remote file", e);
+            }
+        } finally {
+            channel.disconnect();
         }
         FileUtils.getFileUtils().setFileLastModified(localFile,
                 ((long) fileAttributes.getMTime()) * 1000);
