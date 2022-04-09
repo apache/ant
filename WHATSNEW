@@ -4,11 +4,11 @@ Changes from Ant 1.9.16 TO Ant 1.9.17
 Changes that could break older environments:
 --------------------------------------------
 
-* <get> has a new attribute authenticateOnRedirect that can be used to
-  prevent Ant from sending the configured credentials when following a
-  redirect. It is false by default, which means builds that rely on
-  credentials being used on the redirected URI may break.
-  Github Pull Request #173
+ * <get> has a new attribute authenticateOnRedirect that can be used to
+   prevent Ant from sending the configured credentials when following a
+   redirect. It is false by default, which means builds that rely on
+   credentials being used on the redirected URI may break.
+   Github Pull Request #173
 
 Fixed bugs:
 -----------
@@ -17,6 +17,10 @@ Fixed bugs:
    that corresponds to extJavac or modern has the same effect as using
    the shorter alias names.
    Bugzilla Report 65539
+
+ * <scp> may leak connections when trying to preserve the las modified
+   timestamps of files transferred recursively from a server.
+   Bugzilla Report 66001
 
 Other changes:
 --------------
