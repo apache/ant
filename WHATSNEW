@@ -21,7 +21,7 @@ Fixed bugs:
  * legacy-xml reporter of the junitlauncher task now escapes ]]> when writing CDATA.
    Bugzilla Report 65833
 
- * <scp> may leak connections when trying to preserve the las modified
+ * <scp> may leak connections when trying to preserve the last modified
    timestamps of files transferred recursively from a server.
    Bugzilla Report 66001
 
