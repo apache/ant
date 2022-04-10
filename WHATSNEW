@@ -18,7 +18,7 @@ Fixed bugs:
    the shorter alias names.
    Bugzilla Report 65539
 
- * <scp> may leak connections when trying to preserve the las modified
+ * <scp> may leak connections when trying to preserve the last modified
    timestamps of files transferred recursively from a server.
    Bugzilla Report 66001
 
