@@ -25,6 +25,10 @@ Fixed bugs:
    timestamps of files transferred recursively from a server.
    Bugzilla Report 66001
 
+ * tstamp task would in certain cases parse the SOURCE_DATE_EPOCH environment variable
+   value to an incorrect date. This has now been fixed.
+   Github Pull Request #186
+
 Other changes:
 --------------
 
