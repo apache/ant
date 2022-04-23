@@ -75,4 +75,35 @@ public class IsEpochIn1969Here implements Condition {
     <!-- 'iso' overrides 'simple' -->
     <au:assertPropertyEquals name="DSTAMP" value="19720417"/>
   </target>
+
+  <target name="testSourceDateEpoch">
+    <mkdir dir="${input}"/>
+    <mkdir dir="${output}"/>
+    <echo file="${input}/TstampAntunitTest.java"><![CDATA[
+      import org.apache.tools.ant.*;
+      import org.apache.tools.ant.taskdefs.*;
+      public class TstampAntunitTest {
+        public static void main(String[] args) {
+          Task task = new Tstamp();
+          task.setProject(new Project());
+          task.execute();
+          String today = task.getProject().getProperty("TODAY");
+          System.out.println("TODAY is " + today);
+        }
+      }
+    ]]></echo>
+    <javac srcdir="${input}" destdir="${output}"/>
+    <local name="testout"/>
+    <java classname="TstampAntunitTest"
+          failonerror="true"
+          outputproperty="testout"
+          fork="true">
+      <classpath>
+        <pathelement location="${output}"/>
+        <pathelement path="${java.class.path}"/>
+      </classpath>
+      <env key="SOURCE_DATE_EPOCH" value="1650585600"/>
+    </java>
+    <au:assertEquals expected="TODAY is April 22 2022" actual="${testout}"/>
+  </target>
 </project>
