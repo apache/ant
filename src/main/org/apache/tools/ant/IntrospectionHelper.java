@@ -925,9 +925,9 @@ public final class IntrospectionHelper {
     }
 
     /**
-     * Returns whether or not the introspected class supports PCDATA.
+     * Returns whether the introspected class supports PCDATA.
      *
-     * @return whether or not the introspected class supports PCDATA.
+     * @return whether the introspected class supports PCDATA.
      */
     public boolean supportsCharacters() {
         return addText != null;

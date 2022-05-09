@@ -128,7 +128,7 @@ public abstract class AbstractCvsTask extends Task {
     private File dest;
 
     /**
-     * whether or not to append stdout/stderr to existing files
+     * whether to append stdout/stderr to existing files
      */
     private boolean append = false;
 

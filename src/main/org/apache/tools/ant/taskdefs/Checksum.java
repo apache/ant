@@ -97,7 +97,7 @@ public class Checksum extends MatchingTask implements Condition {
      */
     private String provider = null;
     /**
-     * File Extension that is be to used to create or identify
+     * File Extension that will be used to create or identify
      * destination file
      */
     private String fileext;
@@ -123,7 +123,7 @@ public class Checksum extends MatchingTask implements Condition {
      */
     private String totalproperty;
     /**
-     * Whether or not to create a new file.
+     * Whether to create a new file.
      * Defaults to <code>false</code>.
      */
     private boolean forceOverwrite;
@@ -194,7 +194,7 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Sets the file extension that is be to used to
+     * Sets the file extension that will be used to
      * create or identify destination file.
      * @param fileext a <code>String</code> value
      */
@@ -231,7 +231,7 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Whether or not to overwrite existing file irrespective of
+     * Whether to overwrite existing file irrespective of
      * whether it is newer than
      * the source file.  Defaults to false.
      * @param forceOverwrite a <code>boolean</code> value

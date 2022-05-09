@@ -258,7 +258,7 @@ public class Java extends Task {
     }
 
     /**
-     * Set whether or not you want the process to be spawned;
+     * Set whether you want the process to be spawned;
      * default is not spawned.
      * @param spawn if true you do not want Ant to wait for the end of the process.
      * @since Ant 1.6
@@ -804,7 +804,7 @@ public class Java extends Task {
     @Override
     public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
-        // Should work whether or not redirector.inputStream == null:
+        // Should work regardless of redirector.inputStream == null:
         return redirector.handleInput(buffer, offset, length);
     }
 

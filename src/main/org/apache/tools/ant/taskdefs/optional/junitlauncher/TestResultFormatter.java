@@ -52,7 +52,7 @@ public interface TestResultFormatter extends TestExecutionListener, Closeable {
 
     /**
      * This method will be invoked by the {@code junitlauncher} to let the result formatter implementation
-     * know whether or not to use JUnit 4 style, legacy reporting names for test identifiers that get
+     * know whether to use JUnit 4 style legacy reporting names for test identifiers that get
      * displayed in the test reports. Result formatter implementations are allowed to default to a specific
      * reporting style for test identifiers, if this method isn't invoked.
      * @param useLegacyReportingName {@code true} if legacy reporting name is to be used, {@code false}

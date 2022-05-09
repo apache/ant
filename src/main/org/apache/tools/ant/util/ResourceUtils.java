@@ -275,9 +275,9 @@ public class ResourceUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination Resource should be
+     * @param overwrite Whether the destination Resource should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the destination Resource should be set to that
      *                             of the source.
      * @param inputEncoding the encoding used to read the files.
@@ -311,9 +311,9 @@ public class ResourceUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination Resource should be
+     * @param overwrite Whether the destination Resource should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the destination Resource should be set to that
      *                             of the source.
      * @param append Whether to append to an Appendable Resource.
@@ -350,9 +350,9 @@ public class ResourceUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination Resource should be
+     * @param overwrite Whether the destination Resource should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the destination Resource should be set to that
      *                             of the source.
      * @param append Whether to append to an Appendable Resource.

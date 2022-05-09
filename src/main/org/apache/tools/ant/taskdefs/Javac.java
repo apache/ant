@@ -805,8 +805,8 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Gets whether or not the ant classpath is to be included in the classpath.
-     * @return whether or not the ant classpath is to be included in the classpath
+     * Gets whether the ant classpath is to be included in the classpath.
+     * @return whether the ant classpath is to be included in the classpath
      */
     public boolean getIncludeantruntime() {
         return includeAntRuntime == null || includeAntRuntime;
@@ -821,7 +821,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Gets whether or not the java runtime should be included in this
+     * Gets whether the java runtime should be included in this
      * task's classpath.
      * @return the includejavaruntime attribute
      */

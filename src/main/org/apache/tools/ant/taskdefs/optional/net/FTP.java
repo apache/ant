@@ -188,7 +188,7 @@ public class FTP extends Task implements FTPTaskConfig {
     };
 
     /**
-     * internal class providing a File-like interface to some of the information
+     * internal class providing a File-like interface to some information
      * available from the FTP server
      *
      */

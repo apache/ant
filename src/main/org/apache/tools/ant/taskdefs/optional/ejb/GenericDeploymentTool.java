@@ -647,9 +647,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *
      * @param ejbFiles Hashtable of EJB classes (and other) files that will be
      *                 added to the completed JAR file
-     * @param jarFile  JAR file which will contain all of the EJB classes (and
+     * @param jarFile  JAR file which will contain all the EJB classes (and
      *                 other) files
-     * @return         boolean indicating whether or not the <code>jarFile</code>
+     * @return         boolean indicating whether the <code>jarFile</code>
      *                 is up to date
      */
     protected boolean needToRebuild(Hashtable<String, File> ejbFiles, File jarFile) {

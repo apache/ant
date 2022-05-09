@@ -720,7 +720,7 @@ Change the user\*(Aqs office phone number\&.
 .PP
 If none of the options are selected,
 \fBchfn\fR
-operates in an interactive fashion, prompting the user with the current values for all of the fields\&. Enter the new value to change the field, or leave the line blank to use the current value\&. The current value is displayed between a pair of
+operates in an interactive fashion, prompting the user with the current values for all the fields\&. Enter the new value to change the field, or leave the line blank to use the current value\&. The current value is displayed between a pair of
 \fB[ ]\fR
 marks\&. Without options,
 \fBchfn\fR
@@ -1135,7 +1135,7 @@ Change the user\*(Aqs office phone number\&.
 .PP
 If none of the options are selected,
 \fBchfn\fR
-operates in an interactive fashion, prompting the user with the current values for all of the fields\&. Enter the new value to change the field, or leave the line blank to use the current value\&. The current value is displayed between a pair of
+operates in an interactive fashion, prompting the user with the current values for all the fields\&. Enter the new value to change the field, or leave the line blank to use the current value\&. The current value is displayed between a pair of
 \fB[ ]\fR
 marks\&. Without options,
 \fBchfn\fR

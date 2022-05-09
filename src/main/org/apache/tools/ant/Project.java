@@ -986,7 +986,7 @@ public class Project implements ResourceFactory {
     }
 
     /**
-     * Check whether or not a class is suitable for serving as Ant task.
+     * Check whether a class is suitable for serving as Ant task.
      * Ant task implementation classes must be public, concrete, and have
      * a no-arg constructor.
      *
@@ -1529,7 +1529,7 @@ public class Project implements ResourceFactory {
      *                   Must not be <code>null</code>.
      * @param destFile Name of file to copy to.
      *                 Must not be <code>null</code>.
-     * @param filtering Whether or not token filtering should be used during
+     * @param filtering Whether token filtering should be used during
      *                  the copy.
      *
      * @exception IOException if the copying fails.
@@ -1552,9 +1552,9 @@ public class Project implements ResourceFactory {
      *                   Must not be <code>null</code>.
      * @param destFile Name of file to copy to.
      *                 Must not be <code>null</code>.
-     * @param filtering Whether or not token filtering should be used during
+     * @param filtering Whether token filtering should be used during
      *                  the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
      *
      * @exception IOException if the copying fails.
@@ -1579,11 +1579,11 @@ public class Project implements ResourceFactory {
      *                   Must not be <code>null</code>.
      * @param destFile Name of file to copy to.
      *                 Must not be <code>null</code>.
-     * @param filtering Whether or not token filtering should be used during
+     * @param filtering Whether token filtering should be used during
      *                  the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      *
@@ -1625,7 +1625,7 @@ public class Project implements ResourceFactory {
      *                   Must not be <code>null</code>.
      * @param destFile File to copy to.
      *                 Must not be <code>null</code>.
-     * @param filtering Whether or not token filtering should be used during
+     * @param filtering Whether token filtering should be used during
      *                  the copy.
      *
      * @exception IOException if the copying fails.
@@ -1648,9 +1648,9 @@ public class Project implements ResourceFactory {
      *                   Must not be <code>null</code>.
      * @param destFile File to copy to.
      *                 Must not be <code>null</code>.
-     * @param filtering Whether or not token filtering should be used during
+     * @param filtering Whether token filtering should be used during
      *                  the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
      *
      * @exception IOException if the file cannot be copied.
@@ -1675,11 +1675,11 @@ public class Project implements ResourceFactory {
      *                   Must not be <code>null</code>.
      * @param destFile File to copy to.
      *                 Must not be <code>null</code>.
-     * @param filtering Whether or not token filtering should be used during
+     * @param filtering Whether token filtering should be used during
      *                  the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      *

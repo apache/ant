@@ -231,7 +231,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     private final Vector<String> loaderPackages = new Vector<>();
 
     /**
-     * Whether or not this classloader will ignore the base
+     * Whether this classloader will ignore the base
      * classloader if it can't find a class.
      *
      * @see #setIsolated(boolean)
@@ -259,7 +259,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     private ClassLoader savedContextLoader = null;
 
     /**
-     * Whether or not the context loader is currently saved.
+     * Whether the context loader is currently saved.
      */
     private boolean isContextLoaderSaved = false;
 
@@ -581,7 +581,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * not be referred to the parent class loader but will cause a
      * ClassNotFoundException.
      *
-     * @param isolated Whether or not this classloader should run in
+     * @param isolated Whether this classloader should run in
      *                 isolated mode.
      */
     public synchronized void setIsolated(final boolean isolated) {
@@ -830,7 +830,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     }
 
     /**
-     * Tests whether or not the parent classloader should be checked for a
+     * Tests whether the parent classloader should be checked for a
      * resource before this one. If the resource matches both the "use parent
      * classloader first" and the "use this classloader first" lists, the latter
      * takes priority.
@@ -839,7 +839,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *            The name of the resource to check. Must not be
      *            <code>null</code>.
      *
-     * @return whether or not the parent classloader should be checked for a
+     * @return whether the parent classloader should be checked for a
      *         resource before this one is.
      */
     private boolean isParentFirst(final String resourceName) {
@@ -1076,7 +1076,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * Loads a class with this class loader.
      *
      * This class attempts to load the class in an order determined by whether
-     * or not the class matches the system/loader package lists, with the
+     * the class matches the system/loader package lists, with the
      * loader package list taking priority. If the classloader is in isolated
      * mode, failure to load the class in this loader will result in a
      * ClassNotFoundException.

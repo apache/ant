@@ -97,7 +97,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Set whether or not you want the process to be spawned.
+     * Set whether you want the process to be spawned.
      * Default is false.
      * @param spawn if true you do not want Ant to wait for the end of the process.
      * @since Ant 1.6

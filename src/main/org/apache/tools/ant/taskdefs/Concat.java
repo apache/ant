@@ -517,7 +517,7 @@ public class Concat extends Task implements ResourceCollection {
     private Resource dest;
 
     /**
-     * Whether or not the stream should be appended if the destination file
+     * Whether the stream should be appended if the destination file
      * exists.
      * Defaults to <code>false</code>.
      */

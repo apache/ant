@@ -207,7 +207,7 @@ public class FileUtils {
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
+     * @param overwrite Whether the destination file should be overwritten if it already
      *            exists.
      *
      * @throws IOException if the copying fails.
@@ -229,9 +229,9 @@ public class FileUtils {
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *            overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *            the resulting file
      *            should be set to that of the source file.
      *
@@ -254,9 +254,9 @@ public class FileUtils {
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
+     * @param overwrite Whether the destination file should be overwritten if it already
      *            exists.
-     * @param preserveLastModified Whether or not the last modified time of the resulting file
+     * @param preserveLastModified Whether the last modified time of the resulting file
      *            should be set to that of the source file.
      * @param encoding the encoding used to read and write the files.
      *
@@ -286,9 +286,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param encoding the encoding used to read and write the files.
@@ -316,9 +316,9 @@ public class FileUtils {
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
+     * @param overwrite Whether the destination file should be overwritten if it already
      *            exists.
-     * @param preserveLastModified Whether or not the last modified time of the resulting file
+     * @param preserveLastModified Whether the last modified time of the resulting file
      *            should be set to that of the source file.
      * @param inputEncoding the encoding used to read the files.
      * @param outputEncoding the encoding used to write the files.
@@ -376,7 +376,7 @@ public class FileUtils {
      * @param destFile the file to copy to.
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
      *
      * @throws IOException if the copying fails.
@@ -398,9 +398,9 @@ public class FileUtils {
      * @param destFile the file to copy to.
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      *
@@ -420,9 +420,9 @@ public class FileUtils {
      * @param sourceFile the file to copy from. Must not be <code>null</code>.
      * @param destFile the file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
+     * @param overwrite Whether the destination file should be overwritten if it already
      *            exists.
-     * @param preserveLastModified Whether or not the last modified time of the resulting file
+     * @param preserveLastModified Whether the last modified time of the resulting file
      *            should be set to that of the source file.
      * @param encoding the encoding used to read and write the files.
      *
@@ -451,9 +451,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param encoding the encoding used to read and write the files.
@@ -485,9 +485,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param inputEncoding the encoding used to read the files.
@@ -522,9 +522,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param append whether to append to the destination file.
@@ -562,9 +562,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param append whether to append to the destination file.

@@ -80,7 +80,7 @@ import java.util.BitSet;
 class BlockSort {
 
     /*
-     * Some of the constructs used in the C code cannot be ported
+     * Some constructs used in the C code cannot be ported
      * literally to Java - for example macros, unsigned types.  Some
      * code has been hand-tuned to improve performance.  In order to
      * avoid memory pressure some structures are reused for several
@@ -1017,7 +1017,7 @@ class BlockSort {
             }
 
             // Step 2:
-            // LBZ2: Now scan this big bucket so as to synthesise the
+            // LBZ2: Now scan this big bucket to synthesise the
             // sorted order for small buckets [t, ss] for all t != ss.
 
             for (int j = 0; j <= 255; j++) {

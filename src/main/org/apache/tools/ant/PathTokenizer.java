@@ -51,7 +51,7 @@ public class PathTokenizer {
     private boolean onNetWare = Os.isFamily("netware");
 
     /**
-     * Flag to indicate whether or not we are running on a platform with a
+     * Flag to indicate whether we are running on a platform with a
      * DOS style filesystem
      */
     private boolean dosStyleFilesystem;

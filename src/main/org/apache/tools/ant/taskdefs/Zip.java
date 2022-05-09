@@ -879,7 +879,7 @@ public class Zip extends MatchingTask {
 
     /** Process doupdate */
     private void processDoUpdate() {
-        // Whether or not an actual update is required -
+        // Whether an actual update is required -
         // we don't need to update if the original file doesn't exist
         if (doUpdate && !zipFile.exists()) {
             doUpdate = false;

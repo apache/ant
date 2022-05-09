@@ -280,7 +280,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      * @since Ant1.7.1
      */
     protected String addStubVersionOptions() {
-        //handle the many different stub options.
+        //handle different stub options.
         String stubVersion = attributes.getStubVersion();
         //default is compatibility
         String stubOption = null;

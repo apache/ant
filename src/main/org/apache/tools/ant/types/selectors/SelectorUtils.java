@@ -61,7 +61,7 @@ public final class SelectorUtils {
     }
 
     /**
-     * Tests whether or not a given path matches the start of a given
+     * Tests whether a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
@@ -73,7 +73,7 @@ public final class SelectorUtils {
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
      *
-     * @return whether or not a given path matches the start of a given
+     * @return whether a given path matches the start of a given
      * pattern up to the first "**".
      */
     public static boolean matchPatternStart(String pattern, String str) {
@@ -81,7 +81,7 @@ public final class SelectorUtils {
     }
 
     /**
-     * Tests whether or not a given path matches the start of a given
+     * Tests whether a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
@@ -92,10 +92,10 @@ public final class SelectorUtils {
      *                <code>null</code>.
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed
-     *                        case sensitively.
+     * @param isCaseSensitive Whether matching should be performed
+     *                        case-sensitively.
      *
-     * @return whether or not a given path matches the start of a given
+     * @return whether a given path matches the start of a given
      * pattern up to the first "**".
      */
     public static boolean matchPatternStart(String pattern, String str,
@@ -116,7 +116,7 @@ public final class SelectorUtils {
 
 
     /**
-     * Tests whether or not a given path matches the start of a given
+     * Tests whether a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
@@ -127,10 +127,10 @@ public final class SelectorUtils {
      *                <code>null</code>.
      * @param strDirs The tokenized path to match. Must not be
      *                <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed
-     *                        case sensitively.
+     * @param isCaseSensitive Whether matching should be performed
+     *                        case-sensitively.
      *
-     * @return whether or not a given path matches the start of a given
+     * @return whether a given path matches the start of a given
      * pattern up to the first "**".
      */
     static boolean matchPatternStart(String[] patDirs, String[] strDirs,
@@ -160,7 +160,7 @@ public final class SelectorUtils {
     }
 
     /**
-     * Tests whether or not a given path matches a given pattern.
+     * Tests whether a given path matches a given pattern.
      *
      * If you need to call this method multiple times with the same
      * pattern you should rather use TokenizedPath
@@ -181,7 +181,7 @@ public final class SelectorUtils {
     }
 
     /**
-     * Tests whether or not a given path matches a given pattern.
+     * Tests whether a given path matches a given pattern.
      *
      * If you need to call this method multiple times with the same
      * pattern you should rather use TokenizedPattern
@@ -192,7 +192,7 @@ public final class SelectorUtils {
      *                <code>null</code>.
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed
+     * @param isCaseSensitive Whether matching should be performed
      *                        case sensitively.
      *
      * @return <code>true</code> if the pattern matches against the string,
@@ -310,7 +310,7 @@ public final class SelectorUtils {
     }
 
     /**
-     * Tests whether or not a string matches against a pattern.
+     * Tests whether a string matches against a pattern.
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
@@ -328,7 +328,7 @@ public final class SelectorUtils {
     }
 
     /**
-     * Tests whether or not a string matches against a pattern.
+     * Tests whether a string matches against a pattern.
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
@@ -337,7 +337,7 @@ public final class SelectorUtils {
      *                Must not be <code>null</code>.
      * @param str     The string which must be matched against the pattern.
      *                Must not be <code>null</code>.
-     * @param caseSensitive Whether or not matching should be performed
+     * @param caseSensitive Whether matching should be performed
      *                        case sensitively.
      *
      *

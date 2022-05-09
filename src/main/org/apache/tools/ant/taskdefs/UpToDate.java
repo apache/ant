@@ -37,7 +37,7 @@ import org.apache.tools.ant.util.SourceFileScanner;
 
 /**
  * Sets the given property if the specified target has a timestamp
- * greater than all of the source files.
+ * greater than all the source files.
  *
  * @since Ant 1.2
  *

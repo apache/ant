@@ -531,7 +531,7 @@ public class Expand extends Task {
     }
 
     /**
-     * Whether to allow the extracted file or directory to be outside of the dest directory.
+     * Whether to allow the extracted file or directory to be outside the dest directory.
      *
      * @param b the flag
      * @since Ant 1.10.4
@@ -541,7 +541,7 @@ public class Expand extends Task {
     }
 
     /**
-     * Whether to allow the extracted file or directory to be outside of the dest directory.
+     * Whether to allow the extracted file or directory to be outside the dest directory.
      *
      * @return {@code null} if the flag hasn't been set explicitly,
      * otherwise the value set by the user.

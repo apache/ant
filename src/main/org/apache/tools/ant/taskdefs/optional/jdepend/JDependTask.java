@@ -145,7 +145,7 @@ public class JDependTask extends Task {
     }
 
     /**
-     * Whether or not to halt on failure. Default: false.
+     * Whether to halt on failure. Default: false.
      * @param haltonerror the value to set
      */
     public void setHaltonerror(boolean haltonerror) {

@@ -81,7 +81,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
     }
 
     /**
-     * internal class providing a File-like interface to some of the information
+     * internal class providing a File-like interface to some information
      * available from the FTP server
      *
      */

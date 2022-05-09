@@ -201,7 +201,7 @@ public class NetRexxC extends MatchingTask {
     }
 
     /**
-     * Set whether or not compiler messages should be displayed on the 'console'.
+     * Set whether compiler messages should be displayed on the 'console'.
      * Note that this task will rely on the default value for filtering compile messages.
      * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
      * The default value is false.
@@ -366,7 +366,7 @@ public class NetRexxC extends MatchingTask {
     }
 
     /**
-     * Specifies whether the NetRexx compiler should be case sensitive or not.
+     * Specifies whether the NetRexx compiler should be case sensitive.
      * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      * @param strictcase a <code>boolean</code> value.

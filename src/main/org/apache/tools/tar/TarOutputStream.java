@@ -422,7 +422,7 @@ public class TarOutputStream extends FilterOutputStream {
             // The programmer can be writing little 32 byte chunks for all
             // we know, and we must assemble complete records for writing.
             // REVIEW Maybe this should be in TarBuffer? Could that help to
-            // eliminate some of the buffer copying.
+            // eliminate some buffer copying.
             //
         }
 

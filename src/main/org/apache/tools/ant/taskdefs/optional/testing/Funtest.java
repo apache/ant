@@ -474,7 +474,7 @@ public class Funtest extends Task {
             }
         }
 
-        //we get here whether or not the tests/teardown have thrown a BuildException.
+        //we get here whether the tests/teardown have thrown a BuildException.
         //do a forced shutdown of the running application, before processing the faults
 
         try {

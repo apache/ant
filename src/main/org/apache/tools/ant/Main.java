@@ -117,29 +117,29 @@ public class Main implements AntMain {
     private String inputHandlerClassname = null;
 
     /**
-     * Whether or not output to the log is to be unadorned.
+     * Whether output to the log is to be unadorned.
      */
     private boolean emacsMode = false;
 
     /**
-     * Whether or not log output should be reduced to the minimum
+     * Whether log output should be reduced to the minimum
      */
     private boolean silent = false;
 
     /**
-     * Whether or not this instance has successfully been
+     * Whether this instance has successfully been
      * constructed and is ready to run.
      */
     private boolean readyToRun = false;
 
     /**
-     * Whether or not we should only parse and display the project help
+     * Whether we should only parse and display the project help
      * information.
      */
     private boolean projectHelp = false;
 
     /**
-     * Whether or not a logfile is being used. This is used to
+     * Whether a logfile is being used. This is used to
      * check if the output streams must be closed.
      */
     private boolean isLogFileUsed = false;
@@ -1119,7 +1119,7 @@ public class Main implements AntMain {
      *
      * @param project The project to display a description of.
      *                Must not be <code>null</code>.
-     * @param printSubTargets Whether or not subtarget names should also be
+     * @param printSubTargets Whether subtarget names should also be
      *                        printed.
      */
     private static void printTargets(final Project project, boolean printSubTargets,
@@ -1180,7 +1180,7 @@ public class Main implements AntMain {
     }
 
     /**
-     * Searches for the correct place to insert a name into a list so as
+     * Searches for the correct place to insert a name into a list
      * to keep the list sorted alphabetically.
      *
      * @param names The current list of names. Must not be <code>null</code>.

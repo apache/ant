@@ -1436,7 +1436,7 @@ public class Javadoc extends Task {
     public class TagArgument extends FileSet {
         /** Name of the tag. */
         private String name = null;
-        /** Whether or not the tag is enabled. */
+        /** Whether the tag is enabled. */
         private boolean enabled = true;
         /**
          * Scope string of the tag. This will form the middle
@@ -1537,9 +1537,9 @@ public class Javadoc extends Task {
         }
 
         /**
-         * Sets whether or not the tag is enabled.
+         * Sets whether the tag is enabled.
          *
-         * @param enabled Whether or not this tag is enabled.
+         * @param enabled Whether this tag is enabled.
          */
         public void setEnabled(final boolean enabled) {
             this.enabled = enabled;

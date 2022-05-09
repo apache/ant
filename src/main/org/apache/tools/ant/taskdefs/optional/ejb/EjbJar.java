@@ -570,7 +570,7 @@ public class EjbJar extends MatchingTask {
      * Invoked by Ant after the task is prepared, when it is ready to execute
      * this task.
      *
-     * This will configure all of the nested deployment tools to allow them to
+     * This will configure all the nested deployment tools to allow them to
      * process the jar. If no deployment tools have been configured a generic
      * tool is created to handle the jar.
      *

@@ -74,7 +74,7 @@ import java.util.concurrent.TimeUnit;
  * This class relies on a {@link LaunchDefinition} for setting up the launch of the
  * JUnit platform.
  * <p>
- * The {@code LauncherSupport} isn't concerned with whether or not
+ * The {@code LauncherSupport} isn't concerned with whether
  * it's being executed in the same JVM as the build in which the {@code junitlauncher}
  * was triggered or if it's running as part of a forked JVM. Instead it just relies
  * on the {@code LaunchDefinition} to do whatever decisions need to be done before and
@@ -83,9 +83,9 @@ import java.util.concurrent.TimeUnit;
  * This class is not thread-safe and isn't expected to be used for launching from
  * multiple different threads simultaneously.
  * <p>This class is an internal implementation detail of the Ant project and although
- * it's a public class, it isn't meant to be used outside of this project. This class
+ * it's a public class, it isn't meant to be used outside this project. This class
  * can be changed, across releases, without any backward compatible guarantees and hence
- * shouldn't be used or relied upon outside of this project.
+ * shouldn't be used or relied upon outside this project.
  */
 public class LauncherSupport {
 
@@ -133,7 +133,7 @@ public class LauncherSupport {
                     // for this request.
                     final Listener firstListener = new Listener(System.out);
                     // we always enroll the summary generating listener, to the request, so that we
-                    // get to use some of the details of the summary for our further decision making
+                    // get to use some details of the summary for our further decision-making
                     testExecutionListeners.add(firstListener);
                     testExecutionListeners.addAll(getListeners(testRequest, this.launchDefinition.getClassLoader()));
                     final PrintStream originalSysOut = System.out;
@@ -367,7 +367,7 @@ public class LauncherSupport {
             }
             default: {
                 // unknown, but no need to error out, just be lenient
-                // and return back
+                // and return
                 return Optional.empty();
             }
         }

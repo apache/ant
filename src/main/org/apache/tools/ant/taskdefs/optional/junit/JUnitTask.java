@@ -984,7 +984,7 @@ public class JUnitTask extends Task {
                 threads[i].start();
             }
 
-            /* wait for all of the threads to complete.  Not sure if the exception can actually occur in this use case. */
+            /* wait for all the threads to complete.  Not sure if the exception can actually occur in this use case. */
             do {
                 exceptionOccurred = false;
 
@@ -1670,7 +1670,7 @@ public class JUnitTask extends Task {
      * Verifies all <code>test</code> elements having the <code>methods</code>
      * attribute specified and having the <code>if</code>-condition resolved
      * to true, that the value of the <code>methods</code> attribute is valid.
-     * @exception BuildException if some of the tests matching the described
+     * @exception BuildException if some tests matching the described
      *                           conditions has invalid value of the
      *                           <code>methods</code> attribute
      * @since 1.8.2

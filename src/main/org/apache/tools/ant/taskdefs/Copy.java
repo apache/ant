@@ -295,7 +295,7 @@ public class Copy extends Task {
      * copied does not exist.
      *
      * @param quiet
-     *            whether or not to display error messages when a file or
+     *            whether to display error messages when a file or
      *            directory does not exist. Default is false.
      */
     public void setQuiet(final boolean quiet) {

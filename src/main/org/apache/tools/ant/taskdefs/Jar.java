@@ -246,7 +246,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Set whether or not to create an index list for classes.
+     * Set whether to create an index list for classes.
      * This may speed up classloading in some cases.
      * @param flag a <code>boolean</code> value
      */
@@ -255,7 +255,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Set whether or not to add META-INF and its children to the index.
+     * Set whether to add META-INF and its children to the index.
      *
      * <p>Doesn't have any effect if index is false.</p>
      *
@@ -371,7 +371,7 @@ public class Jar extends Zip {
     /**
      * Behavior when a Manifest is found in a zipfileset or zipgroupfileset file.
      * Valid values are "skip", "merge", and "mergewithoutmain".
-     * "merge" will merge all of manifests together, and merge this into any
+     * "merge" will merge all manifests together, and merge this into any
      * other specified manifests.
      * "mergewithoutmain" merges everything but the Main section of the manifests.
      * Default value is "skip".

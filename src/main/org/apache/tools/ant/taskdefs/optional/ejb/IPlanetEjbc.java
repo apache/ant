@@ -402,7 +402,7 @@ public class IPlanetEjbc {
         }
         command += "ejbc ";
 
-        /* Concatenate all of the command line arguments into a single String */
+        /* Concatenate all the command line arguments into a single String */
         String args = String.join(" ", arguments);
 
         log(command + args);
@@ -579,7 +579,7 @@ public class IPlanetEjbc {
 
     /**
      * This inner class is an XML document handler that can be used to parse EJB
-     * descriptors (both the standard EJB descriptor as well as the iAS-specific
+     * descriptors (both the standard EJB descriptor and the iAS-specific
      * descriptor that stores additional values for iAS).  Once the descriptors
      * have been processed, the list of EJBs found can be obtained by calling
      * the <code>getEjbs()</code> method.
@@ -899,8 +899,8 @@ public class IPlanetEjbc {
         /*
          * Below are getter's and setter's for each of the instance variables.
          * Note that (in addition to supporting setters with the same type as
-         * the instance variable) a setter is provided with takes a String
-         * argument -- this are provided so the XML document handler can set
+         * the instance variable) a setter which takes a String argument
+         * is provided so the XML document handler can set
          * the EJB values using the Strings it parses.
          */
 
@@ -1077,7 +1077,7 @@ public class IPlanetEjbc {
          *
          * @param destDir The directory where the EJB source classes, stubs and
          *                skeletons are located.
-         * @return A boolean indicating whether or not the ejbc utility needs to
+         * @return A boolean indicating whether the ejbc utility needs to
          *         be run to bring the stubs and skeletons up to date.
          */
         public boolean mustBeRecompiled(File destDir) {
@@ -1372,7 +1372,7 @@ public class IPlanetEjbc {
         /**
          * Gets the fully qualified name of the Java class with underscores
          * separating the components of the class name rather than periods.
-         * This format is used in naming some of the stub and skeleton classes
+         * This format is used in naming some stub and skeleton classes
          * for the iPlanet Application Server.
          *
          * @return String representing the fully qualified class name using

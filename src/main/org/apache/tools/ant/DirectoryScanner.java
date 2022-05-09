@@ -295,11 +295,11 @@ public class DirectoryScanner
      */
     protected Vector<String> dirsDeselected;
 
-    /** Whether or not our results were built by a slow scan. */
+    /** Whether our results were built by a slow scan. */
     protected boolean haveSlowResults = false;
 
     /**
-     * Whether or not the file system should be treated as a case sensitive
+     * Whether the file system should be treated as a case sensitive
      * one.
      */
     protected boolean isCaseSensitive = true;
@@ -311,13 +311,13 @@ public class DirectoryScanner
     protected boolean errorOnMissingDir = true;
 
     /**
-     * Whether or not symbolic links should be followed.
+     * Whether symbolic links should be followed.
      *
      * @since Ant 1.5
      */
     private boolean followSymlinks = true;
 
-    /** Whether or not everything tested so far has been included. */
+    /** Whether everything tested so far has been included. */
     protected boolean everythingIncluded = true;
 
     // CheckStyle:VisibilityModifier ON
@@ -443,7 +443,7 @@ public class DirectoryScanner
     private final Set<String> notFollowedSymlinks = new HashSet<>();
 
     /**
-     * Test whether or not a given path matches the start of a given
+     * Test whether a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
@@ -455,7 +455,7 @@ public class DirectoryScanner
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
      *
-     * @return whether or not a given path matches the start of a given
+     * @return whether a given path matches the start of a given
      * pattern up to the first "**".
      */
     protected static boolean matchPatternStart(final String pattern, final String str) {
@@ -463,7 +463,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a given path matches the start of a given
+     * Test whether a given path matches the start of a given
      * pattern up to the first "**".
      * <p>
      * This is not a general purpose test and should only be used if you
@@ -474,10 +474,10 @@ public class DirectoryScanner
      *                <code>null</code>.
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed
+     * @param isCaseSensitive Whether matching should be performed
      *                        case sensitively.
      *
-     * @return whether or not a given path matches the start of a given
+     * @return whether a given path matches the start of a given
      * pattern up to the first "**".
      */
     protected static boolean matchPatternStart(final String pattern, final String str,
@@ -486,7 +486,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a given path matches a given pattern.
+     * Test whether a given path matches a given pattern.
      *
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
@@ -501,13 +501,13 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a given path matches a given pattern.
+     * Test whether a given path matches a given pattern.
      *
      * @param pattern The pattern to match against. Must not be
      *                <code>null</code>.
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed
+     * @param isCaseSensitive Whether matching should be performed
      *                        case sensitively.
      *
      * @return <code>true</code> if the pattern matches against the string,
@@ -519,7 +519,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a string matches against a pattern.
+     * Test whether a string matches against a pattern.
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
@@ -537,7 +537,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a string matches against a pattern.
+     * Test whether a string matches against a pattern.
      * The pattern may contain two special characters:<br>
      * '*' means zero or more characters<br>
      * '?' means one and only one character
@@ -546,7 +546,7 @@ public class DirectoryScanner
      *                Must not be <code>null</code>.
      * @param str     The string which must be matched against the pattern.
      *                Must not be <code>null</code>.
-     * @param isCaseSensitive Whether or not matching should be performed
+     * @param isCaseSensitive Whether matching should be performed
      *                        case sensitively.
      *
      *
@@ -659,7 +659,7 @@ public class DirectoryScanner
     /**
      * Find out whether include exclude patterns are matched in a
      * case sensitive way.
-     * @return whether or not the scanning is case sensitive.
+     * @return whether the scanning is case sensitive.
      * @since Ant 1.6
      */
     public synchronized boolean isCaseSensitive() {
@@ -667,10 +667,10 @@ public class DirectoryScanner
     }
 
     /**
-     * Set whether or not include and exclude patterns are matched
+     * Set whether include and exclude patterns are matched
      * in a case sensitive way.
      *
-     * @param isCaseSensitive whether or not the file system should be
+     * @param isCaseSensitive whether the file system should be
      *                        regarded as a case sensitive one.
      */
     @Override
@@ -679,9 +679,9 @@ public class DirectoryScanner
     }
 
     /**
-     * Sets whether or not a missing base directory is an error
+     * Sets whether a missing base directory is an error
      *
-     * @param errorOnMissingDir whether or not a missing base directory
+     * @param errorOnMissingDir whether a missing base directory
      *                        is an error
      * @since Ant 1.7.1
      */
@@ -690,7 +690,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Get whether or not a DirectoryScanner follows symbolic links.
+     * Get whether a DirectoryScanner follows symbolic links.
      *
      * @return flag indicating whether symbolic links should be followed.
      *
@@ -701,9 +701,9 @@ public class DirectoryScanner
     }
 
     /**
-     * Set whether or not symbolic links should be followed.
+     * Set whether symbolic links should be followed.
      *
-     * @param followSymlinks whether or not symbolic links should be followed.
+     * @param followSymlinks whether symbolic links should be followed.
      */
     public synchronized void setFollowSymlinks(final boolean followSymlinks) {
         this.followSymlinks = followSymlinks;
@@ -819,7 +819,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Return whether or not the scanner has included all the files or
+     * Return whether the scanner has included all the files or
      * directories it has come across so far.
      *
      * @return <code>true</code> if all files and directories which have
@@ -1142,7 +1142,7 @@ public class DirectoryScanner
      * @param vpath The path relative to the base directory (needed to
      *              prevent problems with an absolute path when using
      *              dir). Must not be <code>null</code>.
-     * @param fast  Whether or not this call is part of a fast scan.
+     * @param fast  Whether this call is part of a fast scan.
      *
      * @see #filesIncluded
      * @see #filesNotIncluded
@@ -1166,7 +1166,7 @@ public class DirectoryScanner
      * @param path The path relative to the base directory (needed to
      *              prevent problems with an absolute path when using
      *              dir). Must not be <code>null</code>.
-     * @param fast  Whether or not this call is part of a fast scan.
+     * @param fast  Whether this call is part of a fast scan.
      *
      * @see #filesIncluded
      * @see #filesNotIncluded
@@ -1344,7 +1344,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a name matches against at least one include
+     * Test whether a name matches against at least one include
      * pattern.
      *
      * @param name The path to match. Must not be <code>null</code>.
@@ -1356,7 +1356,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a name matches against at least one include
+     * Test whether a name matches against at least one include
      * pattern.
      *
      * @param path The tokenized path to match. Must not be <code>null</code>.
@@ -1375,7 +1375,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a name matches the start of at least one include
+     * Test whether a name matches the start of at least one include
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.
@@ -1387,7 +1387,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a name matches the start of at least one include
+     * Test whether a name matches the start of at least one include
      * pattern.
      *
      * @param tokenizedName The name to match. Must not be <code>null</code>.
@@ -1401,7 +1401,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a name matches the start of the given
+     * Test whether a name matches the start of the given
      * include pattern.
      *
      * @param tokenizedName The name to match. Must not be <code>null</code>.
@@ -1463,7 +1463,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a name matches against at least one exclude
+     * Test whether a name matches against at least one exclude
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.
@@ -1475,7 +1475,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Test whether or not a name matches against at least one exclude
+     * Test whether a name matches against at least one exclude
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.

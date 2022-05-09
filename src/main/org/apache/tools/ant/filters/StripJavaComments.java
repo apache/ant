@@ -40,13 +40,13 @@ public final class StripJavaComments
     private int readAheadCh = -1;
 
     /**
-     * Whether or not the parser is currently in the middle of a string
+     * Whether the parser is currently in the middle of a string
      * literal.
      */
     private boolean inString = false;
 
     /**
-     * Whether or not the last char has been a backslash.
+     * Whether the last char has been a backslash.
      */
     private boolean quoted = false;
 

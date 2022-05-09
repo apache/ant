@@ -90,7 +90,7 @@ public class Parallel extends Task
     private boolean timedOut;
 
     /**
-     * Indicates whether failure of any of the nested tasks should end
+     * Indicates whether failure of any nested task should end
      * execution
      */
     private boolean failOnAny;

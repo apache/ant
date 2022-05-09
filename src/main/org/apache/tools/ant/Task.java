@@ -79,7 +79,7 @@ public abstract class Task extends ProjectComponent {
     // CheckStyle:VisibilityModifier ON
 
     /**
-     * Whether or not this task is invalid. A task becomes invalid
+     * Whether this task is invalid. A task becomes invalid
      * if a conflicting class is specified as the implementation for
      * its type.
      */

@@ -284,9 +284,9 @@ public class Files extends AbstractSelectorContainer
     }
 
     /**
-     * Set whether or not symbolic links should be followed.
+     * Set whether symbolic links should be followed.
      *
-     * @param followSymlinks whether or not symbolic links should be followed.
+     * @param followSymlinks whether symbolic links should be followed.
      */
     public synchronized void setFollowSymlinks(boolean followSymlinks) {
         checkAttributesAllowed();

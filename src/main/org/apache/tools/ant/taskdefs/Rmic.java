@@ -411,7 +411,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Sets whether or not to include ant's own classpath in this task's
+     * Sets whether to include ant's own classpath in this task's
      * classpath.
      * Optional; default is <code>true</code>.
      * @param include if true include ant's classpath
@@ -421,7 +421,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Gets whether or not the ant classpath is to be included in the
+     * Gets whether the ant classpath is to be included in the
      * task's classpath.
      * @return true if ant's classpath is to be included
      */
@@ -441,7 +441,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Gets whether or not the java runtime should be included in this
+     * Gets whether the java runtime should be included in this
      * task's classpath.
      * @return true if default run-time libraries are included
      */

@@ -100,7 +100,7 @@ public class DefaultExcludes extends Task {
     /**
      * If true, echo the default excludes.
      *
-     * @param echo whether or not to echo the contents of
+     * @param echo whether to echo the contents of
      *             the default excludes.
      */
     public void setEcho(boolean echo) {

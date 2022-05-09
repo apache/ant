@@ -37,10 +37,10 @@ class ProcessDestroyer implements Runnable {
     private Method removeShutdownHookMethod;
     private ProcessDestroyerImpl destroyProcessThread = null;
 
-    // whether or not this ProcessDestroyer has been registered as a
+    // whether this ProcessDestroyer has been registered as a
     // shutdown hook
     private boolean added = false;
-    // whether or not this ProcessDestroyer is currently running as
+    // whether this ProcessDestroyer is currently running as
     // shutdown hook
     private boolean running = false;
 
@@ -157,7 +157,7 @@ class ProcessDestroyer implements Runnable {
     }
 
     /**
-     * Returns whether or not the ProcessDestroyer is registered as
+     * Returns whether the ProcessDestroyer is registered as
      * a shutdown hook
      * @return true if this is currently added as shutdown hook
      */

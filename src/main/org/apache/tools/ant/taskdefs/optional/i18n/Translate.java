@@ -131,7 +131,7 @@ public class Translate extends MatchingTask {
     private String endToken;
 
     /**
-     * Whether or not to create a new destination file.
+     * Whether to create a new destination file.
      * Defaults to <code>false</code>.
      */
     private boolean forceOverwrite;
@@ -255,11 +255,11 @@ public class Translate extends MatchingTask {
     }
 
     /**
-     * Whether or not to overwrite existing file irrespective of
+     * Whether to overwrite existing file irrespective of
      * whether it is newer than the source file as well as the
      * resource bundle file.
      * Defaults to false.
-     * @param forceOverwrite whether or not to overwrite existing files
+     * @param forceOverwrite whether to overwrite existing files
      */
     public void setForceOverwrite(boolean forceOverwrite) {
         this.forceOverwrite = forceOverwrite;

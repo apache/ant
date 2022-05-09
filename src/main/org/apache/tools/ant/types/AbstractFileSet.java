@@ -410,9 +410,9 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * Sets whether or not symbolic links should be followed.
+     * Sets whether symbolic links should be followed.
      *
-     * @param followSymlinks whether or not symbolic links should be followed.
+     * @param followSymlinks whether symbolic links should be followed.
      */
     public synchronized void setFollowSymlinks(boolean followSymlinks) {
         if (isReference()) {

@@ -362,7 +362,7 @@ public class JavaTest {
         });
         inputThread.start();
 
-        // wait a little bit for the task to wait for input
+        // wait a little for the task to wait for input
         Thread.sleep(100);
 
         // write some stuff in the input stream to be caught by the input task
@@ -396,7 +396,7 @@ public class JavaTest {
 
         Thread writingThread = new Thread(() -> {
             try {
-                // wait a little bit to have the target executed
+                // wait a little to have the target executed
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 throw new AssumptionViolatedException("Thread interrupted", e);

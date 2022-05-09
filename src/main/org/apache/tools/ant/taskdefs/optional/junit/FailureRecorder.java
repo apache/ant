@@ -433,7 +433,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
     }
 
     /**
-     * The task outside of this JUnitResultFormatter is the &lt;junit&gt; task. So all tests passed
+     * The task outside this JUnitResultFormatter is the &lt;junit&gt; task. So all tests passed,
      * and we could create the new java class.
      * @param event  not used
      * @see org.apache.tools.ant.BuildListener#taskFinished(org.apache.tools.ant.BuildEvent)

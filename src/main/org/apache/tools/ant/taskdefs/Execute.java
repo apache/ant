@@ -80,7 +80,7 @@ public class Execute {
     private boolean useVMLauncher = true;
 
     /**
-     * Set whether or not you want the process to be spawned.
+     * Set whether you want the process to be spawned.
      * Default is not spawned.
      *
      * @param spawn if true you do not want Ant

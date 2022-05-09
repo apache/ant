@@ -44,13 +44,13 @@ public class ExecuteWatchdog implements TimeoutObserver {
     /** the process to execute and watch for duration */
     private Process process;
 
-    /** say whether or not the watchdog is currently monitoring a process */
+    /** say whether the watchdog is currently monitoring a process */
     private volatile boolean watch = false;
 
     /** exception that might be thrown during the process execution */
     private Exception caught = null;
 
-    /** say whether or not the process was killed due to running overtime */
+    /** say whether the process was killed due to running overtime */
     private volatile boolean killedProcess = false;
 
     /** will tell us whether timeout has occurred */
@@ -159,7 +159,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
     }
 
     /**
-     * Indicates whether or not the watchdog is still monitoring the process.
+     * Indicates whether the watchdog is still monitoring the process.
      * @return  <code>true</code> if the process is still running, otherwise
      *          <code>false</code>.
      */

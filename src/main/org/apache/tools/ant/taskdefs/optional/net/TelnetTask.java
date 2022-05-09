@@ -276,7 +276,7 @@ public class TelnetTask extends Task {
         }
 
         /**
-         * Whether or not the message should be echoed to the log.
+         * Whether the message should be echoed to the log.
          * Defaults to <code>true</code>.
          * @param b a <code>boolean</code> value
          */

@@ -469,7 +469,7 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * whether or not format should be preserved.
+     * whether format should be preserved.
      * Defaults to false.
      *
      * @param keepformat The keepformat to set

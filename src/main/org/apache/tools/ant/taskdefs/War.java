@@ -103,7 +103,7 @@ public class War extends Jar {
     }
 
     /**
-     * Set the policy on the web.xml file, that is, whether or not it is needed
+     * Set the policy on the web.xml file, that is, whether it is needed
      * @param needxmlfile whether a web.xml file is needed. Default: true
      */
     public void setNeedxmlfile(boolean needxmlfile) {

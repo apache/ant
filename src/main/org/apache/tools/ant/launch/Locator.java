@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * The Locator is a utility class which is used to find certain items
  * in the environment.
  * <p>
- * It is used at boot time in the launcher, and cannot make use of any of Ant's other classes.
+ * It is used at boot time in the launcher, and cannot make use of any other Ant's classes.
  * <p>
  * This is a surprisingly brittle piece of code, and has had lots of bugs filed against it:
  * <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=42275">running ant off a network share can cause Ant to fail</a>,
@@ -386,7 +386,7 @@ public final class Locator {
     }
 
     /**
-     * Get an array of URLs representing all of the jar files in the
+     * Get an array of URLs representing all the jar files in the
      * given location. If the location is a file, it is returned as the only
      * element of the array. If the location is a directory, it is scanned for
      * jar files.
@@ -404,7 +404,7 @@ public final class Locator {
     }
 
     /**
-     * Get an array of URLs representing all of the files of a given set of
+     * Get an array of URLs representing all the files of a given set of
      * extensions in the given location. If the location is a file, it is
      * returned as the only element of the array. If the location is a
      * directory, it is scanned for matching files.
