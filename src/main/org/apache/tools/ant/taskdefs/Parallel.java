@@ -169,7 +169,7 @@ public class Parallel extends Task
 
     /**
      * Statically determine the maximum number of tasks to execute
-     * simultaneously.  If there are less tasks than threads, then all will be
+     * simultaneously.  If there are fewer tasks than threads, then all will be
      * executed at once; if there are more, then only <code>threadCount</code>
      * tasks will be executed at one time.  If <code>threadsPerProcessor</code>
      * is set then this value is

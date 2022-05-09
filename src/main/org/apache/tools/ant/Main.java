@@ -55,7 +55,7 @@ import org.apache.tools.ant.util.StreamUtils;
  * command line arguments. It then assembles and executes an Ant
  * project.
  * <p>
- * If you integrating Ant into some other tool, this is not the class
+ * If you are integrating Ant into some other tool, this is not the class
  * to use as an entry point. Please see the source code of this
  * class to see how it manipulates the Ant project classes.
  *
@@ -415,7 +415,7 @@ public class Main implements AntMain {
                     throw new BuildException("");
                 }
             } else {
-                // if it's no other arg, it may be the target
+                // if it isn't another arg, it may be the target
                 targets.addElement(arg);
             }
         }

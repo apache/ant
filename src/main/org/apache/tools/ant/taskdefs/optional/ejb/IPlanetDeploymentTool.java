@@ -110,7 +110,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool {
 
     /*
      * Regardless of the name of the iAS-specific EJB descriptor file, it will
-     * written in the completed JAR file as "ias-ejb-jar.xml".  This is the
+     * be written in the completed JAR file as "ias-ejb-jar.xml".  This is the
      * naming convention implemented by iAS.
      */
     private static final String IAS_DD = "ias-ejb-jar.xml";

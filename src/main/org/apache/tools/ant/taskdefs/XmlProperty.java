@@ -520,7 +520,7 @@ public class XmlProperty extends Task {
 
     /**
      * Return the value for the given attribute.
-     * If we are not using semantic attributes, its just the
+     * If we are not using semantic attributes, it's just the
      * literal string value of the attribute.
      *
      * <p>If we <em>are</em> using semantic attributes, then first

@@ -83,7 +83,7 @@ public interface DependencyAnalyzer {
 
     /**
      * Reset the dependency list. This will reset the determined
-     * dependencies and the also list of root classes.
+     * dependencies and also the list of root classes.
      */
     void reset();
 

@@ -118,7 +118,7 @@ public class Jar extends Zip {
     /**
      * The file found from the 'manifest' attribute.  This can be
      * either the location of a manifest, or the name of a jar added
-     * through a fileset.  If its the name of an added jar, the
+     * through a fileset.  If it's the name of an added jar, the
      * manifest is looked for in META-INF/MANIFEST.MF
      */
     private File manifestFile;
@@ -302,7 +302,7 @@ public class Jar extends Zip {
 
     /**
      * The manifest file to use. This can be either the location of a manifest,
-     * or the name of a jar added through a fileset. If its the name of an added
+     * or the name of a jar added through a fileset. If it's the name of an added
      * jar, the task expects the manifest to be in the jar at META-INF/MANIFEST.MF.
      *
      * @param manifestFile the manifest file to use.

@@ -146,7 +146,7 @@ public class IPlanetEjbc {
         this.parser             = parser;
 
         /*
-         * Parse the classpath into it's individual elements and store the
+         * Parse the classpath into its individual elements and store the
          * results in the "classpathElements" instance variable.
          */
         if (classpath != null) {
@@ -897,7 +897,7 @@ public class IPlanetEjbc {
         }
 
         /*
-         * Below are getter's and setter's for each of the instance variables.
+         * Below are getters and setters for each of the instance variables.
          * Note that (in addition to supporting setters with the same type as
          * the instance variable) a setter which takes a String argument
          * is provided so the XML document handler can set
@@ -1146,7 +1146,7 @@ public class IPlanetEjbc {
              * Note that if ONLY the implementation class has changed, it's not
              * necessary to rebuild the EJB stubs and skeletons.  For this
              * reason, we ensure the file exists (using lastModified above), but
-             * we DON'T compare it's timestamp with the timestamps of the home
+             * we DON'T compare its timestamp with the timestamps of the home
              * and remote interfaces (because it's irrelevant in determining if
              * ejbc must be run)
              */

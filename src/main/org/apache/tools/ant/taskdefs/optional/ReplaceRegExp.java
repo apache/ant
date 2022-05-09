@@ -148,7 +148,7 @@ public class ReplaceRegExp extends Task {
      * file for which the regular expression should be replaced;
      * required unless a nested fileset is supplied.
      *
-     * @param file The file for which the reg exp should be replaced.
+     * @param file The file for which the regular expression should be replaced.
      */
     public void setFile(File file) {
         this.file = file;

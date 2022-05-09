@@ -1153,9 +1153,9 @@ public class FTP extends Task implements FTPTaskConfig {
     }
 
     /**
-     * check FTPFiles to check whether they function as directories too
-     * the FTPFile API seem to make directory and symbolic links incompatible
-     * we want to find out if we can cd to a symbolic link
+     * Check FTPFiles whether they function as directories, too.
+     * The FTPFile API seems to make directory and symbolic links incompatible;
+     * we want to find out if we can cd to a symbolic link.
      * @param dir  the parent directory of the file to test
      * @param file the file to test
      * @return true if it is possible to cd to this directory
@@ -1215,9 +1215,9 @@ public class FTP extends Task implements FTPTaskConfig {
     }
 
     /**
-     * check FTPFiles to check whether they function as directories too
-     * the FTPFile API seem to make directory and symbolic links incompatible
-     * we want to find out if we can cd to a symbolic link
+     * Check FTPFiles whether they function as directories, too.
+     * The FTPFile API seems to make directory and symbolic links incompatible;
+     * we want to find out if we can cd to a symbolic link.
      * @param dir  the parent directory of the file to test
      * @param file the file to test
      * @return true if it is possible to cd to this directory

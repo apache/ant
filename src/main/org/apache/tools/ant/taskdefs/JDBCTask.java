@@ -397,8 +397,8 @@ public abstract class JDBCTask extends Task {
             Class<? extends Driver> dc;
             if (classpath != null) {
                 // check first that it is not already loaded otherwise
-                // consecutive runs seems to end into an OutOfMemoryError
-                // or it fails when there is a native library to load
+                // consecutive runs seem to end with an OutOfMemoryError,
+                // or it fails when a native library is attempted to load
                 // several times.
                 // this is far from being perfect but should work
                 // in most cases.

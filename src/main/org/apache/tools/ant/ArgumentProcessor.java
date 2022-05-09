@@ -25,7 +25,7 @@ import java.util.List;
  * <p>
  * Arguments supported by third party code should not conflict with Ant core
  * ones. It is then recommended to chose specific 'enough' argument name,
- * avoiding for instance one letter arguments. By the way, if there any
+ * avoiding for instance one letter arguments. By the way, if there is any
  * conflict, Ant will take precedence.
  *
  * @since 1.9

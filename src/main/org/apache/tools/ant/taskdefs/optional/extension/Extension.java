@@ -236,7 +236,7 @@ public final class Extension {
 
     /**
      * Add Extension to the specified manifest Attributes.
-     * Use the specified prefix so that dependencies can added
+     * Use the specified prefix so that dependencies can be added
      * with a prefix such as "java3d-" etc.
      *
      * @param attributes the attributes of manifest to add to

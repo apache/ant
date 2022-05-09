@@ -256,7 +256,7 @@ public class Move extends Copy {
     }
 
     /**
-     * Its only ok to delete a directory tree if there are no files in it.
+     * It's only ok to delete a directory tree if there are no files in it.
      * @param d the directory to check
      * @return true if a deletion can go ahead
      */

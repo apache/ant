@@ -648,7 +648,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * only the bean classfile needs to be updated and the rest of the
      * WebLogic jar file can remain the same. If the Interfaces, i.e. the
      * method signatures change or if the xml deployment descriptors changed,
-     * the whole jar needs to be rebuilt with ejbc. This is not strictly true
+     * the entire jar needs to be rebuilt with ejbc. This is not strictly true
      * for the xml files. If the JNDI name changes then the jar doesn't have to
      * be rebuilt, but if the resources references change then it does. At
      * this point the WebLogic jar gets rebuilt if the xml files change at
@@ -689,7 +689,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 Map<String, JarEntry> wlEntries = wlJar.stream().collect(Collectors.toMap(ZipEntry::getName,
                         je -> je, (a, b) -> b));
 
-                // Cycle through generic and make sure its in WebLogic
+                // Cycle through generic and make sure it's in WebLogic
                 genericLoader = getClassLoaderFromJar(genericJarFile);
 
                 for (String filepath : genericEntries.keySet()) {
@@ -709,7 +709,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                         || genericEntry.getSize() != wlEntry.getSize()) {
 
                         if (genericEntry.getName().endsWith(".class")) {
-                            //File are different see if its an object or an interface
+                            //File are different see if it's an object or an interface
                             String classname = genericEntry.getName()
                                     .replace(File.separatorChar, '.')
                                     .replace('/', '.');

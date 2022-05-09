@@ -47,7 +47,7 @@ public interface RmicAdapter {
     /**
      * Call the rmic compiler.
      *
-     * @return true if has the compilation been successful
+     * @return true if the compilation has been successful
      * @throws BuildException on error
      */
     boolean execute() throws BuildException;

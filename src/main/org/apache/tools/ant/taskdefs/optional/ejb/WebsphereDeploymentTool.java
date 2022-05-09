@@ -130,7 +130,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /** Additional options for RMIC */
     private String rmicOptions;
 
-    /** true- Use the WebSphere 3.5 compatible mapping rules */
+    /** Use the WebSphere 3.5 compatible mapping rules if true */
     private boolean use35MappingRules;
 
     /** the scratchdir for the ejbdeploy operation */
@@ -636,7 +636,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * then only the bean classfile needs to be updated and the rest of the
      * WebSphere jar file can remain the same. If the Interfaces, i.e. the
      * method signatures change or if the xml deployment descriptors changed,
-     * the whole jar needs to be rebuilt with ejbdeploy. This is not strictly
+     * the entire jar needs to be rebuilt with ejbdeploy. This is not strictly
      * true for the xml files. If the JNDI name changes then the jar doesn't
      * have to be rebuilt, but if the resources references change then it
      * does. At this point the WebSphere jar gets rebuilt if the xml files
@@ -697,7 +697,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                         || genericEntry.getSize() != wasEntry.getSize()) {
 
                         if (genericEntry.getName().endsWith(".class")) {
-                            //File are different see if its an object or an interface
+                            //File are different see if it's an object or an interface
                             String classname
                                 = genericEntry.getName().replace(File.separatorChar, '.');
 

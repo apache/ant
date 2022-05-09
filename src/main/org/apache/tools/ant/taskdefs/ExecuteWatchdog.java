@@ -147,7 +147,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
      * This method will rethrow the exception that was possibly caught during
      * the run of the process. It will only remain valid once the process has
      * been terminated either by 'error', timeout or manual intervention.
-     * Information will be discarded once a new process is ran.
+     * Information will be discarded once a new process has run.
      * @throws  BuildException  a wrapped exception over the one that was
      * silently swallowed and stored during the process run.
      */

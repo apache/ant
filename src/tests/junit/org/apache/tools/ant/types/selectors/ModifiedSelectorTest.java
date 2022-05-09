@@ -710,7 +710,7 @@ public class ModifiedSelectorTest {
 
     /**
      * This scenario is based on scenario 1, but does not use any
-     * default value and its based on &lt;custom&gt; selector. Used values are:
+     * default value and it's based on &lt;custom&gt; selector. Used values are:
      * <ul><li><b>Cache:</b> Propertyfile,
      *                    cachefile={java.io.tmpdir}/mycache.txt</li>
      * <li><b>Algorithm:</b> Digest

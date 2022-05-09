@@ -1460,7 +1460,7 @@ public class JUnitTask extends Task {
      * Handle an input request by this task.
      * @see Task#handleInput(byte[], int, int)
      * This implementation delegates to a runner if it
-     * present.
+     * is present.
      * @param buffer the buffer into which data is to be read.
      * @param offset the offset into the buffer at which data is stored.
      * @param length the amount of data to read.

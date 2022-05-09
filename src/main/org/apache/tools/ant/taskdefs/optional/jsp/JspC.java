@@ -514,7 +514,7 @@ public class JspC extends MatchingTask {
 
     /**
      * calculate where the files will end up:
-     * this is destDir or it id destDir + the package name
+     * this is either destDir or destDir + the package name
      */
     private File getActualDestDir() {
         if (packageName == null) {

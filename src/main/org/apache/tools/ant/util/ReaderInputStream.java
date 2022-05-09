@@ -71,7 +71,7 @@ public class ReaderInputStream extends InputStream {
      *
      * @param reader the target {@link Reader}
      * @param encoder the charset encoder
-     * @param bufferSize the size of the input buffer in number of characters
+     * @param bufferSize the size of the input buffer (number of characters)
      * @since 1.10.9
      */
     public ReaderInputStream(final Reader reader, final CharsetEncoder encoder, final int bufferSize) {

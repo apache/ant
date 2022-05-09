@@ -118,8 +118,8 @@ public class XMLResultAggregator extends Task implements XMLConstants {
 
     /**
      * Set the destination directory where the results should be written. If not
-     * set if will use {@link #DEFAULT_DIR}. When given a relative directory
-     * it will resolve it from the project directory.
+     * set, {@link #DEFAULT_DIR} will be used. When given a relative directory
+     * it will be resolved from the project directory.
      * @param value    the directory where to write the results, absolute or
      * relative.
      */

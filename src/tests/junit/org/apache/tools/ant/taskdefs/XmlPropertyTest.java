@@ -149,7 +149,7 @@ public class XmlPropertyTest {
     private void doTest(String msg, boolean keepRoot, boolean collapse,
                         boolean semantic, boolean include, boolean localRoot) throws IOException {
         for (File inputFile : getFiles(buildRule.getProject().resolveFile("xmlproperty/inputs"))) {
-            // What's the working directory?  If local, then its the
+            // What's the working directory?  If local, then it's the
             // folder of the input file.  Otherwise, its the "current" dir..
             File workingDir;
             if (localRoot) {
