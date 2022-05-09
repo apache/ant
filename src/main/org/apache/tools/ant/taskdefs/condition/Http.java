@@ -32,7 +32,7 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Get;
 
 /**
- * Condition to wait for a HTTP request to succeed. Its attribute(s) are:
+ * Condition to wait for an HTTP request to succeed. Its attribute(s) are:
  *   url - the URL of the request.
  *   errorsBeginAt - number at which errors begin at; default=400.
  *   requestMethod - HTTP request method to use; GET, HEAD, etc. default=GET

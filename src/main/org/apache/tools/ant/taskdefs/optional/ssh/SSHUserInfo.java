@@ -203,7 +203,7 @@ public class SSHUserInfo implements UserInfo, UIKeyboardInteractive {
      * @param instruction not used.
      * @param prompt      the method checks if this is one in length.
      * @param echo        the method checks if the first element is false.
-     * @return the password in an size one array if there is a password
+     * @return the password in a size one array if there is a password
      *         and if the prompt and echo checks pass.
      */
     @Override

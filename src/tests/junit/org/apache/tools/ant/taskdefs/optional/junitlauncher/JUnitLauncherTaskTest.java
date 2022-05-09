@@ -249,7 +249,7 @@ public class JUnitLauncherTaskTest {
             Assert.fail(targetName + " was expected to fail since Ant runtime libraries " +
                     "weren't included in the classpath of the forked JVM");
         } catch (BuildException be) {
-            // expect a Error due to missing main class (which is part of Ant runtime libraries
+            // expect an Error due to missing main class (which is part of Ant runtime libraries
             // that we excluded)
             final String missingMainClass = "Could not find or load main class " + StandaloneLauncher.class.getName();
             if (!buildRule.getFullLog().contains(missingMainClass)) {

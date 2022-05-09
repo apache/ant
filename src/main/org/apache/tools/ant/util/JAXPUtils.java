@@ -178,7 +178,7 @@ public class JAXPUtils {
     }
 
     /**
-     * This is a best attempt to provide a URL.toExternalForm() from
+     * This is the best attempt to provide a URL.toExternalForm() from
      * a file URL. Some parsers like Crimson choke on uri that are made of
      * backslashed paths (ie windows) as it is does not conform
      * URI specifications.

@@ -52,7 +52,7 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
 
 
     /**
-     * Get a enumeration over the elements.
+     * Get an enumeration over the elements.
      * @return an enumeration.
      */
     public Enumeration<V> elements() {

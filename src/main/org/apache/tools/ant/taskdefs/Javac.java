@@ -1378,7 +1378,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Adds an "compiler" attribute to Commandline$Attribute used to
+     * Adds a "compiler" attribute to Commandline$Attribute used to
      * filter command line attributes based on the current
      * implementation.
      */

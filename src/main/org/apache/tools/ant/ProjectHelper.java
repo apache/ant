@@ -292,7 +292,7 @@ public class ProjectHelper {
     /**
      * Get the first project helper found in the classpath
      *
-     * @return an project helper, never <code>null</code>
+     * @return a project helper, never <code>null</code>
      * @see org.apache.tools.ant.ProjectHelperRepository#getHelpers()
      */
     public static ProjectHelper getProjectHelper() {

@@ -223,7 +223,7 @@ public final class Locator {
     }
 
     /**
-     * Decodes an Uri with % characters.
+     * Decodes a Uri with % characters.
      * The URI is escaped
      * @param uri String with the uri possibly containing % characters.
      * @return The decoded Uri
@@ -259,7 +259,7 @@ public final class Locator {
     }
 
     /**
-     * Encodes an Uri with % characters.
+     * Encodes a Uri with % characters.
      * The URI is escaped
      * @param path String to encode.
      * @return The encoded string, according to URI norms

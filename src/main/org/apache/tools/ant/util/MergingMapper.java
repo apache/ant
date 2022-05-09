@@ -60,7 +60,7 @@ public class MergingMapper implements FileNameMapper {
     }
 
     /**
-     * Returns an one-element array containing the file name set via setTo.
+     * Returns a one-element array containing the file name set via setTo.
      * @param sourceFileName ignored.
      * @return a one-element array containing the merged filename.
      */

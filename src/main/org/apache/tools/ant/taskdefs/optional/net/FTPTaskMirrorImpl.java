@@ -93,7 +93,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         private final String name;
 
         /**
-         * creates a proxy to a FTP file
+         * creates a proxy to an FTP file
          * @param file FTPFile
          */
         public FTPFileProxy(FTPFile file) {
@@ -104,7 +104,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         }
 
         /**
-         * creates a proxy to a FTP directory
+         * creates a proxy to an FTP directory
          * @param completePath the remote directory.
          */
         public FTPFileProxy(String completePath) {

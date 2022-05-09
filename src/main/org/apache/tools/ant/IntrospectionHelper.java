@@ -1361,7 +1361,7 @@ public final class IntrospectionHelper {
         /**
          * Used to override the class used to create the object.
          *
-         * @param polyType a ant component type name
+         * @param polyType an ant component type name
          */
         public void setPolyType(final String polyType) {
             this.polyType = polyType;

@@ -427,7 +427,7 @@ public class ProjectHelper2 extends ProjectHelper {
         }
 
         /**
-         * Handle the end of a element.
+         * Handle the end of an element.
          *
          * @param uri the namespace uri of the element
          * @param tag the tag of the element

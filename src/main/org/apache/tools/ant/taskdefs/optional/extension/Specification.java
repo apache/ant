@@ -496,7 +496,7 @@ public final class Specification {
     }
 
     /**
-     * Extract an Package Specification from Attributes.
+     * Extract a Package Specification from Attributes.
      *
      * @param attributes Attributes to searched
      * @return the new Specification object, or null

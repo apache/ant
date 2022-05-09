@@ -916,7 +916,7 @@ public class ZipFile implements Closeable {
     }
 
     /**
-     * Checks whether the archive starts with a LFH.  If it doesn't,
+     * Checks whether the archive starts with an LFH.  If it doesn't,
      * it may be an empty archive.
      */
     private boolean startsWithLocalFileHeader() throws IOException {

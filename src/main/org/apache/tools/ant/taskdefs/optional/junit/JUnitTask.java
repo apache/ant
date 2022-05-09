@@ -244,7 +244,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Property to set to "true" if there is a error in a test.
+     * Property to set to "true" if there is an error in a test.
      *
      * <p>This property is applied on all BatchTest (batchtest) and
      * JUnitTest (test), however, it can possibly be overridden by
@@ -280,7 +280,7 @@ public class JUnitTask extends Task {
      * JUnitTest (test), however, it can possibly be overridden by
      * their own properties.</p>
      * @param propertyName the name of the property to set in the
-     * event of an failure.
+     * event of a failure.
      *
      * @since Ant 1.4
      */

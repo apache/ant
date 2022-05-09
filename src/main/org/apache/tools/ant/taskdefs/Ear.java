@@ -145,7 +145,7 @@ public class Ear extends Jar {
     }
 
     /**
-     * Make sure we don't think we already have a application.xml next
+     * Make sure we don't think we already have an application.xml next
      * time this task gets executed.
      */
     @Override

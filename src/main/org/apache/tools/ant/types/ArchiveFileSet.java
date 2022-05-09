@@ -88,7 +88,7 @@ public abstract class ArchiveFileSet extends FileSet {
     }
 
     /**
-     * Constructor using a archive fileset argument.
+     * Constructor using an archive fileset argument.
      * @param fileset the archivefileset to use
      */
     protected ArchiveFileSet(ArchiveFileSet fileset) {

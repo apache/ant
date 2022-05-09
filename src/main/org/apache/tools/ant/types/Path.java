@@ -169,7 +169,7 @@ public class Path extends DataType implements Cloneable, ResourceCollection {
     }
 
     /**
-     * Adds a element definition to the path.
+     * Adds an element definition to the path.
      * @param location the location of the element to add (must not be
      * <code>null</code> nor empty.
      * @throws BuildException on error

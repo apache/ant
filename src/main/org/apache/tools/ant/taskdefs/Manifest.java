@@ -557,7 +557,7 @@ public class Manifest {
         }
 
         /**
-         * Get a attribute of the section
+         * Get an attribute of the section
          *
          * @param attributeName the name of the attribute
          * @return a Manifest.Attribute instance if the attribute is

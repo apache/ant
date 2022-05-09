@@ -620,7 +620,7 @@ public class Execute {
                 // not found, maybe perform a case insensitive search
 
                 for (String osEnvItem : osEnv.keySet()) {
-                    // Nb: using default locale as key is a env name
+                    // Nb: using default locale as key is an env name
                     if (osEnvItem.equalsIgnoreCase(key)) {
                         // Use the original case of the key
                         key = osEnvItem;

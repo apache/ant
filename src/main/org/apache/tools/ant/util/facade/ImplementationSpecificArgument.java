@@ -43,7 +43,7 @@ public class ImplementationSpecificArgument extends Commandline.Argument {
      * implementation matches the chosen implementation.
      * @see org.apache.tools.ant.types.Commandline.Argument#getParts()
      * @param chosenImpl the implementation to check against.
-     * @return the parts if the implementation matches or an zero length
+     * @return the parts if the implementation matches or a zero length
      *         array if not.
      */
     public final String[] getParts(String chosenImpl) {

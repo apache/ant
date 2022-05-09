@@ -409,7 +409,7 @@ public class Pvcs extends Task {
     /**
      * What a valid return value from PVCS looks like
      *  when it describes a file.  Defaults to <code>&quot;P:</code>.
-     * If you are not using an UNC name for your repository and the
+     * If you are not using a UNC name for your repository and the
      * drive letter <code>P</code> is incorrect for your setup, you may
      * need to change this value, UNC names will always be
      * accepted.

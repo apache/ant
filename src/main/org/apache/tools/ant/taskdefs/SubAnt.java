@@ -197,7 +197,7 @@ public class SubAnt extends Task {
             return;
         }
 /*
-    //REVISIT: there must be cleaner way of doing this, if it is merited at all
+    //REVISIT: there must be a cleaner way of doing this, if it is merited at all
         if (subTarget == null) {
             subTarget = getOwningTarget().getName();
         }

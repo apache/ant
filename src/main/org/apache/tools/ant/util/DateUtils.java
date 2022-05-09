@@ -220,7 +220,7 @@ public final class DateUtils {
     }
 
     /**
-     * Returns the current Date in a format suitable for a SMTP date
+     * Returns the current Date in a format suitable for an SMTP date
      * header.
      * @return the current date.
      * @since Ant 1.5.2
@@ -252,7 +252,7 @@ public final class DateUtils {
     }
 
     /**
-     * Parses the string in a format suitable for a SMTP date header.
+     * Parses the string in a format suitable for an SMTP date header.
      *
      * @param datestr string to be parsed
      *

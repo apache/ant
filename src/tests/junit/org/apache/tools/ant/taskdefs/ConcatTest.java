@@ -221,7 +221,7 @@ public class ConcatTest {
     }
 
     /**
-     * Expect an exception when attempting to cat an file to itself
+     * Expect an exception when attempting to cat a file to itself
      */
     @Test(expected = BuildException.class)
     public void testsame() {

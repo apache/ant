@@ -293,7 +293,7 @@ public class LauncherSupport {
         if (test.getOutputDir() != null) {
             return Paths.get(test.getOutputDir(), filename);
         }
-        // neither listener nor the test define a output dir, so use basedir of the project
+        // neither listener nor the test define an output dir, so use basedir of the project
         final TestExecutionContext testExecutionContext = this.testExecutionContext;
         final String baseDir = testExecutionContext.getProperties().getProperty(MagicNames.PROJECT_BASEDIR);
         return Paths.get(baseDir, filename);
@@ -551,7 +551,7 @@ public class LauncherSupport {
                 streamContentDeliver.stop = true;
                 // just "wakeup" the delivery thread, to take into account
                 // those race conditions, where that other thread didn't yet
-                // notice that it was asked to stop and has now gone into a
+                // notice that it was asked to stop and has now gone into an
                 // X amount of wait, waiting for any new data
                 streamContentDeliver.availableData.offer(EMPTY);
             }

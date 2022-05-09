@@ -200,7 +200,7 @@ public class FTP extends Task implements FTPTaskConfig {
         private final String name;
 
         /**
-         * creates a proxy to a FTP file
+         * creates a proxy to an FTP file
          * @param file FTPFile
          */
         public FTPFileProxy(FTPFile file) {
@@ -211,7 +211,7 @@ public class FTP extends Task implements FTPTaskConfig {
         }
 
         /**
-         * creates a proxy to a FTP directory
+         * creates a proxy to an FTP directory
          * @param completePath the remote directory.
          */
         public FTPFileProxy(String completePath) {

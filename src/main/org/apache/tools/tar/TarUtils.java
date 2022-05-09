@@ -98,7 +98,7 @@ public class TarUtils {
      * @param offset The offset into the buffer from which to parse.
      * @param length The maximum number of bytes to parse - must be at least 2 bytes.
      * @return The long value of the octal string.
-     * @throws IllegalArgumentException if the trailing space/NUL is missing or if a invalid byte is detected.
+     * @throws IllegalArgumentException if the trailing space/NUL is missing or if an invalid byte is detected.
      */
     public static long parseOctal(final byte[] buffer, final int offset, final int length) {
         long    result = 0;
@@ -451,7 +451,7 @@ public class TarUtils {
     }
 
     /**
-     * Write an long integer into a buffer as an octal string if this
+     * Write a long integer into a buffer as an octal string if this
      * will fit, or as a binary number otherwise.
      *
      * Uses {@link #formatUnsignedOctalString} to format

@@ -308,7 +308,7 @@ public class Project implements ResourceFactory {
 
     /**
      * Initializes the properties.
-     * @exception BuildException if an vital property could not be set.
+     * @exception BuildException if a vital property could not be set.
      * @since Ant 1.7
      */
     public void initProperties() throws BuildException {
@@ -1270,7 +1270,7 @@ public class Project implements ResourceFactory {
      * the message is logged directly.
      *
      * @param output Message to handle. Should not be <code>null</code>.
-     * @param isWarning Whether the text represents an warning (<code>true</code>)
+     * @param isWarning Whether the text represents a warning (<code>true</code>)
      *        or information (<code>false</code>).
      */
     public void demuxOutput(final String output, final boolean isWarning) {

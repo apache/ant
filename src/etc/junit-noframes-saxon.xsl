@@ -185,7 +185,7 @@
 
 
     <!-- ================================================================== -->
-    <!-- Write a list of all packages with an hyperlink to the anchor of    -->
+    <!-- Write a list of all packages with a hyperlink to the anchor of    -->
     <!-- of the package name.                                               -->
     <!-- ================================================================== -->
     <xsl:template name="packagelist">

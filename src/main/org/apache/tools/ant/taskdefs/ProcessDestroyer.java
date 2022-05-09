@@ -135,7 +135,7 @@ class ProcessDestroyer implements Runnable {
                     e.printStackTrace(); //NOSONAR
                 }
             }
-            // start the hook thread, a unstarted thread may not be
+            // start the hook thread, an unstarted thread may not be
             // eligible for garbage collection
             // Cf.: https://bugs.openjdk.java.net/browse/JDK-4533087
             destroyProcessThread.setShouldDestroy(false);

@@ -45,7 +45,7 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
 
     /**
      * Setter used to store the location of the toplink DTD file.
-     * This is expected to be an URL (file or otherwise). If running
+     * This is expected to be a URL (file or otherwise). If running
      * this on NT using a file URL, the safest thing would be to not use a
      * drive spec in the URL and make sure the file resides on the drive that
      * ANT is running from.  This will keep the setting in the build XML

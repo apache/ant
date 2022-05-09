@@ -539,7 +539,7 @@ public class Depend extends MatchingTask {
      * test for being an RMI stub
      * @param affectedClass  class being tested
      * @param className      possible origin of the RMI stub
-     * @return whether the class affectedClass is a RMI stub
+     * @return whether the class affectedClass is an RMI stub
      */
     private boolean isRmiStub(String affectedClass, String className) {
         return isStub(affectedClass, className, DefaultRmicAdapter.RMI_STUB_SUFFIX)

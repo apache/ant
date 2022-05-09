@@ -223,7 +223,7 @@ public class EjbJar extends MatchingTask {
     }
 
     /**
-     * Create a orion nested element used to configure a
+     * Create an orion nested element used to configure a
      * deployment tool for Orion server.
      *
      * @return the deployment tool instance to be configured.
