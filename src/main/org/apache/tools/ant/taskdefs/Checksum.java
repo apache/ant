@@ -249,7 +249,7 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Select the in/output pattern via a well know format name.
+     * Select the in/output pattern via a well-known format name.
      * @param e an <code>enumerated</code> value
      *
      * @since 1.7.0

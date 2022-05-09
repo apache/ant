@@ -43,7 +43,7 @@
             <xsl:call-template name="sorted.css"/>
         </redirect:write>
 
-        <!-- create the switch.js for collepsing the data -->
+        <!-- create the switch.js for collapsing the data -->
         <redirect:write file="{$output.dir}/switch.js">
             <xsl:call-template name="switch.js"/>
         </redirect:write>
@@ -83,7 +83,7 @@
 
 
     <!--
-    Generates the navagation bar.
+    Generates the navigation bar.
     --> 
     <xsl:template match="checkstyle" mode="navigation">
         <ul id="navigation">
@@ -167,7 +167,7 @@
             <xsl:choose>
                 <xsl:when test="@source=$filter">
                     <tr>
-                        <!-- Hide the basdir. First char of the result is a path separator so remove that. -->
+                        <!-- Hide the basedir. First char of the result is a path separator so remove that. -->
                         <td><xsl:value-of select="substring(substring-after($node/@name, $basedir),2)"/></td>
                         <td><xsl:value-of select="@line"/></td>
                         <td><xsl:value-of select="@severity"/></td>
@@ -330,7 +330,7 @@
 
 
     <!--
-    Calculates the index of the last occurence of a substring in a string.
+    Calculates the index of the last occurrence of a substring in a string.
     @param txt the whole string in which to search
     @delimiter the substring to search
     -->

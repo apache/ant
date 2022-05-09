@@ -638,7 +638,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * method signatures change or if the xml deployment descriptors changed,
      * the whole jar needs to be rebuilt with ejbdeploy. This is not strictly
      * true for the xml files. If the JNDI name changes then the jar doesn't
-     * have to be rebuild, but if the resources references change then it
+     * have to be rebuilt, but if the resources references change then it
      * does. At this point the WebSphere jar gets rebuilt if the xml files
      * change at all.
      *
@@ -647,7 +647,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      *      see if it needs to be rebuilt.
      * @return true if a rebuild is required.
      */
-    // CheckStyle:MethodLength OFF - this will no be fixed
+    // CheckStyle:MethodLength OFF - this will not be fixed
     protected boolean isRebuildRequired(File genericJarFile, File websphereJarFile) {
         boolean rebuild = false;
 
@@ -717,7 +717,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                         } else {
                             // is it the manifest. If so ignore it
                             if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
-                                //File other then class changed  rebuild
+                                //File other than class changed - rebuild
                                 log("Non class file " + genericEntry.getName()
                                     + " has changed", Project.MSG_VERBOSE);
                                 rebuild = true;

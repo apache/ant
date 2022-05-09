@@ -148,13 +148,13 @@ public class JarTest {
     }
 
     private void testRecreate(String firstTarget, String secondTarget) {
-        //Move the modified date on all input back a couple of seconds rather then delay the test to achieve a similar effect
+        //Move the modified date on all input back a couple of seconds rather than delaying the test to achieve a similar effect
         FileUtilities.rollbackTimestamps(buildRule.getProject().getBaseDir(), 5);
 
         buildRule.executeTarget(firstTarget);
         File jarFile = new File(getOutputDir(), tempJar);
 
-        //Move the modified date back a couple of seconds rather then delay the test to achieve a similar effect
+        //Move the modified date back a couple of seconds rather than delaying the test to achieve a similar effect
         FileUtilities.rollbackTimestamps(buildRule.getOutputDir(), 5);
 
         long jarModifiedDate = jarFile.lastModified();

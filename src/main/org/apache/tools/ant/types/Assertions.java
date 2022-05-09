@@ -98,7 +98,7 @@ public class Assertions extends DataType implements Cloneable {
 
     /**
      * enable or disable system assertions.
-     * Default is not set (neither -enablesystemassertions or -disablesytemassertions
+     * Default is not set (neither -enablesystemassertions nor -disablesytemassertions
      * are used on the command line).
      * @param enableSystemAssertions if true enable system assertions
      */

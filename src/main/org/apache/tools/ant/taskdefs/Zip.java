@@ -522,8 +522,19 @@ public class Zip extends MatchingTask {
     /**
      * Whether the language encoding flag will be used.
      * @return boolean
-     * @since Ant 1.8.0
+     * @since Ant 1.10.13
      */
+    public boolean getUseLanguageEncodingFlag() {
+        return useLanguageEncodingFlag;
+    }
+
+    /**
+     * Whether the language encoding flag will be used.
+     * @return boolean
+     * @since Ant 1.8.0
+     * @deprecated misspelled
+     */
+    @Deprecated
     public boolean getUseLanguageEnodingFlag() {
         return useLanguageEncodingFlag;
     }
@@ -1341,7 +1352,7 @@ public class Zip extends MatchingTask {
                      * for inline <manifest>s.
                      *
                      * If we invoke createEmptyZip like Ant 1.5.2 did,
-                     * we'll loose all stuff that has been in the
+                     * we'll lose all stuff that has been in the
                      * original archive (bugzilla report 17780).
                      */
                     return new ArchiveState(true, initialResources);

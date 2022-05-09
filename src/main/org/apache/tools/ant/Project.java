@@ -837,7 +837,7 @@ public class Project implements ResourceFactory {
      * @param baseD The project base directory.
      *              Must not be <code>null</code>.
      *
-     * @exception BuildException if the directory if invalid.
+     * @exception BuildException if the directory is invalid.
      */
     public void setBasedir(final String baseD) throws BuildException {
         setBaseDir(new File(baseD));

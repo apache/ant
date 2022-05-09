@@ -565,7 +565,7 @@ public class JUnitTask extends Task {
      * before configuration in the build
      * script.
      * This allows attributes in the &lt;junit&gt; task
-     * be be defaults for the tests, but allows
+     * to be defaults for the tests, but allows
      * individual tests to override the defaults.
      *
      * @param test BaseTest

@@ -283,7 +283,7 @@ public class BuildFileRule extends ExternalResource {
 
         /**
          * Fired when a task has finished. This event will still
-         * be throw if an error occurred during the build.
+         * be thrown if an error occurred during the build.
          *
          * @see BuildEvent#getException()
          */

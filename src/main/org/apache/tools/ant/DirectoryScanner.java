@@ -1498,7 +1498,7 @@ public class DirectoryScanner
      *
      * @param name the filename to check for selecting.
      * @param file the java.io.File object for this filename.
-     * @return <code>false</code> when the selectors says that the file
+     * @return <code>false</code> when the selectors say that the file
      *         should not be selected, <code>true</code> otherwise.
      */
     protected boolean isSelected(final String name, final File file) {

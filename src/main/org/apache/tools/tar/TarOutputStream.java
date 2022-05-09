@@ -181,7 +181,7 @@ public class TarOutputStream extends FilterOutputStream {
     /**
      * Set the big number mode.
      * This can be BIGNUMBER_ERROR(0), BIGNUMBER_POSIX(1) or BIGNUMBER_STAR(2).
-     * This specifies the treatment of big files (sizes &gt; TarConstants.MAXSIZE) and other numeric values to big to fit into a traditional tar header.
+     * This specifies the treatment of big files (sizes &gt; TarConstants.MAXSIZE) and other numeric values too big to fit into a traditional tar header.
      * Default is BIGNUMBER_ERROR.
      *
      * @param bigNumberMode the mode to use

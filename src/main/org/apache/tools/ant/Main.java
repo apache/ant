@@ -105,7 +105,7 @@ public class Main implements AntMain {
 
     /**
      * The Ant logger class. There may be only one logger. It will have
-     * the right to use the 'out' PrintStream. The class must implements the
+     * the right to use the 'out' PrintStream. The class must implement the
      * BuildLogger interface.
      */
     private String loggerClassname = null;

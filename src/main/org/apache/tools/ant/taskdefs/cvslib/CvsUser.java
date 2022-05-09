@@ -69,7 +69,7 @@ public class CvsUser {
     /**
      * Validate that this object is configured.
      *
-     * @exception BuildException if the instance has not be correctly
+     * @exception BuildException if the instance has not been correctly
      *            configured.
      */
     public void validate() throws BuildException {

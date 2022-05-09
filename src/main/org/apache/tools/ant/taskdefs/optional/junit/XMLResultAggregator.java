@@ -59,7 +59,7 @@ import org.xml.sax.SAXException;
 public class XMLResultAggregator extends Task implements XMLConstants {
 
     // CheckStyle:VisibilityModifier OFF - bc
-    /** the list of all filesets, that should contains the xml to aggregate */
+    /** the list of all filesets, that should contain the xml to aggregate */
     protected Vector<FileSet> filesets = new Vector<>();
 
     /** the name of the result file */

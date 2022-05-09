@@ -928,7 +928,7 @@ public class FTP extends Task implements FTPTaskConfig {
 
             /**
              * find out the relative path assuming that the path used to construct
-             * this AntFTPFile was spelled properly with regards to case.
+             * this AntFTPFile was spelled properly with regard to case.
              * This is OK on a case sensitive system such as UNIX
              * @return relative path
              */
@@ -970,7 +970,7 @@ public class FTP extends Task implements FTPTaskConfig {
             /**
              * get the relative path of this file
              * @param currentPath          base path
-             * @param currentRelativePath  relative path of the base path with regards to remote dir
+             * @param currentRelativePath  relative path of the base path with regard to remote dir
              * @return relative path
              */
             private String getRelativePath(String currentPath, String currentRelativePath) {
@@ -2199,7 +2199,7 @@ public class FTP extends Task implements FTPTaskConfig {
      * simplifies the coding.
      * @param ftp ftp client
      * @param dir base directory of the file to be sent (local)
-     * @param filename relative path of the file to be send
+     * @param filename relative path of the file to be sent
      *        locally relative to dir
      *        remotely relative to the remotedir attribute
      * @throws IOException  in unknown circumstances

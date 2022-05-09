@@ -373,7 +373,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *
      * vendor-specific subclasses should override this method to define
      * the vendor-specific locations of the EJB DTDs
-     * @param handler no used in this class.
+     * @param handler not used in this class.
      */
     protected void registerKnownDTDs(DescriptorHandler handler) {
         // none to register for generic
@@ -388,7 +388,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         try {
             handler = getDescriptorHandler(config.srcDir);
 
-            // Retreive the files to be added to JAR from EJB descriptor
+            // Retrieve the files to be added to JAR from EJB descriptor
             Hashtable<String, File> ejbFiles = parseEjbFiles(descriptorFileName, saxParser);
 
             // Add any support classes specified in the build file

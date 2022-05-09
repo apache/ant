@@ -139,7 +139,7 @@ public final class SortFilter extends BaseParamFilterReader
 
     /**
      * Controls if the sorting process will be in ascendant/descendant order. If
-     * If has value <code>true</code>, then the line of the file will be
+     * it has value <code>true</code>, then the line of the file will be
      * sorted on descendant order. Default value: <code>false</code>. It will
      * be considered only if <code>comparator</code> is <code>null</code>.
      */

@@ -61,7 +61,7 @@ import org.apache.tools.zip.ZipFile;
 public class Expand extends Task {
     public static final String NATIVE_ENCODING = "native-encoding";
 
-    /** Error message when more that one mapper is defined */
+    /** Error message when more than one mapper is defined */
     public static final String ERROR_MULTIPLE_MAPPERS = "Cannot define more than one mapper";
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();

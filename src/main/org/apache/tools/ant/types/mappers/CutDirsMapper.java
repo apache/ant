@@ -23,7 +23,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileNameMapper;
 
 /**
- * A mapper that strips of the a configurable number of leading
+ * A mapper that strips off a configurable number of leading
  * directories from a file name.
  *
  * <p>This mapper was inspired by a user-list thread that mentioned

@@ -650,7 +650,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * method signatures change or if the xml deployment descriptors changed,
      * the whole jar needs to be rebuilt with ejbc. This is not strictly true
      * for the xml files. If the JNDI name changes then the jar doesn't have to
-     * be rebuild, but if the resources references change then it does. At
+     * be rebuilt, but if the resources references change then it does. At
      * this point the WebLogic jar gets rebuilt if the xml files change at
      * all.
      *
@@ -659,7 +659,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      *      see if it needs to be rebuilt.
      * @return true if the jar needs to be rebuilt.
      */
-    // CheckStyle:MethodLength OFF - this will no be fixed
+    // CheckStyle:MethodLength OFF - this will not be fixed
     protected boolean isRebuildRequired(File genericJarFile, File weblogicJarFile) {
         boolean rebuild = false;
 
@@ -729,7 +729,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                             replaceEntries.put(filepath, genericEntry);
                         } else if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
                             // it is not the manifest, otherwise we'd ignore it
-                            // File other then class changed   rebuild
+                            // File other than class changed - rebuild
                             log("Non class file " + genericEntry.getName()
                                 + " has changed", Project.MSG_VERBOSE);
                             rebuild = true;

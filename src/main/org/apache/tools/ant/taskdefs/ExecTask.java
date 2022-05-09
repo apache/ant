@@ -645,7 +645,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * A Utility method for this classes and subclasses to run an
+     * A Utility method for these classes and subclasses to run an
      * Execute instance (an external command).
      *
      * @param exe instance of the execute class.

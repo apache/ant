@@ -60,7 +60,7 @@ The first test says that none of the 12 files or directories will match if
 the depth range for the selector is between 20 and 25 (that would be one
 deep directory tree!). The second says that all files and directories
 match if the minimum depth is set to 0 and the maximum isn't specified. The
-third test says that if the minumum depth is 1, the first 5 entries in the
+third test says that if the minimum depth is 1, the first 5 entries in the
 list of 12 will not be selected and the rest will.
 
 

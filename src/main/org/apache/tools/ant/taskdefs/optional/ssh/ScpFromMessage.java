@@ -188,7 +188,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         File startFile = localFile;
         while (true) {
             // C0644 filesize filename - header for a regular file
-            // T time 0 time 0\n - present if perserve time.
+            // T time 0 time 0\n - present if preserve time.
             // D directory - this is the header for a directory.
             final ByteArrayOutputStream stream = new ByteArrayOutputStream();
             while (true) {

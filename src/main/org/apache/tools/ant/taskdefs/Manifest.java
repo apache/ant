@@ -835,7 +835,7 @@ public class Manifest {
      *
      * @param section the manifest section to be added
      *
-     * @exception ManifestException if the secti0on is not valid.
+     * @exception ManifestException if the section is not valid.
      */
     public void addConfiguredSection(Section section)
          throws ManifestException {

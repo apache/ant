@@ -555,7 +555,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     /**
      * Gets the version string. This can be to-from "-VLbuild2~Lbuild1", from
      * "~Lbuild1" or to "-VLbuild2".
-     * @return An empty string if neither tolabel or fromlabel are set.
+     * @return An empty string if neither tolabel nor fromlabel are set.
      */
     protected String getVersionLabel() {
         if (fromLabel == null && toLabel == null) {
@@ -594,7 +594,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
 
     /**
      * Gets the Version date string.
-     * @return An empty string if neither Todate or from date are set.
+     * @return An empty string if neither Todate nor from date are set.
      * @throws BuildException if there is an error.
      */
     protected String getVersionDate() throws BuildException {

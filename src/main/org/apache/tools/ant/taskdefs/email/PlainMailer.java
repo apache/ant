@@ -112,7 +112,7 @@ class PlainMailer extends Mailer {
     /**
      * Attaches a file to this email
      *
-     * @param file The file to attache
+     * @param file The file to attach
      * @param out The message stream to add to
      * @throws IOException if errors occur
      */

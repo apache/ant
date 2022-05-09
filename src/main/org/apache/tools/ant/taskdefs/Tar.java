@@ -853,7 +853,7 @@ public class Tar extends MatchingTask {
         }
 
         /**
-         * Flag to indicates whether leading `/'s should
+         * Flag to indicate whether leading `/'s should
          * be preserved in the file names.
          * Optional, default is <code>false</code>.
          * @param b the leading slashes flag.

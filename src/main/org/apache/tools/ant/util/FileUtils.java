@@ -1315,7 +1315,7 @@ public class FileUtils {
      * @return true if path starts with leading; false otherwise.
      * @since Ant 1.10.5
      * @throws IOException if resolveSymlinks is true and invoking
-     * getCanonicaPath on either argument throws an exception
+     * getCanonicalPath on either argument throws an exception
      */
     public boolean isLeadingPath(File leading, File path, boolean resolveSymlinks)
         throws IOException {
@@ -1854,7 +1854,7 @@ public class FileUtils {
     /**
      * Opens a new OutputStream for the given Path.
      * @param path the path of the file
-     * @param append whether to append to or a replace an existing file
+     * @param append whether to append to or to replace an existing file
      * @return a stream ready to write to the file
      * @throws IOException if stream creation fails
      * @since Ant 1.10.2

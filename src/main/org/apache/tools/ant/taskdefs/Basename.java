@@ -102,7 +102,7 @@ public class Basename extends Task {
             return s;
         }
         int clipFrom = s.length() - ext.length();
-        // if the suffix does not starts with a '.' and the
+        // if the suffix does not start with a '.' and the
         // char preceding the suffix is a '.', we assume the user
         // wants to remove the '.' as well (see docs)
         if (ext.charAt(0) != '.' && clipFrom > 0 && s.charAt(clipFrom - 1) == '.') {

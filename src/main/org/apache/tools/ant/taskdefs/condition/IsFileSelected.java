@@ -35,7 +35,7 @@ public class IsFileSelected extends AbstractSelectorContainer implements Conditi
 
     /**
      * The file to check.
-     * @param file the file to check if if passes the embedded selector.
+     * @param file the file to check if it passes the embedded selector.
      */
     public void setFile(File file) {
         this.file = file;

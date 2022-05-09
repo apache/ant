@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
  * This is the a base class a container of selectors - it does
- * not need do be a selector itself.
+ * not need to be a selector itself.
  *
  * @since 1.7
  */

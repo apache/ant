@@ -103,7 +103,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool {
      * The displayName variable stores the value of the "display-name" element
      * from the standard EJB descriptor.  As a future enhancement to this task,
      * we may determine the name of the EJB JAR file using this display-name,
-     * but this has not be implemented yet.
+     * but this has not been implemented yet.
      */
     @SuppressWarnings("unused")
     private String displayName;

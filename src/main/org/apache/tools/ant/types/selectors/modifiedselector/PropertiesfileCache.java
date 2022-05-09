@@ -145,7 +145,7 @@ public class PropertiesfileCache implements Cache {
 
     /**
      * Saves modification of the cache.
-     * Cache is only saved if there is one ore more entries.
+     * Cache is only saved if there is one or more entries.
      * Because entries can not be deleted by this API, this Cache
      * implementation checks the existence of entries before creating the file
      * for performance optimisation.
