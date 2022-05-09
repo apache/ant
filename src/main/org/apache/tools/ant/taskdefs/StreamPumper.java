@@ -213,7 +213,7 @@ public class StreamPumper implements Runnable {
 
     /**
      * Stop the pumper as soon as possible.
-     * Note that it may continue to block on the input stream
+     * Note that it may continue to block on the input stream,
      * but it will really stop the thread as soon as it gets EOF
      * or any byte, and it will be marked as finished.
      * @return Returns a {@link PostStopHandle} for the callers to
@@ -266,7 +266,7 @@ public class StreamPumper implements Runnable {
                 }
             }
             // this can potentially be blocking, but that's OK since our post stop activity is allowed to
-            // cleanup/flush any data and the PostStopHandle let's the caller control over how long they want
+            // clean up/flush any data and the PostStopHandle lets the caller control over how long they want
             // this to go, before actually interrupting the thread
             os.flush();
         } finally {

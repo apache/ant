@@ -201,7 +201,7 @@ public class ManifestTask extends Task {
     }
 
     /**
-     * Whether to flatten multi-valued attributes (i.e. Class-Path)
+     * Whether to flatten multivalued attributes (i.e. Class-Path)
      * into a single one.
      *
      * @param b boolean

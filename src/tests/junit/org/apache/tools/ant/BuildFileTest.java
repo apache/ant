@@ -420,7 +420,7 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * run a target, expect an exception string
-     * containing the substring we look for (case sensitive match)
+     * containing the substring we look for (case-sensitive match)
      *
      * @param target target to run
      * @param cause  information string to reader of report
@@ -453,7 +453,7 @@ public abstract class BuildFileTest extends TestCase {
     }
 
     /**
-     * assert that a property equals a value; comparison is case sensitive.
+     * assert that a property equals a value; comparison is case-sensitive.
      *
      * @param property property name
      * @param value expected value

@@ -41,12 +41,12 @@ public class RExecTask extends Task {
     private static final int PAUSE_TIME = 250;
 
     /**
-     *  The userid to login with, if automated login is used
+     *  The userid to log in with, if automated login is used
      */
     private String userid  = null;
 
     /**
-     *  The password to login with, if automated login is used
+     *  The password to log in with, if automated login is used
      */
     private String password = null;
 
@@ -328,7 +328,7 @@ public class RExecTask extends Task {
      *  Add text to send to the server
      *  A subTask &lt;write&gt; tag was found.  Create the object,
      *  Save it in our list, and return it.
-     * @return a write sub task
+     * @return a write sub-task
      */
     public RExecSubTask createWrite() {
         RExecSubTask task = new RExecWrite();

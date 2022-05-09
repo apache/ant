@@ -476,7 +476,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Whether to flatten multi-valued attributes (i.e. Class-Path)
+     * Whether to flatten multivalued attributes (i.e. Class-Path)
      * into a single one.
      *
      * @param b boolean
@@ -1040,7 +1040,7 @@ public class Jar extends Zip {
             }
 
             // looks like nothing from META-INF should be added
-            // and the check is not case insensitive.
+            // and the check is not case-insensitive.
             // see sun.misc.JarIndex
             // see also
             // https://bugs.openjdk.java.net/browse/JDK-4408526

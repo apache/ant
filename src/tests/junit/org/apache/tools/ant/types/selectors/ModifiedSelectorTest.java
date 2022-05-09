@@ -198,13 +198,13 @@ public class ModifiedSelectorTest {
         // readable form of parameter kind
         String[] kinds = {"task", "target", "build"};
 
-        // setup the "Ant project"
+        // set up the "Ant project"
         MockProject project = new MockProject();
         File base  = new File("base");
         File file1 = new File("file1");
         File file2 = new File("file2");
 
-        // setup the selector
+        // set up the selector
         ModifiedSelector sel = new ModifiedSelector();
         sel.setProject(project);
         sel.setUpdate(true);

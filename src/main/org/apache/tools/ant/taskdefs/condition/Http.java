@@ -100,7 +100,7 @@ public class Http extends ProjectComponent implements Condition {
     /**
      * Sets the read timeout. Any value &lt; 0 will be ignored
      *
-     * @param t the timeout value in milli seconds
+     * @param t the timeout value in milliseconds
      *
      * @see java.net.HttpURLConnection#setReadTimeout
      * @since Ant 1.10.6

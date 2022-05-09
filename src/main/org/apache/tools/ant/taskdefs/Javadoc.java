@@ -1309,7 +1309,7 @@ public class Javadoc extends Task {
 
     /**
      * Represents a link triplet (href, whether link is offline,
-     * location of the package list if off line)
+     * location of the package list if offline)
      */
     public class LinkArgument {
         private String href;
@@ -1652,7 +1652,7 @@ public class Javadoc extends Task {
 
     /**
      * Should the build process fail if Javadoc fails (as indicated by
-     * a non zero return code)?
+     * a non-zero return code)?
      *
      * <p>Default is false.</p>
      * @param b a <code>boolean</code> value

@@ -55,7 +55,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     /** true if indirect dependencies should be gathered */
     private boolean closure = true;
 
-    /** Setup the analyzer */
+    /** Set up the analyzer */
     protected AbstractAnalyzer() {
         reset();
     }

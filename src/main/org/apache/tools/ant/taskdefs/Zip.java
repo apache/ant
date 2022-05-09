@@ -681,7 +681,7 @@ public class Zip extends MatchingTask {
             // can also handle empty archives
             final ArchiveState state = getResourcesToAdd(fss, zipFile, false);
 
-            // quick exit if the target is up to date
+            // quick exit if the target is up-to-date
             if (!state.isOutOfDate()) {
                 return;
             }

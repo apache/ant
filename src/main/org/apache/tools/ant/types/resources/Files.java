@@ -262,7 +262,7 @@ public class Files extends AbstractSelectorContainer
     }
 
     /**
-     * Set case-sensitivity of the Files collection.
+     * Set case sensitivity of the Files collection.
      *
      * @param caseSensitive <code>boolean</code>.
      */

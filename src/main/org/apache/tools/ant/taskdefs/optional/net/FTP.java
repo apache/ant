@@ -450,9 +450,9 @@ public class FTP extends Task implements FTPTaskConfig {
                     //we do not need to scan all the subdirs in the relative path
                     path = myfile.getFastRelativePath();
                 } else {
-                    // may be on a case insensitive file system.  We want
+                    // may be on a case-insensitive file system.  We want
                     // the results to show what's really on the disk, so
-                    // we need to double check.
+                    // we need to double-check.
                     try {
                         path = myfile.getRelativePath();
                         traversesSymlinks = myfile.isTraverseSymlinks();
@@ -872,7 +872,7 @@ public class FTP extends Task implements FTPTaskConfig {
             }
 
             /**
-             * find a file in a directory in case insensitive way
+             * find a file in a directory in case-insensitive way
              * @param parentPath        where we are
              * @param soughtPathElement what is being sought
              * @return                  the first file found or null if not found
@@ -929,7 +929,7 @@ public class FTP extends Task implements FTPTaskConfig {
             /**
              * find out the relative path assuming that the path used to construct
              * this AntFTPFile was spelled properly with regard to case.
-             * This is OK on a case sensitive system such as UNIX
+             * This is OK on a case-sensitive system such as UNIX
              * @return relative path
              */
             public String getFastRelativePath() {
@@ -2100,11 +2100,11 @@ public class FTP extends Task implements FTPTaskConfig {
 
     /**
      * Checks to see if the remote file is current as compared with the local
-     * file. Returns true if the target file is up to date.
+     * file. Returns true if the target file is up-to-date.
      * @param ftp ftpclient
      * @param localFile local file
      * @param remoteFile remote file
-     * @return true if the target file is up to date
+     * @return true if the target file is up-to-date
      * @throws IOException  in unknown circumstances
      * @throws BuildException if the date of the remote files cannot be found and the action is
      * GET_FILES
@@ -2485,7 +2485,7 @@ public class FTP extends Task implements FTPTaskConfig {
     }
 
     /**
-     * checks if the wake up interval is expired
+     * checks if the wake-up interval is expired
      */
     private boolean wakeUpTransferIntervalExpired() {
         boolean result = false;

@@ -801,7 +801,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * recursively all the files inside to the hashtable.
      *
      * @param file the file to add.
-     * @param rootDir the current sub-directory to scan.
+     * @param rootDir the current subdirectory to scan.
      * @param hashtable the hashtable where to add the files.
      */
     private void addAllFiles(File file, String rootDir, Hashtable<String, File> hashtable) {

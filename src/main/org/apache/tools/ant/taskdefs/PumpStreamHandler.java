@@ -48,7 +48,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * @param err the error <code>OutputStream</code>, must not be null.
      * @param input the input <code>InputStream</code>.
      * @param nonBlockingRead set it to <code>true</code> if the input should be
-     *                      read with simulated non blocking IO.
+     *                      read with simulated non-blocking IO.
      */
     public PumpStreamHandler(OutputStream out, OutputStream err,
                              InputStream input, boolean nonBlockingRead) {
@@ -281,8 +281,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * @param is the input stream to copy from.
      * @param os the output stream to copy to.
      * @param closeWhenExhausted if true close the inputstream.
-     * @param nonBlockingIO set it to <code>true</code> to use simulated non
-     *                     blocking IO.
+     * @param nonBlockingIO set it to <code>true</code> to use simulated non-blocking IO.
      * @return a thread object that does the pumping, subclasses
      * should return an instance of {@link ThreadWithPumper
      * ThreadWithPumper}.

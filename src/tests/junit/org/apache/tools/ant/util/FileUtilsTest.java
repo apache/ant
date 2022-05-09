@@ -687,10 +687,10 @@ public class FileUtilsTest {
                 fu.isUpToDate(firstTime, firstTime));
          */
 
-        //check that older is up to date with a newer dest
+        //check that older is up-to-date with a newer dest
         assertTrue("older source files are up to date",
                 getFileUtils().isUpToDate(firstTime,secondTime));
-        //check that older is up to date with a newer dest
+        //check that older is up-to-date with a newer dest
         assertFalse("newer source files are no up to date",
                 getFileUtils().isUpToDate(secondTime, firstTime));
 
@@ -706,7 +706,7 @@ public class FileUtilsTest {
         String s = wellcased.getName().toUpperCase();
         File wrongcased = new File(tempFolder, s);
         if (Os.isFamily("mac") && Os.isFamily("unix")) {
-            //no guarantees on filesystem case-sensitivity
+            //no guarantees on filesystem case sensitivity
         } else if (Os.isFamily("dos")) {
             assertTrue(getFileUtils().hasErrorInCase(wrongcased));
             assertFalse(getFileUtils().hasErrorInCase(wellcased));
@@ -811,7 +811,7 @@ public class FileUtilsTest {
         final boolean existsAsLowerCase = Files.exists(Paths.get(tmpDir.toString(), tmpFile.getFileName().toString().toLowerCase(Locale.US)));
         final boolean existsAsUpperCase = Files.exists(Paths.get(tmpDir.toString(), tmpFile.getFileName().toString().toUpperCase(Locale.US)));
         // if the temp file that we created is found to not exist in a particular "case", then
-        // the filesystem is case sensitive
+        // the filesystem is case-sensitive
         final Boolean expectedCaseSensitivity = !existsAsLowerCase || !existsAsUpperCase;
 
         // call the method and pass it a directory

@@ -526,7 +526,7 @@ public class Tar extends MatchingTask {
     /**
      * Is the archive up to date in relationship to a list of files.
      * @param files the files to check
-     * @return true if the archive is up to date.
+     * @return true if the archive is up-to-date.
      * @deprecated since 1.5.x.
      *             use the two-arg version instead.
      */
@@ -539,7 +539,7 @@ public class Tar extends MatchingTask {
      * Is the archive up to date in relationship to a list of files.
      * @param files the files to check
      * @param dir   the base directory for the files.
-     * @return true if the archive is up to date.
+     * @return true if the archive is up-to-date.
      * @since Ant 1.5.2
      */
     protected boolean archiveIsUpToDate(final String[] files, final File dir) {
@@ -552,7 +552,7 @@ public class Tar extends MatchingTask {
     /**
      * Is the archive up to date in relationship to a list of files.
      * @param r the files to check
-     * @return true if the archive is up to date.
+     * @return true if the archive is up-to-date.
      * @since Ant 1.7
      */
     protected boolean archiveIsUpToDate(final Resource r) {

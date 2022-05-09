@@ -212,7 +212,7 @@ public class NetRexxC extends MatchingTask {
     }
 
     /**
-     * Whether variable cross references are generated.
+     * Whether variable cross-references are generated.
      * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      * @param crossref a <code>boolean</code> value.
@@ -366,7 +366,7 @@ public class NetRexxC extends MatchingTask {
     }
 
     /**
-     * Specifies whether the NetRexx compiler should be case sensitive.
+     * Specifies whether the NetRexx compiler should be case-sensitive.
      * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
      * The default value is false.
      * @param strictcase a <code>boolean</code> value.

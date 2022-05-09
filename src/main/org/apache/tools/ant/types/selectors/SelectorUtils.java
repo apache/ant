@@ -193,7 +193,7 @@ public final class SelectorUtils {
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
      * @param isCaseSensitive Whether matching should be performed
-     *                        case sensitively.
+     *                        case-sensitively.
      *
      * @return <code>true</code> if the pattern matches against the string,
      *         or <code>false</code> otherwise.
@@ -338,7 +338,7 @@ public final class SelectorUtils {
      * @param str     The string which must be matched against the pattern.
      *                Must not be <code>null</code>.
      * @param caseSensitive Whether matching should be performed
-     *                        case sensitively.
+     *                        case-sensitively.
      *
      *
      * @return <code>true</code> if the string matches against the pattern,

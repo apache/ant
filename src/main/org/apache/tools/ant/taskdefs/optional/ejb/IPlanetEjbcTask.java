@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * the EJB.  If these class files cannot be located in the <code>dest</code>
  * directory, the task will fail.  The task will also attempt to locate the EJB
  * stubs and skeletons in this directory.  If found, the timestamps on the
- * stubs and skeletons will be checked to ensure they are up to date.  Only if
+ * stubs and skeletons will be checked to ensure they are up-to-date.  Only if
  * these files cannot be found or if they are out of date will ejbc be called
  * to generate new stubs and skeletons.
  *

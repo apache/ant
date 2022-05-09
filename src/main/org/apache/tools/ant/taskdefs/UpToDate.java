@@ -250,7 +250,7 @@ public class UpToDate extends Task implements Condition {
      * Scan a directory for files to check for "up to date"ness
      * @param srcDir the directory
      * @param files the files to scan for
-     * @return true if the files are up to date
+     * @return true if the files are up-to-date
      */
     protected boolean scanDir(File srcDir, String[] files) {
         SourceFileScanner sfs = new SourceFileScanner(this);

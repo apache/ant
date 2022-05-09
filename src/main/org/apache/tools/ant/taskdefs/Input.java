@@ -153,7 +153,7 @@ public class Input extends Task {
     /**
      * Defines valid input parameters as comma separated strings. If set, input
      * task will reject any input not defined as accepted and requires the user
-     * to reenter it. Validargs are case sensitive. If you want 'a' and 'A' to
+     * to reenter it. Validargs are case-sensitive. If you want 'a' and 'A' to
      * be accepted you need to define both values as accepted arguments.
      *
      * @param validargs A comma separated String defining valid input args.

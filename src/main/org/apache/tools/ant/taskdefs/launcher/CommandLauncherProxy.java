@@ -23,7 +23,7 @@ import org.apache.tools.ant.Project;
 
 /**
  * A command launcher that proxies another command
- * launcher. Sub-classes override exec(args, env, workdir).
+ * launcher. Subclasses override exec(args, env, workdir).
  */
 public class CommandLauncherProxy extends CommandLauncher {
     private final CommandLauncher myLauncher;

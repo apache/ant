@@ -227,7 +227,7 @@ public abstract class DefaultCompilerAdapter
     }
 
     /**
-     * Builds the modulesourcepath for multi module compilation.
+     * Builds the modulesourcepath for multimodule compilation.
      * @return the modulesourcepath
      * @since 1.9.7
      */

@@ -636,8 +636,8 @@ public class Rmic extends MatchingTask {
                 if (f.isFile()) {
                     scanDir(baseDir, new String[] {path}, adapter.getMapper());
                 } else {
-                    // Does not exist, so checking whether it is up to
-                    // date makes no sense.  Compilation will fail
+                    // Does not exist, so checking whether it is up-to-date
+                    // makes no sense.  Compilation will fail
                     // later anyway, but tests expect a certain
                     // output.
                     compileList.add(classname);

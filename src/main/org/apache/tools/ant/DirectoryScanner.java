@@ -299,7 +299,7 @@ public class DirectoryScanner
     protected boolean haveSlowResults = false;
 
     /**
-     * Whether the file system should be treated as a case sensitive
+     * Whether the file system should be treated as a case-sensitive
      * one.
      */
     protected boolean isCaseSensitive = true;
@@ -335,7 +335,7 @@ public class DirectoryScanner
      *
      * <p>Maps pattern string to TokenizedPath.</p>
      *
-     * <p>If this instance is not case sensitive, the file names get
+     * <p>If this instance is not case-sensitive, the file names get
      * turned to upper case.</p>
      *
      * <p>Gets lazily initialized on the first invocation of
@@ -352,7 +352,7 @@ public class DirectoryScanner
      *
      * <p>Maps pattern string to TokenizedPath.</p>
      *
-     * <p>If this instance is not case sensitive, the file names get
+     * <p>If this instance is not case-sensitive, the file names get
      * turned to upper case.</p>
      *
      * <p>Gets lazily initialized on the first invocation of
@@ -475,7 +475,7 @@ public class DirectoryScanner
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
      * @param isCaseSensitive Whether matching should be performed
-     *                        case sensitively.
+     *                        case-sensitively.
      *
      * @return whether a given path matches the start of a given
      * pattern up to the first "**".
@@ -508,7 +508,7 @@ public class DirectoryScanner
      * @param str     The path to match, as a String. Must not be
      *                <code>null</code>.
      * @param isCaseSensitive Whether matching should be performed
-     *                        case sensitively.
+     *                        case-sensitively.
      *
      * @return <code>true</code> if the pattern matches against the string,
      *         or <code>false</code> otherwise.
@@ -547,7 +547,7 @@ public class DirectoryScanner
      * @param str     The string which must be matched against the pattern.
      *                Must not be <code>null</code>.
      * @param isCaseSensitive Whether matching should be performed
-     *                        case sensitively.
+     *                        case-sensitively.
      *
      *
      * @return <code>true</code> if the string matches against the pattern,
@@ -658,8 +658,8 @@ public class DirectoryScanner
 
     /**
      * Find out whether include exclude patterns are matched in a
-     * case sensitive way.
-     * @return whether the scanning is case sensitive.
+     * case-sensitive way.
+     * @return whether the scanning is case-sensitive.
      * @since Ant 1.6
      */
     public synchronized boolean isCaseSensitive() {
@@ -668,10 +668,10 @@ public class DirectoryScanner
 
     /**
      * Set whether include and exclude patterns are matched
-     * in a case sensitive way.
+     * in a case-sensitive way.
      *
      * @param isCaseSensitive whether the file system should be
-     *                        regarded as a case sensitive one.
+     *                        regarded as a case-sensitive one.
      */
     @Override
     public synchronized void setCaseSensitive(final boolean isCaseSensitive) {
@@ -972,9 +972,9 @@ public class DirectoryScanner
                 File myfile = new File(basedir, currentelement);
 
                 if (myfile.exists()) {
-                    // may be on a case insensitive file system.  We want
+                    // may be on a case-insensitive file system.  We want
                     // the results to show what's really on the disk, so
-                    // we need to double check.
+                    // we need to double-check.
                     try {
                         final String path = (basedir == null)
                             ? myfile.getCanonicalPath()

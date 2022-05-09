@@ -95,7 +95,7 @@ import org.apache.tools.ant.util.regexp.RegexpUtil;
  *     replace --&gt; The Expression replacement string
  *     flags   --&gt; The options to give to the replacement
  *                 g = Substitute all occurrences. default is to replace only the first one
- *                 i = Case insensitive match
+ *                 i = Case-insensitive match
  *
  *     byline  --&gt; Should this file be processed a single line at a time (default is false)
  *                 "true" indicates to perform replacement on a line by line basis
@@ -192,7 +192,7 @@ public class ReplaceRegExp extends Task {
      * information, consult the Perl5 syntax.
      * <ul>
      *  <li>g : Global replacement.  Replace all occurrences found</li>
-     *  <li>i : Case Insensitive.  Do not consider case in the match</li>
+     *  <li>i : Case-Insensitive.  Do not consider case in the match</li>
      *  <li>m : Multiline.  Treat the string as multiple lines of input,
      *         using "^" and "$" as the start or end of any line, respectively,
      *         rather than start or end of string.</li>

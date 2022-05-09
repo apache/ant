@@ -29,7 +29,7 @@ import static org.junit.Assert.assertNull;
 /**
  * Testcases for the &lt;http&gt; condition. All these tests require
  * us to be online as they attempt to get the status of various pages
- * on the Ant Apache web site.
+ * on the Ant Apache website.
  */
 public class HttpTest {
 

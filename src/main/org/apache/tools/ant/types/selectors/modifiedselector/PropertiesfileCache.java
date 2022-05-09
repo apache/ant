@@ -138,7 +138,7 @@ public class PropertiesfileCache implements Cache {
                 e.printStackTrace(); //NOSONAR
             }
         }
-        // after loading the cache is up to date with the file
+        // after loading the cache is up-to-date with the file
         cacheLoaded = true;
         cacheDirty  = false;
     }

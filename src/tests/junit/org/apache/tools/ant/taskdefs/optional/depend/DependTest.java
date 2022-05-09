@@ -180,7 +180,7 @@ public class DependTest {
     }
 
     /**
-     * Test the detection and warning of non public classes
+     * Test the detection and warning of non-public classes
      */
     @Test
     public void testNonPublic() {

@@ -123,7 +123,7 @@
   </xsl:for-each>
 </xsl:template>
 
-<!-- little trick to compute the classname for inner and non inner classes -->
+<!-- little trick to compute the classname for inner and non-inner classes -->
 <!-- this is all in one line to avoid CRLF in the name -->
 <xsl:template match="class" mode="class.name">
     <xsl:if test="parent::class"><xsl:apply-templates select="parent::class" mode="class.name"/>.<xsl:value-of select="@name"/></xsl:if><xsl:if test="not(parent::class)"><xsl:value-of select="@name"/></xsl:if>
@@ -399,7 +399,7 @@ If a class exhibits low method cohesion it indicates that the design of the
 class has probably been partitioned incorrectly, and could benefit by being
 split into more classes with individually higher cohesion. On the other
 hand, a high value of cohesion (a low lack of cohesion) implies that the
-class is well designed. A cohesive class will tend to provide a high degree
+class is well-designed. A cohesive class will tend to provide a high degree
 of encapsulation, whereas a lack of cohesion decreases encapsulation and
 increases complexity.
 <p/>

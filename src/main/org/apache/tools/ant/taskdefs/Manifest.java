@@ -316,7 +316,7 @@ public class Manifest {
          * Write the attribute out to a print writer.
          *
          * @param writer the Writer to which the attribute is written
-         * @param flatten whether to collapse multi-valued attributes
+         * @param flatten whether to collapse multivalued attributes
          *        (i.e. potentially Class-Path) Class-Path into a
          *        single attribute.
          *
@@ -537,7 +537,7 @@ public class Manifest {
          * Write the section out to a print writer.
          *
          * @param writer the Writer to which the section is written
-         * @param flatten whether to collapse multi-valued attributes
+         * @param flatten whether to collapse multivalued attributes
          *        (i.e. potentially Class-Path) Class-Path into a
          *        single attribute.
          *
@@ -623,7 +623,7 @@ public class Manifest {
          * @param attribute the attribute to be added.
          *
          * @return the value of the attribute if it is a name
-         *         attribute - null other wise
+         *         attribute - null otherwise
          *
          * @exception ManifestException if the attribute already
          *            exists in this section.
@@ -952,7 +952,7 @@ public class Manifest {
     * Write the manifest out to a print writer.
     *
     * @param writer the Writer to which the manifest is written
-    * @param flatten whether to collapse multi-valued attributes
+    * @param flatten whether to collapse multivalued attributes
     *        (i.e. potentially Class-Path) Class-Path into a single
     *        attribute.
     *

@@ -285,7 +285,7 @@ public abstract class AbstractCvsTask extends Task {
         }
 
         /**
-         * Need a better cross platform integration with <cvspass>, so
+         * Need a better cross-platform integration with <cvspass>, so
          * use the same filename.
          */
         if (passFile == null) {

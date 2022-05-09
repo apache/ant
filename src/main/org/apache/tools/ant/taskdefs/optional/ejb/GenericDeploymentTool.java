@@ -442,7 +442,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 String publicId = getPublicId();
                 writeJar(baseName, jarFile, ejbFiles, publicId);
             } else {
-                // Log that the file is up to date...
+                // Log that the file is up-to-date...
                 log(jarFile.toString() + " is up to date.",
                               Project.MSG_VERBOSE);
             }
@@ -650,7 +650,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * @param jarFile  JAR file which will contain all the EJB classes (and
      *                 other) files
      * @return         boolean indicating whether the <code>jarFile</code>
-     *                 is up to date
+     *                 is up-to-date
      */
     protected boolean needToRebuild(Hashtable<String, File> ejbFiles, File jarFile) {
         if (jarFile.exists()) {

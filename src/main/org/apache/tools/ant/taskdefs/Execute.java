@@ -617,7 +617,7 @@ public class Execute {
 
             // Try without changing case first
             if (osEnv.remove(key) == null && environmentCaseInSensitive) {
-                // not found, maybe perform a case insensitive search
+                // not found, maybe perform a case-insensitive search
 
                 for (String osEnvItem : osEnv.keySet()) {
                     // Nb: using default locale as key is an env name

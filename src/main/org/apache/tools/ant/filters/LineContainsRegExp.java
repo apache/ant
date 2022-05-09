@@ -200,7 +200,7 @@ public final class LineContainsRegExp
     }
 
     /**
-     * Whether to match casesensitively.
+     * Whether to match case-sensitively.
      * @param b boolean
      * @since Ant 1.8.2
      */

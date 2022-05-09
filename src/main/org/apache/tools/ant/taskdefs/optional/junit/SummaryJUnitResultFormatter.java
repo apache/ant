@@ -177,7 +177,7 @@ public class SummaryJUnitResultFormatter
         sb.append(nf.format(suite.getRunTime() / ONE_SECOND));
         sb.append(" sec");
 
-        /* class name needed with multi-threaded execution because
+        /* class name needed with multithreaded execution because
            results line may not appear immediately below start line.
            only write thread id, class name in multi-thread mode so
            the line still looks as much like the old line as possible. */

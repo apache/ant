@@ -93,7 +93,7 @@ public class XMLFragment extends ProjectComponent implements DynamicElementNS {
      */
     private void addText(Node n, String s) {
         s = getProject().replaceProperties(s);
-        //only text nodes that are non null after property expansion are added
+        //only text nodes that are non-null after property expansion are added
         if (s != null && !s.trim().isEmpty()) {
             Text t = doc.createTextNode(s.trim());
             n.appendChild(t);

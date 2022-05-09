@@ -1439,9 +1439,9 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Checks if a path exists and is non empty.
+     * Checks if a path exists and is non-empty.
      * @param path to be checked
-     * @return true if the path is non <code>null</code> and non empty.
+     * @return true if the path is non <code>null</code> and non-empty.
      * @since 1.9.7
      */
     private static boolean hasPath(final Path path) {

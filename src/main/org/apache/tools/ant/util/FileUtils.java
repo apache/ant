@@ -1502,13 +1502,13 @@ public class FileUtils {
     /**
      * test whether a file or directory exists, with an error in the
      * upper/lower case spelling of the name.
-     * Using this method is only interesting on case insensitive file systems
+     * Using this method is only interesting on case-insensitive file systems
      * (Windows).
      * <p>
      * It will return true only if 3 conditions are met:
      * </p>
      * <ul>
-     *   <li>operating system is case insensitive</li>
+     *   <li>operating system is case-insensitive</li>
      *   <li>file exists</li>
      *   <li>actual name from directory reading is different from the
      *       supplied argument</li>
@@ -1551,7 +1551,7 @@ public class FileUtils {
     public boolean isUpToDate(File source, File dest, long granularity) {
         //do a check for the destination file existing
         if (!dest.exists()) {
-            //if it does not, then the file is not up to date.
+            //if it does not, then the file is not up-to-date.
             return false;
         }
         long sourceTime = source.lastModified();
@@ -1571,7 +1571,7 @@ public class FileUtils {
     }
 
     /**
-     * Compare two timestamps for being up to date using
+     * Compare two timestamps for being up-to-date using
      * the specified granularity.
      *
      * @param sourceTime timestamp of source file.
@@ -1584,7 +1584,7 @@ public class FileUtils {
     }
 
     /**
-     * Compare two timestamps for being up to date using the
+     * Compare two timestamps for being up-to-date using the
      * current granularity.
      *
      * @param sourceTime  timestamp of source file.
@@ -1880,7 +1880,7 @@ public class FileUtils {
      * </p>
      * @param path The path whose filesystem case sensitivity needs to be checked
      * @return Returns true if the filesystem corresponding to the passed {@code path}
-     *          is case sensitive. Else returns false. If the case sensitivity
+     *          is case-sensitive. Else returns false. If the case sensitivity
      *          cannot be determined for whatever reason, this method returns an
      *          {@link Optional#empty()}
      * @throws IllegalArgumentException If the passed path is null
@@ -1900,7 +1900,7 @@ public class FileUtils {
                 mixedCaseTmpFile = Files.createTempFile(path, mixedCaseFileNamePrefix, null);
             } else {
                 // we can only do our tricks to figure out whether the filesystem is
-                // case sensitive, only if the path is a directory or a file.
+                // case-sensitive, only if the path is a directory or a file.
                 // In other cases (like the path being non-existent), we don't
                 // have a way to determine that detail
                 return Optional.empty();
@@ -1911,7 +1911,7 @@ public class FileUtils {
             } catch (NoSuchFileException nsfe) {
                 // a NSFE implies that the "lowerCasePath" file wasn't considered to be present
                 // even if the different cased file exists. That effectively means this is a
-                // case sensitive filesystem
+                // case-sensitive filesystem
                 caseSensitive = true;
             }
         } catch (IOException ioe) {

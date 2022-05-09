@@ -77,7 +77,7 @@ public class CCMkdir extends ClearCase {
      */
     public static final String FLAG_NOCOMMENT = "-nc";
     /**
-     * -nco flag -- do not checkout element after creation
+     * -nco flag -- do not check out element after creation
      */
     public static final String FLAG_NOCHECKOUT = "-nco";
 
@@ -179,7 +179,7 @@ public class CCMkdir extends ClearCase {
     }
 
     /**
-     * If true, do not checkout element after creation.
+     * If true, do not check out element after creation.
      *
      * @param co the status to set the flag to
      */

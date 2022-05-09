@@ -846,7 +846,7 @@ public class JUnitTask extends Task {
         setupJUnitDelegate();
 
         final List<List<JUnitTest>> testLists = new ArrayList<>();
-        /* parallel test execution is only supported for multi-process execution */
+        /* parallel test execution is only supported for multiprocess execution */
         final int threads = !fork || forkMode.getValue().equals(ForkMode.ONCE) ? 1 : this.threads;
 
         final boolean forkPerTest = ForkMode.PER_TEST.equals(forkMode.getValue());
@@ -1396,7 +1396,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Compares URLs for equality but takes case-sensitivity into
+     * Compares URLs for equality but takes case sensitivity into
      * account when comparing file URLs and ignores the jar specific
      * part of the URL if present.
      */
@@ -2157,7 +2157,7 @@ public class JUnitTask extends Task {
             new HashMap<>();
         for (final JUnitTest test : Collections.list(testList)) {
             if (test.shouldRun(getProject())) {
-                /* with multi-threaded runs need to defer execution of even */
+                /* with multithreaded runs need to defer execution of even */
                 /* individual tests so the threads can pick tests off the queue. */
                 if ((runIndividual || !test.getFork()) && threads == 1) {
                     execute(test, 0);
@@ -2336,9 +2336,9 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Checks if a path exists and is non empty.
+     * Checks if a path exists and is non-empty.
      * @param path to be checked
-     * @return true if the path is non <code>null</code> and non empty.
+     * @return true if the path is non <code>null</code> and non-empty.
      * @since 1.9.8
      */
     private static boolean hasPath(final Path path) {

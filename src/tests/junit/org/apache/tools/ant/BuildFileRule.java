@@ -76,7 +76,7 @@ public class BuildFileRule extends ExternalResource {
     @Override
     protected void after()  {
         if (project == null) {
-            // configureProject has not been called - nothing we can clean-up
+            // configureProject has not been called - nothing we can clean up
             return;
         }
         final String tearDown = "tearDown";
@@ -181,7 +181,7 @@ public class BuildFileRule extends ExternalResource {
 
         /* we synchronize to protect our custom output streams from being overridden
          * by other tests executing targets concurrently. Ultimately this would only
-         * happen if we ran a multi-threaded test executing multiple targets at once, and
+         * happen if we ran a multithreaded test executing multiple targets at once, and
          * this protection doesn't prevent a target from internally modifying the output
          * stream during a test - but at least this scenario is fairly deterministic so
          * easier to troubleshoot.

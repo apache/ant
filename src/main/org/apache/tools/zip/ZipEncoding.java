@@ -47,7 +47,7 @@ public interface ZipEncoding {
      * encoding.
      *
      * @param name A filename or ZIP comment.
-     * @return Whether the given name may be encoded with out any losses.
+     * @return Whether the given name may be encoded without any losses.
      */
     boolean canEncode(String name);
 

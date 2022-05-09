@@ -101,7 +101,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     private WritableFiles writableFiles = null;
 
     /**
-     * Each sub-class must implement this method and return the constructed
+     * Each subclass must implement this method and return the constructed
      * command line to be executed. It is up to the sub-task to determine the
      * required attributes and their order.
      * @return    The Constructed command line.
@@ -188,7 +188,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         }
     }
 
-    // Special setters for the sub-classes
+    // Special setters for the subclasses
 
     /**
      * Set the internal comment attribute.
@@ -742,7 +742,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * Changes the password to '***' so it isn't displayed on screen if the build fails
      *
      * @param cmd   The command line to clean
-     * @return The command line as a string with out the password
+     * @return The command line as a string without the password
      */
     private String formatCommandLine(Commandline cmd) {
         final StringBuilder sBuff = new StringBuilder(cmd.toString());

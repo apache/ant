@@ -110,7 +110,7 @@ public class CCMkelem extends ClearCase {
      */
     public static final String FLAG_PRESERVETIME = "-ptime";
     /**
-     * -nco flag -- do not checkout element after creation
+     * -nco flag -- do not check out element after creation
      */
     public static final String FLAG_NOCHECKOUT = "-nco";
     /**
@@ -292,7 +292,7 @@ public class CCMkelem extends ClearCase {
     }
 
     /**
-     * If true, do not checkout element after creation.
+     * If true, do not check out element after creation.
      *
      * @param co the status to set the flag to
      */

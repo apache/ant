@@ -28,7 +28,7 @@ import org.apache.tools.ant.util.IdentityStack;
 
 /**
  * Base class for those classes that can appear inside the build file
- * as stand alone data types.
+ * as standalone data types.
  *
  * <p>This class handles the common description attribute and provides
  * a default implementation for reference handling and checking for

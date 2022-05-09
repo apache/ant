@@ -394,10 +394,10 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * Find out if the fileset is case sensitive.
+     * Find out if the fileset is case-sensitive.
      *
      * @return <code>boolean</code> indicating whether the fileset is
-     * case sensitive.
+     * case-sensitive.
      *
      * @since Ant 1.7
      */

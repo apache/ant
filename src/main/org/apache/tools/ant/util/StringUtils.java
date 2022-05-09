@@ -195,7 +195,7 @@ public final class StringUtils {
     /**
      * Takes a human readable size representation eg 10K
      * a long value. Doesn't support 1.1K or other rational values.
-     * @param humanSize the amount as a human readable string.
+     * @param humanSize the amount as a human-readable string.
      * @return a long value representation
      * @throws Exception if there is a problem.
      * @since Ant 1.7
