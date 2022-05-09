@@ -299,7 +299,7 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     // CheckStyle:VisibilityModifier ON
 
     /**
-     * Set the the output level.
+     * Set the output level.
      * This is not used, the logger config is used instead.
      * @param level ignored
      */

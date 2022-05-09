@@ -1066,7 +1066,7 @@ public class Main implements AntMain {
      * @return the short Ant version information as a String
      *         (always non-<code>null</code>)
      *
-     * @throws BuildException BuildException if the version information is unavailable
+     * @throws BuildException if the version information is unavailable
      * @since Ant 1.9.3
      */
     public static String getShortAntVersion() throws BuildException {

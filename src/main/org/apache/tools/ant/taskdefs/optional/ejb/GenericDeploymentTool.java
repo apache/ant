@@ -494,7 +494,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *                           added to the completed JAR file
      * @throws SAXException      Any SAX exception, possibly wrapping another
      *                           exception
-     * @throws IOException       An IOException from the parser, possibly from a
+     * @throws IOException       An IOException from the parser, possibly from
      *                           the byte stream or character stream
      */
     protected Hashtable<String, File> parseEjbFiles(String descriptorFileName, SAXParser saxParser)

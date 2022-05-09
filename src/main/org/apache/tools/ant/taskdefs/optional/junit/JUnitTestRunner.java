@@ -157,7 +157,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     /** is this runner running in forked mode? */
     private boolean forked = false;
 
-    /** ClassLoader passed in in non-forked mode. */
+    /** ClassLoader passed in non-forked mode. */
     private final ClassLoader loader;
 
     /** Do we print TestListener events? */

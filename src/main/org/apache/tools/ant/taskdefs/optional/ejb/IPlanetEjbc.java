@@ -491,7 +491,7 @@ public class IPlanetEjbc {
      * command-line utility.
      * @param ejb The EJB for which stubs and skeletons will be compiled.
      * @return    An array of Strings which are the command-line parameters for
-     *            for the ejbc utility.
+     *            the ejbc utility.
      */
     private String[] buildArgumentList(EjbInfo ejb) {
 

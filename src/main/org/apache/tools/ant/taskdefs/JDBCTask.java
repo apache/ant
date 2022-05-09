@@ -383,7 +383,7 @@ public abstract class JDBCTask extends Task {
 
     /**
      * Gets an instance of the required driver.
-     * Uses the ant class loader and the optionally the provided classpath.
+     * Uses the ant class loader and optionally the provided classpath.
      * @return Driver
      * @throws BuildException if something goes wrong
      */

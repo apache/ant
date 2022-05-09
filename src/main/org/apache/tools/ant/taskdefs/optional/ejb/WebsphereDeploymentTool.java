@@ -632,7 +632,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      *
      * The way WebSphere ejbdeploy works is it creates wrappers for the
      * publicly defined methods as they are exposed in the remote interface.
-     * If the actual bean changes without changing the the method signatures
+     * If the actual bean changes without changing the method signatures
      * then only the bean classfile needs to be updated and the rest of the
      * WebSphere jar file can remain the same. If the Interfaces, ie. the
      * method signatures change or if the xml deployment descriptors changed,

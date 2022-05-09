@@ -20,7 +20,7 @@ package org.apache.tools.ant;
 /**
  * Used to report attempts to set an unsupported element
  * When the attempt to set the element is made,
- * the code does not not know the name of the task/type
+ * the code does not know the name of the task/type
  * based on a mapping from the classname to the task/type.
  * However one class may be used by a lot of task/types.
  * This exception may be caught by code that does know

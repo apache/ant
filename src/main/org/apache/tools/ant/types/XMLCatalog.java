@@ -891,7 +891,7 @@ public class XMLCatalog extends DataType
     /**
      * The ExternalResolver strategy is used if the Apache resolver
      * library (Norm Walsh's library from xml-commons) is available in
-     * the classpath.  The ExternalResolver is a essentially a superset
+     * the classpath.  The ExternalResolver is essentially a superset
      * of the InternalResolver.
      *
      */

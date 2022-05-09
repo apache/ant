@@ -252,7 +252,7 @@ public abstract class DefaultCompilerAdapter
      * Does the command line argument processing common to classic and
      * modern.  Doesn't add the files to compile.
      * @param cmd the command line
-     * @param useDebugLevel if true set set the debug level with the -g switch
+     * @param useDebugLevel if true set the debug level with the -g switch
      * @return the command line
      */
     protected Commandline setupJavacCommandlineSwitches(final Commandline cmd,

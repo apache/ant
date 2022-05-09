@@ -674,7 +674,7 @@ public class FTP extends Task implements FTPTaskConfig {
         /**
          * list the files present in one directory.
          * @param directory full path on the remote side
-         * @param changedir if true change to directory directory before listing
+         * @param changedir if true change to <code>directory</code> directory before listing
          * @return array of FTPFile
          */
         public FTPFile[] listFiles(String directory, boolean changedir) {

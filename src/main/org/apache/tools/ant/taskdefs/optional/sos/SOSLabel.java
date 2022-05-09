@@ -37,7 +37,7 @@ public class SOSLabel extends SOS {
     }
 
     /**
-     * The label to apply the the files in SourceSafe.
+     * The label to apply the files in SourceSafe.
      *
      * @param  label  The new label value
      *

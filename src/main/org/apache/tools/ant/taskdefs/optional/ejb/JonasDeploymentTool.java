@@ -797,7 +797,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Add a file to the a given hashtable. If the file is a directory, add
+     * Add a file to a given hashtable. If the file is a directory, add
      * recursively all the files inside to the hashtable.
      *
      * @param file the file to add.

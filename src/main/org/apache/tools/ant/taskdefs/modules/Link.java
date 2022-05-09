@@ -1861,7 +1861,7 @@ extends Task {
 
     /**
      * Invokes the jlink tool to create a new linked image, unless the
-     * output directory exists and all of its files are files are newer
+     * output directory exists and all of its files are newer
      * than all files in the module path.
      *
      * @throws BuildException if destDir is not set

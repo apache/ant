@@ -446,7 +446,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE);
             log("Please adjust your weblogic descriptor and set newCMP=\"true\" to use the new CMP descriptor inclusion mechanism. ",
                 Project.MSG_VERBOSE);
-            // The the WebLogic CMP deployment descriptor
+            // The WebLogic CMP deployment descriptor
             File weblogicCMPDD = new File(getConfig().descriptorDir, ddPrefix + WL_CMP_DD);
 
             if (weblogicCMPDD.exists()) {
@@ -644,7 +644,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      *
      * The way WebLogic ejbc works is it creates wrappers for the publicly
      * defined methods as they are exposed in the remote interface. If the
-     * actual bean changes without changing the the method signatures then
+     * actual bean changes without changing the method signatures then
      * only the bean classfile needs to be updated and the rest of the
      * WebLogic jar file can remain the same. If the Interfaces, ie. the
      * method signatures change or if the xml deployment descriptors changed,

@@ -673,9 +673,8 @@ public class ZipFile implements Closeable {
      */
     private static final int ZIP64_EOCDL_LENGTH =
         /* zip64 end of central dir locator sig */ WORD
-        /* number of the disk with the start    */
-        /* start of the zip64 end of            */
-        /* central directory                    */ + WORD
+        /* number of the disk with the start of */
+        /* the zip64 end of central directory   */ + WORD
         /* relative offset of the zip64         */
         /* end of central directory record      */ + DWORD
         /* total number of disks                */ + WORD;
@@ -688,9 +687,8 @@ public class ZipFile implements Closeable {
      */
     private static final int ZIP64_EOCDL_LOCATOR_OFFSET =
         /* zip64 end of central dir locator sig */ WORD
-        /* number of the disk with the start    */
-        /* start of the zip64 end of            */
-        /* central directory                    */ + WORD;
+        /* number of the disk with the start of */
+        /* the zip64 end of central directory   */ + WORD;
 
     /**
      * Offset of the field that holds the location of the first

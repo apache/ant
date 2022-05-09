@@ -21,7 +21,7 @@ package org.apache.tools.ant.util.optional;
 import org.apache.tools.ant.util.WeakishReference;
 
 /**
- * This is a reference that really is is Weak, as it uses the
+ * This is a reference that really is Weak, as it uses the
  * appropriate java.lang.ref class.
  * @deprecated since 1.7.
  *             Just use {@link java.lang.ref.WeakReference} directly.

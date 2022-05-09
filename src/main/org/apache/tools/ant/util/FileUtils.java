@@ -594,7 +594,7 @@ public class FileUtils {
 
     /**
      * Calls File.setLastModified(long time). Originally written to
-     * to dynamically bind to that call on Java1.2+.
+     * dynamically bind to that call on Java1.2+.
      *
      * @param file the file whose modified time is to be set
      * @param time the time to which the last modified time is to be set.

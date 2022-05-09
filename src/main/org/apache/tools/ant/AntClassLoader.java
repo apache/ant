@@ -316,7 +316,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *                  elements are set up to start with.
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted  before trying to
-     *                    load the a class through this loader.
+     *                    load the class through this loader.
      */
     public AntClassLoader(final ClassLoader parent, final Project project,
         final Path classpath, final boolean parentFirst) {
@@ -338,7 +338,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *                  elements are set up to start with.
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted before trying to
-     *                    load the a class through this loader.
+     *                    load the class through this loader.
      */
     public AntClassLoader(final Project project, final Path classpath,
         final boolean parentFirst) {
@@ -356,7 +356,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *               class is used as the parent.
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted before trying to
-     *                    load the a class through this loader.
+     *                    load the class through this loader.
      */
     public AntClassLoader(final ClassLoader parent, final boolean parentFirst) {
         setParent(parent);

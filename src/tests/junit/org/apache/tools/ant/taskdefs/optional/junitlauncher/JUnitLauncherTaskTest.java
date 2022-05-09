@@ -84,7 +84,7 @@ public class JUnitLauncherTaskTest {
     }
     
     /**
-     * Tests that when a test, that's isn't configured with {@code haltOnFailure=true}, continues the
+     * Tests that when a test, that isn't configured with {@code haltOnFailure=true}, continues the
      * build even when there are test failures
      */
     @Test
@@ -406,7 +406,7 @@ public class JUnitLauncherTaskTest {
     }
     
     /**
-     * Tests that when a test, that's isn't configured with {@code haltOnFailure=true}, continues the
+     * Tests that when a test, that isn't configured with {@code haltOnFailure=true}, continues the
      * build even when there are test failures
      */
     @Test

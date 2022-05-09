@@ -101,7 +101,7 @@ public abstract class DefBase extends AntlibDefinition {
     /**
      * Create the classpath to be used when searching for component being
      * defined.
-     * @return the classpath of the this definition
+     * @return the classpath of this definition
      */
     public Path createClasspath() {
         return getDelegate().createClasspath();

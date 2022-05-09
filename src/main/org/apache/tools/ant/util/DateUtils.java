@@ -299,7 +299,7 @@ public final class DateUtils {
     }
 
     /**
-     * Parse a string as a date using the either the ISO8601_DATETIME
+     * Parse a string as a date using either the ISO8601_DATETIME
      * or ISO8601_DATE formats.
      *
      * @param datestr string to be parsed

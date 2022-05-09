@@ -518,7 +518,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Set the suffix for the generated jar file. When generic jars are
-     * generated, they have a suffix which is appended to the the bean name
+     * generated, they have a suffix which is appended to the bean name
      * to create the name of the jar file. Note that this suffix includes
      * the extension fo te jar file and should therefore end with an
      * appropriate extension such as .jar or .ear

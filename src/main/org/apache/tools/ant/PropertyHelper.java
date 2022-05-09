@@ -1064,7 +1064,7 @@ public class PropertyHelper implements GetProperty {
                 prev = pos + 1;
             } else if (value.charAt(pos + 1) != '{') {
                 //peek ahead to see if the next char is a property or not
-                //not a property: insert the char as a literal
+                //a property: insert the char as a literal
                 /*
                 fragments.addElement(value.substring(pos + 1, pos + 2));
                 prev = pos + 2;
