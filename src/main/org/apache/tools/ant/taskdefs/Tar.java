@@ -364,7 +364,7 @@ public class Tar extends MatchingTask {
                            final TarFileSet tarFileSet)
         throws IOException {
         if (file.equals(tarFile)) {
-            // If the archive is built for the first time and it is
+            // If the archive is built for the first time, and it is
             // matched by a resource collection, then it hasn't been
             // found in check (it hasn't been there) but will be
             // included now.

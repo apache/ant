@@ -941,7 +941,7 @@ public class Concat extends Task implements ResourceCollection {
         // treat empty nested text as no text
         sanitizeText();
 
-        // if binary check if incompatible attributes are used
+        // if binary, check if incompatible attributes are used
         if (binary) {
             if (textBuffer != null) {
                 throw new BuildException(

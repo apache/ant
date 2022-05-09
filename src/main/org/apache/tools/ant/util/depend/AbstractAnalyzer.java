@@ -137,7 +137,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
 
         // we look through the source path elements. If the element is a dir
         // we look for the file. If it is a zip, we look for the zip entry.
-        // This isn't normal for source paths but we get it for free
+        // This isn't normal for source paths, but we get it for free
         return getResourceContainer(sourceLocation, sourcePath.list());
     }
 

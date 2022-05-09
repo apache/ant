@@ -639,7 +639,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             }
             if (runWithAnnotation != null && testClass.getAnnotation(runWithAnnotation) != null) {
                 /* Class is marked with @RunWith. If this class is badly written (no test methods,
-                 * multiple constructors, private constructor etc) then the class is automatically
+                 * multiple constructors, private constructor, etc.) then the class is automatically
                  * run and fails in the IDEs I've tried... so I'm happy handing the class to JUnit
                  * to try and run, and let JUnit report a failure if a bad test case is provided.
                  * Trying to do anything else is likely to result in us filtering out cases that

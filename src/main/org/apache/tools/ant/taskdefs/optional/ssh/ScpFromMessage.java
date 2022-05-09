@@ -222,7 +222,7 @@ public class ScpFromMessage extends AbstractSshMessage {
     private File parseAndCreateDirectory(final String serverResponse,
                                          final File localFile) {
         int start = serverResponse.indexOf(' ');
-        // appears that the next token is not used and it's zero.
+        // appears that the next token is not used, and it's zero.
         start = serverResponse.indexOf(' ', start + 1);
         final String directoryName = serverResponse.substring(start + 1);
         if (localFile.isDirectory()) {

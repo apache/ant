@@ -287,7 +287,7 @@ public class TelnetTask extends Task {
 
     /**
      *  Reads the output from the connected server
-     *  until the required string is found or we time out.
+     *  until the required string is found, or we time out.
      */
     public class TelnetRead extends TelnetSubTask {
         private Integer timeout = null;
@@ -323,7 +323,7 @@ public class TelnetTask extends Task {
 
     /**
      *  This class handles the abstraction of the telnet protocol.
-     *  Currently it is a wrapper around <a
+     *  Currently, it is a wrapper around <a
      *  href="https://jakarta.apache.org/commons/net/index.html">Jakarta
      *  Commons Net</a>.
      */

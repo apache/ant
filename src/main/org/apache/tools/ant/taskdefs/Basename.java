@@ -35,7 +35,7 @@ import org.apache.tools.ant.Task;
  * </ul>
  * The <b>file</b> and <b>property</b> attributes are required. The
  * <b>suffix</b> attribute can be specified either with or without
- * the &quot;.&quot;, and the result will be the same (ie., the
+ * the &quot;.&quot;, and the result will be the same (i.e., the
  * returned file name will be minus the .suffix).
  * <p>
  * When this task executes, it will set the specified property to the

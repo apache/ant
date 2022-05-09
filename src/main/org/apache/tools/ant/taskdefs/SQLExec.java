@@ -759,7 +759,7 @@ public class SQLExec extends JDBCTask {
             sql.append(keepformat ? "\n" : " ").append(line);
 
             // SQL defines "--" as a comment to EOL
-            // and in Oracle it may contain a hint
+            // and in Oracle it may contain a hint,
             // so we cannot just remove it, instead we must end it
             if (!keepformat && line.contains("--")) {
                 sql.append("\n");
@@ -1005,7 +1005,7 @@ public class SQLExec extends JDBCTask {
          * @param src the source file
          */
         public void setSrc(File src) {
-            //there are places (in this file, and perhaps elsewhere, where it is assumed
+            //there are places (in this file, and perhaps elsewhere), where it is assumed
             //that null is an acceptable parameter.
             if (src != null) {
                 setSrcResource(new FileResource(src));

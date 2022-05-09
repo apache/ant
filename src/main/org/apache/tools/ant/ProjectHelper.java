@@ -278,7 +278,7 @@ public class ProjectHelper {
      *                Must not be <code>null</code>.
      * @param source The source for XML configuration. A helper must support
      *               at least File, for backward compatibility. Helpers may
-     *               support URL, InputStream, etc or specialized types.
+     *               support URL, InputStream, etc. or specialized types.
      *
      * @since Ant1.5
      * @exception BuildException if the configuration is invalid or cannot

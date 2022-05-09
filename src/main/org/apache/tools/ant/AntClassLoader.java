@@ -868,7 +868,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
     /**
      * Finds the resource with the given name. A resource is
-     * some data (images, audio, text, etc) that can be accessed by class
+     * some data (images, audio, text, etc.) that can be accessed by class
      * code in a way that is independent of the location of the code.
      *
      * @param name The name of the resource for which a stream is required.
@@ -892,7 +892,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
             url = getUrl(name);
         }
         if (url == null && !isParentFirst(name)) {
-            // this loader was first but it didn't find it - try the parent
+            // this loader was first, but it didn't find it - try the parent
             if (ignoreBase) {
                 url = getRootLoader() == null ? null : getRootLoader().getResource(name);
             } else {
@@ -933,7 +933,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
     /**
      * Finds all the resources with the given name. A resource is some
-     * data (images, audio, text, etc) that can be accessed by class
+     * data (images, audio, text, etc.) that can be accessed by class
      * code in a way that is independent of the location of the code.
      *
      * @param name name of the resource
@@ -1204,12 +1204,12 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     }
 
     /**
-     * Get the manifest from the given jar, if it is indeed a jar and it has a
+     * Get the manifest from the given jar, if it is indeed a jar, and it has a
      * manifest
      *
      * @param container the File from which a manifest is required.
      *
-     * @return the jar's manifest or null is the container is not a jar or it
+     * @return the jar's manifest or null is the container is not a jar, or it
      *         has no manifest.
      *
      * @exception IOException if the manifest cannot be read.
@@ -1232,7 +1232,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * @param entry the entry of which the certificates are requested
      *
      * @return the entry's certificates or null is the container is
-     *         not a jar or it has no certificates.
+     *         not a jar, or it has no certificates.
      */
     private Certificate[] getCertificates(final File container, final String entry) {
         if (container.isDirectory()) {

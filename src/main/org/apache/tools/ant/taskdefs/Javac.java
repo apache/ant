@@ -1412,7 +1412,7 @@ public class Javac extends MatchingTask {
 
     /**
      * Ensure that every {@code package-info.java} produced a {@code package-info.class}.
-     * Otherwise this task's up-to-date tracking mechanisms do not work.
+     * Otherwise, this task's up-to-date tracking mechanisms do not work.
      * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">Bug #43114</a>
      */
     private void generateMissingPackageInfoClasses(final File dest) throws IOException {

@@ -36,7 +36,7 @@ public class Jikes extends DefaultCompilerAdapter {
      * Mostly of this code is identical to doClassicCompile()
      * However, it does not support all options like
      * extdirs, deprecation and so on, because
-     * there is no option in jikes and I don't understand
+     * there is no option in jikes, and I don't understand
      * what they should do.
      *
      * It has been successfully tested with jikes &gt;1.10.
@@ -50,7 +50,7 @@ public class Jikes extends DefaultCompilerAdapter {
         Commandline cmd = new Commandline();
 
         // For -sourcepath, use the "sourcepath" value if present.
-        // Otherwise default to the "srcdir" value.
+        // Otherwise, default to the "srcdir" value.
         Path sourcepath;
         if (compileSourcepath != null) {
             sourcepath = compileSourcepath;

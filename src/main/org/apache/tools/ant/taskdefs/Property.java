@@ -168,7 +168,7 @@ public class Property extends Task {
      * Sets the property to the absolute filename of the
      * given file. If the value of this attribute is an absolute path, it
      * is left unchanged (with / and \ characters converted to the
-     * current platforms conventions). Otherwise it is taken as a path
+     * current platforms conventions). Otherwise, it is taken as a path
      * relative to the project's basedir and expanded.
      * @param location path to set
      *
@@ -359,7 +359,7 @@ public class Property extends Task {
 
     /**
      * Prefix to use when retrieving environment variables.
-     * Thus if you specify environment=&quot;myenv&quot;
+     * Thus, if you specify environment=&quot;myenv&quot;
      * you will be able to access OS-specific
      * environment variables via property names &quot;myenv.PATH&quot; or
      * &quot;myenv.TERM&quot;.

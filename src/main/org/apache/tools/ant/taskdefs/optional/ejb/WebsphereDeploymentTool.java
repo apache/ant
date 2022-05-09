@@ -634,7 +634,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * publicly defined methods as they are exposed in the remote interface.
      * If the actual bean changes without changing the method signatures
      * then only the bean classfile needs to be updated and the rest of the
-     * WebSphere jar file can remain the same. If the Interfaces, ie. the
+     * WebSphere jar file can remain the same. If the Interfaces, i.e. the
      * method signatures change or if the xml deployment descriptors changed,
      * the whole jar needs to be rebuilt with ejbdeploy. This is not strictly
      * true for the xml files. If the JNDI name changes then the jar doesn't

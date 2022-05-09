@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 /**
- * Alters the default excludes for the <strong>entire</strong> build..
+ * Alters the default excludes for the <strong>entire</strong> build.
  *
  * @since Ant 1.6
  *

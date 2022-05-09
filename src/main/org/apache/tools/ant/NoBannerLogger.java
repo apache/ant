@@ -40,7 +40,7 @@ public class NoBannerLogger extends DefaultLogger {
     }
 
     /**
-     * Notes the name of the target so it can be logged
+     * Notes the name of the target, so it can be logged
      * if it generates any messages.
      *
      * @param event A BuildEvent containing target information.

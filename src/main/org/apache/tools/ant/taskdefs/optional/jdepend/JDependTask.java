@@ -440,7 +440,7 @@ public class JDependTask extends Task {
 
     // this comment extract from JUnit Task may also apply here
     // "in VM is not very nice since it could probably hang the
-    // whole build. IMHO this method should be avoided and it would be best
+    // whole build. IMHO this method should be avoided, and it would be best
     // to remove it in future versions. TBD. (SBa)"
 
     /**
@@ -576,7 +576,7 @@ public class JDependTask extends Task {
         if (getOutputFile() != null) {
             // having a space between the file and its path causes commandline
             // to add quotes around the argument thus making JDepend not taking
-            // it into account. Thus we split it in two
+            // it into account. Thus, we split it in two
             commandline.createArgument().setValue("-file");
             commandline.createArgument().setValue(outputFile.getPath());
             // we have to find a cleaner way to put this output

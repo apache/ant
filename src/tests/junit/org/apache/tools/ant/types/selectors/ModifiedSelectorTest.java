@@ -455,7 +455,7 @@ public class ModifiedSelectorTest {
     /**
      * Test the interface semantic of Algorithms.
      * This method does some common test for algorithm implementations.
-     * An algorithm must return always the same value for the same file and
+     * An algorithm must return always the same value for the same file, and
      * it must not return <i>null</i>.
      *
      * @param algo   configured test object
@@ -674,7 +674,7 @@ public class ModifiedSelectorTest {
             //
 
             // Mark all files which should be selected as (T)rue and all others
-            // as (F)alse. Directories are always selected so they always are
+            // as (F)alse. Directories are always selected, so they always are
             // (T)rue.
             StringBuilder expected = new StringBuilder();
             for (int i = 0; i < selectorRule.getFiles().length; i++) {

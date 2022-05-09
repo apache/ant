@@ -204,7 +204,7 @@ public class Exit extends Task {
     /**
      * test the unless condition
      * @return true if there is no unless condition,
-     *  or there is a named property but it doesn't exist
+     *  or there is a named property, but it doesn't exist
      */
     private boolean testUnlessCondition() {
         return PropertyHelper.getPropertyHelper(getProject())

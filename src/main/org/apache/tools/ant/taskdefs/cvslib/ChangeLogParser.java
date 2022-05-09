@@ -148,7 +148,7 @@ class ChangeLogParser {
     private void processComment(final String line) {
         if ("============================================================================="
             .equals(line)) {
-            //We have ended changelog for that particular file
+            //We have ended changelog for that particular file,
             //so we can save it
             final int end = comment.length() - System.lineSeparator().length(); //was -1
             comment = comment.substring(0, end);

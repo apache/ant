@@ -155,7 +155,7 @@ public final class SelectorUtils {
 
         // Fail if string is not exhausted or pattern is exhausted
         // Otherwise the pattern now holds ** while string is not exhausted
-        // this will generate false positives but we can live with that.
+        // this will generate false positives, but we can live with that.
         return strIdxStart > strIdxEnd || patIdxStart <= patIdxEnd;
     }
 
@@ -394,7 +394,7 @@ public final class SelectorUtils {
         }
         if (strIdxStart > strIdxEnd) {
             // All characters in the string are used. Check if only '*'s are
-            // left in the pattern. If so, we succeeded. Otherwise failure.
+            // left in the pattern. If so, we succeeded. Otherwise, failure.
             return allStars(patArr, patIdxStart, patIdxEnd);
         }
 
@@ -412,7 +412,7 @@ public final class SelectorUtils {
         }
         if (strIdxStart > strIdxEnd) {
             // All characters in the string are used. Check if only '*'s are
-            // left in the pattern. If so, we succeeded. Otherwise failure.
+            // left in the pattern. If so, we succeeded. Otherwise, failure.
             return allStars(patArr, patIdxStart, patIdxEnd);
         }
 
@@ -457,7 +457,7 @@ public final class SelectorUtils {
         }
 
         // All characters in the string are used. Check if only '*'s are left
-        // in the pattern. If so, we succeeded. Otherwise failure.
+        // in the pattern. If so, we succeeded. Otherwise, failure.
         return allStars(patArr, patIdxStart, patIdxEnd);
     }
 

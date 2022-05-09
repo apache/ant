@@ -475,7 +475,7 @@ public class Depend extends MatchingTask {
             if (closure) {
                 count += deleteAffectedFiles(affectedClass);
             } else {
-                // without closure we may delete an inner class but not the
+                // without closure, we may delete an inner class but not the
                 // top level class which would not trigger a recompile.
 
                 if (!affectedClass.contains("$")) {
@@ -595,7 +595,7 @@ public class Depend extends MatchingTask {
             }
             ClassFileInfo info = classFileInfoMap.get(className);
 
-            // if we have no info about the class - it may have been deleted already and we
+            // if we have no info about the class - it may have been deleted already, and we
             // are using cached info.
             if (info != null) {
                 for (File classpathFile : e.getValue()) {

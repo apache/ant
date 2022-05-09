@@ -336,7 +336,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     }
 
     /**
-     * check that it is ok to set attributes, i.e that no reference is defined
+     * check that it is ok to set attributes, i.e. that no reference is defined
      * @since Ant 1.6
      * @throws BuildException if not allowed
      */
@@ -347,7 +347,7 @@ public abstract class DataType extends ProjectComponent implements Cloneable {
     }
 
     /**
-     * check that it is ok to add children, i.e that no reference is defined
+     * check that it is ok to add children, i.e. that no reference is defined
      * @since Ant 1.6
      * @throws BuildException if not allowed
      */

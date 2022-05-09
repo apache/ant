@@ -421,7 +421,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             /*
              * fallback in case we have trouble loading the class or
              * don't know how to handle it (there is no easy way to
-             * know what IDL mode would generate.
+             * know what IDL mode would generate).
              *
              * This is supposed to make Ant always recompile the
              * class, as a file of that name should not exist.

@@ -816,7 +816,7 @@ public class Javadoc extends Task {
 
     /**
      * Set the scope to be processed. This is an alternative to the
-     * use of the setPublic, setPrivate, etc methods. It gives better build
+     * use of the setPublic, setPrivate, etc. methods. It gives better build
      * file control over what scope is processed.
      *
      * @param at the scope to be processed.
@@ -1441,7 +1441,7 @@ public class Javadoc extends Task {
         /**
          * Scope string of the tag. This will form the middle
          * argument of the -tag parameter when the tag is enabled
-         * (with an X prepended for and is parsed from human-readable form.
+         * (with an X prepended for and is parsed from human-readable form).
          */
         private String scope = "a";
 

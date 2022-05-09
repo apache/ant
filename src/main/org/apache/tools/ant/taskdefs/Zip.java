@@ -1299,7 +1299,7 @@ public class Zip extends MatchingTask {
 
     /*
      * This is yet another hacky construct to extend the FileSet[]
-     * getResourcesToAdd method so we can pass the information whether
+     * getResourcesToAdd method, so we can pass the information whether
      * non-fileset resources have been available to it without having
      * to move the withEmpty behavior checks (since either would break
      * subclasses in several ways).

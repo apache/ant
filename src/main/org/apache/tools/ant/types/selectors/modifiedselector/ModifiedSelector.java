@@ -654,7 +654,7 @@ public class ModifiedSelector extends BaseExtendSelector
      * Set the used ClassLoader.
      * If you invoke this selector by API (e.g. inside some testcases) the selector
      * will use a different classloader for loading the interface implementations than
-     * the caller. Therefore you will get a ClassCastException if you get the
+     * the caller. Therefore, you will get a ClassCastException if you get the
      * implementations from the selector and cast them.
      * @param loader the ClassLoader to use
      */

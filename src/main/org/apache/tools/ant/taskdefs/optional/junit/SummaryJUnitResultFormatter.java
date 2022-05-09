@@ -55,7 +55,7 @@ public class SummaryJUnitResultFormatter
      *  Insures that a line of log output is written and flushed as a single
      *  operation, to prevent lines from being spliced into other lines.
      *  (Hopefully this solves the issue of run on lines -
-     *  [junit] Tests Run: 2 Failures: 2 [junit] Tests run: 5...
+     *  [junit] Tests Run: 2 Failures: 2 [junit] Tests run: 5...)
      *  synchronized doesn't seem to be to harsh a penalty since it only
      *  occurs twice per test - at the beginning and end.  Note that message
      *  construction occurs outside the locked block.

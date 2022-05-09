@@ -22,10 +22,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * The sole purpose of this class is (note that it is package-private
- * is to serve as a separate, static compilation unit for importing
+ * The sole purpose of this class is (note that it is package-private)
+ * to serve as a separate, static compilation unit for importing
  * FTPClientConfig, to enable users who wish to use the FTP task
- * without using its new features to avoid  the need to
+ * without using its new features to avoid the need to
  * upgrade to jakarta-commons-net 1.4.0, where FTPClientConfig was
  * introduced.
   */

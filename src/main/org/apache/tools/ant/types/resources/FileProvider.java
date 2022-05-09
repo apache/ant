@@ -24,7 +24,7 @@ import java.io.File;
  * This is an interface that resources that can provide a file should implement.
  * This is a refactoring of {@link FileResource}, to allow other resources
  * to act as sources of files (and to make components that only support
- * file-based resources from only support FileResource resources.
+ * file-based resources from only support FileResource resources).
  * @since Ant 1.8
  */
 public interface FileProvider {

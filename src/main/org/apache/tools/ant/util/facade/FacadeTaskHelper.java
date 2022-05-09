@@ -136,7 +136,7 @@ public class FacadeTaskHelper {
 
     /**
      * Tests whether the implementation has been chosen by the user
-     * (either via a magic property or explicitly.
+     * (either via a magic property or explicitly).
      * @return true if magic or user choice has be set.
      * @since Ant 1.5.2
      */

@@ -377,7 +377,7 @@ public class NetRexxC extends MatchingTask {
 
     /**
      * Sets whether classes need to be imported explicitly using an <code>import</code>
-     * statement. By default the NetRexx compiler will import certain packages
+     * statement. By default, the NetRexx compiler will import certain packages
      * automatically.
      * Valid true values are "yes", "on" or "true". Anything else sets the flag to false.
      * The default value is false.

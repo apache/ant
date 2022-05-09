@@ -206,7 +206,7 @@ public final class DOMUtil {
             throw new IllegalStateException("Invalid node type: " + child.getNodeType());
         }
 
-        // okay we have a copy of the child, now the child becomes the parent
+        // okay we have a copy of the child, now the child becomes the parent,
         // and we are iterating recursively over its children.
         try {
             final NodeList children = child.getChildNodes();

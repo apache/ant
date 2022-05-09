@@ -872,7 +872,7 @@ public class Main implements AntMain {
 
         // this list doesn't contain the build files default target,
         // which may be added later unless targets have been specified
-        // on the command line. Therefore the property gets set again
+        // on the command line. Therefore, the property gets set again
         // in Project#executeTargets when we can be sure the list is
         // complete.
         // Setting it here allows top-level tasks to access the
@@ -1217,7 +1217,7 @@ public class Main implements AntMain {
      *                Should not be <code>null</code>.
      * @param maxlen The maximum length of the names of the targets.
      *               If descriptions are given, they are padded to this
-     *               position so they line up (so long as the names really
+     *               position, so they line up (so long as the names really
      *               <i>are</i> shorter than this).
      */
     private static void printTargets(final Project project, final Vector<String> names,

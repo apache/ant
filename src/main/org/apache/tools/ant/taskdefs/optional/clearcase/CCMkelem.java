@@ -374,7 +374,7 @@ public class CCMkelem extends ClearCase {
         if (getComment() != null) {
             /* Had to make two separate commands here because if a space is
                inserted between the flag and the value, it is treated as a
-               Windows filename with a space and it is enclosed in double
+               Windows filename with a space, and it is enclosed in double
                quotes ("). This breaks clearcase.
             */
             cmd.createArgument().setValue(FLAG_COMMENT);
@@ -392,7 +392,7 @@ public class CCMkelem extends ClearCase {
         if (getCommentFile() != null) {
             /* Had to make two separate commands here because if a space is
                inserted between the flag and the value, it is treated as a
-               Windows filename with a space and it is enclosed in double
+               Windows filename with a space, and it is enclosed in double
                quotes ("). This breaks clearcase.
             */
             cmd.createArgument().setValue(FLAG_COMMENTFILE);
@@ -410,7 +410,7 @@ public class CCMkelem extends ClearCase {
         if (getEltype() != null) {
             /* Had to make two separate commands here because if a space is
                inserted between the flag and the value, it is treated as a
-               Windows filename with a space and it is enclosed in double
+               Windows filename with a space, and it is enclosed in double
                quotes ("). This breaks clearcase.
             */
             cmd.createArgument().setValue(FLAG_ELTYPE);

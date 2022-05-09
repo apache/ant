@@ -141,7 +141,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
             } else if (lower.contains("warning")) {
                 setError(false);
                    } else {
-                // If we don't know the type of the line
+                // If we don't know the type of the line,
                 // and we are in emacs mode, it will be
                 // an error, because in this mode, jikes won't
                 // always print "error", but sometimes other

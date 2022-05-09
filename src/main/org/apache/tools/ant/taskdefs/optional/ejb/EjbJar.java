@@ -379,7 +379,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * Sets the source directory, which is the directory that
-     * contains the classes that will be added to the EJB jar. Typically
+     * contains the classes that will be added to the EJB jar. Typically,
      * this will include the home and remote interfaces and the bean class.
      *
      * @param inDir the source directory.
@@ -460,7 +460,7 @@ public class EjbJar extends MatchingTask {
      * this directory. The jar files that exist in this directory are also
      * used when determining if the contents of the jar file have changed.
      * Note that this parameter is only used if no deployment tools are
-     * specified. Typically each deployment tool will specify its own
+     * specified. Typically, each deployment tool will specify its own
      * destination directory.
      *
      * @param inDir the destination directory in which to generate jars

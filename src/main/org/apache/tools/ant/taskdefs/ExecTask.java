@@ -589,7 +589,7 @@ public class ExecTask extends Task {
             return false;
         }
         //the Exec OS check is different from Os.isOs(), which
-        //probes for a specific OS. Instead it searches the os field
+        //probes for a specific OS. Instead, it searches the os field
         //for the current os.name
         String myos = System.getProperty("os.name");
         log("Current OS is " + myos, Project.MSG_VERBOSE);

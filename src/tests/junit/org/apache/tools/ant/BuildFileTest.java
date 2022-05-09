@@ -73,7 +73,7 @@ public abstract class BuildFileTest extends TestCase {
      * test target depend on it.
      *
      * @throws Exception this implementation doesn't throw any
-     * exception but we've added it to the signature so that
+     * exception, but we've added it to the signature so that
      * subclasses can throw whatever they need.
      */
     protected void tearDown() throws Exception {

@@ -412,7 +412,7 @@ public class TarUtils {
      * @param buf The buffer to receive the output
      * @param offset The starting offset into the buffer
      * @param length The size of the output buffer
-     * @return The updated offset, i.e offset+length
+     * @return The updated offset, i.e. offset+length
      * @throws IllegalArgumentException if the value (and trailer) will not fit in the buffer
      */
     public static int formatOctalBytes(final long value, final byte[] buf, final int offset, final int length) {

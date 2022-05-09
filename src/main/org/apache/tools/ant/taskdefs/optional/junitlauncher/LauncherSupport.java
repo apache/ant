@@ -76,7 +76,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * The {@code LauncherSupport} isn't concerned with whether
  * it's being executed in the same JVM as the build in which the {@code junitlauncher}
- * was triggered or if it's running as part of a forked JVM. Instead it just relies
+ * was triggered or if it's running as part of a forked JVM. Instead, it just relies
  * on the {@code LaunchDefinition} to do whatever decisions need to be done before and
  * after launching the tests.
  * <p>

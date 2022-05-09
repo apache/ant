@@ -432,7 +432,7 @@ public class PropertyHelper implements GetProperty {
      * inside of Ant itself.</p>
      *
      * @param ns   The namespace that the property is in (currently
-     *             not used.
+     *             not used).
      * @param name The name of property to set.
      *             Must not be <code>null</code>.
      * @param value The new value of the property.
@@ -572,7 +572,7 @@ public class PropertyHelper implements GetProperty {
     /**
      * Decode properties from a String representation.  If the entire
      * contents of the String resolve to a single property, that value
-     * is returned.  Otherwise a String is returned.
+     * is returned.  Otherwise, a String is returned.
      *
      * @param value The string to be scanned for property references.
      *              May be <code>null</code>, in which case this

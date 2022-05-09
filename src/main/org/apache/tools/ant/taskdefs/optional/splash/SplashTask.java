@@ -52,7 +52,7 @@ public class SplashTask extends Task {
     private String progressRegExp = null;
     private String displayText = null;
 
-    // class instance so we'll never show two splash screens at the same time
+    // class instance, so we'll never show two splash screens at the same time
     private static SplashScreen splash = null;
 
     /**

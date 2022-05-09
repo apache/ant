@@ -145,7 +145,7 @@ public class RExecTask extends Task {
 
     /**
      *  Reads the output from the connected server
-     *  until the required string is found or we time out.
+     *  until the required string is found, or we time out.
      */
     public class RExecRead extends RExecSubTask {
         private Integer timeout = null;
@@ -181,7 +181,7 @@ public class RExecTask extends Task {
 
     /**
      *  This class handles the abstraction of the rexec protocol.
-     *  Currently it is a wrapper around <a
+     *  Currently, it is a wrapper around <a
      *  href="https://jakarta.apache.org/commons/net/index.html">Jakarta
      *  Commons Net</a>.
      */

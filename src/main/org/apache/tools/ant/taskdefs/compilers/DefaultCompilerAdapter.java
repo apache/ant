@@ -259,7 +259,7 @@ public abstract class DefaultCompilerAdapter
                                                         final boolean useDebugLevel) {
         final Path classpath = getCompileClasspath();
         // For -sourcepath, use the "sourcepath" value if present.
-        // Otherwise default to the "srcdir" value.
+        // Otherwise, default to the "srcdir" value.
         Path sourcepath;
         if (compileSourcepath != null) {
             sourcepath = compileSourcepath;

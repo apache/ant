@@ -462,7 +462,7 @@ public class Ant extends Task {
     /**
      * Get the default build file name to use when launching the task.
      * <p>
-     * This function may be overridden by providers of custom ProjectHelper so they can easily
+     * This function may be overridden by providers of custom ProjectHelper, so they can easily
      * implement their sublauncher.
      *
      * @return the name of the default file

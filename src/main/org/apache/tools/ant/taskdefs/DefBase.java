@@ -37,8 +37,8 @@ public abstract class DefBase extends AntlibDefinition {
     private ClasspathUtils.Delegate cpDelegate;
 
     /**
-     * Check if classpath attributes have been set.
-     * (to be called before getCpDelegate() is used.
+     * Check if classpath attributes have been set
+     * to be called before getCpDelegate() is used.
      * @return true if cpDelegate has been created.
      */
     protected boolean hasCpDelegate() {

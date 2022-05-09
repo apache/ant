@@ -360,7 +360,7 @@ public class FormatterElement {
     /**
      * A standard FileOutputStream creates a file as soon as it's opened. This
      * class delays the creation of the file until the first time a caller attempts
-     * to write to it so we don't end up with empty files if the listeners don't use
+     * to write to it, so we don't end up with empty files if the listeners don't use
      * them.
      */
     private static class DelayedFileOutputStream extends OutputStream {

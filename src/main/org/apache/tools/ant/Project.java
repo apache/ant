@@ -263,7 +263,7 @@ public class Project implements ResourceFactory {
     }
 
     /**
-     * Create and initialize a subproject. By default the subproject will be of
+     * Create and initialize a subproject. By default, the subproject will be of
      * the same type as its parent. If a no-arg constructor is unavailable, the
      * <code>Project</code> class will be used.
      * @return a Project instance configured as a subproject of this Project.
@@ -1971,7 +1971,7 @@ public class Project implements ResourceFactory {
      * Add an id reference.
      * Used for broken build files.
      * @param id the id to set.
-     * @param value the value to set it to (Unknown element in this case.
+     * @param value the value to set it to (Unknown element in this case).
      */
     public void addIdReference(final String id, final Object value) {
         idReferences.put(id, value);

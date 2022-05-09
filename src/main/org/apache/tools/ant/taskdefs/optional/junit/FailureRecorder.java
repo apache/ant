@@ -148,7 +148,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
     public void setProject(Project project) {
         // store project reference for logging
         super.setProject(project);
-        // check if already registered
+        // check if already registered;
         // register if needed
         if (project.getBuildListeners().stream().noneMatch(FailureRecorder.class::isInstance)) {
             verbose("Register FailureRecorder (@" + this.hashCode() + ") as BuildListener");
@@ -196,7 +196,7 @@ public class FailureRecorder extends ProjectComponent implements JUnitResultForm
      */
     @Override
     public void setOutput(OutputStream out) {
-        // unused, close output file so it can be deleted before the VM exits
+        // unused, close output file, so it can be deleted before the VM exits
         if (out != System.out) {
             FileUtils.close(out);
         }

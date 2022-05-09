@@ -132,7 +132,7 @@ public class ServerDeploy extends Task {
     }
 
     /**
-     *  Returns the source field (the path/filename of the component to be
+     *  Returns the source field (the path/filename) of the component to be
      *  deployed.
      *  @return A File object representing the "source" attribute.
      */

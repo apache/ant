@@ -255,7 +255,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
 
         private void storeToFile(final byte[] data, final int offset, final int length) throws IOException {
             if (this.fileOutputStream == null) {
-                // no backing file was created so we can't do anything
+                // no backing file was created, so we can't do anything
                 return;
             }
             this.fileOutputStream.write(data, offset, length);

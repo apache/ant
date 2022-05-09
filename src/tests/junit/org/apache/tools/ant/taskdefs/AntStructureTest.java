@@ -66,7 +66,7 @@ public class AntStructureTest {
         // can't access the booleans in MyPrinter here (even if they
         // were static) since the MyPrinter instance that was used in
         // the test has likely been loaded via a different classloader
-        // than this class.  Therefore we make the printer assert its
+        // than this class.  Therefore, we make the printer assert its
         // state and only check for the tail invocation.
         assertThat(buildRule.getLog(), containsString(MyPrinter.TAIL_CALLED));
     }

@@ -110,7 +110,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
 
     /**
      * Directory where <code>ss.exe</code> resides.
-     * By default the task expects it to be in the PATH.
+     * By default, the task expects it to be in the PATH.
      * @param  dir  The directory containing ss.exe.
      */
     public final void setSsdir(String dir) {
@@ -675,7 +675,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         } else if (writableFiles.getValue().equals(WRITABLE_REPLACE)) {
             return FLAG_REPLACE_WRITABLE;
         } else if (writableFiles.getValue().equals(WRITABLE_SKIP)) {
-            // ss.exe exits with '100', when files have been skipped
+            // ss.exe exits with '100', when files have been skipped,
             // so we have to ignore the failure
             failOnError = false;
             return FLAG_SKIP_WRITABLE;
