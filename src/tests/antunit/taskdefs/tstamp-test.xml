@@ -98,6 +98,7 @@ public class IsEpochIn1969Here implements Condition {
           failonerror="true"
           outputproperty="testout"
           fork="true">
+      <sysproperty key="user.timezone" value="GMT"/>
       <classpath>
         <pathelement location="${output}"/>
         <pathelement path="${java.class.path}"/>
