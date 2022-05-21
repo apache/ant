@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.Project;
 import org.junit.Test;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.launcher.TestPlan;
 
 import java.io.ByteArrayOutputStream;
@@ -70,7 +71,23 @@ public class LegacyXmlResultFormatterTest {
                 return Optional.empty();
             }
         });
-        final TestPlan testPlan = TestPlan.from(Collections.emptySet());
+        final ConfigurationParameters dummyParams = new ConfigurationParameters() {
+            @Override
+            public Optional<String> get(String key) {
+                return Optional.empty();
+            }
+
+            @Override
+            public Optional<Boolean> getBoolean(String key) {
+                return Optional.empty();
+            }
+
+            @Override
+            public int size() {
+                return 0;
+            }
+        };
+        final TestPlan testPlan = TestPlan.from(Collections.emptySet(), dummyParams);
         f.testPlanExecutionStarted(testPlan);
         return testPlan;
     }
