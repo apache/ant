@@ -48,10 +48,10 @@
   <property file="get-m2.properties" />
 
   <property name="m2.antlib.resource"
-            value="org/apache/maven/artifact/ant/antlib.xml" />
+            value="org/apache/maven/resolver/ant/antlib.xml" />
 
   <property name="m2.antlib.uri"
-            value="antlib:org.apache.maven.artifact.ant" />
+            value="antlib:org.apache.maven.resolver.ant" />
 
   <macrodef name="require">
     <attribute name="property" />
@@ -100,7 +100,7 @@
   </target>
 
   <target name="checksum-mismatch" depends="validate-m2-checksum"
-          if="m2.sha1.checksum" unless="checksum.equal">
+          if="m2.sha1.checksum" unless="${checksum.equal}">
     <delete file="${m2.artifact}" />
     <fail>
       Failed to verify the downloaded file ${m2.antlib.url}" against the checksum
@@ -116,6 +116,6 @@
   </target>
 
   <target name="get-m2" depends="checksum-match"
-      description="Download the Maven2 Ant tasks" />
+      description="Download the Maven Artifact Resolver Ant tasks" />
 
 </project>

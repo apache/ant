@@ -98,7 +98,7 @@ Set -Ddest=LOCATION on the command line
 
 
   <target name="macros" depends="pick-dest,get-m2"
-          xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+          xmlns:resolver="antlib:org.apache.maven.resolver.ant">
     <fail>
       Cannot execute multiple targets due to the bug in Maven Ant tasks
       <condition>
@@ -119,16 +119,21 @@ Set -Ddest=LOCATION on the command line
             </not>
           </condition>
         </fail>
-        <artifact:dependencies pathID="@{archive}.path" useScope="runtime">
-          <dependency groupId="@{project}"
-                      artifactId="@{archive}"
-                      version="${@{archive}.version}">
-            <!-- exclude dependencies of ant-antunit (they should be in optional scope) -->
-            <exclusion groupId="org.apache.ant" artifactId="ant"/>
-            <exclusion groupId="org.apache.ant" artifactId="ant-launcher"/>
-          </dependency>
-          <artifact:remoteRepository url="@{repository}" id="@{id}"/>
-        </artifact:dependencies>
+        <resolver:remoterepo url="@{repository}" id="@{id}"/>
+        <resolver:resolve>
+          <dependencies id="@{archive}.path">
+            <dependency groupId="@{project}"
+                        artifactId="@{archive}"
+                        version="${@{archive}.version}"
+                        scope="runtime">
+              <!-- exclude dependencies of ant-antunit (they should be in optional scope) -->
+              <exclusion groupId="org.apache.ant" artifactId="ant"/>
+              <exclusion groupId="org.apache.ant" artifactId="ant-launcher"/>
+            </dependency>
+          </dependencies>
+          <!-- create a path containing all these resolved dependencies -->
+          <path refid="@{archive}.path"/>
+        </resolver:resolve>
         <!-- now we are left with the problem of getting the files into our directory -->
         <copy todir="${dest.dir}">
           <path refid="@{archive}.path"/>
