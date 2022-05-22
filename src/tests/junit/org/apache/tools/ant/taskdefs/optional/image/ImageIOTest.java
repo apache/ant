@@ -22,6 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -131,6 +132,8 @@ public class ImageIOTest {
     }
 
     @Test
+    @Ignore("badimage.jpg used in this test doesn't" +
+            " trigger failures https://bugs.openjdk.java.net/browse/JDK-8287120")
     public void testFailOnError() {
         final String message = "Unsupported Image Type";
         thrown.expect(BuildException.class);
