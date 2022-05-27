@@ -1126,10 +1126,14 @@ public class DirectoryScanner
     private void processSlowScan(final String[] arr) {
         for (String element : arr) {
             final TokenizedPath path  = new TokenizedPath(element);
-            if (!couldHoldIncluded(path) || contentsExcluded(path)) {
+            if (!scanDuringFastScan(path)) {
                 scandir(new File(basedir, element), path, false);
             }
         }
+    }
+
+    private boolean scanDuringFastScan(TokenizedPath path) {
+        return couldHoldIncluded(path) && !contentsExcluded(path);
     }
 
     /**
@@ -1236,7 +1240,18 @@ public class DirectoryScanner
             final String name = vpath + newFile;
             final TokenizedPath newPath = new TokenizedPath(path, newFile);
             final File file = new File(dir, newFile);
-            final String[] children = file.list();
+            final String[] children;
+
+            // don't invoke file.list() if we know we never use the children
+            if (fast // slow scan scans everything anyway
+                && file.isDirectory() // otherwise we need list() to know whether this is a directory
+                && !scanDuringFastScan(newPath) // otherwise we'd invoke scandir
+                ) {
+                children = new String[0];
+            } else {
+                children = file.list();
+            }
+
             if (children == null || (children.length == 0 && file.isFile())) {
                 if (isIncluded(newPath)) {
                     accountForIncludedFile(newPath, file);
@@ -1263,7 +1278,7 @@ public class DirectoryScanner
                 } else {
                     everythingIncluded = false;
                     dirsNotIncluded.addElement(name);
-                    if (fast && couldHoldIncluded(newPath) && !contentsExcluded(newPath)) {
+                    if (fast && scanDuringFastScan(newPath)) {
                         scandir(file, newPath, fast, children, directoryNamesFollowed);
                     }
                 }
@@ -1298,7 +1313,7 @@ public class DirectoryScanner
     private void accountForIncludedDir(final TokenizedPath name, final File file,
                                        final boolean fast) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
-        if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
+        if (fast && scanDuringFastScan(name)) {
             scandir(file, name, fast);
         }
     }
@@ -1308,7 +1323,7 @@ public class DirectoryScanner
                                        final String[] children,
                                        final Deque<String> directoryNamesFollowed) {
         processIncluded(name, file, dirsIncluded, dirsExcluded, dirsDeselected);
-        if (fast && couldHoldIncluded(name) && !contentsExcluded(name)) {
+        if (fast && scanDuringFastScan(name)) {
             scandir(file, name, fast, children, directoryNamesFollowed);
         }
     }
@@ -1319,7 +1334,7 @@ public class DirectoryScanner
 
     private void accountForNotFollowedSymlink(final TokenizedPath name, final File file) {
         if (!isExcluded(name) && (isIncluded(name)
-                || (file.isDirectory() && couldHoldIncluded(name) && !contentsExcluded(name)))) {
+                || (file.isDirectory() && scanDuringFastScan(name)))) {
             notFollowedSymlinks.add(file.getAbsolutePath());
         }
     }

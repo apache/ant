@@ -44,6 +44,11 @@ Other changes:
  * <ftp> now supports FTPs.
    Github Pull Request #170
 
+ * DirectoryScanner avoids listing directory contents when it known it
+   will never use the information retrieved. This may improve
+   performance in some special cases.
+   Bugzilla Report 66048
+
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
 
