@@ -22,6 +22,11 @@ Fixed bugs:
    timestamps of files transferred recursively from a server.
    Bugzilla Report 66001
 
+ * Building Ant from source could result in the javadocs target failing if the
+   optional dependencies were missing. This has now been fixed.
+   Bugzilla Report 63438
+
+
 Other changes:
 --------------
 
