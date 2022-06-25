@@ -1399,7 +1399,8 @@
              windowtitle="${Name} API"
              doctitle="${Name}"
              maxmemory="1000M"
-             verbose="${javadoc.verbose}">
+             verbose="${javadoc.verbose}"
+             additionalparam="${javadoc.doclint.none}">
 
       <packageset dir="${java.dir}"/>
 
@@ -1430,7 +1431,8 @@
              version="true"
              locale="en"
              windowtitle="${Name} Test Utilities"
-             doctitle="${Name}">
+             doctitle="${Name}"
+             additionalparam="${javadoc.doclint.none}">
 
       <!-- hide some meta information for javadoc -->
       <tag name="pre" description="Precondition:" scope="all"/>
