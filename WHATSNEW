@@ -29,6 +29,10 @@ Fixed bugs:
    value to an incorrect date. This has now been fixed.
    Github Pull Request #186
 
+ * fetch.xml didn't set up non-default repositories propery and thus
+   failed to download JAI.
+   Github Pull Request #191
+
 Other changes:
 --------------
 
