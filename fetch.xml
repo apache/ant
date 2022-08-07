@@ -119,8 +119,8 @@ Set -Ddest=LOCATION on the command line
             </not>
           </condition>
         </fail>
-        <resolver:remoterepo url="@{repository}" id="@{id}"/>
         <resolver:resolve>
+          <resolver:remoterepo url="@{repository}" id="@{id}"/>
           <dependencies id="@{archive}.path">
             <dependency groupId="@{project}"
                         artifactId="@{archive}"
