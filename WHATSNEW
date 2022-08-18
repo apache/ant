@@ -33,6 +33,12 @@ Fixed bugs:
    failed to download JAI.
    Github Pull Request #191
 
+ * When building and installing Ant distribution from source, the build script
+   would change permissions on unrelated files in the destination directory.
+   This is now fixed and such unrelated files in the destination directory
+   will be left untouched.
+   Bugzilla Report 66164
+
 Other changes:
 --------------
 

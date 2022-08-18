@@ -1059,14 +1059,6 @@
 
     <setpermissions mode="755" failonerror="${setpermissions.fail}"
                     nonPosixMode="${setpermissions.nonposixmode}">
-      <dirset dir="${dist.dir}"/>
-    </setpermissions>
-    <setpermissions mode="644" failonerror="${setpermissions.fail}"
-                    nonPosixMode="${setpermissions.nonposixmode}">
-      <fileset dir="${dist.dir}"/>
-    </setpermissions>
-    <setpermissions mode="755" failonerror="${setpermissions.fail}"
-                    nonPosixMode="${setpermissions.nonposixmode}">
       <fileset dir="${dist.bin}">
         <include name="**/ant"/>
         <include name="**/antRun"/>
@@ -1158,14 +1150,6 @@
       </fileset>
     </copy>
 
-    <setpermissions mode="755" failonerror="${setpermissions.fail}"
-                    nonPosixMode="${setpermissions.nonposixmode}">
-      <dirset dir="${dist.dir}"/>
-    </setpermissions>
-    <setpermissions mode="644" failonerror="${setpermissions.fail}"
-                    nonPosixMode="${setpermissions.nonposixmode}">
-      <fileset dir="${dist.dir}"/>
-    </setpermissions>
     <setpermissions mode="755" failonerror="${setpermissions.fail}"
                     nonPosixMode="${setpermissions.nonposixmode}">
       <fileset dir="${dist.bin}">
