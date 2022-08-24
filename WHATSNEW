@@ -59,6 +59,10 @@ Other changes:
    performance in some special cases.
    Bugzilla Report 66048
 
+ * <manifest> will now create the parent directory of the manifestFile
+   attribute if it doesn't exist.
+   Bugzilla Report 66231
+
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
 

@@ -238,6 +238,14 @@ public class ManifestTask extends Task {
                 error = new BuildException("Failed to read " + manifestFile,
                                            e, getLocation());
             }
+        } else {
+            final File parent = manifestFile.getParentFile();
+            if (parent != null && !parent.isDirectory()
+                && !(parent.mkdirs() || parent.isDirectory())) {
+                throw new BuildException(
+                    "Failed to create missing parent directory for %s",
+                    manifestFile);
+            }
         }
 
         // look for and print warnings
