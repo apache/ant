@@ -286,9 +286,9 @@ public class TarUtils {
                                    final ZipEncoding encoding)
         throws IOException {
 
-        int len = length;
-        for (; len > 0; len--) {
-            if (buffer[offset + len - 1] != 0) {
+        int len = 0;
+        for (; len < length; ++len) {
+            if (buffer[offset + len] == 0) {
                 break;
             }
         }
