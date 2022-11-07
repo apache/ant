@@ -39,6 +39,11 @@ Fixed bugs:
    will be left untouched.
    Bugzilla Report 66164
 
+ * parsing tar entries with multiple NUL bytes in their name would
+   include garbage bytes as the name included all bytes up to the last
+   NUL rather than the first.
+   Github Pull Request #194
+
 Other changes:
 --------------
 
