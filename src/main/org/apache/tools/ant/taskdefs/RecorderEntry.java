@@ -237,6 +237,11 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         }
     }
 
+    @Override
+    public int getMessageOutputLevel() {
+        return this.loglevel;
+    }
+
     /**
      * @see BuildLogger#setOutputPrintStream(PrintStream)
      * {@inheritDoc}.

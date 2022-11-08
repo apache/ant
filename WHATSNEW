@@ -68,6 +68,9 @@ Other changes:
    attribute if it doesn't exist.
    Bugzilla Report 66231
 
+ * org.apache.tools.ant.BuildLogger now has a new method getMessageOutputLevel()
+   which returns the currently set message output level.
+
 Changes from Ant 1.10.11 TO Ant 1.10.12
 =======================================
 

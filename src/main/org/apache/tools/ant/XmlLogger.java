@@ -432,6 +432,11 @@ public class XmlLogger implements BuildLogger {
         msgOutputLevel = level;
     }
 
+    @Override
+    public int getMessageOutputLevel() {
+        return this.msgOutputLevel;
+    }
+
     /**
      * Set the output stream to which logging output is sent when operating
      * as a logger.

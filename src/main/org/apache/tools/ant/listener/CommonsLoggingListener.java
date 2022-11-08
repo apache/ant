@@ -308,6 +308,11 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
         // Use the logger config
     }
 
+    @Override
+    public int getMessageOutputLevel() {
+        return Project.MSG_INFO;
+    }
+
     /**
      * Set the output print stream.
      * @param output the output stream

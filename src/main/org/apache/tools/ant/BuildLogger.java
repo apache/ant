@@ -46,6 +46,16 @@ public interface BuildLogger extends BuildListener {
      */
     void setMessageOutputLevel(int level);
 
+
+    /**
+     * @return Returns the {@link #setMessageOutputLevel(int) currently set} message output level.
+     * The {@code default} implementation of this method returns {@code MSG_INFO}.
+     * @since 1.10.13
+     */
+    default int getMessageOutputLevel() {
+        return Project.MSG_INFO;
+    }
+
     /**
      * Sets the output stream to which this logger is to send its output.
      *

@@ -93,6 +93,11 @@ public class DefaultLogger implements BuildLogger {
         this.msgOutputLevel = level;
     }
 
+    @Override
+    public int getMessageOutputLevel() {
+        return this.msgOutputLevel;
+    }
+
     /**
      * Sets the output stream to which this logger is to send its output.
      *
