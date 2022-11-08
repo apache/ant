@@ -369,8 +369,8 @@ else
   fi
 fi
 # Run "java -XshowSettings:properties" and check the output for "java.specification.version" value
-JAVA_SPEC_VERSION=`"$JAVACMD" -XshowSettings:properties 2>&1 | grep "java.specification.version = " | tr -d '[:space:]'`
-if [ "$JAVA_SPEC_VERSION" = "java.specification.version=18" ] || [ "$JAVA_SPEC_VERSION" = "java.specification.version=19" ]; then
+JAVA_SPEC_VERSION=$("$JAVACMD" -XshowSettings:properties 2>&1 | grep "java.specification.version = " | tr -d '[:space:]java.specification.version=')
+if [ "$JAVA_SPEC_VERSION" -ge 18 ]; then
   # set security manager property to allow calls to System.setSecurityManager() at runtime
   ANT_OPTS="$ANT_OPTS -Djava.security.manager=allow"
 fi
