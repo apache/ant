@@ -141,7 +141,7 @@ public class LoadResource extends Task {
             if (failOnError) {
                 throw new BuildException(message);
             }
-            log(message, quiet ? Project.MSG_WARN : Project.MSG_ERR);
+            log(message, quiet ? Project.MSG_VERBOSE : Project.MSG_ERR);
             return;
         }
 

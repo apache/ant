@@ -44,6 +44,9 @@ Fixed bugs:
    NUL rather than the first.
    Github Pull Request #194
 
+ * loadresource might log warnings even though quiet was set to true
+   Bugzilla Report 65647
+
 Other changes:
 --------------
 
