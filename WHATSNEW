@@ -47,6 +47,10 @@ Fixed bugs:
  * loadresource might log warnings even though quiet was set to true
    Bugzilla Report 65647
 
+ * javac task would add paths constructs containing wildcards to the
+   internally created argument file where wildcards are not allowed
+   Bugzilla Report 65621
+
 Other changes:
 --------------
 

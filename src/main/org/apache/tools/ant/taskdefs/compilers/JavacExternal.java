@@ -20,6 +20,8 @@ package org.apache.tools.ant.taskdefs.compilers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -86,27 +88,68 @@ public class JavacExternal extends DefaultCompilerAdapter {
      */
     private int moveArgFileEligibleOptionsToEnd(String[] commandLine) {
         int nonArgFileOptionIdx = 1; // 0 for javac executable
-        while(nonArgFileOptionIdx < commandLine.length &&
-                !isArgFileEligible(commandLine[nonArgFileOptionIdx])) {
-            nonArgFileOptionIdx++;
+        while (nonArgFileOptionIdx < commandLine.length) {
+            int argsToMove = numberOfArgsNotEligibleForFile(commandLine, nonArgFileOptionIdx);
+            if (argsToMove > 0) {
+                nonArgFileOptionIdx += argsToMove;
+            } else {
+                break;
+            }
         }
 
         for(int i = nonArgFileOptionIdx + 1; i < commandLine.length; i++) {
-            if (!isArgFileEligible(commandLine[i])) {
-                String option = commandLine[i];
+            int argsToMove = numberOfArgsNotEligibleForFile(commandLine, i);
+            if (argsToMove > 0) {
+                String[] options = Arrays.copyOfRange(commandLine, i, i + argsToMove);
                 if (i - nonArgFileOptionIdx >= 0) {
-                    System.arraycopy( commandLine, nonArgFileOptionIdx, commandLine, nonArgFileOptionIdx + 1, i - nonArgFileOptionIdx );
+                    System.arraycopy( commandLine, nonArgFileOptionIdx, commandLine, nonArgFileOptionIdx + argsToMove, i - nonArgFileOptionIdx );
                 }
-                commandLine[nonArgFileOptionIdx] = option;
-                nonArgFileOptionIdx++;
+                System.arraycopy(options, 0, commandLine, nonArgFileOptionIdx, argsToMove);
+                nonArgFileOptionIdx += argsToMove;
+                i += argsToMove - 1;
             }
         }
 
         return nonArgFileOptionIdx;
     }
 
+    private static int numberOfArgsNotEligibleForFile(String[] args, int currentIndex) {
+        String currentOption = args[currentIndex];
+        if (!isArgFileEligible(currentOption)) {
+            return 1;
+        }
+        if (currentIndex + 1 < args.length && isArgFollowedByPath(currentOption)
+            && containsWildcards(args[currentIndex + 1])) {
+            return 2;
+        }
+        return 0;
+    }
+
+    private static boolean containsWildcards(String path) {
+        return path.contains("*") || path.contains("?");
+    }
+
     private static boolean isArgFileEligible(String option) {
-        return !(option.startsWith("-J") || option.startsWith("@"));
+        return !(option.startsWith("-J") || option.startsWith("@")
+            || (option.startsWith("-Xbootclasspath/") && containsWildcards(option))
+        );
+    }
+
+    private static List<String> ARGS_FOLLOWED_BY_PATH = Arrays.asList(
+        "-cp", "-classpath", "--class-path",
+        "-endorseddirs",
+        "-extdirs",
+        "--module-path", "-p",
+        "--module-source-path",
+        "--processor-module-path",
+        "--processor-path", "-processorpath",
+        "-sourcepath", "--source-path",
+        "-bootclasspath", "--boot-class-path",
+        "--upgrade-module-path"
+    );
+
+    private static boolean isArgFollowedByPath(String option) {
+        return ARGS_FOLLOWED_BY_PATH.contains(option);
     }
 
     /**

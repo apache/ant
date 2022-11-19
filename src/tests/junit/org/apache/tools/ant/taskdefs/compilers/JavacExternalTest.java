@@ -173,6 +173,48 @@ public class JavacExternalTest {
         }
     }
 
+    @Test
+    public void classpathWithWildcardsIsMovedToBeginning() throws Exception {
+        final File workDir = createWorkDir("testSMC");
+        try {
+            final File src = new File(workDir, "src");
+            src.mkdir();
+            createFile(src, "org/apache/ant/tests/J1.java");
+            createFile(src, "org/apache/ant/tests/J2.java");
+            final Project prj = new Project();
+            prj.setBaseDir(workDir);
+            final File foo = new File(workDir, "foo");
+            foo.mkdir();
+            final Javac javac = new Javac();
+            javac.setProject(prj);
+            final Commandline[] cmd = new Commandline[1];
+            final TestJavacExternal impl = new TestJavacExternal();
+            final Path srcPath = new Path(prj);
+            srcPath.setLocation(src);
+            javac.setSrcdir(srcPath);
+            javac.createClasspath().setPath("foo/*");
+            javac.setSource("9");
+            javac.setTarget("9");
+            javac.setFork(true);
+            javac.setMemoryInitialSize("80m");
+            javac.setExecutable("javacExecutable");
+            javac.add(impl);
+            javac.createCompilerArg().setValue("-g");
+            javac.execute();
+            assertEquals("javacExecutable", impl.getArgs()[0]);
+            assertEquals("-J-Xms80m", impl.getArgs()[1]);
+            assertEquals("-classpath", impl.getArgs()[2]);
+            String normalizedPath = impl.getArgs()[3].replace("\\", "/");
+            assertTrue(normalizedPath + " contains /foo/*", normalizedPath.contains("foo/*"));
+            assertTrue(Stream.of(impl.getArgs()).anyMatch(x -> x.equals("-g")));
+            assertTrue(impl.getArgs()[impl.getArgs().length - 2].endsWith("J1.java"));
+            assertTrue(impl.getArgs()[impl.getArgs().length - 1].endsWith("J2.java"));
+            assertEquals(4, impl.getFirstFileName());
+        } finally {
+            delete(workDir);
+        }
+    }
+
     private File createWorkDir(String testName) {
         final File tmp = new File(System.getProperty("java.io.tmpdir"));   //NOI18N
         final File destDir = new File(tmp, String.format("%s%s%d",
