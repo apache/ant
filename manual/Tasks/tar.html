@@ -133,7 +133,10 @@ to <q>gzip</q>, <q>bzip2</q>, or <q>xz</q>.</p>
     <td>The character encoding to use for filenames inside the tar file.  For a list of possible
       values see
       the <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html"
-      target="_top">Supported Encodings</a>.<br/><em>Since Ant 1.9.5</em>
+      target="_top">Supported Encodings</a>. In general the tar format
+      expects names to use a single byte encoding and specifying a
+      multi-byte encoding here may lead to archives that cannot be
+      properly extracted by my tar tools.<br/><em>Since Ant 1.9.5</em>
     <td>No; defaults to default JVM character encoding</td>
   </tr>
 </table>

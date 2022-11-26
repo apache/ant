@@ -86,6 +86,14 @@ public class UntarTest {
     }
 
     @Test
+    public void testMultiByteEncoding() {
+        buildRule.executeTarget("multiByteEncodingTest");
+        String filename = buildRule.getProject().getProperty("output") + "/untartestout/foo";
+        assertTrue("foo has been properly named",
+                   buildRule.getProject().resolveFile(filename).exists());
+    }
+
+    @Test
     public void testResourceCollection() throws IOException {
         testLogoExtraction("resourceCollection");
     }

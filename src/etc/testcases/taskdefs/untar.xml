@@ -60,6 +60,14 @@
   <target name="encodingTest">
     <mkdir dir="${output}/untartestin"/>
     <touch file="${output}/untartestin/foo"/>
+    <tar tarfile="${output}/untartest.tar" basedir="${output}/untartestin" encoding="Cp1251"/>
+    <mkdir dir="${output}/untartestout"/>
+    <untar src="${output}/untartest.tar" dest="${output}/untartestout" encoding="Cp1251"/>
+  </target>
+
+  <target name="multiByteEncodingTest">
+    <mkdir dir="${output}/untartestin"/>
+    <touch file="${output}/untartestin/foo"/>
     <tar tarfile="${output}/untartest.tar" basedir="${output}/untartestin" encoding="UnicodeBig"/>
     <mkdir dir="${output}/untartestout"/>
     <untar src="${output}/untartest.tar" dest="${output}/untartestout" encoding="UnicodeBig"/>
