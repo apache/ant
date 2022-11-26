@@ -26,6 +26,8 @@ package org.apache.tools.tar;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.WeakHashMap;
 
 import org.apache.tools.zip.ZipEncoding;
 import org.apache.tools.zip.ZipEncodingHelper;
@@ -38,6 +40,10 @@ import org.apache.tools.zip.ZipEncodingHelper;
 public class TarUtils {
 
     private static final int BYTE_MASK = 255;
+    private static final String NUL = "\0";
+    private static final String X = "X";
+    private static final String X_NUL = "X\0";
+    private static final WeakHashMap<ZipEncoding, byte[]> NUL_BY_ENCODING = new WeakHashMap<>();
 
     static final ZipEncoding DEFAULT_ENCODING =
         ZipEncodingHelper.getZipEncoding(null);
@@ -286,18 +292,73 @@ public class TarUtils {
                                    final ZipEncoding encoding)
         throws IOException {
 
+        final byte[] nul = getNulByteEquivalent(encoding);
+        final int nulLen = nul.length;
         int len = 0;
-        for (; len < length; ++len) {
-            if (buffer[offset + len] == 0) {
-                break;
+        if (nulLen == 1) {
+            final byte nulByte = nul[0];
+            for (; len < length; ++len) {
+                if (buffer[offset + len] == nulByte) {
+                    break;
+                }
+            }
+        } else if (nulLen == 0) {
+            len = length;
+        } else {
+            boolean found = false;
+            for (; len <= length - nulLen; ++len) {
+                // six-arg Arrays.equals requires Java 9
+                byte[] atOffset = Arrays.copyOfRange(buffer, offset + len, offset + len + nulLen);
+                if (Arrays.equals(atOffset, nul)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                len = length;
             }
         }
         if (len > 0) {
-            final byte[] b = new byte[len];
-            System.arraycopy(buffer, offset, b, 0, len);
+            final byte[] b = Arrays.copyOfRange(buffer, offset, offset + len);
             return encoding.decode(b);
         }
         return "";
+    }
+
+    private static byte[] getNulByteEquivalent(ZipEncoding encoding) throws IOException {
+        byte[] value = NUL_BY_ENCODING.get(encoding);
+        if (value == null) {
+            value = getUncachedNulByteEquivalent(encoding);
+            NUL_BY_ENCODING.put(encoding, value);
+        }
+        return value;
+    }
+
+    private static byte[] getUncachedNulByteEquivalent(ZipEncoding encoding) throws IOException {
+        final ByteBuffer nulBuffer = encoding.encode(NUL);
+        final int nulLen = nulBuffer.limit() - nulBuffer.position();
+        final byte[] nul =
+            Arrays.copyOfRange(nulBuffer.array(), nulBuffer.arrayOffset(), nulBuffer.arrayOffset() + nulLen);
+        if (nulLen <= 1) {
+            return nul;
+        }
+        final ByteBuffer xBuffer = encoding.encode(X);
+        final int xBufferLen = xBuffer.limit() - xBuffer.position();
+        final ByteBuffer xNulBuffer = encoding.encode(X_NUL);
+        final int xNulBufferLen = xNulBuffer.limit() - xNulBuffer.position();
+        if (xBufferLen >= xNulBufferLen) {
+            return nul;
+        }
+        final byte[] x =
+            Arrays.copyOfRange(xBuffer.array(), xBuffer.arrayOffset(), xBuffer.arrayOffset() + xBufferLen);
+        final byte[] nulPrefix =
+            Arrays.copyOfRange(xNulBuffer.array(), xNulBuffer.arrayOffset(), xNulBuffer.arrayOffset() + xBufferLen);
+        if (Arrays.equals(x, nulPrefix)) {
+            // strip of BOM or similar prefix
+            return Arrays.copyOfRange(xNulBuffer.array(), xNulBuffer.arrayOffset() + xBufferLen,
+                                      xNulBuffer.arrayOffset() + xNulBufferLen);
+        }
+        return nul;
     }
 
     /**
