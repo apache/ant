@@ -273,7 +273,7 @@
   <target name="testhttpurl1" unless="offline">
     <au:assertTrue>
       <length when="greater" length="0">
-        <url url="http://www.w3.org/MarkUp/" />
+        <url url="https://ant.apache.org/index.html" />
       </length>
     </au:assertTrue>
   </target>
