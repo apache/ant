@@ -330,7 +330,20 @@ public class JUnitLauncherTask extends Task {
                 break;
             }
             case Constants.FORK_EXIT_CODE_TIMED_OUT: {
-                throw new BuildException(new TimeoutException("Forked test(s) timed out"));
+                // test has failure(s)
+                try {
+                    if (test.getFailureProperty() != null) {
+                        // if there are test failures and the test is configured to set a property in case
+                        // of failure, then set the property to true
+                        this.getProject().setNewProperty(test.getFailureProperty(), "true");
+                    }
+                } finally {
+                    if (test.isHaltOnFailure()) {
+                        throw new BuildException(new TimeoutException("Forked test(s) timed out"));
+                    } else {
+                        log("Timeout occurred. Please note the time in the report does not reflect the time until the timeout.");
+                    }
+                }
             }
         }
     }
