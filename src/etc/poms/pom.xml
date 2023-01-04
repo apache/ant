@@ -26,7 +26,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.ant</groupId>
   <artifactId>ant-parent</artifactId>
-  <version>1.10.13-SNAPSHOT</version>
+  <version>1.10.14-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>master POM</description>
   <licenses>

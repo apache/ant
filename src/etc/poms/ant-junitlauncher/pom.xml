@@ -26,20 +26,20 @@
         <groupId>org.apache.ant</groupId>
         <artifactId>ant-parent</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>1.10.13-SNAPSHOT</version>
+        <version>1.10.14-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <url>https://ant.apache.org/</url>
     <groupId>org.apache.ant</groupId>
     <artifactId>ant-junitlauncher</artifactId>
-    <version>1.10.13-SNAPSHOT</version>
+    <version>1.10.14-SNAPSHOT</version>
     <name>Apache Ant + JUnit 5</name>
     <description>contains JUnit 5.x support</description>
     <dependencies>
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.10.13-SNAPSHOT</version>
+            <version>1.10.14-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
