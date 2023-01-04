@@ -29,6 +29,10 @@ Fixed bugs:
    file permissions of the files they modify.
    Bugzilla Report 66522
 
+ * junitlauncher task would fail if a forked test timed out even
+   if haltOnFailure was set to false. This is now fixed.
+   Bugzilla Report 66411
+
 Other changes:
 --------------
 
