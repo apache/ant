@@ -101,7 +101,7 @@ public class allow extends SecurityManager {
         uninstall();
     }
 
-    @Override
+    //@Override
     public void checkAwtEventQueueAccess() {
         uninstall();
     }
@@ -146,7 +146,7 @@ public class allow extends SecurityManager {
         uninstall();
     }
 
-    @Override
+    //@Override
     public void checkMemberAccess(Class<?> clazz, int which) {
         uninstall();
     }
@@ -221,12 +221,12 @@ public class allow extends SecurityManager {
         uninstall();
     }
 
-    @Override
+    //@Override
     public void checkSystemClipboardAccess() {
         uninstall();
     }
 
-    @Override
+    //@Override
     public boolean checkTopLevelWindow(Object window) {
         uninstall();
         // we return false because we don't know what thread would be calling this permission
