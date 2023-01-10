@@ -308,7 +308,7 @@ Note: This document was adapted from the one created in the context of
     * ivy.xml in release subdirectory
     * WHATSNEW (add a new section)
     * src/etc/testcases/taskdefs/conditions/antversion.xml
-    * snap/snapcraft.yml (bump version to [newversion]alpha and set grade
+    * snap/snapcraft.yaml (bump version to [newversion]alpha and set grade
       to devel)
 
     Amend the merge commit
