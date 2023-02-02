@@ -218,7 +218,7 @@ public abstract class AbstractSshMessage {
      * @param percentTransmitted the current percent transmitted
      * @return the percent that the file is of the total
      */
-    protected final int trackProgress(final long filesize, final long totalLength,
+    protected static int trackProgress(final long filesize, final long totalLength,
                                       final int percentTransmitted) {
 
         // CheckStyle:MagicNumber OFF

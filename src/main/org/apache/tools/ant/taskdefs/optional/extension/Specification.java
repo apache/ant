@@ -406,7 +406,7 @@ public final class Specification {
      * @param first First version number (dotted decimal)
      * @param second Second version number (dotted decimal)
      */
-    private boolean isCompatible(final DeweyDecimal first,
+    private static boolean isCompatible(final DeweyDecimal first,
                                  final DeweyDecimal second) {
         return first.isGreaterThanOrEqual(second);
     }

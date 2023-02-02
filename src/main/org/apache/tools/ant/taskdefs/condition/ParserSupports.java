@@ -105,7 +105,7 @@ public class ParserSupports extends ProjectComponent implements Condition {
      * Get our reader
      * @return a reader
      */
-    private XMLReader getReader() {
+    private static XMLReader getReader() {
         JAXPUtils.getParser();
         return JAXPUtils.getXMLReader();
     }

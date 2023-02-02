@@ -169,7 +169,7 @@ public class JlinkTask extends MatchingTask {
         return haveEntries(mergefiles);
     }
 
-    private boolean haveEntries(Path p) {
+    private static boolean haveEntries(Path p) {
         return !(p == null || p.isEmpty());
     }
 }

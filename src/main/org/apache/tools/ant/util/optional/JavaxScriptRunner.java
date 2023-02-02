@@ -215,7 +215,7 @@ public class JavaxScriptRunner extends ScriptRunnerBase {
 
     private static final String DROP_GRAAL_SECURITY_RESTRICTIONS = "polyglot.js.allowAllAccess";
 
-    private void maybeApplyGraalJsProperties(final ScriptEngine engine) {
+    private static void maybeApplyGraalJsProperties(final ScriptEngine engine) {
         if (engine != null && engine.getClass().getName().contains("Graal")) {
             engine.getBindings(ScriptContext.ENGINE_SCOPE)
                 .put(DROP_GRAAL_SECURITY_RESTRICTIONS, true);

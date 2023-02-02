@@ -372,7 +372,7 @@ public class AntTypeDefinition {
             .equals(((AntClassLoader) newLoader).getClasspath()));
     }
 
-    private String extractClassname(Class<?> c) {
+    private static String extractClassname(Class<?> c) {
         return (c == null) ? "<null>" : c.getName();
     }
 }

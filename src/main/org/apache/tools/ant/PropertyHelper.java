@@ -182,7 +182,7 @@ public class PropertyHelper implements GetProperty {
     //  --------------------------------------------------------
 
     private static final PropertyEvaluator TO_STRING = new PropertyEvaluator() {
-        private final String PREFIX = "toString:";
+        private static final String PREFIX = "toString:";
         private final int PREFIX_LEN = PREFIX.length();
 
         public Object evaluate(String property, PropertyHelper propertyHelper) {

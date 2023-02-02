@@ -1058,7 +1058,7 @@ public class Copy extends Task {
      * @return ex.getMessage() if ex.getMessage() is not null
      *         otherwise return ex.toString()
      */
-    private String getMessage(final Exception ex) {
+    private static String getMessage(final Exception ex) {
         return ex.getMessage() == null ? ex.toString() : ex.getMessage();
     }
 

@@ -138,7 +138,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         }
     }
 
-    private void playClip(Clip clip, int loops) {
+    private static void playClip(Clip clip, int loops) {
 
         clip.loop(loops);
         do {
@@ -159,7 +159,7 @@ public class AntSoundPlayer implements LineListener, BuildListener {
         }
     }
 
-    private void playClip(Clip clip, long duration) {
+    private static void playClip(Clip clip, long duration) {
         clip.loop(Clip.LOOP_CONTINUOUSLY);
         try {
             Thread.sleep(duration);

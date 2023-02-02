@@ -325,7 +325,7 @@ public class SubAnt extends Task {
     }
 
     /** whether we should even try to continue after this error */
-    private boolean isHardError(Throwable t) {
+    private static boolean isHardError(Throwable t) {
         if (t instanceof BuildException) {
             return isHardError(t.getCause());
         }

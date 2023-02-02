@@ -184,7 +184,7 @@ public class AntStructure extends Task {
          * <p>Basically this prints the XML declaration, defines some
          * entities and the project element.</p>
          */
-        private void printHead(final PrintWriter out, final Set<String> tasks,
+        private static void printHead(final PrintWriter out, final Set<String> tasks,
                                final Set<String> types) {
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
             out.println("<!ENTITY % boolean \"(true|false|on|off|yes|no)\">");
@@ -229,7 +229,7 @@ public class AntStructure extends Task {
         /**
          * Prints the definition for the target element.
          */
-        private void printTargetAttrs(final PrintWriter out, final String tag) {
+        private static void printTargetAttrs(final PrintWriter out, final String tag) {
             out.print("<!ATTLIST ");
             out.println(tag);
             out.println("          id                      ID    #IMPLIED");

@@ -446,7 +446,7 @@ public class CvsTagDiff extends AbstractCvsTask {
      * @param writer a <code>PrintWriter</code> value
      * @param entry a <code>CvsTagEntry</code> value
      */
-    private void writeTagEntry(Document doc, PrintWriter writer,
+    private static void writeTagEntry(Document doc, PrintWriter writer,
                                CvsTagEntry entry)
         throws IOException {
         Element ent = doc.createElement("entry");

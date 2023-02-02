@@ -75,7 +75,7 @@ public class Deltree extends Task {
         }
     }
 
-    private void removeDir(File dir) {
+    private static void removeDir(File dir) {
 
         // check to make sure that the given dir isn't a symlink
         // the comparison of absolute path and canonical path

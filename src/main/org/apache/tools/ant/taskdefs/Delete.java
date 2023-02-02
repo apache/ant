@@ -875,7 +875,7 @@ public class Delete extends MatchingTask {
         }
     }
 
-    private boolean isDanglingSymlink(final File f) {
+    private static boolean isDanglingSymlink(final File f) {
         if (!Files.isSymbolicLink(f.toPath())) {
             // it's not a symlink, so clearly it's not a dangling one
             return false;

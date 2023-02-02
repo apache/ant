@@ -414,7 +414,7 @@ public abstract class AbstractCvsTask extends Task {
         }
     }
 
-    private String executeToString(Execute execute) {
+    private static String executeToString(Execute execute) {
 
         String cmdLine = Commandline.describeCommand(execute
                 .getCommandline());
@@ -437,7 +437,7 @@ public abstract class AbstractCvsTask extends Task {
      * @param cmdLine the CVS command line
      * @return a StringBuffer where the password has been removed (if available)
      */
-    private StringBuilder removeCvsPassword(String cmdLine) {
+    private static StringBuilder removeCvsPassword(String cmdLine) {
         StringBuilder buf = new StringBuilder(cmdLine);
 
         int start = cmdLine.indexOf("-d:");

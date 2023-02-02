@@ -113,7 +113,7 @@ public class ManifestTask extends Task {
     public void addConfiguredSection(Manifest.Section section)
          throws ManifestException {
         StreamUtils.enumerationAsStream(section.getAttributeKeys())
-                .map(section::getAttribute).forEach(this::checkAttribute);
+                .map(section::getAttribute).forEach(ManifestTask::checkAttribute);
         nestedManifest.addConfiguredSection(section);
     }
 
@@ -147,7 +147,7 @@ public class ManifestTask extends Task {
      * @param attribute The attribute to check
      * @throws BuildException if the check fails
      */
-    private void checkAttribute(Manifest.Attribute attribute) throws BuildException {
+    private static void checkAttribute(Manifest.Attribute attribute) throws BuildException {
         String name = attribute.getName();
         char ch = name.charAt(0);
 

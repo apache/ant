@@ -164,7 +164,7 @@ public class Exit extends Task {
         }
     }
 
-    private boolean isNullOrEmpty(Object value) {
+    private static boolean isNullOrEmpty(Object value) {
         return value == null || "".equals(value);
     }
 

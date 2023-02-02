@@ -150,7 +150,7 @@ public class RuntimeConfigurable implements Serializable {
      * @param componentHelper current component helper
      * @return AttributeComponentInformation instance
      */
-    private AttributeComponentInformation isRestrictedAttribute(String name, ComponentHelper componentHelper) {
+    private static AttributeComponentInformation isRestrictedAttribute(String name, ComponentHelper componentHelper) {
         if (!name.contains(":")) {
             return new AttributeComponentInformation(null, false);
         }
@@ -211,7 +211,7 @@ public class RuntimeConfigurable implements Serializable {
         return true;
     }
 
-    private String attrToComponent(String a) {
+    private static String attrToComponent(String a) {
         // need to remove the prefix
         int p1 = a.lastIndexOf(':');
         int p2 = a.lastIndexOf(':', p1 - 1);

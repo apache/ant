@@ -147,7 +147,7 @@ public class Permissions {
         granted.add(new PropertyPermission("java.vm.name", "read"));
     }
 
-    private java.security.Permission createPermission(
+    private static java.security.Permission createPermission(
             final Permissions.Permission permission) {
         try {
             // First add explicitly already resolved permissions will not be
@@ -327,7 +327,7 @@ public class Permissions {
          * Parses the actions into a set of separate strings.
          * @param actions The actions to be parsed.
          */
-        private Set<String> parseActions(final String actions) {
+        private static Set<String> parseActions(final String actions) {
             final Set<String> result = new HashSet<>();
             final StringTokenizer tk = new StringTokenizer(actions, ",");
             while (tk.hasMoreTokens()) {

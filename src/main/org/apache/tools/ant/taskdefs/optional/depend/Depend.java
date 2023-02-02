@@ -190,7 +190,7 @@ public class Depend extends MatchingTask {
      * @return a collection of class dependencies
      * @exception IOException if the dependency file cannot be read
      */
-    private Map<String, List<String>> readCachedDependencies(File depFile) throws IOException {
+    private static Map<String, List<String>> readCachedDependencies(File depFile) throws IOException {
         Map<String, List<String>> dependencyMap = new HashMap<>();
 
         int prependLength = CLASSNAME_PREPEND.length();
@@ -541,14 +541,14 @@ public class Depend extends MatchingTask {
      * @param className      possible origin of the RMI stub
      * @return whether the class affectedClass is a RMI stub
      */
-    private boolean isRmiStub(String affectedClass, String className) {
+    private static boolean isRmiStub(String affectedClass, String className) {
         return isStub(affectedClass, className, DefaultRmicAdapter.RMI_STUB_SUFFIX)
             || isStub(affectedClass, className, DefaultRmicAdapter.RMI_SKEL_SUFFIX)
             || isStub(affectedClass, className, WLRmic.RMI_STUB_SUFFIX)
             || isStub(affectedClass, className, WLRmic.RMI_SKEL_SUFFIX);
     }
 
-    private boolean isStub(String affectedClass, String baseClass, String suffix) {
+    private static boolean isStub(String affectedClass, String baseClass, String suffix) {
         return (baseClass + suffix).equals(affectedClass);
     }
 
@@ -824,7 +824,7 @@ public class Depend extends MatchingTask {
         this.dump = dump;
     }
 
-    private Stream<File> directories(ResourceCollection rc) {
+    private static Stream<File> directories(ResourceCollection rc) {
         return rc.stream().map(r -> r.as(FileProvider.class))
             .filter(Objects::nonNull).map(FileProvider::getFile)
             .filter(File::isDirectory);

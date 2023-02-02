@@ -100,7 +100,7 @@ public class Mkdir extends Task {
      * directories on WinXP. If the mkdirs does not work,
      * wait a little and try again.
      */
-    private boolean mkdirs(File f) {
+    private static boolean mkdirs(File f) {
         if (!f.mkdirs()) {
             try {
                 Thread.sleep(MKDIR_RETRY_SLEEP_MILLIS);

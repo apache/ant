@@ -277,7 +277,7 @@ public class MakeUrl extends Task {
      * @param fileToConvert File
      * @return the file converted to a URL
      */
-    private String toURL(File fileToConvert) {
+    private static String toURL(File fileToConvert) {
         //create the URL
         //ant equivalent of  fileToConvert.toURI().toURL().toExternalForm();
         return FileUtils.getFileUtils().toURI(fileToConvert.getAbsolutePath());

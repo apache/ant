@@ -991,7 +991,7 @@ public abstract class AbstractFileSet extends DataType
         }
     }
 
-    private BuildException dirAndFileAreMutuallyExclusive() {
+    private static BuildException dirAndFileAreMutuallyExclusive() {
         return new BuildException("you can only specify one of the dir and file attributes");
     }
 }

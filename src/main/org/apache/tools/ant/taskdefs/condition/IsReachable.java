@@ -127,7 +127,7 @@ public class IsReachable extends ProjectComponent implements Condition {
      *
      * @return true if it is isNullOrEmpty
      */
-    private boolean isNullOrEmpty(final String string) {
+    private static boolean isNullOrEmpty(final String string) {
         return string == null || string.isEmpty();
     }
 

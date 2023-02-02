@@ -90,7 +90,7 @@ public class Rotate extends TransformOperation implements DrawOperation {
         return rotatedImage;
     }
 
-    private Rectangle2D getBoundingBox(BufferedImage image, AffineTransform tx) {
+    private static Rectangle2D getBoundingBox(BufferedImage image, AffineTransform tx) {
         int xmax = image.getWidth() - 1;
         int ymax = image.getHeight() - 1;
         Point2D[] corners = new Point2D.Double[4];

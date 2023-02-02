@@ -545,7 +545,7 @@ public class JavaCC extends Task {
      * file.
      *
      */
-    private File getOutputJavaFile(File outputdir, File srcfile) {
+    private static File getOutputJavaFile(File outputdir, File srcfile) {
         String path = srcfile.getPath();
 
         // Extract file's base-name

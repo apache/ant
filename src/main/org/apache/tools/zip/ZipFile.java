@@ -586,7 +586,7 @@ public class ZipFile implements Closeable {
      * even if they are never used - and here a field with only one
      * size would be invalid.</p>
      */
-    private void setSizesAndOffsetFromZip64Extra(final ZipEntry ze,
+    private static void setSizesAndOffsetFromZip64Extra(final ZipEntry ze,
                                                  final OffsetEntry offset,
                                                  final int diskStart)
         throws IOException {

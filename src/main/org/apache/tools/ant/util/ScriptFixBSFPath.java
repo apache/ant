@@ -64,7 +64,7 @@ public class ScriptFixBSFPath {
         }
     }
 
-    private File getClassSource(ClassLoader loader, String className) {
+    private static File getClassSource(ClassLoader loader, String className) {
         return LoaderUtils.getResourceSource(
             loader,
             LoaderUtils.classNameToResource(className));

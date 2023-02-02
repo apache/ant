@@ -777,7 +777,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @return the temp directory.
      * @throws BuildException if a temp directory cannot be created.
      */
-    private File createTempDir() throws IOException {
+    private static File createTempDir() throws IOException {
         return Files.createTempDirectory("genic").toFile();
     }
 
@@ -787,7 +787,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      *
      * @param aFile file to delete.
      */
-    private void deleteAllFiles(File aFile) {
+    private static void deleteAllFiles(File aFile) {
         if (aFile.isDirectory()) {
             for (File child : aFile.listFiles()) {
                 deleteAllFiles(child);
@@ -804,7 +804,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
      * @param rootDir the current sub-directory to scan.
      * @param hashtable the hashtable where to add the files.
      */
-    private void addAllFiles(File file, String rootDir, Hashtable<String, File> hashtable) {
+    private static void addAllFiles(File file, String rootDir, Hashtable<String, File> hashtable) {
         if (!file.exists()) {
             throw new IllegalArgumentException();
         }

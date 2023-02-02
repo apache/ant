@@ -1058,7 +1058,7 @@ public class JUnitTask extends Task {
      * @param testName the test name to be validated
      * @throws BuildException if <code>testName</code> is not a valid test name
      */
-    private void validateTestName(final String testName) throws BuildException {
+    private static void validateTestName(final String testName) throws BuildException {
         if (testName == null || testName.isEmpty()
             || "null".equals(testName)) {
             throw new BuildException("test name must be specified");
@@ -1340,7 +1340,7 @@ public class JUnitTask extends Task {
      * @param summaryOption the summary option -can be null
      * @return true if the run should be withoutput and error
      */
-    private boolean equalsWithOutAndErr(final String summaryOption) {
+    private static boolean equalsWithOutAndErr(final String summaryOption) {
         return "withoutanderr".equalsIgnoreCase(summaryOption);
     }
 

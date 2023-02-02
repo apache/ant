@@ -265,12 +265,12 @@ public class ImportTask extends Task {
         return null;
     }
 
-    private boolean isExistingAbsoluteFile(String name) {
+    private static boolean isExistingAbsoluteFile(String name) {
         File f = new File(name);
         return f.isAbsolute() && f.exists();
     }
 
-    private boolean hasAlreadyBeenImported(Resource importedResource,
+    private static boolean hasAlreadyBeenImported(Resource importedResource,
                                            Vector<Object> importStack) {
         File importedFile = importedResource.asOptional(FileProvider.class)
             .map(FileProvider::getFile).orElse(null);
@@ -282,7 +282,7 @@ public class ImportTask extends Task {
             o -> isOneOf(o, importedResource, importedFile, importedURL));
     }
 
-    private boolean isOneOf(Object o, Resource importedResource,
+    private static boolean isOneOf(Object o, Resource importedResource,
                             File importedFile, URL importedURL) {
         if (o.equals(importedResource) || o.equals(importedFile)
             || o.equals(importedURL)) {

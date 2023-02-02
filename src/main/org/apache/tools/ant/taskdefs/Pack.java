@@ -152,7 +152,7 @@ public abstract class Pack extends Task {
      * @param zOut the output stream
      * @throws IOException if something goes wrong
      */
-    private void zipFile(InputStream in, OutputStream zOut)
+    private static void zipFile(InputStream in, OutputStream zOut)
         throws IOException {
         byte[] buffer = new byte[BUFFER_SIZE];
         int count = 0;

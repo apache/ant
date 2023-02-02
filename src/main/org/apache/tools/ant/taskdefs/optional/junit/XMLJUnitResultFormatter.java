@@ -162,7 +162,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      * get the local hostname
      * @return the name of the local host, or "localhost" if we cannot work it out
      */
-    private String getHostname()  {
+    private static String getHostname()  {
         String hostname = "localhost";
         try {
             final InetAddress localHost = InetAddress.getLocalHost();

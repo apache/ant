@@ -103,7 +103,7 @@ class LibraryDisplayer {
      *
      * @param size the number of dashes to printout
      */
-    private void printLine(final int size) {
+    private static void printLine(final int size) {
         for (int i = 0; i < size; i++) {
             System.out.print("-");
         }
@@ -117,7 +117,7 @@ class LibraryDisplayer {
      * @return the specifications or null if none
      * @throws BuildException if malformed specification sections
      */
-    private Specification[] getSpecifications(final Manifest manifest)
+    private static Specification[] getSpecifications(final Manifest manifest)
         throws BuildException {
         try {
             return Specification.getSpecifications(manifest);
@@ -131,7 +131,7 @@ class LibraryDisplayer {
      *
      * @param specification the specification
      */
-    private void displaySpecification(final Specification specification) {
+    private static void displaySpecification(final Specification specification) {
         final String[] sections = specification.getSections();
         if (null != sections) {
             System.out.print("Sections:  ");

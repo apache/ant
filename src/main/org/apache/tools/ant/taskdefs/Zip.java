@@ -1737,7 +1737,7 @@ public class Zip extends MatchingTask {
      * @return ZipExtraField[]
      * @since Ant 1.8.0
      */
-    protected final ZipExtraField[] getCurrentExtraFields() {
+    protected static final ZipExtraField[] getCurrentExtraFields() {
         return CURRENT_ZIP_EXTRA.get();
     }
 
@@ -1747,7 +1747,7 @@ public class Zip extends MatchingTask {
      * @param extra ZipExtraField[]
      * @since Ant 1.8.0
      */
-    protected final void setCurrentExtraFields(final ZipExtraField[] extra) {
+    protected static final void setCurrentExtraFields(final ZipExtraField[] extra) {
         CURRENT_ZIP_EXTRA.set(extra);
     }
 

@@ -445,7 +445,7 @@ public class SchemaValidate extends XMLValidateTask {
          * @param property string to check
          * @return true if it is not null or empty
          */
-        private boolean isSet(String property) {
+        private static boolean isSet(String property) {
             return property != null && !property.isEmpty();
         }
 

@@ -265,7 +265,7 @@ class BlockSort {
      * @param lo lower boundary of the fmap-interval to be sorted
      * @param hi upper boundary of the fmap-interval to be sorted
      */
-    private void fallbackSimpleSort(int[] fmap,
+    private static void fallbackSimpleSort(int[] fmap,
                                     int[] eclass,
                                     int lo,
                                     int hi) {
@@ -301,7 +301,7 @@ class BlockSort {
     /**
      * swaps two values in fmap
      */
-    private void fswap(int[] fmap, int zz1, int zz2) {
+    private static void fswap(int[] fmap, int zz1, int zz2) {
         int zztmp = fmap[zz1];
         fmap[zz1] = fmap[zz2];
         fmap[zz2] = zztmp;
@@ -310,7 +310,7 @@ class BlockSort {
     /**
      * swaps two intervals starting at yyp1 and yyp2 of length yyn inside fmap.
      */
-    private void fvswap(int[] fmap, int yyp1, int yyp2, int yyn) {
+    private static void fvswap(int[] fmap, int yyp1, int yyp2, int yyn) {
         while (yyn > 0) {
             fswap(fmap, yyp1, yyp2);
             yyp1++;
@@ -319,7 +319,7 @@ class BlockSort {
         }
     }
 
-    private int fmin(int a, int b) {
+    private static int fmin(int a, int b) {
         return a < b ? a : b;
     }
 

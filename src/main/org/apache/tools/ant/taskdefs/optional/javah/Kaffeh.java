@@ -54,7 +54,7 @@ public class Kaffeh implements JavahAdapter {
         return false;
     }
 
-    private Commandline setupKaffehCommand(Javah javah) {
+    private static Commandline setupKaffehCommand(Javah javah) {
         Commandline cmd = new Commandline();
         cmd.setExecutable(JavaEnvUtils.getJdkExecutable("kaffeh"));
 

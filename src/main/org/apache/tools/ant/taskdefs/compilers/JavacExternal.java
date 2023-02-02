@@ -86,7 +86,7 @@ public class JavacExternal extends DefaultCompilerAdapter {
      * @param commandLine command line to process
      * @return int index of first argument that could be put into argfile
      */
-    private int moveArgFileEligibleOptionsToEnd(String[] commandLine) {
+    private static int moveArgFileEligibleOptionsToEnd(String[] commandLine) {
         int nonArgFileOptionIdx = 1; // 0 for javac executable
         while (nonArgFileOptionIdx < commandLine.length) {
             int argsToMove = numberOfArgsNotEligibleForFile(commandLine, nonArgFileOptionIdx);

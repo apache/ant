@@ -197,7 +197,7 @@ public class XmlLogger implements BuildLogger {
         buildElement = null;
     }
 
-    private String getProperty(BuildEvent event, String propertyName, String defaultValue) {
+    private static String getProperty(BuildEvent event, String propertyName, String defaultValue) {
         String rv = defaultValue;
         if (event != null && event.getProject() != null && event.getProject().getProperty(propertyName) != null) {
             rv = event.getProject().getProperty(propertyName);
@@ -469,7 +469,7 @@ public class XmlLogger implements BuildLogger {
     public void setErrorPrintStream(PrintStream err) {
     }
 
-    private void synchronizedAppend(Node parent, Node child) {
+    private static void synchronizedAppend(Node parent, Node child) {
         synchronized (parent) {
             parent.appendChild(child);
         }

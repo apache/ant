@@ -58,7 +58,7 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
         }
     }
 
-    private BufferedReader getReader(File srcFile, String encoding,
+    private static BufferedReader getReader(File srcFile, String encoding,
                                      boolean reverse) throws IOException {
         if (reverse || encoding == null) {
             return new BufferedReader(new FileReader(srcFile));
@@ -67,7 +67,7 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
             Files.newInputStream(srcFile.toPath()), encoding));
     }
 
-    private Writer getWriter(File destFile, String encoding,
+    private static Writer getWriter(File destFile, String encoding,
                              boolean reverse) throws IOException {
         if (!reverse) {
             encoding = "ASCII";
@@ -80,7 +80,7 @@ public class BuiltinNative2Ascii implements Native2AsciiAdapter {
                                    encoding));
     }
 
-    private void translate(BufferedReader input, Writer output,
+    private static void translate(BufferedReader input, Writer output,
         UnaryOperator<String> translation) throws IOException {
         for (String line : (Iterable<String>) () -> input.lines()
             .map(translation).iterator()) {

@@ -313,7 +313,7 @@ public final class IntrospectionHelper {
      * @param type the type of the set method's parameter
      * @return true if the given set method is to be hidden.
      */
-    private boolean isHiddenSetMethod(final String name, final Class<?> type) {
+    private static boolean isHiddenSetMethod(final String name, final Class<?> type) {
         return "setLocation".equals(name) && Location.class.equals(type)
                 || "setTaskType".equals(name) && String.class.equals(type);
     }
@@ -517,7 +517,7 @@ public final class IntrospectionHelper {
      * @param parent the object which doesn't support a requested element
      * @param elementName the name of the Element which is trying to be created.
      */
-    public void throwNotSupported(final Project project, final Object parent, final String elementName) {
+    public static void throwNotSupported(final Project project, final Object parent, final String elementName) {
         final String msg = project.getElementName(parent)
             + NOT_SUPPORTED_CHILD_PREFIX + elementName
             + NOT_SUPPORTED_CHILD_POSTFIX;
@@ -581,7 +581,7 @@ public final class IntrospectionHelper {
      *
      * @since Ant 1.8.0.
      */
-    private Object createDynamicElement(final Object parent, final String ns,
+    private static Object createDynamicElement(final Object parent, final String ns,
                                         final String localName, final String qName) {
         Object nestedElement = null;
         if (parent instanceof DynamicElementNS) {
@@ -1035,7 +1035,7 @@ public final class IntrospectionHelper {
      * @return an appropriate AttributeSetter instance, or <code>null</code>
      *         if no appropriate conversion is available.
      */
-    private AttributeSetter createAttributeSetter(final Method m,
+    private static AttributeSetter createAttributeSetter(final Method m,
                                                   final Class<?> arg,
                                                   final String attrName) {
         if (Optional.class.equals(arg)) {
@@ -1274,7 +1274,7 @@ public final class IntrospectionHelper {
         };
     }
 
-    private AttributeSetter getEnumSetter(
+    private static AttributeSetter getEnumSetter(
         final Class<?> reflectedArg, final Method m, final Class<?> arg) {
         if (reflectedArg.isEnum()) {
             return new AttributeSetter(m, arg) {
@@ -1308,7 +1308,7 @@ public final class IntrospectionHelper {
      *
      * @return a description of the element type
      */
-    private String getElementName(final Project project, final Object element) {
+    private static String getElementName(final Project project, final Object element) {
         return project.getElementName(element);
     }
 
@@ -1672,7 +1672,7 @@ public final class IntrospectionHelper {
      * @param methods the <code>List</code> of methods to search.
      * @return a matching <code>Method</code>; null if none found.
      */
-    private Method findMatchingMethod(final Class<?> paramClass, final List<Method> methods) {
+    private static Method findMatchingMethod(final Class<?> paramClass, final List<Method> methods) {
         if (paramClass == null) {
             return null;
         }
@@ -1694,7 +1694,7 @@ public final class IntrospectionHelper {
         return matchedMethod;
     }
 
-    private String condenseText(final String text) {
+    private static String condenseText(final String text) {
         if (text.length() <= MAX_REPORT_NESTED_TEXT) {
             return text;
         }
@@ -1715,7 +1715,7 @@ public final class IntrospectionHelper {
     /**
      *
      */
-    private AntTypeDefinition findRestrictedDefinition(
+    private static AntTypeDefinition findRestrictedDefinition(
         final ComponentHelper helper, final String componentName, final List<Method> methods) {
         AntTypeDefinition definition = null;
         Class<?> matchedDefinitionClass = null;
@@ -1747,7 +1747,7 @@ public final class IntrospectionHelper {
         return definition;
     }
 
-    private MethodAndObject createRestricted(
+    private static MethodAndObject createRestricted(
         final ComponentHelper helper, final String elementName, final List<Method> addTypeMethods) {
 
         final Project project = helper.getProject();

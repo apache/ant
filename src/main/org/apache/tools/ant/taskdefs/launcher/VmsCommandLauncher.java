@@ -91,7 +91,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
      * @return the command File.
      * @throws IOException if errors are encountered creating the file.
      */
-    private File createCommandFile(final Project project, String[] cmd, String[] env)
+    private static File createCommandFile(final Project project, String[] cmd, String[] env)
         throws IOException {
         File script = FILE_UTILS.createTempFile(project, "ANT", ".COM", null, true, true);
         try (BufferedWriter out = new BufferedWriter(new FileWriter(script))) {
@@ -121,7 +121,7 @@ public class VmsCommandLauncher extends Java13CommandLauncher {
         return script;
     }
 
-    private void deleteAfter(final File f, final Process p) {
+    private static void deleteAfter(final File f, final Process p) {
         new Thread(() -> {
             try {
                 p.waitFor();

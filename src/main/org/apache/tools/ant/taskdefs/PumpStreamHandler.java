@@ -161,7 +161,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
     private static final long JOIN_TIMEOUT = 200;
 
-    private void start(Thread t) {
+    private static void start(Thread t) {
         if (t != null) {
             t.start();
         }
@@ -176,7 +176,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * @param t Thread
      * @since Ant 1.8.0
      */
-    protected final void finish(Thread t) {
+    protected static final void finish(Thread t) {
         if (t == null) {
             // nothing to terminate
             return;

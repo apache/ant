@@ -1954,7 +1954,7 @@ public class Javadoc extends Task {
         }
     }
 
-    private void checkPackages(final List<String> packagesToDoc, final Path sourceDirs) {
+    private static void checkPackages(final List<String> packagesToDoc, final Path sourceDirs) {
         if (!packagesToDoc.isEmpty() && sourceDirs.isEmpty()) {
             throw new BuildException(
                 "sourcePath attribute must be set when specifying package names.");
@@ -1970,7 +1970,7 @@ public class Javadoc extends Task {
         }
     }
 
-    private void doSourcePath(final Commandline toExecute, final Path sourceDirs) {
+    private static void doSourcePath(final Commandline toExecute, final Path sourceDirs) {
         if (!sourceDirs.isEmpty()) {
             toExecute.createArgument().setValue("-sourcepath");
             toExecute.createArgument().setPath(sourceDirs);
@@ -2285,7 +2285,7 @@ public class Javadoc extends Task {
         }
     }
 
-    private void doSourceAndPackageNames(
+    private static void doSourceAndPackageNames(
         final Commandline toExecute,
         final List<String> packagesToDoc,
         final List<SourceFile> sourceFilesToDoc,
@@ -2329,7 +2329,7 @@ public class Javadoc extends Task {
      * @return the quoted string, if there is no need to quote the string,
      *         return the original string.
      */
-    private String quoteString(final String str) {
+    private static String quoteString(final String str) {
         if (!containsWhitespace(str)
             && !str.contains("'") && !str.contains("\"")) {
             return str;
@@ -2340,7 +2340,7 @@ public class Javadoc extends Task {
         return quoteString(str, '"');
     }
 
-    private boolean containsWhitespace(final String s) {
+    private static boolean containsWhitespace(final String s) {
         for (char c : s.toCharArray()) {
             if (Character.isWhitespace(c)) {
                 return true;
@@ -2349,7 +2349,7 @@ public class Javadoc extends Task {
         return false;
     }
 
-    private String quoteString(final String str, final char delim) {
+    private static String quoteString(final String str, final char delim) {
         final StringBuilder buf = new StringBuilder(str.length() * 2);
         buf.append(delim);
         boolean lastCharWasCR = false;
@@ -2576,12 +2576,12 @@ public class Javadoc extends Task {
         return 0;
     }
 
-    private String fixLineFeeds(final String orig) {
+    private static String fixLineFeeds(final String orig) {
         return orig.replace("\r\n", "\n")
             .replace("\n", System.lineSeparator());
     }
 
-    private String patchContent(final String fileContents, final String fixData) {
+    private static String patchContent(final String fileContents, final String fixData) {
         // using regexes here looks like overkill
         final int start = fileContents.indexOf(LOAD_FRAME);
         if (start >= 0) {

@@ -265,7 +265,7 @@ public class PropertyFile extends Task {
         }
     }
 
-    private boolean checkParam(File param) {
+    private static boolean checkParam(File param) {
         return param != null;
     }
 

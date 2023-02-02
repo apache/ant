@@ -144,7 +144,7 @@ public class Javac extends MatchingTask {
         facade = new FacadeTaskHelper(assumedJavaVersion());
     }
 
-    private String assumedJavaVersion() {
+    private static String assumedJavaVersion() {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_8)) {
             return CompilerAdapterFactory.COMPILER_JAVAC_1_8;
         }
@@ -942,7 +942,7 @@ public class Javac extends MatchingTask {
         }
     }
 
-    private String getAltCompilerName(final String anImplementation) {
+    private static String getAltCompilerName(final String anImplementation) {
         if (CompilerAdapterFactory.isModernJdkCompiler(anImplementation)) {
             return CompilerAdapterFactory.COMPILER_MODERN;
         }

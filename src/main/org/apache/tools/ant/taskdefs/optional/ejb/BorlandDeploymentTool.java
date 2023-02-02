@@ -472,7 +472,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * convert a class file name : A/B/C/toto.class
      * into    a class name: A.B.C.toto
      */
-    private String toClass(String filename) {
+    private static String toClass(String filename) {
         //remove the .class
         return filename.substring(0, filename.lastIndexOf(".class"))
             .replace('\\', '.').replace('/', '.');
@@ -482,7 +482,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * convert a file name : A/B/C/toto.java
      * into    a class name: A/B/C/toto.class
      */
-    private  String toClassFile(String filename) {
+    private static String toClassFile(String filename) {
         //remove the .class
         return filename.replaceFirst("\\.java$", ".class");
     }

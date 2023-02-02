@@ -159,7 +159,7 @@ public class ProjectHelperRepository {
         helpers.add(helperConstructor);
     }
 
-    private Constructor<? extends ProjectHelper> getProjectHelperBySystemProperty() {
+    private static Constructor<? extends ProjectHelper> getProjectHelperBySystemProperty() {
         String helperClass = System.getProperty(MagicNames.PROJECT_HELPER_CLASS);
         try {
             if (helperClass != null) {
@@ -177,7 +177,7 @@ public class ProjectHelperRepository {
         return null;
     }
 
-    private Constructor<? extends ProjectHelper> getProjectHelperByService(InputStream is) {
+    private static Constructor<? extends ProjectHelper> getProjectHelperByService(InputStream is) {
         try {
             // This code is needed by EBCDIC and other strange systems.
             // It's a fix for bugs reported in xerces
@@ -214,7 +214,7 @@ public class ProjectHelperRepository {
      *                if the class cannot be found or if a constructor with no
      *                argument cannot be found.
      */
-    private Constructor<? extends ProjectHelper> getHelperConstructor(String helperClass) throws BuildException {
+    private static Constructor<? extends ProjectHelper> getHelperConstructor(String helperClass) throws BuildException {
         ClassLoader classLoader = LoaderUtils.getContextClassLoader();
         try {
             Class<?> clazz = null;

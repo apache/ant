@@ -275,7 +275,7 @@ public abstract class Mailer {
      * @return the current date in SMTP suitable format.
      * @since Ant 1.5
      */
-    protected final String getDate() {
+    protected static final String getDate() {
         return DateUtils.getDateForHeader();
     }
 }

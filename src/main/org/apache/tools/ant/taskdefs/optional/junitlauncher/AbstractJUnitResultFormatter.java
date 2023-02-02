@@ -164,7 +164,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
         return Optional.empty();
     }
 
-    private void writeFrom(final SysOutErrContentStore store, final Writer writer) throws IOException {
+    private static void writeFrom(final SysOutErrContentStore store, final Writer writer) throws IOException {
         final char[] chars = new char[1024];
         int numRead = -1;
         try (final Reader reader = store.getReader()) {

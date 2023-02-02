@@ -100,7 +100,7 @@ public class AntVersion extends Task implements Condition {
         }
     }
 
-    private DeweyDecimal getVersion() {
+    private static DeweyDecimal getVersion() {
         Project p = new Project();
         p.init();
         StringBuilder sb = new StringBuilder();
