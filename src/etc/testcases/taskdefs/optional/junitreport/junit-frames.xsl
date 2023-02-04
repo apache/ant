@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-    xmlns:lxslt="http://xml.apache.org/xslt"
-    xmlns:redirect="http://xml.apache.org/xalan/redirect"
-    xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
-    extension-element-prefixes="redirect">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:redirect="http://xml.apache.org/xalan/redirect"
+                xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils"
+                extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
 <xsl:decimal-format decimal-separator="." grouping-separator=","/>
 <!--
@@ -596,7 +596,7 @@ h6 {
         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
             <xsl:call-template name="testsuite.test.header"/>
             <xsl:for-each select="testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
-                <xsl:sort select="@package" order="ascending"/>
+                <xsl:sort select="@package"/>
                 <!-- get the node set containing all testsuites that have the same package -->
                 <xsl:variable name="insamepackage" select="/testsuites/testsuite[./@package = current()/@package]"/>
                 <tr valign="top">
@@ -651,15 +651,13 @@ h6 {
             <xsl:variable name="insamepackage" select="/testsuites/testsuite[./@package = $name]"/>
             <xsl:if test="count($insamepackage) &gt; 0">
                 <h2>Classes</h2>
-                <p>
                 <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                     <xsl:call-template name="testsuite.test.header"/>
                     <xsl:apply-templates select="$insamepackage" mode="print.test">
                         <xsl:sort select="@name"/>
                     </xsl:apply-templates>
                 </table>
-                </p>
-            </xsl:if>
+             </xsl:if>
         </body>
     </html>
 </xsl:template>
@@ -787,8 +785,7 @@ h6 {
 	<xsl:if test="boolean($show.class)">
 	    <td><a href="{$class.href}"><xsl:value-of select="../@name"/></a></td>
 	</xsl:if>
-        <td>
-	    <a name="{@name}"/>
+        <td id="{@name}">
 	    <xsl:choose>
 		<xsl:when test="boolean($show.class)">
 		    <a href="{concat($class.href, '#', @name)}"><xsl:value-of select="@name"/></a>
@@ -797,7 +794,7 @@ h6 {
 		    <xsl:value-of select="@name"/>
 		</xsl:otherwise>
 	    </xsl:choose>
-	</td>
+	    </td>
         <xsl:choose>
             <xsl:when test="failure">
                 <td>Failure</td>

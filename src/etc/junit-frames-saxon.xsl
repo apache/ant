@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="xs"
-    version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+                xmlns="http://www.w3.org/1999/xhtml">
     <xsl:character-map name="no-control-characters">
         <xsl:output-character character="&#127;" string="&amp;#127;"/>
         <xsl:output-character character="&#128;" string="&amp;#128;"/>
@@ -675,7 +673,7 @@
                 <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                     <xsl:call-template name="testsuite.test.header"/>
                     <xsl:for-each select="testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
-                        <xsl:sort select="@package" order="ascending"/>
+                        <xsl:sort select="@package"/>
                         <!-- get the node set containing all testsuites that have the same package -->
                         <xsl:variable name="insamepackage" select="/testsuites/testsuite[./@package = current()/@package]"/>
                         <tr valign="top">
@@ -731,14 +729,12 @@
                 <xsl:variable name="insamepackage" select="/testsuites/testsuite[./@package = $name]"/>
                 <xsl:if test="count($insamepackage) &gt; 0">
                     <h2>Classes</h2>
-                    <p>
                         <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                             <xsl:call-template name="testsuite.test.header"/>
                             <xsl:apply-templates select="$insamepackage" mode="print.test">
                                 <xsl:sort select="@name"/>
                             </xsl:apply-templates>
                         </table>
-                    </p>
                 </xsl:if>
             </body>
         </html>
@@ -878,9 +874,8 @@
             <xsl:if test="boolean($show.class)">
                 <td><a href="{$class.href}"><xsl:value-of select="../@name"/></a></td>
             </xsl:if>
-            <td>
-                <a name="{@name}"/>
-                <xsl:choose>
+            <td id="{@name}">
+                 <xsl:choose>
                     <xsl:when test="boolean($show.class)">
                         <a href="{concat($class.href, '#', @name)}"><xsl:value-of select="@name"/></a>
                     </xsl:when>

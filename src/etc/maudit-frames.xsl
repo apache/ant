@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-    xmlns:lxslt="http://xml.apache.org/xslt"
-    xmlns:redirect="org.apache.xalan.lib.Redirect"
-    extension-element-prefixes="redirect">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:redirect="http://xml.apache.org/xalan/redirect"
+                extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
@@ -99,22 +99,22 @@
 </xsl:template>
 
 <xsl:template name="index.html">
-<HTML>
-    <HEAD><TITLE>Audit Results.</TITLE></HEAD>
-    <FRAMESET cols="20%,80%">
-        <FRAMESET rows="30%,70%">
-            <FRAME src="overview-frame.html" name="packageListFrame"/>
-            <FRAME src="allclasses-frame.html" name="classListFrame"/>
-        </FRAMESET>
-        <FRAME src="overview-summary.html" name="classFrame"/>
-    </FRAMESET>
-    <noframes>
-        <H2>Frame Alert</H2>
-        <P>
-        This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
-        </P>
-    </noframes>
-</HTML>
+<html>
+    <head><title>Audit Results.</title></head>
+    <frameset cols="20%,80%">
+        <frameset rows="30%,70%">
+            <frame src="overview-frame.html" name="packageListFrame"/>
+            <frame src="allclasses-frame.html" name="classListFrame"/>
+        </frameset>
+        <frame src="overview-summary.html" name="classFrame"/>
+        <noframes>
+            <h2>Frame Alert</h2>
+            <p>
+                This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
+            </p>
+        </noframes>
+    </frameset>
+</html>
 </xsl:template>
 
 
@@ -175,22 +175,22 @@
 <!-- print the violations of the class -->
 <xsl:template match="class" mode="class.details">
     <xsl:variable name="package.name" select="@package"/>
-    <HTML>
-        <HEAD>
+    <html>
+        <head>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name" select="$package.name"/>
             </xsl:call-template>
-        </HEAD>
-        <BODY>
+        </head>
+        <body>
             <xsl:call-template name="pageHeader"/>
-            <H3>Class <xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></H3>
+            <h3>Class <xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></h3>
 
             <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
                 <xsl:call-template name="class.audit.header"/>
                 <xsl:apply-templates select="." mode="print.audit"/>
             </table>
 
-            <H3>Violations</H3>
+            <h3>Violations</h3>
             <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
                 <xsl:call-template name="violation.audit.header"/>
                 <xsl:apply-templates select="./violation" mode="print.audit">
@@ -198,37 +198,37 @@
                 </xsl:apply-templates>
             </table>
             <xsl:call-template name="pageFooter"/>
-        </BODY>
-    </HTML>
+        </body>
+    </html>
 </xsl:template>
 
 
 <!-- list of classes in a package -->
 <xsl:template name="classes.list">
     <xsl:param name="name"/>
-    <HTML>
-        <HEAD>
+    <html>
+        <head>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name" select="$name"/>
             </xsl:call-template>
-        </HEAD>
-        <BODY>
+        </head>
+        <body>
             <table width="100%">
                 <tr>
                     <td nowrap="nowrap">
-                        <H2><a href="package-summary.html" target="classFrame"><xsl:value-of select="$name"/></a></H2>
+                        <h2><a href="package-summary.html" target="classFrame"><xsl:value-of select="$name"/></a></h2>
                     </td>
                 </tr>
             </table>
 
             <h2>Classes</h2>
-            <TABLE WIDTH="100%">
+            <table width="100%">
                 <xsl:apply-templates select="/classes/class[./@package = $name]" mode="classes.list">
                     <xsl:sort select="@name"/>
                 </xsl:apply-templates>
-            </TABLE>
-        </BODY>
-    </HTML>
+            </table>
+        </body>
+    </html>
 </xsl:template>
 <!-- the class to list -->
 <xsl:template match="class" mode="classes.list">
@@ -360,7 +360,7 @@
         <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
             <xsl:call-template name="class.audit.header"/>
             <xsl:for-each select="class[not(./@package = preceding-sibling::class/@package)]">
-                <xsl:sort select="@package" order="ascending"/>
+                <xsl:sort select="@package"/>
                 <tr>
           <xsl:call-template name="alternate-row"/>
                     <td><a href="{translate(@package,'.','/')}/package-summary.html"><xsl:value-of select="@package"/></a></td>
@@ -376,13 +376,13 @@
 
 <xsl:template name="package.summary">
     <xsl:param name="name"/>
-    <HTML>
-        <HEAD>
+    <html>
+        <head>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name" select="$name"/>
             </xsl:call-template>
-        </HEAD>
-        <BODY>
+        </head>
+        <body>
             <xsl:attribute name="onload">open('package-frame.html','classListFrame')</xsl:attribute>
             <xsl:call-template name="pageHeader"/>
             <h3>Package <xsl:value-of select="$name"/></h3>
@@ -393,7 +393,7 @@
             </table-->
 
             <xsl:if test="count(/classes/class[./@package = $name]) &gt; 0">
-                <H3>Classes</H3>
+                <h3>Classes</h3>
                 <table class="log" border="0" cellpadding="5" cellspacing="2" width="100%">
                     <xsl:call-template name="class.audit.header"/>
                     <xsl:apply-templates select="/classes/class[./@package = $name]" mode="print.audit">
@@ -402,8 +402,8 @@
                 </table>
             </xsl:if>
             <xsl:call-template name="pageFooter"/>
-        </BODY>
-    </HTML>
+        </body>
+    </html>
 </xsl:template>
 
 
@@ -428,7 +428,7 @@
 <!-- create the link to the stylesheet based on the package name -->
 <xsl:template name="create.stylesheet.link">
     <xsl:param name="package.name"/>
-    <LINK REL ="stylesheet" TYPE="text/css" TITLE="Style"><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>stylesheet.css</xsl:attribute></LINK>
+    <link rel ="stylesheet" type="text/css" title="Style"><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>stylesheet.css</xsl:attribute></link>
 </xsl:template>
 
 <!-- Page HEADER -->

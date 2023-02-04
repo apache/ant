@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-        xmlns:lxslt="http://xml.apache.org/xslt"
-        xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"
-  doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
+            doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
 Licensed to the Apache Software Foundation (ASF) under one
@@ -125,7 +125,6 @@ under the License.
       -->
         </head>
         <body>
-            <a name="top"></a>
             <xsl:call-template name="pageHeader"/>
 
             <!-- Summary part -->
@@ -202,8 +201,7 @@ under the License.
         <!-- create an anchor to this directory name -->
         <xsl:for-each select="/testsuites/testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
             <xsl:sort select="@package"/>
-                <a name="{@package}"></a>
-                <h3>Directory <xsl:value-of select="@package"/></h3>
+                <h3 id="{@package}">Directory <xsl:value-of select="@package"/></h3>
 
                 <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
                     <xsl:call-template name="testsuite.test.header"/>
@@ -221,8 +219,7 @@ under the License.
         <xsl:for-each select="testsuite">
             <xsl:sort select="@name"/>
             <!-- create an anchor to this class name -->
-            <a name="{@name}"></a>
-            <h3>Project <xsl:value-of select="@name"/></h3>
+            <h3 id="{@name}">Project <xsl:value-of select="@name"/></h3>
 
             <table class="details" border="0" cellpadding="5" cellspacing="2" width="95%">
               <xsl:call-template name="testcase.test.header"/>
@@ -314,7 +311,7 @@ under the License.
 
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
-    <h1>Unit Test Results</h1>
+    <h1 id="top">Unit Test Results</h1>
     <table width="100%">
     <tr>
         <td align="left"></td>
