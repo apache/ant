@@ -1258,7 +1258,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         stylesheetLoaded = true;
 
         try {
-            log("Loading stylesheet " + stylesheet, Project.MSG_INFO);
+            log("Loading stylesheet " + stylesheet.getName(), Project.MSG_INFO);
             // We call liaison.configure() and then liaison.setStylesheet()
             // so that the internal variables of liaison can be set up
             if (liaison instanceof XSLTLiaison2) {

@@ -1,6 +1,8 @@
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================
 
+ * log only the stylesheet name in the xslt task.
+   Github Pull Request #199
 
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================
