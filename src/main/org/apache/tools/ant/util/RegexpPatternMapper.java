@@ -142,12 +142,14 @@ public class RegexpPatternMapper implements FileNameMapper {
         result.setLength(0);
         for (int i = 0; i < to.length; i++) {
             if (to[i] == '\\') {
-                if (++i < to.length) {
-                    int value = Character.digit(to[i], DECIMAL);
+                final int nextCharIndex = i + 1;
+                if (nextCharIndex < to.length) {
+                    int value = Character.digit(to[nextCharIndex], DECIMAL);
                     if (value > -1) {
+                        i++; // mark that the next digit (after the backslash) has been consumed
                         result.append(v.get(value));
                     } else {
-                        result.append(to[i]);
+                        result.append(to[i]); // append the backslash character
                     }
                 } else {
                     // TODO - should throw an exception instead?

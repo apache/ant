@@ -46,4 +46,14 @@ public class RegexpPatternMapperTest {
     public void testHandleDirSep() {
         buildRule.executeTarget("handle.dirsep");
     }
+
+    /**
+     * Test that if the {@code to} attribute of {@code regexpmapper} contains a backslash
+     * character which isn't followed by a digit (representing regex group) then the backslash
+     * doesn't disappear from the output. See bug 66468 for details
+     */
+    @Test
+    public void testBackslashInTo() {
+        buildRule.executeTarget("to-with-backslash-for-non-groups");
+    }
 }

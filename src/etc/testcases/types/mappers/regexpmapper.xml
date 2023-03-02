@@ -29,4 +29,10 @@
       <regexpmapper from="d/e/(.*)" to="\1" handledirsep="yes"/>
     </mapperresult>
   </target>
+
+  <target name="to-with-backslash-for-non-groups">
+    <mapperresult input="a/j.java" output="foo\bar=j.java">
+      <regexpmapper from="a/(.*)" to="foo\bar=\1" />
+    </mapperresult>
+  </target>
 </project>

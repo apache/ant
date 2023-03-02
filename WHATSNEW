@@ -13,6 +13,11 @@ Fixed bugs:
    basedir. This has now been fixed.
    Bugzilla Report 66504  
 
+ * regexmapper would, in some cases, incorrectly consume backslash characters
+   from the "to" attribute, resulting in missing backslashes in the output.
+   This is now fixed.
+   Bugzilla Report 66468
+
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================
 
