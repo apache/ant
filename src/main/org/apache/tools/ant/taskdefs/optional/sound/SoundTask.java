@@ -150,12 +150,12 @@ public class SoundTask extends Task {
                     Vector<File> files = new Vector<>();
                     String[] fileNames = source.list();
                     if (fileNames != null) {
-                    for (String file : fileNames) {
-                        File f = new File(source, file);
-                        if (f.isFile()) {
-                            files.addElement(f);
+                        for (String file : fileNames) {
+                            File f = new File(source, file);
+                            if (f.isFile()) {
+                                files.addElement(f);
+                            }
                         }
-                    }
                     }
                     if (files.size() < 1) {
                         throw new BuildException("No files found in directory " + source);

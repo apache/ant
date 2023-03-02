@@ -430,10 +430,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                     for (String dir : scanner.getIncludedDirectories()) {
                         String[] elements = new File(baseDir, dir).list();
                         if (elements != null) {
-                        for (String element : new File(baseDir, dir).list()) {
-                            process(baseDir, dir + File.separator + element, destDir,
-                                    styleResource);
-                        }
+                            for (String element : new File(baseDir, dir).list()) {
+                                process(baseDir,
+                                        dir + File.separator + element,
+                                        destDir, styleResource);
+                            }
                         }
                     }
                 }

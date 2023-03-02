@@ -293,13 +293,13 @@ public class Sync extends Task {
         if (dir.isDirectory()) {
             File[] children = dir.listFiles();
             if (children != null) {
-            for (File file : children) {
-                // Test here again to avoid method call for non-directories!
-                if (file.isDirectory()) {
-                    removedCount += removeEmptyDirectories(file, true,
-                            preservedEmptyDirectories);
+                for (File file : children) {
+                    // Test here again to avoid method call for non-directories!
+                    if (file.isDirectory()) {
+                        removedCount += removeEmptyDirectories(file, true,
+                                            preservedEmptyDirectories);
+                    }
                 }
-            }
             }
             if (children == null || children.length > 0) {
                 // This directory may have become empty...
