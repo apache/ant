@@ -259,7 +259,7 @@ public class jlink {
         if (names == null || names.length == 0) {
             return;
         }
-        for (String name : dir.list()) {
+        for (String name : names) {
             File file = new File(dir, name);
 
             if (file.isDirectory()) {
