@@ -84,7 +84,7 @@ public class TestClasses extends TestDefinition {
                 writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, haltOnFailure.toString());
             }
             if (outputDir != null) {
-                writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, outputDir);
+                writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, outputDir.getPath());
             }
             if (includeEngines != null) {
                 writer.writeAttribute(LD_XML_ATTR_INCLUDE_ENGINES, includeEngines);
@@ -122,7 +122,7 @@ public class TestClasses extends TestDefinition {
             }
             final String outDir = reader.getAttributeValue(null, LD_XML_ATTR_OUTPUT_DIRECTORY);
             if (outDir != null) {
-                testDefinition.setOutputDir(outDir);
+                testDefinition.setOutputDir(new File(outDir));
             }
             final String includeEngs = reader.getAttributeValue(null, LD_XML_ATTR_INCLUDE_ENGINES);
             if (includeEngs != null) {

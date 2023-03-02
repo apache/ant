@@ -1,8 +1,17 @@
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================
 
+Fixed bugs:
+-----------
+
  * log only the stylesheet name in the xslt task.
    Github Pull Request #199
+
+ * junitlauncher task's "test" and "listener" elements which take
+   a "outputDir" property were incorrectly resolving the outputDir
+   against the current working directory instead of the project's
+   basedir. This has now been fixed.
+   Bugzilla Report 66504  
 
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================

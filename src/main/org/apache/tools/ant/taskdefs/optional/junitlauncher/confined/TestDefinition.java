@@ -23,6 +23,8 @@ import org.apache.tools.ant.PropertyHelper;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +38,7 @@ public abstract class TestDefinition {
     protected String unlessProperty;
     protected Boolean haltOnFailure;
     protected String failureProperty;
-    protected String outputDir;
+    protected File outputDir;
     protected String includeEngines;
     protected String excludeEngines;
     protected ForkDefinition forkDefinition;
@@ -87,11 +89,11 @@ public abstract class TestDefinition {
         return Collections.unmodifiableList(this.listeners);
     }
 
-    public void setOutputDir(final String dir) {
+    public void setOutputDir(final File dir) {
         this.outputDir = dir;
     }
 
-    public String getOutputDir() {
+    public File getOutputDir() {
         return this.outputDir;
     }
 

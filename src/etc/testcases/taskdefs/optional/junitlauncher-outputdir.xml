@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- the basedir used here is intentionally different than the dir containing this build file.
+See issue 65504 for details
+ -->
+<project name="junitlauncher-outputdir-test" basedir="../../../../../build/testcases">
+
+    <property name="report-dir" value="bz-66504-reports"/>
+    <property name="build.classes.dir" value="${build.tests.value}"/>
+
+    <property name="lib.optional" value="${root}/lib/optional"/>
+
+    <path id="junit.platform.classpath">
+        <fileset dir="${lib.optional}" includes="junit-platform*.jar"/>
+    </path>
+
+    <path id="junit.engine.jupiter.classpath">
+        <fileset dir="${lib.optional}">
+            <include name="junit-jupiter*.jar"/>
+            <include name="opentest4j*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="test.classpath">
+        <pathelement location="${build.classes.dir}"/>
+        <path refid="junit.engine.jupiter.classpath"/>
+    </path>
+
+    <target name="test-report-dir">
+        <mkdir dir="${report-dir}"/>
+        <junitlauncher>
+            <listener classname="org.example.junitlauncher.Tracker"
+                      outputDir="${report-dir}"
+                      resultFile="${test-report-dir.tracker}"
+                      if="test-report-dir.tracker"/>
+            <listener type="legacy-xml"/>
+            <!-- A specific test meant to pass -->
+            <test name="org.example.junitlauncher.jupiter.PassingTest" outputDir="${report-dir}"/>
+            <classpath refid="test.classpath"/>
+        </junitlauncher>
+    </target>
+
+    <target name="test-report-dir-fork">
+        <mkdir dir="${report-dir}"/>
+        <junitlauncher>
+            <listener classname="org.example.junitlauncher.Tracker"
+                      outputDir="${report-dir}"
+                      resultFile="${test-report-dir-fork.tracker}"
+                      if="test-report-dir-fork.tracker"/>
+            <listener type="legacy-xml"/>
+            <!-- A specific test meant to pass -->
+            <test name="org.example.junitlauncher.jupiter.PassingTest" outputDir="${report-dir}">
+                <fork/>
+            </test>
+            <classpath refid="test.classpath"/>
+        </junitlauncher>
+    </target>
+
+</project>
+

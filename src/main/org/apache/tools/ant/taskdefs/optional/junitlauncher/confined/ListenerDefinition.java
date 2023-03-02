@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
+import java.io.File;
+
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -53,7 +55,7 @@ public class ListenerDefinition {
     private String extension = "txt";
     private boolean sendSysOut;
     private boolean sendSysErr;
-    private String outputDir;
+    private File outputDir;
     private boolean useLegacyReportingName = true;
 
     public ListenerDefinition() {
@@ -146,11 +148,11 @@ public class ListenerDefinition {
      * @param dir Path to the output directory
      * @since Ant 1.10.6
      */
-    public void setOutputDir(final String dir) {
+    public void setOutputDir(final File dir) {
         this.outputDir = dir;
     }
 
-    public String getOutputDir() {
+    public File getOutputDir() {
         return this.outputDir;
     }
 
@@ -198,7 +200,7 @@ public class ListenerDefinition {
         writer.writeAttribute(LD_XML_ATTR_SEND_SYS_OUT, Boolean.toString(this.sendSysOut));
         writer.writeAttribute(LD_XML_ATTR_LISTENER_USE_LEGACY_REPORTING_NAME, Boolean.toString(this.useLegacyReportingName));
         if (this.outputDir != null) {
-            writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, this.outputDir);
+            writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, this.outputDir.getPath());
         }
         if (this.resultFile != null) {
             writer.writeAttribute(LD_XML_ATTR_LISTENER_RESULT_FILE, this.resultFile);
@@ -224,7 +226,7 @@ public class ListenerDefinition {
         }
         final String outputDir = reader.getAttributeValue(null, LD_XML_ATTR_OUTPUT_DIRECTORY);
         if (outputDir != null) {
-            listenerDef.setOutputDir(outputDir);
+            listenerDef.setOutputDir(new File(outputDir));
         }
         final String resultFile = reader.getAttributeValue(null, LD_XML_ATTR_LISTENER_RESULT_FILE);
         if (resultFile != null) {
