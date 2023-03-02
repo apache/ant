@@ -110,7 +110,9 @@ public class Sync extends Task {
 
         // If the destination directory didn't already exist,
         // or was empty, then no previous file removal is necessary!
-        boolean noRemovalNecessary = !toDir.exists() || toDir.list().length < 1;
+        String[] toDirChildren = toDir.list();
+        boolean noRemovalNecessary = !toDir.exists() || toDirChildren == null
+            || toDirChildren.length < 1;
 
         // Copy all the necessary out-of-date files
         log("PASS#1: Copying files to " + toDir, Project.MSG_DEBUG);
@@ -290,6 +292,7 @@ public class Sync extends Task {
         int removedCount = 0;
         if (dir.isDirectory()) {
             File[] children = dir.listFiles();
+            if (children != null) {
             for (File file : children) {
                 // Test here again to avoid method call for non-directories!
                 if (file.isDirectory()) {
@@ -297,12 +300,13 @@ public class Sync extends Task {
                             preservedEmptyDirectories);
                 }
             }
-            if (children.length > 0) {
+            }
+            if (children == null || children.length > 0) {
                 // This directory may have become empty...
                 // We need to re-query its children list!
                 children = dir.listFiles();
             }
-            if (children.length < 1 && removeIfEmpty
+            if ((children == null || children.length < 1) && removeIfEmpty
                 && !preservedEmptyDirectories.contains(dir)) {
                 log("Removing empty directory: " + dir, Project.MSG_DEBUG);
                 dir.delete();

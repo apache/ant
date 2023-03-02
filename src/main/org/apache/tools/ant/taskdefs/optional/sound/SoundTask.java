@@ -148,11 +148,14 @@ public class SoundTask extends Task {
                 if (source.isDirectory()) {
                     // get the list of files in the dir
                     Vector<File> files = new Vector<>();
-                    for (String file : source.list()) {
+                    String[] fileNames = source.list();
+                    if (fileNames != null) {
+                    for (String file : fileNames) {
                         File f = new File(source, file);
                         if (f.isFile()) {
                             files.addElement(f);
                         }
+                    }
                     }
                     if (files.size() < 1) {
                         throw new BuildException("No files found in directory " + source);

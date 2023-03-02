@@ -824,6 +824,9 @@ public class TarEntry implements TarConstants {
         }
 
         String[]   list = file.list();
+        if (list == null) {
+            return new TarEntry[0];
+        }
         TarEntry[] result = new TarEntry[list.length];
 
         for (int i = 0; i < list.length; ++i) {

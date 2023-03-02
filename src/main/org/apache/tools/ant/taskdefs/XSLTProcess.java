@@ -428,9 +428,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 if (performDirectoryScan) {
                     // Process all the directories marked for styling
                     for (String dir : scanner.getIncludedDirectories()) {
+                        String[] elements = new File(baseDir, dir).list();
+                        if (elements != null) {
                         for (String element : new File(baseDir, dir).list()) {
                             process(baseDir, dir + File.separator + element, destDir,
                                     styleResource);
+                        }
                         }
                     }
                 }
