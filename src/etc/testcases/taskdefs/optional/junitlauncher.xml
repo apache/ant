@@ -371,5 +371,32 @@
             <listener type="legacy-brief" sendSysOut="true" useLegacyReportingName="true"/>
         </junitlauncher>
     </target>
+
+    <target name="test-fork-different-java" depends="init">
+        <!-- create a symlinked file which points to the "java" command
+        and use that symlink to launch the forked JVM -->
+        <property name="different-java" value="${java.io.tmpdir}/foobarjava"/>
+        <delete file="${different-java}"/>
+        <symlink resource="${java.home}/bin/java" link="${different-java}"/>
+
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <test name="org.example.junitlauncher.vintage.ForkedTest" outputdir="${output.dir}">
+                <listener classname="org.example.junitlauncher.Tracker"
+                          outputDir="${output.dir}"
+                          resultFile="${test-fork-different-java.tracker}"
+                          if="test-fork-different-java.tracker"/>
+
+                <!-- we just verify that the launch of the forked JVM works fine and the test
+                succeeds. There isn't a (easy) way we can actually verify the binary that was used
+                to launch the forked JVM -->
+                <fork dir="${basedir}" java="${different-java}">
+                    <sysproperty key="junitlauncher.test.sysprop.one" value="forked"/>
+                </fork>
+
+                <listener type="legacy-xml"/>
+            </test>
+        </junitlauncher>
+    </target>
 </project>
 

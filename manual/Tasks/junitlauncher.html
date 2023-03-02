@@ -631,6 +631,15 @@ the new JVM instance that will be created to launch the tests.
             JVM, is expected to contain the Ant runtime jars</td>
         <td>No. Value defaults to <code>true</code>.</td>
     </tr>
+    <tr>
+        <td>java</td>
+        <td>The command used to launch the forked <code>java</code> process. This attribute can be set
+        to point to a different installation of Java than the one that is currently being used to
+        run the Ant build
+            <p><em>Since Ant 1.10.14</em></p>
+        </td>
+        <td>No</td>
+    </tr>
 </table>
 
 The <code>fork</code> element allows the following nested elements:

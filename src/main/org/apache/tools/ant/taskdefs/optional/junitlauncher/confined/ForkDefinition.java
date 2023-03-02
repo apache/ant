@@ -102,6 +102,17 @@ public class ForkDefinition {
     }
 
     /**
+     * The command used to launch {@code java}. This can be a path to the {@code java}
+     * binary that will be used to launch the forked {@code java} process.
+     *
+     * @param java Path to the java command
+     * @since Ant 1.10.14
+     */
+    public void setJava(String java) {
+        this.commandLineJava.setVm(java);
+    }
+
+    /**
      * Generates a new {@link CommandlineJava} constructed out of the configurations set on this
      * {@link ForkDefinition}
      *

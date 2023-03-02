@@ -18,6 +18,14 @@ Fixed bugs:
    This is now fixed.
    Bugzilla Report 66468
 
+Other changes:
+--------------
+
+ * <fork> element of the junitlauncher task now has a new optional "java"
+   attribute which can be used to point to a different Java installation
+   for runnning the forked tests.
+   Bugzilla Report 66464
+
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================
 

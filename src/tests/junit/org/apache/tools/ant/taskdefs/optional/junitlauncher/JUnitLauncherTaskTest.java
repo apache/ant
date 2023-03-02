@@ -22,6 +22,7 @@ import static org.example.junitlauncher.Tracker.verifySetupFailed;
 import static org.example.junitlauncher.Tracker.verifySkipped;
 import static org.example.junitlauncher.Tracker.verifySuccess;
 import static org.example.junitlauncher.Tracker.wasTestRun;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,7 @@ import java.nio.file.Paths;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask;
 import org.apache.tools.ant.util.LoaderUtils;
 import org.example.junitlauncher.jupiter.JupiterSampleTest;
@@ -473,6 +475,22 @@ public class JUnitLauncherTaskTest {
     @Test
     public void testBz63958() throws Exception {
         final String targetName = "bz-63958";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+
+        Assert.assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
+                ForkedTest.class.getName(), "testSysProp"));
+    }
+
+    /**
+     * Tests that tests launched by the junitlauncher task can use a different "java" command
+     * to launch the forked JVM
+     */
+    @Test
+    public void testForkDifferentJava() throws Exception {
+        // the target uses symlink, so we first make sure symlink is available on this system
+        assumeTrue("Symlinks not supported on current operating system", Os.isFamily("unix"));
+        final String targetName = "test-fork-different-java";
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
 
