@@ -375,34 +375,12 @@ Set -Ddest=LOCATION on the command line
 
   <target name="netrexx"
           description="load NetRexx compiler"
-          depends="init-no-m2,-setup-temp-cache,-fetch-netrexx,-fetch-netrexx-no-commons-net">
-    <checksum file="${temp.dir}/NetRexx.zip" algorithm="SHA-256" property="${netrexx.sha256}" verifyProperty="netrexx.hash.matches"/>
-    <fail message="NetRexx.zip fetched via ftp has an unexpected SHA-256 checksum, the file may have been tampered with">
-       <condition>
-         <not>
-           <istrue value="${netrexx.hash.matches}"/>
-         </not>
-      </condition>
-    </fail>
-    <copy todir="${dest.dir}" flatten="true">
-      <zipfileset src="${temp.dir}/NetRexx.zip">
-        <include name="NetRexx\lib\NetRexxC.jar"/>
-        <include name="NetRexx\browse\license.txt"/>
-      </zipfileset>
-    </copy>
-    <antcall target="-cleanup-temp-cache"/>
+          depends="init-no-m2,-setup-temp-cache,-fetch-netrexx">
+    <get src="https://netrexx.org/files/NetRexxC-${netrexx.version}.jar"
+         dest="${dest.dir}" skipexisting="true"/>
   </target>
-
-  <available property="have.commons.net" classname="org.apache.commons.net.ftp.FTPClientConfig"/>
 
   <target name="-fetch-netrexx" if="have.commons.net">
-    <get-ftp-file host="ftp.software.ibm.com" remotedir="/software/awdtools/netrexx"
-            filename="NetRexx.zip" localdir="${temp.dir}"/>
-  </target>
-
-  <target name="-fetch-netrexx-no-commons-net" unless="have.commons.net">
-    <get src="ftp://ftp.software.ibm.com/software/awdtools/netrexx/NetRexx.zip"
-         dest="${temp.dir}/NetRexx.zip" skipexisting="true"/>
   </target>
 
   <target name="xz"
