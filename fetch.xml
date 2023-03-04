@@ -375,12 +375,9 @@ Set -Ddest=LOCATION on the command line
 
   <target name="netrexx"
           description="load NetRexx compiler"
-          depends="init-no-m2,-setup-temp-cache,-fetch-netrexx">
+          depends="init-no-m2">
     <get src="https://netrexx.org/files/NetRexxC-${netrexx.version}.jar"
          dest="${dest.dir}" skipexisting="true"/>
-  </target>
-
-  <target name="-fetch-netrexx" if="have.commons.net">
   </target>
 
   <target name="xz"
