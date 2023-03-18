@@ -1469,7 +1469,7 @@ public class FileUtils {
      * @throws IOException if anything bad happens during this
      * process.  Note that <code>to</code> may have been deleted
      * already when this happens.
-     * @since Ant 1.6
+     * @since Ant 1.10.14
      */
     public void rename(File from, File to, boolean keepTargetFilePermissions) throws IOException {
         Set<PosixFilePermission> existingFilePermissions = null;
