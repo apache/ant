@@ -434,7 +434,7 @@ public class ReplaceRegExp extends Task {
                 log("File has changed; saving the updated file", Project.MSG_VERBOSE);
                 try {
                     long origLastModified = f.lastModified();
-                    FILE_UTILS.rename(temp, f);
+                    FILE_UTILS.rename(temp, f, true);
                     if (preserveLastModified) {
                         FILE_UTILS.setFileLastModified(f, origLastModified);
                     }

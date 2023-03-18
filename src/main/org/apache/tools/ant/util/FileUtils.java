@@ -40,6 +40,7 @@ import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.lang.UnsupportedOperationException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -1450,6 +1452,27 @@ public class FileUtils {
      * @since Ant 1.6
      */
     public void rename(File from, File to) throws IOException {
+        rename(from, to, false);
+    }
+
+    /**
+     * Renames a file, even if that involves crossing file system boundaries.
+     *
+     * <p>This will remove <code>to</code> (if it exists), ensure that
+     * <code>to</code>'s parent directory exists and move
+     * <code>from</code>, which involves deleting <code>from</code> as
+     * well.</p>
+     *
+     * @param from the file to move.
+     * @param to the new file name.
+     * @param keepTargetFilePermissions keep target file permissions
+     * @throws IOException if anything bad happens during this
+     * process.  Note that <code>to</code> may have been deleted
+     * already when this happens.
+     * @since Ant 1.6
+     */
+    public void rename(File from, File to, boolean keepTargetFilePermissions) throws IOException {
+        Set<PosixFilePermission> existingFilePermissions = null;
         // identical logic lives in Move.renameFile():
         from = normalize(from.getAbsolutePath()).getCanonicalFile();
         to = normalize(to.getAbsolutePath());
@@ -1460,6 +1483,13 @@ public class FileUtils {
         if (from.getAbsolutePath().equals(to.getAbsolutePath())) {
             System.err.println("Rename of " + from + " to " + to + " is a no-op.");
             return;
+        }
+        if (keepTargetFilePermissions) {
+            try {
+                existingFilePermissions = Files.getPosixFilePermissions(to.toPath());
+            } catch (UnsupportedOperationException | IOException exc) {
+                //ignore
+            }
         }
         if (to.exists() && !(areSame(from, to) || tryHardToDelete(to))) {
             throw new IOException("Failed to delete " + to + " while trying to rename " + from);
@@ -1475,6 +1505,9 @@ public class FileUtils {
             if (!tryHardToDelete(from)) {
                 throw new IOException("Failed to delete " + from + " while trying to rename it.");
             }
+        }
+        if (existingFilePermissions != null) {
+            Files.setPosixFilePermissions(to.toPath(), existingFilePermissions);
         }
     }
 

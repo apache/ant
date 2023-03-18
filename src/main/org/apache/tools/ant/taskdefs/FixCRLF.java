@@ -372,7 +372,7 @@ public class FixCRLF extends MatchingTask implements ChainableReader {
                     Project.MSG_DEBUG);
             }
             if (destIsWrong) {
-                FILE_UTILS.rename(tmpFile, destFile);
+                FILE_UTILS.rename(tmpFile, destFile, true);
                 if (preserveLastModified) {
                     log("preserved lastModified for " + destFile,
                         Project.MSG_DEBUG);

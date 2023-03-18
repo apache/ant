@@ -670,7 +670,7 @@ public class Replace extends MatchingTask {
                 if (changes) {
                     fileCount++;
                     long origLastModified = src.lastModified();
-                    FILE_UTILS.rename(temp, src);
+                    FILE_UTILS.rename(temp, src, true);
                     if (preserveLastModified) {
                         FILE_UTILS.setFileLastModified(src, origLastModified);
                     }

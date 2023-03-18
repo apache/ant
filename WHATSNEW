@@ -18,6 +18,10 @@ Fixed bugs:
    This is now fixed.
    Bugzilla Report 66468
 
+ * <fixcrlf>, <replace> and <replaceregexp> now try to preserve the
+   file permissions of the files they modify.
+   Bugzilla Report 66522
+
 Other changes:
 --------------
 

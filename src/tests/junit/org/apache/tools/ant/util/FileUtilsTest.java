@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
@@ -117,6 +118,39 @@ public class FileUtilsTest {
          * Just assert the time has changed.
          */
         assertNotEquals(thirdModTime, secondModTime);
+    }
+
+    /**
+     * test file permissions for FileUtils#rename.
+     * Since Ant1.10.7, ant uses FileUtils#rename for various tasks (eg. ReplaceRegExp).
+     * Test that file permission set stays the same.
+     * @see FileUtils#rename(java.io.File, java.io.File, boolean)
+     * @throws IOException if something goes wrong
+     */
+    @Test
+    public void testFilePermissions() throws IOException {
+        assumeFalse("Test doesn't run on DOS", Os.isFamily("dos"));
+        File removeThis = getFileUtils().createTempFile("permis", "sion", folder.getRoot(), true, true);
+        File toBeMoved1 = getFileUtils().createTempFile("permis", "sion", folder.getRoot(), true, true);
+        File toBeMoved2 = getFileUtils().createTempFile("permis", "sion", folder.getRoot(), true, true);
+        try (FileOutputStream fos = new FileOutputStream(removeThis)) {
+            fos.write(new byte[0]);
+        }
+        try (FileOutputStream fos = new FileOutputStream(toBeMoved1)) {
+            fos.write(new byte[0]);
+        }
+        try (FileOutputStream fos = new FileOutputStream(toBeMoved2)) {
+            fos.write(new byte[0]);
+        }
+        Set<PosixFilePermission> allAllowed = PosixFilePermissions.fromString("rwxrwxrwx");
+        Files.setPosixFilePermissions(removeThis.toPath(), allAllowed);
+
+        getFileUtils().rename(toBeMoved1, removeThis, true);
+        assertEquals(allAllowed,Files.getPosixFilePermissions(removeThis.toPath()));
+
+        Set<PosixFilePermission> tempAllowed = Files.getPosixFilePermissions(toBeMoved2.toPath());
+        getFileUtils().rename(toBeMoved2, removeThis);
+        assertEquals(tempAllowed,Files.getPosixFilePermissions(removeThis.toPath()));
     }
 
     @Test
