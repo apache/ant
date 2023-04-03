@@ -1,6 +1,13 @@
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================
 
+Changes that could break older environments:
+-------------------------------------------
+
+ * Resource#compareTo now invokes getName rather than toString as the
+   later may be costly (for example in the case of a StringResource).
+   Bugzilla Report 66496
+
 Fixed bugs:
 -----------
 

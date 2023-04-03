@@ -277,7 +277,7 @@ public class Resource extends DataType implements Comparable<Resource>, Resource
         if (isReference()) {
             return getRef().compareTo(other);
         }
-        return toString().compareTo(other.toString());
+        return getName().compareTo(other.getName());
     }
 
     /**
