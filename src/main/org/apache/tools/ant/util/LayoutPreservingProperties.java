@@ -422,7 +422,7 @@ public class LayoutPreservingProperties extends Properties {
      * @return <code>true</code> if the line is to be continued,
      * <code>false</code> otherwise
      */
-    private boolean requiresContinuation(final String s) {
+    private static boolean requiresContinuation(final String s) {
         final char[] ca = s.toCharArray();
         int i = ca.length - 1;
         while (i > 0 && ca[i] == '\\') {
@@ -440,7 +440,7 @@ public class LayoutPreservingProperties extends Properties {
      * @param s the string to unescape (coming from the source file)
      * @return the unescaped string
      */
-    private String unescape(final String s) {
+    private static String unescape(final String s) {
         /*
          * The following combinations are converted:
          * \n  newline
@@ -495,7 +495,7 @@ public class LayoutPreservingProperties extends Properties {
      * @param ch the character array containing the unicode character code
      * @return the character extracted
      */
-    private char unescapeUnicode(final char[] ch, final int i) {
+    private static char unescapeUnicode(final char[] ch, final int i) {
         final String s = new String(ch, i, 4);
         return (char) Integer.parseInt(s, 16);
     }
@@ -507,7 +507,7 @@ public class LayoutPreservingProperties extends Properties {
      * @param s the string to escape
      * @return the escaped string
      */
-    private String escapeValue(final String s) {
+    private static String escapeValue(final String s) {
         return escape(s, false);
     }
 
@@ -520,7 +520,7 @@ public class LayoutPreservingProperties extends Properties {
      * @param s the string to escape
      * @return the escaped string
      */
-    private String escapeName(final String s) {
+    private static String escapeName(final String s) {
         return escape(s, true);
     }
 
@@ -534,7 +534,7 @@ public class LayoutPreservingProperties extends Properties {
      * leading whitespace
      * @return the escaped string
      */
-    private String escape(final String s, final boolean escapeAllSpaces) {
+    private static String escape(final String s, final boolean escapeAllSpaces) {
         if (s == null) {
             return null;
         }
@@ -571,7 +571,7 @@ public class LayoutPreservingProperties extends Properties {
      * @param ch the character to encode
      * @return the unicode escape sequence
      */
-    private String escapeUnicode(final char ch) {
+    private static String escapeUnicode(final char ch) {
         return "\\" + UnicodeUtil.EscapeUnicode(ch);
     }
 
@@ -731,7 +731,7 @@ public class LayoutPreservingProperties extends Properties {
             name = stripStart(name, " \t\f");
         }
 
-        private String stripStart(final String s, final String chars) {
+        private static String stripStart(final String s, final String chars) {
             if (s == null) {
                 return null;
             }
@@ -748,7 +748,7 @@ public class LayoutPreservingProperties extends Properties {
             return s.substring(i);
         }
 
-        private int findFirstSeparator(String s) {
+        private static int findFirstSeparator(String s) {
             // Replace double backslashes with underscores so that they don't
             // confuse us looking for '\t' or '\=', for example, but they also
             // don't change the position of other characters
@@ -765,7 +765,7 @@ public class LayoutPreservingProperties extends Properties {
             return indexOfAny(s, " :=\t");
         }
 
-        private int indexOfAny(final String s, final String chars) {
+        private static int indexOfAny(final String s, final String chars) {
             if (s == null || chars == null) {
                 return -1;
             }

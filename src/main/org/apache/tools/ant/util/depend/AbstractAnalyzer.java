@@ -264,7 +264,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      *         class or null if the class could not be found.
      * @exception IOException if the files in the given paths cannot be read.
      */
-    private File getResourceContainer(String resourceLocation, String[] paths)
+    private static File getResourceContainer(String resourceLocation, String[] paths)
          throws IOException {
         for (String path : paths) {
             File element = new File(path);

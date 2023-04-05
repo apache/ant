@@ -355,11 +355,11 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
                 : parseableExtraFields;
     }
 
-    private ZipExtraField[] copyOf(ZipExtraField[] src) {
+    private static ZipExtraField[] copyOf(ZipExtraField[] src) {
         return copyOf(src, src.length);
     }
 
-    private ZipExtraField[] copyOf(ZipExtraField[] src, int length) {
+    private static ZipExtraField[] copyOf(ZipExtraField[] src, int length) {
         ZipExtraField[] cpy = new ZipExtraField[length];
         System.arraycopy(src, 0, cpy, 0, Math.min(src.length, length));
         return cpy;

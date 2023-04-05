@@ -604,7 +604,7 @@ public class XMLCatalog extends DataType
      *            fragment.
      * @return The URI sans fragment.
      */
-    private String removeFragment(String uri) {
+    private static String removeFragment(String uri) {
         String result = uri;
         int hashPos = uri.indexOf("#");
         if (hashPos >= 0) {

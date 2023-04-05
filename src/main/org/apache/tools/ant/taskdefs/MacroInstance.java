@@ -166,7 +166,7 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
     private static final int STATE_EXPECT_BRACKET = 1;
     private static final int STATE_EXPECT_NAME    = 2;
 
-    private String macroSubs(String s, Map<String, String> macroMapping) {
+    private static String macroSubs(String s, Map<String, String> macroMapping) {
         if (s == null) {
             return null;
         }

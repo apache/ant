@@ -356,7 +356,7 @@ public class Launcher {
      * @return the URLS from the user's lib dir
      * @throws MalformedURLException if the URLs cannot be created.
      */
-    private URL[] getUserURLs() throws MalformedURLException {
+    private static URL[] getUserURLs() throws MalformedURLException {
         final File userLibDir
             = new File(System.getProperty(USER_HOMEDIR), USER_LIBDIR);
 
@@ -372,7 +372,7 @@ public class Launcher {
      * @return a combined array
      * @throws MalformedURLException if there is a problem.
      */
-    private URL[] getJarArray(final URL[] libJars, final URL[] userJars,
+    private static URL[] getJarArray(final URL[] libJars, final URL[] userJars,
         final URL[] systemJars, final File toolsJar)
         throws MalformedURLException {
         int numJars = libJars.length + userJars.length + systemJars.length;

@@ -547,7 +547,7 @@ public class PathConvert extends Task {
      * child elements if the refid attribute is set.
      * @return BuildException.
      */
-    private BuildException noChildrenAllowed() {
+    private static BuildException noChildrenAllowed() {
         return new BuildException(
             "You must not specify nested elements when using the refid attribute.");
     }

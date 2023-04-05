@@ -198,7 +198,7 @@ public abstract class Unpack extends Task {
         return false;
     }
 
-    private String getLastNamePart(Resource r) {
+    private static String getLastNamePart(Resource r) {
         String n = r.getName();
         int idx = n.lastIndexOf('/');
         return idx < 0 ? n : n.substring(idx + 1);

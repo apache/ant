@@ -104,7 +104,7 @@ public class UUEncoder {
      * @param out    The output stream the encoded data is written to.
      * @exception IOException if something goes wrong
      */
-    private void encodeLine(
+    private static void encodeLine(
         byte[] data, int offset, int length, OutputStream out)
         throws IOException {
         // write out the number of characters encoded in this line.

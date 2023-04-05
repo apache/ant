@@ -1438,7 +1438,7 @@ public class DirectoryScanner
      * @return whether the pattern is deeper than the name.
      * @since Ant 1.6.3
      */
-    private boolean isDeeper(final TokenizedPattern pattern, final TokenizedPath name) {
+    private static boolean isDeeper(final TokenizedPattern pattern, final TokenizedPath name) {
         return pattern.containsPattern(SelectorUtils.DEEP_TREE_MATCH)
             || pattern.depth() > name.depth();
     }

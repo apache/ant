@@ -424,7 +424,7 @@ public class EchoProperties extends Task {
         }
     }
 
-    private List<Tuple> sortProperties(Properties props) {
+    private static List<Tuple> sortProperties(Properties props) {
         // sort the list. Makes SCM and manual diffs easier.
         return props.stringPropertyNames().stream()
             .map(k -> new Tuple(k, props.getProperty(k))).sorted()

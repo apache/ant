@@ -49,7 +49,7 @@ public class Gcjh implements JavahAdapter {
         return false;
     }
 
-    private Commandline setupGcjhCommand(Javah javah) {
+    private static Commandline setupGcjhCommand(Javah javah) {
         Commandline cmd = new Commandline();
         cmd.setExecutable(JavaEnvUtils.getJdkExecutable("gcjh"));
 

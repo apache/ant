@@ -397,7 +397,7 @@ public class ChangeLogTask extends AbstractCvsTask {
     /**
      * replace all known author's id's with their maven specified names
      */
-    private void replaceAuthorIdWithName(final Properties userList,
+    private static void replaceAuthorIdWithName(final Properties userList,
                                          final CVSEntry[] entrySet) {
         for (final CVSEntry entry : entrySet) {
             if (userList.containsKey(entry.getAuthor())) {

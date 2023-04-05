@@ -738,16 +738,16 @@ public class ExecTask extends Task {
     protected void logFlush() {
     }
 
-    private boolean isPath(String line) {
+    private static boolean isPath(String line) {
         return line.startsWith("PATH=")
             || line.startsWith("Path=");
     }
 
-    private String getPath(String line) {
+    private static String getPath(String line) {
         return line.substring("PATH=".length());
     }
 
-    private String getPath(Map<String, String> map) {
+    private static String getPath(Map<String, String> map) {
         String p = map.get("PATH");
         return p != null ? p : map.get("Path");
     }

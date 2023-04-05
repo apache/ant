@@ -376,7 +376,7 @@ public class Funtest extends Task {
      * @param task task
      * @param role role of the task
      */
-    private void validateTask(Task task, String role) {
+    private static void validateTask(Task task, String role) {
         if (task != null && task.getProject() == null) {
             throw new BuildException("%s task is not bound to the project %s",
                 role, task);

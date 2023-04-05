@@ -918,7 +918,7 @@ public class Replace extends MatchingTask {
      * @param str1 String
      * @param str2 String
      */
-    private void stringReplace(StringBuilder str, String str1, String str2) {
+    private static void stringReplace(StringBuilder str, String str1, String str2) {
         int found = str.indexOf(str1);
         final int str1Length = str1.length();
         final int str2Length = str2.length();
@@ -934,7 +934,7 @@ public class Replace extends MatchingTask {
      *
      * @param props Properties
      */
-    private Iterator<String> getOrderedIterator(Properties props) {
+    private static Iterator<String> getOrderedIterator(Properties props) {
         List<String> keys = new ArrayList<>(props.stringPropertyNames());
         keys.sort(Comparator.comparingInt(String::length).reversed());
         return keys.iterator();

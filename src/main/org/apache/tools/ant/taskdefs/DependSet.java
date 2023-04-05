@@ -263,15 +263,15 @@ public class DependSet extends MatchingTask {
         }
     }
 
-    private Resource getXest(ResourceCollection rc, ResourceComparator c) {
+    private static Resource getXest(ResourceCollection rc, ResourceComparator c) {
         return StreamUtils.iteratorAsStream(rc.iterator()).max(c).orElse(null);
     }
 
-    private Resource getOldest(ResourceCollection rc) {
+    private static Resource getOldest(ResourceCollection rc) {
         return getXest(rc, REVERSE_DATE);
     }
 
-    private Resource getNewest(ResourceCollection rc) {
+    private static Resource getNewest(ResourceCollection rc) {
         return getXest(rc, DATE);
     }
 

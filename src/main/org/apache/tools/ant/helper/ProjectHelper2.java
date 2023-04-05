@@ -1049,7 +1049,7 @@ public class ProjectHelper2 extends ProjectHelper {
             }
         }
 
-        private String getTargetPrefix(AntXMLContext context) {
+        private static String getTargetPrefix(AntXMLContext context) {
             String configuredValue = getCurrentTargetPrefix();
             if (configuredValue != null && configuredValue.isEmpty()) {
                 configuredValue = null;

@@ -398,7 +398,7 @@ public class JJTree extends Task {
      * @param file File
      * @return file's root directory
      */
-    private File getRoot(File file) {
+    private static File getRoot(File file) {
         File root = file.getAbsoluteFile();
 
         while (root.getParent() != null) {

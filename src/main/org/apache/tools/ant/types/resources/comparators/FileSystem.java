@@ -46,14 +46,14 @@ public class FileSystem extends ResourceComparator {
         return compare(file(foo), file(bar));
     }
 
-    private File file(Resource r) {
+    private static File file(Resource r) {
         return r.asOptional(FileProvider.class)
             .orElseThrow(() -> new ClassCastException(
                 r.getClass() + " doesn't provide files"))
             .getFile();
     }
 
-    private int compare(File f1, File f2) {
+    private static int compare(File f1, File f2) {
         if (Objects.equals(f1, f2)) {
             return 0;
         }

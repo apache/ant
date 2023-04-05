@@ -146,7 +146,7 @@ public class HostInfo extends Task {
         }
     }
 
-    private boolean hasHostName(InetAddress addr) {
+    private static boolean hasHostName(InetAddress addr) {
         return !addr.getHostAddress().equals(addr.getCanonicalHostName());
     }
 
@@ -164,7 +164,7 @@ public class HostInfo extends Task {
         nameAddr = selectBestAddress(best4, best6);
     }
 
-    private InetAddress selectBestAddress(InetAddress bestSoFar,
+    private static InetAddress selectBestAddress(InetAddress bestSoFar,
             InetAddress current) {
         InetAddress best = bestSoFar;
         if (best == null) {

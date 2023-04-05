@@ -804,7 +804,7 @@ public class Rmic extends MatchingTask {
      * Check to see if the class or (super)interfaces implement
      * java.rmi.Remote.
      */
-    private boolean isValidRmiRemote(Class<?> testClass) {
+    private static boolean isValidRmiRemote(Class<?> testClass) {
         return Remote.class.isAssignableFrom(testClass);
     }
 

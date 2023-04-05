@@ -297,7 +297,7 @@ public class JakartaMimeMailer extends Mailer {
         return addrs.toArray(new InternetAddress[addrs.size()]);
     }
 
-    private String parseCharSetFromMimeType(final String type) {
+    private static String parseCharSetFromMimeType(final String type) {
         if (type == null) {
             return null;
         }

@@ -350,7 +350,7 @@ public class Pvcs extends Task {
      * handling UNC notation.
      * @throws IOException if there is an error.
      */
-    private void massagePCLI(File in, File out)
+    private static void massagePCLI(File in, File out)
         throws IOException {
         try (BufferedReader inReader = new BufferedReader(new FileReader(in));
                 BufferedWriter outWriter = new BufferedWriter(new FileWriter(out))) {

@@ -667,11 +667,11 @@ public class ZipOutputStream extends FilterOutputStream {
         return actuallyNeedsZip64;
     }
 
-    private boolean isZip64Required(ZipEntry entry1, Zip64Mode requestedMode) {
+    private static boolean isZip64Required(ZipEntry entry1, Zip64Mode requestedMode) {
         return requestedMode == Zip64Mode.Always || isTooLageForZip32(entry1);
     }
 
-    private boolean isTooLageForZip32(ZipEntry zipArchiveEntry) {
+    private static boolean isTooLageForZip32(ZipEntry zipArchiveEntry) {
         return zipArchiveEntry.getSize() >= ZIP64_MAGIC
             || zipArchiveEntry.getCompressedSize() >= ZIP64_MAGIC;
     }
@@ -1634,7 +1634,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @param ze ZipEntry
      * @return boolean
      */
-    private boolean hasZip64Extra(ZipEntry ze) {
+    private static boolean hasZip64Extra(ZipEntry ze) {
         return ze.getExtraField(Zip64ExtendedInformationExtraField
                                 .HEADER_ID)
             != null;

@@ -116,7 +116,7 @@ public class EmailAddress {
      *  A specialised trim() that trims whitespace,
      *  '(', ')', '"', '<', '>' from the start and end of strings
      */
-    private String trim(String t, boolean trimAngleBrackets) {
+    private static String trim(String t, boolean trimAngleBrackets) {
         int start = 0;
         int end = t.length();
         boolean trim;

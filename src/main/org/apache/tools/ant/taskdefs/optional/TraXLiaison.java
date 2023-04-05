@@ -266,7 +266,7 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
         return src;
     }
 
-    private String resourceToURI(final Resource resource) {
+    private static String resourceToURI(final Resource resource) {
         final FileProvider fp = resource.as(FileProvider.class);
         if (fp != null) {
             return FILE_UTILS.toURI(fp.getFile().getAbsolutePath());

@@ -70,7 +70,7 @@ public class JspNameMangler implements JspMangler {
      * @param jspFile jspFile file
      * @return extensionless potentially remapped name
      */
-    private String mapJspToBaseName(File jspFile) {
+    private static String mapJspToBaseName(File jspFile) {
         String className = stripExtension(jspFile);
 
         // since we don't mangle extensions like the servlet does,
@@ -109,7 +109,7 @@ public class JspNameMangler implements JspMangler {
      * @param jspFile file in
      * @return file without any jsp extension
      */
-    private String stripExtension(File jspFile) {
+    private static String stripExtension(File jspFile) {
         return StringUtils.removeSuffix(jspFile.getName(), ".jsp");
     }
 

@@ -985,7 +985,7 @@ public class Java extends Task {
      * @param exe executable.
      * @param command command to execute.
      */
-    private void setupCommandLine(Execute exe, String[] command) {
+    private static void setupCommandLine(Execute exe, String[] command) {
         //On VMS platform, we need to create a special java options file
         //containing the arguments and classpath for the java command.
         //The special file is supported by the "-V" switch on the VMS JVM.
@@ -1004,7 +1004,7 @@ public class Java extends Task {
      * @param exe executable.
      * @param command command to execute.
      */
-    private void setupCommandLineForVMS(Execute exe, String[] command) {
+    private static void setupCommandLineForVMS(Execute exe, String[] command) {
         ExecuteJava.setupCommandLineForVMS(exe, command);
     }
 

@@ -943,7 +943,7 @@ public abstract class DefaultCompilerAdapter
      * <p>support for -source 1.1 and -source 1.2 has been added with
      * JDK 1.4.2 but isn't present in 1.5.0+</p>
      */
-    private String adjustSourceValue(final String source) {
+    private static String adjustSourceValue(final String source) {
         return "1.1".equals(source) || "1.2".equals(source) ? "1.3" : source;
     }
 }

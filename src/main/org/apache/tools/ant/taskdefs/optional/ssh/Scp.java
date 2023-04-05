@@ -547,11 +547,11 @@ public class Scp extends SSHBase {
         this.toUri = toUri;
     }
 
-    private BuildException exactlyOne(final String[] attrs) {
+    private static BuildException exactlyOne(final String[] attrs) {
         return exactlyOne(attrs, null);
     }
 
-    private BuildException exactlyOne(final String[] attrs, final String alt) {
+    private static BuildException exactlyOne(final String[] attrs, final String alt) {
         return new BuildException("Exactly one of [%s]%s is required",
                 String.join("|", attrs),
             alt == null ? "" : " or " + alt);

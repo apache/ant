@@ -79,7 +79,7 @@ public class DirectoryIterator implements ClassFileIterator {
      * @return a vector containing File objects for each entry in the
      *      directory.
      */
-    private List<File> getDirectoryEntries(File directory) {
+    private static List<File> getDirectoryEntries(File directory) {
         File[] filesInDir = directory.listFiles();
         if (filesInDir == null) {
             return Collections.emptyList();

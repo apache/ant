@@ -275,7 +275,7 @@ public class jlink {
      * which for a class is the name of the package with the class
      * name appended.
      */
-    private String getEntryName(File file, String prefix) {
+    private static String getEntryName(File file, String prefix) {
         String name = file.getName();
 
         if (!name.endsWith(".class")) {

@@ -358,7 +358,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         attributes.log(niceSourceList, Project.MSG_VERBOSE);
     }
 
-    private void verifyArguments(Commandline cmd) {
+    private static void verifyArguments(Commandline cmd) {
         if (JavaEnvUtils.isAtLeastJavaVersion(JavaEnvUtils.JAVA_9)) {
             for (String arg : cmd.getArguments()) {
                 if ("-Xnew".equals(arg)) {

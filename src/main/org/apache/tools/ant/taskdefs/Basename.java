@@ -97,7 +97,7 @@ public class Basename extends Task {
             removeExtension(file.getName(), suffix));
     }
 
-    private String removeExtension(String s, String ext) {
+    private static String removeExtension(String s, String ext) {
         if (ext == null || !s.endsWith(ext)) {
             return s;
         }

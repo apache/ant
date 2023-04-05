@@ -280,7 +280,7 @@ public class PropertySet extends DataType implements ResourceCollection {
      * Use stringPropertyNames to get the list of properties (including
      * default ones).
      */
-    private Map<String, Object> getAllSystemProperties() {
+    private static Map<String, Object> getAllSystemProperties() {
         return System.getProperties().stringPropertyNames().stream()
                 .collect(Collectors.toMap(name -> name, name -> System.getProperties().getProperty(name), (a, b) -> b));
     }

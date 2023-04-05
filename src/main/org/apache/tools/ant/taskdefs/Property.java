@@ -607,7 +607,7 @@ public class Property extends Task {
      * @see "http://java.sun.com/dtd/properties.dtd"
      * @see java.util.Properties#loadFromXML(InputStream)
      */
-    private void loadProperties(
+    private static void loadProperties(
                                 Properties props, InputStream is, boolean isXml) throws IOException {
         if (isXml) {
             // load the xml based property definition

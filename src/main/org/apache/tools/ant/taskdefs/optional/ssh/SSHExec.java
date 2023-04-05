@@ -483,7 +483,7 @@ public class SSHExec extends SSHBase {
      * @param to             file to write to
      * @param append         if true, append to existing file, else overwrite
      */
-    private void writeToFile(final String from, final boolean append, final File to)
+    private static void writeToFile(final String from, final boolean append, final File to)
         throws IOException {
         final StandardOpenOption appendOrTruncate = append ? StandardOpenOption.APPEND
             : StandardOpenOption.TRUNCATE_EXISTING;

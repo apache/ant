@@ -1140,7 +1140,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *
      * @return the classname in filesystem format (eg java/lang/Integer.class)
      */
-    private String getClassFilename(final String classname) {
+    private static String getClassFilename(final String classname) {
         return classname.replace('.', '/') + ".class";
     }
 

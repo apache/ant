@@ -573,7 +573,7 @@ public class Checksum extends MatchingTask implements Condition {
         return checksumMatches;
     }
 
-    private String createDigestString(byte[] fileDigest) {
+    private static String createDigestString(byte[] fileDigest) {
         StringBuilder checksumSb = new StringBuilder();
         for (byte digestByte : fileDigest) {
             checksumSb.append(String.format("%02x", BYTE_MASK & digestByte));

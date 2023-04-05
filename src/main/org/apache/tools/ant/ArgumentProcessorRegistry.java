@@ -107,7 +107,7 @@ public class ArgumentProcessorRegistry {
         registerArgumentProcessor(getProcessor(helperClass));
     }
 
-    private ArgumentProcessor getProcessor(String helperClassName) {
+    private static ArgumentProcessor getProcessor(String helperClassName) {
         try {
             @SuppressWarnings("unchecked")
             Class< ? extends ArgumentProcessor> cl = (Class< ? extends ArgumentProcessor>) Class.forName(helperClassName);
@@ -118,7 +118,7 @@ public class ArgumentProcessorRegistry {
         }
     }
 
-    private ArgumentProcessor getProcessor(
+    private static ArgumentProcessor getProcessor(
             Class< ? extends ArgumentProcessor> processorClass) {
         ArgumentProcessor processor;
         try {
@@ -143,7 +143,7 @@ public class ArgumentProcessorRegistry {
         }
     }
 
-    private ArgumentProcessor getProcessorByService(InputStream is)
+    private static ArgumentProcessor getProcessorByService(InputStream is)
             throws IOException {
         try (BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             String processorClassName = rd.readLine();

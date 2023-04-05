@@ -361,7 +361,7 @@ public class Jar extends Zip {
         }
     }
 
-    private boolean jarHasIndex(File jarFile) throws IOException {
+    private static boolean jarHasIndex(File jarFile) throws IOException {
         try (ZipFile zf = new ZipFile(jarFile)) {
             return StreamUtils.enumerationAsStream(zf.entries())
                     .anyMatch(ze -> INDEX_NAME.equalsIgnoreCase(ze.getName()));

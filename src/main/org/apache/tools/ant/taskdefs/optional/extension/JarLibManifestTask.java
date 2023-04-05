@@ -232,7 +232,7 @@ public final class JarLibManifestTask extends Task {
      * @param extensions the list of extensions
      * @throws BuildException if an error occurs
      */
-    private void appendLibraryList(final Attributes attributes, final String listPrefix,
+    private static void appendLibraryList(final Attributes attributes, final String listPrefix,
             final List<Extension> extensions) throws BuildException {
         final int size = extensions.size();
         for (int i = 0; i < size; i++) {
@@ -252,7 +252,7 @@ public final class JarLibManifestTask extends Task {
      * @param attributes the attributes to add key-value to
      * @param extensionKey the key to use
      */
-    private void appendExtensionList(final Attributes attributes,
+    private static void appendExtensionList(final Attributes attributes,
             final Attributes.Name extensionKey, final String listPrefix, final int size) {
         //add in something like
         //"Extension-List: javahelp java3d"

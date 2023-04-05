@@ -314,7 +314,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
     private PrintStream savedOut = null;
     private PrintStream savedErr = null;
 
-    private PrintStream createEmptyStream() {
+    private static PrintStream createEmptyStream() {
         return new PrintStream(
             new OutputStream() {
                 @Override
@@ -323,7 +323,7 @@ public class JUnitTestRunner implements TestListener, JUnitTaskMirror.JUnitTestR
             });
     }
 
-    private PrintStream createTeePrint(final PrintStream ps1, final PrintStream ps2) {
+    private static PrintStream createTeePrint(final PrintStream ps1, final PrintStream ps2) {
         return new PrintStream(new TeeOutputStream(ps1, ps2));
     }
 

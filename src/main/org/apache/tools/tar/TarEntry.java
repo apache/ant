@@ -910,7 +910,7 @@ public class TarEntry implements TarConstants {
         TarUtils.formatCheckSumOctalBytes(chk, outbuf, csOffset, CHKSUMLEN);
     }
 
-    private int writeEntryHeaderField(long value, byte[] outbuf, int offset,
+    private static int writeEntryHeaderField(long value, byte[] outbuf, int offset,
                                       int length, boolean starMode) {
         if (!starMode && (value < 0
                           || value >= (1L << (3 * (length - 1))))) {
@@ -1074,7 +1074,7 @@ public class TarEntry implements TarConstants {
      * @param header The tar entry header buffer to evaluate the format for.
      * @return format type
      */
-    private int evaluateType(byte[] header) {
+    private static int evaluateType(byte[] header) {
         if (matchAsciiBuffer(GNU_TMAGIC, header, MAGIC_OFFSET, PURE_MAGICLEN)) {
             return FORMAT_OLDGNU;
         }

@@ -322,7 +322,7 @@ public class MailLogger extends DefaultLogger {
      *      Set to null to make required.
      * @return                The value of the property, or default value.
      */
-    private String getValue(Map<String, Object> properties, String name,
+    private static String getValue(Map<String, Object> properties, String name,
                             String defaultValue) {
         String propertyName = "MailLogger." + name;
         String value = (String) properties.get(propertyName);
@@ -345,7 +345,7 @@ public class MailLogger extends DefaultLogger {
      * @param  message          mail body
      * @exception  IOException  thrown if sending message fails
      */
-    private void sendMail(Values values, String message) throws IOException {
+    private static void sendMail(Values values, String message) throws IOException {
         MailMessage mailMessage = new MailMessage(
             values.mailhost(), values.port());
         mailMessage.setHeader("Date", DateUtils.getDateForHeader());
@@ -422,7 +422,7 @@ public class MailLogger extends DefaultLogger {
         mailer.send();
     }
 
-    private Vector<EmailAddress> splitEmailAddresses(String listString) {
+    private static Vector<EmailAddress> splitEmailAddresses(String listString) {
         return Stream.of(listString.split(",")).map(EmailAddress::new)
             .collect(Collectors.toCollection(Vector::new));
     }

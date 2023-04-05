@@ -522,7 +522,7 @@ public class TarOutputStream extends FilterOutputStream {
         closeEntry();
     }
 
-    private String stripTo7Bits(String name) {
+    private static String stripTo7Bits(String name) {
         StringBuilder result = new StringBuilder(name.length());
         for (final char ch : name.toCharArray()) {
             char stripped = (char) (ch & 0x7F);
@@ -543,7 +543,7 @@ public class TarOutputStream extends FilterOutputStream {
         buffer.writeRecord(recordBuf);
     }
 
-    private void addPaxHeadersForBigNumbers(Map<String, String> paxHeaders,
+    private static void addPaxHeadersForBigNumbers(Map<String, String> paxHeaders,
                                             TarEntry entry) {
         addPaxHeaderForBigNumber(paxHeaders, "size", entry.getSize(),
                                  TarConstants.MAXSIZE);
@@ -563,7 +563,7 @@ public class TarOutputStream extends FilterOutputStream {
         failForBigNumber("mode", entry.getMode(), TarConstants.MAXID);
     }
 
-    private void addPaxHeaderForBigNumber(Map<String, String> paxHeaders,
+    private static void addPaxHeaderForBigNumber(Map<String, String> paxHeaders,
                                           String header, long value,
                                           long maxValue) {
         if (value < 0 || value > maxValue) {
@@ -571,7 +571,7 @@ public class TarOutputStream extends FilterOutputStream {
         }
     }
 
-    private void failForBigNumbers(TarEntry entry) {
+    private static void failForBigNumbers(TarEntry entry) {
         failForBigNumber("entry size", entry.getSize(), TarConstants.MAXSIZE);
         failForBigNumberWithPosixMessage("group id", entry.getLongGroupId(), TarConstants.MAXID);
         failForBigNumber("last modification time",
@@ -585,15 +585,15 @@ public class TarOutputStream extends FilterOutputStream {
                          TarConstants.MAXID);
     }
 
-    private void failForBigNumber(String field, long value, long maxValue) {
+    private static void failForBigNumber(String field, long value, long maxValue) {
         failForBigNumber(field, value, maxValue, "");
     }
 
-    private void failForBigNumberWithPosixMessage(String field, long value, long maxValue) {
+    private static void failForBigNumberWithPosixMessage(String field, long value, long maxValue) {
         failForBigNumber(field, value, maxValue, " Use STAR or POSIX extensions to overcome this limit");
     }
 
-    private void failForBigNumber(String field, long value, long maxValue, String additionalMsg) {
+    private static void failForBigNumber(String field, long value, long maxValue, String additionalMsg) {
         if (value < 0 || value > maxValue) {
             throw new RuntimeException(field + " '" + value //NOSONAR
                                        + "' is too big ( > "
@@ -655,7 +655,7 @@ public class TarOutputStream extends FilterOutputStream {
         return false;
     }
 
-    private void transferModTime(TarEntry from, TarEntry to) {
+    private static void transferModTime(TarEntry from, TarEntry to) {
         Date fromModTime = from.getModTime();
         long fromModTimeSeconds = fromModTime.getTime() / 1000;
         if (fromModTimeSeconds < 0 || fromModTimeSeconds > TarConstants.MAXSIZE) {

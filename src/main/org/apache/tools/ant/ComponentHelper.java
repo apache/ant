@@ -1027,7 +1027,7 @@ public class ComponentHelper  {
     /**
      * Print class not found.
      */
-    private void printClassNotFound(PrintWriter out, String classname, boolean optional,
+    private static void printClassNotFound(PrintWriter out, String classname, boolean optional,
             String dirListing) {
         out.println("Cause: the class " + classname + " was not found.");
         if (optional) {
@@ -1044,7 +1044,7 @@ public class ComponentHelper  {
     /**
      * Print could not load dependent class.
      */
-    private void printNotLoadDependentClass(PrintWriter out, boolean optional,
+    private static void printNotLoadDependentClass(PrintWriter out, boolean optional,
             NoClassDefFoundError ncdfe, String dirListing) {
         out.println("Cause: Could not load a dependent class "
                     +  ncdfe.getMessage());
