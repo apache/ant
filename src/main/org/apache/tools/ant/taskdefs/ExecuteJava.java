@@ -151,6 +151,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 throw new BuildException(
                     "main() method in %s is not declared static", classname);
             }
+            perm.setProject(project);
             if (timeout == null) {
                 run(); //NOSONAR
             } else {
@@ -201,6 +202,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (sysProperties != null) {
                 sysProperties.restoreSystem();
             }
+            perm.setProject(null);
         }
     }
 

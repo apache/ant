@@ -30,6 +30,7 @@ import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
+import org.apache.tools.ant.Project;
 
 /**
  * This class implements a security manager meant for usage by tasks that run inside the
@@ -52,6 +53,7 @@ public class Permissions {
     private SecurityManager origSm = null;
     private boolean active = false;
     private final boolean delegateToOldSM;
+    private Project project = null;
 
     // Mandatory constructor for permission object.
     private static final Class<?>[] PARAMS = {String.class, String.class};
@@ -72,6 +74,10 @@ public class Permissions {
      */
     public Permissions(final boolean delegateToOldSM) {
         this.delegateToOldSM = delegateToOldSM;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     /**
@@ -100,8 +106,14 @@ public class Permissions {
     public synchronized void setSecurityManager() throws BuildException {
         origSm = System.getSecurityManager();
         init();
-        System.setSecurityManager(new MySM());
-        active = true;
+        try {
+            System.setSecurityManager(new MySM());
+            active = true;
+        } catch (UnsupportedOperationException x) {
+            if (project != null) {
+                project.log("Skipping security manager (perhaps running on Java 18+)", x, Project.MSG_INFO);
+            }
+        }
     }
 
     /**
@@ -169,8 +181,10 @@ public class Permissions {
      * To be used by tasks that just finished executing the parts subject to these permissions.
      */
     public synchronized void restoreSecurityManager() {
-        active = false;
-        System.setSecurityManager(origSm);
+        if (active) {
+            active = false;
+            System.setSecurityManager(origSm);
+        }
     }
 
     /**
