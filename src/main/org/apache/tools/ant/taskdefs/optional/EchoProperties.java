@@ -359,16 +359,12 @@ public class EchoProperties extends Task {
 
             @Override
             public Set<Map.Entry<Object, Object>> entrySet() {
-                Set<Map.Entry<Object, Object>> result = super.entrySet();
-                if (JavaEnvUtils.isKaffe()) {
                     Set<Map.Entry<Object, Object>> t =
                         new TreeSet<>(Comparator.comparing(
                             ((Function<Map.Entry<Object, Object>, Object>) Map.Entry::getKey)
                                 .andThen(Object::toString)));
-                    t.addAll(result);
+                    t.addAll(super.entrySet());
                     return t;
-                }
-                return result;
             }
         };
         allProps.forEach((k, v) -> props.put(String.valueOf(k), String.valueOf(v)));

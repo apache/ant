@@ -41,6 +41,9 @@ Other changes:
    for runnning the forked tests.
    Bugzilla Report 66464
 
+ * made sure <echoproperties> sorts the echoed properties on JDK9+ as well.
+   Bugzilla Report 66588
+
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================
 
