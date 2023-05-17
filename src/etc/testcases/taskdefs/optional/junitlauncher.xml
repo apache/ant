@@ -166,6 +166,29 @@
         </junitlauncher>
     </target>
 
+    <target name="test-per-test-fork-mode" depends="init">
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <testclasses outputdir="${output.dir}">
+                <!-- the same test is duplicated intentionally; if both are run in the same JVM the second one will
+                     fail, it is a nice way to ensure "perTest" mode runs every test suite class in a separate JVM -->
+                <fileset dir="${build.classes.dir}" includes="org/example/**/junitlauncher/**/ForkedTest.class"/>
+                <fileset dir="${build.classes.dir}" includes="org/example/**/junitlauncher/**/ForkedTest.class"/>
+
+                <listener classname="org.example.junitlauncher.Tracker"
+                          outputDir="${output.dir}"
+                          resultFile="${test-per-test-fork-mode.tracker}"
+                          if="test-per-test-fork-mode.tracker"/>
+
+                <fork dir="${basedir}" mode="perTest">
+                    <sysproperty key="junitlauncher.test.sysprop.one" value="forked"/>
+                </fork>
+
+                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true" useLegacyReportingName="false"/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
     <target name="test-junit-platform-lib-excluded" depends="init">
         <junitlauncher>
             <classpath refid="junit.engine.jupiter.classpath"/>

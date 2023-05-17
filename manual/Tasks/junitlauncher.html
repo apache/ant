@@ -582,8 +582,7 @@
 
 <p>
     The <a href="#fork">fork</a> nested element can be used to run the tests in a newly forked
-    JVM. All tests that are part of this <code>testclasses</code> element will run in one single
-    instance of the newly forked JVM.
+    JVM.
 </p>
 
 <h4 id="fork">fork</h4>
@@ -612,6 +611,17 @@ the new JVM instance that will be created to launch the tests.
             running in this forked JVM is allowed to run. If the test runs longer
             than this configured value, then the JVM is killed</td>
         <td>No</td>
+    </tr>
+    <tr>
+        <td>mode</td>
+        <td>Controls how many JVMs get created if you want to fork some tests. Possible values
+            are <q>once</q> (the default) and <q>perTest</q>. <q>once</q> creates only a single
+            JVM for all tests while <q>perTest</q> creates a new JVM for each test suite class.
+            Note that only tests within the same <q>fork</q> element can share a JVM, so even
+            if you set <var>mode</var> to <q>once</q> Ant may have to create more than one JVM.
+            <p><em>Since Ant 1.10.13</em></p>
+        </td>
+        <td>No; defaults to <q>once</q></td>
     </tr>
     <tr>
         <td>includeJUnitPlatformLibraries</td>
