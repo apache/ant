@@ -50,6 +50,7 @@ public class DefaultCompilerAdapterTest {
 
     private static class LogCapturingJavac extends Javac {
         private StringBuilder sb = new StringBuilder();
+        @Override
         public void log(String msg, int msgLevel) {
             sb.append(msg);
         }

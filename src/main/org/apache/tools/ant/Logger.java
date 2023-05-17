@@ -15,19 +15,16 @@
  *  limitations under the License.
  *
  */
-
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant;
 
 /**
- * Interface to log messages for XSLT
- * @since Ant 1.5
- * @deprecated replaced by Logger
+ * A generic logger interface.
  */
-@Deprecated
-public interface XSLTLogger {
+public interface Logger {
     /**
      * Log a message.
-     * @param msg the message to log
+     *
+     * @param message String to be logged
      */
-    void log(String msg);
+    void log(String message);
 }

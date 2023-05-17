@@ -22,7 +22,7 @@ package org.apache.tools.ant;
  * Provides common facilities.
  *
  */
-public abstract class ProjectComponent implements Cloneable {
+public abstract class ProjectComponent implements Cloneable, Logger {
 
     // CheckStyle:VisibilityModifier OFF - bc
     /**

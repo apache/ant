@@ -63,7 +63,7 @@ import org.apache.tools.ant.util.VectorSet;
  * file paths at runtime.
  *
  */
-public class Project implements ResourceFactory {
+public class Project implements ResourceFactory, Logger {
     /** Message priority of &quot;error&quot;. */
     public static final int MSG_ERR = 0;
     /** Message priority of &quot;warning&quot;. */

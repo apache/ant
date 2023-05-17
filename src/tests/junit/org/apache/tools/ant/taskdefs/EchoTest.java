@@ -97,7 +97,8 @@ public class EchoTest {
         /**
          * {@inheritDoc}
          */
-        protected void log(String message) {
+        @Override
+        public void log(String message) {
             this.lastLoggedMessage = message;
         }
 

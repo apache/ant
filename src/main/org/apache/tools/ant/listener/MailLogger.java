@@ -307,7 +307,7 @@ public class MailLogger extends DefaultLogger {
      * @param message the message being logger
      */
     @Override
-    protected void log(String message) {
+    public void log(String message) {
         buffer.append(message).append(System.lineSeparator());
     }
 

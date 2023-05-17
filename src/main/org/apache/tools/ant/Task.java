@@ -271,15 +271,6 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Logs a message with the default (INFO) priority.
-     *
-     * @param msg The message to be logged. Should not be <code>null</code>.
-     */
-    public void log(String msg) {
-        log(msg, Project.MSG_INFO);
-    }
-
-    /**
      * Logs a message with the given priority. This delegates
      * the actual logging to the project.
      *
@@ -287,6 +278,7 @@ public abstract class Task extends ProjectComponent {
      * @param msgLevel The message priority at which this message is to
      *                 be logged.
      */
+    @Override
     public void log(String msg, int msgLevel) {
         if (getProject() == null) {
             super.log(msg, msgLevel);

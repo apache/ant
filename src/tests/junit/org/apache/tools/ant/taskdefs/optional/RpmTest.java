@@ -63,6 +63,7 @@ public class RpmTest {
                 };
         }
 
+        @Override
         public void log(String msg, int msgLevel) {
         }
     }
