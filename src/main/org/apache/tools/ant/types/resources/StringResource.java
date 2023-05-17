@@ -223,7 +223,7 @@ public class StringResource extends Resource {
      */
     @Override
     public void setRefid(Reference r) {
-        if (encoding != DEFAULT_ENCODING) {
+        if (!encoding.equals(DEFAULT_ENCODING)) {
             throw tooManyAttributes();
         }
         super.setRefid(r);
