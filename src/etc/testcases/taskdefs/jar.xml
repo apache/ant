@@ -294,7 +294,11 @@
         <attribute name="Implementation-Vendor"  value="Apache Software Foundation"/>
       </manifest>
     </jar>
-  </target>  
+  </target>
 
+  <target name="testZip64ModeJar" description="tests bz-66873">
+    <mkdir dir="${tmp.dir}"/>
+    <jar destfile="${tmp.dir}/zip64mode.jar" zip64mode="always" basedir="." includes="jar.xml"/>
+  </target>
     
 </project>

@@ -33,6 +33,11 @@ Fixed bugs:
    if haltOnFailure was set to false. This is now fixed.
    Bugzilla Report 66411
 
+ * fixes a bug in org.apache.tools.zip.ZipOutputStream where, even
+   when "zip64Mode" is set to "always", ZipOutputStream may not create
+   a CEN extra field data for the entry.
+   Bugzilla Report 66873
+
 Other changes:
 --------------
 

@@ -1227,7 +1227,8 @@ public class ZipOutputStream extends FilterOutputStream {
         final boolean needsZip64Extra = hasZip64Extra(ze)
                 || ze.getCompressedSize() >= ZIP64_MAGIC
                 || ze.getSize() >= ZIP64_MAGIC
-                || lfhOffset >= ZIP64_MAGIC;
+                || lfhOffset >= ZIP64_MAGIC
+                || zip64Mode == Zip64Mode.Always;
 
         if (needsZip64Extra && zip64Mode == Zip64Mode.Never) {
             // must be the offset that is too big, otherwise an
@@ -1291,7 +1292,8 @@ public class ZipOutputStream extends FilterOutputStream {
         // uncompressed length
         putLong(ze.getCrc(), buf, CFH_CRC_OFFSET);
         if (ze.getCompressedSize() >= ZIP64_MAGIC
-                || ze.getSize() >= ZIP64_MAGIC) {
+                || ze.getSize() >= ZIP64_MAGIC
+                || zip64Mode == Zip64Mode.Always) {
             ZipLong.ZIP64_MAGIC.putLong(buf, CFH_COMPRESSED_SIZE_OFFSET);
             ZipLong.ZIP64_MAGIC.putLong(buf, CFH_ORIGINAL_SIZE_OFFSET);
         } else {
@@ -1316,7 +1318,11 @@ public class ZipOutputStream extends FilterOutputStream {
         putLong(ze.getExternalAttributes(), buf, CFH_EXTERNAL_ATTRIBUTES_OFFSET);
 
         // relative offset of LFH
-        putLong(Math.min(lfhOffset, ZIP64_MAGIC), buf, CFH_LFH_OFFSET);
+        if (lfhOffset >= ZIP64_MAGIC || zip64Mode == Zip64Mode.Always) {
+            putLong(ZIP64_MAGIC, buf, CFH_LFH_OFFSET);
+        } else {
+            putLong(Math.min(lfhOffset, ZIP64_MAGIC), buf, CFH_LFH_OFFSET);
+        }
 
         // file name
         System.arraycopy(name.array(), name.arrayOffset(), buf, CFH_FILENAME_OFFSET, nameLen);
@@ -1344,7 +1350,8 @@ public class ZipOutputStream extends FilterOutputStream {
         if (needsZip64Extra) {
             Zip64ExtendedInformationExtraField z64 = getZip64Extra(ze);
             if (ze.getCompressedSize() >= ZIP64_MAGIC
-                || ze.getSize() >= ZIP64_MAGIC) {
+                    || ze.getSize() >= ZIP64_MAGIC
+                    || zip64Mode == Zip64Mode.Always) {
                 z64.setCompressedSize(new ZipEightByteInteger(ze.getCompressedSize()));
                 z64.setSize(new ZipEightByteInteger(ze.getSize()));
             } else {
@@ -1352,7 +1359,7 @@ public class ZipOutputStream extends FilterOutputStream {
                 z64.setCompressedSize(null);
                 z64.setSize(null);
             }
-            if (lfhOffset >= ZIP64_MAGIC) {
+            if (lfhOffset >= ZIP64_MAGIC || zip64Mode == Zip64Mode.Always) {
                 z64.setRelativeHeaderOffset(new ZipEightByteInteger(lfhOffset));
             }
             ze.setExtra();
