@@ -8,6 +8,18 @@ Changes that could break older environments:
    later may be costly (for example in the case of a StringResource).
    Bugzilla Report 66496
 
+ * When using Java 18 or higher, Ant will no longer use Java SecurityManager
+   because it has been deprecated for removal and by default is disallowed
+   to be set at runtime https://openjdk.org/jeps/411.
+   This will mean that the "<permissions>" type is no longer functional when
+   using Java 18 or higher.
+   Furthermore, when using Java 18 or higher, if the build executes
+   tasks that call "java.lang.System.exit()" and if those tasks aren't
+   running in a forked VM of their own, then such tasks will now kill
+   the entire Ant build process. It is recommended that such tasks be
+   updated to launch in a forked JVM so that the System.exit() call
+   will not impact the JVM in which Ant process runs.
+
 Fixed bugs:
 -----------
 
