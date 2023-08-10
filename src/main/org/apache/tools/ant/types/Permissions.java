@@ -35,7 +35,10 @@ import org.apache.tools.ant.util.SecurityManagerUtil;
 /**
  * This class implements a security manager meant for usage by tasks that run inside the
  * Ant VM. An examples are the Java Task and JUnitTask.
+ * <p>
+ * Note: This class doesn't provide any functionality for Java 18 and higher
  *
+ * <p>
  * The basic functionality is that nothing (except for a base set of permissions) is allowed, unless
  * the permission is granted either explicitly or implicitly.
  * If a permission is granted this can be overruled by explicitly revoking the permission.
