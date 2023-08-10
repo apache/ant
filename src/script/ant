@@ -368,8 +368,19 @@ else
     ant_sys_opts="-Djikes.class.path=\"$JIKESPATH\""
   fi
 fi
-# allow calling System.setSecurityManager at runtime
-ant_sys_opts="$ant_sys_opts -Djava.security.manager=allow"
+# Run "java -XshowSettings:properties" and check the output for "java.specification.version" value
+JAVA_SPEC_VERSION=$("$JAVACMD" -XshowSettings:properties 2>&1 | sed -n -e 's/[[:space:]]//g' -e 's/^java\.specification\.version=//p')
+case "$JAVA_SPEC_VERSION" in
+  1.*)
+    # Up to and including Java 8, versions are reported as 1.N.
+    ;;
+  *)
+    if [ "$JAVA_SPEC_VERSION" -ge 18 ]; then
+      # set security manager property to allow calls to System.setSecurityManager() at runtime
+      ANT_OPTS="$ANT_OPTS -Djava.security.manager=allow"
+    fi
+    ;;
+esac
 ant_exec_command="exec \"\$JAVACMD\" $ANT_OPTS -classpath \"\$LOCALCLASSPATH\" -Dant.home=\"\$ANT_HOME\" -Dant.library.dir=\"\$ANT_LIB\" $ant_sys_opts org.apache.tools.ant.launch.Launcher $ANT_ARGS -cp \"\$CLASSPATH\""
 if $ant_exec_debug; then
   # using printf to avoid echo line continuation and escape interpretation confusion

@@ -347,10 +347,7 @@
   </selector>
 
   <selector id="ant.launcher">
-    <or>
-      <filename name="${ant.package}/launch/"/>
-      <filename name="allow.*"/>
-    </or>
+    <filename name="${ant.package}/launch/"/>
   </selector>
 
   <selector id="ant.core">
