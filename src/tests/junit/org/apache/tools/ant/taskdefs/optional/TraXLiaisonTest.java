@@ -35,7 +35,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
+import org.apache.tools.ant.taskdefs.condition.JavaVersion;
 import org.apache.tools.ant.util.JAXPUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.After;
 import org.junit.Test;
 
@@ -60,6 +62,10 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements XSLTLogg
 
     @Test
     public void testXalan2RedirectViaJDKFactory() throws Exception {
+        final JavaVersion javaVersion = new JavaVersion();
+        javaVersion.setAtMost("17");
+        assumeTrue("Test sets SecurityManager at runtime which is no longer supported" +
+                " on Java version: " + JavaEnvUtils.getJavaVersion(), javaVersion.eval());
         try {
             getClass().getClassLoader().loadClass("org.apache.xalan.lib.Redirect");
         } catch (Exception exc) {
@@ -106,6 +112,10 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements XSLTLogg
 
     @Test
     public void testXalan2RedirectViaXalan() throws Exception {
+        final JavaVersion javaVersion = new JavaVersion();
+        javaVersion.setAtMost("17");
+        assumeTrue("Test sets SecurityManager at runtime which is no longer supported" +
+                " on Java version: " + JavaEnvUtils.getJavaVersion(), javaVersion.eval());
         try {
             getClass().getClassLoader().loadClass("org.apache.xalan.lib.Redirect");
         } catch (Exception exc) {

@@ -30,6 +30,7 @@ import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
+import org.apache.tools.ant.util.SecurityManagerUtil;
 
 /**
  * This class implements a security manager meant for usage by tasks that run inside the
@@ -98,6 +99,9 @@ public class Permissions {
      * @throws BuildException on error
      */
     public synchronized void setSecurityManager() throws BuildException {
+        if (!SecurityManagerUtil.isSetSecurityManagerAllowed()) {
+            return;
+        }
         origSm = System.getSecurityManager();
         init();
         System.setSecurityManager(new MySM());
@@ -169,6 +173,9 @@ public class Permissions {
      * To be used by tasks that just finished executing the parts subject to these permissions.
      */
     public synchronized void restoreSecurityManager() {
+        if (!SecurityManagerUtil.isSetSecurityManagerAllowed()) {
+            return;
+        }
         active = false;
         System.setSecurityManager(origSm);
     }

@@ -20,6 +20,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeNoException;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,13 +30,19 @@ import java.security.Permission;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
+import org.apache.tools.ant.taskdefs.condition.JavaVersion;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.Test;
 
 public class XMLResultAggregatorTest {
 
     @Test
     public void testFrames() throws Exception {
+        final JavaVersion javaVersion = new JavaVersion();
+        javaVersion.setAtMost("17");
+        assumeTrue("Test sets SecurityManager at runtime which is no longer supported" +
+                " on Java version: " + JavaEnvUtils.getJavaVersion(), javaVersion.eval());
         // For now, skip this test on JDK 6 (and below); see below for why:
         try {
             Class.forName("java.nio.file.Files");

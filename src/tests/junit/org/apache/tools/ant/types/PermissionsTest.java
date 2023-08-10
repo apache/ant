@@ -19,6 +19,8 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.ExitException;
+import org.apache.tools.ant.taskdefs.condition.JavaVersion;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,6 +29,7 @@ import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * JUnit 4 testcases for org.apache.tools.ant.types.Permissions.
@@ -40,6 +43,11 @@ public class PermissionsTest {
 
     @Before
     public void setUp() {
+        final JavaVersion javaVersion = new JavaVersion();
+        javaVersion.setAtMost("17");
+        assumeTrue("org.apache.tools.ant.types.Permissions no longer supported on Java version: "
+                + JavaEnvUtils.getJavaVersion(), javaVersion.eval());
+
         perms = new Permissions();
         Permissions.Permission perm = new Permissions.Permission();
         // Grant extra permissions to read and write the user.* properties and read to the
@@ -87,7 +95,9 @@ public class PermissionsTest {
 
     @After
     public void tearDown() {
-        perms.restoreSecurityManager();
+        if (perms != null) {
+            perms.restoreSecurityManager();
+        }
     }
 
     /** Tests a permission that is granted per default. */

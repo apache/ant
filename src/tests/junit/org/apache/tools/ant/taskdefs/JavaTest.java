@@ -35,6 +35,7 @@ import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.taskdefs.condition.JavaVersion;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 import org.junit.Assume;
 import org.junit.AssumptionViolatedException;
@@ -72,6 +73,18 @@ public class JavaTest {
 
     private boolean runFatalTests = false;
 
+    private static final boolean allowedToIssueSystemExit;
+    private static final String SKIP_MSG_CAUSE_SYSTEM_EXIT_USE =
+            "Skipping test on current Java version " + JavaEnvUtils.getJavaVersion()
+                    + " because test calls System.exit() in non-forked VM";
+    static {
+        final JavaVersion javaVersion = new JavaVersion();
+        javaVersion.setAtMost("17");
+        // don't run tests which call System.exit() on a non-forked VM because
+        // Ant no longer sets a custom SecurityManager to prevent the VM exit
+        // for Java versions >= 18
+        allowedToIssueSystemExit = javaVersion.eval();
+    }
 
     /**
      * configure the project.
@@ -209,12 +222,14 @@ public class JavaTest {
     @Test
     public void testRunFail() {
         assumeTrue("Fatal tests have not been set to run", runFatalTests);
+        assumeTrue(SKIP_MSG_CAUSE_SYSTEM_EXIT_USE, allowedToIssueSystemExit);
         buildRule.executeTarget("testRunFail");
     }
 
     @Test
     public void testRunFailFoe() {
         assumeTrue("Fatal tests have not been set to run", runFatalTests);
+        assumeTrue(SKIP_MSG_CAUSE_SYSTEM_EXIT_USE, allowedToIssueSystemExit);
         thrown.expect(BuildException.class);
         thrown.expectMessage("Java returned:");
         buildRule.executeTarget("testRunFailFoe");
@@ -273,12 +288,14 @@ public class JavaTest {
 
     @Test
     public void testResultPropertyNonZeroNoFork() {
+        assumeTrue(SKIP_MSG_CAUSE_SYSTEM_EXIT_USE, allowedToIssueSystemExit);
         buildRule.executeTarget("testResultPropertyNonZeroNoFork");
-         assertEquals("-1", buildRule.getProject().getProperty("exitcode"));
+        assertEquals("-1", buildRule.getProject().getProperty("exitcode"));
      }
 
     @Test
     public void testRunFailWithFailOnError() {
+        assumeTrue(SKIP_MSG_CAUSE_SYSTEM_EXIT_USE, allowedToIssueSystemExit);
         thrown.expect(BuildException.class);
         thrown.expectMessage("Java returned:");
         buildRule.executeTarget("testRunFailWithFailOnError");

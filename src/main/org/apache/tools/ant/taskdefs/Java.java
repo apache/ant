@@ -38,6 +38,7 @@ import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.RedirectorElement;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.KeepAliveInputStream;
+import org.apache.tools.ant.util.SecurityManagerUtil;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -202,7 +203,7 @@ public class Java extends Task {
                 log("bootclasspath ignored when same JVM is used.",
                     Project.MSG_WARN);
             }
-            if (perm == null) {
+            if (perm == null && SecurityManagerUtil.isSetSecurityManagerAllowed()) {
                 perm = new Permissions(true);
                 log("running " + this.getCommandLine().getClassname()
                     + " with default permissions (exit forbidden)", Project.MSG_VERBOSE);
