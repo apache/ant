@@ -32,6 +32,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.StreamUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -462,6 +463,7 @@ public class JarTest {
      */
     @Test
     public void testZip64ModeJar() throws IOException {
+        assumeTrue("Skipping on Java version < 11", JavaEnvUtils.isAtLeastJavaVersion("11"));
         // invoke the target
         buildRule.executeTarget("testZip64ModeJar");
         final File zip64Modejar = new File(getOutputDir(), tempDir + "zip64mode.jar");
