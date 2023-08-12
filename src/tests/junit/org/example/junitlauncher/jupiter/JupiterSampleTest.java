@@ -19,12 +19,16 @@ package org.example.junitlauncher.jupiter;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -71,6 +75,22 @@ public class JupiterSampleTest {
     @Test
     @Tag("slow")
     void testMethodIncludeTagisNotExecuted() {
+    }
+
+    @ParameterizedTest(name = "{displayName} asserting {0} is an even number")
+    @ValueSource(ints = {2, 4, 6, 7, 12})
+    void testEvenFails(final int val) {
+        final boolean shouldRun = Boolean.getBoolean("junitlauncher.test.run-jupiter-parameterized-tests");
+        Assumptions.assumeTrue(shouldRun, "Skipping testEvenFails");
+        assertEquals(0, val % 2, val + " is not an even number");
+    }
+
+    @ParameterizedTest(name = "{displayName}  asserting {0} is an odd number")
+    @ValueSource(ints = {1, 3, 9})
+    void testOddPasses(final int val) {
+        final boolean shouldRun = Boolean.getBoolean("junitlauncher.test.run-jupiter-parameterized-tests");
+        Assumptions.assumeTrue(shouldRun, "Skipping testOddPasses");
+        assertNotEquals(0, val % 2, val + " is not an odd number");
     }
 
     @AfterEach

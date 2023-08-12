@@ -498,6 +498,20 @@ public class JUnitLauncherTaskTest {
                 ForkedTest.class.getName(), "testSysProp"));
     }
 
+    /**
+     * Tests that junitlauncher can be used with parameterized junit-jupiter tests
+     */
+    @Test
+    public void testJupiterParameterizedTest() throws Exception {
+        final String targetName = "test-jupiter-parameterized-test";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+        Assert.assertTrue("JupiterSampleTest#testOddPasses was expected to succeed", verifySuccess(trackerFile,
+                JupiterSampleTest.class.getName(), "testOddPasses"));
+        Assert.assertTrue("JupiterSampleTest#testEvenFails was expected to fail", verifyFailed(trackerFile,
+                JupiterSampleTest.class.getName(), "testEvenFails"));
+    }
+
     private Path setupTrackerProperty(final String targetName) {
         final String filename = targetName + "-tracker.txt";
         buildRule.getProject().setProperty(targetName + ".tracker", filename);

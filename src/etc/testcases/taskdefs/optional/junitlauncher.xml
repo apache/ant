@@ -39,6 +39,7 @@
         <fileset dir="../../../../../lib/optional">
             <include name="junit-jupiter*.jar"/>
             <include name="opentest4j*.jar"/>
+            <include name="apiguardian-api*"/> <!-- required for jupiter ParameterizedTest -->
         </fileset>
     </path>
 
@@ -398,5 +399,37 @@
             </test>
         </junitlauncher>
     </target>
+
+    <target name="test-jupiter-parameterized-test" depends="init">
+        <junitlauncher>
+            <classpath refid="junit.engine.jupiter.classpath"/>
+            <classpath>
+                <pathelement location="${build.classes.dir}"/>
+            </classpath>
+            <test name="org.example.junitlauncher.jupiter.JupiterSampleTest"
+                  outputdir="${output.dir}">
+                <listener classname="org.example.junitlauncher.Tracker"
+                          outputDir="${output.dir}"
+                          resultFile="${test-jupiter-parameterized-test.tracker}"
+                          if="test-jupiter-parameterized-test.tracker"/>
+                <fork>
+                    <sysproperty
+                            key="junitlauncher.test.run-jupiter-parameterized-tests"
+                            value="true" />
+                </fork>
+                <listener type="legacy-xml"
+                          resultFile="JupiterSampleTest-ParameterizedTests.xml"
+                          useLegacyReportingName="false"
+                          />
+            </test>
+        </junitlauncher>
+        <junitreport>
+            <fileset dir="${output.dir}">
+                <include name="JupiterSampleTest-ParameterizedTests.xml"/>
+            </fileset>
+            <report todir="${output.dir}/JupiterSampleTest-ParameterizedTests/html/"/>
+        </junitreport>
+    </target>
+
 </project>
 
