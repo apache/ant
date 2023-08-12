@@ -28,6 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
+import java.util.function.Function;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -83,8 +85,18 @@ public class LegacyXmlResultFormatterTest {
             }
 
             @Override
+            public <T> Optional<T> get(String key, Function<String, T> transformer) {
+                return Optional.empty();
+            }
+
+            @Override
             public int size() {
                 return 0;
+            }
+
+            @Override
+            public Set<String> keySet() {
+                return Collections.emptySet();
             }
         };
         final TestPlan testPlan = TestPlan.from(Collections.emptySet(), dummyParams);
