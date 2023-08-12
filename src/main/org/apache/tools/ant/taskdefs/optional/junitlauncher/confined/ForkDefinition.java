@@ -22,6 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PropertySet;
@@ -36,6 +37,7 @@ public class ForkDefinition {
 
     private boolean includeAntRuntimeLibraries = true;
     private boolean includeJUnitPlatformLibraries = true;
+    private ForkMode forkMode;
 
     private final CommandlineJava commandLineJava;
     private final Environment env = new Environment();
@@ -113,6 +115,20 @@ public class ForkDefinition {
     }
 
     /**
+     * The {@code forkMode} to use when launching the tests in a forked JVM.
+     *
+     * @param forkMode Can be null, in which case an internal implementation default will be used.
+     * @since Ant 1.10.14
+     */
+    public void setForkMode(final ForkMode forkMode) {
+        this.forkMode = forkMode;
+    }
+
+    ForkMode getForkMode() {
+        return this.forkMode;
+    }
+
+    /**
      * Generates a new {@link CommandlineJava} constructed out of the configurations set on this
      * {@link ForkDefinition}
      *
@@ -151,4 +167,21 @@ public class ForkDefinition {
         return cmdLine;
     }
 
+    public static final class ForkMode extends EnumeratedAttribute {
+
+        static final String FORK_EVERY_TEST_CLASS = "perTestClass";
+
+        public ForkMode() {
+            // public no-arg constructor required by Ant introspection
+        }
+
+        private ForkMode(final String val) {
+            this.setValue(val);
+        }
+
+        @Override
+        public String[] getValues() {
+            return new String[] {FORK_EVERY_TEST_CLASS};
+        }
+    }
 }

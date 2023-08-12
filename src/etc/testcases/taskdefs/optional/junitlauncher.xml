@@ -142,6 +142,7 @@
                 <fileset dir="${build.classes.dir}">
                     <include name="org/example/**/junitlauncher/**/"/>
                     <exclude name="org/example/**/junitlauncher/**/ForkedTest.class"/>
+                    <exclude name="org/example/**/junitlauncher/**/SharedDataAccessorTest*.class"/>
                 </fileset>
                 <listener type="legacy-brief" sendSysOut="true"/>
                 <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
@@ -431,5 +432,57 @@
         </junitreport>
     </target>
 
+    <target name="test-fork-one-jvm-all-tests" depends="init">
+        <property name="junitlauncher.test.tracker.append.file"
+                  value="${output.dir}/${test-fork-one-jvm-all-tests.tracker}"/>
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <testclasses outputdir="${output.dir}">
+                <fileset dir="${build.classes.dir}">
+                    <!-- order is important here since the second test is asserted,
+                        in JUnitLauncherTaskTest.testTestClassesDefaultForkMode(), to fail -->
+                    <include name="org/example/**/junitlauncher/**/SharedDataAccessorTest1.class"/>
+                    <include name="org/example/**/junitlauncher/**/SharedDataAccessorTest2.class"/>
+                </fileset>
+                <fork/>
+                <listener classname="org.example.junitlauncher.Tracker"
+                          if="test-fork-one-jvm-all-tests.tracker"/>
+                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+    <target name="test-fork-per-test-class" depends="init">
+        <property name="junitlauncher.test.tracker.append.file"
+                  value="${output.dir}/${test-fork-per-test-class.tracker}"/>
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <testclasses outputdir="${output.dir}">
+                <fileset dir="${build.classes.dir}">
+                    <include name="org/example/**/junitlauncher/**/SharedDataAccessorTest1.class"/>
+                    <include name="org/example/**/junitlauncher/**/SharedDataAccessorTest2.class"/>
+                </fileset>
+                <fork forkMode="perTestClass"/>
+                <listener classname="org.example.junitlauncher.Tracker"
+                          if="test-fork-per-test-class.tracker"/>
+                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+    <target name="test-single-test-explicit-fork-mode" depends="init">
+        <property name="junitlauncher.test.tracker.append.file"
+                  value="${output.dir}/${test-single-test-explicit-fork-mode.tracker}"/>
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <test name="org.example.junitlauncher.jupiter.SharedDataAccessorTest2"
+                  outputdir="${output.dir}">
+                <fork forkMode="perTestClass"/>
+                <listener classname="org.example.junitlauncher.Tracker"
+                          if="test-single-test-explicit-fork-mode.tracker"/>
+                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"/>
+            </test>
+        </junitlauncher>
+    </target>
 </project>
 

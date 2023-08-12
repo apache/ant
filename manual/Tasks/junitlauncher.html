@@ -640,6 +640,17 @@ the new JVM instance that will be created to launch the tests.
         </td>
         <td>No</td>
     </tr>
+    <tr>
+        <td>forkMode</td>
+        <td>Controls how many JVMs are launched for the forked tests. Allowed values are:
+            <ul class="inlinelist">
+                <li><code>perTestClass</code> - This mode launches each test class in a
+                    separately forked JVM</li>
+            </ul>
+            <p><em>Since Ant 1.10.14</em></p>
+        </td>
+        <td>No; defaults to launching all test classes in one single forked JVM.</td>
+    </tr>
 </table>
 
 The <code>fork</code> element allows the following nested elements:

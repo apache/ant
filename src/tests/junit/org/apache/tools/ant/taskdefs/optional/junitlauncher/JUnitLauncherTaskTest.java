@@ -22,10 +22,13 @@ import static org.example.junitlauncher.Tracker.verifySetupFailed;
 import static org.example.junitlauncher.Tracker.verifySkipped;
 import static org.example.junitlauncher.Tracker.verifySuccess;
 import static org.example.junitlauncher.Tracker.wasTestRun;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,6 +43,8 @@ import org.apache.tools.ant.util.LoaderUtils;
 import org.example.junitlauncher.jupiter.JupiterSampleTest;
 import org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll;
 import org.example.junitlauncher.jupiter.JupiterTagSampleTest;
+import org.example.junitlauncher.jupiter.SharedDataAccessorTest1;
+import org.example.junitlauncher.jupiter.SharedDataAccessorTest2;
 import org.example.junitlauncher.vintage.AlwaysFailingJUnit4Test;
 import org.example.junitlauncher.vintage.ForkedTest;
 import org.example.junitlauncher.vintage.JUnit4SampleTest;
@@ -95,9 +100,9 @@ public class JUnitLauncherTaskTest {
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
         // make sure the test that was expected to be run (and fail), did indeed fail
-        Assert.assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to run", wasTestRun(trackerFile,
+        assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to run", wasTestRun(trackerFile,
                 AlwaysFailingJUnit4Test.class.getName(), "testWillFail"));
-        Assert.assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to fail", verifyFailed(trackerFile,
+        assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to fail", verifyFailed(trackerFile,
                 AlwaysFailingJUnit4Test.class.getName(), "testWillFail"));
     }
 
@@ -110,8 +115,8 @@ public class JUnitLauncherTaskTest {
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
         // make sure the right test(s) were run
-        Assert.assertTrue("JUnit4SampleTest test was expected to be run", wasTestRun(trackerFile, JUnit4SampleTest.class.getName()));
-        Assert.assertTrue("JUnit4SampleTest#testFoo was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("JUnit4SampleTest test was expected to be run", wasTestRun(trackerFile, JUnit4SampleTest.class.getName()));
+        assertTrue("JUnit4SampleTest#testFoo was expected to succeed", verifySuccess(trackerFile,
                 JUnit4SampleTest.class.getName(), "testFoo"));
     }
 
@@ -124,20 +129,20 @@ public class JUnitLauncherTaskTest {
         final Path tracker1 = setupTrackerProperty(targetSpecificMethod);
         buildRule.executeTarget(targetSpecificMethod);
         // verify only that specific method was run
-        Assert.assertTrue("testBar was expected to be run", wasTestRun(tracker1, JUnit4SampleTest.class.getName(),
+        assertTrue("testBar was expected to be run", wasTestRun(tracker1, JUnit4SampleTest.class.getName(),
                 "testBar"));
-        Assert.assertFalse("testFoo wasn't expected to be run", wasTestRun(tracker1, JUnit4SampleTest.class.getName(),
+        assertFalse("testFoo wasn't expected to be run", wasTestRun(tracker1, JUnit4SampleTest.class.getName(),
                 "testFoo"));
 
 
         final String targetMultipleMethods = "test-multiple-specific-methods";
         final Path tracker2 = setupTrackerProperty(targetMultipleMethods);
         buildRule.executeTarget(targetMultipleMethods);
-        Assert.assertTrue("testFooBar was expected to be run", wasTestRun(tracker2, JUnit4SampleTest.class.getName(),
+        assertTrue("testFooBar was expected to be run", wasTestRun(tracker2, JUnit4SampleTest.class.getName(),
                 "testFooBar"));
-        Assert.assertTrue("testFoo was expected to be run", wasTestRun(tracker2, JUnit4SampleTest.class.getName(),
+        assertTrue("testFoo was expected to be run", wasTestRun(tracker2, JUnit4SampleTest.class.getName(),
                 "testFoo"));
-        Assert.assertFalse("testBar wasn't expected to be run", wasTestRun(tracker2, JUnit4SampleTest.class.getName(),
+        assertFalse("testBar wasn't expected to be run", wasTestRun(tracker2, JUnit4SampleTest.class.getName(),
                 "testBar"));
     }
 
@@ -151,9 +156,9 @@ public class JUnitLauncherTaskTest {
         final Path trackerFile2 = setupTrackerProperty(targetName + "-2");
         buildRule.executeTarget(targetName);
 
-        Assert.assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to be run", wasTestRun(trackerFile1,
+        assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to be run", wasTestRun(trackerFile1,
                 AlwaysFailingJUnit4Test.class.getName(), "testWillFail"));
-        Assert.assertTrue("JUnit4SampleTest#testFoo was expected to be run", wasTestRun(trackerFile2,
+        assertTrue("JUnit4SampleTest#testFoo was expected to be run", wasTestRun(trackerFile2,
                 JUnit4SampleTest.class.getName(), "testFoo"));
     }
 
@@ -167,17 +172,17 @@ public class JUnitLauncherTaskTest {
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
 
-        Assert.assertTrue("JUnit4SampleTest#testFoo was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("JUnit4SampleTest#testFoo was expected to succeed", verifySuccess(trackerFile,
                 JUnit4SampleTest.class.getName(), "testFoo"));
-        Assert.assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to fail", verifyFailed(trackerFile,
+        assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to fail", verifyFailed(trackerFile,
                 AlwaysFailingJUnit4Test.class.getName(), "testWillFail"));
-        Assert.assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
                 JupiterSampleTest.class.getName(), "testSucceeds"));
-        Assert.assertTrue("JupiterSampleTest#testFails was expected to succeed", verifyFailed(trackerFile,
+        assertTrue("JupiterSampleTest#testFails was expected to succeed", verifyFailed(trackerFile,
                 JupiterSampleTest.class.getName(), "testFails"));
-        Assert.assertTrue("JupiterSampleTest#testSkipped was expected to be skipped", verifySkipped(trackerFile,
+        assertTrue("JupiterSampleTest#testSkipped was expected to be skipped", verifySkipped(trackerFile,
                 JupiterSampleTest.class.getName(), "testSkipped"));
-        Assert.assertFalse("ForkedTest wasn't expected to be run", wasTestRun(trackerFile, ForkedTest.class.getName()));
+        assertFalse("ForkedTest wasn't expected to be run", wasTestRun(trackerFile, ForkedTest.class.getName()));
 
         verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll.xml", "<failure message=\"Intentional failure\" type=\"java.lang.RuntimeException\">");
         verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingStatic.xml", "Caused by: java.lang.RuntimeException: Intentional exception from static init block");
@@ -187,9 +192,9 @@ public class JUnitLauncherTaskTest {
         final String outputDir = buildRule.getProject().getProperty("output.dir");
         final Path xmlFile = Paths.get(outputDir, fileName);
 
-        Assert.assertTrue("XML file doesn't exist: " + xmlFile, Files.exists(xmlFile));
+        assertTrue("XML file doesn't exist: " + xmlFile, Files.exists(xmlFile));
         final String content = new String(Files.readAllBytes(xmlFile), StandardCharsets.UTF_8);
-        Assert.assertTrue(fileName + " doesn't contain " + expectedContentExtract, content.contains(expectedContentExtract));
+        assertTrue(fileName + " doesn't contain " + expectedContentExtract, content.contains(expectedContentExtract));
     }
 
     /**
@@ -207,7 +212,7 @@ public class JUnitLauncherTaskTest {
         Assert.assertEquals("System property " + ForkedTest.SYS_PROP_ONE + " was unexpected updated",
                 "dummy", System.getProperty(ForkedTest.SYS_PROP_ONE));
 
-        Assert.assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
                 ForkedTest.class.getName(), "testSysProp"));
     }
 
@@ -233,7 +238,7 @@ public class JUnitLauncherTaskTest {
             }
         }
         final String exclusionLogMsg = "Excluding JUnit platform libraries";
-        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
+        assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
     }
 
     /**
@@ -259,7 +264,7 @@ public class JUnitLauncherTaskTest {
             }
         }
         final String exclusionLogMsg = "Excluding Ant runtime libraries";
-        Assert.assertTrue("Ant runtime libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
+        assertTrue("Ant runtime libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
     }
 
 
@@ -275,10 +280,10 @@ public class JUnitLauncherTaskTest {
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
         final String exclusionLogMsg = "Excluding JUnit platform libraries";
-        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
-        Assert.assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("JUnit platform libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
+        assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
                 JupiterSampleTest.class.getName(), "testSucceeds"));
-        Assert.assertTrue("JupiterSampleTest#testFails was expected to fail", verifyFailed(trackerFile,
+        assertTrue("JupiterSampleTest#testFails was expected to fail", verifyFailed(trackerFile,
                 JupiterSampleTest.class.getName(), "testFails"));
     }
 
@@ -296,14 +301,14 @@ public class JUnitLauncherTaskTest {
         // run the target
         buildRule.executeTarget(targetName);
         final String exclusionLogMsg = "Excluding Ant runtime libraries";
-        Assert.assertTrue("Ant runtime libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
-        Assert.assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("Ant runtime libraries weren't excluded from classpath", buildRule.getFullLog().contains(exclusionLogMsg));
+        assertTrue("JupiterSampleTest#testSucceeds was expected to succeed", verifySuccess(trackerFile,
                 JupiterSampleTest.class.getName(), "testSucceeds"));
-        Assert.assertTrue("JupiterSampleTest#testFails was expected to fail", verifyFailed(trackerFile,
+        assertTrue("JupiterSampleTest#testFails was expected to fail", verifyFailed(trackerFile,
                 JupiterSampleTest.class.getName(), "testFails"));
-        Assert.assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to fail", verifyFailed(trackerFile,
+        assertTrue("AlwaysFailingJUnit4Test#testWillFail was expected to fail", verifyFailed(trackerFile,
                 AlwaysFailingJUnit4Test.class.getName(), "testWillFail"));
-        Assert.assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
                 ForkedTest.class.getName(), "testSysProp"));
 
 
@@ -324,12 +329,12 @@ public class JUnitLauncherTaskTest {
         // run the target
         buildRule.executeTarget(targetName);
 
-        Assert.assertTrue("Ant runtime libraries weren't excluded from classpath",
+        assertTrue("Ant runtime libraries weren't excluded from classpath",
                 buildRule.getFullLog().contains("Excluding Ant runtime libraries"));
-        Assert.assertTrue("JUnit platform libraries weren't excluded from classpath",
+        assertTrue("JUnit platform libraries weren't excluded from classpath",
                 buildRule.getFullLog().contains("Excluding JUnit platform libraries"));
 
-        Assert.assertTrue("JUnit4SampleTest#testBar was expected to pass", verifySuccess(trackerFile,
+        assertTrue("JUnit4SampleTest#testBar was expected to pass", verifySuccess(trackerFile,
                 JUnit4SampleTest.class.getName(), "testBar"));
     }
 
@@ -342,9 +347,9 @@ public class JUnitLauncherTaskTest {
         final Path tracker2 = setupTrackerProperty(target);
         buildRule.executeTarget(target);
         // verify only that specific method was run
-        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
+        assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisExecuted"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecuted"));
     }
 
@@ -357,9 +362,9 @@ public class JUnitLauncherTaskTest {
         final Path tracker2 = setupTrackerProperty(target);
         buildRule.executeTarget(target);
         // verify only that specific method was run
-        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
+        assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisExecuted"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker2, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecuted"));
     }
 
@@ -375,15 +380,15 @@ public class JUnitLauncherTaskTest {
 
         buildRule.executeTarget(target);
         // verify only that specific method was run
-        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker1, JupiterSampleTest.class.getName(),
+        assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker1, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisExecuted"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker1, JupiterSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker1, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecuted"));
-        Assert.assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
+        assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisExecutedTagSampleTest"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecutedTagSampleTest"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker2, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecutedTagSampleTest2"));
     }
     
@@ -416,7 +421,7 @@ public class JUnitLauncherTaskTest {
         final String targetName = "test-beforeall-failure-continues-build";
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
-        Assert.assertTrue("Expected @BeforeAll failure to lead to failing testcase", verifySetupFailed(trackerFile, JupiterSampleTestFailingBeforeAll.class.getName()));
+        assertTrue("Expected @BeforeAll failure to lead to failing testcase", verifySetupFailed(trackerFile, JupiterSampleTestFailingBeforeAll.class.getName()));
     }
 
 
@@ -430,15 +435,15 @@ public class JUnitLauncherTaskTest {
 
         buildRule.executeTarget(target);
         // verify only that specific method was run
-        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
+        assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisExecuted"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecuted"));
-        Assert.assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+        assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisExecutedTagSampleTest"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecutedTagSampleTest"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecutedTagSampleTest2"));
     }
 
@@ -452,15 +457,15 @@ public class JUnitLauncherTaskTest {
 
         buildRule.executeTarget(target);
 
-        Assert.assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
+        assertTrue("testMethodIncludeTagisExecuted was expected to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisExecuted"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecuted was expected NOT to be run", wasTestRun(tracker, JupiterSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecuted"));
-        Assert.assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+        assertTrue("testMethodIncludeTagisExecutedTagSampleTest was expected to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisExecutedTagSampleTest"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecutedTagSampleTest"));
-        Assert.assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
+        assertFalse("testMethodIncludeTagisNotExecutedTagSampleTest2 was expected NOT to be run", wasTestRun(tracker, JupiterTagSampleTest.class.getName(),
                 "testMethodIncludeTagisNotExecutedTagSampleTest2"));
 
         // Do it in the test, cause otherwise the file will be too big
@@ -478,7 +483,7 @@ public class JUnitLauncherTaskTest {
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
 
-        Assert.assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
                 ForkedTest.class.getName(), "testSysProp"));
     }
 
@@ -494,7 +499,7 @@ public class JUnitLauncherTaskTest {
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
 
-        Assert.assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("ForkedTest#testSysProp was expected to succeed", verifySuccess(trackerFile,
                 ForkedTest.class.getName(), "testSysProp"));
     }
 
@@ -506,17 +511,68 @@ public class JUnitLauncherTaskTest {
         final String targetName = "test-jupiter-parameterized-test";
         final Path trackerFile = setupTrackerProperty(targetName);
         buildRule.executeTarget(targetName);
-        Assert.assertTrue("JupiterSampleTest#testOddPasses was expected to succeed", verifySuccess(trackerFile,
+        assertTrue("JupiterSampleTest#testOddPasses was expected to succeed", verifySuccess(trackerFile,
                 JupiterSampleTest.class.getName(), "testOddPasses"));
-        Assert.assertTrue("JupiterSampleTest#testEvenFails was expected to fail", verifyFailed(trackerFile,
+        assertTrue("JupiterSampleTest#testEvenFails was expected to fail", verifyFailed(trackerFile,
                 JupiterSampleTest.class.getName(), "testEvenFails"));
+    }
+
+    /**
+     * Tests usage of {@code <testclasses>} with {@code <fork>} with the default fork mode
+     */
+    @Test
+    public void testTestClassesDefaultForkMode() throws Exception {
+        final String targetName = "test-fork-one-jvm-all-tests";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+
+        assertTrue("SharedDataAccessorTest1#testData was expected to pass",
+                verifySuccess(trackerFile, SharedDataAccessorTest1.class.getName(), "testData"));
+        assertTrue("SharedDataAccessorTest2#testData was expected to fail",
+                verifyFailed(trackerFile, SharedDataAccessorTest2.class.getName(), "testData"));
+    }
+
+    /**
+     * Tests usage of {@code <testclasses>} with {@code forkMode=perTestClass}
+     */
+    @Test
+    public void testForkPerTestClass() throws Exception {
+        final String targetName = "test-fork-per-test-class";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+
+        assertTrue("SharedDataAccessorTest1#testData was expected to pass",
+                verifySuccess(trackerFile, SharedDataAccessorTest1.class.getName(), "testData"));
+        assertTrue("SharedDataAccessorTest2#testData was expected to pass",
+                verifySuccess(trackerFile, SharedDataAccessorTest2.class.getName(), "testData"));
+    }
+
+    /**
+     * Tests usage of {@code <test>} with {@code forkMode=perTestClass}
+     */
+    @Test
+    public void testSingleTestExplicitForkMode() throws Exception {
+        final String targetName = "test-single-test-explicit-fork-mode";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+
+        assertTrue("SharedDataAccessorTest2#testData was expected to pass",
+                verifySuccess(trackerFile, SharedDataAccessorTest2.class.getName(), "testData"));
+        assertFalse("SharedDataAccessorTest1 wasn't expected to be run",
+                wasTestRun(trackerFile, SharedDataAccessorTest1.class.getName()));
     }
 
     private Path setupTrackerProperty(final String targetName) {
         final String filename = targetName + "-tracker.txt";
         buildRule.getProject().setProperty(targetName + ".tracker", filename);
         final String outputDir = buildRule.getProject().getProperty("output.dir");
-        return Paths.get(outputDir, filename);
+        final Path trackerFile = Paths.get(outputDir, filename);
+        try {
+            Files.deleteIfExists(trackerFile);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to delete tracker file " + trackerFile, e);
+        }
+        return trackerFile;
     }
 
     private void setupRuntimeClassesProperty() {

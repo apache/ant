@@ -25,6 +25,7 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.File;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -93,42 +94,53 @@ public class SingleTestClass extends TestDefinition implements NamedTest {
     }
 
     @Override
-    protected void toForkedRepresentation(final JUnitLauncherTask task, final XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement(LD_XML_ELM_TEST);
-        writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, testClass);
-        if (testMethods != null) {
-            final StringBuilder sb = new StringBuilder();
-            for (final String method : testMethods) {
-                if (sb.length() != 0) {
-                    sb.append(",");
+    protected List<ForkedRepresentation> toForkedRepresentations() throws IllegalStateException {
+        if (this.forkDefinition == null) {
+            throw new IllegalStateException("tests haven't been configured to run in forked JVM");
+        }
+        return Collections.singletonList(new SingleTestFork());
+    }
+
+    private final class SingleTestFork extends ForkedRepresentation {
+        @Override
+        public void write(final JUnitLauncherTask task, final XMLStreamWriter writer)
+                throws XMLStreamException {
+            writer.writeStartElement(LD_XML_ELM_TEST);
+            writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, testClass);
+            if (testMethods != null) {
+                final StringBuilder sb = new StringBuilder();
+                for (final String method : testMethods) {
+                    if (sb.length() != 0) {
+                        sb.append(",");
+                    }
+                    sb.append(method);
                 }
-                sb.append(method);
+                writer.writeAttribute(LD_XML_ATTR_METHODS, sb.toString());
             }
-            writer.writeAttribute(LD_XML_ATTR_METHODS, sb.toString());
-        }
-        if (haltOnFailure != null) {
-            writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, haltOnFailure.toString());
-        }
-        if (outputDir != null) {
-            writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, outputDir.getPath());
-        }
-        if (includeEngines != null) {
-            writer.writeAttribute(LD_XML_ATTR_INCLUDE_ENGINES, includeEngines);
-        }
-        if (excludeEngines != null) {
-            writer.writeAttribute(LD_XML_ATTR_EXCLUDE_ENGINES, excludeEngines);
-        }
-        // listeners for this test
-        if (listeners != null) {
-            for (final ListenerDefinition listenerDef : getListeners()) {
-                if (!listenerDef.shouldUse(task.getProject())) {
-                    // not applicable
-                    continue;
+            if (haltOnFailure != null) {
+                writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, haltOnFailure.toString());
+            }
+            if (outputDir != null) {
+                writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, outputDir.getPath());
+            }
+            if (includeEngines != null) {
+                writer.writeAttribute(LD_XML_ATTR_INCLUDE_ENGINES, includeEngines);
+            }
+            if (excludeEngines != null) {
+                writer.writeAttribute(LD_XML_ATTR_EXCLUDE_ENGINES, excludeEngines);
+            }
+            // listeners for this test
+            if (listeners != null) {
+                for (final ListenerDefinition listenerDef : getListeners()) {
+                    if (!listenerDef.shouldUse(task.getProject())) {
+                        // not applicable
+                        continue;
+                    }
+                    listenerDef.toForkedRepresentation(writer);
                 }
-                listenerDef.toForkedRepresentation(writer);
             }
+            writer.writeEndElement();
         }
-        writer.writeEndElement();
     }
 
     public static TestDefinition fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {

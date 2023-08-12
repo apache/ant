@@ -145,6 +145,10 @@ public abstract class TestDefinition {
         return parts.toArray(new String[0]);
     }
 
-    protected abstract void toForkedRepresentation(JUnitLauncherTask task, XMLStreamWriter writer) throws XMLStreamException;
+    protected abstract List<ForkedRepresentation> toForkedRepresentations() throws IllegalStateException;
 
+    public static abstract class ForkedRepresentation {
+        public abstract void write(JUnitLauncherTask task, XMLStreamWriter writer)
+                throws XMLStreamException;
+    }
 }

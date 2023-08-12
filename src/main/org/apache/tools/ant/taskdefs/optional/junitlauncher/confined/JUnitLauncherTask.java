@@ -25,6 +25,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.TestDefinition.ForkedRepresentation;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
@@ -99,10 +100,14 @@ public class JUnitLauncherTask extends Task {
                         "in context of project " + project, Project.MSG_DEBUG);
                 continue;
             }
-            if (test.getForkDefinition() != null) {
-                forkTest(test);
-            } else {
+            final ForkDefinition forkDefinition = test.getForkDefinition();
+            if (forkDefinition == null) {
                 launchViaReflection(new InVMLaunch(Collections.singletonList(test)));
+            } else {
+                final List<ForkedRepresentation> forkedReps = test.toForkedRepresentations();
+                for (final ForkedRepresentation forkedRep : forkedReps) {
+                    forkTest(test, forkDefinition, forkedRep);
+                }
             }
         }
     }
@@ -238,9 +243,9 @@ public class JUnitLauncherTask extends Task {
         return propsPath;
     }
 
-    private void forkTest(final TestDefinition test) {
+    private void forkTest(final TestDefinition test, final ForkDefinition forkDefinition,
+                          final ForkedRepresentation forkedRepresentation) {
         // create launch command
-        final ForkDefinition forkDefinition = test.getForkDefinition();
         final CommandlineJava commandlineJava = forkDefinition.generateCommandLine(this);
         if (this.classPath != null) {
             commandlineJava.createClasspath(getProject()).createPath().append(this.classPath);
@@ -283,7 +288,7 @@ public class JUnitLauncherTask extends Task {
                     listenerDef.toForkedRepresentation(writer);
                 }
                 // test definition as XML
-                test.toForkedRepresentation(this, writer);
+                forkedRepresentation.write(this, writer);
                 writer.writeEndElement();
                 writer.writeEndDocument();
             } finally {

@@ -17,6 +17,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junitlauncher.confined;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.ForkDefinition.ForkMode;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
@@ -74,37 +76,71 @@ public class TestClasses extends TestDefinition {
     }
 
     @Override
-    protected void toForkedRepresentation(final JUnitLauncherTask task, final XMLStreamWriter writer) throws XMLStreamException {
-        writer.writeStartElement(LD_XML_ELM_TEST_CLASSES);
-        // write out each test class
-        for (final String test : getTestClassNames()) {
-            writer.writeStartElement(LD_XML_ELM_TEST);
-            writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, test);
-            if (haltOnFailure != null) {
-                writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, haltOnFailure.toString());
-            }
-            if (outputDir != null) {
-                writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, outputDir.getPath());
-            }
-            if (includeEngines != null) {
-                writer.writeAttribute(LD_XML_ATTR_INCLUDE_ENGINES, includeEngines);
-            }
-            if (excludeEngines != null) {
-                writer.writeAttribute(LD_XML_ATTR_EXCLUDE_ENGINES, excludeEngines);
-            }
-            // listeners for this test
-            if (listeners != null) {
-                for (final ListenerDefinition listenerDef : getListeners()) {
-                    if (!listenerDef.shouldUse(task.getProject())) {
-                        // not applicable
-                        continue;
-                    }
-                    listenerDef.toForkedRepresentation(writer);
+    protected List<ForkedRepresentation> toForkedRepresentations() throws IllegalStateException {
+        if (this.forkDefinition == null) {
+            throw new IllegalStateException("tests haven't been configured to run in forked JVM");
+        }
+        final ForkMode forkMode = this.forkDefinition.getForkMode();
+        if (forkMode == null) {
+            // launch all test classes in a single forked JVM
+            return Collections.singletonList(new ForkModeRep(this.getTestClassNames()));
+        }
+        switch (forkMode.getValue()) {
+            case ForkMode.FORK_EVERY_TEST_CLASS: {
+                // launch each test class in a separate forked JVM
+                final List<ForkedRepresentation> forkModeReps = new ArrayList<>();
+                for (final String testClass : getTestClassNames()) {
+                    forkModeReps.add(new ForkModeRep(Collections.singletonList(testClass)));
                 }
+                return Collections.unmodifiableList(forkModeReps);
+            }
+            default: {
+                throw new BuildException("Unsupported fork mode: " + forkMode.getValue());
+            }
+        }
+    }
+
+    private final class ForkModeRep extends ForkedRepresentation {
+        private final List<String> testClassesToFork;
+
+        private ForkModeRep(final List<String> testClassesToFork) {
+            this.testClassesToFork = testClassesToFork;
+        }
+
+        @Override
+        public void write(final JUnitLauncherTask task, final XMLStreamWriter writer)
+                throws XMLStreamException {
+            writer.writeStartElement(LD_XML_ELM_TEST_CLASSES);
+            // write out each test class
+            for (final String test : this.testClassesToFork) {
+                writer.writeStartElement(LD_XML_ELM_TEST);
+                writer.writeAttribute(LD_XML_ATTR_CLASS_NAME, test);
+                if (haltOnFailure != null) {
+                    writer.writeAttribute(LD_XML_ATTR_HALT_ON_FAILURE, haltOnFailure.toString());
+                }
+                if (outputDir != null) {
+                    writer.writeAttribute(LD_XML_ATTR_OUTPUT_DIRECTORY, outputDir.getPath());
+                }
+                if (includeEngines != null) {
+                    writer.writeAttribute(LD_XML_ATTR_INCLUDE_ENGINES, includeEngines);
+                }
+                if (excludeEngines != null) {
+                    writer.writeAttribute(LD_XML_ATTR_EXCLUDE_ENGINES, excludeEngines);
+                }
+                // listeners for this test
+                if (listeners != null) {
+                    for (final ListenerDefinition listenerDef : getListeners()) {
+                        if (!listenerDef.shouldUse(task.getProject())) {
+                            // not applicable
+                            continue;
+                        }
+                        listenerDef.toForkedRepresentation(writer);
+                    }
+                }
+                writer.writeEndElement();
             }
             writer.writeEndElement();
         }
-        writer.writeEndElement();
     }
 
     public static List<TestDefinition> fromForkedRepresentation(final XMLStreamReader reader) throws XMLStreamException {

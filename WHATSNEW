@@ -65,6 +65,11 @@ Other changes:
    setLogLevel(LogLevel level) method.
    Bugzilla Report 66238
 
+ * The <fork> element of junitlaunchertask now allows a "forkMode"
+   attribute. forkMode=perTestClass can now be used to launch
+   each test class in a separate forked JVM.
+   Bugzilla Report 65176
+
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================
 
