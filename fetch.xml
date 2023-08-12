@@ -260,6 +260,7 @@ Set -Ddest=LOCATION on the command line
           description="load full XML libraries (Xalan and xml-resolver)"
           depends="init">
     <f2 project="xalan"/>
+    <f2 project="xalan" archive="serializer"/>
     <f2 project="xml-resolver"/>
   </target>
 
