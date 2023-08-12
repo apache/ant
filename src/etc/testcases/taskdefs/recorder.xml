@@ -29,9 +29,9 @@
 
   <target name="noappend">
     <copy file="${recin}/rectest2.result" tofile="${output}/rectest1.log"/>
-    <record name="${output}/rectest1.log" action="start"/>
+    <record name="${output}/rectest1.log" action="start" loglevel="info"/>
     <echo message="some message1"/>
-    <record name="${output}/rectest1.log" action="stop"/>
+    <record name="${output}/rectest1.log" action="stop" logLevel="info"/>
   </target>
 
   <target name="append">

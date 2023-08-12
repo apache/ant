@@ -61,6 +61,10 @@ Other changes:
  * made sure <echoproperties> sorts the echoed properties on JDK9+ as well.
    Bugzilla Report 66588
 
+ * org.apache.tools.ant.taskdefs.Recorder class now introduces a
+   setLogLevel(LogLevel level) method.
+   Bugzilla Report 66238
+
 Changes from Ant 1.10.12 TO Ant 1.10.13
 =======================================
 

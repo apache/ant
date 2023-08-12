@@ -136,6 +136,16 @@ public class Recorder extends Task implements SubBuildListener {
         loglevel = level.getLevel();
     }
 
+    /**
+     * Sets the level to which this recorder entry should log to.
+     *
+     * @param level the level to set.
+     * @since Ant 1.10.14
+     */
+    public void setLogLevel(final LogLevel level) {
+        loglevel = level.getLevel();
+    }
+
     //////////////////////////////////////////////////////////////////////
     // CORE / MAIN BODY
 
