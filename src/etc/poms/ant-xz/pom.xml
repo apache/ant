@@ -45,7 +45,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/m
     <dependency>
       <groupId>org.tukaani</groupId>
       <artifactId>xz</artifactId>
-      <version>1.8</version>
+      <version>1.9</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
