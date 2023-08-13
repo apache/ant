@@ -50,6 +50,11 @@ Fixed bugs:
    a CEN extra field data for the entry.
    Bugzilla Report 66873
 
+ * legacy-xml listener of junitlauncher task wouldn't report certain
+   failures involving junit jupiter dynamic tests. This has now been
+   fixed.
+   Github Pull Request #122
+
 Other changes:
 --------------
 

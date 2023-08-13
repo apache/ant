@@ -24,6 +24,7 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
@@ -244,6 +245,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                     // (https://bz.apache.org/bugzilla/show_bug.cgi?id=63850)
                     continue;
                 }
+                String classname = null;
                 // find the associated class of this test
                 final Optional<ClassSource> parentClassSource;
                 if (testId.isTest()) {
@@ -252,10 +254,25 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 else {
                     parentClassSource = findFirstClassSource(testId);
                 }
-                if (!parentClassSource.isPresent()) {
-                    continue;
+                if (parentClassSource.isPresent()) {
+                    classname = parentClassSource.get().getClassName();
+                } else {
+                    if (testId.getSource().isPresent()) {
+                        final TestSource testSource = testId.getSource().get();
+                        if (testSource instanceof MethodSource) {
+                            // this can happen for the case where the test is generated dynamically
+                            // through the use of @org.junit.jupiter.api.TestFactory. In such cases
+                            // the method having that annotation is considered a test and its
+                            // source is reported as a MethodSource
+                            classname = ((MethodSource) testSource).getClassName();
+                        }
+                    }
                 }
-                final String classname = (parentClassSource.get()).getClassName();
+                if (classname == null) {
+                    // as a last resort, use the test id as the classname,
+                    // so that the failure does get reported instead of being ignored/invisible
+                    classname = testId.getUniqueIdObject().toString();
+                }
                 writer.writeStartElement(ELEM_TESTCASE);
                 writeAttribute(writer, ATTR_CLASSNAME, classname);
                 writeAttribute(writer, ATTR_NAME, useLegacyReportingName ? testId.getLegacyReportingName()

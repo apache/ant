@@ -40,6 +40,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.JUnitLauncherTask;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.example.junitlauncher.jupiter.JupiterDynamicTests;
 import org.example.junitlauncher.jupiter.JupiterSampleTest;
 import org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll;
 import org.example.junitlauncher.jupiter.JupiterTagSampleTest;
@@ -184,17 +185,8 @@ public class JUnitLauncherTaskTest {
                 JupiterSampleTest.class.getName(), "testSkipped"));
         assertFalse("ForkedTest wasn't expected to be run", wasTestRun(trackerFile, ForkedTest.class.getName()));
 
-        verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll.xml", "<failure message=\"Intentional failure\" type=\"java.lang.RuntimeException\">");
-        verifyLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingStatic.xml", "Caused by: java.lang.RuntimeException: Intentional exception from static init block");
-    }
-
-    private void verifyLegacyXMLFile(final String fileName, final String expectedContentExtract) throws IOException {
-        final String outputDir = buildRule.getProject().getProperty("output.dir");
-        final Path xmlFile = Paths.get(outputDir, fileName);
-
-        assertTrue("XML file doesn't exist: " + xmlFile, Files.exists(xmlFile));
-        final String content = new String(Files.readAllBytes(xmlFile), StandardCharsets.UTF_8);
-        assertTrue(fileName + " doesn't contain " + expectedContentExtract, content.contains(expectedContentExtract));
+        assertPresentInLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingBeforeAll.xml", "<failure message=\"Intentional failure\" type=\"java.lang.RuntimeException\">");
+        assertPresentInLegacyXMLFile("TEST-org.example.junitlauncher.jupiter.JupiterSampleTestFailingStatic.xml", "Caused by: java.lang.RuntimeException: Intentional exception from static init block");
     }
 
     /**
@@ -560,6 +552,53 @@ public class JUnitLauncherTaskTest {
                 verifySuccess(trackerFile, SharedDataAccessorTest2.class.getName(), "testData"));
         assertFalse("SharedDataAccessorTest1 wasn't expected to be run",
                 wasTestRun(trackerFile, SharedDataAccessorTest1.class.getName()));
+    }
+
+    /**
+     * Tests that dynamically generated jupiter tests, when they fail, are reported
+     * correctly by the legacy-xml reporter
+     */
+    @Test
+    public void testJupiterDynamicTests() throws Exception {
+        final String targetName = "test-jupiter-dynamic-tests";
+        final Path trackerFile = setupTrackerProperty(targetName);
+        buildRule.executeTarget(targetName);
+
+        assertTrue("JupiterDynamicTests was expected to be run",
+                wasTestRun(trackerFile, JupiterDynamicTests.class.getName()));
+        final String xmlReportFile = "JupiterDynamicTests.xml";
+        final String testClassName = JupiterDynamicTests.class.getName();
+        assertPresentInLegacyXMLFile(xmlReportFile, "@BeforeEach called on " + testClassName);
+        assertAbsentInLegacyXMLFile(xmlReportFile, "@TestFactory called");
+        assertPresentInLegacyXMLFile(xmlReportFile,
+                "<failure message=\"Intentionally failing in @BeforeEach of " + testClassName);
+    }
+
+    private void assertPresentInLegacyXMLFile(final String fileName,
+                                              final String expectedContent) throws IOException {
+        assertInLegacyXMLFile(fileName, expectedContent, true);
+    }
+
+    private void assertAbsentInLegacyXMLFile(final String fileName,
+                                             final String unexpectedContent) throws IOException {
+        assertInLegacyXMLFile(fileName, unexpectedContent, false);
+    }
+
+    private void assertInLegacyXMLFile(final String fileName, final String content,
+                                       final boolean expected) throws IOException {
+        final String outputDir = buildRule.getProject().getProperty("output.dir");
+        final Path xmlFile = Paths.get(outputDir, fileName);
+
+        assertTrue("XML file doesn't exist: " + xmlFile, Files.exists(xmlFile));
+        final String actualContent = new String(Files.readAllBytes(xmlFile), StandardCharsets.UTF_8);
+        if (expected) {
+            assertTrue(fileName + " doesn't contain " + content,
+                    actualContent.contains(content));
+        } else {
+            assertFalse(fileName + " unexpectedly contains " + content,
+                    actualContent.contains(content));
+        }
+
     }
 
     private Path setupTrackerProperty(final String targetName) {

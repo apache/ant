@@ -484,5 +484,23 @@
             </test>
         </junitlauncher>
     </target>
+
+    <target name="test-jupiter-dynamic-tests" depends="init">
+        <property name="junitlauncher.test.tracker.append.file"
+                  value="${output.dir}/${test-jupiter-dynamic-tests.tracker}"/>
+        <junitlauncher>
+            <classpath refid="test.classpath"/>
+            <test name="org.example.junitlauncher.jupiter.JupiterDynamicTests"
+                  outputdir="${output.dir}">
+                <fork>
+                    <sysproperty key="junitlauncher.test.failBeforeEach" value="true"/>
+                </fork>
+                <listener classname="org.example.junitlauncher.Tracker"
+                          if="test-jupiter-dynamic-tests.tracker"/>
+                <listener type="legacy-xml" sendSysErr="true" sendSysOut="true"
+                          resultFile="JupiterDynamicTests.xml"/>
+            </test>
+        </junitlauncher>
+    </target>
 </project>
 
