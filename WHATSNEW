@@ -1,3 +1,7 @@
+Changes from Ant 1.10.14 TO Ant 1.10.15
+=======================================
+
+
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================
 
@@ -54,6 +58,13 @@ Fixed bugs:
    failures involving junit jupiter dynamic tests. This has now been
    fixed.
    Github Pull Request #122
+ 
+ * allow.class which was introduced in Ant 1.10.13 release, has been
+   removed from this 1.10.14 release. This class was introduced in
+   context of the SecurityManager changes in Ant 1.10.13, which have
+   now been reverted in Ant 1.10.14, since they caused several
+   regressions.
+   Bugzilla Reports 66828, 66951
 
 Other changes:
 --------------
