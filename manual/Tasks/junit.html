@@ -33,6 +33,11 @@ no <code>JUnit4TestAdapter</code>.</p>
 <p><strong>Note</strong>: This task depends on external libraries not included
 in the Apache Ant distribution.  See <a href="../install.html#librarydependencies">
 Library Dependencies</a> for more information.</p>
+
+<p><strong>Note: </strong>It is necessary to set <var>fork</var>=<q>true</q>, if the test(s)
+  being launched by this task or any libraries being used by the test(s), call APIs like
+<code>java.lang.System.exit()</code> or <code>java.lang.Runtime.exit()</code>.</p>
+
 <p><strong>Note</strong>: You must have <samp>junit.jar</samp> available.  You can do one of:</p>
 <ol>
   <li>Put both <samp>junit.jar</samp> and <samp>ant-junit.jar</samp>
@@ -293,6 +298,9 @@ is <q>false</q> or the target JVM doesn't support it (i.e. Java 1.1).</p>
 <h4>permissions</h4>
 
 <p><em>Since Ant 1.6</em>.</p>
+
+<p><strong>Note</strong>:<br/> This element is no longer supported when running on Java 18 and
+  higher versions. See <a href="../Types/permissions.html">permissions</a> for details</p>
 
 <p>Security permissions can be revoked and granted during the execution of the class via a
 nested <code>permissions</code> element. For more information please

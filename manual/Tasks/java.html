@@ -28,7 +28,9 @@
 <h3>Description</h3>
 <p>Executes a Java class within the running (Apache Ant) JVM or forks another JVM if specified.</p>
 <p>If odd things go wrong when you run this task, set <var>fork</var>=<q>true</q> to use a new
-JVM.</p>
+JVM. It is necessary to set <var>fork</var>=<q>true</q>, if the class being launched by
+  this task or any libraries being used by that class, call APIs like
+  <code>java.lang.System.exit()</code> or <code>java.lang.Runtime.exit()</code>.</p>
 
 <p><em>Since Ant 1.6.3</em>, you can interact with a forked JVM, as well as sending input to it via
 the <var>input</var> and <var>inputstring</var> attributes.</p>
@@ -280,13 +282,17 @@ about <a href="exec.html#env">exec</a></p>
 
 <p><em>Since Ant 1.6</em>.</p>
 
+<p><strong>Note</strong>:<br/> This element is no longer supported when running on Java 18 and
+  higher versions. See <a href="../Types/permissions.html">permissions</a> for details</p>
+
 <p>Security permissions can be revoked and granted during the execution of the class via a
 nested <code>permissions</code> element. For more information please
 see <a href="../Types/permissions.html">permissions</a>.</p>
 <p>When the permission <code>RuntimePermission exitVM</code> has not been granted (or has been
 revoked) the <code>System.exit()</code> call will be intercepted and treated like indicated
 in <var>failonerror</var>.</p>
-<p><strong>Note</strong>:<br/> If you do not specify permissions, a set of default permissions will
+<p><strong>Note</strong>:<br/> When running on Java runtime versions lesser than 18,
+  if you do not specify permissions, a set of default permissions will
 be added to your Java invocation to make sure that the Ant run will continue or terminated as
 indicated by <var>failonerror</var>. All permissions not granted per default will be checked by
 whatever security manager was already in place. <code>exitVM</code> will be disallowed.</p>
