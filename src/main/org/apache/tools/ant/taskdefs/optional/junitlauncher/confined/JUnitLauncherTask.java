@@ -42,11 +42,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_EXCLUDE_TAGS;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_HALT_ON_FAILURE;
 import static org.apache.tools.ant.taskdefs.optional.junitlauncher.confined.Constants.LD_XML_ATTR_INCLUDE_TAGS;
@@ -82,8 +85,8 @@ public class JUnitLauncherTask extends Task {
     private boolean printSummary;
     private final List<TestDefinition> tests = new ArrayList<>();
     private final List<ListenerDefinition> listeners = new ArrayList<>();
-    private List<String> includeTags = new ArrayList<>();
-    private List<String> excludeTags = new ArrayList<>();
+    private final List<String> includeTags = new ArrayList<>();
+    private final List<String> excludeTags = new ArrayList<>();
 
     public JUnitLauncherTask() {
     }
@@ -105,8 +108,13 @@ public class JUnitLauncherTask extends Task {
                 launchViaReflection(new InVMLaunch(Collections.singletonList(test)));
             } else {
                 final List<ForkedRepresentation> forkedReps = test.toForkedRepresentations();
+                final long timeout = forkDefinition.getTimeout(); // in millis
+                // compute the "end time" (if any)
+                final Optional<Long> deadlineNanos = timeout == -1
+                        ? Optional.empty() // no timeout
+                        : Optional.of(System.nanoTime() + MILLISECONDS.toNanos(timeout));
                 for (final ForkedRepresentation forkedRep : forkedReps) {
-                    forkTest(test, forkDefinition, forkedRep);
+                    forkTest(test, forkDefinition, forkedRep, deadlineNanos);
                 }
             }
         }
@@ -244,7 +252,8 @@ public class JUnitLauncherTask extends Task {
     }
 
     private void forkTest(final TestDefinition test, final ForkDefinition forkDefinition,
-                          final ForkedRepresentation forkedRepresentation) {
+                          final ForkedRepresentation forkedRepresentation,
+                          final Optional<Long> deadlineNanos) {
         // create launch command
         final CommandlineJava commandlineJava = forkDefinition.generateCommandLine(this);
         if (this.classPath != null) {
@@ -302,7 +311,7 @@ public class JUnitLauncherTask extends Task {
         commandlineJava.createArgument().setValue(launchDefXmlPath.toAbsolutePath().toString());
 
         // launch the process and wait for process to complete
-        final int exitCode = executeForkedTest(forkDefinition, commandlineJava);
+        final int exitCode = executeForkedTest(forkDefinition, commandlineJava, deadlineNanos);
         switch (exitCode) {
             case Constants.FORK_EXIT_CODE_SUCCESS: {
                 // success
@@ -359,11 +368,26 @@ public class JUnitLauncherTask extends Task {
                 .collect(Collectors.joining(", "));
     }
 
-    private int executeForkedTest(final ForkDefinition forkDefinition, final CommandlineJava commandlineJava) {
+    private int executeForkedTest(final ForkDefinition forkDefinition, final CommandlineJava commandlineJava,
+                                  final Optional<Long> deadlineNanos) {
         final LogOutputStream outStream = new LogOutputStream(this, Project.MSG_INFO);
         final LogOutputStream errStream = new LogOutputStream(this, Project.MSG_WARN);
-        final ExecuteWatchdog watchdog = forkDefinition.getTimeout() > 0
-                ? createExecuteWatchdog(forkDefinition.getTimeout()) : null;
+        final ExecuteWatchdog watchdog;
+        if (deadlineNanos.isPresent()) {
+            final long remainingNanos = deadlineNanos.get() - System.nanoTime();
+            if (remainingNanos <= 0) {
+                // already timed out
+                return Constants.FORK_EXIT_CODE_TIMED_OUT;
+            }
+            final long timeoutInMillis = NANOSECONDS.toMillis(remainingNanos);
+            if (timeoutInMillis == 0) {
+                // already timed out
+                return Constants.FORK_EXIT_CODE_TIMED_OUT;
+            }
+            watchdog = createExecuteWatchdog(timeoutInMillis);
+        } else {
+            watchdog = null; // no timeout specified
+        }
         final Execute execute = new Execute(new PumpStreamHandler(outStream, errStream), watchdog);
         execute.setCommandline(commandlineJava.getCommandline());
         execute.setAntRun(getProject());

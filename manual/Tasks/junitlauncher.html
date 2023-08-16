@@ -645,7 +645,11 @@ the new JVM instance that will be created to launch the tests.
         <td>Controls how many JVMs are launched for the forked tests. Allowed values are:
             <ul class="inlinelist">
                 <li><code>perTestClass</code> - This mode launches each test class in a
-                    separately forked JVM</li>
+                    separately forked JVM. Each of these JVMs will be forked sequentially
+                    one at a time, as and when each test class execution completes.
+                    If any <code>timeout</code> value is specified, then that timeout applies to
+                    the time that all tests use together, not to an individual test.
+                </li>
             </ul>
             <p><em>Since Ant 1.10.14</em></p>
         </td>
