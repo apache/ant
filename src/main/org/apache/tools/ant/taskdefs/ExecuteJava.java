@@ -211,9 +211,11 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
     @Override
     public void run() {
         final Object[] argument = {javaCommand.getArguments()};
+        boolean restoreSecMgr = false;
         try {
             if (perm != null) {
                 perm.setSecurityManager();
+                restoreSecMgr = true;
             }
             main.invoke(null, argument);
         } catch (InvocationTargetException e) {
@@ -224,7 +226,7 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         } catch (Throwable t) {
             caught = t;
         } finally {
-            if (perm != null) {
+            if (perm != null && restoreSecMgr) {
                 perm.restoreSecurityManager();
             }
             synchronized (this) {

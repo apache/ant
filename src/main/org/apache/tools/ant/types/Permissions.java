@@ -30,13 +30,13 @@ import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.SecurityManagerUtil;
 
 /**
  * This class implements a security manager meant for usage by tasks that run inside the
  * Ant VM. An examples are the Java Task and JUnitTask.
- * <p>
- * Note: This class doesn't provide any functionality for Java 18 and higher
  *
  * <p>
  * The basic functionality is that nothing (except for a base set of permissions) is allowed, unless
@@ -46,9 +46,13 @@ import org.apache.tools.ant.util.SecurityManagerUtil;
  * It is not permissible to add permissions (either granted or revoked) while the Security Manager
  * is active (after calling setSecurityManager() but before calling restoreSecurityManager()).
  *
+ * <p>
+ * Note: This class isn't supported in Java 18 and higher where {@link SecurityManager} has been
+ * deprecated for removal.
+ *
  * @since Ant 1.6
  */
-public class Permissions {
+public class Permissions extends ProjectComponent {
 
     private final List<Permission> grantedPermissions = new LinkedList<>();
     private final List<Permission> revokedPermissions = new LinkedList<>();
@@ -99,11 +103,24 @@ public class Permissions {
      * subject to these Permissions. Note that setting the SecurityManager too early may
      * prevent your part from starting, as for instance changing classloaders may be prohibited.
      * The classloader for the new situation is supposed to be present.
+     * <p>
+     * This method is no longer supported in Java 18 and higher versions and throws a
+     * {@link BuildException}. {@link org.apache.tools.ant.MagicNames#WARN_SECURITY_MANAGER_USAGE}
+     * property can be set to {@code true} to log a warning message instead of throwing the exception.
+     *
      * @throws BuildException on error
      */
     public synchronized void setSecurityManager() throws BuildException {
         if (!SecurityManagerUtil.isSetSecurityManagerAllowed()) {
-            return;
+            final String msg = "Use of <permissions> or " + Permissions.class.getName()
+                    + " is disallowed in current Java runtime version";
+            if (SecurityManagerUtil.warnOnSecurityManagerUsage(getProject())) {
+                // just log a warning
+                log("Security checks are disabled - " + msg, Project.MSG_WARN);
+                return;
+            } else {
+                throw new BuildException(msg);
+            }
         }
         origSm = System.getSecurityManager();
         init();
@@ -174,10 +191,22 @@ public class Permissions {
 
     /**
      * To be used by tasks that just finished executing the parts subject to these permissions.
+     * <p>
+     * This method is no longer supported in Java 18 and higher versions and throws a
+     * {@link BuildException}. {@link org.apache.tools.ant.MagicNames#WARN_SECURITY_MANAGER_USAGE}
+     * property can be set to {@code true} to log a warning message instead of throwing the exception.
      */
-    public synchronized void restoreSecurityManager() {
+    public synchronized void restoreSecurityManager() throws BuildException {
         if (!SecurityManagerUtil.isSetSecurityManagerAllowed()) {
-            return;
+            final String msg = "Use of <permissions> or " + Permissions.class.getName()
+                    + " is disallowed in current Java runtime version";
+            if (SecurityManagerUtil.warnOnSecurityManagerUsage(getProject())) {
+                // just log a warning
+                log("Security checks are disabled - " + msg, Project.MSG_WARN);
+                return;
+            } else {
+                throw new BuildException(msg);
+            }
         }
         active = false;
         System.setSecurityManager(origSm);

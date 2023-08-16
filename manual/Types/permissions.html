@@ -25,11 +25,17 @@
 <body>
 
 <h2 id="permissions">Permissions</h2>
-<p><b>Note</b> <code>Permissions</code> requires the use of Java SecurityManager.
-  Java version 17 deprecated SecurityManager for removal and Java 18 by default disallowed
-  setting SecurityManager at runtime. <code>Permissions</code> is thus no longer supported
-  when used in Java 18 or higher versions. Using it in such Java runtime versions won't provide the
-  functionality that it originally provided.</p>
+<p><b>Note:</b> <code>Permissions</code> requires the use of Java SecurityManager.
+  Java version 17 deprecated SecurityManager for removal and Java 18 and higher versions, by
+  default, disallow setting SecurityManager at runtime. <code>Permissions</code> is thus no longer
+  supported when used in Java 18 or higher versions. Using it in those Java runtime versions
+  will throw a <code>org.apache.tools.ant.BuildException</code>. Throwing of
+  <code>BuildException</code> can be relaxed by setting the
+  <code>ant.securitymanager.usage.warn</code> system or Ant property to <code>true</code>,
+  which will then cause a warning to be logged instead of the exception being thrown. Even when
+  <code>ant.securitymanager.usage.warn</code> is set to <code>true</code>,
+  SecurityManager usage will still be disabled and no security checks will be performed.
+  It is recommended to no longer use <code>&lt;permissions&gt;</code></p>
 
 <p>Permissions represents a set of security permissions granted or revoked to a specific part
 code executed in the JVM where Apache Ant is running in.  The actual Permissions are specified

@@ -26,6 +26,8 @@ import org.apache.tools.ant.ExitException;
  * The goal is to intercept System.exit calls and make it throw an
  * exception instead so that a System.exit in a task does not
  * fully terminate Ant.
+ * <p>
+ * This class is no longer supported in Java runtime versions 18 and higher.
  *
  * @see ExitException
  */

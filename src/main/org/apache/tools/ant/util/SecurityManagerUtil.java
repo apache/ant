@@ -17,14 +17,41 @@
  */
 package org.apache.tools.ant.util;
 
+import org.apache.tools.ant.MagicNames;
+import org.apache.tools.ant.Project;
+
+/**
+ * @since Ant 1.10.14
+ */
 public final class SecurityManagerUtil {
 
     private static final boolean isJava18OrHigher = JavaEnvUtils.isAtLeastJavaVersion("18");
+    private static final boolean sysPropWarnOnSecMgrUsage =
+            Boolean.getBoolean(MagicNames.WARN_SECURITY_MANAGER_USAGE);
 
+    /**
+     * {@return true if {@code SecurityManager} usage is allowed in current Java runtime. false
+     * otherwise}
+     */
     public static boolean isSetSecurityManagerAllowed() {
         if (isJava18OrHigher) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * {@return true if {@code SecurityManager} usage should only be logged as a warning. false
+     * otherwise}
+     */
+    public static boolean warnOnSecurityManagerUsage(final Project project) {
+        if (project == null) {
+            return sysPropWarnOnSecMgrUsage;
+        }
+        final String val = project.getProperty(MagicNames.WARN_SECURITY_MANAGER_USAGE);
+        if (val == null) {
+            return sysPropWarnOnSecMgrUsage;
+        }
+        return Boolean.parseBoolean(val);
     }
 }

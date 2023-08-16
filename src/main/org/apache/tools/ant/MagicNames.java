@@ -359,5 +359,16 @@ public final class MagicNames {
      */
     public static final String DISABLE_NASHORN_COMPAT = "ant.disable.graal.nashorn.compat";
 
+    /**
+     * When running on Java 18 or higher runtime, Ant will throw a {@link BuildException}
+     * if the {@linkplain  org.apache.tools.ant.types.Permissions <permissions>} type is used.
+     * Set this property to {@code true} to disable throwing an exception and instead just log a
+     * warning message.
+     *
+     * Value: {@value}
+     * @since Ant 1.10.14
+     */
+    public static final String WARN_SECURITY_MANAGER_USAGE = "ant.securitymanager.usage.warn";
+
 }
 
