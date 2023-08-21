@@ -660,6 +660,7 @@
            source="${javac.source}"
            release="${javac.release}"
            optimize="${optimize}">
+      <compilerarg line="-proc:none"/>
       <classpath>
         <!-- A very limited classpath which only doesn't include optional libraries,
          which the classes in confined package aren't meant to depend on -->
@@ -713,6 +714,7 @@
            source="${javac.source}"
            release="${javac.release}"
            optimize="${optimize}">
+      <compilerarg line="-proc:none"/>
       <classpath refid="classpath"/>
 
       <selector id="conditional-patterns">
@@ -763,6 +765,7 @@
            target="${javac.target}"
            source="${javac.source}"
            optimize="${optimize}">
+      <compilerarg line="-proc:none"/>
       <classpath refid="classpath"/>
 
       <selector id="conditional-patterns-jdk9+">
@@ -1638,6 +1641,7 @@
            source="${javac.source}"
            release="${javac.release}"
            deprecation="${deprecation}">
+      <compilerarg line="-proc:none"/>
       <classpath refid="tests-classpath"/>
 
       <selector refid="conditional-patterns"/>

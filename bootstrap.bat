@@ -46,6 +46,7 @@ set TOOLS=src\main\org\apache\tools
 set CLASSDIR=build\classes
 
 SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;%CLASSPATH%
+SET BOOTJAVAC_OPTS="-proc:none %BOOTJAVAC_OPTS%"
 
 echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%

@@ -115,6 +115,7 @@ TOOLS=src/main/org/apache/tools
 CLASSDIR=build/classes
 
 CLASSPATH=${CLASSDIR}:src/main:${CLASSPATH}
+BOOTJAVAC_OPTS="-proc:none ${BOOTJAVAC_OPTS}"
 
 # For Cygwin, switch to Windows format before running java
 if $cygwin; then
