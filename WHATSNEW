@@ -1,6 +1,13 @@
 Changes from Ant 1.10.14 TO Ant 1.10.15
 =======================================
 
+Fixed bugs:
+-----------
+
+ * Fixes an regression, introduced in Ant 1.10.13, where pathconvert
+   would unintentionally trim the string output.
+   Bugzilla Report 67082
+
 
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================

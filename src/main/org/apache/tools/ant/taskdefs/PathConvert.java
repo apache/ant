@@ -429,7 +429,7 @@ public class PathConvert extends Task {
         if (property == null) {
             out = new LogOutputStream(this);
         } else {
-            out = new PropertyOutputStream(getProject(), property) {
+            out = new PropertyOutputStream(getProject(), property, false) {
                 @Override
                 public void close() {
                     if (setonempty || size() > 0) {
