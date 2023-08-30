@@ -129,4 +129,13 @@
           <pathconvert property="someprop" dest="somefile" refid="testpath" />
       </au:expectfailure>
   </target>
+
+  <target name="testUntrimmedOutput">
+      <pathconvert property="result" dirsep="|">
+          <file file="foo" />
+          <globmapper from="${basedir}/*" to="  *  " handledirsep="true" />
+      </pathconvert>
+      <au:assertPropertyEquals name="result" value="  foo  " />
+  </target>
+
 </project>
