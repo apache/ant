@@ -68,6 +68,9 @@ public abstract class ConstantPoolEntry {
     /** Tag value for Method Type entries */
     public static final int CONSTANT_METHODTYPE = 16;
 
+    /** Tag value for Dynamic entries*/
+    public static final int CONSTANT_DYNAMIC = 17;
+
     /** Tag value for InvokeDynamic entries*/
     public static final int CONSTANT_INVOKEDYNAMIC = 18;
 
@@ -165,6 +168,9 @@ public abstract class ConstantPoolEntry {
                 break;
             case CONSTANT_METHODTYPE:
                 cpInfo = new MethodTypeCPInfo();
+                break;
+            case CONSTANT_DYNAMIC:
+                cpInfo = new DynamicCPInfo();
                 break;
             case CONSTANT_INVOKEDYNAMIC:
                 cpInfo = new InvokeDynamicCPInfo();
