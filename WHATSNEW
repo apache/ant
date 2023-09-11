@@ -8,6 +8,10 @@ Fixed bugs:
    would unintentionally trim the string output.
    Bugzilla Report 67082
 
+ * Fixes a bug in <depend> task which would throw a ClassFormatError
+   if it encountered constant pool entry type 17.
+   Bugzilla Report 66552
+
 
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================
