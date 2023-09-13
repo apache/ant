@@ -16,6 +16,10 @@ Fixed bugs:
    could result in an unexpected failure. This has now been fixed.
    Bugzilla Report 67417
 
+ * Fixes an issue in bootstrap.bat when trying to detect if the "javac"
+   command in the JDK supports the "--release" option.
+   Github Pull Request #205
+
 
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================
