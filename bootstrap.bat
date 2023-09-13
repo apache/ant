@@ -60,21 +60,24 @@ if not exist build\nul mkdir build
 if not exist build\classes\nul mkdir build\classes
 
 rem Check if javac tool supports the --release param
-SET JAVAC_RELEASE_VERSION=""
-echo "public class JavacVersionCheck {}" > %CLASSDIR%\JavacVersionCheck.java
+SET JAVAC_RELEASE_VERSION=
+echo public class JavacVersionCheck {} >%CLASSDIR%\JavacVersionCheck.java
 "%JAVAC%" --release 8 -d %CLASSDIR% %CLASSDIR%\JavacVersionCheck.java >nul 2>&1
-IF %ERRORLEVEL% EQU 0 SET JAVAC_RELEASE_VERSION="--release 8"
+IF ERRORLEVEL 0 IF NOT ERRORLEVEL 1 SET JAVAC_RELEASE_VERSION=--release 8
 DEL %CLASSDIR%\JavacVersionCheck.java %CLASSDIR%\JavacVersionCheck.class >nul 2>&1
 echo.
-IF %JAVAC_RELEASE_VERSION% == "" (
+IF "%JAVAC_RELEASE_VERSION%" == "" (
   echo ... Compiling Ant Classes
   "%JAVAC%" %BOOTJAVAC_OPTS% -d %CLASSDIR% %TOOLS%\bzip2\*.java %TOOLS%\tar\*.java %TOOLS%\zip\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java %TOOLS%\ant\taskdefs\condition\*.java %TOOLS%\ant\taskdefs\compilers\*.java %TOOLS%\ant\types\resources\*.java %TOOLS%\ant\property\*.java
 ) ELSE (
-  echo ... Compiling Ant Classes with %JAVAC_RELEASE_VERSION%
+  echo ... Compiling Ant Classes with "%JAVAC_RELEASE_VERSION%"
   "%JAVAC%" %BOOTJAVAC_OPTS% -d %CLASSDIR% %JAVAC_RELEASE_VERSION% %TOOLS%\bzip2\*.java %TOOLS%\tar\*.java %TOOLS%\zip\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java %TOOLS%\ant\taskdefs\condition\*.java %TOOLS%\ant\taskdefs\compilers\*.java %TOOLS%\ant\types\resources\*.java %TOOLS%\ant\property\*.java
 )
 
-if ERRORLEVEL 1 goto mainend
+IF ERRORLEVEL 0 IF NOT ERRORLEVEL 1 goto build
+goto mainEnd
+
+:build
 
 echo.
 echo ... Copying Required Files
