@@ -117,25 +117,10 @@ set _JAVACMD=%JAVACMD%
 if "%JAVA_HOME%" == "" goto noJavaHome
 if not exist "%JAVA_HOME%\bin\java.exe" goto noJavaHome
 if "%_JAVACMD%" == "" set _JAVACMD=%JAVA_HOME%\bin\java.exe
-goto setSecurityManagerOpt
+goto checkJikes
 
 :noJavaHome
 if "%_JAVACMD%" == "" set _JAVACMD=java.exe
-
-:setSecurityManagerOpt
-setlocal EnableDelayedExpansion
-"!_JAVACMD!" -XshowSettings:properties 2>&1 | find "java.specification.version = 18" >nul 2>&1
-if !errorlevel! EQU 0 (
-    rem This is Java 18, so set -Djava.security.manager=allow
-    set JAVA_SECMGR_OPT=-Djava.security.manager=allow
-) else (
-    "!_JAVACMD!" -XshowSettings:properties 2>&1 | find "java.specification.version = 19" >nul 2>&1
-    if !errorlevel! EQU 0 (
-        rem This is Java 19, so set -Djava.security.manager=allow
-        set JAVA_SECMGR_OPT=-Djava.security.manager=allow
-    )
-)
-endlocal & set "ANT_OPTS=%ANT_OPTS% %JAVA_SECMGR_OPT%"
 
 :checkJikes
 if not "%JIKESPATH%"=="" goto runAntWithJikes
