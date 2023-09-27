@@ -58,7 +58,7 @@
   <!-- Ant Checkstyle -->
   <property name="checkstyle.src.dir" location="${etc.dir}/checkstyle"/>
   <property name="checkstyle.version"
-            value="6.19"
+            value="8.28"
             description="Which version of Checkstyle to use"/>
   <property name="checkstyle.reportdir"
             location="${reports.dir}/checkstyle"
@@ -88,7 +88,7 @@
 
   <!-- Findbugs: Running SpotBugs -->
   <property name="spotbugs.version"
-            value="3.1.4"
+            value="3.1.12"
             description="Which version of SpotBugs to use"/>
   <property name="findbugs.reportdir"
             location="${reports.dir}/findbugs"
@@ -130,7 +130,7 @@
 
   <!-- OWASP Dependency Check -->
   <property name="owasp.dc.version"
-            value="3.2.1"
+            value="5.2.4"
             description="Which version of OWASP Dependency Check to use"/>
   <property name="owasp.dc.report.dir"
             value="${reports.dir}/owasp-dc"
@@ -147,8 +147,9 @@
             value="${htmlcheck.report.dir}/report.txt"
             description="Report file of the HTML-Check"/>
 
+  <available classname="org.apache.ivy.Ivy" property="ivy.present"/>
 
-  <target name="init-ivy">
+  <target name="init-ivy" unless="ivy.present">
     <property name="ivy.version"  value="2.5.0"/>
     <property name="ivy.jar.url"  value="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"/>
     <property name="ivy.jar.dir"  value="${build.dir}/ivy"/>
