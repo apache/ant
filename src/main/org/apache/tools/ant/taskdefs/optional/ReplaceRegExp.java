@@ -481,10 +481,13 @@ public class ReplaceRegExp extends Task {
                 log("An error occurred processing file: '"
                     + file.getAbsolutePath() + "': " + e.toString(),
                     Project.MSG_ERR);
+                throw new BuildException("An error occurred processing file: '" + file.getAbsolutePath() + "'",
+                                         e, getLocation());
             }
         } else if (file != null) {
             log("The following file is missing: '"
                 + file.getAbsolutePath() + "'", Project.MSG_ERR);
+            throw new BuildException("The following file is missing: '" + file.getAbsolutePath() + "'");
         }
 
         if (resources != null) {
@@ -498,10 +501,13 @@ public class ReplaceRegExp extends Task {
                         log("An error occurred processing file: '"
                             + f.getAbsolutePath() + "': " + e.toString(),
                             Project.MSG_ERR);
+                        throw new BuildException("An error occurred processing file: '" + f.getAbsolutePath() + "'",
+                                                 e, getLocation());
                     }
                 } else {
                     log("The following file is missing: '"
                         + f.getAbsolutePath() + "'", Project.MSG_ERR);
+                    throw new BuildException("The following file is missing: '" + f.getAbsolutePath() + "'");
                 }
             }
         }
