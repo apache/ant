@@ -325,6 +325,7 @@ public class ReplaceRegExp extends Task {
      * If false, note errors but continue.
      *
      * @param failonerror true or false
+     * @since Ant 1.10.15
      */
     public void setFailOnError(boolean failonerror) {
         this.failonerror = failonerror;

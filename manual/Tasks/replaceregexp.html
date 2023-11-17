@@ -95,6 +95,15 @@ documentation of the <a href="../Types/regexp.html#implementation">Regexp Type</
       1.8.0</em>.</td>
     <td>No; defaults to <q>false</q></td>
   </tr>
+  <tr>
+    <td>failonerror</td>
+    <td>Stop the build process if certain file operations fail.<br/>
+      For historical reasons the task swallows and logs certain
+      failure cases, enabling this option makes sure the exception
+      make the build fail instead.
+      <em>since Ant 1.10.15</em></td>
+    <td>No; defaults to <q>false</q></td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>

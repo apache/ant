@@ -43,6 +43,14 @@ Changes that could break older environments:
    updated to launch in a forked JVM so that the System.exit() call
    will not impact the JVM in which Ant process runs.
 
+Other changes:
+--------------
+
+ * <replaceregexp> has a new failOnError attirbute which, when
+   enabled, makes the task throw a BuildException for certain error
+   cases that will only be logged otherwise.
+   Github Pull Request #206
+
 Fixed bugs:
 -----------
 
