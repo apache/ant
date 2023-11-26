@@ -234,6 +234,7 @@
     <or>
       <!-- we need JUnit jupiter engine only in tests where we test the junitlauncher task -->
       <filename name="${optional.package}/junitlauncher/**/JUnitLauncherTaskTest.java"/>
+      <filename name="${optional.package}/junitlauncher/OutputDirLocationTest.java"/>
       <filename name="org/example/junitlauncher/jupiter/**/*"/>
     </or>
   </selector>
