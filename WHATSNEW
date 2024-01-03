@@ -1,6 +1,17 @@
 Changes from Ant 1.10.14 TO Ant 1.10.15
 =======================================
 
+Other changes:
+--------------
+
+ * exec task now logs the process' non-zero exit code at INFO
+   level instead of the previous ERROR level. The following
+   message from exec task is the one who's level has been changed:
+
+   Result: 1
+
+   Bugzilla Report 26453
+
 Fixed bugs:
 -----------
 
