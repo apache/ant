@@ -674,7 +674,7 @@ public class ExecTask extends Task {
                     throw new BuildException(getTaskType() + " returned: "
                         + returnCode, getLocation());
                 }
-                log("Result: " + returnCode, Project.MSG_ERR);
+                log("Result: " + returnCode, Project.MSG_INFO);
             }
         } else {
             exe.spawn();
