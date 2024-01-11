@@ -31,6 +31,11 @@ Fixed bugs:
    command in the JDK supports the "--release" option.
    Github Pull Request #205
 
+ * Fixes a bug in org.apache.tools.ant.taskdefs.email.EmailAddress which
+   would throw a java.lang.StringIndexOutOfBoundsException if the email
+   address passed to its constructor was an empty String.
+   Bugzilla Report 68462
+
 
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================

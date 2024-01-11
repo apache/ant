@@ -93,6 +93,17 @@ public class EmailAddressTest {
         expectNameAddress3(new EmailAddress(" < address > "));
     }
 
+    /**
+     * verify that an empty value to EmailAddress constructor doesn't lead to
+     * a StringIndexOutOfBoundsException
+     */
+    @Test
+    public void testEmpty() {
+        final EmailAddress addr = new EmailAddress("");
+        assertEquals("", addr.getName());
+        assertEquals("", addr.getAddress());
+    }
+
     private void expectNameAddress(EmailAddress e) {
         assertEquals("name", e.getName());
         assertEquals("address", e.getAddress());

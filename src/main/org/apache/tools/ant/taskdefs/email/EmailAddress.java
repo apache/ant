@@ -117,6 +117,9 @@ public class EmailAddress {
      *  '(', ')', '"', '<', '>' from the start and end of strings
      */
     private String trim(String t, boolean trimAngleBrackets) {
+        if (t.isEmpty()) {
+            return t;
+        }
         int start = 0;
         int end = t.length();
         boolean trim;
