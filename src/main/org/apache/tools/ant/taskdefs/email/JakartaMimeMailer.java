@@ -25,8 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.security.Provider;
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -148,15 +146,6 @@ public class JakartaMimeMailer extends Mailer {
             Session sesh;
             Authenticator auth = null;
             if (SSL) {
-                try {
-                    final Provider p =
-                        Class.forName("com.sun.net.ssl.internal.ssl.Provider")
-                            .asSubclass(Provider.class).getDeclaredConstructor().newInstance();
-                    Security.addProvider(p);
-                } catch (final Exception e) {
-                    throw new BuildException(
-                        "could not instantiate ssl security provider, check that you have JSSE in your classpath");
-                }
                 // SMTP provider
                 props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
                 props.put("mail.smtp.socketFactory.fallback", "false");

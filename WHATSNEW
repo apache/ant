@@ -12,6 +12,11 @@ Other changes:
 
    Bugzilla Report 26453
 
+ * Removes direct references to com.sun.net.ssl.internal.ssl.Provider class
+   from the mail task, since that internal JDK class is no longer available
+   in recent versions of Java.
+   Bugzilla Report 68460
+
 Fixed bugs:
 -----------
 
