@@ -257,10 +257,14 @@ public class LauncherSupport {
         // set the destination output stream for writing out the formatted result
         final java.nio.file.Path resultOutputFile = getListenerOutputFile(testRequest, formatterDefinition);
         try {
-            final OutputStream resultOutputStream = Files.newOutputStream(resultOutputFile);
-            // enroll the output stream to be closed when the execution of the TestRequest completes
-            testRequest.closeUponCompletion(resultOutputStream);
-            resultFormatter.setDestination(new KeepAliveOutputStream(resultOutputStream));
+            if (formatterDefinition.shouldUseFile()) {
+                final OutputStream resultOutputStream = Files.newOutputStream(resultOutputFile);
+                // enroll the output stream to be closed when the execution of the TestRequest completes
+                testRequest.closeUponCompletion(resultOutputStream);
+                resultFormatter.setDestination(new KeepAliveOutputStream(resultOutputStream));
+            } else {
+                resultFormatter.setDestination(new KeepAliveOutputStream(System.out));
+            }
         } catch (IOException e) {
             throw new BuildException(e);
         }
