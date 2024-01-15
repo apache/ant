@@ -45,14 +45,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintStream;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -257,7 +250,7 @@ public class LauncherSupport {
         // set the destination output stream for writing out the formatted result
         final java.nio.file.Path resultOutputFile = getListenerOutputFile(testRequest, formatterDefinition);
         try {
-            final OutputStream resultOutputStream = Files.newOutputStream(resultOutputFile);
+            final OutputStream resultOutputStream = new BufferedOutputStream(Files.newOutputStream(resultOutputFile));
             // enroll the output stream to be closed when the execution of the TestRequest completes
             testRequest.closeUponCompletion(resultOutputStream);
             resultFormatter.setDestination(new KeepAliveOutputStream(resultOutputStream));
