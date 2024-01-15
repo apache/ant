@@ -41,6 +41,12 @@ Fixed bugs:
    address passed to its constructor was an empty String.
    Bugzilla Report 68462
 
+ * legacy-xml reporter of junitlauncher task was using a non-buffered
+   outputstream when generating the report. This introduces severe
+   performance penalties since the writes translate to native write
+   system calls. This has been fixed to use a BufferedOutputStream.
+   Github Pull Request #207
+
 
 Changes from Ant 1.10.13 TO Ant 1.10.14
 =======================================
