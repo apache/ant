@@ -293,7 +293,7 @@ be used for a path argument. For example:</p>
   &lt;fileset dir="lib" includes="*.jar"/&gt;
 &lt;/path&gt;
 &lt;javac srcdir="src" destdir="classes"&gt;
-  &lt;compilerarg arg="-Xbootclasspath/p:${toString:lib.path.ref}"/&gt;
+  &lt;compilerarg value="-Xbootclasspath/p:${toString:lib.path.ref}"/&gt;
 &lt;/javac&gt;</pre>
 
 <h3 id="arg">Command-line Arguments</h3>
