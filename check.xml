@@ -19,7 +19,7 @@
 
   <description>
     Check Ant codebase against certain code style guidelines using
-    Checkstyle, Apache Rat, SpotBugs, OWASP Dependency Check, Simian
+    Checkstyle, Apache Rat, SpotBugs, OWASP Dependency Check
     and Nu Html Checker (v.Nu).
 
     Checkstyle uses an abstract syntax tree (AST) for doing checks
@@ -36,11 +36,6 @@
     checks if there are any known, publicly disclosed, vulnerabilities." It is
     available at https://www.owasp.org/index.php/OWASP_Dependency_Check under
     Apache License, Version 2.0.
-
-    "Simian (Similarity Analyser) identifies duplication in Java, C#, C, CPP,
-    COBOL, Ruby, JSP, ASP, HTML, XML, Visual Basic, Groovy source code and even
-    plain text files."  It is available at https://www.harukizaemon.com/simian/
-    and is for free use in open source projects.
 
     "The Nu Html Checker (v.Nu) is the backend of checker.html5.org,
     html5.validator.nu, and validator.w3.org/nu." It is available at
@@ -113,20 +108,6 @@
   <property name="rat.report.file"
             value="${rat.report.dir}/report.html"
             description="Name of Apache Rat report"/>
-
-  <!-- Simian -->
-  <property name="simian.version"
-            value="2.5.10"
-            description="Which version of Simian to use"/>
-  <property name="simian.uri"
-            value="http://www.harukizaemon.com/simian/simian-${simian.version}.tar.gz"
-            description="Where to get Simian"/>
-  <property name="simian.lib.dir"
-            value="${build.dir}/simian-lib"
-            description="Where to store Simian resources"/>
-  <property name="simian.report.dir"
-            value="${reports.dir}/simian"
-            description="Where to store Simian reports"/>
 
   <!-- OWASP Dependency Check -->
   <property name="owasp.dc.version"
@@ -221,37 +202,6 @@
     <concat>
       <filelist dir="${checkstyle.reportdir}" files="report.txt"/>
     </concat>
-  </target>
-
-  <target name="simiancheck" description="--> runs the check for duplicates">
-    <available property="simian.jar.present" file="${simian.lib.dir}/simian-${simian.version}.jar"/>
-    <sequential unless:set="simian.jar.present">
-      <echo>Install Simian ${simian.version}</echo>
-      <mkdir dir="${simian.lib.dir}"/>
-      <get src="${simian.uri}" dest="${simian.lib.dir}"/>
-      <gunzip src="${simian.lib.dir}/simian-${simian.version}.tar.gz" dest="${simian.lib.dir}/simian-${simian.version}.tar"/>
-      <untar src="${simian.lib.dir}/simian-${simian.version}.tar" dest="${simian.lib.dir}">
-        <patternset>
-          <include name="**/simian*.jar"/>
-          <include name="**/simian*.xsl"/>
-        </patternset>
-        <flattenmapper/>
-      </untar>
-    </sequential>
-
-    <echo>Run Simian</echo>
-    <taskdef resource="simiantask.properties">
-      <classpath>
-        <fileset dir="${simian.lib.dir}" includes="*.jar"/>
-      </classpath>
-    </taskdef>
-    <mkdir dir="${simian.report.dir}"/>
-    <simian failureProperty="simian.duplicates.found">
-        <fileset dir="${java.dir}"/>
-        <formatter type="plain" toFile="${simian.report.dir}/simian-log.txt"/>
-        <formatter type="xml" toFile="${simian.report.dir}/simian-log.xml"/>
-    </simian>
-    <xslt in="${simian.report.dir}/simian-log.xml" style="${simian.lib.dir}/simian.xsl" out="${simian.report.dir}/simian.html"/>
   </target>
 
   <target name="fixTS" description="--> fix checkstyle errors 'Line has trailing spaces'">

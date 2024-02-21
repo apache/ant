@@ -129,7 +129,6 @@
     <property name="format" value="\s+$"/>
   </module>
 
-  <!-- <module name="au.com.redhillconsulting.simian.SimianCheck"/> -->
   <module name="SuppressionCommentFilter">
     <property name="offCommentFormat" value="CheckStyle\:([\w\|]+) *OFF"/>
     <property name="onCommentFormat" value="CheckStyle\:([\w\|]+) *ON"/>
