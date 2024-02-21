@@ -280,6 +280,10 @@ public class MimeMailer extends Mailer {
         final List<InternetAddress> addrs = new ArrayList<>();
 
         for (final EmailAddress addr : list) {
+            if (addr.getAddress().isEmpty()) {
+                // skip
+                continue;
+            }
             final String name = addr.getName();
             addrs.add((name == null)
                 ? new InternetAddress(addr.getAddress())
