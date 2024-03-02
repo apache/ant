@@ -32,7 +32,7 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Get;
 
 /**
- * Condition to wait for a HTTP request to succeed. Its attribute(s) are:
+ * Condition to wait for an HTTP request to succeed. Its attribute(s) are:
  *   url - the URL of the request.
  *   errorsBeginAt - number at which errors begin at; default=400.
  *   requestMethod - HTTP request method to use; GET, HEAD, etc. default=GET
@@ -100,7 +100,7 @@ public class Http extends ProjectComponent implements Condition {
     /**
      * Sets the read timeout. Any value &lt; 0 will be ignored
      *
-     * @param t the timeout value in milli seconds
+     * @param t the timeout value in milliseconds
      *
      * @see java.net.HttpURLConnection#setReadTimeout
      * @since Ant 1.10.6

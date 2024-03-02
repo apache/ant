@@ -239,7 +239,7 @@ public class Ant extends Task {
 
     /**
      * Handles output.
-     * Send it the the new project if is present, otherwise
+     * Send it the new project if is present, otherwise
      * call the super class.
      * @param outputToHandle The string output to output.
      * @see Task#handleOutput(String)
@@ -279,7 +279,7 @@ public class Ant extends Task {
 
     /**
      * Handles output.
-     * Send it the the new project if is present, otherwise
+     * Send it the new project if is present, otherwise
      * call the super class.
      * @param toFlush The string to output.
      * @see Task#handleFlush(String)
@@ -296,7 +296,7 @@ public class Ant extends Task {
 
     /**
      * Handle error output.
-     * Send it the the new project if is present, otherwise
+     * Send it the new project if is present, otherwise
      * call the super class.
      * @param errorOutputToHandle The string to output.
      *
@@ -314,7 +314,7 @@ public class Ant extends Task {
 
     /**
      * Handle error output.
-     * Send it the the new project if is present, otherwise
+     * Send it the new project if is present, otherwise
      * call the super class.
      * @param errorOutputToFlush The string to output.
      * @see Task#handleErrorFlush(String)
@@ -462,7 +462,7 @@ public class Ant extends Task {
     /**
      * Get the default build file name to use when launching the task.
      * <p>
-     * This function may be overridden by providers of custom ProjectHelper so they can easily
+     * This function may be overridden by providers of custom ProjectHelper, so they can easily
      * implement their sublauncher.
      *
      * @return the name of the default file

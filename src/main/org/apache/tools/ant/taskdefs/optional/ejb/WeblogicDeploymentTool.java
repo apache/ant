@@ -446,7 +446,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             log("The old method for locating CMP files has been DEPRECATED.", Project.MSG_VERBOSE);
             log("Please adjust your weblogic descriptor and set newCMP=\"true\" to use the new CMP descriptor inclusion mechanism. ",
                 Project.MSG_VERBOSE);
-            // The the WebLogic CMP deployment descriptor
+            // The WebLogic CMP deployment descriptor
             File weblogicCMPDD = new File(getConfig().descriptorDir, ddPrefix + WL_CMP_DD);
 
             if (weblogicCMPDD.exists()) {
@@ -644,13 +644,13 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      *
      * The way WebLogic ejbc works is it creates wrappers for the publicly
      * defined methods as they are exposed in the remote interface. If the
-     * actual bean changes without changing the the method signatures then
+     * actual bean changes without changing the method signatures then
      * only the bean classfile needs to be updated and the rest of the
-     * WebLogic jar file can remain the same. If the Interfaces, ie. the
+     * WebLogic jar file can remain the same. If the Interfaces, i.e. the
      * method signatures change or if the xml deployment descriptors changed,
-     * the whole jar needs to be rebuilt with ejbc. This is not strictly true
+     * the entire jar needs to be rebuilt with ejbc. This is not strictly true
      * for the xml files. If the JNDI name changes then the jar doesn't have to
-     * be rebuild, but if the resources references change then it does. At
+     * be rebuilt, but if the resources references change then it does. At
      * this point the WebLogic jar gets rebuilt if the xml files change at
      * all.
      *
@@ -659,7 +659,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      *      see if it needs to be rebuilt.
      * @return true if the jar needs to be rebuilt.
      */
-    // CheckStyle:MethodLength OFF - this will no be fixed
+    // CheckStyle:MethodLength OFF - this will not be fixed
     protected boolean isRebuildRequired(File genericJarFile, File weblogicJarFile) {
         boolean rebuild = false;
 
@@ -689,7 +689,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 Map<String, JarEntry> wlEntries = wlJar.stream().collect(Collectors.toMap(ZipEntry::getName,
                         je -> je, (a, b) -> b));
 
-                // Cycle through generic and make sure its in WebLogic
+                // Cycle through generic and make sure it's in WebLogic
                 genericLoader = getClassLoaderFromJar(genericJarFile);
 
                 for (String filepath : genericEntries.keySet()) {
@@ -709,7 +709,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                         || genericEntry.getSize() != wlEntry.getSize()) {
 
                         if (genericEntry.getName().endsWith(".class")) {
-                            //File are different see if its an object or an interface
+                            //File are different see if it's an object or an interface
                             String classname = genericEntry.getName()
                                     .replace(File.separatorChar, '.')
                                     .replace('/', '.');
@@ -729,7 +729,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                             replaceEntries.put(filepath, genericEntry);
                         } else if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
                             // it is not the manifest, otherwise we'd ignore it
-                            // File other then class changed   rebuild
+                            // File other than class changed - rebuild
                             log("Non class file " + genericEntry.getName()
                                 + " has changed", Project.MSG_VERBOSE);
                             rebuild = true;

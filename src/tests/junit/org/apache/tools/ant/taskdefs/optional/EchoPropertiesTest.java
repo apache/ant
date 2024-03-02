@@ -182,7 +182,7 @@ public class EchoPropertiesTest {
                 RegexpMatcherFactory.regexpMatcherPresent(buildRule.getProject()));
         buildRule.executeTarget("testWithRegex");
         // the following line has been changed from checking ant.home to ant.version
-        // so the test will still work when run outside of an Ant script
+        // so the test will still work when run outside an Ant script
         assertThat(buildRule.getFullLog(), containsString(MagicNames.ANT_VERSION + "="));
     }
 

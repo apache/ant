@@ -90,7 +90,7 @@ public class BuildNumber extends Task {
             myFile = savedFile;
         }
 
-        //Finally set the property
+        // Finally, set the property
         getProject().setNewProperty(DEFAULT_PROPERTY_NAME,
             String.valueOf(buildNumber));
     }

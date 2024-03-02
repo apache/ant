@@ -249,7 +249,7 @@ public final class JavaEnvUtils {
      * Returns the version of Java this class is running under.
      * <p>This number can be used for comparisons.</p>
      * @return the version of Java as a number 10x the major/minor,
-     * e.g Java1.5 has a value of 15 and Java9 the value 90 - major
+     * e.g. Java1.5 has a value of 15 and Java9 the value 90 - major
      * will be 1 for all versions of Java prior to Java 9, minor will
      * be 0 for all versions of Java starting with Java 9.
      * @deprecated use #getParsedJavaVersion instead
@@ -262,7 +262,7 @@ public final class JavaEnvUtils {
     /**
      * Returns the version of Java this class is running under.
      * <p>This number can be used for comparisons.</p>
-     * @return the version of Java as major.minor, e.g Java1.5 has a
+     * @return the version of Java as major.minor, e.g. Java1.5 has a
      * value of 1.5 and Java9 the value 9 - major will be 1 for all
      * versions of Java prior to Java 9, minor will be 0 for all
      * versions of Java starting with Java 9.

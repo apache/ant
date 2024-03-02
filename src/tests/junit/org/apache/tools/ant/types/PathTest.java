@@ -226,7 +226,7 @@ public class PathTest {
         }
     }
 
-    // try a multi-part netware-volume length path, see how it is handled
+    // try a multipart netware-volume length path, see how it is handled
     @Test
     public void testConstructorNetWareStyleTwoItems() {
         p = new Path(project, "sys:\\test;dev:\\temp");
@@ -278,7 +278,7 @@ public class PathTest {
         }
     }
 
-    // try a multi-part netware-volume length path w/forward slash, see how it is handled
+    // try a multipart netware-volume length path w/forward slash, see how it is handled
     @Test
     public void testConstructorNetWareStyleUnixFSTwoItems() {
         p = new Path(project, "sys:/test;dev:/temp");
@@ -308,7 +308,7 @@ public class PathTest {
          }
     }
 
-    // try a multi-part netware-volume length path with UNIX
+    // try a multipart netware-volume length path with UNIX
     // separator (this testcase if from an actual bug that was
     // found, in AvailableTest, which uses PathTokenizer)
     @Test

@@ -119,7 +119,7 @@ public class JlinkTask extends MatchingTask {
     }
 
     /**
-     * Defines whether or not the output should be compacted.
+     * Defines whether the output should be compacted.
      * @param compress a <code>boolean</code> value
      */
     public void setCompress(boolean compress) {

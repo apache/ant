@@ -51,7 +51,7 @@ import com.sun.media.jai.codec.FileSeekableStream;
  * DataType objects.  The operations are arranged to conform to the
  * Chaining Model of JAI.  Check out the JAI Programming Guide.
  *
- * @deprecated JAI is not developed any more. Internal APIs that JAI depends on were
+ * @deprecated JAI is not developed anymore. Internal APIs that JAI depends on were
  * scheduled for removal in Java 7 and finally removed in Java 9.
  * @see org.apache.tools.ant.types.optional.image.ImageOperation
  * @see org.apache.tools.ant.types.DataType

@@ -335,7 +335,7 @@ public class JJTree extends Task {
     /**
      * When running JJTree from an Ant taskdesk the -OUTPUT_DIRECTORY must
      * always be set. But when -OUTPUT_DIRECTORY is set, -OUTPUT_FILE is
-     * handled as if relative of this -OUTPUT_DIRECTORY. Thus when the
+     * handled as if relative of this -OUTPUT_DIRECTORY. Thus, when the
      * -OUTPUT_FILE is absolute or contains a drive letter we have a problem.
      *
      * @param destFile String

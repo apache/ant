@@ -348,7 +348,7 @@ public final class ChainReaderHelper {
             }
         }
         // Ant 1.7.1 and earlier ignore <filterreader> without a
-        // classname attribute, not sure this is a good idea -
+        // classname attribute, not sure whether this is a good idea -
         // backwards compatibility makes it hard to change, though.
         return ancestor;
     }

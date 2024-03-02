@@ -177,7 +177,7 @@ public abstract class SOS extends Task implements SOSCmd {
         this.verbose = verbose;
     }
 
-    // Special setters for the sub-classes
+    // Special setters for the subclasses
 
     /**
      * Set the file name.

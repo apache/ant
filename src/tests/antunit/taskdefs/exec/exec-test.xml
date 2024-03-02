@@ -599,7 +599,7 @@
         <au:assertLogContains text="${ant.file} out" />
     </target>
 
-    <!-- test will succeed as the OS wont match-->
+    <!-- test will succeed as the OS won't match-->
     <target name="testExecUnknownOS">
       <exec executable="nonexistent-program-we-expect"
             failonerror="true"

@@ -168,7 +168,7 @@ public class BigProjectLogger extends SimpleBigProjectLogger
     }
 
     private void maybeRaiseSubBuildStarted(BuildEvent event) {
-        // double checked locking should be OK since the flag is write-once
+        // double-checked locking should be OK since the flag is write-once
         if (!subBuildStartedRaised) {
             synchronized (subBuildLock) {
                 if (!subBuildStartedRaised) {

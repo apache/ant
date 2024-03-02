@@ -29,7 +29,7 @@ public class TestHelper {
     /**
      * Find a TCP/IP port which may continue to be available.
      * <br />
-     * The returned port is available since a socket has successfully bind to it, but this availability is not ensured
+     * The returned port is available since a socket has successfully bound to it, but this availability is not ensured
      * after this method since the associated socket is released and some other process can now use it.
      */
     public static int getMaybeAvailablePort() {

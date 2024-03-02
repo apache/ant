@@ -225,7 +225,7 @@ public class ManifestClassPathTest {
     @Test
     public void testDifferentWindowsDrive() {
         assumeTrue("Test with drive letters only run on windows", Os.isFamily("windows"));
-        // the lines below try to find a drive name different than the one containing the temp dir
+        // the lines below try to find a drive name different from the one containing the temp dir
         // if the temp dir is C will try to use D
         // if the temp dir is on D or other will try to use C
         File tmpdir = new File(System.getProperty("java.io.tmpdir"));

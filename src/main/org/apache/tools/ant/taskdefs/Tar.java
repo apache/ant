@@ -364,7 +364,7 @@ public class Tar extends MatchingTask {
                            final TarFileSet tarFileSet)
         throws IOException {
         if (file.equals(tarFile)) {
-            // If the archive is built for the first time and it is
+            // If the archive is built for the first time, and it is
             // matched by a resource collection, then it hasn't been
             // found in check (it hasn't been there) but will be
             // included now.
@@ -526,7 +526,7 @@ public class Tar extends MatchingTask {
     /**
      * Is the archive up to date in relationship to a list of files.
      * @param files the files to check
-     * @return true if the archive is up to date.
+     * @return true if the archive is up-to-date.
      * @deprecated since 1.5.x.
      *             use the two-arg version instead.
      */
@@ -539,7 +539,7 @@ public class Tar extends MatchingTask {
      * Is the archive up to date in relationship to a list of files.
      * @param files the files to check
      * @param dir   the base directory for the files.
-     * @return true if the archive is up to date.
+     * @return true if the archive is up-to-date.
      * @since Ant 1.5.2
      */
     protected boolean archiveIsUpToDate(final String[] files, final File dir) {
@@ -552,7 +552,7 @@ public class Tar extends MatchingTask {
     /**
      * Is the archive up to date in relationship to a list of files.
      * @param r the files to check
-     * @return true if the archive is up to date.
+     * @return true if the archive is up-to-date.
      * @since Ant 1.7
      */
     protected boolean archiveIsUpToDate(final Resource r) {
@@ -853,7 +853,7 @@ public class Tar extends MatchingTask {
         }
 
         /**
-         * Flag to indicates whether leading `/'s should
+         * Flag to indicate whether leading `/'s should
          * be preserved in the file names.
          * Optional, default is <code>false</code>.
          * @param b the leading slashes flag.

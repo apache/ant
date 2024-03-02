@@ -33,7 +33,7 @@ public final class JavaClassHelper {
     /**
      * Get the constants declared in a file as name=value
      *
-     * @param bytes the class as a array of bytes
+     * @param bytes the class as an array of bytes
      * @return a StringBuffer contains the name=value pairs
      * @exception IOException if an error occurs
      */

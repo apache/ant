@@ -50,7 +50,7 @@ public class MajoritySelector extends BaseSelectorContainer {
     }
 
     /**
-     * A attribute to specify what will happen if number
+     * An attribute to specify what will happen if number
      * of yes votes is the same as the number of no votes
      * defaults to true
      *

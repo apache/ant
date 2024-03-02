@@ -146,7 +146,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     private String rmicopts;
 
     /**
-     * Whether or not the RMI skeleton and stub must be modified to
+     * Whether the RMI skeleton and stub must be modified to
      * implement the implicit propagation of the security context (the
      * transactional context is always provided). The default is
      * <code>false</code>.
@@ -797,11 +797,11 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Add a file to the a given hashtable. If the file is a directory, add
-     * recursivly all the files inside to the hashtable.
+     * Add a file to a given hashtable. If the file is a directory, add
+     * recursively all the files inside to the hashtable.
      *
      * @param file the file to add.
-     * @param rootDir the current sub-directory to scan.
+     * @param rootDir the current subdirectory to scan.
      * @param hashtable the hashtable where to add the files.
      */
     private void addAllFiles(File file, String rootDir, Hashtable<String, File> hashtable) {

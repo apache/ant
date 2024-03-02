@@ -73,7 +73,7 @@ public class Gcj extends DefaultCompilerAdapter {
 
         classpath.append(getCompileClasspath());
 
-        // Gcj has no option for source-path so we
+        // Gcj has no option for source-path, so we
         // will add it to classpath.
         if (compileSourcepath != null) {
             classpath.append(compileSourcepath);

@@ -66,7 +66,7 @@ public class ExtraAttribute {
     }
 
     /**
-     * Make sure that neither the name or the value
+     * Make sure that neither the name nor the value
      * is null.
      *
      * @throws BuildException if the attribute is invalid.

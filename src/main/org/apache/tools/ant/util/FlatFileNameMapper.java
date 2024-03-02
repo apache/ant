@@ -47,7 +47,7 @@ public class FlatFileNameMapper implements FileNameMapper {
     }
 
     /**
-     * Returns an one-element array containing the source file name
+     * Returns a one-element array containing the source file name
      * without any leading directory information.
      * @param sourceFileName the name to map.
      * @return the file name in a one-element array.

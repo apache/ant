@@ -271,7 +271,7 @@ public class ResourceList extends DataType implements ResourceCollection {
         }
         String expandedLine = expanded.toString();
         if (expandedLine.contains(":")) {
-            // could be an URL or an absolute file on an OS with drives
+            // could be a URL or an absolute file on an OS with drives
             try {
                 return new URLResource(expandedLine);
             } catch (BuildException mfe) {

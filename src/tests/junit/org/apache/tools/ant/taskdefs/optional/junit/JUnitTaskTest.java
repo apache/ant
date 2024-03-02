@@ -249,7 +249,7 @@ public class JUnitTaskTest {
         assertThat(buildRule.getOutput(), containsString("3rd run: should run D.test10"));
 
 
-        // 4rd run: two running tests with errors
+        // 4th run: two running tests with errors
         buildRule.executeTarget("failureRecorder.runtest");
         assertTrue("The collector file '" + collectorFile.getAbsolutePath()
                    + "' should exist after the 4th run.",

@@ -475,7 +475,7 @@ public class Depend extends MatchingTask {
             if (closure) {
                 count += deleteAffectedFiles(affectedClass);
             } else {
-                // without closure we may delete an inner class but not the
+                // without closure, we may delete an inner class but not the
                 // top level class which would not trigger a recompile.
 
                 if (!affectedClass.contains("$")) {
@@ -539,7 +539,7 @@ public class Depend extends MatchingTask {
      * test for being an RMI stub
      * @param affectedClass  class being tested
      * @param className      possible origin of the RMI stub
-     * @return whether the class affectedClass is a RMI stub
+     * @return whether the class affectedClass is an RMI stub
      */
     private boolean isRmiStub(String affectedClass, String className) {
         return isStub(affectedClass, className, DefaultRmicAdapter.RMI_STUB_SUFFIX)
@@ -595,7 +595,7 @@ public class Depend extends MatchingTask {
             }
             ClassFileInfo info = classFileInfoMap.get(className);
 
-            // if we have no info about the class - it may have been deleted already and we
+            // if we have no info about the class - it may have been deleted already, and we
             // are using cached info.
             if (info != null) {
                 for (File classpathFile : e.getValue()) {

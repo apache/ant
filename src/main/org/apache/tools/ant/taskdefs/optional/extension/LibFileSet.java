@@ -27,14 +27,14 @@ import org.apache.tools.ant.types.FileSet;
  */
 public class LibFileSet extends FileSet {
     /**
-     * Flag indicating whether should include the
+     * Flag indicating whether to include the
      * "Implementation-URL" attribute in manifest.
      * Defaults to false.
      */
     private boolean includeURL;
 
     /**
-     * Flag indicating whether should include the
+     * Flag indicating whether to include the
      * "Implementation-*" attributes in manifest.
      * Defaults to false.
      */
@@ -57,7 +57,7 @@ public class LibFileSet extends FileSet {
     private String urlBase;
 
     /**
-     * Flag indicating whether should include the
+     * Flag indicating whether to include the
      * "Implementation-URL" attribute in manifest.
      * Defaults to false.
      *
@@ -68,7 +68,7 @@ public class LibFileSet extends FileSet {
     }
 
     /**
-     * Flag indicating whether should include the
+     * Flag indicating whether to include the
      * "Implementation-*" attributes in manifest.
      * Defaults to false.
      *

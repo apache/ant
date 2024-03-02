@@ -227,7 +227,7 @@ public abstract class DefaultCompilerAdapter
     }
 
     /**
-     * Builds the modulesourcepath for multi module compilation.
+     * Builds the modulesourcepath for multimodule compilation.
      * @return the modulesourcepath
      * @since 1.9.7
      */
@@ -252,14 +252,14 @@ public abstract class DefaultCompilerAdapter
      * Does the command line argument processing common to classic and
      * modern.  Doesn't add the files to compile.
      * @param cmd the command line
-     * @param useDebugLevel if true set set the debug level with the -g switch
+     * @param useDebugLevel if true set the debug level with the -g switch
      * @return the command line
      */
     protected Commandline setupJavacCommandlineSwitches(final Commandline cmd,
                                                         final boolean useDebugLevel) {
         final Path classpath = getCompileClasspath();
         // For -sourcepath, use the "sourcepath" value if present.
-        // Otherwise default to the "srcdir" value.
+        // Otherwise, default to the "srcdir" value.
         Path sourcepath;
         if (compileSourcepath != null) {
             sourcepath = compileSourcepath;

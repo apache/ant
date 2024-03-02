@@ -34,7 +34,7 @@ public interface ExtensionResolver {
      * @param extension the extension
      * @param project the Ant project instance
      * @return the File satisfying extension, null
-     *         if can not resolve extension
+     *         if extension can not be resolved
      * @throws BuildException if error occurs attempting to
      *         resolve extension
      */

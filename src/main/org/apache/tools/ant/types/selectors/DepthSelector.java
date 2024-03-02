@@ -25,7 +25,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Parameter;
 
 /**
- * Selector that filters files based on the how deep in the directory
+ * Selector that filters files based on how deep in the directory
  * tree they are.
  *
  * @since 1.5

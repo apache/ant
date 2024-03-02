@@ -39,7 +39,7 @@ import org.apache.tools.ant.Task;
  * to work fine.
  *
  * plans for the future:
- * - use the midi api to define sounds (or drum beat etc) in xml and have
+ * - use the midi api to define sounds (or drum beat, etc.) in xml and have
  *   Ant play them back
  *
  */

@@ -188,7 +188,7 @@ public class ScpFromMessage extends AbstractSshMessage {
         File startFile = localFile;
         while (true) {
             // C0644 filesize filename - header for a regular file
-            // T time 0 time 0\n - present if perserve time.
+            // T time 0 time 0\n - present if preserve time.
             // D directory - this is the header for a directory.
             final ByteArrayOutputStream stream = new ByteArrayOutputStream();
             while (true) {
@@ -222,7 +222,7 @@ public class ScpFromMessage extends AbstractSshMessage {
     private File parseAndCreateDirectory(final String serverResponse,
                                          final File localFile) {
         int start = serverResponse.indexOf(' ');
-        // appears that the next token is not used and it's zero.
+        // appears that the next token is not used, and it's zero.
         start = serverResponse.indexOf(' ', start + 1);
         final String directoryName = serverResponse.substring(start + 1);
         if (localFile.isDirectory()) {

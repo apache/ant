@@ -148,7 +148,7 @@ public class GlobPatternMapper implements FileNameMapper {
 
     /**
      * Returns null if the source file name doesn't match the
-     * &quot;from&quot; pattern, an one-element array containing the
+     * &quot;from&quot; pattern, a one-element array containing the
      * translated file otherwise.
      * @param sourceFileName the filename to map
      * @return a list of converted filenames

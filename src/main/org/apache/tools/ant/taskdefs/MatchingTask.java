@@ -225,9 +225,9 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     }
 
     /**
-     * Sets whether or not symbolic links should be followed.
+     * Sets whether symbolic links should be followed.
      *
-     * @param followSymlinks whether or not symbolic links should be followed
+     * @param followSymlinks whether symbolic links should be followed
      */
     public void setFollowSymlinks(boolean followSymlinks) {
         fileset.setFollowSymlinks(followSymlinks);

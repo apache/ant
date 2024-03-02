@@ -206,7 +206,7 @@ public abstract class Definer extends DefBase {
         ClassLoader al = createLoader();
 
         if (!definerSet) {
-            //we arent fully defined yet. this is an error unless
+            //we aren't fully defined yet. this is an error unless
             //we are in an antlib, in which case the resource name is determined
             //automatically.
             //NB: URIs in the ant core package will be "" at this point.
