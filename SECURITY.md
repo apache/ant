@@ -1,3 +1,3 @@
 # Security Policy
 
-Please see https://ant.apache.org/security.html
+Please see <https://ant.apache.org/security.html>
