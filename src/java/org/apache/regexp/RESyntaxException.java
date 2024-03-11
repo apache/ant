@@ -1,8 +1,6 @@
+package org.apache.regexp;
+
 /*
- * $Header: /home/cvs/jakarta-regexp/LICENSE,v 1.3 2000/04/27 01:21:00 jon Exp $
- * $Revision: 1.3 $
- * $Date: 2000/04/27 01:21:00 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -58,4 +56,21 @@
  * <http://www.apache.org/>.
  *
  */ 
- 
+
+/**
+ * Exception thrown to indicate a syntax error in a regular expression.
+ *
+ * @author <a href="mailto:jonl@muppetlabs.com">Jonathan Locke</a>
+ * @version $Id: RESyntaxException.java,v 1.1 2000/04/27 01:22:33 jon Exp $
+ */
+public class RESyntaxException extends Exception
+{
+    /**
+     * Constructor.
+     * @param s Further description of the syntax error
+     */
+    public RESyntaxException(String s)
+    {
+        super("Syntax error: " + s);
+    }
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="jon@latchkey.com">Jon S. Stevens</author>
+    <title>Regexp Changes</title>
+  </properties>
+
+<body>
+
+  <section name="Regexp Changes">
+
+<p>
+This document reflects the changes between releases for the Jakarta Regexp
+package.
+</p>
+
+<h3>Version 1.2</h3>
+<ul>
+<li>Updated to Ant 1.2 (JSS)</li>
+<li>Documentation now built with <a 
+href="http://jakarta.apache.org/site/jakarta-site2.html">Anakia</a> (JSS)</li>
+<li><a href="http://jakarta.apache.org/cvsweb/index.cgi/jakarta-regexp/src/java/org/apache/regexp/RE.java?rev=1.3&amp;content-type=text/vnd.viewcvs-markup">Fixed bug</a></li>
+<li><a href="http://jakarta.apache.org/cvsweb/index.cgi/jakarta-regexp/src/java/org/apache/regexp/RE.java?rev=1.4&amp;content-type=text/vnd.viewcvs-markup">Fixed bug</a></li>
+<li><a href="http://jakarta.apache.org/cvsweb/index.cgi/jakarta-regexp/src/java/org/apache/regexp/RE.java?rev=1.5&amp;content-type=text/vnd.viewcvs-markup">Fixed bug</a></li>
+<li><a href="http://jakarta.apache.org/cvsweb/index.cgi/jakarta-regexp/src/java/org/apache/regexp/RE.java?rev=1.6&amp;content-type=text/vnd.viewcvs-markup">Fixed bug</a></li>
+</ul>
+
+<h3>Version 1.1</h3>
+
+<p>
+Contributions by Ales Novak:
+</p>
+
+<ul>
+<li>RECompiler.compile() - copy on return</li>
+<li>RE.matchNodes() - BOL and EOL cases
+if RE.MATCH_MULTILINE is specified.
+- Think of RETest.java which prints
+MATCH!!!: ......
+two times while in the older version only one time.
+</li>
+<li>
+RE.java also contains an extension which allow to parse
+InputStreams, Readers and char arrays in addition to Strings.
+All needed modifications are only in the RE class.
+</li>
+</ul>
+
+<p>
+Contributions by Jon S. Stevens:
+</p>
+
+<ul>
+<li>Fix in the build system for building on NT</li>
+<li>Documentation fixes / additions</li>
+</ul>
+
+<h3>Version 1.0</h3>
+<ul>
+<li>Repackaging from original contribution. No major code changes.</li>
+</ul>
+
+  </section>
+
+</body>
+</document>
+

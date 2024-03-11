@@ -1,8 +1,6 @@
+package org.apache.regexp;
+
 /*
- * $Header: /home/cvs/jakarta-regexp/LICENSE,v 1.3 2000/04/27 01:21:00 jon Exp $
- * $Revision: 1.3 $
- * $Date: 2000/04/27 01:21:00 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -58,4 +56,49 @@
  * <http://www.apache.org/>.
  *
  */ 
- 
+
+/** Encapsulates String
+ *
+ * @author <a href="mailto:ales.novak@netbeans.com">Ales Novak</a>
+ */
+public final class CharacterArrayCharacterIterator implements CharacterIterator
+{
+    /** encapsulated */
+    private final char[] src;
+    /** offset in the char array */
+    private final int off;
+    /** used portion of the array */
+    private final int len;
+
+    /** @param src - encapsulated String */
+    public CharacterArrayCharacterIterator(char[] src, int off, int len)
+    {
+        this.src = src;
+        this.off = off;
+        this.len = len;
+    }
+
+    /** @return a substring */
+    public String substring(int offset, int length)
+    {
+        return new String(src, off + offset, length);
+    }
+
+    /** @return a substring */
+    public String substring(int offset)
+    {
+        return new String(src, off + offset, len);
+    }
+
+    /** @return a character at the specified position. */
+    public char charAt(int pos)
+    {
+        return src[off + pos];
+    }
+
+    /** @return <tt>true</tt> iff if the specified index is after the end of the character stream */
+    public boolean isEnd(int pos)
+    {
+        return (pos >= len);
+    }
+}

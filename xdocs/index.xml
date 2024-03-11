@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="jon@latchkey.com">Jon S. Stevens</author>
+    <title>Regexp</title>
+  </properties>
+
+<body>
+
+  <section name="Regexp">
+
+<p>
+Regexp is a 100% Pure Java Regular Expression package that was graciously 
+donated to the Apache Software Foundation by Jonathan Locke. He originally wrote 
+this software back in 1996 and it has stood up quite well to the test of time. 
+It includes complete Javadoc documentation as well as a simple Applet for visual 
+debugging and testing suite for compatibility.
+</p>
+
+<p>
+This package is intended to be an answer to a question we commonly hear in the 
+Java world:
+<br/>
+<strong>&quot;Why isn't there a decent regular expression package available for 
+Java under a BSD-Style (ie: Apache) license?&quot;</strong>
+</p>
+
+<p>
+You can <a href="../site/binindex.html">download</a> builds.
+</p>
+
+<p>
+You can view the list of 
+<a href="./changes.html">changes</a> between revisions.
+</p>
+
+<p>
+The Javadoc is <a href="http://jakarta.apache.org/regexp/apidocs/">available online</a>. 
+It is also included in the distribution download.
+</p>
+
+<p>
+An online <a
+href="http://jakarta.apache.org/jyve-faq/Turbine/screen/DisplayTopics/action/SetAll/project_id/2/faq_id/27">FAQ</a>
+is available for commonly asked questions like, &quot;What is a regular
+expression?&quot;, &quot;Why did you do this? There are already other Java
+regexp packages available!&quot;, etc. 
+</p>
+
+<p>
+If you would like to get involved with this project in one way or another 
+(Mailing lists, CVS, Contributions), please see the <a 
+href="../site/getinvolved.html">Getting Involved</a> section of the Jakarta Website.
+</p>
+
+<h3><a href="../site/whoweare.html">Contributors</a></h3>
+
+<ul>
+<li>Jonathan Locke wrote the original code.</li>
+<li>James Davidson for making the contact with Jonathan and asking him to release his 
+source code.</li>
+<li>Jon S. Stevens is responsible for re-packaging it and preparing it 
+for release.</li>
+<li>Craig McClanahan is responsible for setting up the CVS and mailing lists.</li>
+<li><a href="mailto:ales AT netbeans.com">Ales Novak</a> has contributed
+bug fixes and feature enhancements.</li>
+</ul>
+
+  </section>
+
+</body>
+</document>
+

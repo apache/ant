@@ -1,8 +1,6 @@
+package org.apache.regexp;
+
 /*
- * $Header: /home/cvs/jakarta-regexp/LICENSE,v 1.3 2000/04/27 01:21:00 jon Exp $
- * $Revision: 1.3 $
- * $Date: 2000/04/27 01:21:00 $
- *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -58,4 +56,23 @@
  * <http://www.apache.org/>.
  *
  */ 
- 
+
+/** Encapsulates different types of character sources - String, InputStream, ...
+ * Defines a set of common methods
+ *
+ * @author <a href="mailto:ales.novak@netbeans.com">Ales Novak</a>
+ */
+public interface CharacterIterator
+{
+    /** @return a substring */
+    String substring(int offset, int length);
+
+    /** @return a substring */
+    String substring(int offset);
+
+    /** @return a character at the specified position. */
+    char charAt(int pos);
+
+    /** @return <tt>true</tt> iff if the specified index is after the end of the character stream */
+    boolean isEnd(int pos);
+}
