@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <directory>D:\Ant\ant</directory>
+    <outputDirectory>target\generated-sources\annotations</outputDirectory>
+</configuration>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with

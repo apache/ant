@@ -109,6 +109,14 @@
     <module>ant-xz</module>
   </modules>
   <dependencies>
+
+    <dependency>
+      <groupId>cn.home1</groupId>
+      <artifactId>maven-build</artifactId>
+      <version>3.3.0</version>
+      <type>pom</type>
+    </dependency>
+
      <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
