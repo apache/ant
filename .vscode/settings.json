@@ -1,3 +1,7 @@
 {
-    "python.analysis.typeCheckingMode": "basic"
+    "python.analysis.typeCheckingMode": "basic",
+    "redHatDependencyAnalytics.mvn.executable.path": "",
+    "maven.terminal.useJavaHome": true,
+    "maven.pomfile.autoUpdateEffectivePOM": true,
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
