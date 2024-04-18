@@ -116,6 +116,7 @@ public class FTP extends Task implements FTPTaskConfig {
     private String password;
     private String account;
     private boolean useFtps = false;
+    private boolean useSecureDataChannel = false;
     private HostnameVerifier hostnameVerifier;
     private File listing;
     private boolean binary = true;
@@ -1275,6 +1276,15 @@ public class FTP extends Task implements FTPTaskConfig {
      */
     public void setUseFtps(boolean useFtps) {
         this.useFtps = useFtps;
+    }
+
+    /**
+     * Whether to use secure data channel when using FTPS
+     *
+     * @since 1.10.15
+     */
+    public void setUseSecureDataChannel(boolean useSecureDataChannel) {
+        this.useSecureDataChannel = useSecureDataChannel;
     }
 
     public void add(HostnameVerifier hostnameVerifier) {
@@ -2574,6 +2584,17 @@ public class FTP extends Task implements FTPTaskConfig {
                         "could not enter into passive mode: %s",
                         ftp.getReplyString());
                 }
+            }
+            // if it is FTPS and secure data channel is desired, then we exec "PROT P"
+            // command to enable secure data channel, for the lifetime of this client
+            if (useFtps && useSecureDataChannel) {
+                FTPSClient ftps = (FTPSClient) ftp;
+                try {
+                    ftps.execPROT("P"); // P implies PRIVATE and enables encryption
+                } catch (IOException e) {
+                    throw new BuildException("failed to enable secure data channel: " + e, e);
+                }
+                log("enabled secure data channel", Project.MSG_VERBOSE);
             }
 
             // If an initial command was configured then send it.
