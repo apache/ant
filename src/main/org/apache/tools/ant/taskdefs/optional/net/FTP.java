@@ -2590,6 +2590,10 @@ public class FTP extends Task implements FTPTaskConfig {
             if (useFtps && useSecureDataChannel) {
                 FTPSClient ftps = (FTPSClient) ftp;
                 try {
+                    // first issue a PBSZ command as mandated by RFC-2228.
+                    // we set 0 because the buffer size is redundant since the encryption
+                    // is handled at TLS layer and not application layer
+                    ftps.execPBSZ(0);
                     ftps.execPROT("P"); // P implies PRIVATE and enables encryption
                 } catch (IOException e) {
                     throw new BuildException("failed to enable secure data channel: " + e, e);
