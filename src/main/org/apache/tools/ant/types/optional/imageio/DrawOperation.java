@@ -31,7 +31,7 @@ import java.awt.image.BufferedImage;
 public interface DrawOperation {
     /**
      * Abstract method which is intended to create an image buffer
-     * and return it so it can be drawn into another object.  Use
+     * and return it, so it can be drawn into another object.  Use
      * an Alpha channel for a "transparent" background.
      * @return a planar image
      */

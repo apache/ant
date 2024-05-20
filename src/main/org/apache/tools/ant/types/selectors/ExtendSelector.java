@@ -176,7 +176,7 @@ public class ExtendSelector extends BaseSelector {
      * since we know we must have them all by now. And since we must know
      * both classpath and classname, creating the class is deferred to here
      * as well.
-     * @param basedir The the base directory.
+     * @param basedir The base directory.
      * @param filename The name of the file to check.
      * @param file A File object for this filename.
      * @return whether the file should be selected or not.

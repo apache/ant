@@ -79,7 +79,7 @@ public final class ExpandProperties
     /**
      * Returns the next character in the filtered stream. The original
      * stream is first read in fully, and the Ant properties are expanded.
-     * The results of this expansion are then queued so they can be read
+     * The results of this expansion are then queued, so they can be read
      * character-by-character.
      *
      * @return the next character in the resulting stream, or -1

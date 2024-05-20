@@ -232,7 +232,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter, IgnoredT
     }
 
     /**
-     * Format the test for printing..
+     * Format the test for printing.
      * @param test a test
      * @return the formatted testname
      */

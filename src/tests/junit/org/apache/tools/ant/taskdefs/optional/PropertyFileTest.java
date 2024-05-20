@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  *  JUnit testcase that exercises the optional PropertyFile task in ant.
- *  (this is really more of a functional test so far.., but it's enough to let
+ *  (this is really more of a functional test so far, but it's enough to let
  *   me start refactoring...)
  *
  *created    October 2, 2001
@@ -71,8 +71,8 @@ public class PropertyFileTest {
     }
 
     /**
-     *  A unit test for JUnit- Exercises the propertyfile tasks ability to
-     *  update properties that are already defined-
+     *  A unit test for JUnit - Exercises the propertyfile tasks ability to
+     *  update properties that are already defined.
      */
     @Test
     public void testUpdatesExistingProperties() throws Exception {

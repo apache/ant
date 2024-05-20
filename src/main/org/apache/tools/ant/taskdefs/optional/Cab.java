@@ -151,7 +151,7 @@ public class Cab extends MatchingTask {
     }
 
     /**
-     * Check to see if the target is up to date with respect to input files.
+     * Check to see if the target is up-to-date with respect to input files.
      * @param files the list of files to check.
      * @return true if the cab file is newer than its dependents.
      */
@@ -226,7 +226,7 @@ public class Cab extends MatchingTask {
 
         Vector<String> files = getFileList();
 
-        // quick exit if the target is up to date
+        // quick exit if the target is up-to-date
         if (isUpToDate(files)) {
             return;
         }

@@ -186,7 +186,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     * Whether or not the build should halt if compilation fails.
+     * Whether the build should halt if compilation fails.
      * Defaults to <code>true</code>.
      * @param fail a <code>boolean</code> value.
      */
@@ -514,7 +514,7 @@ public class JspC extends MatchingTask {
 
     /**
      * calculate where the files will end up:
-     * this is destDir or it id destDir + the package name
+     * this is either destDir or destDir + the package name
      */
     private File getActualDestDir() {
         if (packageName == null) {
@@ -579,7 +579,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     * Test whether or not compilation is needed. A return value of
+     * Test whether compilation is needed. A return value of
      * <code>true<code> means yes, <code>false</code> means
      * our tests do not indicate this, but as the TLDs are
      * not used for dependency checking this is not guaranteed.

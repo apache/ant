@@ -71,7 +71,7 @@ import org.apache.tools.ant.util.FileUtils;
  * <p>The value part of the properties being set, might contain references to other
  * properties. These references are resolved at the time these properties are set.
  * This also holds for properties loaded from a property file.</p>
- * Properties are case sensitive.
+ * Properties are case-sensitive.
  *
  * @since Ant 1.1
  *
@@ -168,7 +168,7 @@ public class Property extends Task {
      * Sets the property to the absolute filename of the
      * given file. If the value of this attribute is an absolute path, it
      * is left unchanged (with / and \ characters converted to the
-     * current platforms conventions). Otherwise it is taken as a path
+     * current platforms conventions). Otherwise, it is taken as a path
      * relative to the project's basedir and expanded.
      * @param location path to set
      *
@@ -298,7 +298,7 @@ public class Property extends Task {
 
     /**
      * Whether to apply the prefix when expanding properties on the
-     * right hand side of a properties file as well.
+     * right-hand side of a properties file as well.
      *
      * @param b boolean
      * @since Ant 1.8.2
@@ -309,7 +309,7 @@ public class Property extends Task {
 
     /**
      * Whether to apply the prefix when expanding properties on the
-     * right hand side of a properties file as well.
+     * right-hand side of a properties file as well.
      *
      * @return boolean
      * @since Ant 1.8.2
@@ -359,7 +359,7 @@ public class Property extends Task {
 
     /**
      * Prefix to use when retrieving environment variables.
-     * Thus if you specify environment=&quot;myenv&quot;
+     * Thus, if you specify environment=&quot;myenv&quot;
      * you will be able to access OS-specific
      * environment variables via property names &quot;myenv.PATH&quot; or
      * &quot;myenv.TERM&quot;.
@@ -371,7 +371,7 @@ public class Property extends Task {
      * on select platforms. Feel free to send patches to increase the number of platforms
      * this functionality is supported on ;).
      * </p>
-     * Note also that properties are case sensitive, even if the
+     * Note also that properties are case-sensitive, even if the
      * environment variables on your operating system are not, e.g. it
      * will be ${env.Path} not ${env.PATH} on Windows 2000.
      *

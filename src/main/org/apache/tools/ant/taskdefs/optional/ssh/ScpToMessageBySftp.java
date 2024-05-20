@@ -290,7 +290,7 @@ public class ScpToMessageBySftp extends ScpToMessage/*AbstractSshMessage*/ {
             channel.put(localFile.getAbsolutePath(), remotePath, monitor);
             // set the fileMode on the transferred file. The "remotePath" can potentially be a directory
             // into which the file got transferred, so we can't/shouldn't go ahead and try to change that directory's
-            // permissions. Instead we determine the path of the transferred file on remote.
+            // permissions. Instead, we determine the path of the transferred file on remote.
             final String transferredFileRemotePath;
             if (channel.stat(remotePath).isDir()) {
                 // Note: It's correct to use "/" as the file separator without worrying about what the remote

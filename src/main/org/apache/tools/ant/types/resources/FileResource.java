@@ -159,8 +159,8 @@ public class FileResource extends Resource implements Touchable, FileProvider,
 
     /**
      * Get the name of this FileResource.  If the basedir is set,
-     * the name will be relative to that.  Otherwise the basename
-     * only will be returned.
+     * the name will be relative to that.  Otherwise, only the basename
+     * will be returned.
      * @return the name of this resource.
      */
     @Override

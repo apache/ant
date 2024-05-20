@@ -269,7 +269,7 @@ public abstract class Mailer {
     }
 
     /**
-     * Return the current Date in a format suitable for a SMTP date
+     * Return the current Date in a format suitable for an SMTP date
      * header.
      *
      * @return the current date in SMTP suitable format.

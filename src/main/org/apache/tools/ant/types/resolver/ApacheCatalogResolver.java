@@ -107,7 +107,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
         }
         final ApacheCatalog apacheCatalog = (ApacheCatalog) catalog;
 
-        // Pass in reference to ourselves so we can be called back.
+        // Pass in reference to ourselves, so we can be called back.
         apacheCatalog.setResolver(this);
 
         try {

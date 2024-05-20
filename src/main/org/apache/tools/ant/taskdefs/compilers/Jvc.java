@@ -58,7 +58,7 @@ public class Jvc extends DefaultCompilerAdapter {
 
         classpath.append(getCompileClasspath());
 
-        // jvc has no option for source-path so we
+        // jvc has no option for source-path, so we
         // will add it to classpath.
         if (compileSourcepath != null) {
             classpath.append(compileSourcepath);

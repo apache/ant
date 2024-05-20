@@ -123,7 +123,7 @@ public class ManifestClassPath extends Task {
             buffer.append(' ');
         }
 
-        // Finally assign the property with the manifest classpath
+        // Finally, assign the property with the manifest classpath
         getProject().setNewProperty(name, buffer.toString().trim());
     }
 

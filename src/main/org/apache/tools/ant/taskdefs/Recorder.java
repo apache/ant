@@ -54,7 +54,7 @@ public class Recorder extends Task implements SubBuildListener {
     /** The name of the file to record to. */
     private String filename = null;
     /**
-     * Whether or not to append. Need Boolean to record an unset state (null).
+     * Whether to append. Need Boolean to record an unset state (null).
      */
     private Boolean append = null;
     /**
@@ -110,7 +110,7 @@ public class Recorder extends Task implements SubBuildListener {
 
 
     /**
-     * Whether or not the logger should append to a previous file.
+     * Whether the logger should append to a previous file.
      * @param append if true, append to a previous file.
      */
     public void setAppend(boolean append) {

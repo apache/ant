@@ -108,7 +108,7 @@ public class LoadResource extends Task {
 
     /**
      * If true, suppress the load error report and set the
-     * the failonerror value to false.
+     * failonerror value to false.
      * @param quiet The new Quiet value
      */
     public void setQuiet(final boolean quiet) {

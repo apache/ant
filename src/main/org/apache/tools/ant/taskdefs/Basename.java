@@ -35,7 +35,7 @@ import org.apache.tools.ant.Task;
  * </ul>
  * The <b>file</b> and <b>property</b> attributes are required. The
  * <b>suffix</b> attribute can be specified either with or without
- * the &quot;.&quot;, and the result will be the same (ie., the
+ * the &quot;.&quot;, and the result will be the same (i.e., the
  * returned file name will be minus the .suffix).
  * <p>
  * When this task executes, it will set the specified property to the
@@ -102,7 +102,7 @@ public class Basename extends Task {
             return s;
         }
         int clipFrom = s.length() - ext.length();
-        // if the suffix does not starts with a '.' and the
+        // if the suffix does not start with a '.' and the
         // char preceding the suffix is a '.', we assume the user
         // wants to remove the '.' as well (see docs)
         if (ext.charAt(0) != '.' && clipFrom > 0 && s.charAt(clipFrom - 1) == '.') {

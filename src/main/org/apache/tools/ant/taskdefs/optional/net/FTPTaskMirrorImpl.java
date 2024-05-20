@@ -81,7 +81,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
     }
 
     /**
-     * internal class providing a File-like interface to some of the information
+     * internal class providing a File-like interface to some information
      * available from the FTP server
      *
      */
@@ -93,7 +93,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         private final String name;
 
         /**
-         * creates a proxy to a FTP file
+         * creates a proxy to an FTP file
          * @param file FTPFile
          */
         public FTPFileProxy(FTPFile file) {
@@ -104,7 +104,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         }
 
         /**
-         * creates a proxy to a FTP directory
+         * creates a proxy to an FTP directory
          * @param completePath the remote directory.
          */
         public FTPFileProxy(String completePath) {
@@ -334,9 +334,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                     //we do not need to scan all the subdirs in the relative path
                     path = myfile.getFastRelativePath();
                 } else {
-                    // may be on a case insensitive file system.  We want
+                    // may be on a case-insensitive file system.  We want
                     // the results to show what's really on the disk, so
-                    // we need to double check.
+                    // we need to double-check.
                     try {
                         path = myfile.getRelativePath();
                         traversesSymlinks = myfile.isTraverseSymlinks();
@@ -551,7 +551,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
         /**
          * list the files present in one directory.
          * @param directory full path on the remote side
-         * @param changedir if true change to directory directory before listing
+         * @param changedir if true change to <code>directory</code> directory before listing
          * @return array of FTPFile
          */
         public FTPFile[] listFiles(String directory, boolean changedir) {
@@ -747,7 +747,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 this.ftpFile = getFile(listFiles(this.curpwd), lastpathelement);
             }
             /**
-             * find a file in a directory in case insensitive way
+             * find a file in a directory in case-insensitive way
              * @param parentPath        where we are
              * @param soughtPathElement what is being sought
              * @return                  the first file found or null if not found
@@ -802,8 +802,8 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
 
             /**
              * find out the relative path assuming that the path used to construct
-             * this AntFTPFile was spelled properly with regards to case.
-             * This is OK on a case sensitive system such as UNIX
+             * this AntFTPFile was spelled properly with regard to case.
+             * This is OK on a case-sensitive system such as UNIX
              * @return relative path
              */
             public String getFastRelativePath() {
@@ -845,7 +845,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
             /**
              * get the relative path of this file
              * @param currentPath          base path
-             * @param currentRelativePath  relative path of the base path with regards to remote dir
+             * @param currentRelativePath  relative path of the base path with regard to remote dir
              * @return relative path
              */
             private String getRelativePath(String currentPath, String currentRelativePath) {
@@ -1030,9 +1030,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
     }
 
     /**
-     * check FTPFiles to check whether they function as directories too
-     * the FTPFile API seem to make directory and symbolic links incompatible
-     * we want to find out if we can cd to a symbolic link
+     * Check FTPFiles whether they function as directories, too.
+     * The FTPFile API seems to make directory and symbolic links incompatible;
+     * we want to find out if we can cd to a symbolic link.
      * @param dir  the parent directory of the file to test
      * @param file the file to test
      * @return true if it is possible to cd to this directory
@@ -1081,9 +1081,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
     }
 
     /**
-     * check FTPFiles to check whether they function as directories too
-     * the FTPFile API seem to make directory and symbolic links incompatible
-     * we want to find out if we can cd to a symbolic link
+     * Check FTPFiles whether they function as directories, too.
+     * The FTPFile API seems to make directory and symbolic links incompatible;
+     * we want to find out if we can cd to a symbolic link.
      * @param dir  the parent directory of the file to test
      * @param file the file to test
      * @return true if it is possible to cd to this directory
@@ -1399,11 +1399,11 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
 
     /**
      * Checks to see if the remote file is current as compared with the local
-     * file. Returns true if the target file is up to date.
+     * file. Returns true if the target file is up-to-date.
      * @param ftp ftpclient
      * @param localFile local file
      * @param remoteFile remote file
-     * @return true if the target file is up to date
+     * @return true if the target file is up-to-date
      * @throws IOException  in unknown circumstances
      * @throws BuildException if the date of the remote files cannot be found and the action is
      * GET_FILES
@@ -1498,7 +1498,7 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
      * simplifies the coding.
      * @param ftp ftp client
      * @param dir base directory of the file to be sent (local)
-     * @param filename relative path of the file to be send
+     * @param filename relative path of the file to be sent
      *        locally relative to dir
      *        remotely relative to the remotedir attribute
      * @throws IOException  in unknown circumstances

@@ -53,7 +53,7 @@ public class OwnedBySelector implements FileSelector {
 
     /**
      * Sets the "follow symbolic links" option.
-     * @param followSymlinks whether or not symbolic links should be followed.
+     * @param followSymlinks whether symbolic links should be followed.
      */
     public void setFollowSymlinks(boolean followSymlinks) {
         this.followSymlinks = followSymlinks;

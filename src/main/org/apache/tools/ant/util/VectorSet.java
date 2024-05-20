@@ -80,7 +80,7 @@ public final class VectorSet<E> extends Vector<E> {
 
     private synchronized void doAdd(int index, E o) {
         // Vector.add seems to delegate to insertElementAt, but this
-        // is not documented so we may better implement it ourselves
+        // is not documented, so we may better implement it ourselves
         if (set.add(o)) {
             int count = size();
             ensureCapacity(count + 1);

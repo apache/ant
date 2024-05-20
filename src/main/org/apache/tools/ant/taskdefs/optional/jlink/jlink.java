@@ -387,7 +387,7 @@ public class jlink {
     }
 
     /*
-     * Necessary in the case where you add a entry that
+     * Necessary in the case where you add an entry that
      * is not compressed.
      */
     private long calcChecksum(File f) throws IOException {
@@ -396,7 +396,7 @@ public class jlink {
     }
 
     /*
-     * Necessary in the case where you add a entry that
+     * Necessary in the case where you add an entry that
      * is not compressed.
      */
     private long calcChecksum(InputStream in) throws IOException {

@@ -61,7 +61,7 @@ public class JarLibResolveTask extends Task {
     private boolean checkExtension = true;
 
     /**
-     * Flag indicating whether or not you should
+     * Flag indicating whether you should
      * throw a BuildException if you cannot resolve
      * library.
      */

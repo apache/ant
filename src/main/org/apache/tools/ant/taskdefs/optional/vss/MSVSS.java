@@ -101,7 +101,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     private WritableFiles writableFiles = null;
 
     /**
-     * Each sub-class must implement this method and return the constructed
+     * Each subclass must implement this method and return the constructed
      * command line to be executed. It is up to the sub-task to determine the
      * required attributes and their order.
      * @return    The Constructed command line.
@@ -110,7 +110,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
 
     /**
      * Directory where <code>ss.exe</code> resides.
-     * By default the task expects it to be in the PATH.
+     * By default, the task expects it to be in the PATH.
      * @param  dir  The directory containing ss.exe.
      */
     public final void setSsdir(String dir) {
@@ -188,7 +188,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         }
     }
 
-    // Special setters for the sub-classes
+    // Special setters for the subclasses
 
     /**
      * Set the internal comment attribute.
@@ -555,7 +555,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
     /**
      * Gets the version string. This can be to-from "-VLbuild2~Lbuild1", from
      * "~Lbuild1" or to "-VLbuild2".
-     * @return An empty string if neither tolabel or fromlabel are set.
+     * @return An empty string if neither tolabel nor fromlabel are set.
      */
     protected String getVersionLabel() {
         if (fromLabel == null && toLabel == null) {
@@ -594,7 +594,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
 
     /**
      * Gets the Version date string.
-     * @return An empty string if neither Todate or from date are set.
+     * @return An empty string if neither Todate nor from date are set.
      * @throws BuildException if there is an error.
      */
     protected String getVersionDate() throws BuildException {
@@ -675,7 +675,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         } else if (writableFiles.getValue().equals(WRITABLE_REPLACE)) {
             return FLAG_REPLACE_WRITABLE;
         } else if (writableFiles.getValue().equals(WRITABLE_SKIP)) {
-            // ss.exe exits with '100', when files have been skipped
+            // ss.exe exits with '100', when files have been skipped,
             // so we have to ignore the failure
             failOnError = false;
             return FLAG_SKIP_WRITABLE;
@@ -742,7 +742,7 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      * Changes the password to '***' so it isn't displayed on screen if the build fails
      *
      * @param cmd   The command line to clean
-     * @return The command line as a string with out the password
+     * @return The command line as a string without the password
      */
     private String formatCommandLine(Commandline cmd) {
         final StringBuilder sBuff = new StringBuilder(cmd.toString());

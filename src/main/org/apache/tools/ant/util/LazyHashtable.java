@@ -40,7 +40,7 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
     }
 
     /** Used to be part of init. It must be done once - but
-     * we delay it until we do need _all_ tasks. Otherwise we
+     * we delay it until we do need _all_ tasks. Otherwise, we
      * just get the tasks that we need, and avoid costly init.
      */
     protected void initAll() {
@@ -52,7 +52,7 @@ public class LazyHashtable<K, V> extends Hashtable<K, V> {
 
 
     /**
-     * Get a enumeration over the elements.
+     * Get an enumeration over the elements.
      * @return an enumeration.
      */
     public Enumeration<V> elements() {

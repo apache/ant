@@ -110,7 +110,7 @@ public class Javah extends Task {
     }
 
     /**
-     * A class corresponding the the nested "class" element.
+     * A class corresponding the nested "class" element.
      * It contains a "name" attribute.
      */
     public class ClassArgument {

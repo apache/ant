@@ -55,7 +55,7 @@ import org.apache.tools.ant.util.StreamUtils;
  * command line arguments. It then assembles and executes an Ant
  * project.
  * <p>
- * If you integrating Ant into some other tool, this is not the class
+ * If you are integrating Ant into some other tool, this is not the class
  * to use as an entry point. Please see the source code of this
  * class to see how it manipulates the Ant project classes.
  *
@@ -105,7 +105,7 @@ public class Main implements AntMain {
 
     /**
      * The Ant logger class. There may be only one logger. It will have
-     * the right to use the 'out' PrintStream. The class must implements the
+     * the right to use the 'out' PrintStream. The class must implement the
      * BuildLogger interface.
      */
     private String loggerClassname = null;
@@ -117,29 +117,29 @@ public class Main implements AntMain {
     private String inputHandlerClassname = null;
 
     /**
-     * Whether or not output to the log is to be unadorned.
+     * Whether output to the log is to be unadorned.
      */
     private boolean emacsMode = false;
 
     /**
-     * Whether or not log output should be reduced to the minimum
+     * Whether log output should be reduced to the minimum
      */
     private boolean silent = false;
 
     /**
-     * Whether or not this instance has successfully been
+     * Whether this instance has successfully been
      * constructed and is ready to run.
      */
     private boolean readyToRun = false;
 
     /**
-     * Whether or not we should only parse and display the project help
+     * Whether we should only parse and display the project help
      * information.
      */
     private boolean projectHelp = false;
 
     /**
-     * Whether or not a logfile is being used. This is used to
+     * Whether a logfile is being used. This is used to
      * check if the output streams must be closed.
      */
     private boolean isLogFileUsed = false;
@@ -415,7 +415,7 @@ public class Main implements AntMain {
                     throw new BuildException("");
                 }
             } else {
-                // if it's no other arg, it may be the target
+                // if it isn't another arg, it may be the target
                 targets.addElement(arg);
             }
         }
@@ -872,7 +872,7 @@ public class Main implements AntMain {
 
         // this list doesn't contain the build files default target,
         // which may be added later unless targets have been specified
-        // on the command line. Therefore the property gets set again
+        // on the command line. Therefore, the property gets set again
         // in Project#executeTargets when we can be sure the list is
         // complete.
         // Setting it here allows top-level tasks to access the
@@ -1066,7 +1066,7 @@ public class Main implements AntMain {
      * @return the short Ant version information as a String
      *         (always non-<code>null</code>)
      *
-     * @throws BuildException BuildException if the version information is unavailable
+     * @throws BuildException if the version information is unavailable
      * @since Ant 1.9.3
      */
     public static String getShortAntVersion() throws BuildException {
@@ -1119,7 +1119,7 @@ public class Main implements AntMain {
      *
      * @param project The project to display a description of.
      *                Must not be <code>null</code>.
-     * @param printSubTargets Whether or not subtarget names should also be
+     * @param printSubTargets Whether subtarget names should also be
      *                        printed.
      */
     private static void printTargets(final Project project, boolean printSubTargets,
@@ -1180,7 +1180,7 @@ public class Main implements AntMain {
     }
 
     /**
-     * Searches for the correct place to insert a name into a list so as
+     * Searches for the correct place to insert a name into a list
      * to keep the list sorted alphabetically.
      *
      * @param names The current list of names. Must not be <code>null</code>.
@@ -1217,7 +1217,7 @@ public class Main implements AntMain {
      *                Should not be <code>null</code>.
      * @param maxlen The maximum length of the names of the targets.
      *               If descriptions are given, they are padded to this
-     *               position so they line up (so long as the names really
+     *               position, so they line up (so long as the names really
      *               <i>are</i> shorter than this).
      */
     private static void printTargets(final Project project, final Vector<String> names,

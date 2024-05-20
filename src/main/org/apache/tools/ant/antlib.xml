@@ -21,14 +21,14 @@
 <antlib>
   <!--
        This is the ant lib definition for ant.
-       Currently it only contains componentdefinitions (restricted
+       Currently, it only contains componentdefinitions (restricted
        types that are not allowed at the top level)
        - conditions, selectors and comparators
        (those that are not top-level types (taskdefs or typedefs).
        defined in defaults.properties of taskdefs and types
        packages).
 
-       This is currently experimental and it is most
+       This is currently experimental, and it is most
        likely that these definitions will be placed
        in a Java Ant definition class.
   -->

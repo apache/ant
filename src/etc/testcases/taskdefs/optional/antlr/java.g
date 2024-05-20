@@ -442,7 +442,7 @@ parameterModifier
 //   Inside a class definition without "static":
 //      it is an instance initializer
 //   As the body of a method
-//   As a completely indepdent braced block of code inside a method
+//   As a completely independent braced block of code inside a method
 //      it starts a new scope for variable definitions
 
 compoundStatement

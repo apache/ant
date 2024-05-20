@@ -318,7 +318,7 @@ public class CCLock extends ClearCase {
         }
         /* Had to make two separate commands here because if a space is
            inserted between the flag and the value, it is treated as a
-           Windows filename with a space and it is enclosed in double
+           Windows filename with a space, and it is enclosed in double
            quotes ("). This breaks clearcase.
         */
         cmd.createArgument().setValue(FLAG_NUSERS);
@@ -337,7 +337,7 @@ public class CCLock extends ClearCase {
         }
         /* Had to make two separate commands here because if a space is
            inserted between the flag and the value, it is treated as a
-           Windows filename with a space and it is enclosed in double
+           Windows filename with a space, and it is enclosed in double
            quotes ("). This breaks clearcase.
         */
         cmd.createArgument().setValue(FLAG_COMMENT);
@@ -356,7 +356,7 @@ public class CCLock extends ClearCase {
         }
         /* Had to make two separate commands here because if a space is
            inserted between the flag and the value, it is treated as a
-           Windows filename with a space and it is enclosed in double
+           Windows filename with a space, and it is enclosed in double
            quotes ("). This breaks clearcase.
         */
         cmd.createArgument().setValue(FLAG_PNAME);
