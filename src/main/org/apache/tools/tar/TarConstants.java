@@ -74,6 +74,13 @@ public interface TarConstants {
     int    CHKSUMLEN = 8;
 
     /**
+     * Offset of the checksum field within header record.
+     *
+     * @since 1.10.15
+     */
+    int CHKSUM_OFFSET = 148;
+
+    /**
      * The length of the size field in a header buffer.
      * Includes the trailing space or NUL.
      */

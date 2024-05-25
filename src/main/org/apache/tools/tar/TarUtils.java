@@ -624,4 +624,33 @@ public class TarUtils {
         return sum;
     }
 
+    /**
+     * Wikipedia <a href="https://en.wikipedia.org/wiki/Tar_(computing)#File_header">says</a>: <blockquote> The checksum is calculated by taking the sum of the
+     * unsigned byte values of the header block with the eight checksum bytes taken to be ASCII spaces (decimal value 32). It is stored as a six digit octal
+     * number with leading zeroes followed by a NUL and then a space. Various implementations do not adhere to this format. For better compatibility, ignore
+     * leading and trailing whitespace, and get the first six digits. In addition, some historic tar implementations treated bytes as signed. Implementations
+     * typically calculate the checksum both ways, and treat it as good if either the signed or unsigned sum matches the included checksum. </blockquote>
+     * <p>
+     * The return value of this method should be treated as a best-effort heuristic rather than an absolute and final truth. The checksum verification logic may
+     * well evolve over time as more special cases are encountered.
+     * </p>
+     *
+     * @param header tar header
+     * @return whether the checksum is reasonably good
+     * @since 1.10.15
+     */
+    public static boolean verifyCheckSum(final byte[] header) {
+        final long storedSum = parseOctal(header, TarConstants.CHKSUM_OFFSET, TarConstants.CHKSUMLEN);
+        long unsignedSum = 0;
+        long signedSum = 0;
+        for (int i = 0; i < header.length; i++) {
+            byte b = header[i];
+            if (TarConstants.CHKSUM_OFFSET <= i && i < TarConstants.CHKSUM_OFFSET + TarConstants.CHKSUMLEN) {
+                b = ' ';
+            }
+            unsignedSum += 0xff & b;
+            signedSum += b;
+        }
+        return storedSum == unsignedSum || storedSum == signedSum;
+    }
 }

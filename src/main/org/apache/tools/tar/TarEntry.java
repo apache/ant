@@ -128,6 +128,9 @@ public class TarEntry implements TarConstants {
     /** The entry's modification time. */
     private long modTime;
 
+    /** If the header checksum is reasonably correct. */
+    private boolean checkSumOK;
+
     /** The entry's link flag. */
     private byte linkFlag;
 
@@ -707,6 +710,17 @@ public class TarEntry implements TarConstants {
     }
 
     /**
+     * Tests whether this entry's checksum status.
+     *
+     * @return if the header checksum is reasonably correct
+     * @see TarUtils#verifyCheckSum(byte[])
+     * @since 1.10.15
+     */
+    public boolean isCheckSumOK() {
+        return checkSumOK;
+    }
+
+    /**
      * Indicate if this entry is a GNU sparse block.
      *
      * @return true if this is a sparse extension provided by GNU tar
@@ -974,6 +988,7 @@ public class TarEntry implements TarConstants {
         offset += SIZELEN;
         modTime = TarUtils.parseOctalOrBinary(header, offset, MODTIMELEN);
         offset += MODTIMELEN;
+        checkSumOK = TarUtils.verifyCheckSum(header);
         offset += CHKSUMLEN;
         linkFlag = header[offset++];
         linkName = oldStyle ? TarUtils.parseName(header, offset, NAMELEN)

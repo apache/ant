@@ -66,6 +66,7 @@ public class TarRoundTripTest {
             = new TarInputStream(new ByteArrayInputStream(buff.toByteArray()));
         TarEntry tripped = tis.getNextEntry();
         assertEquals("round-tripped name", LONG_NAME, tripped.getName());
+        assertTrue(tripped.isCheckSumOK());
         assertNull("no more entries", tis.getNextEntry());
         tis.close();
     }
