@@ -649,7 +649,10 @@ public class LauncherSupport {
         @Override
         public void executionStarted(final TestIdentifier testIdentifier) {
             super.executionStarted(testIdentifier);
+            AbstractJUnitResultFormatter.isTestClass(testIdentifier).ifPresent(testClass ->
+                    this.originalSysOut.println("Running " + testClass.getClassName()));
         }
+
 
         private static final double ONE_SECOND = 1000.0;
         // We use this only in the testPlanExecutionFinished method, which
