@@ -32,10 +32,10 @@
                 <fail>
                         <condition>
                                 <not>
-                                        <antversion exactly="1.10.15" />
+                                        <antversion exactly="1.10.16" />
                                 </not>
                         </condition>
-                        Should be exactly 1.10.15
+                        Should be exactly 1.10.16
                 </fail>
         </target>
 
