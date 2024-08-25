@@ -22,6 +22,11 @@ Other changes:
    cases that will only be logged otherwise.
    Github Pull Request #206
 
+ * <ftp> task now has a new "useSecureDataChannel" attribute which
+   can be set to true, when ftps is enabled, to enable secure data
+   channel.
+   Bugzilla Report 68773
+
 Fixed bugs:
 -----------
 
