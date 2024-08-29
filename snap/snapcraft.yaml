@@ -33,11 +33,11 @@ description: |
   Environment.
 confinement: classic
 grade: devel
-base: core18
+base: core22
 license: Apache-2.0
 architectures:
-  - run-on: all
-    build-on: [amd64, i386]
+  - build-for: all
+    build-on: [amd64, arm64]
 
 apps:
   ant:
