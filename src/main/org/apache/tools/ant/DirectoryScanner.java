@@ -1210,7 +1210,8 @@ public class DirectoryScanner
             return;
         }
         if (!followSymlinks) {
-            final ArrayList<String> noLinks = new ArrayList<>();
+            final String[] noLinks = new String[newFiles.length];
+            int noLinksCount = 0;
             for (final String newFile : newFiles) {
                 final Path filePath;
                 if (dir == null) {
@@ -1228,10 +1229,10 @@ public class DirectoryScanner
                     }
                     accountForNotFollowedSymlink(name, file);
                 } else {
-                    noLinks.add(newFile);
+                    noLinks[noLinksCount++] = newFile;
                 }
             }
-            newFiles = noLinks.toArray(new String[0]);
+            newFiles = Arrays.copyOf(noLinks, noLinksCount);
         } else {
             directoryNamesFollowed.addFirst(dir.getName());
         }
@@ -1788,16 +1789,17 @@ public class DirectoryScanner
      */
     private TokenizedPattern[] fillNonPatternSet(final Map<String, TokenizedPath> map,
                                                  final String[] patterns) {
-        final List<TokenizedPattern> al = new ArrayList<>(patterns.length);
+        final TokenizedPattern[] al = new TokenizedPattern[patterns.length];
+        int alCount = 0;
         for (String pattern : patterns) {
             if (SelectorUtils.hasWildcards(pattern)) {
-                al.add(new TokenizedPattern(pattern));
+                al[alCount++] = new TokenizedPattern(pattern);
             } else {
                 final String s = isCaseSensitive() ? pattern : pattern.toUpperCase();
                 map.put(s, new TokenizedPath(s));
             }
         }
-        return al.toArray(new TokenizedPattern[0]);
+        return Arrays.copyOf(al, alCount);
     }
 
     /**
