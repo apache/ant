@@ -771,15 +771,16 @@ public class Copy extends Task {
      */
     protected void buildMap(final File fromDir, final File toDir, final String[] names,
                             final FileNameMapper mapper, final Hashtable<String, String[]> map) {
-        String[] toCopy = null;
+        final String[] toCopy;
         if (forceOverwrite) {
-            final List<String> v = new ArrayList<>();
+            final String[] v = new String[names.length];
+            int added = 0;
             for (String name : names) {
                 if (mapper.mapFileName(name) != null) {
-                    v.add(name);
+                    v[added++] = name;
                 }
             }
-            toCopy = v.toArray(new String[0]);
+            toCopy = Arrays.copyOf(v, added);
         } else {
             final SourceFileScanner ds = new SourceFileScanner(this);
             toCopy = ds.restrict(names, fromDir, toDir, mapper, granularity);
@@ -816,15 +817,16 @@ public class Copy extends Task {
     protected Map<Resource, String[]> buildMap(final Resource[] fromResources, final File toDir,
                            final FileNameMapper mapper) {
         final Map<Resource, String[]> map = new HashMap<>();
-        Resource[] toCopy;
+        final Resource[] toCopy;
         if (forceOverwrite) {
-            final List<Resource> v = new ArrayList<>();
+            final Resource[] v = new Resource[fromResources.length];
+            int added = 0;
             for (Resource rc : fromResources) {
                 if (mapper.mapFileName(rc.getName()) != null) {
-                    v.add(rc);
+                    v[added++] = rc;
                 }
             }
-            toCopy = v.toArray(new Resource[0]);
+            toCopy = Arrays.copyOf(v, added);
         } else {
             toCopy = ResourceUtils.selectOutOfDateSources(this, fromResources, mapper,
                     name -> new FileResource(toDir, name), granularity);
