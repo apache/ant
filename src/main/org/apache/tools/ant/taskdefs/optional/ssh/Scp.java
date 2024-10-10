@@ -437,7 +437,7 @@ public class Scp extends SSHBase {
 
         // For IPv6 address having more than one ":", it should look for the last occurrence
         final int indexOfPath = uri.lastIndexof(':');
-        if (indexOfPath == -1) {
+        if (indexOfPath <= indexOfAt) {
             throw new BuildException("no remote path in %s", uri);
         }
 
