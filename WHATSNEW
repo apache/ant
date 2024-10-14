@@ -1,7 +1,11 @@
 Changes from Ant 1.10.15 TO Ant 1.10.16
 =======================================
 
+Fixed bugs:
+-----------
 
+ * <scp> now properly handles IPv6 addresses as hostnames.
+   Bugzilla Report 59160
 
 Changes from Ant 1.10.14 TO Ant 1.10.15
 =======================================
