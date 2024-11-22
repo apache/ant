@@ -176,7 +176,7 @@ class Simple8BitZipEncoding implements ZipEncoding {
      *         covered by this encoding.
      */
     private Simple8BitChar encodeHighChar(final char c) {
-        // for performance an simplicity, yet another reincarnation of
+        // for performance and simplicity, yet another reincarnation of
         // binary search...
         int i0 = 0;
         int i1 = this.reverseMapping.size();

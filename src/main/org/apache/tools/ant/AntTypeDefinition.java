@@ -74,7 +74,7 @@ public class AntTypeDefinition {
 
     /**
      * Set the class of the definition.
-     * As a side-effect may set the classloader and classname.
+     * As a side effect may set the classloader and classname.
      * @param clazz the class of this definition.
      */
     public void setClass(Class<?> clazz) {

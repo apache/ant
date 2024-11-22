@@ -44,13 +44,13 @@ public class ExecuteWatchdog implements TimeoutObserver {
     /** the process to execute and watch for duration */
     private Process process;
 
-    /** say whether or not the watchdog is currently monitoring a process */
+    /** say whether the watchdog is currently monitoring a process */
     private volatile boolean watch = false;
 
     /** exception that might be thrown during the process execution */
     private Exception caught = null;
 
-    /** say whether or not the process was killed due to running overtime */
+    /** say whether the process was killed due to running overtime */
     private volatile boolean killedProcess = false;
 
     /** will tell us whether timeout has occurred */
@@ -145,9 +145,9 @@ public class ExecuteWatchdog implements TimeoutObserver {
 
     /**
      * This method will rethrow the exception that was possibly caught during
-     * the run of the process. It will only remains valid once the process has
+     * the run of the process. It will only remain valid once the process has
      * been terminated either by 'error', timeout or manual intervention.
-     * Information will be discarded once a new process is ran.
+     * Information will be discarded once a new process has run.
      * @throws  BuildException  a wrapped exception over the one that was
      * silently swallowed and stored during the process run.
      */
@@ -159,7 +159,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
     }
 
     /**
-     * Indicates whether or not the watchdog is still monitoring the process.
+     * Indicates whether the watchdog is still monitoring the process.
      * @return  <code>true</code> if the process is still running, otherwise
      *          <code>false</code>.
      */

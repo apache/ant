@@ -31,7 +31,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * Adds an new entry to a CVS password file.
+ * Adds a new entry to a CVS password file.
  *
  *
  * @since Ant 1.4

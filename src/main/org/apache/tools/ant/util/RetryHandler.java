@@ -36,7 +36,7 @@ public class RetryHandler {
      * Create a new RetryingHandler.
      *
      * @param retriesAllowed how many times to retry
-     * @param task the Ant task that is is executed from, used for logging only
+     * @param task the Ant task that it is executed from, used for logging only
      */
     public RetryHandler(int retriesAllowed, Task task) {
         this.retriesAllowed = retriesAllowed;

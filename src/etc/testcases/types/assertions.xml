@@ -83,7 +83,7 @@
     </java>
   </target>  
 
-  <!-- repeated settigns result in the last declaration winning
+  <!-- repeated settings result in the last declaration winning
     except that the rule 'classes win over packages takes priority
     this run will assert -->
   <target name="test-override" depends="setUp">
@@ -99,7 +99,7 @@
     </java>
   </target>  
 
-  <!-- repeated settigns result in the last declaration winning;
+  <!-- repeated settings result in the last declaration winning;
     this run will not assert -->
   <target name="test-override2" depends="setUp">
     <java fork="true" failonerror="true"

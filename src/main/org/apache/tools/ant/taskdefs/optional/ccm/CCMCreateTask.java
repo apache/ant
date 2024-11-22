@@ -246,7 +246,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler {
     }
 
     /**
-     * Specifies the task number used to checkin
+     * Specifies the task number used to check in
      * the file (may use 'default').
      *
      * @param v  Value to assign to task.

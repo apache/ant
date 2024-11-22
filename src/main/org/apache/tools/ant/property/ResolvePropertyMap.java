@@ -72,7 +72,7 @@ public class ResolvePropertyMap implements GetProperty {
             // or we've been asked to prefix the value side (later
             // recursive calls via the GetProperty interface) the
             // prefix must be prepended when looking up the property
-            // outside of the map.
+            // outside the map.
             String fullKey = name;
             if (prefix != null && (expandingLHS || prefixValues)) {
                 fullKey = prefix + name;
@@ -80,7 +80,7 @@ public class ResolvePropertyMap implements GetProperty {
 
             Object masterValue = master.getProperty(fullKey);
             if (masterValue != null) {
-                // If the property already has a value outside of the
+                // If the property already has a value outside the
                 // map, use that value to enforce property
                 // immutability.
 
@@ -92,7 +92,7 @@ public class ResolvePropertyMap implements GetProperty {
             String recursiveCallKey = name;
             if (prefix != null && !expandingLHS && !prefixValues) {
                 // only look up nonprefixed properties inside the map
-                // if prefixValues is true or we are expanding the key
+                // if prefixValues is true, or we are expanding the key
                 // itself
                 recursiveCallKey = prefix + name;
             }

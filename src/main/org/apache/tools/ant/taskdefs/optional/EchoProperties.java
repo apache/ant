@@ -237,7 +237,7 @@ public class EchoProperties extends Task {
     }
 
     /**
-     * A enumerated type for the format attribute.
+     * An enumerated type for the format attribute.
      * The values are "xml" and "text".
      */
     public static class FormatAttribute extends EnumeratedAttribute {

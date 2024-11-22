@@ -34,7 +34,7 @@ import org.apache.tools.ant.util.StringUtils;
  * Create or modifies ClassLoader. The required pathRef parameter
  * will be used to add classpath elements.
  *
- * The classpath is a regular path. Currently only file components are
+ * The classpath is a regular path. Currently, only file components are
  * supported (future extensions may allow URLs).
  *
  * You can modify the core loader by not specifying any name or using
@@ -169,8 +169,8 @@ public class Classloader extends Task {
 
             Object obj = getProject().getReference(loaderName);
             if (reset) {
-                // Are any other references held ? Can we 'close' the loader
-                // so it removes the locks on jars ?
+                // Are any other references held? Can we 'close' the loader,
+                // so it removes the locks on jars?
                 obj = null; // a new one will be created.
             }
 

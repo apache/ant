@@ -248,7 +248,7 @@ public class ScriptDef extends DefBase {
                 "scriptdef requires a src attribute if the encoding is set");
         }
 
-        // Check if need to set the loader
+        // Check if the loader must be set
         if (getAntlibClassLoader() != null || hasCpDelegate()) {
             helper.setClassLoader(createLoader());
         }

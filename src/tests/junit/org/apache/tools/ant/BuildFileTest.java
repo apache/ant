@@ -73,7 +73,7 @@ public abstract class BuildFileTest extends TestCase {
      * test target depend on it.
      *
      * @throws Exception this implementation doesn't throw any
-     * exception but we've added it to the signature so that
+     * exception, but we've added it to the signature so that
      * subclasses can throw whatever they need.
      */
     protected void tearDown() throws Exception {
@@ -420,7 +420,7 @@ public abstract class BuildFileTest extends TestCase {
 
     /**
      * run a target, expect an exception string
-     * containing the substring we look for (case sensitive match)
+     * containing the substring we look for (case-sensitive match)
      *
      * @param target target to run
      * @param cause  information string to reader of report
@@ -453,7 +453,7 @@ public abstract class BuildFileTest extends TestCase {
     }
 
     /**
-     * assert that a property equals a value; comparison is case sensitive.
+     * assert that a property equals a value; comparison is case-sensitive.
      *
      * @param property property name
      * @param value expected value
@@ -591,7 +591,7 @@ public abstract class BuildFileTest extends TestCase {
 
         /**
          * Fired when a task has finished. This event will still
-         * be throw if an error occurred during the build.
+         * be thrown if an error occurred during the build.
          *
          * @see BuildEvent#getException()
          */

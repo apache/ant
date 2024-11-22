@@ -126,7 +126,7 @@ public class ANTLRTest {
 
     /**
      * This test creates an html-ized version of the calculator grammar.
-     * The sanity check is simply whether or not an html file was generated.
+     * The sanity check is simply whether an html file was generated.
      */
     @Test
     public void test10() {

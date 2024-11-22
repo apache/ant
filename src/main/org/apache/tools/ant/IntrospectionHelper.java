@@ -530,7 +530,7 @@ public final class IntrospectionHelper {
      * @param parentUri URI of the parent.
      * @param parent the parent class
      * @param elementName element to work with. This can contain
-     *  a URI,localname tuple of of the form uri:localname
+     *  a URI,localname tuple of the form uri:localname
      * @param child the bit of XML to work with
      * @return a nested creator that can handle the child elements.
      * @throws BuildException if the parent does not support child elements of that name
@@ -925,9 +925,9 @@ public final class IntrospectionHelper {
     }
 
     /**
-     * Returns whether or not the introspected class supports PCDATA.
+     * Returns whether the introspected class supports PCDATA.
      *
-     * @return whether or not the introspected class supports PCDATA.
+     * @return whether the introspected class supports PCDATA.
      */
     public boolean supportsCharacters() {
         return addText != null;
@@ -1361,7 +1361,7 @@ public final class IntrospectionHelper {
         /**
          * Used to override the class used to create the object.
          *
-         * @param polyType a ant component type name
+         * @param polyType an ant component type name
          */
         public void setPolyType(final String polyType) {
             this.polyType = polyType;

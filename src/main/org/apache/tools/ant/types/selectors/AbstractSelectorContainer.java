@@ -32,8 +32,8 @@ import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
 /**
- * This is the a base class a container of selectors - it does
- * not need do be a selector itself.
+ * This is the base class for a container of selectors - it does
+ * not need to be a selector itself.
  *
  * @since 1.7
  */

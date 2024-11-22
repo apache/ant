@@ -359,7 +359,7 @@ public class TarBuffer {
 
     /**
      * Write an archive record to the archive, where the record may be
-     * inside of a larger array buffer. The buffer must be "offset plus
+     * inside a larger array buffer. The buffer must be "offset plus
      * record size" long.
      *
      * @param buf The buffer containing the record data to write.

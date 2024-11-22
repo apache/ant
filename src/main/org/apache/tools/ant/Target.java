@@ -166,7 +166,7 @@ public class Target implements TaskContainer {
             list.add(token);
 
             // Make sure that depends attribute does not
-            // end in a ,
+            // end in a ","
             if (tok.hasMoreTokens()) {
                 token = tok.nextToken();
                 if (!tok.hasMoreTokens() || !",".equals(token)) {

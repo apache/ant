@@ -81,7 +81,7 @@ public class Name implements ResourceSelector {
 
     /**
      * Set whether the name comparisons are case-sensitive.
-     * @param b boolean case-sensitivity flag.
+     * @param b boolean case sensitivity flag.
      */
     public void setCaseSensitive(boolean b) {
         cs = b;
@@ -89,7 +89,7 @@ public class Name implements ResourceSelector {
 
     /**
      * Learn whether this Name ResourceSelector is case-sensitive.
-     * @return boolean case-sensitivity flag.
+     * @return boolean case sensitivity flag.
      */
     public boolean isCaseSensitive() {
         return cs;

@@ -614,7 +614,7 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * Utility method to lookup a ResourceLocation in the filesystem.
+     * Utility method to look up a ResourceLocation in the filesystem.
      *
      * @return An InputSource for reading the file, or <code>null</code>
      *     if the file does not exist or is not readable.
@@ -688,7 +688,7 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * Utility method to lookup a ResourceLocation in the classpath.
+     * Utility method to look up a ResourceLocation in the classpath.
      *
      * @return An InputSource for reading the resource, or <code>null</code>
      *    if the resource does not exist in the classpath or is not readable.
@@ -724,7 +724,7 @@ public class XMLCatalog extends DataType
     }
 
     /**
-     * Utility method to lookup a ResourceLocation in URL-space.
+     * Utility method to look up a ResourceLocation in URL-space.
      *
      * @return An InputSource for reading the resource, or <code>null</code>
      *    if the resource does not identify a valid URL or is not readable.
@@ -891,7 +891,7 @@ public class XMLCatalog extends DataType
     /**
      * The ExternalResolver strategy is used if the Apache resolver
      * library (Norm Walsh's library from xml-commons) is available in
-     * the classpath.  The ExternalResolver is a essentially a superset
+     * the classpath.  The ExternalResolver is essentially a superset
      * of the InternalResolver.
      *
      */

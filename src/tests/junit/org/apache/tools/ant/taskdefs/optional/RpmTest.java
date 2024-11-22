@@ -48,7 +48,7 @@ public class RpmTest {
         rpm.execute();
     }
 
-    // override some of the code so we can test the handling of the
+    // override some code, so we can test the handling of the
     // return code only.
     public static class MyRpm extends Rpm {
         protected Execute getExecute(Commandline toExecute,

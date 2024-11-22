@@ -383,7 +383,7 @@ public abstract class JDBCTask extends Task {
 
     /**
      * Gets an instance of the required driver.
-     * Uses the ant class loader and the optionally the provided classpath.
+     * Uses the ant class loader and optionally the provided classpath.
      * @return Driver
      * @throws BuildException if something goes wrong
      */
@@ -397,8 +397,8 @@ public abstract class JDBCTask extends Task {
             Class<? extends Driver> dc;
             if (classpath != null) {
                 // check first that it is not already loaded otherwise
-                // consecutive runs seems to end into an OutOfMemoryError
-                // or it fails when there is a native library to load
+                // consecutive runs seem to end with an OutOfMemoryError,
+                // or it fails when a native library is attempted to load
                 // several times.
                 // this is far from being perfect but should work
                 // in most cases.

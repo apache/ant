@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.ParserAdapter;
 
 /**
- * Checks XML files are valid (or only well formed). The
+ * Checks XML files are valid (or only well-formed). The
  * task uses the SAX2 parser implementation provided by JAXP by default
  * (probably the one that is used by Ant itself), but one can specify any
  * SAX1/2 parser if needed.
@@ -132,7 +132,7 @@ public class XMLValidateTask extends Task {
      * is <code>true</code>.
      * <p>
      * If set to false, the validation will fail only if the parsed document
-     * is not well formed XML.
+     * is not well-formed XML.
      * <p>
      * this option is ignored if the specified class
      * with {@link #setClassName(String)} is not a SAX2 XMLReader.
