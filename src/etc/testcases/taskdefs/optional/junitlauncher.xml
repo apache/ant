@@ -31,7 +31,7 @@
     <path id="junit.engine.vintage.classpath">
         <fileset dir="../../../../../lib/optional" includes="junit-vintage-engine*.jar"/>
         <fileset dir="../../../../../lib/optional" includes="junit-*.jar"/>
-        <fileset dir="../../../../../lib/optional" includes="hamcrest*.jar"/>
+        <fileset dir="../../../../../lib/optional" includes="hamcrest-*.jar"/>
         <fileset dir="../../../../../lib/optional" includes="opentest4j*.jar"/>
     </path>
 
