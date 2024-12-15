@@ -25,7 +25,12 @@ import org.apache.tools.ant.Project;
  */
 public final class SecurityManagerUtil {
 
-    private static final boolean isJava18OrHigher = JavaEnvUtils.isAtLeastJavaVersion("18");
+    // Ant will not set the SecurityManager if Java version is 18 or higher.
+    // For versions lower than Java 18, Ant will not set the SecurityManager
+    // if the "java.security.manager" system property is set to "disallow".
+    private static final boolean IS_SET_SECURITYMANAGER_ALLOWED = !JavaEnvUtils.isAtLeastJavaVersion("18")
+            && !"disallow".equals(System.getProperty("java.security.manager"));
+
     private static final boolean sysPropWarnOnSecMgrUsage =
             Boolean.getBoolean(MagicNames.WARN_SECURITY_MANAGER_USAGE);
 
@@ -34,10 +39,7 @@ public final class SecurityManagerUtil {
      * otherwise}
      */
     public static boolean isSetSecurityManagerAllowed() {
-        if (isJava18OrHigher) {
-            return false;
-        }
-        return true;
+        return IS_SET_SECURITYMANAGER_ALLOWED;
     }
 
     /**
