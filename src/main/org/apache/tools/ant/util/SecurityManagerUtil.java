@@ -25,7 +25,15 @@ import org.apache.tools.ant.Project;
  */
 public final class SecurityManagerUtil {
 
-    private static final boolean isJava18OrHigher = JavaEnvUtils.isAtLeastJavaVersion("18");
+    // Since Java-18 the securtiy-manager is disabled by default (and always
+    // disabled since 24), since 12 VM-arguments can disable it.
+    // For the details about the degradation of SecurityManager support, see
+    // - https://openjdk.org/jeps/411
+    // - https://openjdk.org/jeps/486
+    private static final boolean IS_SET_SECURITYMANAGER_ALLOWED = !JavaEnvUtils.isAtLeastJavaVersion("12")
+            || (!JavaEnvUtils.isAtLeastJavaVersion("18")
+                    && !"disallow".equals(System.getProperty("java.security.manager")));
+
     private static final boolean sysPropWarnOnSecMgrUsage =
             Boolean.getBoolean(MagicNames.WARN_SECURITY_MANAGER_USAGE);
 
@@ -34,10 +42,7 @@ public final class SecurityManagerUtil {
      * otherwise}
      */
     public static boolean isSetSecurityManagerAllowed() {
-        if (isJava18OrHigher) {
-            return false;
-        }
-        return true;
+        return IS_SET_SECURITYMANAGER_ALLOWED;
     }
 
     /**
