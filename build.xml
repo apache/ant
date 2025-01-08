@@ -1211,8 +1211,7 @@
       <fileset dir="${lib.dir}">
         <include name="optional/junit-3.8.2.jar"/>
         <include name="optional/junit-4.13.2.jar"/>
-        <include name="optional/hamcrest-core-1.3.jar"/>
-        <include name="optional/hamcrest-library-1.3.jar"/>
+        <include name="optional/hamcrest-3.0.jar"/>
         <include name="README"/>
         <include name="libraries.properties"/>
       </fileset>
