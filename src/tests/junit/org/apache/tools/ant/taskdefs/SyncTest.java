@@ -150,7 +150,7 @@ public class SyncTest {
         assertFileIsPresent(destDir + "/a.txt");
         final boolean caseSensitive = FileUtils.isCaseSensitiveFileSystem(
                 buildRule.getProject().resolveFile(destDir).toPath())
-                .orElse(true); // directory scanner defaults to case sensitive = true
+                .orElse(true); // directory scanner defaults to case-sensitive = true
         if (caseSensitive) {
             assertFileIsNotPresent(destDir + "/A.txt");
         } else {

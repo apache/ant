@@ -130,7 +130,7 @@ public final class Extension {
     /**
      * Enum indicating that extension is incompatible with
      * other extension in ways other than other enums
-     * indicate). For example the other extension may have
+     * indicate. For example, the other extension may have
      * a different ID.
      */
     public static final Compatibility INCOMPATIBLE
@@ -236,7 +236,7 @@ public final class Extension {
 
     /**
      * Add Extension to the specified manifest Attributes.
-     * Use the specified prefix so that dependencies can added
+     * Use the specified prefix so that dependencies can be added
      * with a prefix such as "java3d-" etc.
      *
      * @param attributes the attributes of manifest to add to
@@ -460,7 +460,7 @@ public final class Extension {
      * Return <code>true</code> if the specified <code>Extension</code>
      * (which represents an optional package required by an application)
      * is satisfied by this <code>Extension</code> (which represents an
-     * optional package that is already installed.  Otherwise, return
+     * optional package that is already installed).  Otherwise, return
      * <code>false</code>.
      *
      * @param required Description of the required optional package

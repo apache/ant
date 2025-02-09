@@ -123,7 +123,7 @@
   </xsl:for-each>
 </xsl:template>
 
-<!-- little trick to compute the classname for inner and non inner classes -->
+<!-- little trick to compute the classname for inner and non-inner classes -->
 <!-- this is all in one line to avoid CRLF in the name -->
 <xsl:template match="class" mode="class.name">
     <xsl:if test="parent::class"><xsl:apply-templates select="parent::class" mode="class.name"/>.<xsl:value-of select="@name"/></xsl:if><xsl:if test="not(parent::class)"><xsl:value-of select="@name"/></xsl:if>
@@ -268,7 +268,7 @@ invocation of a method that is not declared in any of:
 <li>a class or method that extends the class.</li>
 </ul>
 
-The value is the count of all the remote method calls in all of the methods
+The value is the count of all the remote method calls in all the methods
 and constructors of the class.
 
 <a name="NLM"/>
@@ -276,7 +276,7 @@ and constructors of the class.
 
 NLM is defined for classes and interfaces.  A local method is defined as a
 method that is declared in the class or interface. NLM can be configured to
-include the local methods of all of the class's superclasses.  Methods with
+include the local methods of all the class's superclasses.  Methods with
 public, protected, package and private visibility can be independently
 counted by setting configuration parameters.
 
@@ -324,7 +324,7 @@ typically require a deeper understanding of the potential interactions that
 objects of the class can have with the rest of the system.
 <p/>
 RFC is defined as the sum of NLM and NRM for the class.  The local methods
-include all of the public, protected, package and private methods, but not
+include all the public, protected, package and private methods, but not
 methods declared only in a superclass.
 
 <a name="DAC"/>
@@ -399,7 +399,7 @@ If a class exhibits low method cohesion it indicates that the design of the
 class has probably been partitioned incorrectly, and could benefit by being
 split into more classes with individually higher cohesion. On the other
 hand, a high value of cohesion (a low lack of cohesion) implies that the
-class is well designed. A cohesive class will tend to provide a high degree
+class is well-designed. A cohesive class will tend to provide a high degree
 of encapsulation, whereas a lack of cohesion decreases encapsulation and
 increases complexity.
 <p/>

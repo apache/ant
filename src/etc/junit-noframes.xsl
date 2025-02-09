@@ -449,7 +449,7 @@
             <xsl:with-param name="word" select="."/>
         </xsl:call-template>
     </code>
-    <!-- the later is better but might be problematic for non-21" monitors... -->
+    <!-- the latter is better but might be problematic for non-21" monitors... -->
     <!--pre><xsl:value-of select="."/></pre-->
 </xsl:template>
 

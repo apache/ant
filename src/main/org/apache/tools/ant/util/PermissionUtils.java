@@ -133,7 +133,7 @@ public class PermissionUtils {
      * Sets permissions of a {@link Resource} - returns an empty set
      * for unsupported resource types or file systems that don't
      * support PosixFilePermissions and no fallback has been
-     * provided..
+     * provided.
      *
      * <p>Supported types are:</p>
      * <ul>

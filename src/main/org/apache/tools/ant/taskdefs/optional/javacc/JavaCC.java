@@ -531,7 +531,7 @@ public class JavaCC extends Task {
      * @param home the javacc home path directory.
      * @throws BuildException thrown if the home directory is invalid
      * or if the archive could not be found despite attempts to do so.
-     * @return a the major version number
+     * @return the major version number
      */
     protected static int getMajorVersionNumber(File home)
         throws BuildException {

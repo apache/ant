@@ -277,7 +277,7 @@ public class CopyTest {
         // we are only going to test against systems that support symlinks
         assumeTrue("Symlinks not supported on this operating system", Os.isFamily(Os.FAMILY_UNIX));
 
-        // setup the source files to run copying against
+        // set up the source files to run copying against
         buildRule.executeTarget("setupSelfCopyTesting");
         final File testDir = new File(buildRule.getProject().getProperty("self.copy.test.root.dir"));
         assertTrue(testDir + " was expected to be a directory", testDir.isDirectory());

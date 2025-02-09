@@ -45,7 +45,7 @@ public class AntClassLoader5 extends AntClassLoader {
      *                  elements are set up to start with.
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted  before trying to
-     *                    load the a class through this loader.
+     *                    load the class through this loader.
      */
     public AntClassLoader5(ClassLoader parent, Project project,
                            Path classpath, boolean parentFirst) {

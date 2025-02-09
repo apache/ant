@@ -209,7 +209,7 @@ public class FileUtils {
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
+     * @param overwrite Whether the destination file should be overwritten if it already
      *            exists.
      *
      * @throws IOException if the copying fails.
@@ -231,9 +231,9 @@ public class FileUtils {
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *            overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *            the resulting file
      *            should be set to that of the source file.
      *
@@ -256,9 +256,9 @@ public class FileUtils {
      * @param sourceFile Name of file to copy from. Must not be <code>null</code>.
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
+     * @param overwrite Whether the destination file should be overwritten if it already
      *            exists.
-     * @param preserveLastModified Whether or not the last modified time of the resulting file
+     * @param preserveLastModified Whether the last modified time of the resulting file
      *            should be set to that of the source file.
      * @param encoding the encoding used to read and write the files.
      *
@@ -288,9 +288,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param encoding the encoding used to read and write the files.
@@ -318,9 +318,9 @@ public class FileUtils {
      * @param destFile Name of file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
+     * @param overwrite Whether the destination file should be overwritten if it already
      *            exists.
-     * @param preserveLastModified Whether or not the last modified time of the resulting file
+     * @param preserveLastModified Whether the last modified time of the resulting file
      *            should be set to that of the source file.
      * @param inputEncoding the encoding used to read the files.
      * @param outputEncoding the encoding used to write the files.
@@ -378,7 +378,7 @@ public class FileUtils {
      * @param destFile the file to copy to.
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
      *
      * @throws IOException if the copying fails.
@@ -400,9 +400,9 @@ public class FileUtils {
      * @param destFile the file to copy to.
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      *
@@ -422,9 +422,9 @@ public class FileUtils {
      * @param sourceFile the file to copy from. Must not be <code>null</code>.
      * @param destFile the file to copy to. Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
-     * @param overwrite Whether or not the destination file should be overwritten if it already
+     * @param overwrite Whether the destination file should be overwritten if it already
      *            exists.
-     * @param preserveLastModified Whether or not the last modified time of the resulting file
+     * @param preserveLastModified Whether the last modified time of the resulting file
      *            should be set to that of the source file.
      * @param encoding the encoding used to read and write the files.
      *
@@ -453,9 +453,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param encoding the encoding used to read and write the files.
@@ -487,9 +487,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param inputEncoding the encoding used to read the files.
@@ -524,9 +524,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param append whether to append to the destination file.
@@ -564,9 +564,9 @@ public class FileUtils {
      *                 Must not be <code>null</code>.
      * @param filters the collection of filters to apply to this copy.
      * @param filterChains filterChains to apply during the copy.
-     * @param overwrite Whether or not the destination file should be
+     * @param overwrite Whether the destination file should be
      *                  overwritten if it already exists.
-     * @param preserveLastModified Whether or not the last modified time of
+     * @param preserveLastModified Whether the last modified time of
      *                             the resulting file should be set to that
      *                             of the source file.
      * @param append whether to append to the destination file.
@@ -596,7 +596,7 @@ public class FileUtils {
 
     /**
      * Calls File.setLastModified(long time). Originally written to
-     * to dynamically bind to that call on Java1.2+.
+     * dynamically bind to that call on Java1.2+.
      *
      * @param file the file whose modified time is to be set
      * @param time the time to which the last modified time is to be set.
@@ -1317,7 +1317,7 @@ public class FileUtils {
      * @return true if path starts with leading; false otherwise.
      * @since Ant 1.10.5
      * @throws IOException if resolveSymlinks is true and invoking
-     * getCanonicaPath on either argument throws an exception
+     * getCanonicalPath on either argument throws an exception
      */
     public boolean isLeadingPath(File leading, File path, boolean resolveSymlinks)
         throws IOException {
@@ -1535,13 +1535,13 @@ public class FileUtils {
     /**
      * test whether a file or directory exists, with an error in the
      * upper/lower case spelling of the name.
-     * Using this method is only interesting on case insensitive file systems
+     * Using this method is only interesting on case-insensitive file systems
      * (Windows).
      * <p>
      * It will return true only if 3 conditions are met:
      * </p>
      * <ul>
-     *   <li>operating system is case insensitive</li>
+     *   <li>operating system is case-insensitive</li>
      *   <li>file exists</li>
      *   <li>actual name from directory reading is different from the
      *       supplied argument</li>
@@ -1584,7 +1584,7 @@ public class FileUtils {
     public boolean isUpToDate(File source, File dest, long granularity) {
         //do a check for the destination file existing
         if (!dest.exists()) {
-            //if it does not, then the file is not up to date.
+            //if it does not, then the file is not up-to-date.
             return false;
         }
         long sourceTime = source.lastModified();
@@ -1604,7 +1604,7 @@ public class FileUtils {
     }
 
     /**
-     * Compare two timestamps for being up to date using
+     * Compare two timestamps for being up-to-date using
      * the specified granularity.
      *
      * @param sourceTime timestamp of source file.
@@ -1617,7 +1617,7 @@ public class FileUtils {
     }
 
     /**
-     * Compare two timestamps for being up to date using the
+     * Compare two timestamps for being up-to-date using the
      * current granularity.
      *
      * @param sourceTime  timestamp of source file.
@@ -1887,7 +1887,7 @@ public class FileUtils {
     /**
      * Opens a new OutputStream for the given Path.
      * @param path the path of the file
-     * @param append whether to append to or a replace an existing file
+     * @param append whether to append to or to replace an existing file
      * @return a stream ready to write to the file
      * @throws IOException if stream creation fails
      * @since Ant 1.10.2
@@ -1913,7 +1913,7 @@ public class FileUtils {
      * </p>
      * @param path The path whose filesystem case sensitivity needs to be checked
      * @return Returns true if the filesystem corresponding to the passed {@code path}
-     *          is case sensitive. Else returns false. If the case sensitivity
+     *          is case-sensitive. Else returns false. If the case sensitivity
      *          cannot be determined for whatever reason, this method returns an
      *          {@link Optional#empty()}
      * @throws IllegalArgumentException If the passed path is null
@@ -1933,7 +1933,7 @@ public class FileUtils {
                 mixedCaseTmpFile = Files.createTempFile(path, mixedCaseFileNamePrefix, null);
             } else {
                 // we can only do our tricks to figure out whether the filesystem is
-                // case sensitive, only if the path is a directory or a file.
+                // case-sensitive, only if the path is a directory or a file.
                 // In other cases (like the path being non-existent), we don't
                 // have a way to determine that detail
                 return Optional.empty();
@@ -1944,7 +1944,7 @@ public class FileUtils {
             } catch (NoSuchFileException nsfe) {
                 // a NSFE implies that the "lowerCasePath" file wasn't considered to be present
                 // even if the different cased file exists. That effectively means this is a
-                // case sensitive filesystem
+                // case-sensitive filesystem
                 caseSensitive = true;
             }
         } catch (IOException ioe) {

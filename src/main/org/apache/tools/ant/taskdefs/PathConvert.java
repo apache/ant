@@ -134,8 +134,7 @@ public class PathConvert extends Task {
      * Helper class, holds the nested &lt;map&gt; values. Elements will look like
      * this: &lt;map from=&quot;d:&quot; to=&quot;/foo&quot;/&gt;
      *
-     * When running on windows, the prefix comparison will be case
-     * insensitive.
+     * When running on windows, the prefix comparison will be case-insensitive.
      */
     public class MapEntry {
 
@@ -275,7 +274,7 @@ public class PathConvert extends Task {
         // Currently, we deal with only two path formats: Unix and Windows
         // And Unix is everything that is not Windows
 
-        // for NetWare and OS/2, piggy-back on Windows, since in the
+        // for NetWare and OS/2, piggyback on Windows, since in the
         // validateSetup code, the same assumptions can be made as
         // with windows - that ; is the path separator
 
@@ -461,7 +460,7 @@ public class PathConvert extends Task {
         // And Unix is everything that is not Windows
         // (with the exception for NetWare and OS/2 below)
 
-        // for NetWare and OS/2, piggy-back on Windows, since here and
+        // for NetWare and OS/2, piggyback on Windows, since here and
         // in the apply code, the same assumptions can be made as with
         // windows - that \\ is an OK separator, and do comparisons
         // case-insensitive.

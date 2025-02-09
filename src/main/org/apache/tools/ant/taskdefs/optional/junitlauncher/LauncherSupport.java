@@ -76,18 +76,18 @@ import java.util.concurrent.TimeUnit;
  * This class relies on a {@link LaunchDefinition} for setting up the launch of the
  * JUnit platform.
  * <p>
- * The {@code LauncherSupport} isn't concerned with whether or not
+ * The {@code LauncherSupport} isn't concerned with whether
  * it's being executed in the same JVM as the build in which the {@code junitlauncher}
- * was triggered or if it's running as part of a forked JVM. Instead it just relies
+ * was triggered or if it's running as part of a forked JVM. Instead, it just relies
  * on the {@code LaunchDefinition} to do whatever decisions need to be done before and
  * after launching the tests.
  * <p>
  * This class is not thread-safe and isn't expected to be used for launching from
  * multiple different threads simultaneously.
  * <p>This class is an internal implementation detail of the Ant project and although
- * it's a public class, it isn't meant to be used outside of this project. This class
+ * it's a public class, it isn't meant to be used outside this project. This class
  * can be changed, across releases, without any backward compatible guarantees and hence
- * shouldn't be used or relied upon outside of this project.
+ * shouldn't be used or relied upon outside this project.
  */
 public class LauncherSupport {
 
@@ -135,7 +135,7 @@ public class LauncherSupport {
                     // for this request.
                     final Listener firstListener = new Listener(System.out);
                     // we always enroll the summary generating listener, to the request, so that we
-                    // get to use some of the details of the summary for our further decision making
+                    // get to use some details of the summary for our further decision-making
                     testExecutionListeners.add(firstListener);
                     testExecutionListeners.addAll(getListeners(testRequest, this.launchDefinition.getClassLoader()));
                     final PrintStream originalSysOut = System.out;
@@ -295,7 +295,7 @@ public class LauncherSupport {
         if (test.getOutputDir() != null) {
             return new File(test.getOutputDir(), filename).toPath();
         }
-        // neither listener nor the test define a output dir, so use basedir of the project
+        // neither listener nor the test define an output dir, so use basedir of the project
         final TestExecutionContext testExecutionContext = this.testExecutionContext;
         final String baseDir = testExecutionContext.getProperties().getProperty(MagicNames.PROJECT_BASEDIR);
         return Paths.get(baseDir, filename);
@@ -369,7 +369,7 @@ public class LauncherSupport {
             }
             default: {
                 // unknown, but no need to error out, just be lenient
-                // and return back
+                // and return
                 return Optional.empty();
             }
         }
@@ -553,7 +553,7 @@ public class LauncherSupport {
                 streamContentDeliver.stop = true;
                 // just "wakeup" the delivery thread, to take into account
                 // those race conditions, where that other thread didn't yet
-                // notice that it was asked to stop and has now gone into a
+                // notice that it was asked to stop and has now gone into an
                 // X amount of wait, waiting for any new data
                 streamContentDeliver.availableData.offer(EMPTY);
             }

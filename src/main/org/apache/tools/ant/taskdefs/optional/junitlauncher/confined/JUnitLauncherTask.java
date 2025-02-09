@@ -475,8 +475,8 @@ public class JUnitLauncherTask extends Task {
             // - if it does, then we use the Ant runtime classpath plus the task's configured classpath
             // with the traditional parent first loading.
             // - else (i.e. Ant runtime classpath doesn't have JUnit platform classes), then we
-            // expect/assume the task's configured classpath to have the JUnit platform classes and we
-            // then create a "overriding" classloader which prefers certain resources (specifically the classes
+            // expect/assume the task's configured classpath to have the JUnit platform classes, and we
+            // then create an "overriding" classloader which prefers certain resources (specifically the classes
             // from org.apache.tools.ant.taskdefs.optional.junitlauncher package), from the task's
             // classpath, even if the Ant's runtime classpath has those resources.
             if (JUnitLauncherClassPathUtil.hasJUnitPlatformResources(JUnitLauncherTask.class.getClassLoader())) {

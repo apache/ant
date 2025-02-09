@@ -27,8 +27,8 @@ import org.apache.tools.ant.PropertyHelper;
 /**
  * This selector just holds one other selector and forwards all
  * requests to it. It exists so that there is a single selector
- * type that can exist outside of any targets, as an element of
- * project. It overrides all of the reference stuff so that it
+ * type that can exist outside any targets, as an element of
+ * project. It overrides all the reference stuff so that it
  * works as expected. Note that this is the only selector you
  * can reference.
  *

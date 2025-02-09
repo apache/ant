@@ -200,7 +200,7 @@ public class ProjectHelperRepository {
     }
 
     /**
-     * Get the constructor with not argument of an helper from its class name.
+     * Get the constructor with not argument of a helper from its class name.
      * It'll first try the thread class loader, then Class.forName() will load
      * from the same loader that loaded this class.
      *

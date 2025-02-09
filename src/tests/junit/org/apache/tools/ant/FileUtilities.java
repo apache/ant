@@ -34,7 +34,7 @@ public class FileUtilities {
      * @param project the project containing the base directory the file is in.
      * @param fileName the path to the file from the base directory.
      * @return the contents of the given file as a string.
-     * @throws IOException on error reading the file (not existing, not readable etc)
+     * @throws IOException on error reading the file (not existing, not readable etc.)
      */
     public static String getFileContents(Project project, String fileName) throws IOException {
         return getFileContents(new File(project.getBaseDir(), fileName));
@@ -44,7 +44,7 @@ public class FileUtilities {
      * Reads the contents of a file into a String.
      * @param file the file to read.
      * @return the contents of the given file as a string.
-     * @throws IOException on error reading the file (not existing, not readable etc)
+     * @throws IOException on error reading the file (not existing, not readable etc.)
      */
     public static String getFileContents(File file) throws IOException {
         try (FileReader rdr = new FileReader(file)) {
@@ -53,7 +53,7 @@ public class FileUtilities {
     }
 
     /**
-     * Modified the timestamp on a file so it's <code>seconds</code> earlier than it was before. Where <code>file</code>
+     * Modified the timestamp on a file, so it's <code>seconds</code> earlier than it was before. Where <code>file</code>
      * is a directory, this function recurses into all child files (and directories) and reduces their modified
      * timestamps by the same range, rather than set all timestamps to the same time.
      * @param file the file to change, or the directory to change then recurse into

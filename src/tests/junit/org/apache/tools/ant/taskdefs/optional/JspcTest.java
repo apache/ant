@@ -167,7 +167,7 @@ public class JspcTest {
         assertMapped(mangler, "0.jsp", "_0_jsp");
         //underscores at the front get an underscore too
         assertMapped(mangler, "_.jsp", "___jsp");
-        //non java char at start => underscore then the the _hex value
+        //non java char at start => underscore then the _hex value
         assertMapped(mangler, "-.jsp", "__0002d_jsp");
         //and paths are stripped
         char s = File.separatorChar;

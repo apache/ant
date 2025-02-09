@@ -44,7 +44,7 @@ public class IdentityMapper implements FileNameMapper {
     }
 
     /**
-     * Returns an one-element array containing the source file name.
+     * Returns a one-element array containing the source file name.
      * @param sourceFileName the name to map.
      * @return the source filename in a one-element array.
      */

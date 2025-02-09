@@ -181,7 +181,7 @@ public class JUnitTestRunnerTest {
                   false, false, TestRunner.class.getClassLoader());
             // use the classloader that loaded this class otherwise
             // it will not be able to run inner classes if this test
-            // is ran in non-forked mode.
+            // is run in non-forked mode.
             addFormatter(formatter);
         }
         ResultFormatter getFormatter() {

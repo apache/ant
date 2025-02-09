@@ -123,7 +123,7 @@ public class PresentSelector extends BaseSelector {
 
     /**
      * Checks to make sure all settings are kosher. In this case, it
-     * means that the targetdir attribute has been set and we have a mapper.
+     * means that the targetdir attribute has been set, and we have a mapper.
      */
     @Override
     public void verifySettings() {

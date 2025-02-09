@@ -427,7 +427,7 @@ public class ProjectHelper2 extends ProjectHelper {
         }
 
         /**
-         * Handle the end of a element.
+         * Handle the end of an element.
          *
          * @param uri the namespace uri of the element
          * @param tag the tag of the element
@@ -984,7 +984,7 @@ public class ProjectHelper2 extends ProjectHelper {
             }
             Hashtable<String, Target> projectTargets = project.getTargets();
             boolean usedTarget = false;
-            // If the name has not already been defined define it
+            // If the name has not already been defined, define it
             if (projectTargets.containsKey(name)) {
                 project.log("Already defined in main or a previous import, ignore " + name,
                             Project.MSG_VERBOSE);

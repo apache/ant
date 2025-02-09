@@ -98,8 +98,8 @@ public class Equals implements Condition {
     }
 
     /**
-     * Should the comparison be case sensitive?
-     * @param b if true use a case sensitive comparison (this is the
+     * Should the comparison be case-sensitive?
+     * @param b if true use a case-sensitive comparison (this is the
      *          default)
      * @since Ant 1.5
      */

@@ -138,14 +138,14 @@ public class PropertiesfileCache implements Cache {
                 e.printStackTrace(); //NOSONAR
             }
         }
-        // after loading the cache is up to date with the file
+        // after loading the cache is up-to-date with the file
         cacheLoaded = true;
         cacheDirty  = false;
     }
 
     /**
      * Saves modification of the cache.
-     * Cache is only saved if there is one ore more entries.
+     * Cache is only saved if there is one or more entries.
      * Because entries can not be deleted by this API, this Cache
      * implementation checks the existence of entries before creating the file
      * for performance optimisation.

@@ -55,7 +55,7 @@ public final class TailFilter extends BaseParamFilterReader
     /** Number of lines to be skipped. */
     private long skip = 0;
 
-    /** Whether or not read-ahead been completed. */
+    /** Whether read-ahead been completed. */
     private boolean completedReadAhead = false;
 
     /** A line tokenizer */

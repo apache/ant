@@ -181,7 +181,7 @@ public class TarOutputStream extends FilterOutputStream {
     /**
      * Set the big number mode.
      * This can be BIGNUMBER_ERROR(0), BIGNUMBER_POSIX(1) or BIGNUMBER_STAR(2).
-     * This specifies the treatment of big files (sizes &gt; TarConstants.MAXSIZE) and other numeric values to big to fit into a traditional tar header.
+     * This specifies the treatment of big files (sizes &gt; TarConstants.MAXSIZE) and other numeric values too big to fit into a traditional tar header.
      * Default is BIGNUMBER_ERROR.
      *
      * @param bigNumberMode the mode to use
@@ -422,7 +422,7 @@ public class TarOutputStream extends FilterOutputStream {
             // The programmer can be writing little 32 byte chunks for all
             // we know, and we must assemble complete records for writing.
             // REVIEW Maybe this should be in TarBuffer? Could that help to
-            // eliminate some of the buffer copying.
+            // eliminate some buffer copying.
             //
         }
 
@@ -508,7 +508,7 @@ public class TarOutputStream extends FilterOutputStream {
                 // or where UTF-8 encoding isn't a single octet
                 // per character.
                 // Must be in loop as size may go from 99 to 100 in
-                // first pass so we'd need a second.
+                // first pass, so we'd need a second.
                 len = actualLength;
                 line = len + " " + key + "=" + value + "\n";
                 actualLength = line.getBytes(StandardCharsets.UTF_8).length;

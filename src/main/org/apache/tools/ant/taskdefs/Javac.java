@@ -805,8 +805,8 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Gets whether or not the ant classpath is to be included in the classpath.
-     * @return whether or not the ant classpath is to be included in the classpath
+     * Gets whether the ant classpath is to be included in the classpath.
+     * @return whether the ant classpath is to be included in the classpath
      */
     public boolean getIncludeantruntime() {
         return includeAntRuntime == null || includeAntRuntime;
@@ -821,7 +821,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Gets whether or not the java runtime should be included in this
+     * Gets whether the java runtime should be included in this
      * task's classpath.
      * @return the includejavaruntime attribute
      */
@@ -1378,7 +1378,7 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Adds an "compiler" attribute to Commandline$Attribute used to
+     * Adds a "compiler" attribute to Commandline$Attribute used to
      * filter command line attributes based on the current
      * implementation.
      */
@@ -1412,7 +1412,7 @@ public class Javac extends MatchingTask {
 
     /**
      * Ensure that every {@code package-info.java} produced a {@code package-info.class}.
-     * Otherwise this task's up-to-date tracking mechanisms do not work.
+     * Otherwise, this task's up-to-date tracking mechanisms do not work.
      * @see <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">Bug #43114</a>
      */
     private void generateMissingPackageInfoClasses(final File dest) throws IOException {
@@ -1439,9 +1439,9 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Checks if a path exists and is non empty.
+     * Checks if a path exists and is non-empty.
      * @param path to be checked
-     * @return true if the path is non <code>null</code> and non empty.
+     * @return true if the path is non <code>null</code> and non-empty.
      * @since 1.9.7
      */
     private static boolean hasPath(final Path path) {

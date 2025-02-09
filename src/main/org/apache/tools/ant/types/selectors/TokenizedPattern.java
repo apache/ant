@@ -56,12 +56,12 @@ public class TokenizedPattern {
     }
 
     /**
-     * Tests whether or not a given path matches a given pattern.
+     * Tests whether a given path matches a given pattern.
      *
      * @param path    The path to match, as a {@link String}. Must not be
      *                {@code null}.
-     * @param isCaseSensitive Whether or not matching should be performed
-     *                        case sensitively.
+     * @param isCaseSensitive Whether matching should be performed
+     *                        case-sensitively.
      *
      * @return {@code true} if the pattern matches against the string,
      *         or {@code false} otherwise.
@@ -72,7 +72,7 @@ public class TokenizedPattern {
     }
 
     /**
-     * Tests whether or not this pattern matches the start of
+     * Tests whether this pattern matches the start of
      * a path.
      *
      * @param path {@link TokenizedPath}

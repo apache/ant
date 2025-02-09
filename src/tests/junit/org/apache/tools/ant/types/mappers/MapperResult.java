@@ -27,7 +27,7 @@ import org.apache.tools.ant.util.FileNameMapper;
  * This is a test task to show the result of a mapper
  * on a specific input.
  * (Test is not in the name of the class, to make sure that
- * it is not treated as a unit test.
+ * it is not treated as a unit test.)
  */
 
 public class MapperResult extends Task {

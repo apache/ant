@@ -119,7 +119,7 @@ public class KeySubst extends Task {
      *   <p>
      *   name=value*name2=value
      *   <p>
-     *   Names are case sensitive.
+     *   Names are case-sensitive.
      *   <p>
      *   Use the setSep() method to change the * to something else
      *   if you need to use * as a name or value.

@@ -753,7 +753,7 @@ public class TarEntry implements TarConstants {
     }
 
     /**
-     * Return whether or not this entry represents a directory.
+     * Return whether this entry represents a directory.
      *
      * @return True if this entry is a directory.
      */

@@ -305,7 +305,7 @@ public class AggregateTransformer {
                     "org/apache/tools/ant/taskdefs/optional/junit/xsl/" + xslname);
             return new URLResource(stylesheetURL);
         }
-        // If we are here, then the style dir is here and we
+        // If we are here, then the style dir is here, and we
         // should read the stylesheet from the filesystem
         return new FileResource(new File(styleDir, xslname));
     }

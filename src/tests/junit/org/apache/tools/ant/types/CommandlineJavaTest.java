@@ -83,7 +83,7 @@ public class CommandlineJavaTest {
         assertEquals("no classpath", 4, s.length);
         /*
          * After changing CommandlineJava to search for the java
-         * executable, I don't know, how to tests the value returned
+         * executable, I don't know, how to test the value returned
          * here without using the same logic as applied in the class
          * itself.
          *

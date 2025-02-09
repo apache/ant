@@ -29,13 +29,13 @@ import org.apache.tools.ant.BuildException;
 public interface RegexpMatcher {
 
     /***
-     * Default Mask (case insensitive, neither multiline nor
+     * Default Mask (case-insensitive, neither multiline nor
      * singleline specified).
      */
     int MATCH_DEFAULT          = 0x00000000;
 
     /***
-     * Perform a case insensitive match
+     * Perform a case-insensitive match
      */
     int MATCH_CASE_INSENSITIVE = 0x00000100;
 

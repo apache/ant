@@ -455,7 +455,7 @@ public class Sync extends Task {
     }
 
     /**
-     * Subclass Copy in order to access it's file/dir maps.
+     * Subclass Copy in order to access its file/dir maps.
      */
     public static class MyCopy extends Copy {
 

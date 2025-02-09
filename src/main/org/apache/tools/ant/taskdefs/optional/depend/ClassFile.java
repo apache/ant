@@ -63,7 +63,7 @@ public class ClassFile {
                 "No Magic Code Found - probably not a Java class file.");
         }
 
-        // right we have a good looking class file.
+        // right we have a good-looking class file.
         /* int minorVersion = */ classStream.readUnsignedShort();
         /* int majorVersion = */ classStream.readUnsignedShort();
 

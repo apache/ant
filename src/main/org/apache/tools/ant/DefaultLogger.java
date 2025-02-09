@@ -62,7 +62,7 @@ public class DefaultLogger implements BuildLogger {
     protected static final String lSep = StringUtils.LINE_SEP;
     // CheckStyle:ConstantNameCheck ON
 
-    /** Whether or not to use emacs-style output */
+    /** Whether to use emacs-style output */
     protected boolean emacsMode = false;
     // CheckStyle:VisibilityModifier ON
 

@@ -39,12 +39,12 @@ public class TelnetTask extends Task {
     private static final int TELNET_PORT = 23;
 
     /**
-     *  The userid to login with, if automated login is used
+     *  The userid to log in with, if automated login is used
      */
     private String userid  = null;
 
     /**
-     *  The password to login with, if automated login is used
+     *  The password to log in with, if automated login is used
      */
     private String password = null;
 
@@ -149,7 +149,7 @@ public class TelnetTask extends Task {
     }
 
     /**
-     * Set the the login id to use on the server;
+     * Set the login id to use on the server;
      * required if <code>password</code> is set.
      * @param u a <code>String</code> value
      */
@@ -158,7 +158,7 @@ public class TelnetTask extends Task {
     }
 
     /**
-     *  Set the the login password to use
+     * Set the login password to use
      * required if <code>userid</code> is set.
      * @param p a <code>String</code> value
      */
@@ -216,7 +216,7 @@ public class TelnetTask extends Task {
      *  Add text to send to the server
      *  A subTask &lt;write&gt; tag was found.  Create the object,
      *  Save it in our list, and return it.
-     * @return a write telnet sub task
+     * @return a write telnet sub-task
      */
     public TelnetSubTask createWrite() {
         TelnetSubTask task = new TelnetWrite();
@@ -276,7 +276,7 @@ public class TelnetTask extends Task {
         }
 
         /**
-         * Whether or not the message should be echoed to the log.
+         * Whether the message should be echoed to the log.
          * Defaults to <code>true</code>.
          * @param b a <code>boolean</code> value
          */
@@ -287,7 +287,7 @@ public class TelnetTask extends Task {
 
     /**
      *  Reads the output from the connected server
-     *  until the required string is found or we time out.
+     *  until the required string is found, or we time out.
      */
     public class TelnetRead extends TelnetSubTask {
         private Integer timeout = null;
@@ -323,7 +323,7 @@ public class TelnetTask extends Task {
 
     /**
      *  This class handles the abstraction of the telnet protocol.
-     *  Currently it is a wrapper around <a
+     *  Currently, it is a wrapper around <a
      *  href="https://jakarta.apache.org/commons/net/index.html">Jakarta
      *  Commons Net</a>.
      */

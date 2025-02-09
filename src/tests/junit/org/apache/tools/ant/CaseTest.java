@@ -50,7 +50,7 @@ public class CaseTest {
 
     /**
      * Test whether the build file uses case when determining
-     * task names. Task name should be case sensitive.
+     * task names. Task name should be case-sensitive.
      */
     @Test
     public void testTaskCase() {
