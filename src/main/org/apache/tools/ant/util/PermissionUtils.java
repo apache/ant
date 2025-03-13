@@ -19,6 +19,7 @@ package org.apache.tools.ant.util;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributeView;
@@ -219,7 +220,7 @@ public class PermissionUtils {
          */
         public static FileType of(Path p) throws IOException {
             BasicFileAttributes attrs =
-                Files.readAttributes(p, BasicFileAttributes.class);
+                Files.readAttributes(p, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
             if (attrs.isRegularFile()) {
                 return FileType.REGULAR_FILE;
             } else if (attrs.isDirectory()) {
