@@ -52,7 +52,7 @@ public class SplashTask extends Task {
     private String progressRegExp = null;
     private String displayText = null;
 
-    // class instance so we'll never show two splash screens at the same time
+    // class instance, so we'll never show two splash screens at the same time
     private static SplashScreen splash = null;
 
     /**
@@ -135,7 +135,7 @@ public class SplashTask extends Task {
      * and dig out current progress optional; if not provided,
      * progress is increased every action and log output line
      * @param progressRegExp Progress regular expression, exactly one
-     * group pattern must exists, and it represents the progress
+     * group pattern must exist, and it represents the progress
      * number (0-100) (i.e "Progress: (.*)%")
      * @since Ant 1.8.0
      */

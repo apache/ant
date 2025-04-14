@@ -80,7 +80,7 @@ public class Execute {
     private boolean useVMLauncher = true;
 
     /**
-     * Set whether or not you want the process to be spawned.
+     * Set whether you want the process to be spawned.
      * Default is not spawned.
      *
      * @param spawn if true you do not want Ant
@@ -617,10 +617,10 @@ public class Execute {
 
             // Try without changing case first
             if (osEnv.remove(key) == null && environmentCaseInSensitive) {
-                // not found, maybe perform a case insensitive search
+                // not found, maybe perform a case-insensitive search
 
                 for (String osEnvItem : osEnv.keySet()) {
-                    // Nb: using default locale as key is a env name
+                    // Nb: using default locale as key is an env name
                     if (osEnvItem.equalsIgnoreCase(key)) {
                         // Use the original case of the key
                         key = osEnvItem;

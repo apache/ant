@@ -373,7 +373,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *
      * vendor-specific subclasses should override this method to define
      * the vendor-specific locations of the EJB DTDs
-     * @param handler no used in this class.
+     * @param handler not used in this class.
      */
     protected void registerKnownDTDs(DescriptorHandler handler) {
         // none to register for generic
@@ -388,7 +388,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         try {
             handler = getDescriptorHandler(config.srcDir);
 
-            // Retreive the files to be added to JAR from EJB descriptor
+            // Retrieve the files to be added to JAR from EJB descriptor
             Hashtable<String, File> ejbFiles = parseEjbFiles(descriptorFileName, saxParser);
 
             // Add any support classes specified in the build file
@@ -442,7 +442,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                 String publicId = getPublicId();
                 writeJar(baseName, jarFile, ejbFiles, publicId);
             } else {
-                // Log that the file is up to date...
+                // Log that the file is up-to-date...
                 log(jarFile.toString() + " is up to date.",
                               Project.MSG_VERBOSE);
             }
@@ -494,7 +494,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *                           added to the completed JAR file
      * @throws SAXException      Any SAX exception, possibly wrapping another
      *                           exception
-     * @throws IOException       An IOException from the parser, possibly from a
+     * @throws IOException       An IOException from the parser, possibly from
      *                           the byte stream or character stream
      */
     protected Hashtable<String, File> parseEjbFiles(String descriptorFileName, SAXParser saxParser)
@@ -647,10 +647,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      *
      * @param ejbFiles Hashtable of EJB classes (and other) files that will be
      *                 added to the completed JAR file
-     * @param jarFile  JAR file which will contain all of the EJB classes (and
+     * @param jarFile  JAR file which will contain all the EJB classes (and
      *                 other) files
-     * @return         boolean indicating whether or not the <code>jarFile</code>
-     *                 is up to date
+     * @return         boolean indicating whether the <code>jarFile</code>
+     *                 is up-to-date
      */
     protected boolean needToRebuild(Hashtable<String, File> ejbFiles, File jarFile) {
         if (jarFile.exists()) {

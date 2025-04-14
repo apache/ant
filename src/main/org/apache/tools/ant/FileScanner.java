@@ -149,10 +149,10 @@ public interface FileScanner {
     void setIncludes(String[] includes);
 
     /**
-     * Sets whether or not the file system should be regarded as case sensitive.
+     * Sets whether the file system should be regarded as case-sensitive.
      *
-     * @param isCaseSensitive whether or not the file system should be
-     *                        regarded as a case sensitive one
+     * @param isCaseSensitive whether the file system should be
+     *                        regarded as a case-sensitive one
      */
     void setCaseSensitive(boolean isCaseSensitive);
 }

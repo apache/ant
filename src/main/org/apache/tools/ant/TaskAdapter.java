@@ -55,7 +55,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
     }
 
     /**
-     * Checks whether or not a class is suitable to be adapted by TaskAdapter.
+     * Checks whether a class is suitable to be adapted by TaskAdapter.
      * If the class is of type Dispatchable, the check is not performed because
      * the method that will be executed will be determined only at runtime of
      * the actual task and not during parse time.

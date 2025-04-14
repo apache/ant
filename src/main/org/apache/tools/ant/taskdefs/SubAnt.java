@@ -197,7 +197,7 @@ public class SubAnt extends Task {
             return;
         }
 /*
-    //REVISIT: there must be cleaner way of doing this, if it is merited at all
+    //REVISIT: there must be a cleaner way of doing this, if it is merited at all
         if (subTarget == null) {
             subTarget = getOwningTarget().getName();
         }
@@ -510,7 +510,7 @@ public class SubAnt extends Task {
     }
 
     /**
-     * Set the buildpath to be used to find sub-projects.
+     * Set the buildpath to be used to find subprojects.
      *
      * @param  s an Ant Path object containing the buildpath.
      */

@@ -280,7 +280,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      * @since Ant1.7.1
      */
     protected String addStubVersionOptions() {
-        //handle the many different stub options.
+        //handle different stub options.
         String stubVersion = attributes.getStubVersion();
         //default is compatibility
         String stubOption = null;
@@ -421,7 +421,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
             /*
              * fallback in case we have trouble loading the class or
              * don't know how to handle it (there is no easy way to
-             * know what IDL mode would generate.
+             * know what IDL mode would generate).
              *
              * This is supposed to make Ant always recompile the
              * class, as a file of that name should not exist.

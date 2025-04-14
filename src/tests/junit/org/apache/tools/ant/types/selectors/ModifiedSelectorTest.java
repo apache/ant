@@ -198,13 +198,13 @@ public class ModifiedSelectorTest {
         // readable form of parameter kind
         String[] kinds = {"task", "target", "build"};
 
-        // setup the "Ant project"
+        // set up the "Ant project"
         MockProject project = new MockProject();
         File base  = new File("base");
         File file1 = new File("file1");
         File file2 = new File("file2");
 
-        // setup the selector
+        // set up the selector
         ModifiedSelector sel = new ModifiedSelector();
         sel.setProject(project);
         sel.setUpdate(true);
@@ -455,7 +455,7 @@ public class ModifiedSelectorTest {
     /**
      * Test the interface semantic of Algorithms.
      * This method does some common test for algorithm implementations.
-     * An algorithm must return always the same value for the same file and
+     * An algorithm must return always the same value for the same file, and
      * it must not return <i>null</i>.
      *
      * @param algo   configured test object
@@ -674,7 +674,7 @@ public class ModifiedSelectorTest {
             //
 
             // Mark all files which should be selected as (T)rue and all others
-            // as (F)alse. Directories are always selected so they always are
+            // as (F)alse. Directories are always selected, so they always are
             // (T)rue.
             StringBuilder expected = new StringBuilder();
             for (int i = 0; i < selectorRule.getFiles().length; i++) {
@@ -710,7 +710,7 @@ public class ModifiedSelectorTest {
 
     /**
      * This scenario is based on scenario 1, but does not use any
-     * default value and its based on &lt;custom&gt; selector. Used values are:
+     * default value and it's based on &lt;custom&gt; selector. Used values are:
      * <ul><li><b>Cache:</b> Propertyfile,
      *                    cachefile={java.io.tmpdir}/mycache.txt</li>
      * <li><b>Algorithm:</b> Digest

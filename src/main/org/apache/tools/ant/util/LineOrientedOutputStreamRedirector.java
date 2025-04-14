@@ -23,7 +23,7 @@ import java.io.OutputStream;
 /**
  * Output stream which buffer and redirect a stream line by line.
  * <p>
- * If the source stream doesn't end with a end of line, one will be added. This
+ * If the source stream doesn't end with an end of line, one will be added. This
  * is particularly useful in combination with the OutputStreamFunneler so each
  * funneled stream get its line.
  *

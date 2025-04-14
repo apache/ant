@@ -118,7 +118,7 @@ public class Jar extends Zip {
     /**
      * The file found from the 'manifest' attribute.  This can be
      * either the location of a manifest, or the name of a jar added
-     * through a fileset.  If its the name of an added jar, the
+     * through a fileset.  If it's the name of an added jar, the
      * manifest is looked for in META-INF/MANIFEST.MF
      */
     private File manifestFile;
@@ -246,7 +246,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Set whether or not to create an index list for classes.
+     * Set whether to create an index list for classes.
      * This may speed up classloading in some cases.
      * @param flag a <code>boolean</code> value
      */
@@ -255,7 +255,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Set whether or not to add META-INF and its children to the index.
+     * Set whether to add META-INF and its children to the index.
      *
      * <p>Doesn't have any effect if index is false.</p>
      *
@@ -302,7 +302,7 @@ public class Jar extends Zip {
 
     /**
      * The manifest file to use. This can be either the location of a manifest,
-     * or the name of a jar added through a fileset. If its the name of an added
+     * or the name of a jar added through a fileset. If it's the name of an added
      * jar, the task expects the manifest to be in the jar at META-INF/MANIFEST.MF.
      *
      * @param manifestFile the manifest file to use.
@@ -371,7 +371,7 @@ public class Jar extends Zip {
     /**
      * Behavior when a Manifest is found in a zipfileset or zipgroupfileset file.
      * Valid values are "skip", "merge", and "mergewithoutmain".
-     * "merge" will merge all of manifests together, and merge this into any
+     * "merge" will merge all manifests together, and merge this into any
      * other specified manifests.
      * "mergewithoutmain" merges everything but the Main section of the manifests.
      * Default value is "skip".
@@ -476,7 +476,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Whether to flatten multi-valued attributes (i.e. Class-Path)
+     * Whether to flatten multivalued attributes (i.e. Class-Path)
      * into a single one.
      *
      * @param b boolean
@@ -1040,7 +1040,7 @@ public class Jar extends Zip {
             }
 
             // looks like nothing from META-INF should be added
-            // and the check is not case insensitive.
+            // and the check is not case-insensitive.
             // see sun.misc.JarIndex
             // see also
             // https://bugs.openjdk.java.net/browse/JDK-4408526

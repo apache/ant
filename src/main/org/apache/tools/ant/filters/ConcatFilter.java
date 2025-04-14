@@ -105,7 +105,7 @@ public final class ConcatFilter extends BaseParamFilterReader
         if (prependReader != null) {
             ch = prependReader.read();
             if (ch == -1) {
-                // I am the only one so I have to close the reader
+                // I am the only one, so I have to close the reader
                 prependReader.close();
                 prependReader = null;
             }
@@ -119,7 +119,7 @@ public final class ConcatFilter extends BaseParamFilterReader
             if (appendReader != null) {
                 ch = appendReader.read();
                 if (ch == -1) {
-                    // I am the only one so I have to close the reader
+                    // I am the only one, so I have to close the reader
                     appendReader.close();
                     appendReader = null;
                 }

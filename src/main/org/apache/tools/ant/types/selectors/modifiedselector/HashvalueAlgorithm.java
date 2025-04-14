@@ -36,7 +36,7 @@ public class HashvalueAlgorithm implements Algorithm {
 
     /**
      * This algorithm doesn't need any configuration.
-     * Therefore it's always valid.
+     * Therefore, it's always valid.
      * @return always true
      */
     public boolean isValid() {

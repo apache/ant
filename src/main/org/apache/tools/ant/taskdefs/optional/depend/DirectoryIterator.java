@@ -45,7 +45,7 @@ public class DirectoryIterator implements ClassFileIterator {
     /**
      * The current directory iterator. As directories encounter lower level
      * directories, the current iterator is pushed onto the iterator stack
-     * and a new iterator over the sub directory becomes the current
+     * and a new iterator over the subdirectory becomes the current
      * directory. This implements a depth first traversal of the directory
      * namespace.
      */

@@ -411,7 +411,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Sets whether or not to include ant's own classpath in this task's
+     * Sets whether to include ant's own classpath in this task's
      * classpath.
      * Optional; default is <code>true</code>.
      * @param include if true include ant's classpath
@@ -421,7 +421,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Gets whether or not the ant classpath is to be included in the
+     * Gets whether the ant classpath is to be included in the
      * task's classpath.
      * @return true if ant's classpath is to be included
      */
@@ -441,7 +441,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Gets whether or not the java runtime should be included in this
+     * Gets whether the java runtime should be included in this
      * task's classpath.
      * @return true if default run-time libraries are included
      */
@@ -636,8 +636,8 @@ public class Rmic extends MatchingTask {
                 if (f.isFile()) {
                     scanDir(baseDir, new String[] {path}, adapter.getMapper());
                 } else {
-                    // Does not exist, so checking whether it is up to
-                    // date makes no sense.  Compilation will fail
+                    // Does not exist, so checking whether it is up-to-date
+                    // makes no sense.  Compilation will fail
                     // later anyway, but tests expect a certain
                     // output.
                     compileList.add(classname);
@@ -817,7 +817,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Adds an "compiler" attribute to Commandline$Attribute used to
+     * Adds a "compiler" attribute to Commandline$Attribute used to
      * filter command line attributes based on the current
      * implementation.
      */

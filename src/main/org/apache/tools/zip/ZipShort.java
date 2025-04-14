@@ -61,7 +61,7 @@ public final class ZipShort implements Cloneable {
 
     /**
      * Get value as two bytes in big endian byte order.
-     * @return the value as a a two byte array in big endian byte order
+     * @return the value as a two byte array in big endian byte order
      * @since 1.1
      */
     public byte[] getBytes() {

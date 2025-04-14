@@ -75,7 +75,7 @@ public class ScriptFixBSFPath {
     }
 
     /**
-     * Check if need to mess about with the classloader.
+     * Check if we need to mess with the classloader.
      * The class loader will need to be modified for two
      * reasons:
      * <ol>
@@ -112,7 +112,7 @@ public class ScriptFixBSFPath {
         // Check for location of language
         String languageClassName = BSF_LANGUAGE_MAP.get(language);
 
-        // Check if need to need to move bsf
+        // Check if we need to move bsf
         boolean needMoveBsf =
             bsfSource != null
             && languageClassName != null

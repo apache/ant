@@ -681,7 +681,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         /**
          * Wrapper for this element which takes care of actually configuring
          * the element, if this element is contained within a target.
-         * Otherwise the configuration is performed with the configure method.
+         * Otherwise, the configuration is performed with the configure method.
          * @see ProjectHelper#configure(Object,AttributeList,Project)
          */
         private RuntimeConfigurable wrapper = null;
@@ -808,7 +808,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         /**
          * Wrapper for this element which takes care of actually configuring
          * the element, if a parent wrapper is provided.
-         * Otherwise the configuration is performed with the configure method.
+         * Otherwise, the configuration is performed with the configure method.
          * @see ProjectHelper#configure(Object,AttributeList,Project)
          */
         private RuntimeConfigurable childWrapper = null;

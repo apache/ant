@@ -56,7 +56,7 @@ public class ExecuteOn extends ExecTask {
 
     // CheckStyle:VisibilityModifier OFF - bc
 
-    // filesets has been protected so we need to keep that even after
+    // filesets has been protected, so we need to keep that even after
     // switching to resource collections.  In fact, they will still
     // get a different treatment form the other resource collections
     // even in execute since we have some subtle special features like

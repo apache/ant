@@ -59,7 +59,7 @@ public class Available extends Task implements Condition {
 
     /**
      * Set the searchParents attribute.
-     * This controls the behaviour of the the "file" type.
+     * This controls the behaviour of the "file" type.
      * If true, the path, parent path and grandparent path are
      * searched for the file. If false, only the path is searched.
      * The default value is false.

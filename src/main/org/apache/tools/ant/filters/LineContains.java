@@ -103,7 +103,7 @@ public final class LineContains
 
     /**
      * Returns the next character in the filtered stream, only including
-     * lines from the original stream which contain all of the specified words.
+     * lines from the original stream which contain all the specified words.
      *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached

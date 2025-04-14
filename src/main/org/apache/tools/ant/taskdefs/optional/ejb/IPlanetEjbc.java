@@ -146,7 +146,7 @@ public class IPlanetEjbc {
         this.parser             = parser;
 
         /*
-         * Parse the classpath into it's individual elements and store the
+         * Parse the classpath into its individual elements and store the
          * results in the "classpathElements" instance variable.
          */
         if (classpath != null) {
@@ -402,7 +402,7 @@ public class IPlanetEjbc {
         }
         command += "ejbc ";
 
-        /* Concatenate all of the command line arguments into a single String */
+        /* Concatenate all the command line arguments into a single String */
         String args = String.join(" ", arguments);
 
         log(command + args);
@@ -491,7 +491,7 @@ public class IPlanetEjbc {
      * command-line utility.
      * @param ejb The EJB for which stubs and skeletons will be compiled.
      * @return    An array of Strings which are the command-line parameters for
-     *            for the ejbc utility.
+     *            the ejbc utility.
      */
     private String[] buildArgumentList(EjbInfo ejb) {
 
@@ -579,7 +579,7 @@ public class IPlanetEjbc {
 
     /**
      * This inner class is an XML document handler that can be used to parse EJB
-     * descriptors (both the standard EJB descriptor as well as the iAS-specific
+     * descriptors (both the standard EJB descriptor and the iAS-specific
      * descriptor that stores additional values for iAS).  Once the descriptors
      * have been processed, the list of EJBs found can be obtained by calling
      * the <code>getEjbs()</code> method.
@@ -897,10 +897,10 @@ public class IPlanetEjbc {
         }
 
         /*
-         * Below are getter's and setter's for each of the instance variables.
+         * Below are getters and setters for each of the instance variables.
          * Note that (in addition to supporting setters with the same type as
-         * the instance variable) a setter is provided with takes a String
-         * argument -- this are provided so the XML document handler can set
+         * the instance variable) a setter which takes a String argument
+         * is provided so the XML document handler can set
          * the EJB values using the Strings it parses.
          */
 
@@ -1077,7 +1077,7 @@ public class IPlanetEjbc {
          *
          * @param destDir The directory where the EJB source classes, stubs and
          *                skeletons are located.
-         * @return A boolean indicating whether or not the ejbc utility needs to
+         * @return A boolean indicating whether the ejbc utility needs to
          *         be run to bring the stubs and skeletons up to date.
          */
         public boolean mustBeRecompiled(File destDir) {
@@ -1146,7 +1146,7 @@ public class IPlanetEjbc {
              * Note that if ONLY the implementation class has changed, it's not
              * necessary to rebuild the EJB stubs and skeletons.  For this
              * reason, we ensure the file exists (using lastModified above), but
-             * we DON'T compare it's timestamp with the timestamps of the home
+             * we DON'T compare its timestamp with the timestamps of the home
              * and remote interfaces (because it's irrelevant in determining if
              * ejbc must be run)
              */
@@ -1372,7 +1372,7 @@ public class IPlanetEjbc {
         /**
          * Gets the fully qualified name of the Java class with underscores
          * separating the components of the class name rather than periods.
-         * This format is used in naming some of the stub and skeleton classes
+         * This format is used in naming some stub and skeleton classes
          * for the iPlanet Application Server.
          *
          * @return String representing the fully qualified class name using

@@ -56,7 +56,7 @@ public class CommandlineJava implements Cloneable {
     private String vmVersion;
     private String maxMemory = null;
     /**
-     *  any assertions to make? Currently only supported in forked JVMs
+     *  any assertions to make? Currently, only supported in forked JVMs
      */
     private Assertions assertions = null;
 

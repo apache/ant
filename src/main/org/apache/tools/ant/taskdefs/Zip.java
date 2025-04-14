@@ -522,8 +522,19 @@ public class Zip extends MatchingTask {
     /**
      * Whether the language encoding flag will be used.
      * @return boolean
-     * @since Ant 1.8.0
+     * @since Ant 1.10.13
      */
+    public boolean getUseLanguageEncodingFlag() {
+        return useLanguageEncodingFlag;
+    }
+
+    /**
+     * Whether the language encoding flag will be used.
+     * @return boolean
+     * @since Ant 1.8.0
+     * @deprecated misspelled
+     */
+    @Deprecated
     public boolean getUseLanguageEnodingFlag() {
         return useLanguageEncodingFlag;
     }
@@ -670,7 +681,7 @@ public class Zip extends MatchingTask {
             // can also handle empty archives
             final ArchiveState state = getResourcesToAdd(fss, zipFile, false);
 
-            // quick exit if the target is up to date
+            // quick exit if the target is up-to-date
             if (!state.isOutOfDate()) {
                 return;
             }
@@ -868,7 +879,7 @@ public class Zip extends MatchingTask {
 
     /** Process doupdate */
     private void processDoUpdate() {
-        // Whether or not an actual update is required -
+        // Whether an actual update is required -
         // we don't need to update if the original file doesn't exist
         if (doUpdate && !zipFile.exists()) {
             doUpdate = false;
@@ -1288,7 +1299,7 @@ public class Zip extends MatchingTask {
 
     /*
      * This is yet another hacky construct to extend the FileSet[]
-     * getResourcesToAdd method so we can pass the information whether
+     * getResourcesToAdd method, so we can pass the information whether
      * non-fileset resources have been available to it without having
      * to move the withEmpty behavior checks (since either would break
      * subclasses in several ways).
@@ -1341,7 +1352,7 @@ public class Zip extends MatchingTask {
                      * for inline <manifest>s.
                      *
                      * If we invoke createEmptyZip like Ant 1.5.2 did,
-                     * we'll loose all stuff that has been in the
+                     * we'll lose all stuff that has been in the
                      * original archive (bugzilla report 17780).
                      */
                     return new ArchiveState(true, initialResources);

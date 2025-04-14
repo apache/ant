@@ -816,7 +816,7 @@ public class Javadoc extends Task {
 
     /**
      * Set the scope to be processed. This is an alternative to the
-     * use of the setPublic, setPrivate, etc methods. It gives better build
+     * use of the setPublic, setPrivate, etc. methods. It gives better build
      * file control over what scope is processed.
      *
      * @param at the scope to be processed.
@@ -1309,7 +1309,7 @@ public class Javadoc extends Task {
 
     /**
      * Represents a link triplet (href, whether link is offline,
-     * location of the package list if off line)
+     * location of the package list if offline)
      */
     public class LinkArgument {
         private String href;
@@ -1436,12 +1436,12 @@ public class Javadoc extends Task {
     public class TagArgument extends FileSet {
         /** Name of the tag. */
         private String name = null;
-        /** Whether or not the tag is enabled. */
+        /** Whether the tag is enabled. */
         private boolean enabled = true;
         /**
          * Scope string of the tag. This will form the middle
          * argument of the -tag parameter when the tag is enabled
-         * (with an X prepended for and is parsed from human-readable form.
+         * (with an X prepended for and is parsed from human-readable form).
          */
         private String scope = "a";
 
@@ -1537,9 +1537,9 @@ public class Javadoc extends Task {
         }
 
         /**
-         * Sets whether or not the tag is enabled.
+         * Sets whether the tag is enabled.
          *
-         * @param enabled Whether or not this tag is enabled.
+         * @param enabled Whether this tag is enabled.
          */
         public void setEnabled(final boolean enabled) {
             this.enabled = enabled;
@@ -1652,7 +1652,7 @@ public class Javadoc extends Task {
 
     /**
      * Should the build process fail if Javadoc fails (as indicated by
-     * a non zero return code)?
+     * a non-zero return code)?
      *
      * <p>Default is false.</p>
      * @param b a <code>boolean</code> value

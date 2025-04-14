@@ -28,7 +28,7 @@ import org.apache.tools.ant.util.ProxySetup;
 
 /**
  * Sets Java's web proxy properties, so that tasks and code run in
- * the same JVM can have through-the-firewall access to remote web sites,
+ * the same JVM can have through-the-firewall access to remote websites,
  * and remote ftp sites.
  * You can nominate an http and ftp proxy, or a socks server, reset the server
  * settings, or do nothing at all.
@@ -84,7 +84,7 @@ public class SetProxy extends Task {
 
 
     /**
-     * list of non proxy hosts
+     * list of non-proxy hosts
      */
     private String nonProxyHosts = null;
 

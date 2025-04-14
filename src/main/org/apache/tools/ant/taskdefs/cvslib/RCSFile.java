@@ -18,7 +18,7 @@
 package org.apache.tools.ant.taskdefs.cvslib;
 
 /**
- * Represents a RCS File change.
+ * Represents an RCS File change.
  *
  */
 class RCSFile {

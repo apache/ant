@@ -31,7 +31,7 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Not a real task but used during tests.
  *
- * Closes the resources associated with an URL.  In particular this is
+ * Closes the resources associated with a URL.  In particular this is
  * going to close the jars associated with a jar:file: URL - and it
  * does so in a way that the Java VM still thinks it is open, so use
  * it at your own risk.

@@ -21,7 +21,7 @@ package org.apache.tools.ant.types.resources;
 import java.net.URL;
 
 /**
- * This is an interface that resources that can provide an URL should implement.
+ * This is an interface that resources that can provide a URL should implement.
  * This is a refactoring of {@link URLResource}, to allow other resources
  * to act as sources of URLs.
  * @since Ant 1.8

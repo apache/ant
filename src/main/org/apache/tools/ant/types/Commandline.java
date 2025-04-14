@@ -32,7 +32,7 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
- * Commandline objects help handling command lines specifying processes to
+ * Commandline objects help to handle command lines specifying processes to
  * execute.
  * <p>
  * The class can be used to define a command line as nested elements or as a

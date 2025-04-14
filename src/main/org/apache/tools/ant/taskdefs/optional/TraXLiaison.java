@@ -259,8 +259,8 @@ public class TraXLiaison implements XSLTLiaison4, ErrorListener, XSLTLoggerAware
             // xalan prior to 2.2 because of systemid bugs.
             src = new StreamSource(is);
         }
-        // The line below is a hack: the system id must an URI, but it is not
-        // cleat to get the URI of an resource, so just set the name of the
+        // The line below is a hack: the system id must a URI, but it is not
+        // cleat to get the URI of a resource, so just set the name of the
         // resource as a system id
         src.setSystemId(resourceToURI(resource));
         return src;

@@ -44,7 +44,7 @@ import org.junit.Test;
 
 /**
  * Small testcase for the junitreporttask.
- * First test added to reproduce an fault, still a lot to improve
+ * First test added to reproduce a fault, still a lot to improve
  *
  */
 public class JUnitReportTest {

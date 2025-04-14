@@ -47,7 +47,7 @@ public class DependencyVisitor extends EmptyVisitor {
     /**
      * Get the dependencies collected by this visitor
      *
-     * @return a Enumeration of classnames, being the classes upon which the
+     * @return an Enumeration of classnames, being the classes upon which the
      *      visited classes depend.
      */
     public Enumeration<String> getDependencies() {

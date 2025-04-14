@@ -91,7 +91,7 @@ public final class LineContainsRegExp
 
     /**
      * Returns the next character in the filtered stream, only including
-     * lines from the original stream which match all of the specified
+     * lines from the original stream which match all the specified
      * regular expressions.
      *
      * @return the next character in the resulting stream, or -1
@@ -200,7 +200,7 @@ public final class LineContainsRegExp
     }
 
     /**
-     * Whether to match casesensitively.
+     * Whether to match case-sensitively.
      * @param b boolean
      * @since Ant 1.8.2
      */

@@ -209,7 +209,7 @@ public class DateSelectorTest {
         s.setWhen(after);
         s.setGranularity(2);
 
-        // setup the modified timestamp to match what the test needs, although be aware that
+        // set up the modified timestamp to match what the test needs, although be aware that
         // the 3rd and 4th files don't exist so can't be changed, so don't try and loop over them
         for (int i = 1; i <= 2; i++) {
             assumeTrue("Cannot setup file times for test",

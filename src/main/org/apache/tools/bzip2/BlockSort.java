@@ -80,7 +80,7 @@ import java.util.BitSet;
 class BlockSort {
 
     /*
-     * Some of the constructs used in the C code cannot be ported
+     * Some constructs used in the C code cannot be ported
      * literally to Java - for example macros, unsigned types.  Some
      * code has been hand-tuned to improve performance.  In order to
      * avoid memory pressure some structures are reused for several
@@ -110,7 +110,7 @@ class BlockSort {
     /*
      * LBZ2: If you are ever unlucky/improbable enough to get a stack
      * overflow whilst sorting, increase the following constant and
-     * try again. In practice I have never seen the stack go above 27
+     * try again. In practice, I have never seen the stack go above 27
      * elems, so the following limit seems very generous.
      */
     private static final int QSORT_STACK_SIZE = 1000;
@@ -219,7 +219,7 @@ class BlockSort {
      * quicksort on all permutations of the bucket based on the index
      * of the bucket the second byte of the permutation belongs to,
      * thereby forming new buckets.  When arrived here the
-     * permutations are sorted up to the second character and we have
+     * permutations are sorted up to the second character, and we have
      * buckets of permutations that are identical up to two
      * characters.
      *
@@ -463,7 +463,7 @@ class BlockSort {
      * The C code uses an array of ints (each int holding 32 flags) to
      * represents the bucket-start flags (bhtab).  It also contains
      * optimizations to skip over 32 consecutively set or
-     * consecutively unset bits on word boundaries at once.  For now
+     * consecutively unset bits on word boundaries at once.  For now,
      * I've chosen to use the simpler but potentially slower code
      * using BitSet - also in the hope that using the BitSet#nextXXX
      * methods may be fast enough.
@@ -1017,7 +1017,7 @@ class BlockSort {
             }
 
             // Step 2:
-            // LBZ2: Now scan this big bucket so as to synthesise the
+            // LBZ2: Now scan this big bucket to synthesise the
             // sorted order for small buckets [t, ss] for all t != ss.
 
             for (int j = 0; j <= 255; j++) {

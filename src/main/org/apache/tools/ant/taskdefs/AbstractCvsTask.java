@@ -53,7 +53,7 @@ public abstract class AbstractCvsTask extends Task {
      * setCompression(true).
      */
     public static final int DEFAULT_COMPRESSION_LEVEL = 3;
-    private static final int MAXIMUM_COMRESSION_LEVEL = 9;
+    private static final int MAXIMUM_COMPRESSION_LEVEL = 9;
 
     private Commandline cmd = new Commandline();
 
@@ -128,7 +128,7 @@ public abstract class AbstractCvsTask extends Task {
     private File dest;
 
     /**
-     * whether or not to append stdout/stderr to existing files
+     * whether to append stdout/stderr to existing files
      */
     private boolean append = false;
 
@@ -285,7 +285,7 @@ public abstract class AbstractCvsTask extends Task {
         }
 
         /**
-         * Need a better cross platform integration with <cvspass>, so
+         * Need a better cross-platform integration with <cvspass>, so
          * use the same filename.
          */
         if (passFile == null) {
@@ -749,7 +749,7 @@ public abstract class AbstractCvsTask extends Task {
             c.createArgument().setValue(m.getName());
         }
         if (this.compression > 0
-            && this.compression <= MAXIMUM_COMRESSION_LEVEL) {
+            && this.compression <= MAXIMUM_COMPRESSION_LEVEL) {
             c.createArgument(true).setValue("-z" + this.compression);
         }
         if (quiet && !reallyquiet) {

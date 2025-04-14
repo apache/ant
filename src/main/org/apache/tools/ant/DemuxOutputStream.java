@@ -72,7 +72,7 @@ public class DemuxOutputStream extends OutputStream {
     private Project project;
 
     /**
-     * Whether or not this stream represents an error stream.
+     * Whether this stream represents an error stream.
      */
     private boolean isErrorStream;
 
@@ -83,7 +83,7 @@ public class DemuxOutputStream extends OutputStream {
      *                demultiplexed. Must not be <code>null</code>.
      * @param isErrorStream <code>true</code> if this is the error string,
      *                      otherwise a normal output stream. This is
-     *                      passed to the project so it knows
+     *                      passed to the project, so it knows
      *                      which stream it is receiving.
      */
     public DemuxOutputStream(Project project, boolean isErrorStream) {

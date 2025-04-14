@@ -185,7 +185,7 @@
 
 
     <!-- ================================================================== -->
-    <!-- Write a list of all packages with an hyperlink to the anchor of    -->
+    <!-- Write a list of all packages with a hyperlink to the anchor of    -->
     <!-- of the package name.                                               -->
     <!-- ================================================================== -->
     <xsl:template name="packagelist">
@@ -485,7 +485,7 @@
             <xsl:with-param name="word" select="."/>
         </xsl:call-template>
     </code>
-    <!-- the later is better but might be problematic for non-21" monitors... -->
+    <!-- the latter is better but might be problematic for non-21" monitors... -->
     <!--pre><xsl:value-of select="."/></pre-->
 </xsl:template>
 

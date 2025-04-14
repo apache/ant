@@ -151,7 +151,7 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest implements XSLTLogg
         liaison.setStylesheet(xsl);
         liaison.addParam("param", "value");
         File in = getFile("/taskdefs/optional/xsltliaison-in.xml");
-        // test for 10 consecutives transform
+        // test for 10 consecutive transforms
         for (int i = 0; i < 50; i++) {
             File out = new File("xsltliaison" + i + ".tmp");
             try {

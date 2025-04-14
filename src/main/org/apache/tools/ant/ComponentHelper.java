@@ -351,7 +351,7 @@ public class ComponentHelper  {
     }
 
     /**
-     * Checks whether or not a class is suitable for serving as Ant task.
+     * Checks whether a class is suitable for serving as Ant task.
      * Ant task implementation classes must be public, concrete, and have
      * a no-arg constructor.
      *

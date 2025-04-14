@@ -177,7 +177,7 @@ public class Chmod extends ExecuteOn {
     public void execute() throws BuildException {
         /*
          * In Ant 1.1, <chmod dir="foo" /> means, change the permissions
-         * of directory foo, not anything inside of it.  This is the case the
+         * of directory foo, not anything inside it.  This is the case the
          * second branch of the if statement below catches for backwards
          * compatibility.
          */

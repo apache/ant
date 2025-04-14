@@ -97,7 +97,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Set whether or not you want the process to be spawned.
+     * Set whether you want the process to be spawned.
      * Default is false.
      * @param spawn if true you do not want Ant to wait for the end of the process.
      * @since Ant 1.6
@@ -589,7 +589,7 @@ public class ExecTask extends Task {
             return false;
         }
         //the Exec OS check is different from Os.isOs(), which
-        //probes for a specific OS. Instead it searches the os field
+        //probes for a specific OS. Instead, it searches the os field
         //for the current os.name
         String myos = System.getProperty("os.name");
         log("Current OS is " + myos, Project.MSG_VERBOSE);
@@ -645,7 +645,7 @@ public class ExecTask extends Task {
     }
 
     /**
-     * A Utility method for this classes and subclasses to run an
+     * A Utility method for these classes and subclasses to run an
      * Execute instance (an external command).
      *
      * @param exe instance of the execute class.

@@ -169,7 +169,7 @@ public class CallTarget extends Task {
 
     /**
      * Handles output.
-     * Send it the the new project if is present, otherwise
+     * Send it the new project if is present, otherwise
      * call the super class.
      * @param output The string output to output.
      * @see Task#handleOutput(String)
@@ -207,7 +207,7 @@ public class CallTarget extends Task {
 
     /**
      * Handles output.
-     * Send it the the new project if is present, otherwise
+     * Send it the new project if is present, otherwise
      * call the super class.
      * @param output The string to output.
      * @see Task#handleFlush(String)
@@ -223,7 +223,7 @@ public class CallTarget extends Task {
 
     /**
      * Handle error output.
-     * Send it the the new project if is present, otherwise
+     * Send it the new project if is present, otherwise
      * call the super class.
      * @param output The string to output.
      *
@@ -240,7 +240,7 @@ public class CallTarget extends Task {
 
     /**
      * Handle error output.
-     * Send it the the new project if is present, otherwise
+     * Send it the new project if is present, otherwise
      * call the super class.
      * @param output The string to output.
      * @see Task#handleErrorFlush(String)

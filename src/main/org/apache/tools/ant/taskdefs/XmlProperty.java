@@ -470,7 +470,7 @@ public class XmlProperty extends Task {
             // forcibly override the property if it already exists.
             // We need to put these properties into the project
             // when we read them, though (instead of keeping them
-            // outside of the project and batch adding them at the end)
+            // outside the project and batch adding them at the end)
             // to allow other properties to reference them.
             value = addedAttributes.get(name) + getDelimiter() + value;
             getProject().setProperty(name, value);
@@ -520,7 +520,7 @@ public class XmlProperty extends Task {
 
     /**
      * Return the value for the given attribute.
-     * If we are not using semantic attributes, its just the
+     * If we are not using semantic attributes, it's just the
      * literal string value of the attribute.
      *
      * <p>If we <em>are</em> using semantic attributes, then first

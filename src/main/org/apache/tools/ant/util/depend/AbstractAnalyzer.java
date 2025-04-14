@@ -55,7 +55,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
     /** true if indirect dependencies should be gathered */
     private boolean closure = true;
 
-    /** Setup the analyzer */
+    /** Set up the analyzer */
     protected AbstractAnalyzer() {
         reset();
     }
@@ -137,7 +137,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
 
         // we look through the source path elements. If the element is a dir
         // we look for the file. If it is a zip, we look for the zip entry.
-        // This isn't normal for source paths but we get it for free
+        // This isn't normal for source paths, but we get it for free
         return getResourceContainer(sourceLocation, sourcePath.list());
     }
 
@@ -207,7 +207,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
 
     /**
      * Reset the dependency list. This will reset the determined
-     * dependencies and the also list of root classes.
+     * dependencies and also the list of root classes.
      */
     @Override
     public void reset() {

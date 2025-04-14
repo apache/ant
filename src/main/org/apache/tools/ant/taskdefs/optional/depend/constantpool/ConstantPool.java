@@ -47,7 +47,7 @@ public class ConstantPool {
 
     /** Initialise the constant pool. */
     public ConstantPool() {
-        // The zero index is never present in the constant pool itself so
+        // The zero index is never present in the constant pool itself, so
         // we add a null entry for it
         entries.add(null);
     }

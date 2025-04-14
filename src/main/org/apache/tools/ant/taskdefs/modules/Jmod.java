@@ -232,7 +232,7 @@ extends Task {
 
     /**
      * Regular expression matching names of modules which depend on the
-     * the created jmod's module, for which hashes should be added to the
+     * created jmod's module, for which hashes should be added to the
      * created jmod.
      */
     private String hashModulesPattern;

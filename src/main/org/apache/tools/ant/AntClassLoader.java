@@ -231,7 +231,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     private final Vector<String> loaderPackages = new Vector<>();
 
     /**
-     * Whether or not this classloader will ignore the base
+     * Whether this classloader will ignore the base
      * classloader if it can't find a class.
      *
      * @see #setIsolated(boolean)
@@ -259,7 +259,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     private ClassLoader savedContextLoader = null;
 
     /**
-     * Whether or not the context loader is currently saved.
+     * Whether the context loader is currently saved.
      */
     private boolean isContextLoaderSaved = false;
 
@@ -316,7 +316,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *                  elements are set up to start with.
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted  before trying to
-     *                    load the a class through this loader.
+     *                    load the class through this loader.
      */
     public AntClassLoader(final ClassLoader parent, final Project project,
         final Path classpath, final boolean parentFirst) {
@@ -338,7 +338,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *                  elements are set up to start with.
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted before trying to
-     *                    load the a class through this loader.
+     *                    load the class through this loader.
      */
     public AntClassLoader(final Project project, final Path classpath,
         final boolean parentFirst) {
@@ -356,7 +356,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *               class is used as the parent.
      * @param parentFirst If <code>true</code>, indicates that the parent
      *                    classloader should be consulted before trying to
-     *                    load the a class through this loader.
+     *                    load the class through this loader.
      */
     public AntClassLoader(final ClassLoader parent, final boolean parentFirst) {
         setParent(parent);
@@ -581,7 +581,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * not be referred to the parent class loader but will cause a
      * ClassNotFoundException.
      *
-     * @param isolated Whether or not this classloader should run in
+     * @param isolated Whether this classloader should run in
      *                 isolated mode.
      */
     public synchronized void setIsolated(final boolean isolated) {
@@ -830,7 +830,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     }
 
     /**
-     * Tests whether or not the parent classloader should be checked for a
+     * Tests whether the parent classloader should be checked for a
      * resource before this one. If the resource matches both the "use parent
      * classloader first" and the "use this classloader first" lists, the latter
      * takes priority.
@@ -839,7 +839,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      *            The name of the resource to check. Must not be
      *            <code>null</code>.
      *
-     * @return whether or not the parent classloader should be checked for a
+     * @return whether the parent classloader should be checked for a
      *         resource before this one is.
      */
     private boolean isParentFirst(final String resourceName) {
@@ -868,7 +868,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
     /**
      * Finds the resource with the given name. A resource is
-     * some data (images, audio, text, etc) that can be accessed by class
+     * some data (images, audio, text, etc.) that can be accessed by class
      * code in a way that is independent of the location of the code.
      *
      * @param name The name of the resource for which a stream is required.
@@ -892,7 +892,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
             url = getUrl(name);
         }
         if (url == null && !isParentFirst(name)) {
-            // this loader was first but it didn't find it - try the parent
+            // this loader was first, but it didn't find it - try the parent
             if (ignoreBase) {
                 url = getRootLoader() == null ? null : getRootLoader().getResource(name);
             } else {
@@ -933,7 +933,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
 
     /**
      * Finds all the resources with the given name. A resource is some
-     * data (images, audio, text, etc) that can be accessed by class
+     * data (images, audio, text, etc.) that can be accessed by class
      * code in a way that is independent of the location of the code.
      *
      * @param name name of the resource
@@ -1076,7 +1076,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * Loads a class with this class loader.
      *
      * This class attempts to load the class in an order determined by whether
-     * or not the class matches the system/loader package lists, with the
+     * the class matches the system/loader package lists, with the
      * loader package list taking priority. If the classloader is in isolated
      * mode, failure to load the class in this loader will result in a
      * ClassNotFoundException.
@@ -1204,12 +1204,12 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
     }
 
     /**
-     * Get the manifest from the given jar, if it is indeed a jar and it has a
+     * Get the manifest from the given jar, if it is indeed a jar, and it has a
      * manifest
      *
      * @param container the File from which a manifest is required.
      *
-     * @return the jar's manifest or null is the container is not a jar or it
+     * @return the jar's manifest or null is the container is not a jar, or it
      *         has no manifest.
      *
      * @exception IOException if the manifest cannot be read.
@@ -1232,7 +1232,7 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener, Clo
      * @param entry the entry of which the certificates are requested
      *
      * @return the entry's certificates or null is the container is
-     *         not a jar or it has no certificates.
+     *         not a jar, or it has no certificates.
      */
     private Certificate[] getCertificates(final File container, final String entry) {
         if (container.isDirectory()) {

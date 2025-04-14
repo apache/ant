@@ -192,7 +192,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
     This store first uses a relatively decent sized in-memory buffer for storing the sysout/syserr
     content. This in-memory buffer will be used as long as it can fit in the new content that
     keeps coming in. When the size limit is reached, this store switches to a file based store
-    by creating a temporarily file and writing out the already in-memory held buffer content
+    by creating a temporary file and writing out the already in-memory held buffer content
     and any new content that keeps arriving to this store. Once the file has been created,
     the in-memory buffer will never be used any more and in fact is destroyed as soon as the
     file is created.
@@ -255,7 +255,7 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
 
         private void storeToFile(final byte[] data, final int offset, final int length) throws IOException {
             if (this.fileOutputStream == null) {
-                // no backing file was created so we can't do anything
+                // no backing file was created, so we can't do anything
                 return;
             }
             this.fileOutputStream.write(data, offset, length);

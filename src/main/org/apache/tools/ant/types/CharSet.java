@@ -62,7 +62,7 @@ public class CharSet extends EnumeratedAttribute {
     }
 
     /**
-     * Convenience methood: get US-ASCII CharSet.
+     * Convenience method: get US-ASCII CharSet.
      * @return the default value.
      */
     public static CharSet getAscii() {

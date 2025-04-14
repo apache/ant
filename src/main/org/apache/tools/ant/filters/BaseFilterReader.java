@@ -122,7 +122,7 @@ public abstract class BaseFilterReader extends FilterReader {
     /**
      * Sets the initialized status.
      *
-     * @param initialized Whether or not the filter is initialized.
+     * @param initialized Whether the filter is initialized.
      */
     protected final void setInitialized(final boolean initialized) {
         this.initialized = initialized;
@@ -131,7 +131,7 @@ public abstract class BaseFilterReader extends FilterReader {
     /**
      * Returns the initialized status.
      *
-     * @return whether or not the filter is initialized
+     * @return whether the filter is initialized
      */
     protected final boolean getInitialized() {
         return initialized;

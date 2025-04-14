@@ -92,7 +92,7 @@ public class JUnitLauncherTaskTest {
     }
     
     /**
-     * Tests that when a test, that's isn't configured with {@code haltOnFailure=true}, continues the
+     * Tests that when a test, that isn't configured with {@code haltOnFailure=true}, continues the
      * build even when there are test failures
      */
     @Test
@@ -196,7 +196,7 @@ public class JUnitLauncherTaskTest {
     public void testBasicFork() throws Exception {
         final String targetName = "test-basic-fork";
         final Path trackerFile = setupTrackerProperty(targetName);
-        // setup a dummy and incorrect value of a sysproperty that's used in the test
+        // set up a dummy and incorrect value of a sysproperty that's used in the test
         // being forked
         System.setProperty(ForkedTest.SYS_PROP_ONE, "dummy");
         buildRule.executeTarget(targetName);
@@ -248,7 +248,7 @@ public class JUnitLauncherTaskTest {
             Assert.fail(targetName + " was expected to fail since Ant runtime libraries " +
                     "weren't included in the classpath of the forked JVM");
         } catch (BuildException be) {
-            // expect a Error due to missing main class (which is part of Ant runtime libraries
+            // expect an Error due to missing main class (which is part of Ant runtime libraries
             // that we excluded)
             final String missingMainClass = "Could not find or load main class " + StandaloneLauncher.class.getName();
             if (!buildRule.getFullLog().contains(missingMainClass)) {
@@ -405,7 +405,7 @@ public class JUnitLauncherTaskTest {
     }
     
     /**
-     * Tests that when a test, that's isn't configured with {@code haltOnFailure=true}, continues the
+     * Tests that when a test, that isn't configured with {@code haltOnFailure=true}, continues the
      * build even when there are test failures
      */
     @Test
@@ -615,7 +615,7 @@ public class JUnitLauncherTaskTest {
     }
 
     private void setupRuntimeClassesProperty() {
-        // setup a property that points to the locations of Ant runtime classes.
+        // set up a property that points to the locations of Ant runtime classes.
         // this path will then be used in target to create a duplicate copied
         // classes and then will be used as a custom location for Ant runtime libraries
         final String projectResourceName = LoaderUtils.classNameToResource(Project.class.getName());

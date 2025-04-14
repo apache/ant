@@ -712,7 +712,7 @@ public class ZipOutputStream extends FilterOutputStream {
                 raf.seek(entry.localDataStart  - 5 * SHORT);
                 writeOut(ZipShort.getBytes(INITIAL_VERSION));
 
-                // * remove ZIP64 extra so it doesn't get written
+                // * remove ZIP64 extra, so it doesn't get written
                 //   to the central directory
                 entry.entry.removeExtraField(Zip64ExtendedInformationExtraField
                                              .HEADER_ID);

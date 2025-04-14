@@ -250,7 +250,7 @@ public class FormatterElement {
     /**
      * Ensures that the selector passes the conditions placed
      * on it with <code>if</code> and <code>unless</code> properties.
-     * @param t the task the this formatter is used in.
+     * @param t the task this formatter is used in.
      * @return true if the formatter should be used.
      */
     public boolean shouldUse(Task t) {
@@ -360,7 +360,7 @@ public class FormatterElement {
     /**
      * A standard FileOutputStream creates a file as soon as it's opened. This
      * class delays the creation of the file until the first time a caller attempts
-     * to write to it so we don't end up with empty files if the listeners don't use
+     * to write to it, so we don't end up with empty files if the listeners don't use
      * them.
      */
     private static class DelayedFileOutputStream extends OutputStream {

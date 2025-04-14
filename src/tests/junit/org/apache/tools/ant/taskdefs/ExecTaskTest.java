@@ -48,7 +48,7 @@ public class ExecTaskTest {
     private static final int TIME_TO_WAIT = 1;
     /** maximum time allowed for the build in milliseconds */
     private static final int MAX_BUILD_TIME = 6000;
-    private static final int SECURITY_MARGIN = 4000; // wait 4 second extras
+    private static final int SECURITY_MARGIN = 4000; // wait 4-second extras
     // the test failed with 100 ms of margin on cvs.apache.org on August 1st, 2003
     // the test randomly failed with 3 s of margin on Windows Jenkins slaves on during July 2014
 
@@ -92,7 +92,7 @@ public class ExecTaskTest {
         }
         // now wait until the spawned process is finished
         Thread.sleep((TIME_TO_WAIT) * 1000 + SECURITY_MARGIN);
-        // time of the build in milli seconds
+        // time of the build in milliseconds
         long elapsed = myBuild.getTimeElapsed();
         assertTrue("we waited more than the process lasted",
                 TIME_TO_WAIT * 1000 + SECURITY_MARGIN > elapsed);
