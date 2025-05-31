@@ -52,7 +52,9 @@ public abstract class Mailer {
     // CheckStyle:VisibilityModifier ON
     private boolean ignoreInvalidRecipients = false;
     private boolean starttls = false;
+    private boolean requireStarttls = false;
     private boolean portExplicitlySpecified = false;
+    private boolean checkServerIdentity = true;
 
     /**
      * Set the mail server.
@@ -134,6 +136,25 @@ public abstract class Mailer {
 
     protected boolean isStartTLSEnabled() {
         return starttls;
+    }
+
+    /**
+     * Set whether to enforce authentication to switch to a TLS
+     * connection via STARTTLS.
+     * @param b boolean; if true STARTTLS will be required.
+     * @since Ant 1.10.16
+     */
+    public void setRequireStartTLS(boolean b) {
+        this.requireStarttls = b;
+    }
+
+    /**
+     * Whether the server's identity shall be verified during TLS handshake.
+     * @param b boolean; if true server identity will be checked.
+     * @since Ant 1.10.16
+     */
+    public void setCheckServerIdentity(boolean b) {
+        this.checkServerIdentity = b;
     }
 
     /**
@@ -266,6 +287,20 @@ public abstract class Mailer {
      */
     protected boolean shouldIgnoreInvalidRecipients() {
         return ignoreInvalidRecipients;
+    }
+
+    /**
+     * @since Ant 1.10.16
+     */
+    protected boolean shouldCheckServerIdentity() {
+        return starttls;
+    }
+
+    /**
+     * @since Ant 1.10.16
+     */
+    protected boolean isStartTLSRequired() {
+        return requireStarttls;
     }
 
     /**

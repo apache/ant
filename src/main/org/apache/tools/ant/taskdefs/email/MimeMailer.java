@@ -157,6 +157,9 @@ public class MimeMailer extends Mailer {
                     props.put("mail.smtp.socketFactory.port",
                               String.valueOf(port));
                 }
+                if (shouldCheckServerIdentity()) {
+                    props.put("mail.smtp.ssl.checkserveridentity", "true");
+                }
             }
             if (user != null || password != null) {
                 props.put("mail.smtp.auth", "true");
@@ -164,6 +167,12 @@ public class MimeMailer extends Mailer {
             }
             if (isStartTLSEnabled()) {
                 props.put("mail.smtp.starttls.enable", "true");
+                if (isStartTLSRequired()) {
+                    props.put("mail.smtp.starttls.required", "true");
+                }
+                if (shouldCheckServerIdentity()) {
+                    props.put("mail.smtp.ssl.checkserveridentity", "true");
+                }
             }
             sesh = Session.getInstance(props, auth);
 
