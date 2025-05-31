@@ -33,7 +33,7 @@
 
 -->
 <xsl:param name="output.dir" select="'.'"/>
-
+<xsl:param name="TITLE">Unit Test Results</xsl:param>
 
 <xsl:template match="testsuites">
     <!-- create the index.html -->
@@ -127,7 +127,7 @@
 <xsl:template name="index.html">
 <html>
     <head>
-        <title>Unit Test Results.</title>
+        <title><xsl:value-of select="$TITLE"/></title>
     </head>
     <frameset cols="20%,80%">
         <frameset rows="30%,70%">
@@ -207,7 +207,7 @@ h6 {
     <xsl:variable name="class.name"><xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></xsl:variable>
     <html>
         <head>
-          <title>Unit Test Results: <xsl:value-of select="$class.name"/></title>
+          <title><xsl:value-of select="$TITLE"/>: <xsl:value-of select="$class.name"/></title>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name" select="$package.name"/>
             </xsl:call-template>
@@ -432,7 +432,7 @@ h6 {
 <xsl:template match="testsuites" mode="overview.packages">
     <html>
         <head>
-            <title>Unit Test Results: Summary</title>
+            <title><xsl:value-of select="$TITLE"/>: Summary</title>
             <xsl:call-template name="create.stylesheet.link">
                 <xsl:with-param name="package.name"/>
             </xsl:call-template>
@@ -589,7 +589,7 @@ h6 {
 
 <!-- Page HEADER -->
 <xsl:template name="pageHeader">
-    <h1>Unit Test Results</h1>
+    <h1><xsl:value-of select="$TITLE"/></h1>
     <table width="100%">
     <tr>
         <td align="left"></td>
