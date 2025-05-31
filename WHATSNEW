@@ -18,6 +18,14 @@ Changes that could break older environments:
    the behavior of 1.10.15.
    Bugzilla Report 65756
 
+ * the <mail> task as well as MailLogger will now check the server
+   identity as specified by RFC 2595 when JavaMail is used in
+   combination with TLS (plain TLS or StartTLS).
+   The check can be disabled with a new MailLogger property
+   MailLogger.tls.checkserveridentity or a new <mail> task attribute
+   checkServerIdentity.
+   Bugzilla Report 69416
+
 Fixed bugs:
 -----------
 
@@ -40,6 +48,10 @@ Other changes:
    "disallow".
    Github Pull Request #216
 
+ * <mail> and MailLogger can now enforce the use of STARTLS rather
+   than silently fall back to unencrypted authentication via a new
+   MailLogger property and a new <mail> task attribute.
+   Bugzilla Report 69416
 
 Changes from Ant 1.10.14 TO Ant 1.10.15
 =======================================

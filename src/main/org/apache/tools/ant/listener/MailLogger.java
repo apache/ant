@@ -84,6 +84,11 @@ import org.apache.tools.mail.MailMessage;
  *    <li> MailLogger.charset [no default] - character set of email</li>
  *    <li> MailLogger.starttls.enable [default: false] - on or true if
  *    STARTTLS should be supported (requires Java or Jakarta Mail)</li>
+ *    <li> MailLogger.starttls.require [default: false] - on or true if
+ *    STARTTLS should be required (requires Java or Jakarta Mail)</li>
+ *    <li> MailLogger.tls.checkserveridentity [default: true] - on or true if
+ *    the identity of the server shall be chcked during the TLS handshake
+ *    (requires Java or Jakarta Mail)</li>
  *    <li> MailLogger.properties.file [no default] - Filename of
  *    properties file that will override other values.</li>
  *  </ul>
@@ -153,6 +158,10 @@ public class MailLogger extends DefaultLogger {
                                                 "ssl", "off")))
                 .starttls(Project.toBoolean(getValue(properties,
                                                      "starttls.enable", "off")))
+                .starttlsRequired(Project.toBoolean(getValue(properties,
+                                                             "starttls.require", "off")))
+                .checkTlsServerIdentity(Project.toBoolean(getValue(properties,
+                                                                   "tls.checkserveridentity", "on")))
                 .from(getValue(properties, "from", null))
                 .replytoList(getValue(properties, "replyto", ""))
                 .toList(getValue(properties, prefix + ".to", null))
@@ -299,6 +308,22 @@ public class MailLogger extends DefaultLogger {
             this.starttls = starttls;
             return this;
         }
+        private boolean starttlsRequired;
+        public boolean starttlsRequired() {
+            return starttlsRequired;
+        }
+        public Values starttlsRequired(boolean required) {
+            this.starttlsRequired = required;
+            return required ? starttls(required) : this;
+        }
+        private boolean checkTlsServerIdentity = true;
+        public boolean checkTlsServerIdentity() {
+            return checkTlsServerIdentity;
+        }
+        public Values checkTlsServerIdentity(boolean check) {
+            this.checkTlsServerIdentity = check;
+            return this;
+        }
     }
 
     /**
@@ -400,6 +425,8 @@ public class MailLogger extends DefaultLogger {
         mailer.setPassword(values.password());
         mailer.setSSL(values.ssl());
         mailer.setEnableStartTLS(values.starttls());
+        mailer.setRequireStartTLS(values.starttlsRequired());
+        mailer.setCheckServerIdentity(values.checkTlsServerIdentity());
         Message mymessage =
             new Message(!values.body().isEmpty() ? values.body() : message);
         mymessage.setProject(project);

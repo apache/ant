@@ -171,6 +171,23 @@ more information.</p>
       1.8.0</em></td>
     <td>No</td>
   </tr>
+  <tr>
+    <td>requireStartTLS</td>
+    <td>(boolean) Whether the <code>STARTTLS</code> command used to switch to an encrypted
+      connection for authentication should be required.
+      <br/>Implicitly sets <q>enableStartTLS</q> to <q>true</q> if enabled. Requires JavaMail.
+      <br/><em>Since Ant 1.10.16</em></td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>checkServerIdentity</td>
+    <td>(boolean) Whether the server's identity shall be verified
+      during TLS handshake.
+      <br/> Ignored unless <q>ssl</q> or <q>enableStartTLS</q> is <q>true</q>.
+      Requires JavaMail.
+      <br/><em>Since Ant 1.10.16</em></td>
+    <td>No; default is <q>true</q></td>
+  </tr>
 </table>
 
 <h3>Note regarding the attributes containing email addresses</h3>

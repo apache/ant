@@ -260,6 +260,22 @@ failure messages individually.</p>
     <td>No; default is <q>false</q></td>
   </tr>
   <tr>
+    <td><code>MailLogger.starttls.require</code></td>
+    <td>on or true if <code>STARTTLS</code> should be required
+      (requires JavaMail).
+      If <q>true</q> implicitly
+      sets <code>MailLogger.starttls.enable</code> to <q>true</q> as well.
+      <br/><em>Since Ant 1.10.16</em></td>
+    <td>No; default is <q>false</q></td>
+  </tr>
+  <tr>
+    <td><code>MailLogger.tls.checkserveridentity</code></td>
+    <td>on or true if the identity of the server shall be chcked
+      during the TLS handshake (requires JavaMail).
+      <br/><em>Since Ant 1.10.16</em></td>
+    <td>No; default is <q>true</q></td>
+  </tr>
+  <tr>
     <td><code>MailLogger.properties.file</code></td>
     <td>Filename of properties file that will override other values.</td>
     <td>No</td>

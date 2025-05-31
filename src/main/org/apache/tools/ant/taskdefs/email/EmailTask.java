@@ -105,9 +105,13 @@ public class EmailTask extends Task {
     private boolean ssl = false;
     /** indicate if the user wishes support for STARTTLS */
     private boolean starttls = false;
+    private boolean requireStarttls = false;
 
     /** ignore invalid recipients? */
     private boolean ignoreInvalidRecipients = false;
+
+    /** more strict TLS server certificate check */
+    private boolean checkServerIdentity = true;
 
     /**
      * Set the user for SMTP auth; this requires JavaMail.
@@ -148,6 +152,29 @@ public class EmailTask extends Task {
      */
     public void setEnableStartTLS(boolean b) {
         this.starttls = b;
+    }
+
+    /**
+     * Set whether to require authentication to switch to a TLS
+     * connection via STARTTLS.
+     *
+     * @param b boolean; if true STARTTLS will be supported and required.
+     * @since Ant 1.10.16
+     */
+    public void setRequireStartTLS(boolean b) {
+        this.requireStarttls = b;
+        if (b) {
+            setEnableStartTLS(b);
+        }
+    }
+
+    /**
+     * Whether the server's identity shall be verified during TLS handshake.
+     * @param b boolean; if true server identity will be checked.
+     * @since Ant 1.10.16
+     */
+    public void setCheckServerIdentity(boolean b) {
+        this.checkServerIdentity = b;
     }
 
     /**
@@ -557,6 +584,8 @@ public class EmailTask extends Task {
             mailer.setPassword(password);
             mailer.setSSL(ssl);
             mailer.setEnableStartTLS(starttls);
+            mailer.setRequireStartTLS(requireStarttls);
+            mailer.setCheckServerIdentity(checkServerIdentity);
             mailer.setMessage(message);
             mailer.setFrom(from);
             mailer.setReplyToList(replyToList);
