@@ -32,6 +32,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.TarResource;
 import org.apache.tools.ant.types.resources.ZipResource;
@@ -96,7 +97,7 @@ public class PermissionUtilsTest {
 
     @Test
     public void detectsFileTypeOfSymbolicLinkFromPath() throws IOException {
-        if (!System.getProperty("os.name").contains("Windows")) {
+        if (Os.isFamily("unix")) {
             Path symlink = folder.getRoot().toPath().resolve("link.tst");
             Files.createSymbolicLink(symlink, folder.newFile("ant.tst").toPath());
             assertEquals(PermissionUtils.FileType.SYMLINK,
