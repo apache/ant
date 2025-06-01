@@ -20,7 +20,7 @@
 
   <path id="junit">
     <fileset dir="../../../../../../lib/optional" includes="junit*" />
-    <fileset dir="../../../../../../lib/optional" includes="hamcrest-core*" />
+    <fileset dir="../../../../../../lib/optional" includes="hamcrest-*" />
   </path>
 
   <macrodef name="empty-test">
