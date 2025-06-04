@@ -304,8 +304,6 @@ public abstract class DefaultCompilerAdapter
             cmd.createArgument().setFile(destDir);
         }
 
-        cmd.createArgument().setValue("-classpath");
-
         // Just add "sourcepath" to classpath (for JDK1.1)
         // as well as "bootclasspath" and "extdirs"
         if (!assumeJava1_2Plus()) {
@@ -317,9 +315,15 @@ public abstract class DefaultCompilerAdapter
             }
             cp.append(classpath);
             cp.append(sourcepath);
+
+            cmd.createArgument().setValue("-classpath");
             cmd.createArgument().setPath(cp);
         } else {
-            cmd.createArgument().setPath(classpath);
+            if (!classpath.isEmpty()) {
+              cmd.createArgument().setValue("-classpath");
+              cmd.createArgument().setPath(classpath);
+            }
+
             // If the buildfile specifies sourcepath="", then don't
             // output any sourcepath.
             if (sourcepath.size() > 0) {

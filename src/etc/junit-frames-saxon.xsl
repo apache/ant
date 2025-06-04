@@ -66,7 +66,7 @@
 
     -->
     <xsl:param name="output.dir" select="'.'"/>
-    <xsl:param name="TITLE">Unit Test Results.</xsl:param>
+    <xsl:param name="TITLE">Unit Test Results</xsl:param>
 
 
     <xsl:template match="testsuites">
@@ -298,7 +298,7 @@
                 </xsl:choose>
             </xsl:variable>
             <head>
-                <title>Unit Test Results: <xsl:value-of select="$title"/></title>
+                <title><xsl:value-of select="$TITLE"/>: <xsl:value-of select="$title"/></title>
                 <xsl:call-template name="create.stylesheet.link">
                     <xsl:with-param name="package.name"/>
                 </xsl:call-template>
@@ -364,7 +364,7 @@
         <xsl:variable name="class.name"><xsl:if test="not($package.name = '')"><xsl:value-of select="$package.name"/>.</xsl:if><xsl:value-of select="@name"/></xsl:variable>
         <html>
             <head>
-                <title>Unit Test Results: <xsl:value-of select="$class.name"/></title>
+                <title><xsl:value-of select="$TITLE"/>: <xsl:value-of select="$class.name"/></title>
                 <xsl:call-template name="create.stylesheet.link">
                     <xsl:with-param name="package.name" select="$package.name"/>
                 </xsl:call-template>
@@ -615,7 +615,7 @@
     <xsl:template match="testsuites" mode="overview.packages">
         <html>
             <head>
-                <title>Unit Test Results: Summary</title>
+                <title><xsl:value-of select="$TITLE"/>: Summary</title>
                 <xsl:call-template name="create.stylesheet.link">
                     <xsl:with-param name="package.name"/>
                 </xsl:call-template>

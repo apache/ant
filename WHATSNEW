@@ -1,6 +1,23 @@
 Changes from Ant 1.10.15 TO Ant 1.10.16
 =======================================
 
+Fixed bugs:
+-----------
+
+ * <scp> now properly handles IPv6 addresses as hostnames.
+   Bugzilla Report 59160
+
+ * javac task has been fixed to generate the "-classpath" option
+   only when there are any classpath elements present.
+   Bugzilla Report 69586
+
+Other changes:
+--------------
+
+ * Ant will no longer set a java.lang.SecurityManager at runtime
+   if the "java.security.manager" system property is set to
+   "disallow".
+   Github Pull Request #216
 
 
 Changes from Ant 1.10.14 TO Ant 1.10.15

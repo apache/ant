@@ -435,8 +435,10 @@ public class Scp extends SSHBase {
             throw new BuildException("no username was given.  Can't authenticate.");
         }
 
-        final int indexOfPath = uri.indexOf(':', indexOfAt + 1);
-        if (indexOfPath == -1) {
+        // For IPv6 addresses, the host part may contain more than one ":",
+        // look for the last occurrence
+        final int indexOfPath = uri.lastIndexOf(':');
+        if (indexOfPath <= indexOfAt) {
             throw new BuildException("no remote path in %s", uri);
         }
 

@@ -58,7 +58,7 @@
    limitations under the License.
  -->
 
-<xsl:param name="TITLE">Unit Test Results.</xsl:param>
+<xsl:param name="TITLE">Unit Test Results</xsl:param>
 
 <!--
 

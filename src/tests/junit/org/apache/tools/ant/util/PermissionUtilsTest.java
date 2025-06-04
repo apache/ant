@@ -25,11 +25,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.TarResource;
 import org.apache.tools.ant.types.resources.ZipResource;
@@ -90,6 +93,16 @@ public class PermissionUtilsTest {
     public void detectsFileTypeOfDirectoryFromResource() throws IOException {
         assertEquals(PermissionUtils.FileType.DIR,
                      PermissionUtils.FileType.of(new FileResource(folder.newFolder("ant.tst"))));
+    }
+
+    @Test
+    public void detectsFileTypeOfSymbolicLinkFromPath() throws IOException {
+        if (Os.isFamily("unix")) {
+            Path symlink = folder.getRoot().toPath().resolve("link.tst");
+            Files.createSymbolicLink(symlink, folder.newFile("ant.tst").toPath());
+            assertEquals(PermissionUtils.FileType.SYMLINK,
+                         PermissionUtils.FileType.of(symlink));
+        }
     }
 
     @Test
