@@ -1229,7 +1229,7 @@ public class DirectoryScanner
                     noLinks[noLinksCount++] = newFile;
                 }
             }
-            newFiles = Arrays.copyOf(noLinks, noLinksCount);
+            newFiles = noLinksCount == noLinks.length ? noLinks : Arrays.copyOf(noLinks, noLinksCount);
         } else {
             directoryNamesFollowed.addFirst(dir.getName());
         }
