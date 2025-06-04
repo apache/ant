@@ -1213,12 +1213,9 @@ public class DirectoryScanner
             final String[] noLinks = new String[newFiles.length];
             int noLinksCount = 0;
             for (final String newFile : newFiles) {
-                final Path filePath;
-                if (dir == null) {
-                    filePath = Paths.get(newFile);
-                } else {
-                    filePath = Paths.get(dir.toPath().toString(), newFile);
-                }
+                final Path filePath = dir == null
+                                        ? Paths.get(newFile)
+                                        : dir.toPath().resolve(newFile);
                 if (Files.isSymbolicLink(filePath)) {
                     final String name = vpath + newFile;
                     final File file = new File(dir, newFile);
@@ -1816,12 +1813,9 @@ public class DirectoryScanner
     private boolean causesIllegalSymlinkLoop(final String dirName, final File parent,
                                              final Deque<String> directoryNamesFollowed) {
         try {
-            final Path dirPath;
-            if (parent == null) {
-                dirPath = Paths.get(dirName);
-            } else {
-                dirPath = Paths.get(parent.toPath().toString(), dirName);
-            }
+            final Path dirPath = parent == null
+                                    ? Paths.get(dirName)
+                                    : parent.toPath().resolve(dirName);
             if (directoryNamesFollowed.size() >= maxLevelsOfSymlinks
                 && Collections.frequency(directoryNamesFollowed, dirName) >= maxLevelsOfSymlinks
                 && Files.isSymbolicLink(dirPath)) {
