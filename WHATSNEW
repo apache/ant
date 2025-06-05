@@ -1,6 +1,23 @@
 Changes from Ant 1.10.15 TO Ant 1.10.16
 =======================================
 
+Changes that could break older environments:
+-------------------------------------------
+
+ * <xslt> now uses the same logic to compare file timestamps when
+   determining whether a target file is out-of-date with respect to
+   the source file or stylesheet that most other tasks use. This means
+   it will assume a default timestamp granularity that depends on the
+   current operating system.
+   A new granularity attribute allows you to override the assumed
+   granularity.
+   Under certain edge cases this means xslt will now not process files
+   it would have processed before (when the timestamps of source or
+   stylesheet are very close or even equal to the timestamp of the
+   target). In this case you can set granularity to 0 to get back to
+   the behavior of 1.10.15.
+   Bugzilla Report 65756
+
 Fixed bugs:
 -----------
 

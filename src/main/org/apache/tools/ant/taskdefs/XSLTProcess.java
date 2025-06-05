@@ -55,6 +55,7 @@ import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.types.resources.Union;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.ClasspathUtils;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
@@ -244,6 +245,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private TraceConfiguration traceConfiguration;
 
     /**
+     * Filesystem timestamp granularity in milliseconds.
+     *
+     * @since Ant 1.10.16
+     */
+    private long granularity = FILE_UTILS.getFileTimestampGranularity();
+
+    /**
      * Whether to style all files in the included directories as well;
      * optional, default is true.
      *
@@ -390,9 +398,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                         stylesheet = alternative;
                     }
                 }
-                final FileResource fr = new FileResource();
-                fr.setProject(getProject());
-                fr.setFile(stylesheet);
+                final FileResource fr = new FileResource(getProject(), stylesheet);
                 styleResource = fr;
             } else {
                 styleResource = xslResource;
@@ -693,6 +699,19 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
 
     /**
+     * Set the number of milliseconds leeway to give before deciding a
+     * target is out of date.
+     *
+     * <p>Default is 1 second, or 2 seconds on DOS systems.</p>
+     * @param granularity the granularity used to decide if a target is out of
+     *                    date.
+     * @since Ant 1.10.16
+     */
+    public void setGranularity(final long granularity) {
+        this.granularity = granularity;
+    }
+
+    /**
      * Load processor here instead of in setProcessor - this will be
      * called from within execute, so we have access to the latest
      * classpath.
@@ -830,9 +849,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 return;
             }
             outF = new File(destDir, outFileName[0]);
+            Resource outR = new FileResource(getProject(), outF);
 
-            if (force || inF.lastModified() > outF.lastModified()
-                    || styleSheetLastModified > outF.lastModified()) {
+            if (force
+                || SelectorUtils.isOutOfDate(inF, outF, granularity)
+                || SelectorUtils.isOutOfDate(stylesheet, outR, granularity)) {
                 ensureDirectoryFor(outF);
                 log("Processing " + inF + " to " + outF);
                 configureLiaison(stylesheet);
@@ -862,11 +883,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private void process(final File inFile, final File outFile, final Resource stylesheet) throws BuildException {
         try {
             final long styleSheetLastModified = stylesheet.getLastModified();
+            final Resource outResource = new FileResource(getProject(), outFile);
             log("In file " + inFile + " time: " + inFile.lastModified(), Project.MSG_DEBUG);
             log("Out file " + outFile + " time: " + outFile.lastModified(), Project.MSG_DEBUG);
             log("Style file " + xslFile + " time: " + styleSheetLastModified, Project.MSG_DEBUG);
-            if (force || inFile.lastModified() >= outFile.lastModified()
-                    || styleSheetLastModified >= outFile.lastModified()) {
+            if (force
+                || SelectorUtils.isOutOfDate(inFile, outFile, granularity)
+                || SelectorUtils.isOutOfDate(stylesheet, outResource, granularity)) {
                 ensureDirectoryFor(outFile);
                 log("Processing " + inFile + " to " + outFile, Project.MSG_INFO);
                 configureLiaison(stylesheet);
@@ -1242,9 +1265,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     @Deprecated
     protected void configureLiaison(final File stylesheet) throws BuildException {
-        final FileResource fr = new FileResource();
-        fr.setProject(getProject());
-        fr.setFile(stylesheet);
+        final FileResource fr = new FileResource(getProject(), stylesheet);
         configureLiaison(fr);
     }
 

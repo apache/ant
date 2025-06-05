@@ -96,7 +96,7 @@
       <antcall target="copyXsl">
         <param name="xsl.value" value="new-value"/>
       </antcall>
-      <xslt in="data.xml" out="${output}/out.xml" style="tmp.xsl"/>
+      <xslt in="data.xml" out="${output}/out.xml" style="tmp.xsl" granularity="0"/>
       <delete file="tmp.xsl"/>
   </target>
 

@@ -231,6 +231,15 @@ path-like structure).</p>
       1.8.0</em>.</td>
     <td>No; default is <q>true</q></td>
   </tr>
+  <tr>
+    <td>granularity</td>
+    <td>The number of milliseconds leeway to give before deciding a
+      file is out of date with respect of the source file or stylesheet. This is
+      needed because not every file system supports tracking the last modified time to the
+      millisecond level. This can also be useful if source and target files live on separate
+      machines with clocks being out of sync. <em>since Ant 1.10.16</em>.</td>
+    <td>No; default is 1 second, or 2 seconds on DOS systems</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 

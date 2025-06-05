@@ -573,11 +573,30 @@ public final class SelectorUtils {
      *
      * @param src the original file
      * @param target the file being compared against
-     * @param granularity the amount in milliseconds of slack we will give in
+     * @param granularity the int amount in milliseconds of slack we will give in
      *        determining out of dateness
      * @return whether the target is out of date
      */
     public static boolean isOutOfDate(File src, File target, int granularity) {
+        return isOutOfDate(src, target, (long) granularity);
+    }
+
+    /**
+     * Returns dependency information on these two files. If src has been
+     * modified later than target, it returns true. If target doesn't exist,
+     * it likewise returns true. Otherwise, target is newer than src and
+     * is not out of date, thus the method returns false. It also returns
+     * false if the src file doesn't even exist, since how could the
+     * target then be out of date.
+     *
+     * @param src the original file
+     * @param target the file being compared against
+     * @param granularity the amount in milliseconds of slack we will give in
+     *        determining out of dateness
+     * @return whether the target is out of date
+     * @since Ant 1.10.16
+     */
+    public static boolean isOutOfDate(File src, File target, long granularity) {
         return src.exists() && (!target.exists()
                 || (src.lastModified() - granularity) > target.lastModified());
     }
