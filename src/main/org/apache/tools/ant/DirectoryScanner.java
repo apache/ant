@@ -1210,14 +1210,12 @@ public class DirectoryScanner
             return;
         }
         if (!followSymlinks) {
-            final ArrayList<String> noLinks = new ArrayList<>();
+            final String[] noLinks = new String[newFiles.length];
+            int noLinksCount = 0;
             for (final String newFile : newFiles) {
-                final Path filePath;
-                if (dir == null) {
-                    filePath = Paths.get(newFile);
-                } else {
-                    filePath = Paths.get(dir.toPath().toString(), newFile);
-                }
+                final Path filePath = dir == null
+                                        ? Paths.get(newFile)
+                                        : dir.toPath().resolve(newFile);
                 if (Files.isSymbolicLink(filePath)) {
                     final String name = vpath + newFile;
                     final File file = new File(dir, newFile);
@@ -1228,10 +1226,10 @@ public class DirectoryScanner
                     }
                     accountForNotFollowedSymlink(name, file);
                 } else {
-                    noLinks.add(newFile);
+                    noLinks[noLinksCount++] = newFile;
                 }
             }
-            newFiles = noLinks.toArray(new String[0]);
+            newFiles = noLinksCount == noLinks.length ? noLinks : Arrays.copyOf(noLinks, noLinksCount);
         } else {
             directoryNamesFollowed.addFirst(dir.getName());
         }
@@ -1788,16 +1786,17 @@ public class DirectoryScanner
      */
     private TokenizedPattern[] fillNonPatternSet(final Map<String, TokenizedPath> map,
                                                  final String[] patterns) {
-        final List<TokenizedPattern> al = new ArrayList<>(patterns.length);
+        final TokenizedPattern[] al = new TokenizedPattern[patterns.length];
+        int alCount = 0;
         for (String pattern : patterns) {
             if (SelectorUtils.hasWildcards(pattern)) {
-                al.add(new TokenizedPattern(pattern));
+                al[alCount++] = new TokenizedPattern(pattern);
             } else {
                 final String s = isCaseSensitive() ? pattern : pattern.toUpperCase();
                 map.put(s, new TokenizedPath(s));
             }
         }
-        return al.toArray(new TokenizedPattern[0]);
+        return Arrays.copyOf(al, alCount);
     }
 
     /**
@@ -1814,12 +1813,9 @@ public class DirectoryScanner
     private boolean causesIllegalSymlinkLoop(final String dirName, final File parent,
                                              final Deque<String> directoryNamesFollowed) {
         try {
-            final Path dirPath;
-            if (parent == null) {
-                dirPath = Paths.get(dirName);
-            } else {
-                dirPath = Paths.get(parent.toPath().toString(), dirName);
-            }
+            final Path dirPath = parent == null
+                                    ? Paths.get(dirName)
+                                    : parent.toPath().resolve(dirName);
             if (directoryNamesFollowed.size() >= maxLevelsOfSymlinks
                 && Collections.frequency(directoryNamesFollowed, dirName) >= maxLevelsOfSymlinks
                 && Files.isSymbolicLink(dirPath)) {
