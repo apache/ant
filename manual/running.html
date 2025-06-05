@@ -662,6 +662,10 @@ most minimal classpath possible, generally just
 the <samp>ant-launcher.jar</samp>.
 </p>
 
+<p>Note that both classes will terminate the running VM when the build
+  is finished and thus are not well suited as programmatic entry
+  points.</p>
+
 <p id="viaant">
 Ant can be started in Ant via the <code>&lt;java&gt;</code> command.
 Here is an example:
