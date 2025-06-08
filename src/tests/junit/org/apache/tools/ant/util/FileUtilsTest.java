@@ -861,6 +861,24 @@ public class FileUtilsTest {
                 ? "sensitive" : "insensitive"), expectedCaseSensitivity, actualCaseSensitivity.get());
     }
 
+    @Test
+    public void testStartsWithPathSeparator() {
+        assertTrue(getFileUtils().startsWithPathSeparator("/foo"));
+        assertTrue(getFileUtils().startsWithPathSeparator("\\foo"));
+        assertFalse(getFileUtils().startsWithPathSeparator("c:\\foo"));
+        assertFalse(getFileUtils().startsWithPathSeparator("foo"));
+        assertFalse(getFileUtils().startsWithPathSeparator("file:/foo"));
+    }
+
+    @Test
+    public void testStripLeadingPathSeparator() {
+        assertEquals("foo", getFileUtils().stripLeadingPathSeparator("/foo"));
+        assertEquals("foo", getFileUtils().stripLeadingPathSeparator("\\foo"));
+        assertEquals("c:\\foo", getFileUtils().stripLeadingPathSeparator("c:\\foo"));
+        assertEquals("foo", getFileUtils().stripLeadingPathSeparator("foo"));
+        assertEquals("file:/foo", getFileUtils().stripLeadingPathSeparator("file:/foo"));
+    }
+
     /**
      * adapt file separators to local conventions
      */

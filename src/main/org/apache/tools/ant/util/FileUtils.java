@@ -1959,4 +1959,31 @@ public class FileUtils {
         }
         return Optional.of(caseSensitive);
     }
+
+    /**
+     * Tests whether the given path starts with a path separator.
+     * @param path path to check.
+     * @return true if the path starts with a path separator.
+     * @since Ant 1.10.16
+     */
+    public boolean startsWithPathSeparator(String path) {
+        if (path == null || path.length() == 0) {
+            return false;
+        }
+        char c = path.charAt(0);
+        return c == File.pathSeparatorChar || c == '/' || c == '\\';
+    }
+
+    /**
+     * Strips a leading path separator from path that actually start
+     * with one.
+     * @param path the whose leading file separator should be stripped.
+     * @return path with the leading path separator stripped off if
+     * path starts with a path separator - or the unchanged path
+     * otherwise.
+     * @since Ant 1.10.16
+     */
+    public String stripLeadingPathSeparator(String path) {
+        return startsWithPathSeparator(path) ? path.substring(1) : path;
+    }
 }
