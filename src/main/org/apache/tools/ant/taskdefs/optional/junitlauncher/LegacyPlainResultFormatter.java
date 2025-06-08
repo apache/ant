@@ -65,6 +65,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
             final Stats stats = entry.getValue();
             final StringBuilder sb = new StringBuilder("Tests run: ").append(stats.numTestsRun.get());
             sb.append(", Failures: ").append(stats.numTestsFailed.get());
+            sb.append(", Errors: ").append(stats.numTestsWithError.get());
             sb.append(", Skipped: ").append(stats.numTestsSkipped.get());
             sb.append(", Aborted: ").append(stats.numTestsAborted.get());
             sb.append(", Time elapsed: ");
@@ -188,7 +189,11 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
                     break;
                 }
                 case FAILED: {
-                    sb.append(" FAILED");
+                    if (isFailure(testExecutionResult)) {
+                        sb.append(" FAILED");
+                    } else {
+                        sb.append(" Caused an ERROR");
+                    }
                     appendThrowable(sb, testExecutionResult);
                     break;
                 }
@@ -214,7 +219,11 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
                 break;
             }
             case FAILED: {
-                parentClassStats.numTestsFailed.incrementAndGet();
+                if (isFailure(testExecutionResult)) {
+                    parentClassStats.numTestsFailed.incrementAndGet();
+                } else {
+                    parentClassStats.numTestsWithError.incrementAndGet();
+                }
                 break;
             }
         }
@@ -264,6 +273,7 @@ class LegacyPlainResultFormatter extends AbstractJUnitResultFormatter implements
         private final TestIdentifier testIdentifier;
         private final AtomicLong numTestsRun = new AtomicLong(0);
         private final AtomicLong numTestsFailed = new AtomicLong(0);
+        private final AtomicLong numTestsWithError = new AtomicLong(0);
         private final AtomicLong numTestsSkipped = new AtomicLong(0);
         private final AtomicLong numTestsAborted = new AtomicLong(0);
         private final long startedAt;

@@ -55,6 +55,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
     private final Map<TestIdentifier, Stats> testIds = new ConcurrentHashMap<>();
     private final Map<TestIdentifier, Optional<String>> skipped = new ConcurrentHashMap<>();
     private final Map<TestIdentifier, Optional<Throwable>> failed = new ConcurrentHashMap<>();
+    private final Map<TestIdentifier, Optional<Throwable>> errored = new ConcurrentHashMap<>();
     private final Map<TestIdentifier, Optional<Throwable>> aborted = new ConcurrentHashMap<>();
 
     private TestPlan testPlan;
@@ -62,6 +63,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
     private long testPlanEndedAt = -1;
     private final AtomicLong numTestsRun = new AtomicLong(0);
     private final AtomicLong numTestsFailed = new AtomicLong(0);
+    private final AtomicLong numTestsErrored = new AtomicLong(0);
     private final AtomicLong numTestsSkipped = new AtomicLong(0);
     private final AtomicLong numTestsAborted = new AtomicLong(0);
     private boolean useLegacyReportingName = true;
@@ -126,8 +128,13 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 break;
             }
             case FAILED: {
-                this.numTestsFailed.incrementAndGet();
-                this.failed.put(testIdentifier, testExecutionResult.getThrowable());
+                if (isFailure(testExecutionResult)) {
+                    this.numTestsFailed.incrementAndGet();
+                    this.failed.put(testIdentifier, testExecutionResult.getThrowable());
+                } else {
+                    this.numTestsErrored.incrementAndGet();
+                    this.errored.put(testIdentifier, testExecutionResult.getThrowable());
+                }
                 break;
             }
         }
@@ -168,6 +175,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
         private static final String ELEM_TESTCASE = "testcase";
         private static final String ELEM_SKIPPED = "skipped";
         private static final String ELEM_FAILURE = "failure";
+        private static final String ELEM_ERROR = "error";
         private static final String ELEM_ABORTED = "aborted";
         private static final String ELEM_SYSTEM_OUT = "system-out";
         private static final String ELEM_SYSTEM_ERR = "system-err";
@@ -180,6 +188,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
         private static final String ATTR_TIMESTAMP = "timestamp";
         private static final String ATTR_NUM_ABORTED = "aborted";
         private static final String ATTR_NUM_FAILURES = "failures";
+        private static final String ATTR_NUM_ERRORS = "errors";
         private static final String ATTR_NUM_TESTS = "tests";
         private static final String ATTR_NUM_SKIPPED = "skipped";
         private static final String ATTR_MESSAGE = "message";
@@ -208,6 +217,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
             writeAttribute(writer, ATTR_TIMESTAMP, timestamp);
             writeAttribute(writer, ATTR_NUM_TESTS, String.valueOf(numTestsRun.longValue()));
             writeAttribute(writer, ATTR_NUM_FAILURES, String.valueOf(numTestsFailed.longValue()));
+            writeAttribute(writer, ATTR_NUM_ERRORS, String.valueOf(numTestsErrored.longValue()));
             writeAttribute(writer, ATTR_NUM_SKIPPED, String.valueOf(numTestsSkipped.longValue()));
             writeAttribute(writer, ATTR_NUM_ABORTED, String.valueOf(numTestsAborted.longValue()));
 
@@ -239,7 +249,7 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
         void writeTestCase(final XMLStreamWriter writer) throws XMLStreamException {
             for (final Map.Entry<TestIdentifier, Stats> entry : testIds.entrySet()) {
                 final TestIdentifier testId = entry.getKey();
-                if (!testId.isTest() && !failed.containsKey(testId)) {
+                if (!testId.isTest() && !failed.containsKey(testId) && !errored.containsKey(testId)) {
                     // only interested in test methods unless there was a failure,
                     // in which case we want the exception reported
                     // (https://bz.apache.org/bugzilla/show_bug.cgi?id=63850)
@@ -283,6 +293,8 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
                 writeSkipped(writer, testId);
                 // failed element if the test failed
                 writeFailed(writer, testId);
+                // error element if the test caused an error
+                writeErrored(writer, testId);
                 // aborted element if the test was aborted
                 writeAborted(writer, testId);
 
@@ -306,8 +318,21 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
             if (!failed.containsKey(testIdentifier)) {
                 return;
             }
-            writer.writeStartElement(ELEM_FAILURE);
-            final Optional<Throwable> cause = failed.get(testIdentifier);
+            writeFailedOrErrored(writer, ELEM_FAILURE, failed.get(testIdentifier));
+        }
+
+        private void writeErrored(final XMLStreamWriter writer, final TestIdentifier testIdentifier) throws XMLStreamException {
+            if (!errored.containsKey(testIdentifier)) {
+                return;
+            }
+            writeFailedOrErrored(writer, ELEM_ERROR, errored.get(testIdentifier));
+        }
+
+        private void writeFailedOrErrored(final XMLStreamWriter writer,
+                                          final String elementName,
+                                          final Optional<Throwable> cause)
+            throws XMLStreamException {
+            writer.writeStartElement(elementName);
             if (cause.isPresent()) {
                 final Throwable t = cause.get();
                 final String message = t.getMessage();

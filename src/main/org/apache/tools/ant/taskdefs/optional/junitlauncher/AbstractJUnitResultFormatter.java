@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.TestIdentifier;
@@ -186,6 +187,10 @@ abstract class AbstractJUnitResultFormatter implements TestResultFormatter {
                 + AbstractJUnitResultFormatter.this.getClass().getName(), t, Project.MSG_DEBUG));
     }
 
+
+    protected static boolean isFailure(final TestExecutionResult executionResult) {
+        return executionResult.getThrowable().orElse(null) instanceof AssertionError;
+    }
 
     /*
     A "store" for sysout/syserr content that gets sent to the AbstractJUnitResultFormatter.
