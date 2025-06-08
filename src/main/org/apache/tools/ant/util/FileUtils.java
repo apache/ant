@@ -684,13 +684,13 @@ public class FileUtils {
         if (filename.isEmpty()) {
             return false;
         }
+        if (!ON_DOS && !ON_NETWARE) {
+            return PRIMARY_INSTANCE.startsWithPathSeparator(filename);
+        }
         int len = filename.length();
         char sep = File.separatorChar;
         filename = filename.replace('/', sep).replace('\\', sep);
         char c = filename.charAt(0);
-        if (!ON_DOS && !ON_NETWARE) {
-            return c == sep;
-        }
         if (c == sep) {
             // CheckStyle:MagicNumber OFF
             if (!ON_DOS || len <= 4 || filename.charAt(1) != sep) {
@@ -859,7 +859,7 @@ public class FileUtils {
         String osPath;
         String path = normalize(f.getAbsolutePath()).getPath();
         String name = f.getName();
-        boolean isAbsolute = path.charAt(0) == File.separatorChar;
+        boolean isAbsolute = startsWithPathSeparator(path);
         // treat directories specified using .DIR syntax as files
         // CheckStyle:MagicNumber OFF
         boolean isDirectory = f.isDirectory()

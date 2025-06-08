@@ -28,6 +28,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.FileResourceIterator;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * ArchiveScanner accesses the pattern matching algorithm in DirectoryScanner,
@@ -47,6 +48,8 @@ public abstract class ArchiveScanner extends DirectoryScanner {
     protected File srcFile;
 
     // CheckStyle:VisibilityModifier ON
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
      * The archive resource which should be scanned.
@@ -257,11 +260,9 @@ public abstract class ArchiveScanner extends DirectoryScanner {
     public boolean match(String path) {
         String vpath = path;
         if (!path.isEmpty()) {
-            vpath = path.replace('/', File.separatorChar)
-                    .replace('\\', File.separatorChar);
-            if (vpath.charAt(0) == File.separatorChar) {
-                vpath = vpath.substring(1);
-            }
+            vpath = FILE_UTILS.stripLeadingPathSeparator(path)
+                .replace('/', File.separatorChar)
+                .replace('\\', File.separatorChar);
         }
         return isIncluded(vpath) && !isExcluded(vpath);
     }

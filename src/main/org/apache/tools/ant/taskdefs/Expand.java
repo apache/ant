@@ -257,10 +257,8 @@ public class Expand extends Task {
                                boolean isDirectory, FileNameMapper mapper)
                                throws IOException {
 
-        final boolean entryNameStartsWithPathSpec = !entryName.isEmpty()
-            && (entryName.charAt(0) == File.separatorChar
-                || entryName.charAt(0) == '/'
-                || entryName.charAt(0) == '\\');
+        final boolean entryNameStartsWithPathSpec =
+            FILE_UTILS.startsWithPathSeparator(entryName);
         if (stripAbsolutePathSpec && entryNameStartsWithPathSpec) {
             log("stripped absolute path spec from " + entryName,
                 Project.MSG_VERBOSE);
