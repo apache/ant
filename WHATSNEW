@@ -28,6 +28,10 @@ Fixed bugs:
    only when there are any classpath elements present.
    Bugzilla Report 69586
 
+ * URLResource#getName could strip the first character of a resource
+   path even if it was not a file separator.
+   Bugzilla Report 69680
+
 Other changes:
 --------------
 
