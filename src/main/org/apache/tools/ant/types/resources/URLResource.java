@@ -183,7 +183,7 @@ public class URLResource extends Resource implements URLProvider {
             return getRef().getName();
         }
         String name = getURL().getFile();
-        return name.isEmpty() ? name : name.substring(1);
+        return FILE_UTILS.stripLeadingPathSeparator(name);
     }
 
     /**
@@ -196,7 +196,7 @@ public class URLResource extends Resource implements URLProvider {
     }
 
     /**
-     * Find out whether the URL exists .
+     * Find out whether the URL exists.
      * @return true if this resource exists.
      */
     public synchronized boolean isExists() {
