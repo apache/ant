@@ -40,6 +40,10 @@ Fixed bugs:
    path even if it was not a file separator.
    Bugzilla Report 69680
 
+ * <junitlauncher>'s legacy formatters now separate errors from
+   failures like their <junit> counterparts did.
+   Bugzilla Report 69687
+
 Other changes:
 --------------
 
