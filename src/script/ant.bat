@@ -109,6 +109,7 @@ goto checkJava
 
 :noAntHome
 echo ANT_HOME is set incorrectly or ant could not be located. Please set ANT_HOME.
+set ANT_ERROR=203
 goto end
 
 :checkJava
