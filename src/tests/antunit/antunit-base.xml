@@ -35,7 +35,23 @@
     <equals arg1="${build.sysclasspath}" arg2="only"/>
   </condition>
 
-  <target name="tearDown">
+  <condition property="windows_os">
+    <os family="windows"/>
+  </condition>
+  <target name="markFilesWritable" if="windows_os">
+    <!--
+      some tests create read-only files in input/output directory.
+      Windows doesn't allow deleting read-only files, so we reset
+      the permissions on those files to writable before tearDown
+      can delete the input/output directory.
+    -->
+    <setpermissions mode="666" nonPosixMode="tryDosOrFail">
+      <fileset dir="${input}" erroronmissingdir="false"/>
+      <fileset dir="${output}" erroronmissingdir="false"/>
+    </setpermissions>
+  </target>
+
+  <target name="tearDown" depends="markFilesWritable">
     <delete dir="${input}"/>
     <delete dir="${output}"/>
     <delete dir="${resources}"/>
