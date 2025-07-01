@@ -1754,6 +1754,11 @@ public class FileUtils {
      */
     public boolean tryHardToDelete(File f, boolean runGC) {
         if (!f.delete()) {
+            // If the file is read-only on Windows, then it cannot be deleted.
+            // We set it to writable and then retry to delete it.
+            if (!f.canWrite() && ON_WINDOWS) {
+                final boolean ignored = f.setWritable(true);
+            }
             if (runGC) {
                 System.gc();
             }
