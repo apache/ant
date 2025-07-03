@@ -40,6 +40,9 @@ Fixed bugs:
    path even if it was not a file separator.
    Bugzilla Report 69680
 
+ * ant.bat now exits with a non-zero exit code if ANT_HOME is not set.
+   Github Pull Request #222
+
 Other changes:
 --------------
 
