@@ -14,6 +14,7 @@
 package org.apache.tools.ant.types;
 
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Interface describing a collection of Resources.
@@ -46,9 +47,7 @@ public interface ResourceCollection extends Iterable<Resource> {
      * @since Ant 1.10.2
      */
     default Stream<? extends Resource> stream() {
-        final Stream.Builder<Resource> b = Stream.builder();
-        forEach(b);
-        return b.build();
+        return StreamSupport.stream(spliterator(), false);
     }
 
     /**
