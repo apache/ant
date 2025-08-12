@@ -13,7 +13,10 @@
  */
 package org.apache.tools.ant.types;
 
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Interface describing a collection of Resources.
@@ -41,14 +44,27 @@ public interface ResourceCollection extends Iterable<Resource> {
     boolean isFilesystemOnly();
 
     /**
+     * Creates a {@link Spliterator} over the elements described by this {@link
+     * ResourceCollection}. The spliterator uses the characteristics of the
+     * underlying {@code ResourceCollection} such as size and assumes the
+     * collection is sized.
+     *
+     * @return a {@code Spliterator} over the elements described by this
+     * {@code ResourceCollection}.
+     * @since Ant 1.10.16
+     */
+    @Override
+    default Spliterator<Resource> spliterator() {
+        return Spliterators.spliterator(iterator(), size(), Spliterator.SIZED);
+    }
+
+    /**
      * Return a {@link Stream} over this {@link ResourceCollection}.
      * @return {@link Stream} of {@link Resource}
      * @since Ant 1.10.2
      */
     default Stream<? extends Resource> stream() {
-        final Stream.Builder<Resource> b = Stream.builder();
-        forEach(b);
-        return b.build();
+        return StreamSupport.stream(spliterator(), false);
     }
 
     /**
