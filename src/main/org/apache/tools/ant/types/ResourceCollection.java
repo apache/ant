@@ -13,8 +13,6 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -42,21 +40,6 @@ public interface ResourceCollection extends Iterable<Resource> {
      * @return whether this is a filesystem-only resource collection.
      */
     boolean isFilesystemOnly();
-
-    /**
-     * Creates a {@link Spliterator} over the elements described by this {@link
-     * ResourceCollection}. The spliterator uses the characteristics of the
-     * underlying {@code ResourceCollection} such as size and assumes the
-     * collection is sized.
-     *
-     * @return a {@code Spliterator} over the elements described by this
-     * {@code ResourceCollection}.
-     * @since Ant 1.10.16
-     */
-    @Override
-    default Spliterator<Resource> spliterator() {
-        return Spliterators.spliterator(iterator(), size(), Spliterator.SIZED);
-    }
 
     /**
      * Return a {@link Stream} over this {@link ResourceCollection}.
