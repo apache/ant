@@ -16,13 +16,7 @@
  *
  */
 
-package org.apache.tools.ant.taskdefs;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -56,6 +50,7 @@ import org.apache.tools.ant.util.StringUtils;
  *
  * @since Ant 1.1
  *
+ *
  * @ant.task category="network"
  */
 public class Get extends Task {
@@ -77,6 +72,7 @@ public class Get extends Task {
     private final Resources sources = new Resources();
     private File destination; // required
     private boolean verbose = false;
+    private boolean progressbar = false;
     private boolean quiet = false;
     private boolean useTimestamp = false; //off by default
     private boolean ignoreErrors = false;
@@ -90,9 +86,9 @@ public class Get extends Task {
     private boolean tryGzipEncoding = false;
     private Mapper mapperElement = null;
     private String userAgent =
-        System.getProperty(MagicNames.HTTP_AGENT_PROPERTY,
-                           DEFAULT_AGENT_PREFIX + "/"
-                           + Main.getShortAntVersion());
+            System.getProperty(MagicNames.HTTP_AGENT_PROPERTY,
+                    DEFAULT_AGENT_PREFIX + "/"
+                            + Main.getShortAntVersion());
 
     // Store headers as key/value pair without duplicate in keys
     private Map<String, String> headers = new LinkedHashMap<>();
@@ -127,17 +123,17 @@ public class Get extends Task {
                     final String[] d = mapper.mapFileName(source.toString());
                     if (d == null) {
                         log("skipping " + r + " - mapper can't handle it",
-                            Project.MSG_WARN);
+                                Project.MSG_WARN);
                         continue;
                     }
                     if (d.length == 0) {
                         log("skipping " + r + " - mapper returns no file name",
-                            Project.MSG_WARN);
+                                Project.MSG_WARN);
                         continue;
                     }
                     if (d.length > 1) {
                         log("skipping " + r + " - mapper returns multiple file"
-                            + " names", Project.MSG_WARN);
+                                + " names", Project.MSG_WARN);
                         continue;
                     }
                     dest = new File(destination, d[0]);
@@ -149,6 +145,9 @@ public class Get extends Task {
             DownloadProgress progress = null;
             if (verbose) {
                 progress = new VerboseProgress(System.out);
+            } else if (progressbar) {
+                PrintStream rawOut = new PrintStream(new FileOutputStream(FileDescriptor.out), true);
+                progress = new ProgressBarProgress(rawOut);
             }
 
             //execute the get
@@ -205,11 +204,11 @@ public class Get extends Task {
      */
     public boolean doGet(final URL source, final File dest, final int logLevel,
                          DownloadProgress progress)
-        throws IOException {
+            throws IOException {
 
         if (dest.exists() && skipExisting) {
             log("Destination already exists (skipping): "
-                + dest.getAbsolutePath(), logLevel);
+                    + dest.getAbsolutePath(), logLevel);
             return true;
         }
 
@@ -234,8 +233,8 @@ public class Get extends Task {
         }
 
         final GetThread getThread = new GetThread(source, dest,
-                                            hasTimestamp, timestamp, progress,
-                                            logLevel, userAgent);
+                hasTimestamp, timestamp, progress,
+                logLevel, userAgent);
         getThread.setDaemon(true);
         getProject().registerThreadTask(getThread, this);
         getThread.start();
@@ -243,12 +242,12 @@ public class Get extends Task {
             getThread.join(maxTime * 1000);
         } catch (final InterruptedException ie) {
             log("interrupted waiting for GET to finish",
-                Project.MSG_VERBOSE);
+                    Project.MSG_VERBOSE);
         }
 
         if (getThread.isAlive()) {
             final String msg = "The GET operation took longer than " + maxTime
-                + " seconds, stopping it.";
+                    + " seconds, stopping it.";
             if (ignoreErrors) {
                 log(msg);
             }
@@ -280,13 +279,13 @@ public class Get extends Task {
 
         if (sources.size() == 0) {
             throw new BuildException("at least one source is required",
-                                     getLocation());
+                    getLocation());
         }
         for (final Resource r : sources) {
             final URLProvider up = r.as(URLProvider.class);
             if (up == null) {
                 throw new BuildException(
-                    "Only URLProvider resources are supported", getLocation());
+                        "Only URLProvider resources are supported", getLocation());
             }
         }
 
@@ -295,15 +294,15 @@ public class Get extends Task {
         }
 
         if (destination.exists() && sources.size() > 1
-            && !destination.isDirectory()) {
+                && !destination.isDirectory()) {
             throw new BuildException(
-                "The specified destination is not a directory", getLocation());
+                    "The specified destination is not a directory", getLocation());
         }
 
         if (destination.exists() && !destination.canWrite()) {
             throw new BuildException("Can't write to "
-                                     + destination.getAbsolutePath(),
-                                     getLocation());
+                    + destination.getAbsolutePath(),
+                    getLocation());
         }
 
         if (sources.size() > 1 && !destination.exists()) {
@@ -345,6 +344,15 @@ public class Get extends Task {
      */
     public void setVerbose(final boolean v) {
         verbose = v;
+    }
+
+    /**
+     * If true, show progress bar with download information as percentage.
+     *
+     * @param v if "true" then show progress bar
+     */
+    public void setProgressBar(final boolean v) {
+        progressbar = v;
     }
 
     /**
@@ -440,8 +448,8 @@ public class Get extends Task {
     public void setRetries(final int r) {
         if (r <= 0) {
             log("Setting retries to " + r
-                + " will make the task not even try to reach the URI at all",
-                Project.MSG_WARN);
+                            + " will make the task not even try to reach the URI at all",
+                    Project.MSG_WARN);
         }
         this.numberRetries = r;
     }
@@ -522,7 +530,7 @@ public class Get extends Task {
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
             throw new BuildException("Cannot define more than one mapper",
-                                     getLocation());
+                    getLocation());
         }
         mapperElement = new Mapper(getProject());
         return mapperElement;
@@ -541,7 +549,7 @@ public class Get extends Task {
      * Provide this for Backward Compatibility.
      */
     protected static class Base64Converter
-        extends org.apache.tools.ant.util.Base64Converter {
+            extends org.apache.tools.ant.util.Base64Converter {
     }
 
     /**
@@ -551,9 +559,9 @@ public class Get extends Task {
      */
     public static boolean isMoved(final int responseCode) {
         return responseCode == HttpURLConnection.HTTP_MOVED_PERM
-            || responseCode == HttpURLConnection.HTTP_MOVED_TEMP
-            || responseCode == HttpURLConnection.HTTP_SEE_OTHER
-            || responseCode == HTTP_MOVED_TEMP;
+                || responseCode == HttpURLConnection.HTTP_MOVED_TEMP
+                || responseCode == HttpURLConnection.HTTP_SEE_OTHER
+                || responseCode == HTTP_MOVED_TEMP;
     }
 
     /**
@@ -654,8 +662,109 @@ public class Get extends Task {
         }
     }
 
-    private class GetThread extends Thread {
+    public class ProgressBarProgress implements DownloadProgress {
+        private long contentLength;
+        private long downloadedBytes;
+        private long lastDownloadedBytes;
+        private final PrintStream out;
+        private long lastTime;
+        private int previousLineLength = 0;
 
+        public ProgressBarProgress(PrintStream out) {
+            this.out = out;
+        }
+
+        public void setContentLength(long contentLength) {
+            this.contentLength = contentLength;
+        }
+
+        @Override
+        public void beginDownload() {
+            downloadedBytes = 0;
+            lastDownloadedBytes = 0;
+            lastTime = System.nanoTime();
+        }
+
+        @Override
+        public void onTick() {
+            int downloadedBytesPercentage = (int) ((downloadedBytes * 100) / contentLength);
+            printProgressBar(downloadedBytesPercentage, calculateDownloadSpeed());
+        }
+
+        public double calculateDownloadSpeed() {
+            long bytesSinceLast = downloadedBytes - lastDownloadedBytes;
+            long elapsedTime = System.nanoTime() - lastTime;
+            return (elapsedTime > 0)
+                ? (bytesSinceLast / (elapsedTime / 1_000_000_000.0))
+                : 0.0;
+        }
+
+        public void printProgressBar(int downloadedBytesPercentage, double downloadSpeed) {
+            int size = 50;
+            String iconLeftBoundary = "[";
+            String iconDownloadedBytes = "=";
+            String iconRemainingBytes = " ";
+            String iconArrow = ">";
+            String iconRightBoundary = "]";
+
+            int downloadedBytesLength = size * downloadedBytesPercentage / 100;
+
+            StringBuilder progressBar = new StringBuilder(iconLeftBoundary);
+            for (int i = 0; i < size; i++) {
+                if (i == downloadedBytesLength) {
+                    progressBar.append(iconArrow);
+                } else if (i < downloadedBytesLength) {
+                    progressBar.append(iconDownloadedBytes);
+                } else {
+                    progressBar.append(iconRemainingBytes);
+                }
+            }
+            progressBar.append(iconRightBoundary);
+
+            String progressBarLine = "Downloading..." + progressBar + " "
+                    + downloadedBytesPercentage + "% | "
+                    + remainingTime(downloadSpeed, downloadedBytes, contentLength)
+                    + " | " + readableDownloadSpeed(downloadSpeed);
+
+            int spaces = 0;
+
+            if (previousLineLength - progressBarLine.length() > 0) {
+                spaces = previousLineLength - progressBarLine.length();
+            }
+
+            out.print("\r" + progressBarLine + " ".repeat(spaces));
+            out.flush();
+            previousLineLength = progressBarLine.length();
+        }
+
+        private String readableDownloadSpeed(double downloadSpeed) {
+            int unit = 1024;
+            if (downloadSpeed < unit) {
+                return String.format("%.1f B/S", downloadSpeed);
+            } else {
+                int exponent = (int) (Math.log(downloadSpeed) / Math.log(unit));
+                String pre = "KMG".charAt(exponent - 1) + "";
+                return String.format("%.1f %sB/s", downloadSpeed / Math.pow(unit, exponent), pre);
+            }
+        }
+
+        private String remainingTime(double downloadSpeed, double downloadedBytes, double contentLength) {
+            double remainingTime = (contentLength - downloadedBytes) / downloadSpeed;
+            return String.format("%.0f seconds remaining", remainingTime);
+        }
+
+        @Override
+        public void endDownload() {
+            out.println();
+            out.flush();
+        }
+
+        public void addBytes(long bytes) {
+            downloadedBytes += bytes;
+        }
+    }
+
+    private class GetThread extends Thread {
         private final URL source;
         private final File dest;
         private final boolean hasTimestamp;
@@ -748,7 +857,6 @@ public class Get extends Task {
 
         private URLConnection openConnection(final URL aSource, final String uname,
                                              final String pword) throws IOException {
-
             // set up the URL connection
             final URLConnection connection = aSource.openConnection();
             // modify the headers
@@ -801,15 +909,15 @@ public class Get extends Task {
                     final String newLocation = httpConnection.getHeaderField("Location");
                     final String message = aSource
                             + (responseCode == HttpURLConnection.HTTP_MOVED_PERM ? " permanently"
-                                    : "") + " moved to " + newLocation;
+                            : "") + " moved to " + newLocation;
                     log(message, logLevel);
                     final URL newURL = new URL(aSource, newLocation);
                     if (!redirectionAllowed(aSource, newURL)) {
                         return null;
                     }
                     return openConnection(newURL,
-                        authenticateOnRedirect ? uname : null,
-                        authenticateOnRedirect ? pword : null);
+                            authenticateOnRedirect ? uname : null,
+                            authenticateOnRedirect ? pword : null);
                 }
                 // next test for a 304 result (HTTP only)
                 final long lastModified = httpConnection.getLastModified();
@@ -863,8 +971,13 @@ public class Get extends Task {
             }
 
             if (tryGzipEncoding
-                && GZIP_CONTENT_ENCODING.equals(connection.getContentEncoding())) {
+                    && GZIP_CONTENT_ENCODING.equals(connection.getContentEncoding())) {
                 is = new GZIPInputStream(is);
+            }
+
+            if (progress instanceof ProgressBarProgress) {
+                long contentLength = connection.getContentLengthLong();
+                ((ProgressBarProgress) progress).setContentLength(contentLength);
             }
 
             os = Files.newOutputStream(dest.toPath());
@@ -875,6 +988,9 @@ public class Get extends Task {
                 int length;
                 while (!isInterrupted() && (length = is.read(buffer)) >= 0) {
                     os.write(buffer, 0, length);
+                    if (progress instanceof ProgressBarProgress) {
+                        ((ProgressBarProgress) progress).addBytes(length);
+                    }
                     progress.onTick();
                 }
                 finished = !isInterrupted();
@@ -898,7 +1014,7 @@ public class Get extends Task {
             if (verbose)  {
                 final Date t = new Date(remoteTimestamp);
                 log("last modified = " + t.toString()
-                    + ((remoteTimestamp == 0) ? " - using current time instead" : ""), logLevel);
+                        + ((remoteTimestamp == 0) ? " - using current time instead" : ""), logLevel);
             }
             if (remoteTimestamp != 0) {
                 FILE_UTILS.setFileLastModified(dest, remoteTimestamp);
