@@ -701,12 +701,12 @@ public class Get extends Task {
         }
 
         public void printProgressBar(int downloadedBytesPercentage, double downloadSpeed) {
-            int size = 50;
-            String iconLeftBoundary = "[";
-            String iconDownloadedBytes = "=";
-            String iconRemainingBytes = " ";
-            String iconArrow = ">";
-            String iconRightBoundary = "]";
+            final int size = 50;
+            final String iconLeftBoundary = "[";
+            final String iconDownloadedBytes = "=";
+            final String iconRemainingBytes = " ";
+            final String iconArrow = ">";
+            final String iconRightBoundary = "]";
 
             int downloadedBytesLength = size * downloadedBytesPercentage / 100;
 
@@ -727,13 +727,13 @@ public class Get extends Task {
                     + remainingTime(downloadSpeed, downloadedBytes, contentLength)
                     + " | " + readableDownloadSpeed(downloadSpeed);
 
-            int spaces = 0;
+            int spaces = 1;
 
             if (previousLineLength - progressBarLine.length() > 0) {
                 spaces = previousLineLength - progressBarLine.length();
             }
 
-            out.print("\r" + progressBarLine + " ".repeat(spaces));
+            out.print("\r" + progressBarLine + String.format("%" + spaces + "s", ""));
             out.flush();
             previousLineLength = progressBarLine.length();
         }
