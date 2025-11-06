@@ -72,8 +72,7 @@ public class Get extends Task {
 
     private final Resources sources = new Resources();
     private File destination; // required
-    private boolean verbose = false;
-    private boolean progressbar = false;
+    private String verbose = "";
     private boolean quiet = false;
     private boolean useTimestamp = false; //off by default
     private boolean ignoreErrors = false;
@@ -144,11 +143,11 @@ public class Get extends Task {
             //set up logging
             final int logLevel = Project.MSG_INFO;
             DownloadProgress progress = null;
-            if (verbose) {
-                progress = new VerboseProgress(System.out);
-            } else if (progressbar) {
+            if (verbose.equals("true")) {
                 PrintStream rawOut = new PrintStream(new FileOutputStream(FileDescriptor.out), true);
                 progress = new ProgressBarProgress(rawOut);
+            } else if (verbose.equals("dots")) {
+                progress = new VerboseProgress(System.out);
             }
 
             //execute the get
@@ -226,7 +225,7 @@ public class Get extends Task {
         boolean hasTimestamp = false;
         if (useTimestamp && dest.exists()) {
             timestamp = dest.lastModified();
-            if (verbose) {
+            if (!verbose.isEmpty()) {
                 final Date t = new Date(timestamp);
                 log("local file date : " + t.toString(), logLevel);
             }
@@ -343,17 +342,8 @@ public class Get extends Task {
      *
      * @param v if "true" then be verbose
      */
-    public void setVerbose(final boolean v) {
+    public void setVerbose(final String v) {
         verbose = v;
-    }
-
-    /**
-     * If true, show progress bar with download information as percentage.
-     *
-     * @param v if "true" then show progress bar
-     */
-    public void setProgressBar(final boolean v) {
-        progressbar = v;
     }
 
     /**
@@ -1014,7 +1004,7 @@ public class Get extends Task {
 
         private void updateTimeStamp() {
             final long remoteTimestamp = connection.getLastModified();
-            if (verbose)  {
+            if (!verbose.isEmpty())  {
                 final Date t = new Date(remoteTimestamp);
                 log("last modified = " + t.toString()
                     + ((remoteTimestamp == 0) ? " - using current time instead" : ""), logLevel);
