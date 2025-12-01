@@ -844,15 +844,17 @@ public class FTP extends Task implements FTPTaskConfig {
                     throw new BuildException(
                         "could not change working dir to %s", parent.curpwd);
                 }
-                for (String currentPathElement : pathElements) {
+                final int size = pathElements.size();
+                for (int fcount = 0; fcount < size - 1; fcount++) {
+                    String currentPathElement = pathElements.get(fcount);
                     try {
                         if (!this.client
-                            .changeWorkingDirectory(currentPathElement)) {
+                                .changeWorkingDirectory(currentPathElement)) {
                             if (!isCaseSensitive() && (remoteSystemCaseSensitive
-                                || !remoteSensitivityChecked)) {
+                                    || !remoteSensitivityChecked)) {
                                 currentPathElement =
-                                    findPathElementCaseUnsensitive(this.curpwd,
-                                        currentPathElement);
+                                        findPathElementCaseUnsensitive(this.curpwd,
+                                                currentPathElement);
                                 if (currentPathElement == null) {
                                     return;
                                 }
@@ -860,11 +862,11 @@ public class FTP extends Task implements FTPTaskConfig {
                             return;
                         }
                         this.curpwd =
-                            getCurpwdPlusFileSep() + currentPathElement;
+                                getCurpwdPlusFileSep() + currentPathElement;
                     } catch (IOException ioe) {
                         throw new BuildException(
-                            "could not change working dir to %s from %s",
-                            currentPathElement, curpwd);
+                                "could not change working dir to %s from %s",
+                                currentPathElement, curpwd);
                     }
                 }
                 String lastpathelement = pathElements.get(pathElements.size() - 1);
