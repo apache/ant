@@ -18,11 +18,7 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -76,7 +72,7 @@ public class Get extends Task {
 
     private final Resources sources = new Resources();
     private File destination; // required
-    private boolean verbose = false;
+    private String verbose = "";
     private boolean quiet = false;
     private boolean useTimestamp = false; //off by default
     private boolean ignoreErrors = false;
@@ -147,7 +143,10 @@ public class Get extends Task {
             //set up logging
             final int logLevel = Project.MSG_INFO;
             DownloadProgress progress = null;
-            if (verbose) {
+            if (verbose.equals("true")) {
+                PrintStream rawOut = new PrintStream(new FileOutputStream(FileDescriptor.out), true);
+                progress = new ProgressBarProgress(rawOut);
+            } else if (verbose.equals("dots")) {
                 progress = new VerboseProgress(System.out);
             }
 
@@ -226,7 +225,7 @@ public class Get extends Task {
         boolean hasTimestamp = false;
         if (useTimestamp && dest.exists()) {
             timestamp = dest.lastModified();
-            if (verbose) {
+            if (!verbose.isEmpty()) {
                 final Date t = new Date(timestamp);
                 log("local file date : " + t.toString(), logLevel);
             }
@@ -343,7 +342,7 @@ public class Get extends Task {
      *
      * @param v if "true" then be verbose
      */
-    public void setVerbose(final boolean v) {
+    public void setVerbose(final String v) {
         verbose = v;
     }
 
@@ -654,6 +653,108 @@ public class Get extends Task {
         }
     }
 
+    public class ProgressBarProgress implements DownloadProgress {
+        private long contentLength;
+        private long downloadedBytes;
+        private long lastDownloadedBytes;
+        private final PrintStream out;
+        private long lastTime;
+        private int previousLineLength = 0;
+
+        public ProgressBarProgress(PrintStream out) {
+            this.out = out;
+        }
+
+        public void setContentLength(long contentLength) {
+            this.contentLength = contentLength;
+        }
+
+        @Override
+        public void beginDownload() {
+            downloadedBytes = 0;
+            lastDownloadedBytes = 0;
+            lastTime = System.nanoTime();
+        }
+
+        @Override
+        public void onTick() {
+            int downloadedBytesPercentage = (int) ((downloadedBytes * 100) / contentLength);
+            printProgressBar(downloadedBytesPercentage, calculateDownloadSpeed());
+        }
+
+        public double calculateDownloadSpeed() {
+            long bytesSinceLast = downloadedBytes - lastDownloadedBytes;
+            long elapsedTime = System.nanoTime() - lastTime;
+            return (elapsedTime > 0)
+                ? (bytesSinceLast / (elapsedTime / 1_000_000_000.0))
+                : 0.0;
+        }
+
+        public void printProgressBar(int downloadedBytesPercentage, double downloadSpeed) {
+            final int size = 50;
+            final String iconLeftBoundary = "[";
+            final String iconDownloadedBytes = "=";
+            final String iconRemainingBytes = " ";
+            final String iconArrow = ">";
+            final String iconRightBoundary = "]";
+
+            int downloadedBytesLength = size * downloadedBytesPercentage / 100;
+
+            StringBuilder progressBar = new StringBuilder(iconLeftBoundary);
+            for (int i = 0; i < size; i++) {
+                if (i == downloadedBytesLength) {
+                    progressBar.append(iconArrow);
+                } else if (i < downloadedBytesLength) {
+                    progressBar.append(iconDownloadedBytes);
+                } else {
+                    progressBar.append(iconRemainingBytes);
+                }
+            }
+            progressBar.append(iconRightBoundary);
+
+            String progressBarLine = "Downloading..." + progressBar + " "
+                    + downloadedBytesPercentage + "% | "
+                    + remainingTime(downloadSpeed, downloadedBytes, contentLength)
+                    + " | " + readableDownloadSpeed(downloadSpeed);
+
+            int spaces = 1;
+
+            if (previousLineLength - progressBarLine.length() > 0) {
+                spaces = previousLineLength - progressBarLine.length();
+            }
+
+            out.print("\r" + progressBarLine + String.format("%" + spaces + "s", ""));
+            out.flush();
+            previousLineLength = progressBarLine.length();
+        }
+
+        private String readableDownloadSpeed(double downloadSpeed) {
+            int unit = 1024;
+            if (downloadSpeed < unit) {
+                return String.format("%.1f B/S", downloadSpeed);
+            } else {
+                int exponent = (int) (Math.log(downloadSpeed) / Math.log(unit));
+                String pre = "KMG".charAt(exponent - 1) + "";
+                return String.format("%.1f %sB/s", downloadSpeed / Math.pow(unit, exponent), pre);
+            }
+        }
+
+        private String remainingTime(double downloadSpeed, double downloadedBytes, double contentLength) {
+            double remainingTime = (contentLength - downloadedBytes) / downloadSpeed;
+            return String.format("%.0f seconds remaining", remainingTime);
+        }
+
+        @Override
+        public void endDownload() {
+            out.println();
+            out.flush();
+        }
+
+        public void addBytes(long bytes) {
+            downloadedBytes += bytes;
+        }
+    }
+
     private class GetThread extends Thread {
 
         private final URL source;
@@ -867,6 +968,11 @@ public class Get extends Task {
                 is = new GZIPInputStream(is);
             }
 
+            if (progress instanceof ProgressBarProgress) {
+                long contentLength = connection.getContentLengthLong();
+                ((ProgressBarProgress) progress).setContentLength(contentLength);
+            }
+
             os = Files.newOutputStream(dest.toPath());
             progress.beginDownload();
             boolean finished = false;
@@ -875,6 +981,9 @@ public class Get extends Task {
                 int length;
                 while (!isInterrupted() && (length = is.read(buffer)) >= 0) {
                     os.write(buffer, 0, length);
+                    if (progress instanceof ProgressBarProgress) {
+                        ((ProgressBarProgress) progress).addBytes(length);
+                    }
                     progress.onTick();
                 }
                 finished = !isInterrupted();
@@ -895,7 +1004,7 @@ public class Get extends Task {
 
         private void updateTimeStamp() {
             final long remoteTimestamp = connection.getLastModified();
-            if (verbose)  {
+            if (!verbose.isEmpty())  {
                 final Date t = new Date(remoteTimestamp);
                 log("last modified = " + t.toString()
                     + ((remoteTimestamp == 0) ? " - using current time instead" : ""), logLevel);
