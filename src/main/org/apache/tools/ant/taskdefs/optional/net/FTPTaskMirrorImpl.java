@@ -724,7 +724,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                 } catch (IOException ioe) {
                     throw new BuildException("could not change working dir to %s", parent.curpwd);
                 }
-                for (String currentPathElement : pathElements) {
+                final int size = pathElements.size();
+                for (int fcount = 0; fcount < size - 1; fcount++) {
+                    String currentPathElement = pathElements.get(fcount);
                     try {
                         if (!this.client.changeWorkingDirectory(currentPathElement)) {
                             if (!isCaseSensitive() && (remoteSystemCaseSensitive
@@ -743,8 +745,9 @@ public class FTPTaskMirrorImpl implements FTPTaskMirror {
                                 currentPathElement, this.curpwd);
                     }
                 }
-                String lastpathelement = pathElements.get(pathElements.size() - 1);
-                this.ftpFile = getFile(listFiles(this.curpwd), lastpathelement);
+                String lastpathelement = pathElements.get(size - 1);
+                FTPFile[] theFiles = listFiles(this.curpwd);
+                this.ftpFile = getFile(theFiles, lastpathelement);
             }
             /**
              * find a file in a directory in case insensitive way
