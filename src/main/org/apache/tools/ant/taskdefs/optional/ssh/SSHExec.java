@@ -30,6 +30,8 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -74,6 +76,10 @@ public class SSHExec extends SSHBase {
     private boolean appenderr = false;
     private boolean usePty = false;
     private boolean useSystemIn = false;
+    private boolean hideSensitive = false;
+    private String bindSensitive = null;
+    private String sensitiveDelimiter = ";";
+    private String placeholderBrackets = ":";
 
     private Resource commandResource = null;
 
@@ -274,6 +280,67 @@ public class SSHExec extends SSHBase {
     }
 
     /**
+     * If hideSensitive is <code>true</code>, command will be checked for placeholders to replace,
+     * If hideSensitive is <code>false</code>, command will be executed as is,
+     * Prevents from sensitive data appearance in logs
+     * @param hideSensitive boolean
+     */
+    public void setHideSensitive(final boolean hideSensitive) {
+        this.hideSensitive = hideSensitive;
+    }
+
+    /**
+     * Sets the placeholders with sensitive data to replace in command,
+     * Prevents from sensitive data appearance in logs
+     * @param bindSensitive String
+     */
+    public void setBindSensitive(final String bindSensitive) {
+        this.bindSensitive = bindSensitive;
+    }
+
+    /**
+     * Sets the delimiter of sensitive data key values pairs in bindSensitive
+     *
+     * @param sensitiveDelimiter String
+     */
+    public void setSensitiveDelimiter(final String sensitiveDelimiter) {
+        this.sensitiveDelimiter = sensitiveDelimiter;
+    }
+
+    /**
+     * Sets delimiter to find placeholders and replace them
+     *
+     * @param placeholderBrackets String
+     */
+    public void setPlaceholderBrackets(final String placeholderBrackets) {
+        this.placeholderBrackets = placeholderBrackets;
+    }
+
+    /**
+     * Replaces placeholders with sensitive data in command to avoid sensitive data appearance in logs
+     *
+     * @param cmd String
+     * @return String
+     */
+    private String replacePlaceholders(String cmd) {
+        if (hideSensitive && bindSensitive != null) {
+            try {
+                for (String pair : bindSensitive.split(Pattern.quote(sensitiveDelimiter))) {
+                    String[] kv = pair.split("=");
+                    cmd = cmd.replace(placeholderBrackets + kv[0] + placeholderBrackets, kv[1]);
+                }
+            }
+            catch (ArrayIndexOutOfBoundsException e) {
+                log("Requested array index not found: " + e.getMessage());
+            }
+            catch (PatternSyntaxException e) {
+                log("Wrong pattern to split: " + e.getMessage());
+            }
+        }
+        return cmd;
+    }
+
+    /**
      * Execute the command on the remote host.
      *
      * @exception BuildException  Most likely a network error or bad parameter.
@@ -317,6 +384,7 @@ public class SSHExec extends SSHBase {
             /* called once */
             if (command != null) {
                 log("cmd : " + command, Project.MSG_INFO);
+                command = replacePlaceholders(command);
                 executeCommand(session, command, output);
             } else { // read command resource and execute for each command
                 try (final BufferedReader br = new BufferedReader(
@@ -325,6 +393,7 @@ public class SSHExec extends SSHBase {
                     br.lines().forEach(cmd -> {
                         log("cmd : " + cmd, Project.MSG_INFO);
                         output.append(cmd).append(" : ");
+                        cmd = replacePlaceholders(cmd);
                         executeCommand(s, cmd, output);
                         output.append("\n");
                     });
