@@ -43,6 +43,10 @@ Fixed bugs:
  * ant.bat now exits with a non-zero exit code if ANT_HOME is not set.
    Github Pull Request #222
 
+ * A regression in ftp task caused some files to not be downloaded.
+   That has been fixed now.
+   Bugzilla Report 69485
+
 Other changes:
 --------------
 
