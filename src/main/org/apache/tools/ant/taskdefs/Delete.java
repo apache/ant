@@ -63,6 +63,7 @@ import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SizeSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.NtfsJunctionUtils;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
@@ -82,6 +83,7 @@ public class Delete extends MatchingTask {
     private static final ResourceComparator REVERSE_FILESYSTEM = new Reverse(new FileSystem());
     private static final ResourceSelector EXISTS = new Exists();
     private static FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final NtfsJunctionUtils JUNCTION_UTILS = NtfsJunctionUtils.getNtfsJunctionUtils();
 
     private static class ReverseDirs implements ResourceCollection {
 
@@ -114,6 +116,7 @@ public class Delete extends MatchingTask {
 
     // CheckStyle:VisibilityModifier OFF - bc
     protected File file = null;
+    protected File link = null;
     protected File dir = null;
     protected Vector<FileSet> filesets = new Vector<>();
     protected boolean usedMatchingTask = false;
@@ -136,6 +139,16 @@ public class Delete extends MatchingTask {
      */
     public void setFile(File file) {
         this.file = file;
+    }
+
+    /**
+     * Set the name of a single symbolic link or junction to be removed.
+     *
+     * @param file the link to be deleted
+     * @since Ant 1.10.16
+     */
+    public void setLink(File link) {
+        this.link = link;
     }
 
     /**
@@ -588,9 +601,9 @@ public class Delete extends MatchingTask {
                 quiet ? Project.MSG_VERBOSE : verbosity);
         }
 
-        if (file == null && dir == null && filesets.isEmpty() && rcs == null) {
+        if (file == null && link == null && dir == null && filesets.isEmpty() && rcs == null) {
             throw new BuildException(
-                "At least one of the file or dir attributes, or a nested resource collection, must be set.");
+                "At least one of the file, link or dir attributes, or a nested resource collection, must be set.");
         }
 
         if (quiet && failonerror) {
@@ -621,6 +634,22 @@ public class Delete extends MatchingTask {
                 }
             } else {
                 log("Could not find file " + file.getAbsolutePath()
+                    + " to delete.", quiet ? Project.MSG_VERBOSE : verbosity);
+            }
+        }
+
+        // delete the single link
+        if (link != null) {
+            if (link.exists()) {
+                if (Files.isSymbolicLink(link.toPath()) || JUNCTION_UTILS.isDirectoryJunctionSafe(link)) {
+                    log("Deleting: " + link.getAbsolutePath());
+
+                    if (!delete(link)) {
+                        handle("Unable to delete link " + link.getAbsolutePath());
+                    }
+                }
+            } else {
+                log("Could not find link " + link.getAbsolutePath()
                     + " to delete.", quiet ? Project.MSG_VERBOSE : verbosity);
             }
         }

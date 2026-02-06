@@ -60,6 +60,14 @@ Other changes:
    MailLogger property and a new <mail> task attribute.
    Bugzilla Report 69416
 
+ * added a Windows specific <mklink> task that can be used to create
+   hard links, symbolic links and NTFS directory junctions.
+
+ * added <delete link="..."> that can be used delete symbolic links or
+   NTFS directory junctions. For symbolic links this duplicates what
+   <symlink action="delete" ...> does - it has been introduced to
+   handle symlinks and junctions via a single API.
+
 Changes from Ant 1.10.14 TO Ant 1.10.15
 =======================================
 
@@ -540,9 +548,6 @@ Other changes:
 
  * a new property ant.tmpdir provides improved control over the
    location Ant uses to create temporary files
-
- * added a Windows specific <mklink> task that can be used to create
-   hard links, symbolic links and NTFS directory junctions.
 
 Changes from Ant 1.10.6 TO Ant 1.10.7
 =====================================

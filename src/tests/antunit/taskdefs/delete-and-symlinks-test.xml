@@ -28,7 +28,7 @@
   <target name="tearDown" depends="removelink, antunit-base.tearDown"/>
 
   <target name="removelink" if="link">
-    <symlink action="delete" link="${link}"/>
+    <delete link="${link}"/>
   </target>
 
   <target name="setUp" if="unix">

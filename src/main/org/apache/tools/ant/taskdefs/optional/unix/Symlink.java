@@ -71,6 +71,9 @@ import org.apache.tools.ant.types.FileSet;
  * that have been previously recorded for each directory. Finally, it can be
  * used to remove a symlink without deleting the associated resource.</p>
  *
+ * <p>Since Ant 1.10.16 <code>&lt;delete link=...&gt;</code> can be
+ * used as an alterantive to the &quot;delete&quot; action.</p>
+ *
  * <p>Usage examples:</p>
  *
  * <p>Make a link named &quot;foo&quot; to a resource named

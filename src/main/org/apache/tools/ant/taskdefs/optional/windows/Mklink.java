@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 /**
  * Runs <a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/mklink">mklink</a> on Win32 systems.
  *
- * @since Ant 1.10.9
+ * @since Ant 1.10.16
  */
 public class Mklink extends Task {
     private static final String FILE_SYMLINK = "file-symlink";
