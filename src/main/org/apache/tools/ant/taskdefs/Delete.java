@@ -390,11 +390,12 @@ public class Delete extends MatchingTask {
     }
 
     /**
-     * Sets whether the symbolic links that have not been followed
-     * shall be removed (the links, not the locations they point at).
+     * Sets whether the symbolic links or Windows directory junctions
+     * that have not been followed shall be removed (the links, not
+     * the locations they point at).
      *
      * @param b boolean
-     * @since Ant 1.8.0
+     * @since Ant 1.8.0, support for junctions has been added with 1.10.16
      */
     public void setRemoveNotFollowedSymlinks(boolean b) {
         removeNotFollowedSymlinks = b;
@@ -641,7 +642,8 @@ public class Delete extends MatchingTask {
         // delete the single link
         if (link != null) {
             if (link.exists()) {
-                if (Files.isSymbolicLink(link.toPath()) || JUNCTION_UTILS.isDirectoryJunctionSafe(link)) {
+                if (Files.isSymbolicLink(link.toPath())
+                    || JUNCTION_UTILS.isDirectoryJunctionSafe(link)) {
                     log("Deleting: " + link.getAbsolutePath());
 
                     if (!delete(link)) {
@@ -742,8 +744,9 @@ public class Delete extends MatchingTask {
                         Arrays.sort(links, Comparator.reverseOrder());
                         for (String link : links) {
                             final Path filePath = Paths.get(link);
-                            if (!Files.isSymbolicLink(filePath)) {
-                                // it's not a symbolic link, so move on
+                            if (!Files.isSymbolicLink(filePath)
+                                && !JUNCTION_UTILS.isDirectoryJunctionSafe(filePath)) {
+                                // it's not a symbolic link or junction, so move on
                                 continue;
                             }
                             // it's a symbolic link, so delete it
@@ -905,7 +908,7 @@ public class Delete extends MatchingTask {
     }
 
     private boolean isDanglingSymlink(final File f) {
-        if (!Files.isSymbolicLink(f.toPath())) {
+        if (!Files.isSymbolicLink(f.toPath()) && !JUNCTION_UTILS.isDirectoryJunctionSafe(f)) {
             // it's not a symlink, so clearly it's not a dangling one
             return false;
         }

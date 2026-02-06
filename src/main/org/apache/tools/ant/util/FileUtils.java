@@ -19,6 +19,7 @@ package org.apache.tools.ant.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -86,6 +87,9 @@ public class FileUtils {
     private static final boolean ON_DOS = Os.isFamily("dos");
     private static final boolean ON_WIN9X = Os.isFamily("win9x");
     private static final boolean ON_WINDOWS = Os.isFamily("windows");
+
+    private static final boolean CAN_TRUST_GET_CANONICAL_PATH =
+        !ON_WINDOWS || JavaEnvUtils.isAtLeastJavaVersion("24");
 
     static final int BUF_SIZE = 8192;
 
@@ -1990,5 +1994,33 @@ public class FileUtils {
      */
     public String stripLeadingPathSeparator(String path) {
         return startsWithPathSeparator(path) ? path.substring(1) : path;
+    }
+
+    /**
+     * Tries to get the canonical path of a file resolving symbolic
+     * links or Windows directory junctions.
+     *
+     * <p>On any platform other than Windows this simply invokes
+     * {@link File#getCanonicalPath()} - the same is true for Windows
+     * if the current Java VM is at least Java 24.</p>
+     *
+     * <p>Prior to Java 24 <q>getCanonicalPath</q> doesn't resolve
+     * symbolic links or junctions points on Windows, so the code will
+     * use {@link Path#toRealPath} instead - if the file or the file
+     * linked to exists. If the file or the file linked to doesn't
+     * exist the code falls back to {@link File#getCanonicalPath()}
+     * anyway.</p>
+     *
+     * @since Ant 1.10.16
+     */
+    public String getResolvedPath(File f) throws IOException {
+        if (!CAN_TRUST_GET_CANONICAL_PATH) {
+            try {
+                return f.toPath().toRealPath().toString();
+            } catch (FileNotFoundException ex) {
+                // file or link target doesn't exist, fall back to getCanonicalPath
+            }
+        }
+        return f.getCanonicalPath();
     }
 }

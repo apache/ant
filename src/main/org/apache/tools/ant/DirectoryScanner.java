@@ -47,6 +47,7 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.types.selectors.TokenizedPath;
 import org.apache.tools.ant.types.selectors.TokenizedPattern;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.NtfsJunctionUtils;
 import org.apache.tools.ant.util.VectorSet;
 
 /**
@@ -228,6 +229,7 @@ public class DirectoryScanner
 
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final NtfsJunctionUtils JUNCTION_UTILS = NtfsJunctionUtils.getNtfsJunctionUtils();
 
     /**
      * Patterns which should be excluded by default.
@@ -869,7 +871,8 @@ public class DirectoryScanner
                 excludes = nullExcludes ? new String[0] : excludes;
 
                 if (basedir != null && !followSymlinks
-                    && Files.isSymbolicLink(basedir.toPath())) {
+                    && (Files.isSymbolicLink(basedir.toPath())
+                        || JUNCTION_UTILS.isDirectoryJunctionSafe(basedir))) {
                     notFollowedSymlinks.add(basedir.getAbsolutePath());
                     basedir = null;
                 }
@@ -956,7 +959,7 @@ public class DirectoryScanner
             File canonBase = null;
             if (basedir != null) {
                 try {
-                    canonBase = basedir.getCanonicalFile();
+                    canonBase = new File(FILE_UTILS.getResolvedPath(basedir));
                 } catch (final IOException ex) {
                     throw new BuildException(ex);
                 }
@@ -977,9 +980,10 @@ public class DirectoryScanner
                     // we need to double check.
                     try {
                         final String path = (basedir == null)
-                            ? myfile.getCanonicalPath()
-                            : FILE_UTILS.removeLeadingPath(canonBase,
-                                         myfile.getCanonicalFile());
+                            ? FILE_UTILS.getResolvedPath(myfile)
+                            : FILE_UTILS
+                                .removeLeadingPath(canonBase,
+                                                   new File(FILE_UTILS.getResolvedPath(myfile)));
                         if (!path.equals(currentelement) || ON_VMS) {
                             myfile = currentPath.findFile(basedir, true);
                             if (myfile != null && basedir != null) {
@@ -1216,7 +1220,7 @@ public class DirectoryScanner
                 final Path filePath = dir == null
                                         ? Paths.get(newFile)
                                         : dir.toPath().resolve(newFile);
-                if (Files.isSymbolicLink(filePath)) {
+                if (Files.isSymbolicLink(filePath) || JUNCTION_UTILS.isDirectoryJunctionSafe(filePath)) {
                     final String name = vpath + newFile;
                     final File file = new File(dir, newFile);
                     if (file.isDirectory()) {
@@ -1818,11 +1822,11 @@ public class DirectoryScanner
                                     : parent.toPath().resolve(dirName);
             if (directoryNamesFollowed.size() >= maxLevelsOfSymlinks
                 && Collections.frequency(directoryNamesFollowed, dirName) >= maxLevelsOfSymlinks
-                && Files.isSymbolicLink(dirPath)) {
+                && (Files.isSymbolicLink(dirPath) || JUNCTION_UTILS.isDirectoryJunction(dirPath))) {
 
                 final List<String> files = new ArrayList<>();
                 File f = FILE_UTILS.resolveFile(parent, dirName);
-                final String target = f.getCanonicalPath();
+                final String target = FILE_UTILS.getResolvedPath(f);
                 files.add(target);
 
                 StringBuilder relPath = new StringBuilder();
@@ -1830,7 +1834,7 @@ public class DirectoryScanner
                     relPath.append("../");
                     if (dirName.equals(dir)) {
                         f = FILE_UTILS.resolveFile(parent, relPath + dir);
-                        files.add(f.getCanonicalPath());
+                        files.add(FILE_UTILS.getResolvedPath(f));
                         if (files.size() > maxLevelsOfSymlinks
                             && Collections.frequency(files, target) > maxLevelsOfSymlinks) {
                             return true;

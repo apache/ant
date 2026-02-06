@@ -25,12 +25,15 @@ import java.nio.file.Paths;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.NtfsJunctionUtils;
 
 /**
  * Container for a path that has been split into its components.
  * @since 1.8.0
  */
 public class TokenizedPath {
+
+    private static final NtfsJunctionUtils JUNCTION_UTILS = NtfsJunctionUtils.getNtfsJunctionUtils();
 
     /**
      * Instance that holds no tokens at all.
@@ -133,7 +136,7 @@ public class TokenizedPath {
     }
 
     /**
-     * Do we have to traverse a symlink when trying to reach path from
+     * Do we have to traverse a symlink or directory junction when trying to reach path from
      * basedir?
      * @param base base File (dir).
      * @return boolean
@@ -146,7 +149,8 @@ public class TokenizedPath {
             } else {
                 pathToTraverse = Paths.get(base.toPath().toString(), token);
             }
-            if (Files.isSymbolicLink(pathToTraverse)) {
+            if (Files.isSymbolicLink(pathToTraverse)
+                || JUNCTION_UTILS.isDirectoryJunctionSafe(pathToTraverse)) {
                 return true;
             }
             base = new File(base, token);

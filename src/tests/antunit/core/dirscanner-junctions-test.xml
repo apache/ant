@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../antunit-base.xml"/>
+
+  <target name="setUp">
+    <property name="base" location="${input}/base"/>
+    <mkdir dir="${base}"/>
+  </target>
+
+  <target name="checkOs">
+    <condition property="windows"><os family="windows"/></condition>
+  </target>
+
+  <macrodef name="assertDirIsEmpty">
+    <attribute name="dir" default="${output}"/>
+    <sequential>
+      <local name="resources"/>
+      <resourcecount property="resources">
+        <fileset dir="@{dir}"/>
+      </resourcecount>
+      <au:assertEquals expected="0" actual="${resources}"/>
+    </sequential>
+  </macrodef>
+
+  <target name="testJunctionToSiblingFollow"
+          depends="checkOs, setUp, -sibling"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true"/>
+    </copy>
+    <au:assertFileExists file="${output}/B/file.txt"/>
+  </target>
+
+  <target name="testJunctionToSiblingNoFollow"
+          depends="checkOs, setUp, -sibling"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="false"/>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/B/file.txt"/>
+  </target>
+
+  <target name="testBasedirIsJunctionFollow"
+          depends="checkOs, setUp, -basedir-as-junction"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true"/>
+    </copy>
+    <au:assertFileExists file="${output}/file.txt"/>
+  </target>
+
+  <target name="testBasedirIsJunctionNoFollow"
+          depends="checkOs, setUp, -basedir-as-junction"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="false"/>
+    </copy>
+    <au:assertFileDoesntExist file="${output}/file.txt"/>
+  </target>
+
+  <target name="testLinkToParentFollow"
+          depends="checkOs, setUp, -link-to-parent"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="1"/>
+    </copy>
+    <delete link="${base}/A"/>
+    <au:assertFileExists file="${output}/A/B/file.txt"/>
+    <au:assertFileDoesntExist file="${output}/A/base/A/B/file.txt"/>
+  </target>
+
+  <target name="testLinkToParentFollowMax2"
+          depends="checkOs, setUp, -link-to-parent"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="2"/>
+    </copy>
+    <delete link="${base}/A"/>
+    <au:assertFileExists file="${output}/A/B/file.txt"/>
+    <au:assertFileExists file="${output}/A/base/A/B/file.txt"/>
+  </target>
+
+  <target name="testLinkToParentFollowWithInclude"
+          depends="checkOs, setUp, -link-to-parent"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true">
+        <include name="A/B/*"/>
+      </fileset>
+    </copy>
+    <delete link="${base}/A"/>
+    <au:assertFileExists file="${output}/A/B/file.txt"/>
+  </target>
+
+  <!-- supposed to fail? -->
+  <target name="testLinkToParentFollowWithIncludeMultiFollow"
+          depends="checkOs, setUp, -link-to-parent"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true">
+        <include name="A/base/A/B/*"/>
+      </fileset>
+    </copy>
+    <delete link="${base}/A"/>
+    <au:assertFileExists file="${output}/A/base/A/B/file.txt"/>
+  </target>
+
+  <target name="testLinkToParentNoFollow"
+          depends="checkOs, setUp, -link-to-parent"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="false"/>
+    </copy>
+    <delete link="${base}/A"/>
+    <au:assertFileDoesntExist file="${output}/A/B/file.txt"/>
+  </target>
+
+  <target name="testSillyLoopFollow"
+          depends="checkOs, setUp, -silly-loop"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true"/>
+    </copy>
+    <delete link="${base}"/>
+    <assertDirIsEmpty/>
+  </target>
+
+  <target name="testSillyLoopNoFollow"
+          depends="checkOs, setUp, -silly-loop"
+          if="windows">
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="false"/>
+    </copy>
+    <delete link="${base}"/>
+    <au:assertFileDoesntExist file="${output}"/>
+  </target>
+
+  <target name="testRepeatedName"
+          depends="setUp">
+    <mkdir dir="${base}/A/A/A/A"/>
+    <touch file="${base}/A/A/A/A/file.txt"/>
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="1"/>
+    </copy>
+    <au:assertFileExists file="${output}/A/A/A/A/file.txt"/>
+  </target>
+
+  <target name="testRepeatedNameWithLinkButNoLoop"
+          depends="checkOs, setUp"
+          if="windows">
+    <mkdir dir="${base}/A/A/A/B"/>
+    <touch file="${base}/A/A/A/B/file.txt"/>
+    <mklink linktype="junction" link="${base}/A/A/A/A" targetFile="${base}/A/A/A/B"/>
+    <copy todir="${output}">
+      <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="1"/>
+    </copy>
+    <au:assertFileExists file="${output}/A/A/A/A/file.txt"/>
+  </target>
+
+  <target name="-sibling" if="windows">
+    <mkdir dir="${base}/A"/>
+    <touch file="${base}/A/file.txt"/>
+    <mklink linktype="junction" link="${base}/B" targetFile="${base}/A"/>
+  </target>
+
+  <target name="-basedir-as-junction" if="windows">
+    <delete dir="${base}"/>
+    <mkdir dir="${input}/realdir"/>
+    <touch file="${input}/realdir/file.txt"/>
+    <mklink linktype="junction" link="${base}" targetFile="${input}/realdir"/>
+  </target>
+
+  <target name="-link-to-parent" if="windows">
+    <mkdir dir="${input}/B"/>
+    <touch file="${input}/B/file.txt"/>
+    <mklink linktype="junction" link="${base}/A" targetFile="${input}"/>
+  </target>
+
+  <target name="-silly-loop" if="windows">
+    <delete dir="${base}"/>
+    <mklink linktype="junction" link="${base}" targetFile="${input}"/>
+  </target>
+</project>
