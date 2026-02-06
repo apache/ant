@@ -1321,15 +1321,15 @@ public class FileUtils {
      * @return true if path starts with leading; false otherwise.
      * @since Ant 1.10.5
      * @throws IOException if resolveSymlinks is true and invoking
-     * getCanonicaPath on either argument throws an exception
+     * getCanonicaPath/toRealPath on either argument throws an exception
      */
     public boolean isLeadingPath(File leading, File path, boolean resolveSymlinks)
         throws IOException {
         if (!resolveSymlinks) {
             return isLeadingPath(leading, path);
         }
-        final File l = leading.getCanonicalFile();
-        File p = path.getCanonicalFile();
+        final File l = new File(getResolvedPath(leading));
+        File p = new File(getResolvedPath(path));
         do {
             if (l.equals(p)) {
                 return true;
@@ -1436,8 +1436,7 @@ public class FileUtils {
         }
         File f1Normalized = normalize(f1.getAbsolutePath());
         File f2Normalized = normalize(f2.getAbsolutePath());
-        return f1Normalized.getCanonicalFile().equals(f2Normalized
-                                                      .getCanonicalFile());
+        return getResolvedPath(f1Normalized).equals(getResolvedPath(f2Normalized));
     }
 
     /**
@@ -1478,7 +1477,7 @@ public class FileUtils {
     public void rename(File from, File to, boolean keepTargetFilePermissions) throws IOException {
         Set<PosixFilePermission> existingFilePermissions = null;
         // identical logic lives in Move.renameFile():
-        from = normalize(from.getAbsolutePath()).getCanonicalFile();
+        from = new File(getResolvedPath(normalize(from.getAbsolutePath())));
         to = normalize(to.getAbsolutePath());
         if (!from.exists()) {
             System.err.println("Cannot rename nonexistent file " + from);
@@ -1788,12 +1787,14 @@ public class FileUtils {
      * @return the relative path between the files
      * @throws Exception for undocumented reasons
      * @see File#getCanonicalPath()
+     * @see #getResolvedPath
+     * @see Path#toRealPath
      *
      * @since Ant 1.7
      */
     public static String getRelativePath(File fromFile, File toFile) throws Exception { //NOSONAR
-        String fromPath = fromFile.getCanonicalPath();
-        String toPath = toFile.getCanonicalPath();
+        String fromPath = PRIMARY_INSTANCE.getResolvedPath(fromFile);
+        String toPath = PRIMARY_INSTANCE.getResolvedPath(toFile);
 
         // build the path stack info to compare
         String[] fromPathStack = getPathStack(fromPath);

@@ -92,7 +92,7 @@ public class ManifestClassPath extends Task {
                     relPath = FileUtils.getRelativePath(dir, pathEntry);
                 }
 
-                canonicalPath = pathEntry.getCanonicalPath();
+                canonicalPath = fileUtils.getResolvedPath(pathEntry);
                 // getRelativePath always uses '/' as separator, adapt
                 if (File.separatorChar != '/') {
                     canonicalPath =

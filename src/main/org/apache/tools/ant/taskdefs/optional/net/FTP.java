@@ -2069,7 +2069,7 @@ public class FTP extends Task implements FTPTaskConfig {
             // because of race conditions occurring on Windows
             Delete mydelete = new Delete();
             mydelete.bindToOwner(this);
-            mydelete.setFile(tempFile.getCanonicalFile());
+            mydelete.setFile(new File(FILE_UTILS.getResolvedPath(tempFile)));
             mydelete.execute();
         } catch (Exception e) {
             throw new BuildException(e, getLocation());

@@ -362,7 +362,9 @@ public class Move extends Copy {
         if (parent != null && !parent.exists()) {
             parent.mkdirs();
         } else if (destFile.isFile()) {
-            sourceFile = getFileUtils().normalize(sourceFile.getAbsolutePath()).getCanonicalFile();
+            sourceFile = new File(getFileUtils()
+                                  .getResolvedPath(getFileUtils()
+                                                   .normalize(sourceFile.getAbsolutePath())));
             destFile = getFileUtils().normalize(destFile.getAbsolutePath());
             if (destFile.getAbsolutePath().equals(sourceFile.getAbsolutePath())) {
                 //no point in renaming a file to its own canonical version...

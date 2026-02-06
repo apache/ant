@@ -56,6 +56,7 @@ import org.apache.tools.ant.dispatch.DispatchTask;
 import org.apache.tools.ant.dispatch.DispatchUtils;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Creates, Deletes, Records and Restores Symlinks.
@@ -107,6 +108,8 @@ import org.apache.tools.ant.types.FileSet;
  * introduced in Java 7 through the {@link Files} APIs.
  */
 public class Symlink extends DispatchTask {
+
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private String resource;
     private String link;
@@ -210,7 +213,7 @@ public class Symlink extends DispatchTask {
                 final String resource = links.getProperty(link);
                 try {
                     if (Files.isSymbolicLink(Paths.get(link)) &&
-                            new File(link).getCanonicalPath().equals(new File(resource).getCanonicalPath())) {
+                        FILE_UTILS.getResolvedPath(new File(link)).equals(FILE_UTILS.getResolvedPath(new File(resource)))) {
                         // it's already a symlink and the symlink target is the same
                         // as the target noted in the properties file. So there's no
                         // need to recreate it
@@ -265,7 +268,7 @@ public class Symlink extends DispatchTask {
                 // fill up a Properties object with link and resource names:
                 for (File link : linksInDir) {
                     try {
-                        linksToStore.put(link.getName(), link.getCanonicalPath());
+                        linksToStore.put(link.getName(), FILE_UTILS.getResolvedPath(link));
                     } catch (IOException ioe) {
                         handleError("Couldn't get canonical name of parent link");
                     }
@@ -511,7 +514,8 @@ public class Symlink extends DispatchTask {
                             final String name = f.getName();
                             // we use the canonical path of the parent dir in which the (potential)
                             // link resides
-                            final File parentDirCanonicalizedFile = new File(pf.getCanonicalPath(), name);
+                            final File parentDirCanonicalizedFile =
+                                new File(FILE_UTILS.getResolvedPath(pf), name);
                             if (Files.isSymbolicLink(parentDirCanonicalizedFile.toPath())) {
                                 result.add(parentDirCanonicalizedFile);
                             }
@@ -552,7 +556,7 @@ public class Symlink extends DispatchTask {
                 try (InputStream is = new BufferedInputStream(
                     Files.newInputStream(inc.toPath()))) {
                     links.load(is);
-                    pf = pf.getCanonicalFile();
+                    pf = new File(FILE_UTILS.getResolvedPath(pf));
                 } catch (FileNotFoundException fnfe) {
                     handleError("Unable to find " + name + "; skipping it.");
                     continue;

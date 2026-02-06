@@ -331,8 +331,8 @@ public class Expand extends Task {
         }
         File f = fileUtils.resolveFile(dir, mappedNames[0]);
         if (!allowedOutsideOfDest && !fileUtils.isLeadingPath(dir, f, true)) {
-            log("skipping " + entryName + " as its target " + f.getCanonicalPath()
-                + " is outside of " + dir.getCanonicalPath() + ".", Project.MSG_VERBOSE);
+            log("skipping " + entryName + " as its target " + FILE_UTILS.getResolvedPath(f)
+                + " is outside of " + FILE_UTILS.getResolvedPath(dir) + ".", Project.MSG_VERBOSE);
                 return;
         }
 

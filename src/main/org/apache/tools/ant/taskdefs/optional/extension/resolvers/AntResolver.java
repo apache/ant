@@ -25,12 +25,15 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Ant;
 import org.apache.tools.ant.taskdefs.optional.extension.Extension;
 import org.apache.tools.ant.taskdefs.optional.extension.ExtensionResolver;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Resolver that just returns s specified location.
  *
  */
 public class AntResolver implements ExtensionResolver {
+    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+
     private File antfile;
     private File destfile;
     private String target;
@@ -78,7 +81,7 @@ public class AntResolver implements ExtensionResolver {
 
         try {
             final File dir =
-                antfile.getParentFile().getCanonicalFile();
+                new File(FILE_UTILS.getResolvedPath(antfile.getParentFile()));
             ant.setDir(dir);
         } catch (final IOException ioe) {
             throw new BuildException(ioe.getMessage(), ioe);
