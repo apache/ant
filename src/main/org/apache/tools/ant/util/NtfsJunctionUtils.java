@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
@@ -88,6 +89,8 @@ public class NtfsJunctionUtils {
         try {
             return isDirectoryJunction(path);
         } catch (FileNotFoundException ex) {
+            // ignore
+        } catch (NoSuchFileException ex) {
             // ignore
         } catch (IOException ex) {
             System.err.println("Caught IOException " + ex.getMessage() + " while testing for junction.");

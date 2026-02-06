@@ -2019,6 +2019,8 @@ public class FileUtils {
                 return f.toPath().toRealPath().toString();
             } catch (FileNotFoundException ex) {
                 // file or link target doesn't exist, fall back to getCanonicalPath
+            } catch (NoSuchFileException ex) {
+                // file or link target doesn't exist, fall back to getCanonicalPath
             }
         }
         return f.getCanonicalPath();
