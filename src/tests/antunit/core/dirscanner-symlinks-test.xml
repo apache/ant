@@ -24,8 +24,8 @@
     <mkdir dir="${base}"/>
   </target>
 
-  <target name="checkOs">
-    <condition property="unix"><os family="unix"/></condition>
+  <target name="checkCanCreateSymlink">
+    <condition property="canCreateSymlink"><canCreateSymlink/></condition>
   </target>
 
   <macrodef name="assertDirIsEmpty">
@@ -40,8 +40,8 @@
   </macrodef>
 
   <target name="testSymlinkToSiblingFollow"
-          depends="checkOs, setUp, -sibling"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -sibling"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true"/>
     </copy>
@@ -49,8 +49,8 @@
   </target>
 
   <target name="testSymlinkToSiblingNoFollow"
-          depends="checkOs, setUp, -sibling"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -sibling"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="false"/>
     </copy>
@@ -58,8 +58,8 @@
   </target>
 
   <target name="testBasedirIsSymlinkFollow"
-          depends="checkOs, setUp, -basedir-as-symlink"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -basedir-as-symlink"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true"/>
     </copy>
@@ -67,8 +67,8 @@
   </target>
 
   <target name="testBasedirIsSymlinkNoFollow"
-          depends="checkOs, setUp, -basedir-as-symlink"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -basedir-as-symlink"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="false"/>
     </copy>
@@ -76,8 +76,8 @@
   </target>
 
   <target name="testLinkToParentFollow"
-          depends="checkOs, setUp, -link-to-parent"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -link-to-parent"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="1"/>
     </copy>
@@ -87,8 +87,8 @@
   </target>
 
   <target name="testLinkToParentFollowMax2"
-          depends="checkOs, setUp, -link-to-parent"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -link-to-parent"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true" maxLevelsOfSymlinks="2"/>
     </copy>
@@ -98,8 +98,8 @@
   </target>
 
   <target name="testLinkToParentFollowWithInclude"
-          depends="checkOs, setUp, -link-to-parent"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -link-to-parent"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true">
         <include name="A/B/*"/>
@@ -111,8 +111,8 @@
 
   <!-- supposed to fail? -->
   <target name="testLinkToParentFollowWithIncludeMultiFollow"
-          depends="checkOs, setUp, -link-to-parent"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -link-to-parent"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true">
         <include name="A/base/A/B/*"/>
@@ -123,8 +123,8 @@
   </target>
 
   <target name="testLinkToParentNoFollow"
-          depends="checkOs, setUp, -link-to-parent"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -link-to-parent"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="false"/>
     </copy>
@@ -133,8 +133,8 @@
   </target>
 
   <target name="testSillyLoopFollow"
-          depends="checkOs, setUp, -silly-loop"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -silly-loop"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="true"/>
     </copy>
@@ -143,8 +143,8 @@
   </target>
 
   <target name="testSillyLoopNoFollow"
-          depends="checkOs, setUp, -silly-loop"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp, -silly-loop"
+          if="canCreateSymlink">
     <copy todir="${output}">
       <fileset dir="${base}" followsymlinks="false"/>
     </copy>
@@ -163,8 +163,8 @@
   </target>
 
   <target name="testRepeatedNameWithLinkButNoLoop"
-          depends="checkOs, setUp"
-          if="unix">
+          depends="checkCanCreateSymlink, setUp"
+          if="canCreateSymlink">
     <mkdir dir="${base}/A/A/A/B"/>
     <touch file="${base}/A/A/A/B/file.txt"/>
     <symlink link="${base}/A/A/A/A" resource="${base}/A/A/A/B"/>
@@ -174,26 +174,26 @@
     <au:assertFileExists file="${output}/A/A/A/A/file.txt"/>
   </target>
 
-  <target name="-sibling" if="unix">
+  <target name="-sibling" if="canCreateSymlink">
     <mkdir dir="${base}/A"/>
     <touch file="${base}/A/file.txt"/>
     <symlink link="${base}/B" resource="${base}/A"/>
   </target>
 
-  <target name="-basedir-as-symlink" if="unix">
+  <target name="-basedir-as-symlink" if="canCreateSymlink">
     <delete dir="${base}"/>
     <mkdir dir="${input}/realdir"/>
     <touch file="${input}/realdir/file.txt"/>
     <symlink link="${base}" resource="${input}/realdir"/>
   </target>    
 
-  <target name="-link-to-parent" if="unix">
+  <target name="-link-to-parent" if="canCreateSymlink">
     <mkdir dir="${input}/B"/>
     <touch file="${input}/B/file.txt"/>
     <symlink link="${base}/A" resource="${input}"/>
   </target>
 
-  <target name="-silly-loop" if="unix">
+  <target name="-silly-loop" if="canCreateSymlink">
     <delete dir="${base}"/>
     <symlink link="${base}" resource="${input}"/>
   </target>

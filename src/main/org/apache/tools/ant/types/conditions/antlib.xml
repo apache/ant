@@ -38,6 +38,8 @@
            classname="org.apache.tools.ant.taskdefs.condition.And"/>
   <typedef name="antversion" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.AntVersion"/>
+  <typedef name="canCreateSymlink" onerror="ignore"
+           classname="org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink"/>
   <typedef name="contains" onerror="ignore"
            classname="org.apache.tools.ant.taskdefs.condition.Contains"/>
   <typedef name="equals" onerror="ignore"

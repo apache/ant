@@ -41,6 +41,7 @@ import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.ProxySetup;
 import org.apache.tools.ant.util.java15.ProxyDiagnostics;
+import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
 import org.xml.sax.XMLReader;
 
 /**
@@ -319,6 +320,9 @@ public final class Diagnostics {
 
         header(out, "XSLT Processor information");
         doReportXSLTProcessorInfo(out);
+
+        header(out, "Symlinking information");
+        doReportSymlinkInfo(out);
 
         header(out, "System properties");
         doReportSystemProperties(out);
@@ -680,6 +684,18 @@ public final class Diagnostics {
         ProxyDiagnostics proxyDiag = new ProxyDiagnostics();
         out.println("Java1.5+ proxy settings:");
         out.println(proxyDiag.toString());
+    }
+
+    /**
+     * Report abilities around symbolic links.
+     * @param out the stream to print the content to
+     */
+    private static void doReportSymlinkInfo(PrintStream out) {
+        Project p = new Project();
+        p.initProperties();
+        CanCreateSymbolicLink c = new CanCreateSymbolicLink();
+        c.setProject(p);
+        out.println("can create symbolic links: " + c.eval());
     }
 
 }

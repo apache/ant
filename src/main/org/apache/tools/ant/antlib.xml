@@ -35,6 +35,8 @@
   <!-- conditions -->
   <componentdef name="and" onerror="ignore"
        classname="org.apache.tools.ant.taskdefs.condition.And"/>
+  <componentdef name="canCreateSymlink" onerror="ignore"
+       classname="org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink"/>
   <componentdef name="contains" onerror="ignore"
        classname="org.apache.tools.ant.taskdefs.condition.Contains"/>
   <componentdef name="equals" onerror="ignore"

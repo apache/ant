@@ -23,6 +23,12 @@
     <condition property="isWindows">
       <os family="windows" />
     </condition>
+    <condition property="canCreateSymlink">
+      <and>
+        <os family="windows" />
+        <canCreateSymlink/>
+      </and>
+    </condition>
     <mkdir dir="${input}/foo" />
     <touch file="${input}/foo/test"/>
     <mkdir dir="${output}" />
@@ -49,13 +55,13 @@
     <au:assertFileExists file="${output}/bar"/>
   </target>
 
-  <target name="XtestCreateFileSymlink" depends="setUp" if="isWindows">
+  <target name="testCreateFileSymlink" depends="setUp" if="canCreateSymlink">
     <mklink linktype="file-symlink" link="${output}/bar"
             targetFile="${input}/foo/test"/>
     <au:assertFileExists file="${output}/bar"/>
   </target>
 
-  <target name="XtestCreateDirectorySymlink" depends="setUp" if="isWindows">
+  <target name="XtestCreateDirectorySymlink" depends="setUp" if="canCreateSymlink">
     <mklink linktype="dir-symlink" link="${output}/bar"
             targetFile="${input}/foo"/>
     <au:assertFileExists file="${output}/bar/test"/>

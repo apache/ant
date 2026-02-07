@@ -68,6 +68,9 @@ Other changes:
    <symlink action="delete" ...> does - it has been introduced to
    handle symlinks and junctions via a single API.
 
+ * added <canCreateSymlink> condition that evaluates to true if the
+   current Ant process can create symbolic links.
+
 Changes from Ant 1.10.14 TO Ant 1.10.15
 =======================================
 
