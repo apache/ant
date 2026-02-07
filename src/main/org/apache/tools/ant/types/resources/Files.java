@@ -284,7 +284,7 @@ public class Files extends AbstractSelectorContainer
     }
 
     /**
-     * Set whether or not symbolic links should be followed.
+     * Set whether or not symbolic links or Windows junctions should be followed.
      *
      * @param followSymlinks whether or not symbolic links should be followed.
      */

@@ -411,9 +411,9 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * Sets whether or not symbolic links should be followed.
+     * Sets whether or not symbolic links or Windows junctions should be followed.
      *
-     * @param followSymlinks whether or not symbolic links should be followed.
+     * @param followSymlinks whether or not symbolic links or Windows junctions should be followed.
      */
     public synchronized void setFollowSymlinks(boolean followSymlinks) {
         if (isReference()) {
@@ -424,9 +424,9 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * Find out if the fileset wants to follow symbolic links.
+     * Find out if the fileset wants to follow symbolic links or Windows junctions.
      *
-     * @return <code>boolean</code> indicating whether symbolic links
+     * @return <code>boolean</code> indicating whether symbolic links or Windows junctions
      *         should be followed.
      *
      * @since Ant 1.6
@@ -440,7 +440,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * The maximum number of times a symbolic link may be followed
+     * The maximum number of times a symbolic link or Windows junctions may be followed
      * during a scan.
      *
      * @param max int
@@ -451,7 +451,7 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
-     * The maximum number of times a symbolic link may be followed
+     * The maximum number of times a symbolic link or Windows junctions may be followed
      * during a scan.
      *
      * @return int

@@ -313,7 +313,7 @@ public class DirectoryScanner
     protected boolean errorOnMissingDir = true;
 
     /**
-     * Whether or not symbolic links should be followed.
+     * Whether or not symbolic links or Windows junctions should be followed.
      *
      * @since Ant 1.5
      */
@@ -427,7 +427,7 @@ public class DirectoryScanner
     private IllegalStateException illegal = null;
 
     /**
-     * The maximum number of times a symbolic link may be followed
+     * The maximum number of times a symbolic link or Windows junction may be followed
      * during a scan.
      *
      * @since Ant 1.8.0
@@ -436,7 +436,7 @@ public class DirectoryScanner
 
 
     /**
-     * Absolute paths of all symlinks that haven't been followed but
+     * Absolute paths of all symlinks or Windows junctions that haven't been followed but
      * would have been if followsymlinks had been true or
      * maxLevelsOfSymlinks had been higher.
      *
@@ -692,9 +692,9 @@ public class DirectoryScanner
     }
 
     /**
-     * Get whether or not a DirectoryScanner follows symbolic links.
+     * Get whether or not a DirectoryScanner follows symbolic links or Windows junctions.
      *
-     * @return flag indicating whether symbolic links should be followed.
+     * @return flag indicating whether symbolic links or Windows junctions should be followed.
      *
      * @since Ant 1.6
      */
@@ -703,16 +703,16 @@ public class DirectoryScanner
     }
 
     /**
-     * Set whether or not symbolic links should be followed.
+     * Set whether or not symbolic links or Windows junctions should be followed.
      *
-     * @param followSymlinks whether or not symbolic links should be followed.
+     * @param followSymlinks whether or not symbolic links or Windows junctions should be followed.
      */
     public synchronized void setFollowSymlinks(final boolean followSymlinks) {
         this.followSymlinks = followSymlinks;
     }
 
     /**
-     * The maximum number of times a symbolic link may be followed
+     * The maximum number of times a symbolic link or Windows junctions may be followed
      * during a scan.
      *
      * @param max int
@@ -1690,7 +1690,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Absolute paths of all symbolic links that haven't been followed
+     * Absolute paths of all symbolic links or Windows junctions that haven't been followed
      * but would have been followed had followsymlinks been true or
      * maxLevelsOfSymlinks been bigger.
      *
@@ -1805,12 +1805,12 @@ public class DirectoryScanner
 
     /**
      * Would following the given directory cause a loop of symbolic
-     * links deeper than allowed?
+     * links or Windows junctions deeper than allowed?
      *
      * <p>Can only happen if the given directory has been seen at
      * least more often than allowed during the current scan and it is
-     * a symbolic link and enough other occurrences of the same name
-     * higher up are symbolic links that point to the same place.</p>
+     * a symbolic link or Windows junction and enough other occurrences of the same name
+     * higher up are symbolic links or Windows junctions that point to the same place.</p>
      *
      * @since Ant 1.8.0
      */
