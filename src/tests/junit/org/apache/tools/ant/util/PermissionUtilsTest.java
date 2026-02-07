@@ -32,7 +32,9 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.taskdefs.optional.windows.Mklink;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.resources.TarResource;
 import org.apache.tools.ant.types.resources.ZipResource;
@@ -97,11 +99,27 @@ public class PermissionUtilsTest {
 
     @Test
     public void detectsFileTypeOfSymbolicLinkFromPath() throws IOException {
-        if (Os.isFamily("unix")) {
+        if (new CanCreateSymbolicLink().eval()) {
             Path symlink = folder.getRoot().toPath().resolve("link.tst");
             Files.createSymbolicLink(symlink, folder.newFile("ant.tst").toPath());
             assertEquals(PermissionUtils.FileType.SYMLINK,
                          PermissionUtils.FileType.of(symlink));
+        }
+    }
+
+    @Test
+    public void detectsFileTypeOfWindowsJunctionFromPath() throws IOException {
+        if (Os.isFamily("windows")) {
+            Path junction = folder.getRoot().toPath().resolve("link.tst");
+            Mklink task = new Mklink();
+            Mklink.LinkType linkType = new Mklink.LinkType();
+            linkType.setValue("junction");
+            task.setLinkType(linkType);
+            task.setLink(junction.toFile());
+            task.setTargetFile(folder.newFolder("ant.tst"));
+            task.execute();
+            assertEquals(PermissionUtils.FileType.OTHER,
+                         PermissionUtils.FileType.of(junction));
         }
     }
 

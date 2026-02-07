@@ -223,7 +223,7 @@ public class PermissionUtils {
                 Files.readAttributes(p, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
             if (attrs.isRegularFile()) {
                 return FileType.REGULAR_FILE;
-            } else if (attrs.isDirectory()) {
+            } else if (attrs.isDirectory() && !attrs.isOther()) {
                 return FileType.DIR;
             } else if (attrs.isSymbolicLink()) {
                 return FileType.SYMLINK;
