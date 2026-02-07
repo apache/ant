@@ -32,6 +32,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.taskdefs.optional.windows.Mklink;
@@ -112,6 +113,7 @@ public class PermissionUtilsTest {
         if (Os.isFamily("windows")) {
             Path junction = folder.getRoot().toPath().resolve("link.tst");
             Mklink task = new Mklink();
+            task.setProject(new Project());
             Mklink.LinkType linkType = new Mklink.LinkType();
             linkType.setValue("junction");
             task.setLinkType(linkType);
