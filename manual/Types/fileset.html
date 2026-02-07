@@ -87,7 +87,7 @@ makes a FileSet equivalent to an <code>&lt;and&gt;</code> selector container.</p
   </tr>
   <tr>
     <td>followsymlinks</td>
-    <td>Shall symbolic links be followed? See the note <a href="#symlink">below</a>.</td>
+    <td>Shall symbolic links and Windows junctions be followed? See the note <a href="#symlink">below</a>. Windows junctions are detected since Ant 1.10.16.</td>
     <td>No; defaults to <q>true</q></td>
   </tr>
   <tr>
@@ -109,19 +109,28 @@ makes a FileSet equivalent to an <code>&lt;and&gt;</code> selector container.</p
   </tr>
 </table>
 
-<p id="symlink"><strong>Note</strong>: All files/directories for which the canonical path is
+<p id="symlink"><strong>Note</strong>: Prior to Ant 1.10.2 all files/directories for which the canonical path is
 different from its path are considered symbolic links. On Unix systems this usually means the
 file really is a symbolic link but it may lead to false results on other platforms.</p>
 
-<p>Ant is restricted to features that JRE considers portable, and symbolic links is one such feature
-that was long considered non-portable. That has changed with Java 7 and NIO.2, yet full support for
-symbolic links is still lacking (notably, in Zip files). Full support of symbolic links in Ant would
-require a different implementation of FileSet and revision of all tasks and/or types that derive
-from it. Currently, the semantics of <var>followsymlinks</var> in FileSet is such that <q>false</q>
-excludes symbolic links completely, and <q>true</q> allows symbolic links to be considered by
-selectors, which may have their own <var>followsymlinks</var> attributes with proper semantics;
-i.e., <q>false</q> allows selector to inspect properties of a symbolic link itself, and <q>true</q>
-those of its target.
+<p>Starting with Ant 1.10.2 Ant relies
+  on <code><a href="https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#isSymbolicLink-java.nio.file.Path-"
+  target="_blank">Files#isSymbolicLink</a></code> which is supposed to
+  work reliable on all platforms.</p>
+
+<p>Starting with Ant 1.10.16 Ant will also
+  detect <a href="https://learn.microsoft.com/en-us/windows/win32/fileio/hard-links-and-junctions#junctions"
+  target="_blank">Windows junctions</a> and treat them just like
+  symbolic links in most cases.</p>
+
+<p>Full support for symbolic links is still lacking (notably, in Zip
+files). Currently, the semantics of <var>followsymlinks</var> in
+FileSet is such that <q>false</q> excludes symbolic links and Windows
+junctions completely, and <q>true</q> allows symbolic links and
+junctions to be considered by selectors, which may have their
+own <var>followsymlinks</var> attributes with proper semantics;
+i.e., <q>false</q> allows selector to inspect properties of a symbolic
+link or junction itself, and <q>true</q> those of its target.
 </p>
 
 <h4>Examples</h4>

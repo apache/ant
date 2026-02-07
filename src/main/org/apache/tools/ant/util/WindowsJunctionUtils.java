@@ -108,6 +108,7 @@ public class WindowsJunctionUtils {
         if (!ON_WINDOWS) {
             return false;
         }
+        // see Alan Bateman's comment in https://bugs.openjdk.org/browse/JDK-8031083
         BasicFileAttributes attrs =
             Files.readAttributes(path, BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
         return attrs.isDirectory() && attrs.isOther();

@@ -26,6 +26,14 @@ Changes that could break older environments:
    checkServerIdentity.
    Bugzilla Report 69416
 
+ * Ant now recognizes Windows junctions and treats them just like
+   symbolic links in general. With this builds on Windows that use
+   followSymlinks="false" and rely on Ant following Windowss junctions
+   will break. In order to get the old behavior you need to set
+   followSymlinks to true and exclude real symbolic links via the
+   <symlink> selector.
+   Bugzilla Report 66293
+
 Fixed bugs:
 -----------
 
