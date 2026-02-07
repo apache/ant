@@ -71,6 +71,9 @@ Other changes:
  * added <canCreateSymlink> condition that evaluates to true if the
    current Ant process can create symbolic links.
 
+ * added <windowsjunction> file selector which only select directories
+   that are Windows junctions.
+
 Changes from Ant 1.10.14 TO Ant 1.10.15
 =======================================
 

@@ -55,6 +55,7 @@ import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SizeSelector;
 import org.apache.tools.ant.types.selectors.SymlinkSelector;
 import org.apache.tools.ant.types.selectors.TypeSelector;
+import org.apache.tools.ant.types.selectors.WindowsJunctionSelector;
 import org.apache.tools.ant.types.selectors.WritableSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 
@@ -883,6 +884,14 @@ public abstract class AbstractFileSet extends DataType
      */
     public void addPosixPermissions(PosixPermissionsSelector o) {
         appendSelector(o);
+    }
+
+    /**
+     * @param e WindowsJunctionSelector
+     * @since 1.10.16
+     */
+    public void addWindowsJunction(WindowsJunctionSelector e) {
+        appendSelector(e);
     }
 
     /**

@@ -340,6 +340,14 @@ public abstract class AbstractSelectorContainer extends DataType
     }
 
     /**
+     * @param e WindowsJunctionSelector
+     * @since 1.10.16
+     */
+    public void addWindowsJunction(WindowsJunctionSelector e) {
+        appendSelector(e);
+    }
+
+    /**
      * add an arbitrary selector
      * @param selector the selector to add
      * @since Ant 1.6

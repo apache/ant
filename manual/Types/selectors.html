@@ -88,6 +88,8 @@
         files if they have a given POSIX group.</li>
       <li><a href="#posixPermissions"><code>&lt;posixPermissions&gt;</code></a>&mdash;Select
         files if they have given POSIX permissions.</li>
+      <li><a href="#windowsjunction"><code>&lt;windowsjunction&gt;</code></a>&mdash;Select files if they are
+        Windows junctions.</li>
     </ul>
 
     <h4 id="containsselect">Contains Selector</h4>
@@ -997,6 +999,13 @@
         <td>No; defaults to <q>true</q></td>
       </tr>
     </table>
+
+    <h4 id="windowsjunction">Windows Junction Selector</h4>
+
+    <p>The <code>&lt;windowsjunction&gt;</code> selector selects only
+    directories that are Windows junctions.</p>
+
+    <p><em>Since Ant 1.10.16</em></p>
 
     <h4 id="scriptselector">Script Selector</h4>
 

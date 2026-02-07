@@ -19,21 +19,21 @@
 package org.apache.tools.ant.types.selectors;
 
 import java.io.File;
-import java.nio.file.Files;
+import org.apache.tools.ant.util.WindowsJunctionUtils;
 
 /**
- * A selector that selects symbolic links.
+ * A selector that selects Windows junctions.
  *
- * <p>Is defined in terms of {@link
- * java.nio.file.Files#isSymbolicLink}, this means the selector will
- * accept any file that exists and is a symbolic link.</p>
+ * <p>The selector will accept any file that exists and is a Windows junction.</p>
  *
- * @since Ant 1.10.0
+ * @since Ant 1.10.16
  */
-public class SymlinkSelector implements FileSelector {
+public class WindowsJunctionSelector implements FileSelector {
+
+    private static final WindowsJunctionUtils JUNCTION_UTILS = WindowsJunctionUtils.getWindowsJunctionUtils();
 
     public boolean isSelected(File basedir, String filename, File file) {
-        return file != null && Files.isSymbolicLink(file.toPath());
+        return file != null && JUNCTION_UTILS.isJunctionSafe(file);
     }
 
 }

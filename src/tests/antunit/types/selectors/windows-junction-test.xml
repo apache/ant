@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns:au="antlib:org.apache.ant.antunit" default="antunit">
+
+  <import file="../../antunit-base.xml" />
+
+  <property name="dir" value="testdir"/>
+  <property name="link" value="testlink"/>
+
+  <target name="createTestdir">
+    <mkdir dir="${output}/${dir}"/>
+  </target>
+
+  <target name="testWindowsJunction" depends="makeJunction" if="windows_os">
+    <au:assertTrue>
+      <resourcecount when="equal" count="1">
+        <dirset dir="${output}">
+          <windowsJunction/>
+        </dirset>
+      </resourcecount>
+    </au:assertTrue>
+    <au:assertTrue>
+      <resourcecount when="equal" count="0">
+        <dirset dir="${output}" excludes="${link}">
+          <windowsJunction/>
+        </dirset>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="makeJunction" depends="createTestdir" if="windows_os">
+    <mklink linktype="junction"
+        link="${output}/${link}" targetFile="${output}/${dir}"/>
+  </target>
+
+  <target name="testNoWindowsJunction" depends="createTestdir">
+    <au:assertTrue>
+      <resourcecount when="equal" count="0">
+        <dirset dir="${output}">
+          <windowsJunction/>
+        </dirset>
+      </resourcecount>
+    </au:assertTrue>
+  </target>
+
+  <target name="testAsFalseConditions" depends="createTestdir">
+    <au:assertFalse>
+      <isfileselected file="${output}/${link}">
+        <windowsJunction/>
+      </isfileselected>
+    </au:assertFalse>
+  </target>
+
+  <target name="testAsTrueConditions" depends="makeJunction" if="windows_os">
+    <au:assertTrue>
+      <isfileselected file="${output}/${link}">
+        <windowsJunction/>
+      </isfileselected>
+    </au:assertTrue>
+  </target>
+
+</project>

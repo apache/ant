@@ -47,8 +47,8 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.types.selectors.TokenizedPath;
 import org.apache.tools.ant.types.selectors.TokenizedPattern;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.WindowsJunctionUtils;
 import org.apache.tools.ant.util.VectorSet;
+import org.apache.tools.ant.util.WindowsJunctionUtils;
 
 /**
  * Class for scanning a directory for files/directories which match certain
