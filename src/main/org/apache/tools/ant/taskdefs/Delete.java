@@ -63,7 +63,7 @@ import org.apache.tools.ant.types.selectors.SelectSelector;
 import org.apache.tools.ant.types.selectors.SizeSelector;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.NtfsJunctionUtils;
+import org.apache.tools.ant.util.WindowsJunctionUtils;
 
 /**
  * Deletes a file or directory, or set of files defined by a fileset.
@@ -83,7 +83,7 @@ public class Delete extends MatchingTask {
     private static final ResourceComparator REVERSE_FILESYSTEM = new Reverse(new FileSystem());
     private static final ResourceSelector EXISTS = new Exists();
     private static FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final NtfsJunctionUtils JUNCTION_UTILS = NtfsJunctionUtils.getNtfsJunctionUtils();
+    private static final WindowsJunctionUtils JUNCTION_UTILS = WindowsJunctionUtils.getWindowsJunctionUtils();
 
     private static class ReverseDirs implements ResourceCollection {
 
@@ -142,7 +142,7 @@ public class Delete extends MatchingTask {
     }
 
     /**
-     * Set the name of a single symbolic link or junction to be removed.
+     * Set the name of a single symbolic link or windows junction to be removed.
      *
      * @param file the link to be deleted
      * @since Ant 1.10.16
@@ -390,7 +390,7 @@ public class Delete extends MatchingTask {
     }
 
     /**
-     * Sets whether the symbolic links or Windows directory junctions
+     * Sets whether the symbolic links or Windows junctions
      * that have not been followed shall be removed (the links, not
      * the locations they point at).
      *
@@ -643,7 +643,7 @@ public class Delete extends MatchingTask {
         if (link != null) {
             if (link.exists()) {
                 if (Files.isSymbolicLink(link.toPath())
-                    || JUNCTION_UTILS.isDirectoryJunctionSafe(link)) {
+                    || JUNCTION_UTILS.isJunctionSafe(link)) {
                     log("Deleting: " + link.getAbsolutePath());
 
                     if (!delete(link)) {
@@ -745,7 +745,7 @@ public class Delete extends MatchingTask {
                         for (String link : links) {
                             final Path filePath = Paths.get(link);
                             if (!Files.isSymbolicLink(filePath)
-                                && !JUNCTION_UTILS.isDirectoryJunctionSafe(filePath)) {
+                                && !JUNCTION_UTILS.isJunctionSafe(filePath)) {
                                 // it's not a symbolic link or junction, so move on
                                 continue;
                             }
@@ -908,8 +908,8 @@ public class Delete extends MatchingTask {
     }
 
     private boolean isDanglingSymlink(final File f) {
-        if (!Files.isSymbolicLink(f.toPath()) && !JUNCTION_UTILS.isDirectoryJunctionSafe(f)) {
-            // it's not a symlink, so clearly it's not a dangling one
+        if (!Files.isSymbolicLink(f.toPath()) && !JUNCTION_UTILS.isJunctionSafe(f)) {
+            // it's not a symlink or junction, so clearly it's not a dangling one
             return false;
         }
         // it's a symbolic link, now  check the existence of the (target) file (by "following links")

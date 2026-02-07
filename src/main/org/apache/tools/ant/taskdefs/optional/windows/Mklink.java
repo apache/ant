@@ -167,7 +167,7 @@ public class Mklink extends Task {
         } else if (JUNCTION.equals(linkValue)) {
             sb.append("/j ");
             if (targetFile != null && !targetFile.isDirectory()) {
-                throw new BuildException("target of a directory junction must be a directory");
+                throw new BuildException("target of a junction must be a directory");
             }
         } else if (targetFile != null && !targetFile.isFile()) {
             throw new BuildException("target of a file symlink must be a file");

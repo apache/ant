@@ -33,61 +33,61 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  *
  * @since Ant 1.10.16
  */
-public class NtfsJunctionUtils {
+public class WindowsJunctionUtils {
 
     private static final boolean ON_WINDOWS = Os.isFamily("windows");
 
     /**
      * Shared instance.
      */
-    private static final NtfsJunctionUtils PRIMARY_INSTANCE = new NtfsJunctionUtils();
+    private static final WindowsJunctionUtils PRIMARY_INSTANCE = new WindowsJunctionUtils();
 
     /**
-     * Method to retrieve The NtfsJunctionUtils, which is shared by
+     * Method to retrieve The WindowsJunctionUtils, which is shared by
      * all users of this method.
-     * @return an instance of NtfsJunctionUtils.
+     * @return an instance of WindowsJunctionUtils.
      */
-    public static NtfsJunctionUtils getNtfsJunctionUtils() {
+    public static WindowsJunctionUtils getWindowsJunctionUtils() {
         return PRIMARY_INSTANCE;
     }
 
     /**
      * Empty constructor.
      */
-    protected NtfsJunctionUtils() {
+    protected WindowsJunctionUtils() {
     }
 
     /**
-     * Checks whether a given file is a directory junction.
+     * Checks whether a given file is a windows junction.
      *
-     * @return true if the file is a directory junction.
+     * @return true if the file is a windows junction.
      * @throws IOException on error.
      */
-    public boolean isDirectoryJunction(final File file) throws IOException {
-        return isDirectoryJunction(file.toPath());
+    public boolean isJunction(final File file) throws IOException {
+        return isJunction(file.toPath());
     }
 
     /**
-     * Checks whether a given file is a directory junction.
+     * Checks whether a given file is a windows junction.
      *
-     * @return false if the given file is not a directory junction or
+     * @return false if the given file is not a windows junction or
      * an exception occured while trying to check the file - most
      * likely because the file didn't exists.
      */
-    public boolean isDirectoryJunctionSafe(final File file) {
-        return isDirectoryJunctionSafe(file.toPath());
+    public boolean isJunctionSafe(final File file) {
+        return isJunctionSafe(file.toPath());
     }
 
     /**
-     * Checks whether a given path is a directory junction.
+     * Checks whether a given path is a windows junction.
      *
-     * @return false if the given path is not a directory junction or
+     * @return false if the given path is not a junction or
      * an exception occured while trying to check the path - most
      * likely because the path didn't exists.
      */
-    public boolean isDirectoryJunctionSafe(final Path path) {
+    public boolean isJunctionSafe(final Path path) {
         try {
-            return isDirectoryJunction(path);
+            return isJunction(path);
         } catch (FileNotFoundException ex) {
             // ignore
         } catch (NoSuchFileException ex) {
@@ -99,12 +99,12 @@ public class NtfsJunctionUtils {
     }
 
     /**
-     * Checks whether a given path is a directory junction.
+     * Checks whether a given path is a windows junction.
      *
-     * @return true if the path is a directory junction.
+     * @return true if the path is a windows junction.
      * @throws IOException on error.
      */
-    public boolean isDirectoryJunction(final Path path) throws IOException {
+    public boolean isJunction(final Path path) throws IOException {
         if (!ON_WINDOWS) {
             return false;
         }

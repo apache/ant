@@ -61,10 +61,10 @@ Other changes:
    Bugzilla Report 69416
 
  * added a Windows specific <mklink> task that can be used to create
-   hard links, symbolic links and NTFS directory junctions.
+   hard links, symbolic links and junctions.
 
  * added <delete link="..."> that can be used delete symbolic links or
-   NTFS directory junctions. For symbolic links this duplicates what
+   Windows junctions. For symbolic links this duplicates what
    <symlink action="delete" ...> does - it has been introduced to
    handle symlinks and junctions via a single API.
 

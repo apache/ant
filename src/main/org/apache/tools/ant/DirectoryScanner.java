@@ -47,7 +47,7 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.types.selectors.TokenizedPath;
 import org.apache.tools.ant.types.selectors.TokenizedPattern;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.NtfsJunctionUtils;
+import org.apache.tools.ant.util.WindowsJunctionUtils;
 import org.apache.tools.ant.util.VectorSet;
 
 /**
@@ -229,7 +229,7 @@ public class DirectoryScanner
 
     /** Helper. */
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    private static final NtfsJunctionUtils JUNCTION_UTILS = NtfsJunctionUtils.getNtfsJunctionUtils();
+    private static final WindowsJunctionUtils JUNCTION_UTILS = WindowsJunctionUtils.getWindowsJunctionUtils();
 
     /**
      * Patterns which should be excluded by default.
@@ -872,7 +872,7 @@ public class DirectoryScanner
 
                 if (basedir != null && !followSymlinks
                     && (Files.isSymbolicLink(basedir.toPath())
-                        || JUNCTION_UTILS.isDirectoryJunctionSafe(basedir))) {
+                        || JUNCTION_UTILS.isJunctionSafe(basedir))) {
                     notFollowedSymlinks.add(basedir.getAbsolutePath());
                     basedir = null;
                 }
@@ -1220,7 +1220,7 @@ public class DirectoryScanner
                 final Path filePath = dir == null
                                         ? Paths.get(newFile)
                                         : dir.toPath().resolve(newFile);
-                if (Files.isSymbolicLink(filePath) || JUNCTION_UTILS.isDirectoryJunctionSafe(filePath)) {
+                if (Files.isSymbolicLink(filePath) || JUNCTION_UTILS.isJunctionSafe(filePath)) {
                     final String name = vpath + newFile;
                     final File file = new File(dir, newFile);
                     if (file.isDirectory()) {
@@ -1822,7 +1822,7 @@ public class DirectoryScanner
                                     : parent.toPath().resolve(dirName);
             if (directoryNamesFollowed.size() >= maxLevelsOfSymlinks
                 && Collections.frequency(directoryNamesFollowed, dirName) >= maxLevelsOfSymlinks
-                && (Files.isSymbolicLink(dirPath) || JUNCTION_UTILS.isDirectoryJunction(dirPath))) {
+                && (Files.isSymbolicLink(dirPath) || JUNCTION_UTILS.isJunction(dirPath))) {
 
                 final List<String> files = new ArrayList<>();
                 File f = FILE_UTILS.resolveFile(parent, dirName);

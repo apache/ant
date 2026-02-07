@@ -26,7 +26,7 @@
 
 <h2 id="delete">Delete</h2>
 <h3>Description</h3>
-<p>Deletes a single file, a symbolic link or NTFS junction, a specified directory and all its files and subdirectories, or a set of
+<p>Deletes a single file, a symbolic link or Windows junction, a specified directory and all its files and subdirectories, or a set of
 files specified by one or more <a href="../Types/resources.html#collection">resource
 collection</a>s.  The literal implication of <code>&lt;fileset&gt;</code> is that directories are
 not included; however the removal of empty directories can be triggered when using nested filesets
@@ -71,7 +71,7 @@ nested <code>&lt;fileset&gt;</code>.</p>
   </tr>
   <tr>
     <td>link</td>
-    <td>The symbolic link or Windows directory junction to delete,
+    <td>The symbolic link or Windows junction to delete,
       specified as either the simple filename (if the link exists in
       the current base directory), a relative-path filename, or a
       full-path filename.<br/>
@@ -148,8 +148,7 @@ nested <code>&lt;fileset&gt;</code>.</p>
     <td>Whether symbolic links (not the files/directories they link to) should be removed if they
       haven't been followed because <var>followSymlinks</var> was <q>false</q> or the maximum number
       of symbolic links was too big.  <em>Since Ant 1.8.0</em><br/>
-    Since since Ant 1.10.16 this also applies to not followed windows
-      directory junctions.</td>
+    Since since Ant 1.10.16 this also applies to not followed windows junctions.</td>
     <td>No; default <q>false</q></td>
   </tr>
   <tr>

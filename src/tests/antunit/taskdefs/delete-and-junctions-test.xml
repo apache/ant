@@ -21,31 +21,27 @@
 
   <import file="../antunit-base.xml" />
 
-  <condition property="windows">
-    <os family="windows" />
-  </condition>
-
   <target name="tearDown" depends="removelink, antunit-base.tearDown"/>
 
   <target name="removelink" if="link">
     <delete link="${link}"/>
   </target>
 
-  <target name="setUp" if="windows">
+  <target name="setUp" if="windows_os">
     <mkdir dir="${input}/A/B"/>
     <mkdir dir="${input}/C"/>
     <property name="link" location="${input}/A/B/C"/>
     <mklink linktype="junction" link="${link}" targetfile="${input}/C"/>
   </target>
 
-  <target name="testNotFollowedLink" if="windows" depends="setUp">
+  <target name="testNotFollowedLink" if="windows_os" depends="setUp">
     <delete>
       <fileset dir="${input}" followSymlinks="false"/>
     </delete>
     <au:assertFileExists file="${input}/A/B/C"/>
   </target>
 
-  <target name="testRemoveNotFollowedLink" if="windows" depends="setUp">
+  <target name="testRemoveNotFollowedLink" if="windows_os" depends="setUp">
     <delete removeNotFollowedSymlinks="true">
       <fileset dir="${input}/A" followSymlinks="false"/>
     </delete>
@@ -54,7 +50,7 @@
   </target>
 
   <target name="testRemoveNotFollowedLinkDeletesNotIncludedDirs"
-          depends="setUp" if="windows"
+          depends="setUp" if="windows_os"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=53959">
     <delete removeNotFollowedSymlinks="true">
       <fileset dir="${input}/A" followSymlinks="false" includes="**/D"/>
@@ -63,7 +59,7 @@
     <au:assertFileExists file="${input}/C"/>
   </target>
 
-  <target name="testRemoveNotFollowedLinkHonorsExcludes" if="windows"
+  <target name="testRemoveNotFollowedLinkHonorsExcludes" if="windows_os"
           depends="setUp">
     <delete removeNotFollowedSymlinks="true">
       <fileset dir="${input}/A" followSymlinks="false" excludes="**/C/**"/>

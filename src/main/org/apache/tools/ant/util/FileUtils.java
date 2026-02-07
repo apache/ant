@@ -1999,14 +1999,14 @@ public class FileUtils {
 
     /**
      * Tries to get the canonical path of a file resolving symbolic
-     * links or Windows directory junctions.
+     * links or Windows junctions.
      *
      * <p>On any platform other than Windows this simply invokes
      * {@link File#getCanonicalPath()} - the same is true for Windows
      * if the current Java VM is at least Java 24.</p>
      *
      * <p>Prior to Java 24 <q>getCanonicalPath</q> doesn't resolve
-     * symbolic links or junctions points on Windows, so the code will
+     * symbolic links or junctions on Windows, so the code will
      * use {@link Path#toRealPath} instead - if the file or the file
      * linked to exists. If the file or the file linked to doesn't
      * exist the code falls back to {@link File#getCanonicalPath()}
