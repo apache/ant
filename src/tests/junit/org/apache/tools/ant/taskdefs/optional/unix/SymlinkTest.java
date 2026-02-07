@@ -30,7 +30,7 @@
 package org.apache.tools.ant.taskdefs.optional.unix;
 
 import org.apache.tools.ant.BuildFileRule;
-import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.SymbolicLinkUtils;
@@ -67,7 +67,7 @@ public class SymlinkTest {
 
     @Before
     public void setUp() {
-        assumeTrue("Symlinks not supported on current operating system", Os.isFamily("unix"));
+        assumeTrue("Symlinks not supported on current system", new CanCreateSymbolicLink().eval());
         buildRule.configureProject("src/etc/testcases/taskdefs/optional/unix/symlink.xml");
         buildRule.executeTarget("setUp");
     }

@@ -67,13 +67,12 @@
 
   </target>
 
-  <target name="checkOs">
-    <condition property="unix">
-      <os family="unix" />
-    </condition>
+  <target name="checkCanCreateSymlink">
+    <condition property="canCreateSymlink"><canCreateSymlink/></condition>
   </target>
 
-  <target name="testDanglingSymlinkInDir" if="unix" depends="checkOs,init">
+  <target name="testDanglingSymlinkInDir" if="canCreateSymlink"
+          depends="checkCanCreateSymlink,init">
     <touch file="${output}/foo"/>
     <symlink link="${existing.dir}/link"
              resource="${output}/foo"/>
@@ -82,7 +81,8 @@
     <au:assertFileDoesntExist file="${existing.dir}" />
   </target>
 
-  <target name="testDanglingSymlink" if="unix" depends="checkOs,init">
+  <target name="testDanglingSymlink" if="canCreateSymlink"
+          depends="checkCanCreateSymlink,init">
     <touch file="${output}/foo"/>
     <symlink link="${output}/link"
              resource="${output}/foo"/>

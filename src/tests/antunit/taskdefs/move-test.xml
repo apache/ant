@@ -126,9 +126,6 @@
 
   <!-- stolen from ../types/readwrite-test.xml - create a read-only file -->
   <property name="file" value="testfile"/>
-  <condition property="unix">
-    <os family="unix"/>
-  </condition>
   <target name="createTestdir">
     <mkdir dir="${output}"/>
     <mkdir dir="${input}"/>

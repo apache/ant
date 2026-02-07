@@ -22,16 +22,14 @@
   <property name="file" value="testfile"/>
   <property name="link" value="testlink"/>
 
-  <condition property="unix">
-    <os family="unix"/>
-  </condition>
+  <condition property="canCreateSymlink"><canCreateSymlink/></condition>
 
   <target name="createTestdir">
     <mkdir dir="${output}"/>
     <touch file="${output}/${file}"/>
   </target>
 
-  <target name="testSymlink" depends="makeSymlink" if="unix">
+  <target name="testSymlink" depends="makeSymlink" if="canCreateSymlink">
     <au:assertTrue>
       <resourcecount when="equal" count="1">
         <fileset dir="${output}">
@@ -48,13 +46,8 @@
     </au:assertTrue>
   </target>
 
-  <target name="makeSymlink"
-          depends="createTestdir,makeSymlink-Unix,makeSymlink-Windows"/>
-  <target name="makeSymlink-Unix" if="unix">
+  <target name="makeSymlink" depends="createTestdir" if="canCreateSymlink">
     <symlink link="${output}/${link}" resource="${output}/${file}"/>
-  </target>
-  <target name="makeSymlink-Windows" unless="unix">
-    <!-- no idea how to do this -->
   </target>
 
   <target name="testNoSymlink" depends="createTestdir">
@@ -75,7 +68,7 @@
     </au:assertFalse>
   </target>
 
-  <target name="testAsTrueConditions" depends="makeSymlink" if="unix">
+  <target name="testAsTrueConditions" depends="makeSymlink" if="canCreateSymlink">
     <au:assertTrue>
       <isfileselected file="${output}/${link}">
         <symlink/>

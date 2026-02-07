@@ -21,7 +21,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.FileUtilities;
-import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
 import org.apache.tools.ant.util.FileUtils;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -275,7 +275,7 @@ public class CopyTest {
     @Test
     public void testCopyToSymlinkedSelf() throws Exception {
         // we are only going to test against systems that support symlinks
-        assumeTrue("Symlinks not supported on this operating system", Os.isFamily(Os.FAMILY_UNIX));
+        assumeTrue("Symlinks not supported on current system", new CanCreateSymbolicLink().eval());
 
         // setup the source files to run copying against
         buildRule.executeTarget("setupSelfCopyTesting");

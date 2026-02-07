@@ -20,9 +20,12 @@
   <import file="../../../antunit-base.xml"/>
 
   <target name="setUp">
-    <condition property="isUnix">
-      <os family="unix" />
-    </condition>
+    <condition property="canCreateSymlink"><canCreateSymlink/></condition>
+    <mkdir dir="${output}" />
+    <property name="file_ref"
+      location="${output}/file"/>
+    <property name="hanging_ref"
+        location="${output}/hanging_ref"/>
   </target>
 
   <target name="tearDown" depends="antunit-base.tearDown"
@@ -31,23 +34,11 @@
     <delete dir="${chmod.tmp}"/>
   </target>
 
-  <target name="os">
-
-    <mkdir dir="${output}" />
-    <condition property="unix">
-      <os family="unix" />
-    </condition>
-    <property name="file_ref"
-      location="${output}/file"/>
-    <property name="hanging_ref"
-        location="${output}/hanging_ref"/>
-  </target>
-
-  <target name="init" depends="os" if="unix">
+  <target name="init" depends="setUp" if="canCreateSymlink">
     <touch file="${file_ref}" />
   </target>
 
-  <target name="testCreateDouble" depends="init" if="unix">
+  <target name="testCreateDouble" depends="init" if="canCreateSymlink">
     <symlink overwrite="true" link="${output}/link"
         resource="${file_ref}"/>
     <symlink overwrite="true" link="${output}/link"
@@ -55,34 +46,34 @@
   </target>
 
 
-  <target name="testCreateDoubleHanging" depends="init" if="unix">
+  <target name="testCreateDoubleHanging" depends="init" if="canCreateSymlink">
     <symlink overwrite="true" link="${output}/link2"
         resource="${hanging_ref}"/>
     <symlink overwrite="true" link="${output}/link2"
         resource="${hanging_ref}"/>
   </target>
 
-  <target name="testCreateOverFile" depends="init" if="unix">
+  <target name="testCreateOverFile" depends="init" if="canCreateSymlink">
     <touch file="${output}/link3" />
     <symlink overwrite="true" link="${output}/link3"
         resource="${file_ref}"/>
   </target>
 
-  <target name="testDeleteOfBrokenLink" depends="init" if="unix">
+  <target name="testDeleteOfBrokenLink" depends="init" if="canCreateSymlink">
     <symlink link="${output}/link" resource="${file_ref}"/>
     <delete file="${file_ref}"/>
     <symlink link="${output}/link" action="delete"/>
     <au:assertFileDoesntExist file="${output}/link"/>
   </target>
 
-  <target name="testDeleteLinkToParent" depends="init" if="unix">
+  <target name="testDeleteLinkToParent" depends="init" if="canCreateSymlink">
     <symlink link="${output}/link" resource="${output}"/>
     <symlink link="${output}/link" action="delete"/>
     <au:assertFileDoesntExist file="${output}/link"/>
   </target>
 
   <target name="testDeleteWithNoPermissionToRenameTarget"
-          depends="init" if="unix">
+          depends="init" if="canCreateSymlink">
     <!-- must be outside of ${output} or "base" tearDown will fail -->
     <property name="chmod.tmp" location="${output}/../ant-symlink-test"/>
     <mkdir dir="${chmod.tmp}/A"/>
@@ -92,7 +83,7 @@
     <au:assertFileDoesntExist file="${output}/link"/>
   </target>
 
-  <target name="testDeleteLinkInSameDirAsBuildFile" depends="setUp" if="isUnix"
+  <target name="testDeleteLinkInSameDirAsBuildFile" depends="setUp" if="canCreateSymlink"
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=49137">
     <mkdir dir="${output}/Templates"/>
     <mkdir dir="${output}/project1"/>

@@ -23,10 +23,6 @@
   <property name="dir" location="testdir"/>
   <property name="file" value="testfile"/>
 
-  <condition property="unix">
-    <os family="unix"/>
-  </condition>
-
   <target name="createTestdir">
     <mkdir dir="${output}"/>
     <touch file="${output}/${file}"/>

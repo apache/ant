@@ -37,7 +37,7 @@ import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.RetryHandler;
 import org.apache.tools.ant.util.Retryable;
@@ -54,8 +54,7 @@ public class FTPTest {
     @Rule
     public BuildFileRule buildRule = new BuildFileRule();
 
-    // keep track of what operating systems are supported here.
-    private boolean supportsSymlinks = Os.isFamily("unix");
+    private boolean supportsSymlinks = new CanCreateSymbolicLink().eval();
 
     private FTPClient ftp;
 
