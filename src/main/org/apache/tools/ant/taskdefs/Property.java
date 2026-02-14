@@ -527,11 +527,11 @@ public class Property extends Task {
         if (name != null && untypedValue != null) {
             if (relative) {
                 try {
-                    File from =
+                    File target =
                         untypedValue instanceof File ? (File) untypedValue
                             : new File(untypedValue.toString());
-                    File to = basedir != null ? basedir : getProject().getBaseDir();
-                    String relPath = FileUtils.getRelativePath(to, from);
+                    File source = basedir != null ? basedir : getProject().getBaseDir();
+                    String relPath = FileUtils.getRelativePath(source, target);
                     relPath = relPath.replace('/', File.separatorChar);
                     addProperty(name, relPath);
                 } catch (Exception e) {
