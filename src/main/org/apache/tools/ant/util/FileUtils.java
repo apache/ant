@@ -46,6 +46,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -88,8 +89,12 @@ public class FileUtils {
     private static final boolean ON_WIN9X = Os.isFamily("win9x");
     private static final boolean ON_WINDOWS = Os.isFamily("windows");
 
+    // see https://bugs.openjdk.org/browse/JDK-8003887
     private static final boolean CAN_TRUST_GET_CANONICAL_PATH =
         !ON_WINDOWS || JavaEnvUtils.isAtLeastJavaVersion("24");
+    // bug report opened with OpenJDK but hasn't been published, yet
+    private static final boolean CAN_TRUST_GET_CANONICAL_PATH_FOR_NOT_EXISTING_FILES =
+        !ON_WINDOWS;
 
     static final int BUF_SIZE = 8192;
 
@@ -2015,15 +2020,30 @@ public class FileUtils {
      * @since Ant 1.10.16
      */
     public String getResolvedPath(File f) throws IOException {
-        if (!CAN_TRUST_GET_CANONICAL_PATH) {
-            try {
-                return f.toPath().toRealPath().toString();
-            } catch (FileNotFoundException ex) {
-                // file or link target doesn't exist, fall back to getCanonicalPath
-            } catch (NoSuchFileException ex) {
-                // file or link target doesn't exist, fall back to getCanonicalPath
-            }
+        if (CAN_TRUST_GET_CANONICAL_PATH_FOR_NOT_EXISTING_FILES
+            || (CAN_TRUST_GET_CANONICAL_PATH && f.exists())) {
+            return f.getCanonicalPath();
         }
+        if (f.exists()) {
+            return f.toPath().toRealPath().toString();
+        }
+        LinkedList<String> trailer = new LinkedList<>();
+        trailer.push(f.getName());
+        File parent = f.getParentFile();
+        while (parent != null) {
+            if (parent.exists()) {
+                String resolvedParent = getResolvedPath(parent);
+                String[] parentStack = getPathStack(resolvedParent);
+                List<String> rebuilt =
+                    new ArrayList<String>(Arrays.asList(parentStack));
+                rebuilt.addAll(trailer);
+                return getPath(rebuilt, File.separatorChar);
+            }
+            trailer.push(parent.getName());
+            parent = parent.getParentFile();
+        }
+        // reached root of file system without ever encountering
+        // an existing directory. Giving up.
         return f.getCanonicalPath();
     }
 }

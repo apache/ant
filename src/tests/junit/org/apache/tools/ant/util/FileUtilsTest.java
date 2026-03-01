@@ -35,6 +35,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.MagicTestNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Os;
+import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
+import org.apache.tools.ant.taskdefs.optional.windows.Mklink;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -69,6 +71,8 @@ public class FileUtilsTest {
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+
+    private static final boolean CAN_CREATE_SYMLINKS = new CanCreateSymbolicLink().eval();
 
     private static final String ROOT = System.getProperty(MagicTestNames.TEST_ROOT_DIRECTORY);
     private String root;
@@ -879,6 +883,92 @@ public class FileUtilsTest {
         assertEquals("file:/foo", getFileUtils().stripLeadingPathSeparator("file:/foo"));
     }
 
+    @Test
+    public void getResolvedPathWorksForNormalFilesThatExist() throws IOException {
+        File f = folder.newFile();
+        String resolvedPath = getFileUtils().getResolvedPath(f);
+        assertEquals(f.getAbsolutePath(), resolvedPath);
+    }
+
+    @Test
+    public void getResolvedPathWorksForNormalFilesThatDoesntExist() throws IOException {
+        File missingDir = new File(folder.getRoot(), "foo");
+        File f = new File(missingDir, "foo");
+        String resolvedPath = getFileUtils().getResolvedPath(f);
+        assertEquals(f.getAbsolutePath(), resolvedPath);
+    }
+
+    @Test
+    public void getResolvedPathWorksForSymlinksThatExist() throws IOException {
+        assumeTrue("setup doesn't support creation of symbolic links",
+                   CAN_CREATE_SYMLINKS);
+        File existingDir = folder.newFolder();
+        File f = new File(folder.getRoot(), "foo");
+        Files.createSymbolicLink(f.toPath(), existingDir.toPath());
+        String resolvedPath = getFileUtils().getResolvedPath(f);
+        assertEquals(existingDir.getAbsolutePath(), resolvedPath);
+    }
+
+    @Test
+    public void getResolvedPathDoesntResolveDanglingSymlinks() throws IOException {
+        assumeTrue("setup doesn't support creation of symbolic links",
+                   CAN_CREATE_SYMLINKS);
+        File missingDir = new File(folder.getRoot(), "foo");
+        File f = new File(folder.getRoot(), "bar");
+        Files.createSymbolicLink(f.toPath(), missingDir.toPath());
+        String resolvedPath = getFileUtils().getResolvedPath(f);
+        assertEquals(f.getAbsolutePath(), resolvedPath);
+    }
+
+    @Test
+    public void getResolvedPathWorksForNotExistingFilesInExistingSymlinkDirectories() throws IOException {
+        assumeTrue("setup doesn't support creation of symbolic links",
+                   CAN_CREATE_SYMLINKS);
+        File existingDir = folder.newFolder();
+        File link = new File(folder.getRoot(), "foo");
+        Files.createSymbolicLink(link.toPath(), existingDir.toPath());
+        File level2 = new File(link, "bar");
+        File f = new File(level2, "baz");
+        String resolvedPath = getFileUtils().getResolvedPath(f);
+        assertEquals(new File(new File(existingDir, "bar"), "baz").getAbsolutePath(), resolvedPath);
+    }
+
+    @Test
+    public void getResolvedPathWorksForJunctionsThatExist() throws IOException {
+        assumeTrue("setup doesn't support creation of windows NTFS junctions",
+                   Os.isFamily("windows"));
+        File existingDir = folder.newFolder();
+        File f = new File(folder.getRoot(), "foo");
+        createJunction(f, existingDir);
+        String resolvedPath = getFileUtils().getResolvedPath(f);
+        assertEquals(existingDir.getAbsolutePath(), resolvedPath);
+    }
+
+    @Test
+    public void getResolvedPathDoesntResolveDanglingJunctions() throws IOException {
+        assumeTrue("setup doesn't support creation of windows NTFS junctions",
+                   Os.isFamily("windows"));
+        File missingDir = folder.newFolder();
+        File f = new File(folder.getRoot(), "bar");
+        createJunction(f, missingDir);
+        assertTrue("failed to delete target directory", missingDir.delete());
+        String resolvedPath = getFileUtils().getResolvedPath(f);
+        assertEquals(f.getAbsolutePath(), resolvedPath);
+    }
+
+    @Test
+    public void getResolvedPathWorksForNotExistingFilesInExistingJunctionDirectories() throws IOException {
+        assumeTrue("setup doesn't support creation of windows NTFS junctions",
+                   Os.isFamily("windows"));
+        File existingDir = folder.newFolder();
+        File link = new File(folder.getRoot(), "foo");
+        createJunction(link, existingDir);
+        File level2 = new File(link, "bar");
+        File f = new File(level2, "baz");
+        String resolvedPath = getFileUtils().getResolvedPath(f);
+        assertEquals(new File(new File(existingDir, "bar"), "baz").getAbsolutePath(), resolvedPath);
+    }
+
     /**
      * adapt file separators to local conventions
      */
@@ -904,5 +994,16 @@ public class FileUtilsTest {
         } else {
             assertEquals(s1, s2);
         }
+    }
+
+    private static void createJunction(File junction, File junctionTarget) {
+        Mklink mklink = new Mklink();
+        mklink.setProject(new Project());
+        mklink.setLink(junction);
+        mklink.setTargetFile(junctionTarget);
+        Mklink.LinkType linkType = new Mklink.LinkType();
+        linkType.setValue("junction");
+        mklink.setLinkType(linkType);
+        mklink.execute();
     }
 }
