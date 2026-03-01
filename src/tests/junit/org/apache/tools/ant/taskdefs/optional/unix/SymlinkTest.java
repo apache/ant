@@ -30,10 +30,12 @@
 package org.apache.tools.ant.taskdefs.optional.unix;
 
 import org.apache.tools.ant.BuildFileRule;
-import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
 
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.SymbolicLinkUtils;
+import org.apache.tools.ant.taskdefs.condition.CanCreateSymbolicLink;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -176,6 +178,9 @@ public class SymlinkTest {
     @Test
     public void testSymbolicLinkUtilsMethods() throws Exception {
 
+        assumeTrue("can't trust getCanonicalPath, but SymbolicLinkUtils does",
+                   !Os.isFamily("windows")
+                   || JavaEnvUtils.isAtLeastJavaVersion("24"));
         buildRule.executeTarget("test-fileutils");
         SymbolicLinkUtils su = SymbolicLinkUtils.getSymbolicLinkUtils();
 
