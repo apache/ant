@@ -887,7 +887,7 @@ public class FileUtilsTest {
     public void getResolvedPathWorksForNormalFilesThatExist() throws IOException {
         File f = folder.newFile();
         String resolvedPath = getFileUtils().getResolvedPath(f);
-        assertEquals(f.getAbsolutePath(), resolvedPath);
+        assertEqualsIgnoreDriveCaseGeneric(f.getAbsolutePath(), resolvedPath);
     }
 
     @Test
@@ -895,7 +895,7 @@ public class FileUtilsTest {
         File missingDir = new File(folder.getRoot(), "foo");
         File f = new File(missingDir, "foo");
         String resolvedPath = getFileUtils().getResolvedPath(f);
-        assertEquals(f.getAbsolutePath(), resolvedPath);
+        assertEqualsIgnoreDriveCaseGeneric(f.getAbsolutePath(), resolvedPath);
     }
 
     @Test
@@ -906,7 +906,7 @@ public class FileUtilsTest {
         File f = new File(folder.getRoot(), "foo");
         Files.createSymbolicLink(f.toPath(), existingDir.toPath());
         String resolvedPath = getFileUtils().getResolvedPath(f);
-        assertEquals(existingDir.getAbsolutePath(), resolvedPath);
+        assertEqualsIgnoreDriveCaseGeneric(existingDir.getAbsolutePath(), resolvedPath);
     }
 
     @Test
@@ -917,7 +917,7 @@ public class FileUtilsTest {
         File f = new File(folder.getRoot(), "bar");
         Files.createSymbolicLink(f.toPath(), missingDir.toPath());
         String resolvedPath = getFileUtils().getResolvedPath(f);
-        assertEquals(f.getAbsolutePath(), resolvedPath);
+        assertEqualsIgnoreDriveCaseGeneric(f.getAbsolutePath(), resolvedPath);
     }
 
     @Test
@@ -930,7 +930,8 @@ public class FileUtilsTest {
         File level2 = new File(link, "bar");
         File f = new File(level2, "baz");
         String resolvedPath = getFileUtils().getResolvedPath(f);
-        assertEquals(new File(new File(existingDir, "bar"), "baz").getAbsolutePath(), resolvedPath);
+        assertEqualsIgnoreDriveCaseGeneric(new File(new File(existingDir, "bar"), "baz").getAbsolutePath(),
+                                           resolvedPath);
     }
 
     @Test
@@ -941,7 +942,7 @@ public class FileUtilsTest {
         File f = new File(folder.getRoot(), "foo");
         createJunction(f, existingDir);
         String resolvedPath = getFileUtils().getResolvedPath(f);
-        assertEquals(existingDir.getAbsolutePath(), resolvedPath);
+        assertEqualsIgnoreDriveCaseGeneric(existingDir.getAbsolutePath(), resolvedPath);
     }
 
     @Test
@@ -953,7 +954,7 @@ public class FileUtilsTest {
         createJunction(f, missingDir);
         assertTrue("failed to delete target directory", missingDir.delete());
         String resolvedPath = getFileUtils().getResolvedPath(f);
-        assertEquals(f.getAbsolutePath(), resolvedPath);
+        assertEqualsIgnoreDriveCaseGeneric(f.getAbsolutePath(), resolvedPath);
     }
 
     @Test
@@ -966,7 +967,8 @@ public class FileUtilsTest {
         File level2 = new File(link, "bar");
         File f = new File(level2, "baz");
         String resolvedPath = getFileUtils().getResolvedPath(f);
-        assertEquals(new File(new File(existingDir, "bar"), "baz").getAbsolutePath(), resolvedPath);
+        assertEqualsIgnoreDriveCaseGeneric(new File(new File(existingDir, "bar"), "baz").getAbsolutePath(),
+                                           resolvedPath);
     }
 
     /**
@@ -991,6 +993,14 @@ public class FileUtilsTest {
             sb1.setCharAt(0, Character.toUpperCase(s1.charAt(0)));
             sb2.setCharAt(0, Character.toUpperCase(s2.charAt(0)));
             assertEquals(sb1.toString(), sb2.toString());
+        } else {
+            assertEquals(s1, s2);
+        }
+    }
+
+    private void assertEqualsIgnoreDriveCaseGeneric(String s1, String s2) {
+        if (Os.isFamily("dos") || Os.isFamily("netware")) {
+            assertEqualsIgnoreDriveCase(s1, s2);
         } else {
             assertEquals(s1, s2);
         }
