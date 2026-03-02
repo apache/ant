@@ -92,7 +92,7 @@ public class FileUtils {
     // see https://bugs.openjdk.org/browse/JDK-8003887
     private static final boolean CAN_TRUST_GET_CANONICAL_PATH =
         !ON_WINDOWS || JavaEnvUtils.isAtLeastJavaVersion("24");
-    // bug report opened with OpenJDK but hasn't been published, yet
+    // see https://bugs.java/bugdatabase/JDK-8378947
     private static final boolean CAN_TRUST_GET_CANONICAL_PATH_FOR_NOT_EXISTING_FILES =
         !ON_WINDOWS;
 
