@@ -1148,12 +1148,43 @@ The new test class `CarolExecuteOnTest` was designed to be a functional verifica
   ![](Image/DeleteTDTestReport.png)
 
 
+  ## **1.2 Case Study: Subclass-Based Stubbing in Process Execution - (Author: Chien-Tzu Yeh)**
+
+
+  ### **Implementation Overview**
+  In the Apache Ant codebase, testing components that interact with the underlying operating system poses a significant challenge. To address this, the test suite utilizes a manual subclass-based stubbing pattern. Specifically, within [JUnitTaskTest.java](https://github.com/J-ihsuan/Ant-Testing-Frameworks-and-Debugging-Practices/blob/master/src/tests/junit/org/apache/tools/ant/taskdefs/optional/junit/JUnitTaskTest.java), the system implements a [`MockProcess`](https://github.com/J-ihsuan/Ant-Testing-Frameworks-and-Debugging-Practices/blob/156b65ff3a32e2347900af1c42aa5694a5cc7a03/src/tests/junit/org/apache/tools/ant/taskdefs/optional/junit/JUnitTaskTest.java#L627-L657) class that extends the abstract `java.lang.Process` class.
+
+  Instead of spawning actual OS-level processes, the overridden methods in `MockProcess` (such as `getInputStream()`, `waitFor()`, and `exitValue()`) act as test stubs by returning hardcoded, deterministic dummy data or empty streams. This stub is then injected into a `MockCommandLauncher` to fake the execution lifecycle.
+
+  ### **Design Rationale**
+  This stubbing approach was adopted to fulfill several key testable design goals:
+  - **Controllability & Determinism:** The \<junit> task relies on forking new JVM processes. By utilizing `MockProcess`, developers can programmatically dictate the exact behavior of the spawned process (e.g., forcing a specific exit code) to verify how the `JUnitTask` handles various edge cases.
+
+  - **Performance & Environment Isolation:** Spawning real OS processes during automated unit tests is resource-intensive and platform-dependent (tests might pass on Linux but fail on Windows). The stub decouples the test from the physical OS environment, ensuring the test executes instantaneously in memory without side effects.
+
+  ## **1.3 Implementation: Stubbing the InputHandler Interface - (Author: Chien-Tzu Yeh)**
+  ### **Target Selection & Motivation**
+  To demonstrate testable design through stubbing, I targeted the [`Input`](https://github.com/J-ihsuan/Ant-Testing-Frameworks-and-Debugging-Practices/blob/master/src/main/org/apache/tools/ant/taskdefs/Input.java) task, which is responsible for prompting users for terminal input during build execution. From an architectural perspective, this class depends on an `InputHandler` that defaults to a standard console interaction. This design creates a testing bottleneck: testing this task directly is problematic because the default handler inherently blocks the execution thread indefinitely while waiting for a physical keyboard input signal. This makes it fundamentally incompatible with automated, headless CI/CD environments. To restore testability, I implemented an interface-based stub to decouple the task from this blocking console dependency.
+
+  ### **Stub Implementation**
+  I implemented a custom test stub named `StubInputHandler` that implements the `org.apache.tools.ant.input.InputHandler` interface. Instead of delegating to standard I/O streams, I overrode the handleInput(InputRequest request) method to instantly inject a hardcoded string response into the request object.
+
+  ### **Test Case Execution**
+  I created a new test case, `testInputTaskUsesStubbedHandler()`, within a new test suite. In this test, I instantiated the `Input` task and deliberately replaced the project's default input handler with my `StubInputHandler` (initialized with the dummy response `"yes"`).
+
+  When `inputTask.execute()` is called, it triggers the stubbed method rather than the real blocking method. The test then successfully asserts that the Ant project property was updated with the stubbed value, proving that the task's internal assignment logic works correctly in complete isolation from the physical console.
+
+ ### **Test Execution Result**
+ ![InputTaskStubTest](Image/InputTaskStubTest_success.png)
+
   ## **2. Mocking**
 
   ## **Enviroment Set Up**
   1. Downloaded the **mockito-core and 3 dependencies** via **[here](https://central.sonatype.com/artifact/org.mockito/mockito-core)**.
 
   2. Placed `mockito-core-5.21.0.jar`, `byte-buddy-1.17.7.jar`, `byte-buddy-agent-1.17.7.jar` and `objenesis-3.3.jar` into `lib/optional`.
+
+
 
   ## **2.1 Mocking - Single File Deletion (Author: Eleanor)**
 
