@@ -231,23 +231,23 @@ JSCh earlier than 0.1.28.</p>
   <tr>
     <td>hideSensitive</td>
     <td>Allows to hide sensitive data in logs without output supressing. It makes easier debugging
-      with sensitive data hiding.
+      with sensitive data hiding. <em>since Ant 1.10.16</em>
     </td>
     <td>No; defaults to <q>false</q></td>
   </tr>
   <tr>
     <td>bindSensitive</td>
-    <td>Contains string with key=values pairs are divided by <var>sensitiveDelimiter</var></td>
+    <td>Contains string with key=values pairs are divided by <var>sensitiveDelimiter</var>. <em>since Ant 1.10.16</em></td>
     <td>Yes if <var>hideSensitive</var> set to <q>true</q></td>
   </tr>
   <tr>
     <td>sensitiveDelimiter</td>
-    <td>Sensitive data delimiter of key=values pairs</td>
+    <td>Sensitive data delimiter of key=values pairs. <em>since Ant 1.10.16</em></td>
     <td>No, defaults to <q>;</q></td>
   </tr>
   <tr>
     <td>placeholderBrackets</td>
-    <td>Contains symbols to destinguish placeholder are needed to replace with sensitive data</td>
+    <td>Contains symbols to destinguish placeholder are needed to replace with sensitive data. <em>since Ant 1.10.16</em></td>
     <td>No, defaults to <q>:</q></td>
   </tr>
 </table>
@@ -330,5 +330,26 @@ command line. For example:</p>
 <p>is slightly better, but the username/password is exposed to all users on an Unix system (via
 the <kbd>ps</kbd> command). The best approach is to use the <code>&lt;input&gt;</code> task and/or
 retrieve the password from a (secured) <samp>.properties</samp> file.</p>
+
+<p>Sometimes you may want to execute a command that contains sensitive
+  data that you don't want to appear in Ant's log output. For this you
+  can use a combination of <var>hideSensitive</var>
+  and <var>bindSensitive</var></p>
+
+<pre>
+&lt;sshexec ...
+    command=&quot;some-script :secret: :another-secret:&quot;
+    hidesensitive=&quot;true&quot;
+    bindSensitive=&quot;secret=scott;another-secret=tiger&quot;&gt;
+</pre>
+
+<p>will log <code>some-script :secret: :another-secret:</code> but
+  actually execute <code>some-script scott
+  tiger</code>. The <var>placeholderBrackets</var> attribute allows to use a
+  different string than the default <q>:</q> to mark sensitive parts
+  of the command to replace and <var>sensitiveDelimiter</var> allows
+  the key value pairs of <var>bindSensitive</var> to be separated by a
+  different string than the default <q>;</q>.</p>
+
 </body>
 </html>

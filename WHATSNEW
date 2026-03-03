@@ -87,6 +87,10 @@ Other changes:
    junction or the target of the respective links. The old behavior
    of changing the link's target remains as default.
 
+ * a new combination of attributes allows <sshexec> to mask sensitive
+   data specified for the command line to execute.
+   Github Pull Request #124
+
 Changes from Ant 1.10.14 TO Ant 1.10.15
 =======================================
 
