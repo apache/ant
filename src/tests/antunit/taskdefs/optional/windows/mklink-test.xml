@@ -61,7 +61,7 @@
     <au:assertFileExists file="${output}/bar"/>
   </target>
 
-  <target name="XtestCreateDirectorySymlink" depends="setUp" if="canCreateSymlink">
+  <target name="testCreateDirectorySymlink" depends="setUp" if="canCreateSymlink">
     <mklink linktype="dir-symlink" link="${output}/bar"
             targetFile="${input}/foo"/>
     <au:assertFileExists file="${output}/bar/test"/>
