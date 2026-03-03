@@ -1243,8 +1243,11 @@ The new test class `CarolExecuteOnTest` was designed to be a functional verifica
 
   2. Placed `mockito-core-5.21.0.jar`, `byte-buddy-1.17.7.jar`, `byte-buddy-agent-1.17.7.jar` and `objenesis-3.3.jar` into `lib/optional`.
 
+  ## **2.1 Overview of Mocking and Its Utility**
+  Mocking is a testing technique used to isolate the system under test (SUT) by replacing its external dependencies with programmable proxy objects (mocks). Its primary utility lies in enabling **Behavior Verification**. While traditional stubs are used to provide pre-programmed responses (State Verification), mocks are explicitly designed to verify the interactions between objects—such as checking if a specific method was called, how many times it was called, and with what exact parameters. This allows developers to test complex, event-driven, or side-effect-heavy logic without setting up heavy external environments (e.g., databases, network servers, or complex system listeners).
 
-  ## **2.1 Mocking - Single File Deletion (Author: Eleanor)**
+
+  ## **2.2 Mocking - Single File Deletion (Author: Eleanor)**
 
   ### **Feature Intro**
   The `Delete` task provides a function to remove a single file in `execute()` specified by the `file` attribute. During execution, the task checks if the file exists first.
@@ -1328,7 +1331,22 @@ The new test class `CarolExecuteOnTest` was designed to be a functional verifica
   ```
   ![](Image/DeleteMockTestReport.png)
   
-    
+
+  ## **2.3 Mocking - File Copying (Author: Chien-Tzu Yeh)**
+  ### **Feature Intro**
+  The `Copy` task provides functionality to duplicate files or directories. During the `execute()` phase, the task performs rigorous validation on the source file specified by the `file` attribute.
+
+  - If the source file exists, it proceeds with the copying process.
+
+  - If the source file does not exist, the task checks the `failonerror` flag.
+
+  - If `failonerror` is true, it throws a `BuildException`.
+
+  - If `failonerror` is false, it logs a warning message stating the file could not be found and gracefully skips the operation.
+
+  **Test Result**
+  ![CopyMockTest](Image/CopyMockTest_success.png)
+
 
 
 </details>
