@@ -21,6 +21,8 @@ contact:
   - https://ant.apache.org/mail.html
 issues:
   - https://ant.apache.org/bugs.html
+donation:
+  - https://www.apache.org/foundation/sponsorship.html
 website:
   - https://ant.apache.org/
 source-code:
