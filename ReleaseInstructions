@@ -344,13 +344,13 @@ Note: This document was adapted from the one created in the context of
 
     Update the following files for version number:
 
-    * source/antnews.xml (Announcement)
-    * source/faq.xml (Ant's history details - not for betas)
-    * source/index.xml (Announcement, latest release details, link to
+    * sources/antnews.xml (Announcement)
+    * sources/faq.xml (Ant's history details - not for betas)
+    * sources/index.xml (Announcement, latest release details, link to
     manual under "Documentation")
-    * source/srcdownload.xml
-    * source/bindownload.xml
-    * source/manualdownload.xml
+    * sources/srcdownload.xml
+    * sources/bindownload.xml
+    * sources/manualdownload.xml
 
     Generate the html files by invoking 'ant'
     Commit the modified/generated files in the 'production' folder, it will go

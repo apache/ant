@@ -82,7 +82,7 @@ Other changes:
  * added <canCreateSymlink> condition that evaluates to true if the
    current Ant process can create symbolic links.
 
- * added <windowsjunction> file selector which only select directories
+ * added <windowsjunction> file selector which only selects directories
    that are Windows junctions.
 
  * added a new actOnLinkTargets attribute to <setpermissions> to
