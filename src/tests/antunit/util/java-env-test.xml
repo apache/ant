@@ -16,7 +16,7 @@
   limitations under the License.
 -->
 <project xmlns:au="antlib:org.apache.ant.antunit"
-         name="firstmatch-test"
+         name="java-env-test"
          default="antunit">
 
   <import file="../antunit-base.xml" />
