@@ -48,7 +48,7 @@ public final class JavaEnvUtils {
     private static final String JAVA_HOME = System.getProperty("java.home");
 
     /** FileUtils instance for path normalization */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
+    private static final FileUtils FILE_UTILS;
 
     /** Version of currently running VM. */
     private static String javaVersion;
@@ -230,6 +230,8 @@ public final class JavaEnvUtils {
         } catch (Throwable t) {
             // swallow as this simply doesn't seem to be Apache Harmony
         }
+
+        FILE_UTILS = FileUtils.getFileUtils();
     }
 
     /**

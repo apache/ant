@@ -1,6 +1,16 @@
 Changes from Ant 1.10.16 TO Ant 1.10.17
 =======================================
 
+Fixed bugs:
+-----------
+
+ * The JavaEnvUtils and FileUtils classes statically depend on each
+   other since Ant 1.10.16 making it impossible to load JavaEnvUtils
+   without loading FileUtils first causing NullPointerException for
+   programmatic use on Windows. This affected Eclipse and may also
+   affect other projects using Ant as a library.
+   Bugzilla Report 69992
+
 Changes from Ant 1.10.15 TO Ant 1.10.16
 =======================================
 
