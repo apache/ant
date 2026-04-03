@@ -47,9 +47,6 @@ public final class JavaEnvUtils {
     /** shortcut for System.getProperty("java.home") */
     private static final String JAVA_HOME = System.getProperty("java.home");
 
-    /** FileUtils instance for path normalization */
-    private static final FileUtils FILE_UTILS;
-
     /** Version of currently running VM. */
     private static String javaVersion;
 
@@ -230,8 +227,6 @@ public final class JavaEnvUtils {
         } catch (Throwable t) {
             // swallow as this simply doesn't seem to be Apache Harmony
         }
-
-        FILE_UTILS = FileUtils.getFileUtils();
     }
 
     /**
@@ -450,7 +445,7 @@ public final class JavaEnvUtils {
      * @return null if the executable cannot be found.
      */
     private static File findInDir(String dirName, String commandName) {
-        File dir = FILE_UTILS.normalize(dirName);
+        File dir = FileUtils.getFileUtils().normalize(dirName);
         File executable = null;
         if (dir.exists()) {
             executable = new File(dir, addExtension(commandName));
@@ -544,7 +539,7 @@ public final class JavaEnvUtils {
      */
     public static File createVmsJavaOptionFile(String[] cmds)
             throws IOException {
-        File script = FILE_UTILS.createTempFile(null, "ANT", ".JAVA_OPTS", null, false, true);
+        File script = FileUtils.getFileUtils().createTempFile(null, "ANT", ".JAVA_OPTS", null, false, true);
         try (BufferedWriter out = new BufferedWriter(new FileWriter(script))) {
             for (String cmd : cmds) {
                 out.write(cmd);
