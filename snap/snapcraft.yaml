@@ -14,7 +14,7 @@
 # limitations under the License.
 
 name: ant
-version: "1.10.17alpha"
+version: "1.10.17"
 title: Apache Ant
 summary: Apache Ant
 contact:
@@ -43,7 +43,7 @@ description: |
   will need a Java Development Kit rather than just a Java Runtime
   Environment.
 confinement: classic
-grade: devel
+grade: stable
 base: core22
 license: Apache-2.0
 architectures:
