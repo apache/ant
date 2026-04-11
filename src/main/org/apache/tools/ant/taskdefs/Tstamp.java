@@ -51,6 +51,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 public class Tstamp extends Task {
 
     private static final String ENV_SOURCE_DATE_EPOCH = "SOURCE_DATE_EPOCH";
+    private static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getTimeZone("UTC");
+    private static final String DEFAULT_LOCALE = "en_US";
 
     private List<CustomFormat> customFormats = new Vector<>();
     private String prefix = "";
@@ -78,29 +80,42 @@ public class Tstamp extends Task {
         try {
             Date d = getNow();
             // Honour reproducible builds https://reproducible-builds.org/specs/source-date-epoch/#idm55
+            boolean reproducibleBuild = false;
             final String epoch = System.getenv(ENV_SOURCE_DATE_EPOCH);
             try {
                 if (epoch != null) {
                     // Value of SOURCE_DATE_EPOCH will be an integer, representing seconds.
                     d = new Date(Long.parseLong(epoch) * 1000L);
                     log("Honouring environment variable " + ENV_SOURCE_DATE_EPOCH + " which has been set to " + epoch);
+                    reproducibleBuild = true;
                 }
             } catch(NumberFormatException e) {
                 // ignore
                 log("Ignoring invalid value '" + epoch + "' for " + ENV_SOURCE_DATE_EPOCH
                         + " environment variable", Project.MSG_DEBUG);
             }
+            final boolean reproducibleBuildRequested = reproducibleBuild;
             final Date date = d;
-            customFormats.forEach(cts -> cts.execute(getProject(), date, getLocation()));
+            customFormats
+                .forEach(cts -> cts.execute(getProject(), date, getLocation(), reproducibleBuildRequested));
 
             SimpleDateFormat dstamp = new SimpleDateFormat("yyyyMMdd");
+            if (reproducibleBuildRequested) {
+                dstamp.setTimeZone(DEFAULT_TIME_ZONE);
+            }
             setProperty("DSTAMP", dstamp.format(d));
 
             SimpleDateFormat tstamp = new SimpleDateFormat("HHmm");
+            if (reproducibleBuildRequested) {
+                tstamp.setTimeZone(DEFAULT_TIME_ZONE);
+            }
             setProperty("TSTAMP", tstamp.format(d));
 
             SimpleDateFormat today
                 = new SimpleDateFormat("MMMM d yyyy", Locale.US);
+            if (reproducibleBuildRequested) {
+                today.setTimeZone(DEFAULT_TIME_ZONE);
+            }
             setProperty("TODAY", today.format(d));
 
         } catch (Exception e) {
@@ -324,6 +339,29 @@ public class Tstamp extends Task {
                 sdf.setTimeZone(timeZone);
             }
             Tstamp.this.setProperty(propertyName, sdf.format(date));
+        }
+
+        /**
+         * validate parameter and execute the format.
+         * @param project project to set property in.
+         * @param date date to use as a starting point.
+         * @param location line in file (for errors)
+         * @param reproducibleBuildRequested whether reproducible
+         * builds are requestes - in which case defaults for timezone
+         * and locale may be applied
+         * @since Ant 1.10.18
+         */
+        public void execute(Project project, Date date, Location location,
+                            boolean reproducibleBuildRequested) {
+            if (reproducibleBuildRequested) {
+                if (language == null) {
+                    language = DEFAULT_LOCALE;
+                }
+                if (timeZone == null) {
+                    timeZone = DEFAULT_TIME_ZONE;
+                }
+            }
+            execute(project, date, location);
         }
     }
 

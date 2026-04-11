@@ -1,6 +1,17 @@
 Changes from Ant 1.10.17 TO Ant 1.10.18
 =======================================
 
+Other changes:
+--------------
+
+ * when using the SOURCE_DATE_EPOCH environment variable to set the
+   time for <tstamp> the timezone will now be set to UTC for DSTAMP,
+   TSTAMP and TODAY. This also applies to nested formats where and
+   locale now also defaults to en_US unless it (or the timezone) have
+   been set explicitly.
+   Based on a patch used by the Debian Ant package maintainers.
+   Part of Bugzilla Report 61269
+
 Changes from Ant 1.10.16 TO Ant 1.10.17
 =======================================
 

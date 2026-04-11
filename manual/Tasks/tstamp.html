@@ -51,6 +51,14 @@ ignored.</p>
   for that environment variable and will instead use the "current" date.
 </p>
 
+<p>
+  <em>Since Ant 1.10.18</em> if the <code>SOURCE_DATE_EPOCH</code>
+  environment variable is used by the task, the timezone of DSTAMP,
+  TSTAMP and TODAY will be set to UTC. This is also true for nested
+  format elements where in addition the locale defaults to en_US
+  unless they are specified as part of the format element explicitly.
+</p>
+
 <h3>Parameters</h3>
 <table class="attr">
   <tr>
