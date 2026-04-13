@@ -12,6 +12,19 @@ Other changes:
    Based on a patch used by the Debian Ant package maintainers.
    Part of Bugzilla Report 61269
 
+Fixed bugs:
+-----------
+
+ * When running with "microsoft" Java, Ant used to hardcode the
+  "$JAVA_HOME/Packages" directory in the runtime Paths for
+  certain tasks. The JDK shipped by Microsoft no longer contains
+  that directory (for several decadeds now). As a result, when
+  running with "microsoft" Java, an exception would be raised due
+  to the missing directory. This has now been fixed and Ant no
+  longer adds that directory to the Java runtime Paths.
+  Github Pull Request #230
+
+
 Changes from Ant 1.10.16 TO Ant 1.10.17
 =======================================
 
