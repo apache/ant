@@ -125,7 +125,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
                 // a timeout and not a manual stop then kill it.
                 if (watch) {
                     killedProcess = true;
-                    process.destroy();
+                    process.destroyForcibly();
                 }
             }
         } catch (Exception e) {
