@@ -17,80 +17,69 @@
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../../antunit-base.xml" />
+  <import file="../../script-prereq-check.xml" />
 
-  <target name="setUp">
-    <condition property="expect-js">
-      <not>
-        <and>
-          <isset property="jenkins" />
-          <javaversion atleast="15" />
-        </and>
-      </not>
-    </condition>
-    <echo>$${expect-js}=${expect-js}</echo>
-  </target>
-
-  <target name="test-default-behavior" depends="setUp" if="expect-js">
+  <target name="test-default-behavior" if="prereqs-ok">
     <au:assertFalse>
       <scriptcondition language="javascript" />
     </au:assertFalse>
   </target>
 
-  <target name="test-set-value-true" depends="setUp" if="expect-js">
+  <target name="test-set-value-true" if="prereqs-ok">
     <au:assertTrue>
-      <scriptcondition language="javascript">
+      <scriptcondition language="javascript" manager="${script.manager}">
         self.setValue(true);
       </scriptcondition>
     </au:assertTrue>
   </target>
 
-  <target name="test-set-value-false" depends="setUp" if="expect-js">
+  <target name="test-set-value-false" if="prereqs-ok">
     <au:assertFalse>
-      <scriptcondition language="javascript">
+      <scriptcondition language="javascript" manager="${script.manager}">
         self.setValue(false);
       </scriptcondition>
     </au:assertFalse>
   </target>
 
-  <target name="test-default-value-true" depends="setUp" if="expect-js">
+  <target name="test-default-value-true" if="prereqs-ok">
     <au:assertTrue>
-      <scriptcondition language="javascript" value="true" />
+      <scriptcondition language="javascript" value="true" manager="${script.manager}"/>
     </au:assertTrue>
   </target>
 
-  <target name="test-default-value-false" depends="setUp" if="expect-js">
+  <target name="test-default-value-false" if="prereqs-ok">
     <au:assertFalse>
-      <scriptcondition language="javascript" value="false" />
+      <scriptcondition language="javascript" value="false" manager="${script.manager}"/>
     </au:assertFalse>
   </target>
 
-  <target name="test-default-value-override-true" depends="setUp" if="expect-js">
+  <target name="test-default-value-override-true" if="prereqs-ok">
     <au:assertTrue>
-      <scriptcondition language="javascript" value="false">
+      <scriptcondition language="javascript" value="false" manager="${script.manager}">
         self.setValue(true);
       </scriptcondition>
     </au:assertTrue>
   </target>
 
-  <target name="test-default-value-override-false" depends="setUp" if="expect-js">
+  <target name="test-default-value-override-false" if="prereqs-ok">
     <au:assertFalse>
-      <scriptcondition language="javascript" value="true">
+      <scriptcondition language="javascript" value="true" manager="${script.manager}">
         self.setValue(false);
       </scriptcondition>
     </au:assertFalse>
   </target>
 
-  <target name="test-return-value-true" depends="setUp" if="expect-js">
+  <target name="test-return-value-true" if="prereqs-ok">
     <au:assertTrue>
-      <scriptcondition language="javascript" manager="javax">
+      <scriptcondition language="javascript" manager="${script.manager}">
         true
       </scriptcondition>
     </au:assertTrue>
   </target>
 
-  <target name="test-return-value-false" depends="setUp" if="expect-js">
+  <target name="test-return-value-false" if="prereqs-ok">
     <au:assertFalse>
-      <scriptcondition language="javascript" manager="javax" value="true">
+      <scriptcondition language="javascript" manager="${script.manager}" value="true">
         false
       </scriptcondition>
     </au:assertFalse>

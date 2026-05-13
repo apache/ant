@@ -18,38 +18,13 @@
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
 
   <import file="../../../antunit-base.xml" />
+  <import file="../../../script-prereq-check.xml" />
 
   <description>
     In which we test interesting aspects of scripting.
     The targeted language is javascript; this lets us run without
     additions on Java6+.
   </description>
-
-  <condition property="prereqs-ok">
-    <and>
-      <!-- Starting Java 15, there's no "javascript" script engine (not even nashorn) bundled in JRE -->
-      <javaversion atmost="14"/>
-      <or>
-        <and>
-          <available classname="org.apache.bsf.BSFManager" />
-          <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine" />
-        </and>
-        <available classname="javax.script.ScriptEngineManager" />
-      </or>
-    </and>
-  </condition>
-
-  <!-- auto doesn't verify the language is supported and selects BSF
-       even if the JavaScriptEngine is not there -->
-  <condition property="script.manager" value="javax">
-    <and>
-      <not>
-        <available classname="org.apache.bsf.engines.javascript.JavaScriptEngine" />
-      </not>
-      <isset property="prereqs-ok"/>
-    </and>
-  </condition>
-  <property name="script.manager" value="auto" />
 
   <string id="script.code">
     self.log("Ant version =${ant.version}");

@@ -17,51 +17,40 @@
 -->
 <project default="antunit" xmlns:au="antlib:org.apache.ant.antunit">
   <import file="../../../antunit-base.xml" />
+  <import file="../../../script-prereq-check.xml" />
 
-  <target name="setUp">
-    <condition property="expect-js">
-      <not>
-        <and>
-          <isset property="jenkins" />
-          <javaversion atleast="15" />
-        </and>
-      </not>
-    </condition>
-    <echo>$${expect-js}=${expect-js}</echo>
-  </target>
-
-  <target name="test-available-property-default" depends="setUp" if="expect-js">
+  <target name="test-available-property-default" if="prereqs-ok">
     <property name="foo" value="FOO" />
-    <script language="javascript">
+    <script language="javascript" manager="${script.manager}">
       project.setProperty('bar', foo);
     </script>
     <au:assertEquals expected="${foo}" actual="${bar}" />
   </target>
 
-  <target name="test-available-property-setbeans-false" depends="setUp" if="expect-js">
+  <target name="test-available-property-setbeans-false" if="prereqs-ok">
     <property name="baz" value="BAZ" />
     <au:expectfailure>
-      <script language="javascript" setbeans="false">
+      <script language="javascript" setbeans="false" manager="${script.manager}">
         project.log(nosuch);
         var b = (baz == project.getProperty('baz'));
       </script>
     </au:expectfailure>
   </target>
 
-  <target name="test-available-local-property" depends="setUp" if="expect-js">
+  <target name="test-available-local-property" if="prereqs-ok">
     <local name="localproperty" />
     <property name="localproperty" value="iamlocal" />
-    <script language="javascript">
+    <script language="javascript" manager="${script.manager}">
       if (localproperty != project.getProperty('localproperty')) throw new org.apache.tools.ant.BuildException();
     </script>
   </target>
 
-  <target name="test-shaded-local-property" depends="setUp" if="expect-js">
+  <target name="test-shaded-local-property" if="prereqs-ok">
     <property name="shademe" value="FOO" />
     <sequential>
       <local name="shademe" />
       <property name="shademe" value="BAR" />
-      <script language="javascript">
+      <script language="javascript" manager="${script.manager}">
         if (shademe != project.getProperty('shademe')) throw new org.apache.tools.ant.BuildException();
       </script>
     </sequential>
