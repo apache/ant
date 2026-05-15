@@ -12,6 +12,9 @@ Other changes:
    Based on a patch used by the Debian Ant package maintainers.
    Part of Bugzilla Report 61269
 
+ * Upgraded the jakarta.mail dependency to 2.0.2 because of
+   CVE-2025-7962.
+
 Fixed bugs:
 -----------
 
