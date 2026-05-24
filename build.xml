@@ -476,10 +476,10 @@
     <available property="antlr.present"
                classname="antlr.Tool"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="apache.regexp.present"
+    <available property="apache-regexp.present"
                classname="org.apache.regexp.RE"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="apache.oro.present"
+    <available property="apache-oro.present"
                classname="org.apache.oro.text.regex.Perl5Matcher"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="imageio.present"
@@ -509,7 +509,7 @@
     <available property="xerces.present"
                classname="org.apache.xerces.parsers.SAXParser"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="bcel.present"
+    <available property="apache-bcel.present"
                classname="org.apache.bcel.Constants"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="javamail.present"
@@ -729,9 +729,9 @@
             <selector refid="needs.junitlauncher" unless="junitlauncher.present"/>
             <selector refid="needs.junit.engine.vintage" unless="junit.engine.vintage.present"/>
             <selector refid="needs.junit.engine.jupiter" unless="junit.engine.jupiter.present"/>
-            <selector refid="needs.apache-regexp" unless="apache.regexp.present"/>
-            <selector refid="needs.apache-oro" unless="apache.oro.present"/>
-            <selector refid="needs.apache-bcel" unless="bcel.present"/>
+            <selector refid="needs.apache-regexp" unless="apache-regexp.present"/>
+            <selector refid="needs.apache-oro" unless="apache-oro.present"/>
+            <selector refid="needs.apache-bcel" unless="apache-bcel.present"/>
             <selector refid="needs.apache-log4j" unless="log4j.present"/>
             <selector refid="needs.commons-logging" unless="commons.logging.present"/>
             <selector refid="needs.apache-bsf" unless="bsf.present"/>
@@ -2421,6 +2421,61 @@ ${antunit.reports}
     </optional-sbom>
 
     <cdx:component
+        id="cdx-junitlauncher"
+        name="junit-platform-launcher"
+        group="org.junit.platform"
+        version="${junit-platform-launcher.version}"
+        description='Module "junit-platform-launcher" of JUnit 5.'
+        unknownDependencies="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license licenseId="EPL-2.0">
+        <url url="https://www.eclipse.org/legal/epl-v20.html"/>
+      </license>
+      <externalReference
+          type="WEBSITE"
+          url="https://junit.org/junit5"/>
+    </cdx:component>
+    <optional-sbom dep="junitlauncher" nameSuffix="+ JUnit 5"/>
+
+    <cdx:component
+        id="cdx-apache-regexp"
+        name="jakarta-regexp"
+        group="jakarta-regexp"
+        version="${jakarta-regexp.version}"
+        unknownDependencies="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license refid="apache-2"/>
+    </cdx:component>
+    <optional-sbom dep="apache-regexp" nameSuffix="+ Apache Regexp"/>
+
+    <cdx:component
+        id="cdx-apache-oro"
+        name="oro"
+        group="oro"
+        version="${oro.version}"
+        unknownDependencies="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license refid="apache-2"/>
+    </cdx:component>
+    <optional-sbom dep="apache-oro" nameSuffix="+ Apache Oro"/>
+
+    <cdx:component
+        id="cdx-apache-bcel"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <sbomLink>
+        <url
+            url="https://repo1.maven.org/maven2/org/apache/bcel/bcel/${bcel.version}/bcel-${bcel.version}-cyclonedx.json"/>
+      </sbomLink>
+    </cdx:component>
+    <optional-sbom dep="apache-bcel" nameSuffix="+ BCEL"/>
+
+    <!--optional-jar dep="apache-log4j"/>
+    <optional-jar dep="commons-logging"/>
+    <optional-jar dep="apache-bsf"/>
+    <optional-jar dep="javamail"/>
+    <optional-jar dep="jakartamail"/-->
+
+    <cdx:component
         id="cdx-netrexx"
         bomRef="https://www.netrexx.org/files/NetRexxC-${netrexx.version}.jar"
         name="netrexx"
@@ -2438,6 +2493,17 @@ ${antunit.reports}
           url="https://www.netrexx.org/downloads.nsp"/>
     </cdx:component>
     <optional-sbom dep="netrexx" nameSuffix="+ NetRexx"/>
+
+    <!--optional-jar dep="commons-net"/>
+    <optional-jar dep="antlr"/>
+    <optional-jar dep="imageio"/>
+    <optional-jar dep="jmf"/>
+    <optional-jar dep="jai"/>
+    <optional-jar dep="swing"/>
+    <optional-jar dep="jsch"/>
+    <optional-jar dep="jdepend"/>
+    <optional-jar dep="apache-xalan2"/>
+    <optional-jar dep="xz"/-->
 
     <cdx:componentbom
         bomName="${name}-testutil-cyclonedx"
