@@ -2277,7 +2277,7 @@ ${antunit.reports}
     </cdx:externalreferenceset>
   </target>
 
-  <target name="component-boms" depends="init-cyclonedx,jars"
+  <target name="component-boms" depends="init-cyclonedx,jars,test-jar"
           if="cyclonedx.antlib.present">
 
     <property file="${lib.dir}/libraries.properties"/>
@@ -2439,6 +2439,34 @@ ${antunit.reports}
     </cdx:component>
     <optional-sbom dep="netrexx" nameSuffix="+ NetRexx"/>
 
+    <cdx:componentbom
+        bomName="${name}-testutil-cyclonedx"
+        outputdirectory="${build.lib}"
+        format="all"
+        useComponentSupplier="true"
+        if:set="junit.present" xmlns:if="ant:if"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <component
+          id="cdx-ant-testutil"
+          name="ant-testutil"
+          group="org.apache.ant"
+          version="${pom.version}"
+          description="Apache Ant Test Utilities"
+          publisher="The Apache Software Foundation"
+          manufacturerIsSupplier="true">
+        <file file="${build.lib}/${name}-testutil.jar"/>
+        <manufacturer refid="ant-team"/>
+        <license refid="apache-2"/>
+        <externalReferenceSet refid="ant-common-refs"/>
+        <dependency componentRef="cdx-ant"/>
+        <dependency componentRef="cdx-junit"/>
+      </component>
+      <additionalComponent refid="cdx-ant"/>
+      <additionalComponent refid="cdx-ant-launcher"/>
+      <additionalComponent refid="cdx-junit"/>
+      <additionalComponent refid="cdx-hamcrest"/>
+      <license refid="apache-2"/>
+    </cdx:componentbom>
   </target>
 
 </project>
