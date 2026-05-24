@@ -2413,10 +2413,19 @@ ${antunit.reports}
     </optional-sbom>
 
     <cdx:component
+        id="cdx-junit4"
+        refid="cdx-junit"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx"/>
+    <optional-sbom dep="junit4" nameSuffix="+ JUnit 4">
+      <additionalComponent refid="cdx-hamcrest"/>
+    </optional-sbom>
+
+    <cdx:component
         id="cdx-netrexx"
         bomRef="https://www.netrexx.org/files/NetRexxC-${netrexx.version}.jar"
         name="netrexx"
         version="${netrexx.version}"
+        unknownDependencies="true"
         xmlns:cdx="antlib:org.apache.ant.cyclonedx">
       <license licenseId="ICU">
         <url url="https://github.com/RexxLA/NetRexx/blob/master/LICENSE"/>
