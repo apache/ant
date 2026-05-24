@@ -1030,7 +1030,7 @@
          Create the essential distribution that can run Apache Ant
        ===================================================================
   -->
-  <target name="dist-lite" depends="jars,test-jar,-ant-dist-warn-jdk9+"
+  <target name="dist-lite" depends="jars,test-jar,component-boms,-ant-dist-warn-jdk9+"
           description="--> creates a minimum distribution to run Apache Ant">
 
     <mkdir dir="${dist.dir}"/>
@@ -1414,6 +1414,12 @@
         <include name="ant*.jar"/>
       </fileset>
       <mapper type="regexp" from="ant(.*).jar" to="ant\1/${project.version}/ant\1-${project.version}-sources.jar"/>
+    </copy>
+    <copy todir="${java-repository.dir}">
+      <fileset dir="${dist.name}/lib">
+        <include name="ant*-cyclonedx.*"/>
+      </fileset>
+      <mapper type="regexp" from="ant(.*)-cyclonedx.(.*)" to="ant\1/${project.version}/ant\1-${project.version}-cyclonedx.\2"/>
     </copy>
     <jar destfile="${java-repository.dir}/ant/${project.version}/ant-${project.version}-javadoc.jar"
       basedir="${build.javadocs}">
