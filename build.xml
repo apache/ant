@@ -46,7 +46,7 @@
   <property name="optional.package" value="${taskdefs.package}/optional"/>
   <property name="type.package" value="${ant.package}/types"/>
   <property name="optional.type.package" value="${type.package}/optional"/>
-  <property name="apache.resolver.type.package" value="${type.package}/resolver"/>
+  <property name="apache-resolver.type.package" value="${type.package}/resolver"/>
   <property name="util.package" value="${ant.package}/util"/>
   <property name="regexp.package" value="${util.package}/regexp"/>
 
@@ -193,7 +193,7 @@
   </selector>
 
   <selector id="needs.apache-resolver">
-    <filename name="${apache.resolver.type.package}/"/>
+    <filename name="${apache-resolver.type.package}/"/>
   </selector>
 
   <selector id="needs.junit">
@@ -446,7 +446,7 @@
     <available property="netrexx.present"
                classname="netrexx.lang.Rexx"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="apache.resolver.present"
+    <available property="apache-resolver.present"
                classname="org.apache.xml.resolver.tools.CatalogResolver"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="recent.xalan2.present"
@@ -723,7 +723,7 @@
           <or>
             <selector refid="needs.jdk9+"/>
             <selector refid="not.in.kaffe" if="kaffe"/>
-            <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
+            <selector refid="needs.apache-resolver" unless="apache-resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/> <!-- TODO should perhaps use -source 1.4? -->
             <selector refid="needs.junit4" unless="junit4.present"/>
             <selector refid="needs.junitlauncher" unless="junitlauncher.present"/>
@@ -2020,7 +2020,7 @@ ${antunit.reports}
 
           <!-- needs resolver.jar to work -->
           <exclude name="${optional.package}/XmlValidateCatalogTest.java"
-                   unless="apache.resolver.present"/>
+                   unless="apache-resolver.present"/>
 
           <!-- needs jasperc -->
           <exclude name="${optional.package}/JspcTest.java"
@@ -2215,6 +2215,221 @@ ${antunit.reports}
       <candleParameter name="dist.dir" value="${dist.dir.resolved}"/>
       <candleParameter name="version" value="${manifest-version}"/>
     </dn:wix>
+  </target>
+
+  <!--
+       ===================================================================
+         CycloneDX targets - create SBOMs
+       ===================================================================
+  -->
+  <available property="cyclonedx.antlib.present"
+             classname="org.apache.ant.cyclonedx.ComponentBomTask"
+             classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
+
+  <target name="init-cyclonedx" if="cyclonedx.antlib.present">
+    <typedef uri="antlib:org.apache.ant.cyclonedx"
+      resource="org/apache/ant/cyclonedx/antlib.xml">
+      <classpath refid="classpath"/>
+    </typedef>
+
+    <cdx:organization
+        name="Apache Ant Development Team"
+        id="ant-team"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <url url="https://ant.apache.org/"/>
+    </cdx:organization>
+    <cdx:license
+        licenseId="Apache-2.0"
+        id="apache-2"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <url url="https://www.apache.org/licenses/LICENSE-2.0.txt"/>
+    </cdx:license>
+    <cdx:externalreferenceset
+        id="ant-common-refs"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <externalReference
+          type="LICENSE"
+          url="https://www.apache.org/licenses/LICENSE-2.0.txt"/>
+      <externalReference
+          type="MAILING_LIST"
+          url="https://ant.apache.org/mail.html"/>
+      <externalReference
+          type="SECURITY_CONTACT"
+          url="https://www.apache.org/security/"/>
+      <externalReference
+          type="VCS"
+          url="https://github.com/apache/ant"/>
+      <externalReference
+          type="BUILD_SYSTEM"
+          url="https://ci-builds.apache.org/job/Ant/"/>
+      <externalReference
+          type="ISSUE_TRACKER"
+          url="https://bz.apache.org/bugzilla/buglist.cgi?product=Ant"/>
+      <externalReference
+          type="WEBSITE"
+          url="https://ant.apache.org/"/>
+      <externalReference
+          type="DISTRIBUTION"
+          url="https://ant.apache.org/bindownload.cgi"/>
+      <externalReference
+          type="SOURCE_DISTRIBUTION"
+          url="https://ant.apache.org/srcdownload.cgi"/>
+    </cdx:externalreferenceset>
+  </target>
+
+  <target name="component-boms" depends="init-cyclonedx,jars"
+          if="cyclonedx.antlib.present">
+
+    <property file="${lib.dir}/libraries.properties"/>
+
+    <cdx:componentbom
+        bomName="${name}-launcher-cyclonedx"
+        outputdirectory="${build.lib}"
+        format="all"
+        useComponentSupplier="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <component
+          id="cdx-ant-launcher"
+          name="ant-launcher"
+          group="org.apache.ant"
+          version="${pom.version}"
+          description="Apache Ant Launcher"
+          publisher="The Apache Software Foundation"
+          manufacturerIsSupplier="true">
+        <file file="${build.lib}/${name}-launcher.jar"/>
+        <manufacturer refid="ant-team"/>
+        <license refid="apache-2"/>
+        <externalReferenceSet refid="ant-common-refs"/>
+      </component>
+      <license refid="apache-2"/>
+    </cdx:componentbom>
+    <cdx:componentbom
+        bomName="${name}-cyclonedx"
+        outputdirectory="${build.lib}"
+        format="all"
+        useComponentSupplier="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <component
+          id="cdx-ant"
+          name="ant"
+          group="org.apache.ant"
+          version="${pom.version}"
+          description="Apache Ant Core"
+          publisher="The Apache Software Foundation"
+          manufacturerIsSupplier="true">
+        <file file="${build.lib}/${name}.jar"/>
+        <manufacturer refid="ant-team"/>
+        <license refid="apache-2"/>
+        <externalReferenceSet refid="ant-common-refs"/>
+        <dependency componentRef="cdx-ant-launcher"/>
+      </component>
+      <additionalComponent refid="cdx-ant-launcher"/>
+      <license refid="apache-2"/>
+    </cdx:componentbom>
+
+    <macrodef name="optional-sbom">
+      <attribute name="dep"/>
+      <attribute name="nameSuffix"/>
+      <element name="additionalContent" implicit="true" optional="true"/>
+      <sequential>
+        <cdx:componentbom
+            bomName="${optional.jars.prefix}-@{dep}-cyclonedx"
+            outputdirectory="${build.lib}"
+            format="all"
+            useComponentSupplier="true"
+            if:set="@{dep}.present" xmlns:if="ant:if"
+            xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+          <component
+              id="cdx-ant-@{dep}"
+              name="ant-@{dep}"
+              group="org.apache.ant"
+              version="${pom.version}"
+              description="Apache Ant @{nameSuffix}"
+              publisher="The Apache Software Foundation"
+              manufacturerIsSupplier="true">
+            <file file="${build.lib}/${optional.jars.prefix}-@{dep}.jar"/>
+            <manufacturer refid="ant-team"/>
+            <license refid="apache-2"/>
+            <externalReferenceSet refid="ant-common-refs"/>
+            <dependency componentRef="cdx-ant"/>
+            <dependency componentRef="cdx-@{dep}"/>
+          </component>
+          <additionalComponent refid="cdx-ant"/>
+          <additionalComponent refid="cdx-ant-launcher"/>
+          <additionalComponent refid="cdx-@{dep}"/>
+          <license refid="apache-2"/>
+          <additionalContent/>
+        </cdx:componentbom>
+      </sequential>
+    </macrodef>
+
+    <cdx:component
+        id="cdx-apache-resolver"
+        name="xml-resolver"
+        group="xml-resolver"
+        version="${xml-resolver.version}"
+        description="xml-commons provides an Apache-hosted set of DOM, SAX, and JAXP interfaces for use in other xml-based projects. Our hope is that we can standardize on both a common version and packaging scheme for these critical XML standards interfaces to make the lives of both our developers and users easier."
+        publisher="The Apache Software Foundation"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license refid="apache-2"/>
+      <externalReference
+          type="WEBSITE"
+          url="http://xml.apache.org/commons/components/resolver/"/>
+    </cdx:component>
+    <optional-sbom dep="apache-resolver" nameSuffix="+ Apache Resolver"/>
+
+    <cdx:component
+        id="cdx-junit"
+        name="junit"
+        group="junit"
+        version="${junit.version}"
+        description="JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck."
+        publisher="JUnit"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license licenseId="EPL-1.0">
+        <url url="http://www.eclipse.org/legal/epl-v10.html"/>
+      </license>
+      <externalReference
+          type="WEBSITE"
+          url="http://junit.org"/>
+      <dependency componentRef="cdx-hamcrest"/>
+    </cdx:component>
+    <cdx:component
+        id="cdx-hamcrest"
+        name="hamcrest"
+        group="org.hamcrest"
+        version="${hamcrest.version}"
+        description="Core API and libraries of hamcrest matcher framework."
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license licenseId="BSD-3-Clause">
+        <url url="https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE"/>
+      </license>
+      <externalReference
+          type="WEBSITE"
+          url="http://hamcrest.org/JavaHamcrest/"/>
+    </cdx:component>
+    <optional-sbom dep="junit" nameSuffix="+ JUnit">
+      <additionalComponent refid="cdx-hamcrest"/>
+    </optional-sbom>
+
+    <cdx:component
+        id="cdx-netrexx"
+        bomRef="https://www.netrexx.org/files/NetRexxC-${netrexx.version}.jar"
+        name="netrexx"
+        version="${netrexx.version}"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license licenseId="ICU">
+        <url url="https://github.com/RexxLA/NetRexx/blob/master/LICENSE"/>
+      </license>
+      <externalReference
+          type="WEBSITE"
+          url="https://www.netrexx.org/"/>
+      <externalReference
+          type="DISTRIBUTION"
+          url="https://www.netrexx.org/downloads.nsp"/>
+    </cdx:component>
+    <optional-sbom dep="netrexx" nameSuffix="+ NetRexx"/>
+
   </target>
 
 </project>
