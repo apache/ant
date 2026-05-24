@@ -440,7 +440,7 @@
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="harmony"
                classname="org.apache.harmony.luni.util.Base64"/>
-    <available property="bsf.present"
+    <available property="apache-bsf.present"
                classname="org.apache.bsf.BSFManager"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="netrexx.present"
@@ -449,7 +449,7 @@
     <available property="apache-resolver.present"
                classname="org.apache.xml.resolver.tools.CatalogResolver"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="recent.xalan2.present"
+    <available property="apache-xalan2.present"
                classname="org.apache.xalan.trace.TraceListenerEx3"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="junit.present"
@@ -470,7 +470,7 @@
     <available property="antunit.present"
                classname="org.apache.ant.antunit.AntUnit"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="commons.net.present"
+    <available property="commons-net.present"
                classname="org.apache.commons.net.ftp.FTPClient"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="antlr.present"
@@ -494,10 +494,10 @@
     <available property="jdepend.present"
                classname="jdepend.framework.JDepend"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="log4j.present"
+    <available property="apache-log4j.present"
                classname="org.apache.log4j.Logger"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
-    <available property="commons.logging.present"
+    <available property="commons-logging.present"
                classname="org.apache.commons.logging.LogFactory"
                classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
     <available property="xalan.envcheck"
@@ -732,13 +732,13 @@
             <selector refid="needs.apache-regexp" unless="apache-regexp.present"/>
             <selector refid="needs.apache-oro" unless="apache-oro.present"/>
             <selector refid="needs.apache-bcel" unless="apache-bcel.present"/>
-            <selector refid="needs.apache-log4j" unless="log4j.present"/>
-            <selector refid="needs.commons-logging" unless="commons.logging.present"/>
-            <selector refid="needs.apache-bsf" unless="bsf.present"/>
+            <selector refid="needs.apache-log4j" unless="apache-log4j.present"/>
+            <selector refid="needs.commons-logging" unless="commons-logging.present"/>
+            <selector refid="needs.apache-bsf" unless="apache-bsf.present"/>
             <selector refid="needs.javamail" unless="javamail.present"/>
             <selector refid="needs.jakartamail" unless="jakartamail.present"/>
             <selector refid="needs.netrexx" unless="netrexx.present"/>
-            <selector refid="needs.commons-net" unless="commons.net.present"/>
+            <selector refid="needs.commons-net" unless="commons-net.present"/>
             <selector refid="needs.antlr" unless="antlr.present"/>
             <selector refid="needs.imageio" unless="imageio.present"/>
             <selector refid="needs.jmf" unless="jmf.present"/>
@@ -748,7 +748,7 @@
             <selector refid="needs.jsch" unless="jsch.present"/>
             <selector refid="needs.xz" unless="xz.present"/>
             <selector refid="needs.xmlschema" unless="xmlschema.present"/>
-            <selector refid="needs.apache-xalan2" unless="recent.xalan2.present"/>
+            <selector refid="needs.apache-xalan2" unless="apache-xalan2.present"/>
           </or>
         </not>
       </selector>
@@ -1984,19 +1984,19 @@ ${antunit.reports}
 
           <!-- needs BSF to work -->
           <exclude name="${optional.package}/Rhino*.java"
-                   unless="bsf.present"/>
+                   unless="apache-bsf.present"/>
           <exclude name="${optional.package}/Rhino*.java"
                    unless="rhino.present"/>
           <exclude name="${optional.package}/script/*.java"
-                   unless="bsf.present"/>
+                   unless="apache-bsf.present"/>
           <exclude name="${optional.package}/script/*.java"
                    unless="rhino.present"/>
           <exclude name="${optional.package}/BeanShellScriptTest.java"
-                   unless="bsf.present"/>
+                   unless="apache-bsf.present"/>
           <exclude name="${optional.package}/BeanShellScriptTest.java"
                    unless="beanshell.present"/>
           <exclude name="${optional.type.package}/Script*.java"
-                   unless="bsf.present"/>
+                   unless="apache-bsf.present"/>
           <exclude name="${optional.type.package}/Script*.java"
                    unless="rhino.present"/>
 
@@ -2469,11 +2469,55 @@ ${antunit.reports}
     </cdx:component>
     <optional-sbom dep="apache-bcel" nameSuffix="+ BCEL"/>
 
-    <!--optional-jar dep="apache-log4j"/>
-    <optional-jar dep="commons-logging"/>
-    <optional-jar dep="apache-bsf"/>
-    <optional-jar dep="javamail"/>
-    <optional-jar dep="jakartamail"/-->
+    <cdx:component
+        id="cdx-apache-log4j"
+        name="log4j"
+        group="log4j"
+        version="${log4j.version}"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license refid="apache-2"/>
+    </cdx:component>
+    <optional-sbom dep="apache-log4j" nameSuffix="+ Log4J 1.x"/>
+
+    <cdx:component
+        id="cdx-commons-logging"
+        name="commons-logging-api"
+        group="commons-logging"
+        version="${commons-logging-api.version}"
+        description="Commons Logging is a thin adapter allowing configurable bridging to other, well known logging systems."
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license refid="apache-2"/>
+    </cdx:component>
+    <optional-sbom dep="commons-logging" nameSuffix="+ Commons Logging"/>
+
+    <cdx:component
+        id="cdx-apache-bsf"
+        name="bsf"
+        group="bsf"
+        version="${bsf.version}"
+        unknownDependencies="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license refid="apache-2"/>
+    </cdx:component>
+    <optional-sbom dep="apache-bsf" nameSuffix="+ BSF"/>
+
+    <cdx:component
+        id="cdx-javamail"
+        name="javax.mail"
+        group="com.sun.mail"
+        version="${javax.mail.version}"
+        unknownDependencies="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx"/>
+    <optional-sbom dep="javamail" nameSuffix="+ JavaMail"/>
+
+    <cdx:component
+        id="cdx-jakartamail"
+        name="jakarta.mail"
+        group="com.sun.mail"
+        version="${jakarta.mail.version}"
+        unknownDependencies="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx"/>
+    <optional-sbom dep="jakartamail" nameSuffix="+ JakartaMail"/>
 
     <cdx:component
         id="cdx-netrexx"
@@ -2494,16 +2538,170 @@ ${antunit.reports}
     </cdx:component>
     <optional-sbom dep="netrexx" nameSuffix="+ NetRexx"/>
 
-    <!--optional-jar dep="commons-net"/>
-    <optional-jar dep="antlr"/>
-    <optional-jar dep="imageio"/>
-    <optional-jar dep="jmf"/>
-    <optional-jar dep="jai"/>
-    <optional-jar dep="swing"/>
-    <optional-jar dep="jsch"/>
-    <optional-jar dep="jdepend"/>
-    <optional-jar dep="apache-xalan2"/>
-    <optional-jar dep="xz"/-->
+    <cdx:component
+        id="cdx-commons-net"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <sbomLink>
+        <url
+            url="https://repo1.maven.org/maven2/commons-net/commons-net/${commons-net.version}/commons-net-${commons-net.version}-cyclonedx.json"/>
+      </sbomLink>
+    </cdx:component>
+    <optional-sbom dep="commons-net" nameSuffix="+ Commons Net"/>
+
+    <cdx:component
+        id="cdx-antlr"
+        name="antlr"
+        group="antlr"
+        version="${antlr.version}"
+        description="A framework for constructing recognizers, compilers, and translators from grammatical descriptions containing Java, C#, C++, or Python actions."
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license name="BSD License">
+        <url url="http://www.antlr.org/license.html"/>
+      </license>
+      <externalReference
+          type="WEBSITE"
+          url="http://www.antlr.org/"/>
+    </cdx:component>
+    <optional-sbom dep="antlr" nameSuffix="+ ANTLR"/>
+
+    <cdx:componentbom
+        bomName="${name}-imageio-cyclonedx"
+        outputdirectory="${build.lib}"
+        format="all"
+        useComponentSupplier="true"
+        if:set="imageio.present" xmlns:if="ant:if"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <component
+          id="cdx-ant-imageio"
+          name="ant-imageio"
+          group="org.apache.ant"
+          version="${pom.version}"
+          description="Apache Ant + ImageIO"
+          publisher="The Apache Software Foundation"
+          manufacturerIsSupplier="true">
+        <file file="${build.lib}/${name}-imageio.jar"/>
+        <manufacturer refid="ant-team"/>
+        <license refid="apache-2"/>
+        <externalReferenceSet refid="ant-common-refs"/>
+        <dependency componentRef="cdx-ant"/>
+      </component>
+      <additionalComponent refid="cdx-ant"/>
+      <additionalComponent refid="cdx-ant-launcher"/>
+      <license refid="apache-2"/>
+    </cdx:componentbom>
+
+    <cdx:componentbom
+        bomName="${name}-jmf-cyclonedx"
+        outputdirectory="${build.lib}"
+        format="all"
+        useComponentSupplier="true"
+        if:set="jmf.present" xmlns:if="ant:if"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <component
+          id="cdx-ant-jmf"
+          name="ant-jmf"
+          group="org.apache.ant"
+          version="${pom.version}"
+          description="Apache Ant + JMF"
+          publisher="The Apache Software Foundation"
+          manufacturerIsSupplier="true">
+        <file file="${build.lib}/${name}-jmf.jar"/>
+        <manufacturer refid="ant-team"/>
+        <license refid="apache-2"/>
+        <externalReferenceSet refid="ant-common-refs"/>
+        <dependency componentRef="cdx-ant"/>
+      </component>
+      <additionalComponent refid="cdx-ant"/>
+      <additionalComponent refid="cdx-ant-launcher"/>
+      <license refid="apache-2"/>
+    </cdx:componentbom>
+
+    <cdx:component
+        id="cdx-jai"
+        name="jai-core"
+        group="javax.media"
+        description="The Java Advanced Imaging API extends the Java 2 platform by allowing sophisticated, high-performance image processing to be incorporated into Java applets and applications. It is a set of classes providing imaging functionality beyond that of Java 2D and the Java Foundation classes, though it is designed for compatibility with those APIs. This API implements a set of core image processing capabilities including image tiling, regions of interest, deferred execution and a set of core image processing operators, including many common point, area, and frequency domain operators."
+        version="${jai-core.version}"
+        unknownDependencies="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license name="Sun Microsystems, Inc. Binary Code License Agreement"/>
+    </cdx:component>
+    <optional-sbom dep="jai" nameSuffix="+ JAI"/>
+
+    <cdx:componentbom
+        bomName="${name}-swing-cyclonedx"
+        outputdirectory="${build.lib}"
+        format="all"
+        useComponentSupplier="true"
+        if:set="swing.present" xmlns:if="ant:if"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <component
+          id="cdx-ant-swing"
+          name="ant-swing"
+          group="org.apache.ant"
+          version="${pom.version}"
+          description="Apache Ant + Swing"
+          publisher="The Apache Software Foundation"
+          manufacturerIsSupplier="true">
+        <file file="${build.lib}/${name}-swing.jar"/>
+        <manufacturer refid="ant-team"/>
+        <license refid="apache-2"/>
+        <externalReferenceSet refid="ant-common-refs"/>
+        <dependency componentRef="cdx-ant"/>
+      </component>
+      <additionalComponent refid="cdx-ant"/>
+      <additionalComponent refid="cdx-ant-launcher"/>
+      <license refid="apache-2"/>
+    </cdx:componentbom>
+
+    <cdx:component
+        id="cdx-jsch"
+        name="jsch"
+        group="com.jcraft"
+        description="JSch is a pure Java implementation of SSH2"
+        version="${jsch.version}"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <externalReference
+          type="WEBSITE"
+          url="http://www.jcraft.com/"/>
+      <license name="Revised BSD">
+        <url url="http://www.jcraft.com/jsch/LICENSE.txt"/>
+      </license>
+    </cdx:component>
+    <optional-sbom dep="jsch" nameSuffix="+ JSch"/>
+
+    <cdx:component
+        id="cdx-jdepend"
+        name="jdepend"
+        group="jdepend"
+        version="${jdepend.version}"
+        unknownDependencies="true"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx"/>
+    <optional-sbom dep="jdepend" nameSuffix="+ JDepend"/>
+
+    <cdx:component
+        id="cdx-apache-xalan2"
+        name="xalan"
+        group="xalan"
+        version="${xalan.version}"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <license refid="apache-2"/>
+    </cdx:component>
+    <optional-sbom dep="apache-xalan2" nameSuffix="+ Xalan 2"/>
+
+    <cdx:component
+        id="cdx-xz"
+        name="xz"
+        group="org.tukaani"
+        version="${xz.version}"
+        description="XZ data compression"
+        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+      <externalReference
+          type="WEBSITE"
+          url="https://tukaani.org/xz/java.html"/>
+      <license name="Public Domain"/>
+    </cdx:component>
+    <optional-sbom dep="xz" nameSuffix="+ XZ for Java"/>
 
     <cdx:componentbom
         bomName="${name}-testutil-cyclonedx"
