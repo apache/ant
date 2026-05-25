@@ -2264,7 +2264,7 @@ ${antunit.reports}
           url="https://www.apache.org/security/"/>
       <externalReference
           type="VCS"
-          url="https://github.com/apache/ant"/>
+          url="https://gitbox.apache.org/repos/asf/ant.git"/>
       <externalReference
           type="BUILD_SYSTEM"
           url="https://ci-builds.apache.org/job/Ant/"/>
