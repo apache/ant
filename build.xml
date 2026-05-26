@@ -2239,8 +2239,8 @@ ${antunit.reports}
     </typedef>
 
     <cdx:organization
-        name="Apache Ant Development Team"
-        id="ant-team"
+        name="Apache Ant Project Management Committee"
+        id="ant-pmc"
         xmlns:cdx="antlib:org.apache.ant.cyclonedx">
       <url url="https://ant.apache.org/"/>
     </cdx:organization>
@@ -2303,7 +2303,7 @@ ${antunit.reports}
           publisher="The Apache Software Foundation"
           manufacturerIsSupplier="true">
         <file file="${build.lib}/${name}-launcher.jar"/>
-        <manufacturer refid="ant-team"/>
+        <manufacturer refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
       </component>
@@ -2324,7 +2324,7 @@ ${antunit.reports}
           publisher="The Apache Software Foundation"
           manufacturerIsSupplier="true">
         <file file="${build.lib}/${name}.jar"/>
-        <manufacturer refid="ant-team"/>
+        <manufacturer refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant-launcher"/>
@@ -2354,7 +2354,7 @@ ${antunit.reports}
               publisher="The Apache Software Foundation"
               manufacturerIsSupplier="true">
             <file file="${build.lib}/${optional.jars.prefix}-@{dep}.jar"/>
-            <manufacturer refid="ant-team"/>
+            <manufacturer refid="ant-pmc"/>
             <license refid="apache-2"/>
             <externalReferenceSet refid="ant-common-refs"/>
             <dependency componentRef="cdx-ant"/>
@@ -2586,7 +2586,7 @@ ${antunit.reports}
           publisher="The Apache Software Foundation"
           manufacturerIsSupplier="true">
         <file file="${build.lib}/${name}-imageio.jar"/>
-        <manufacturer refid="ant-team"/>
+        <manufacturer refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant"/>
@@ -2612,7 +2612,7 @@ ${antunit.reports}
           publisher="The Apache Software Foundation"
           manufacturerIsSupplier="true">
         <file file="${build.lib}/${name}-jmf.jar"/>
-        <manufacturer refid="ant-team"/>
+        <manufacturer refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant"/>
@@ -2650,7 +2650,7 @@ ${antunit.reports}
           publisher="The Apache Software Foundation"
           manufacturerIsSupplier="true">
         <file file="${build.lib}/${name}-swing.jar"/>
-        <manufacturer refid="ant-team"/>
+        <manufacturer refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant"/>
@@ -2725,7 +2725,7 @@ ${antunit.reports}
           publisher="The Apache Software Foundation"
           manufacturerIsSupplier="true">
         <file file="${build.lib}/${name}-testutil.jar"/>
-        <manufacturer refid="ant-team"/>
+        <manufacturer refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant"/>
