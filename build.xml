@@ -2301,9 +2301,9 @@ ${antunit.reports}
           version="${pom.version}"
           description="Apache Ant Launcher"
           publisher="The Apache Software Foundation"
-          manufacturerIsSupplier="true">
+          supplierIsManufacturer="true">
         <file file="${build.lib}/${name}-launcher.jar"/>
-        <manufacturer refid="ant-pmc"/>
+        <supplier refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
       </component>
@@ -2322,9 +2322,9 @@ ${antunit.reports}
           version="${pom.version}"
           description="Apache Ant Core"
           publisher="The Apache Software Foundation"
-          manufacturerIsSupplier="true">
+          supplierIsManufacturer="true">
         <file file="${build.lib}/${name}.jar"/>
-        <manufacturer refid="ant-pmc"/>
+        <supplier refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant-launcher"/>
@@ -2352,9 +2352,9 @@ ${antunit.reports}
               version="${pom.version}"
               description="Apache Ant @{nameSuffix}"
               publisher="The Apache Software Foundation"
-              manufacturerIsSupplier="true">
+              supplierIsManufacturer="true">
             <file file="${build.lib}/${optional.jars.prefix}-@{dep}.jar"/>
-            <manufacturer refid="ant-pmc"/>
+            <supplier refid="ant-pmc"/>
             <license refid="apache-2"/>
             <externalReferenceSet refid="ant-common-refs"/>
             <dependency componentRef="cdx-ant"/>
@@ -2584,9 +2584,9 @@ ${antunit.reports}
           version="${pom.version}"
           description="Apache Ant + ImageIO"
           publisher="The Apache Software Foundation"
-          manufacturerIsSupplier="true">
+          supplierIsManufacturer="true">
         <file file="${build.lib}/${name}-imageio.jar"/>
-        <manufacturer refid="ant-pmc"/>
+        <supplier refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant"/>
@@ -2610,9 +2610,9 @@ ${antunit.reports}
           version="${pom.version}"
           description="Apache Ant + JMF"
           publisher="The Apache Software Foundation"
-          manufacturerIsSupplier="true">
+          supplierIsManufacturer="true">
         <file file="${build.lib}/${name}-jmf.jar"/>
-        <manufacturer refid="ant-pmc"/>
+        <supplier refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant"/>
@@ -2648,9 +2648,9 @@ ${antunit.reports}
           version="${pom.version}"
           description="Apache Ant + Swing"
           publisher="The Apache Software Foundation"
-          manufacturerIsSupplier="true">
+          supplierIsManufacturer="true">
         <file file="${build.lib}/${name}-swing.jar"/>
-        <manufacturer refid="ant-pmc"/>
+        <supplier refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant"/>
@@ -2723,9 +2723,9 @@ ${antunit.reports}
           version="${pom.version}"
           description="Apache Ant Test Utilities"
           publisher="The Apache Software Foundation"
-          manufacturerIsSupplier="true">
+          supplierIsManufacturer="true">
         <file file="${build.lib}/${name}-testutil.jar"/>
-        <manufacturer refid="ant-pmc"/>
+        <supplier refid="ant-pmc"/>
         <license refid="apache-2"/>
         <externalReferenceSet refid="ant-common-refs"/>
         <dependency componentRef="cdx-ant"/>
