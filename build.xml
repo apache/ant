@@ -2297,84 +2297,72 @@ ${antunit.reports}
 
     <property file="${lib.dir}/libraries.properties"/>
 
-    <cdx:componentbom
-        bomName="${name}-launcher-cyclonedx"
-        outputdirectory="${build.lib}"
-        format="all"
-        useComponentSupplier="true"
-        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
-      <component
-          id="cdx-ant-launcher"
-          name="ant-launcher"
-          group="org.apache.ant"
-          version="${pom.version}"
-          description="Apache Ant Launcher"
-          publisher="The Apache Software Foundation"
-          supplierIsManufacturer="true">
-        <file file="${build.lib}/${name}-launcher.jar"/>
-        <supplier refid="ant-pmc"/>
-        <license refid="apache-2"/>
-        <externalReferenceSet refid="ant-common-refs"/>
-      </component>
-      <license refid="apache-2"/>
-    </cdx:componentbom>
-    <cdx:componentbom
-        bomName="${name}-cyclonedx"
-        outputdirectory="${build.lib}"
-        format="all"
-        useComponentSupplier="true"
-        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
-      <component
-          id="cdx-ant"
-          name="ant"
-          group="org.apache.ant"
-          version="${pom.version}"
-          description="Apache Ant Core"
-          publisher="The Apache Software Foundation"
-          supplierIsManufacturer="true">
-        <file file="${build.lib}/${name}.jar"/>
-        <supplier refid="ant-pmc"/>
-        <license refid="apache-2"/>
-        <externalReferenceSet refid="ant-common-refs"/>
+    <macrodef name="ant-componentbom">
+      <attribute name="suffix"/>
+      <attribute name="description"/>
+      <element name="deps" optional="true"/>
+      <element name="additionalBomContent" optional="true"/>
+      <sequential>
+        <cdx:componentbom
+            bomName="${name}@{suffix}-cyclonedx"
+            outputdirectory="${build.lib}"
+            format="all"
+            useComponentSupplier="true"
+            useComponentManufacturer="true"
+            xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+          <component
+              id="cdx-ant@{suffix}"
+              name="ant@{suffix}"
+              group="org.apache.ant"
+              version="${pom.version}"
+              description="@{description}"
+              publisher="The Apache Software Foundation"
+              supplierIsManufacturer="true">
+            <file file="${build.lib}/${name}@{suffix}.jar"/>
+            <supplier refid="ant-pmc"/>
+            <license refid="apache-2"/>
+            <externalReferenceSet refid="ant-common-refs"/>
+            <deps/>
+          </component>
+          <license refid="apache-2"/>
+          <additionalBomContent/>
+        </cdx:componentbom>
+      </sequential>
+    </macrodef>
+    <ant-componentbom
+        suffix="-launcher"
+        description="Apache Ant Launcher"/>
+    <ant-componentbom
+        suffix=""
+        description="Apache Ant Core">
+      <deps>
         <dependency componentRef="cdx-ant-launcher"/>
-      </component>
-      <additionalComponent refid="cdx-ant-launcher"/>
-      <license refid="apache-2"/>
-    </cdx:componentbom>
+      </deps>
+      <additionalBomContent>
+        <additionalComponent refid="cdx-ant-launcher"/>
+      </additionalBomContent>
+    </ant-componentbom>
 
     <macrodef name="optional-sbom">
       <attribute name="dep"/>
       <attribute name="nameSuffix"/>
       <element name="additionalContent" implicit="true" optional="true"/>
       <sequential>
-        <cdx:componentbom
-            bomName="${optional.jars.prefix}-@{dep}-cyclonedx"
-            outputdirectory="${build.lib}"
-            format="all"
-            useComponentSupplier="true"
-            if:set="@{dep}.present" xmlns:if="ant:if"
-            xmlns:cdx="antlib:org.apache.ant.cyclonedx">
-          <component
-              id="cdx-ant-@{dep}"
-              name="ant-@{dep}"
-              group="org.apache.ant"
-              version="${pom.version}"
-              description="Apache Ant @{nameSuffix}"
-              publisher="The Apache Software Foundation"
-              supplierIsManufacturer="true">
-            <file file="${build.lib}/${optional.jars.prefix}-@{dep}.jar"/>
-            <supplier refid="ant-pmc"/>
-            <license refid="apache-2"/>
-            <externalReferenceSet refid="ant-common-refs"/>
+        <ant-componentbom
+            suffix="-@{dep}"
+            description="Apache Ant @{nameSuffix}"
+            if:set="@{dep}.present" xmlns:if="ant:if">
+          <deps>
             <dependency componentRef="cdx-ant"/>
             <dependency componentRef="cdx-@{dep}"/>
-          </component>
-          <additionalComponent refid="cdx-ant"/>
-          <additionalComponent refid="cdx-ant-launcher"/>
-          <additionalComponent refid="cdx-@{dep}"/>
-          <license refid="apache-2"/>
-          <additionalContent/>
-        </cdx:componentbom>
+          </deps>
+          <additionalBomContent>
+            <additionalComponent refid="cdx-ant"/>
+            <additionalComponent refid="cdx-ant-launcher"/>
+            <additionalComponent refid="cdx-@{dep}"/>
+            <additionalContent/>
+          </additionalBomContent>
+        </ant-componentbom>
       </sequential>
     </macrodef>
 
@@ -2579,57 +2567,31 @@ ${antunit.reports}
     </cdx:component>
     <optional-sbom dep="antlr" nameSuffix="+ ANTLR"/>
 
-    <cdx:componentbom
-        bomName="${name}-imageio-cyclonedx"
-        outputdirectory="${build.lib}"
-        format="all"
-        useComponentSupplier="true"
-        if:set="imageio.present" xmlns:if="ant:if"
-        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
-      <component
-          id="cdx-ant-imageio"
-          name="ant-imageio"
-          group="org.apache.ant"
-          version="${pom.version}"
-          description="Apache Ant + ImageIO"
-          publisher="The Apache Software Foundation"
-          supplierIsManufacturer="true">
-        <file file="${build.lib}/${name}-imageio.jar"/>
-        <supplier refid="ant-pmc"/>
-        <license refid="apache-2"/>
-        <externalReferenceSet refid="ant-common-refs"/>
+    <ant-componentbom
+        suffix="-imageio"
+        description="Apache Ant + ImageIO"
+        if:set="imageio.present" xmlns:if="ant:if">
+      <deps>
         <dependency componentRef="cdx-ant"/>
-      </component>
-      <additionalComponent refid="cdx-ant"/>
-      <additionalComponent refid="cdx-ant-launcher"/>
-      <license refid="apache-2"/>
-    </cdx:componentbom>
+      </deps>
+      <additionalBomContent>
+        <additionalComponent refid="cdx-ant"/>
+        <additionalComponent refid="cdx-ant-launcher"/>
+      </additionalBomContent>
+    </ant-componentbom>
 
-    <cdx:componentbom
-        bomName="${name}-jmf-cyclonedx"
-        outputdirectory="${build.lib}"
-        format="all"
-        useComponentSupplier="true"
-        if:set="jmf.present" xmlns:if="ant:if"
-        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
-      <component
-          id="cdx-ant-jmf"
-          name="ant-jmf"
-          group="org.apache.ant"
-          version="${pom.version}"
-          description="Apache Ant + JMF"
-          publisher="The Apache Software Foundation"
-          supplierIsManufacturer="true">
-        <file file="${build.lib}/${name}-jmf.jar"/>
-        <supplier refid="ant-pmc"/>
-        <license refid="apache-2"/>
-        <externalReferenceSet refid="ant-common-refs"/>
+    <ant-componentbom
+        suffix="-jmf"
+        description="Apache Ant + JMF"
+        if:set="jmf.present" xmlns:if="ant:if">
+      <deps>
         <dependency componentRef="cdx-ant"/>
-      </component>
-      <additionalComponent refid="cdx-ant"/>
-      <additionalComponent refid="cdx-ant-launcher"/>
-      <license refid="apache-2"/>
-    </cdx:componentbom>
+      </deps>
+      <additionalBomContent>
+        <additionalComponent refid="cdx-ant"/>
+        <additionalComponent refid="cdx-ant-launcher"/>
+      </additionalBomContent>
+    </ant-componentbom>
 
     <cdx:component
         id="cdx-jai"
@@ -2643,31 +2605,18 @@ ${antunit.reports}
     </cdx:component>
     <optional-sbom dep="jai" nameSuffix="+ JAI"/>
 
-    <cdx:componentbom
-        bomName="${name}-swing-cyclonedx"
-        outputdirectory="${build.lib}"
-        format="all"
-        useComponentSupplier="true"
-        if:set="swing.present" xmlns:if="ant:if"
-        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
-      <component
-          id="cdx-ant-swing"
-          name="ant-swing"
-          group="org.apache.ant"
-          version="${pom.version}"
-          description="Apache Ant + Swing"
-          publisher="The Apache Software Foundation"
-          supplierIsManufacturer="true">
-        <file file="${build.lib}/${name}-swing.jar"/>
-        <supplier refid="ant-pmc"/>
-        <license refid="apache-2"/>
-        <externalReferenceSet refid="ant-common-refs"/>
+    <ant-componentbom
+        suffix="-swing"
+        description="Apache Ant + Swing"
+        if:set="jmf.present" xmlns:if="ant:if">
+      <deps>
         <dependency componentRef="cdx-ant"/>
-      </component>
-      <additionalComponent refid="cdx-ant"/>
-      <additionalComponent refid="cdx-ant-launcher"/>
-      <license refid="apache-2"/>
-    </cdx:componentbom>
+      </deps>
+      <additionalBomContent>
+        <additionalComponent refid="cdx-ant"/>
+        <additionalComponent refid="cdx-ant-launcher"/>
+      </additionalBomContent>
+    </ant-componentbom>
 
     <cdx:component
         id="cdx-jsch"
@@ -2718,34 +2667,20 @@ ${antunit.reports}
     </cdx:component>
     <optional-sbom dep="xz" nameSuffix="+ XZ for Java"/>
 
-    <cdx:componentbom
-        bomName="${name}-testutil-cyclonedx"
-        outputdirectory="${build.lib}"
-        format="all"
-        useComponentSupplier="true"
-        if:set="junit.present" xmlns:if="ant:if"
-        xmlns:cdx="antlib:org.apache.ant.cyclonedx">
-      <component
-          id="cdx-ant-testutil"
-          name="ant-testutil"
-          group="org.apache.ant"
-          version="${pom.version}"
-          description="Apache Ant Test Utilities"
-          publisher="The Apache Software Foundation"
-          supplierIsManufacturer="true">
-        <file file="${build.lib}/${name}-testutil.jar"/>
-        <supplier refid="ant-pmc"/>
-        <license refid="apache-2"/>
-        <externalReferenceSet refid="ant-common-refs"/>
+    <ant-componentbom
+        suffix="-testutil"
+        description="Apache Ant Test Utilities">
+      <deps>
         <dependency componentRef="cdx-ant"/>
         <dependency componentRef="cdx-junit"/>
-      </component>
-      <additionalComponent refid="cdx-ant"/>
-      <additionalComponent refid="cdx-ant-launcher"/>
-      <additionalComponent refid="cdx-junit"/>
-      <additionalComponent refid="cdx-hamcrest"/>
-      <license refid="apache-2"/>
-    </cdx:componentbom>
+      </deps>
+      <additionalBomContent>
+        <additionalComponent refid="cdx-ant"/>
+        <additionalComponent refid="cdx-ant-launcher"/>
+        <additionalComponent refid="cdx-junit"/>
+        <additionalComponent refid="cdx-hamcrest"/>
+      </additionalBomContent>
+    </ant-componentbom>
   </target>
 
 </project>
