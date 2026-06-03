@@ -388,14 +388,14 @@ Set -Ddest=LOCATION on the command line
     <f2 project="org.tukaani" archive="xz"/>
   </target>
 
-  <target name="cyclonedx-core-java"
-          description="load CycloneDX Core (Java) library"
+  <target name="ant-cyclonedx"
+          description="load CycloneDX Antlib"
           depends="init">
-    <f2 project="org.cyclonedx" archive="cyclonedx-core-java"/>
+    <f2 project="org.apache.ant" archive="ant-cyclonedx"/>
   </target>
 
   <target name="all"
     description="load all the libraries (except jython)"
     depends="antunit,ivy,logging,junit,junitlauncher,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging,script,
-      javamail,jakartamail,jspc,jai,xz,junit-engine-vintage,junit-engine-jupiter,netrexx,cyclonedx-core-java"/>
+      javamail,jakartamail,jspc,jai,xz,junit-engine-vintage,junit-engine-jupiter,netrexx,ant-cyclonedx"/>
 </project>
