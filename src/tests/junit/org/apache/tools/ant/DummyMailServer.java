@@ -131,7 +131,7 @@ public class DummyMailServer implements Runnable, Callable<Void> {
         sb.append(retmsg);
     }
 
-    public void disconnect() {
+    public synchronized void disconnect() {
         this.stop = true;
         if (out != null) {
             try {
