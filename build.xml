@@ -1392,7 +1392,7 @@
     <delete file="${dist.base.binaries}/${dist.name}-bin.tar"/>
   </target>
 
-  <target name="main-distribution" depends="pkg-distribution,tar-distribution,jars-sources,test-jar-source"
+  <target name="main-distribution" depends="pkg-distribution,-tar-distribution-sboms,jars-sources,test-jar-source"
           description="--> creates the zip, pkg, and tar distributions">
 
     <copy todir="${java-repository.dir}">
@@ -1503,7 +1503,7 @@
     </checksums>
   </target>
 
-  <target name="distribution" depends="main-distribution"
+  <target name="distribution" depends="main-distribution,distribution-sboms"
           description="--> creates the full Apache Ant distribution">
   </target>
 
@@ -2232,7 +2232,7 @@ ${antunit.reports}
              classname="org.apache.ant.cyclonedx.ComponentBomTask"
              classpathref="classpath" ignoresystemclasses="${ignoresystemclasses}"/>
 
-  <target name="init-cyclonedx" if="cyclonedx.antlib.present">
+  <target name="-init-cyclonedx" if="cyclonedx.antlib.present">
     <typedef uri="antlib:org.apache.ant.cyclonedx"
       resource="org/apache/ant/cyclonedx/antlib.xml">
       <classpath refid="classpath"/>
@@ -2295,7 +2295,7 @@ ${antunit.reports}
     </cdx:externalreferenceset>
   </target>
 
-  <target name="component-boms" depends="init-cyclonedx,jars,test-jar"
+  <target name="component-boms" depends="-init-cyclonedx,jars,test-jar"
           if="cyclonedx.antlib.present">
 
     <property file="${lib.dir}/libraries.properties"/>
@@ -2672,7 +2672,8 @@ ${antunit.reports}
 
     <ant-componentbom
         suffix="-testutil"
-        description="Apache Ant Test Utilities">
+        description="Apache Ant Test Utilities"
+        if:set="junit4.present" xmlns:if="ant:if">
       <deps>
         <dependency componentRef="cdx-ant"/>
         <dependency componentRef="cdx-junit"/>
@@ -2686,4 +2687,378 @@ ${antunit.reports}
     </ant-componentbom>
   </target>
 
+  <target name="-prepare-distribution-bom"
+          depends="-init-cyclonedx"
+          if="cyclonedx.antlib.present">
+    <macrodef name="ant-distributionbom">
+      <attribute name="distdir"/>
+      <attribute name="subdir"/>
+      <attribute name="kind"/>
+      <attribute name="descriptionsuffix"/>
+      <attribute name="ext"/>
+      <attribute name="componentType"/>
+      <element name="archiveContent"/>
+      <element name="moreComponentChildren" optional="true"/>
+      <sequential>
+        <cdx:componentbom
+            bomName="${dist.name}-@{kind}.@{ext}.cyclonedx"
+            outputdirectory="@{distdir}"
+            format="all"
+            useComponentSupplier="true"
+            useComponentManufacturer="true"
+            xmlns:cdx="antlib:org.apache.ant.cyclonedx">
+          <component
+              name="https://archive.apache.org/dist/ant/@{subdir}/${dist.name}-@{kind}.@{ext}"
+              purl="https://archive.apache.org/dist/ant/@{subdir}/${dist.name}-@{kind}.@{ext}"
+              version="${pom.version}"
+              type="@{componentType}"
+              description="Apache Ant @{descriptionsuffix}"
+              publisher="The Apache Software Foundation"
+              supplierIsManufacturer="true">
+            <file file="@{distdir}/${dist.name}-@{kind}.@{ext}"/>
+            <supplier refid="ant-pmc"/>
+            <license refid="apache-2"/>
+            <externalReferenceSet refid="ant-common-refs"/>
+            <moreComponentChildren/>
+          </component>
+          <license refid="apache-2"/>
+          <pureFileComponents>
+            <archiveContent/>
+          </pureFileComponents>
+        </cdx:componentbom>
+      </sequential>
+    </macrodef>
+    <macrodef name="create-tarball-boms">
+      <attribute name="distdir"/>
+      <attribute name="subdir"/>
+      <attribute name="kind"/>
+      <attribute name="descriptionsuffix"/>
+      <attribute name="componentType" default="file"/>
+      <element name="componentChildren" optional="true"/>
+      <element name="archiveContents"/>
+      <sequential>
+        <ant-distributionbom
+            distdir="@{distdir}"
+            subdir="@{subdir}"
+            kind="@{kind}"
+            descriptionsuffix="@{descriptionsuffix}"
+            ext="zip"
+            componentType="@{componentType}">
+          <moreComponentChildren>
+            <componentChildren/>
+          </moreComponentChildren>
+          <archiveContent>
+            <archiveContents/>
+          </archiveContent>
+        </ant-distributionbom>
+        <ant-distributionbom
+            distdir="@{distdir}"
+            subdir="@{subdir}"
+            kind="@{kind}"
+            descriptionsuffix="@{descriptionsuffix}"
+            ext="tar.gz"
+            componentType="@{componentType}">
+          <moreComponentChildren>
+            <componentChildren/>
+          </moreComponentChildren>
+          <archiveContent>
+            <archiveContents/>
+          </archiveContent>
+        </ant-distributionbom>
+        <ant-distributionbom
+            distdir="@{distdir}"
+            subdir="@{subdir}"
+            kind="@{kind}"
+            descriptionsuffix="@{descriptionsuffix}"
+            ext="tar.bz2"
+            componentType="@{componentType}">
+          <moreComponentChildren>
+            <componentChildren/>
+          </moreComponentChildren>
+          <archiveContent>
+            <archiveContents/>
+          </archiveContent>
+        </ant-distributionbom>
+        <ant-distributionbom
+            distdir="@{distdir}"
+            subdir="@{subdir}"
+            kind="@{kind}"
+            descriptionsuffix="@{descriptionsuffix}"
+            ext="tar.xz"
+            componentType="@{componentType}">
+          <moreComponentChildren>
+            <componentChildren/>
+          </moreComponentChildren>
+          <archiveContent>
+            <archiveContents/>
+          </archiveContent>
+        </ant-distributionbom>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="-tar-distribution-sboms"
+          depends="-prepare-distribution-bom,component-boms,zip-distribution,tar-distribution"
+          if="cyclonedx.antlib.present">
+    <create-tarball-boms
+        distdir="${dist.base.binaries}"
+        subdir="binaries"
+        kind="bin"
+        componentType="application"
+        descriptionsuffix="Binary Distribution">
+      <componentChildren>
+        <component>
+          <sbomLink>
+            <file file="${build.lib}/ant-launcher-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-launcher.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-launcher"/>
+        <component>
+          <sbomLink>
+            <file file="${build.lib}/ant-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant"/>
+        <component scope="optional" if:set="antlr.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-antlr-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-antlr.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-antlr"
+                    if:set="apache-bcel.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="apache-bcel.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-apache-bcel-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-apache-bcel.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-apache-bcel"
+                    if:set="apache-bcel.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="apache-bcel.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-apache-bsf-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-apache-bsf.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-apache-bsf"
+                    if:set="apache-bcel.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="apache-log4j.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-apache-log4j-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-apache-log4j.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-apache-log4j"
+                    if:set="apache-log4j.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="apache-oro.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-apache-oro-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-apache-oro.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-apache-oro"
+                    if:set="apache-oro.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="apache-regexp.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-apache-regexp-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-apache-regexp.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-apache-regexp"
+                    if:set="apache-regexp.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="apache-resolver.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-apache-resolver-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-apache-resolver.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-apache-resolver"
+                    if:set="apache-resolver.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="apache-xalan2.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-apache-xalan2-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-apache-xalan2.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-apache-xalan2"
+                    if:set="apache-xalan2.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="commons-logging.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-commons-logging-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-commons-logging.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-commons-logging"
+                    if:set="commons-logging.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="commons-net.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-commons-net-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-commons-net.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-commons-net"
+                    if:set="commons-net.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="imageio.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-imageio-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-imageio.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-imageio"
+                    if:set="imageio.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="jai.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-jai-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-jai.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-jai"
+                    if:set="jai.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="jakartamail.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-jakartamail-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-jakartamail.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-jakartamail"
+                    if:set="jakartamail.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="javamail.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-javamail-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-javamail.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-javamail"
+                    if:set="javamail.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="jdepend.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-jdepend-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-jdepend.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-jdepend"
+                    if:set="jdepend.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="jmf.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-jmf-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-jmf.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-jmf"
+                    if:set="jmf.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="jsch.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-jsch-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-jsch.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-jsch"
+                    if:set="jsch.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="junit4.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-junit4-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-junit4.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-junit4"
+                    if:set="junit4.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="junit.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-junit-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-junit.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-junit"
+                    if:set="junit.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="junitlauncher.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-junitlauncher-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-junitlauncher.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-junitlauncher"
+                    if:set="junitlauncher.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="netrexx.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-netrexx-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-netrexx.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-netrexx"
+                    if:set="netrexx.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="swing.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-swing-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-swing.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-swing"
+                    if:set="swing.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="xz.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-xz-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-xz.jar"/>
+        </component>
+        <dependency componentRef="cdx-ant-xz"
+                    if:set="xz.present" xmlns:if="ant:if"/>
+        <component scope="optional" if:set="junit4.present" xmlns:if="ant:if">
+          <sbomLink>
+            <file file="${build.lib}/ant-testutil-cyclonedx.json"/>
+          </sbomLink>
+          <file file="${build.lib}/ant-testutil.jar"/>
+        </component>
+      </componentChildren>
+      <archiveContents>
+        <fileset dir="${dist.name}/.."
+                 includes="${dist.name}/"
+                 defaultexcludes="no"/>
+      </archiveContents>
+    </create-tarball-boms>
+  </target>
+
+  <target name="distribution-sboms"
+          depends="-prepare-distribution-bom,main-distribution"
+          if="cyclonedx.antlib.present">
+    <property name="manual-zip-content" value="${build.dir}/manual-zip-content"/>
+    <mkdir dir="${manual-zip-content}"/>
+    <unzip dest="${manual-zip-content}" src="${dist.base.manual}/${dist.name}-manual.zip"/>
+    <create-tarball-boms
+        distdir="${dist.base.manual}"
+        subdir="manual"
+        kind="manual"
+        descriptionsuffix="Manual">
+      <archiveContents>
+        <fileset dir="${manual-zip-content}" defaultexcludes="no"/>
+      </archiveContents>
+    </create-tarball-boms>
+    <delete dir="${manual-zip-content}"/>
+
+    <property name="src-zip-content" value="${build.dir}/src-zip-content"/>
+    <mkdir dir="${src-zip-content}"/>
+    <create-tarball-boms
+        distdir="${dist.base.source}"
+        subdir="source"
+        kind="src"
+        descriptionsuffix="Source Distribution">
+      <archiveContents>
+        <fileset dir="${src-zip-content}" defaultexcludes="no"/>
+      </archiveContents>
+    </create-tarball-boms>
+    <delete dir="${src-zip-content}"/>
+
+    <checksums>
+      <fileset dir="${dist.base.binaries}/">
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.sha512"/>
+      </fileset>
+      <fileset dir="${dist.base.source}/">
+        <exclude name="**/*.asc"/>
+        <exclude name="**/*.sha512"/>
+      </fileset>
+    </checksums>
+  </target>
 </project>
