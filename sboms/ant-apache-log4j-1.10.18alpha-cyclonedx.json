@@ -1,0 +1,500 @@
+{
+  "bomFormat" : "CycloneDX",
+  "specVersion" : "1.6",
+  "serialNumber" : "urn:uuid:38e65c6f-86e3-4d5b-bb14-eebf2a76c61d",
+  "version" : 1,
+  "metadata" : {
+    "timestamp" : "2026-06-07T12:52:39Z",
+    "lifecycles" : [
+      {
+        "phase" : "build"
+      }
+    ],
+    "tools" : {
+      "components" : [
+        {
+          "type" : "library",
+          "supplier" : {
+            "name" : "Apache Ant Project Management Committee",
+            "url" : [
+              "https://ant.apache.org/"
+            ]
+          },
+          "manufacturer" : {
+            "name" : "Apache Ant Project Management Committee",
+            "url" : [
+              "https://ant.apache.org/"
+            ]
+          },
+          "publisher" : "The Apache Software Foundation",
+          "group" : "org.apache.ant",
+          "name" : "ant-cyclonedx",
+          "version" : "0.1",
+          "description" : "Apache CycloneDX Antlib",
+          "licenses" : [
+            {
+              "license" : {
+                "id" : "Apache-2.0",
+                "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+              }
+            }
+          ],
+          "purl" : "pkg:maven/org.apache.ant/ant-cyclonedx@0.1?type=jar",
+          "externalReferences" : [
+            {
+              "type" : "vcs",
+              "url" : "https://gitbox.apache.org/repos/asf/ant-antlibs-cyclonedx.git"
+            },
+            {
+              "type" : "license",
+              "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+            },
+            {
+              "type" : "build-system",
+              "url" : "https://ci-builds.apache.org/job/Ant/job/CycloneDX%20Antlib/"
+            },
+            {
+              "type" : "mailing-list",
+              "url" : "https://ant.apache.org/mail.html"
+            },
+            {
+              "type" : "issue-tracker",
+              "url" : "https://bz.apache.org/bugzilla/buglist.cgi?component=CycloneDX%20Antlib&product=Ant"
+            },
+            {
+              "type" : "website",
+              "url" : "https://ant.apache.org/antlibs/cyclonedx/"
+            },
+            {
+              "type" : "distribution",
+              "url" : "https://ant.apache.org/antlibs/bindownload.cgi"
+            },
+            {
+              "type" : "source-distribution",
+              "url" : "https://ant.apache.org/antlibs/srcdownload.cgi"
+            },
+            {
+              "type" : "security-contact",
+              "url" : "https://www.apache.org/security/"
+            }
+          ]
+        }
+      ]
+    },
+    "component" : {
+      "type" : "library",
+      "bom-ref" : "pkg:maven/org.apache.ant/ant-apache-log4j@1.10.18-SNAPSHOT?type=jar",
+      "supplier" : {
+        "name" : "Apache Ant Project Management Committee",
+        "url" : [
+          "https://ant.apache.org/"
+        ]
+      },
+      "manufacturer" : {
+        "name" : "Apache Ant Project Management Committee",
+        "url" : [
+          "https://ant.apache.org/"
+        ]
+      },
+      "publisher" : "The Apache Software Foundation",
+      "group" : "org.apache.ant",
+      "name" : "ant-apache-log4j",
+      "version" : "1.10.18-SNAPSHOT",
+      "description" : "Apache Ant + Log4J 1.x",
+      "hashes" : [
+        {
+          "alg" : "MD5",
+          "content" : "df728f7b35c0f14eb9777c28b795c157"
+        },
+        {
+          "alg" : "SHA-1",
+          "content" : "7b5e33f656a9af74819a7efa8275298a7d2be3b9"
+        },
+        {
+          "alg" : "SHA-256",
+          "content" : "9934a7cc2a65b5ec9a268e791a7ec3bb64657bf696f6679cdcd6d8d3825fb49c"
+        },
+        {
+          "alg" : "SHA-512",
+          "content" : "5d766b106f74517b5cd3e9261b3eb951a98991cee4bce3edc7bbe5e4905c10ac000358ae19c83795549f8581b622ca154616dd621fde7504a0c6f85b043df1e6"
+        },
+        {
+          "alg" : "SHA3-256",
+          "content" : "ac915f0a0c5efb5f1994841571dc0f207f2247bc8ec9a2c82d54e77593989f46"
+        },
+        {
+          "alg" : "SHA3-512",
+          "content" : "9c48d96ab4ebd97e5e1b04becf008c10ec046a34400036828fb75d7d2986166d684e01b27d119094bae8862d8357f9e241829c0add0d286b4dd00740712a8eac"
+        },
+        {
+          "alg" : "SHA-384",
+          "content" : "55b8c972b11f5f8d73d01a9a8be95d076231e95ba9cb704fa45a9656e22330b704900942a4555f967024e1e800b79cf4"
+        },
+        {
+          "alg" : "SHA3-384",
+          "content" : "ba488f5ecd11c2d20a631bbe87ec65fa97a736101b8ae3454bbfc6ab500f50e645239647e3bdd3a0065b680b41a58c6e"
+        }
+      ],
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "Apache-2.0",
+            "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/org.apache.ant/ant-apache-log4j@1.10.18-SNAPSHOT?type=jar",
+      "externalReferences" : [
+        {
+          "type" : "vcs",
+          "url" : "https://gitbox.apache.org/repos/asf/ant.git"
+        },
+        {
+          "type" : "issue-tracker",
+          "url" : "https://bz.apache.org/bugzilla/buglist.cgi?product=Ant"
+        },
+        {
+          "type" : "website",
+          "url" : "https://ant.apache.org/"
+        },
+        {
+          "type" : "advisories",
+          "url" : "https://ant.apache.org/security.html#Apache%20Ant%20Security%20Vulnerabilities"
+        },
+        {
+          "type" : "mailing-list",
+          "url" : "https://ant.apache.org/mail.html"
+        },
+        {
+          "type" : "documentation",
+          "url" : "https://ant.apache.org/manual/"
+        },
+        {
+          "type" : "source-distribution",
+          "url" : "https://ant.apache.org/srcdownload.cgi"
+        },
+        {
+          "type" : "distribution",
+          "url" : "https://ant.apache.org/bindownload.cgi"
+        },
+        {
+          "type" : "license",
+          "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        },
+        {
+          "type" : "build-system",
+          "url" : "https://ci-builds.apache.org/job/Ant/"
+        },
+        {
+          "type" : "release-notes",
+          "url" : "https://github.com/apache/ant/blob/master/WHATSNEW"
+        },
+        {
+          "type" : "security-contact",
+          "url" : "https://www.apache.org/security/"
+        },
+        {
+          "type" : "rfc-9116",
+          "url" : "https://ant.apache.org/.well-known/security.txt"
+        }
+      ]
+    },
+    "manufacturer" : {
+      "name" : "Apache Ant Project Management Committee",
+      "url" : [
+        "https://ant.apache.org/"
+      ]
+    },
+    "supplier" : {
+      "name" : "Apache Ant Project Management Committee",
+      "url" : [
+        "https://ant.apache.org/"
+      ]
+    },
+    "licenses" : [
+      {
+        "license" : {
+          "id" : "Apache-2.0",
+          "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      }
+    ]
+  },
+  "components" : [
+    {
+      "type" : "library",
+      "bom-ref" : "pkg:maven/org.apache.ant/ant@1.10.18-SNAPSHOT?type=jar",
+      "supplier" : {
+        "name" : "Apache Ant Project Management Committee",
+        "url" : [
+          "https://ant.apache.org/"
+        ]
+      },
+      "manufacturer" : {
+        "name" : "Apache Ant Project Management Committee",
+        "url" : [
+          "https://ant.apache.org/"
+        ]
+      },
+      "publisher" : "The Apache Software Foundation",
+      "group" : "org.apache.ant",
+      "name" : "ant",
+      "version" : "1.10.18-SNAPSHOT",
+      "description" : "Apache Ant Core",
+      "hashes" : [
+        {
+          "alg" : "MD5",
+          "content" : "5dd4aa18b6dc9a769fddf456d23525be"
+        },
+        {
+          "alg" : "SHA-1",
+          "content" : "abb46ac6ada0b6f0ecc7d2f8e10e0d1cd2011bac"
+        },
+        {
+          "alg" : "SHA-256",
+          "content" : "db0d4a594c65a4cb170d851b4cd3fe36a82e3dee8f2a3738393349606a503621"
+        },
+        {
+          "alg" : "SHA-512",
+          "content" : "ff48bfeb661736779287a6eb68b527793868e64f1da75e80649b3a6f7e0c29389f44bd17217fc0e0684761804388008f9b7c2e1d1112b79e8129b5fa5d0f1b91"
+        },
+        {
+          "alg" : "SHA3-256",
+          "content" : "20057d1b6fdd74af1a33a71f0494b88405931025d622979dcbccf4542565de9e"
+        },
+        {
+          "alg" : "SHA3-512",
+          "content" : "f9f4aceb500d8d4b15e6f0eec0c08c1d512682dc3edb2d51f5b6b9419e88d570e38e472328a2a0a0e685106d5266349878cea41dfdc4373911bd12f3b606c1d0"
+        },
+        {
+          "alg" : "SHA-384",
+          "content" : "79442c31e2b1a325105079aa9d1491deef6433e831fabdbf3e2f48a8835b4dca8cb975a8342accfddc18ca343a9d50da"
+        },
+        {
+          "alg" : "SHA3-384",
+          "content" : "49cb7a152090ba86cff13b76eeeee08a33986695e9e14f16ebca4bb4672d62e3e476381875fc9587fd57b2f802260154"
+        }
+      ],
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "Apache-2.0",
+            "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/org.apache.ant/ant@1.10.18-SNAPSHOT?type=jar",
+      "externalReferences" : [
+        {
+          "type" : "vcs",
+          "url" : "https://gitbox.apache.org/repos/asf/ant.git"
+        },
+        {
+          "type" : "issue-tracker",
+          "url" : "https://bz.apache.org/bugzilla/buglist.cgi?product=Ant"
+        },
+        {
+          "type" : "website",
+          "url" : "https://ant.apache.org/"
+        },
+        {
+          "type" : "advisories",
+          "url" : "https://ant.apache.org/security.html#Apache%20Ant%20Security%20Vulnerabilities"
+        },
+        {
+          "type" : "mailing-list",
+          "url" : "https://ant.apache.org/mail.html"
+        },
+        {
+          "type" : "documentation",
+          "url" : "https://ant.apache.org/manual/"
+        },
+        {
+          "type" : "source-distribution",
+          "url" : "https://ant.apache.org/srcdownload.cgi"
+        },
+        {
+          "type" : "distribution",
+          "url" : "https://ant.apache.org/bindownload.cgi"
+        },
+        {
+          "type" : "license",
+          "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        },
+        {
+          "type" : "build-system",
+          "url" : "https://ci-builds.apache.org/job/Ant/"
+        },
+        {
+          "type" : "release-notes",
+          "url" : "https://github.com/apache/ant/blob/master/WHATSNEW"
+        },
+        {
+          "type" : "security-contact",
+          "url" : "https://www.apache.org/security/"
+        },
+        {
+          "type" : "rfc-9116",
+          "url" : "https://ant.apache.org/.well-known/security.txt"
+        }
+      ]
+    },
+    {
+      "type" : "library",
+      "bom-ref" : "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar",
+      "supplier" : {
+        "name" : "Apache Ant Project Management Committee",
+        "url" : [
+          "https://ant.apache.org/"
+        ]
+      },
+      "manufacturer" : {
+        "name" : "Apache Ant Project Management Committee",
+        "url" : [
+          "https://ant.apache.org/"
+        ]
+      },
+      "publisher" : "The Apache Software Foundation",
+      "group" : "org.apache.ant",
+      "name" : "ant-launcher",
+      "version" : "1.10.18-SNAPSHOT",
+      "description" : "Apache Ant Launcher",
+      "hashes" : [
+        {
+          "alg" : "MD5",
+          "content" : "652c42e30abc21d8f65631798bf83a59"
+        },
+        {
+          "alg" : "SHA-1",
+          "content" : "d00960e241743e8ebe6328ef887c461b8e16bbd4"
+        },
+        {
+          "alg" : "SHA-256",
+          "content" : "4757294429f9f087a9fc9f3fd2ac1c0f4cddc507bc732e184401192864fa0491"
+        },
+        {
+          "alg" : "SHA-512",
+          "content" : "e820da4498ff55bbf77d0bb43311903279d153b4322931d4d4c15df2f9d4747833941ce9df08ca2cfe2525343f40a4fa6f33ccad633f4f527002dc85e4f8e179"
+        },
+        {
+          "alg" : "SHA3-256",
+          "content" : "3d545b66f1216a64690ae91d34b7ff687b6f5e9d067b2c8d703c959098d396a0"
+        },
+        {
+          "alg" : "SHA3-512",
+          "content" : "5cac03f87bee7c0a2a4fbdfad7c3e35cd6266f140a90695173f93263c792e63662e33cdd5aaed9d2bbe625ee9c42f7f4eccb0f12b510094075acf3468a439b97"
+        },
+        {
+          "alg" : "SHA-384",
+          "content" : "942643635f7a5bb201f19f99caf0099285d2b93bf46605de13c1920a03efb64a619b5f7b82e03bfe64353de2ec58511f"
+        },
+        {
+          "alg" : "SHA3-384",
+          "content" : "ac3f8171353410ee6b9f454be024726516cfe531cf0e7041028ed82e60954d0e904b6fda09465754db283707984eba72"
+        }
+      ],
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "Apache-2.0",
+            "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar",
+      "externalReferences" : [
+        {
+          "type" : "vcs",
+          "url" : "https://gitbox.apache.org/repos/asf/ant.git"
+        },
+        {
+          "type" : "issue-tracker",
+          "url" : "https://bz.apache.org/bugzilla/buglist.cgi?product=Ant"
+        },
+        {
+          "type" : "website",
+          "url" : "https://ant.apache.org/"
+        },
+        {
+          "type" : "advisories",
+          "url" : "https://ant.apache.org/security.html#Apache%20Ant%20Security%20Vulnerabilities"
+        },
+        {
+          "type" : "mailing-list",
+          "url" : "https://ant.apache.org/mail.html"
+        },
+        {
+          "type" : "documentation",
+          "url" : "https://ant.apache.org/manual/"
+        },
+        {
+          "type" : "source-distribution",
+          "url" : "https://ant.apache.org/srcdownload.cgi"
+        },
+        {
+          "type" : "distribution",
+          "url" : "https://ant.apache.org/bindownload.cgi"
+        },
+        {
+          "type" : "license",
+          "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        },
+        {
+          "type" : "build-system",
+          "url" : "https://ci-builds.apache.org/job/Ant/"
+        },
+        {
+          "type" : "release-notes",
+          "url" : "https://github.com/apache/ant/blob/master/WHATSNEW"
+        },
+        {
+          "type" : "security-contact",
+          "url" : "https://www.apache.org/security/"
+        },
+        {
+          "type" : "rfc-9116",
+          "url" : "https://ant.apache.org/.well-known/security.txt"
+        }
+      ]
+    },
+    {
+      "type" : "library",
+      "bom-ref" : "pkg:maven/log4j/log4j@1.2.14?type=jar",
+      "group" : "log4j",
+      "name" : "log4j",
+      "version" : "1.2.14",
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "Apache-2.0",
+            "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/log4j/log4j@1.2.14?type=jar"
+    }
+  ],
+  "dependencies" : [
+    {
+      "ref" : "pkg:maven/org.apache.ant/ant-apache-log4j@1.10.18-SNAPSHOT?type=jar",
+      "dependsOn" : [
+        "pkg:maven/org.apache.ant/ant@1.10.18-SNAPSHOT?type=jar",
+        "pkg:maven/log4j/log4j@1.2.14?type=jar"
+      ]
+    },
+    {
+      "ref" : "pkg:maven/org.apache.ant/ant@1.10.18-SNAPSHOT?type=jar",
+      "dependsOn" : [
+        "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar"
+      ]
+    },
+    {
+      "ref" : "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar",
+      "dependsOn" : [ ]
+    },
+    {
+      "ref" : "pkg:maven/log4j/log4j@1.2.14?type=jar",
+      "dependsOn" : [ ]
+    }
+  ]
+}
