@@ -68,9 +68,7 @@
       <equals arg1="${classes-updated}" arg2="true" />
     </au:assertTrue>
     <javac srcdir="javac-dir/good-src" destdir="${build-dir}" updatedProperty="classes-updated-2" />
-    <au:assertFalse>
-      <isset property="classes-updated-2" />
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="classes-updated-2" />
   </target>
 
   <target name="test-error-property" depends="setup">
@@ -105,9 +103,7 @@
           description="https://issues.apache.org/bugzilla/show_bug.cgi?id=43114">
     <!-- no changes, shouldn't recompile, the initial bug -->
     <javac srcdir="${javac-dir}/src" destdir="${build-dir}" updatedProperty="second-pass" />
-    <au:assertFalse>
-      <isset property="second-pass" />
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="second-pass" />
     <sleep seconds="2" />
 
     <!-- change package-info.java but make containing target dir even
@@ -129,9 +125,7 @@
 
     <!-- no changes, shouldn't recompile, the initial bug -->
     <javac srcdir="${javac-dir}/src" updatedProperty="second-pass" />
-    <au:assertFalse>
-      <isset property="second-pass" />
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="second-pass" />
     <sleep seconds="2" />
 
     <!-- change package-info.java but make containing target dir even

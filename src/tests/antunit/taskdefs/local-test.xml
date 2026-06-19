@@ -25,9 +25,7 @@
   <au:assertPropertyEquals name="bar" value="bar" />
 
   <target name="testGlobalLocal">
-    <au:assertFalse>
-      <isset property="bar" />
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="bar" />
   </target>
 
   <target name="testBaseline">
