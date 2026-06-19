@@ -43,9 +43,7 @@
       class="ClassNotPresent"
       classpathref="whichresource-build"/>
 
-    <au:assertFalse>
-      <isset property="whichresource.prop2"/>
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="whichresource.prop2"/>
   </target>
     
 </project>

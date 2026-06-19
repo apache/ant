@@ -79,9 +79,7 @@
       <a:something a:foo="bar"/>
     </echoxml>
     <au:assertResourceContains resource="${file}" value="a:something"/>
-    <au:assertFalse message="Didn't expecte ${file} to contain antlib:a">
-      <resourcecontains resource="${file}" substring="antlib:a"/>
-    </au:assertFalse>
+    <au:assertResourceDoesntContain resource="${file}" value="antlib:a"/>
   </target>
 
 </project>

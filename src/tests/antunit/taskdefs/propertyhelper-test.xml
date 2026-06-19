@@ -71,9 +71,7 @@
 
   <target name="testNull" depends="setUp" if="prereqs-ok">
     <!-- demonstrate that a null value always implies a nonexistent property -->
-    <au:assertFalse>
-      <isset property="null" />
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="null" />
   </target>
 
   <target name="testAvailable" depends="setUp" if="prereqs-ok">
@@ -113,9 +111,7 @@
   </target>
 
   <target name="XtestLoadPropertiesWithObjects" if="prereqs-ok" depends="setUp">
-    <au:assertFalse>
-      <isset property="object2" />
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="object2" />
     <string id="props" value="object2=$${object}" />
     <!-- verify the property is not yet expanded -->
     <au:assertTrue>
@@ -131,9 +127,7 @@
   </target>
 
   <target name="testLoadPropertiesWithStrings" if="prereqs-ok" depends="setUp">
-    <au:assertFalse>
-      <isset property="string2" />
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="string2" />
     <string id="props" value="string2=$${string}" />
     <!-- verify the property is not yet expanded -->
     <au:assertTrue>

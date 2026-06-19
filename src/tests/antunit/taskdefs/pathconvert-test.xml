@@ -105,9 +105,7 @@
       <pathconvert property="result" setonempty="false">
           <resources />
       </pathconvert>
-      <au:assertFalse>
-          <isset property="result" />
-      </au:assertFalse>
+      <au:assertPropertyNotSet name="result" />
   </target>
 
   <target name="testDest">

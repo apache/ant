@@ -101,9 +101,7 @@ http.@SERVER@ = ${server}
     <loadproperties>
       <string value="#foo=bar" />
     </loadproperties>
-    <au:assertFalse>
-      <isset property="foo" />
-    </au:assertFalse>
+    <au:assertPropertyNotSet name="foo" />
   </target>
 
   <target name="testPrefixAttributeProperties">
