@@ -1417,9 +1417,9 @@
     </copy>
     <copy todir="${java-repository.dir}">
       <fileset dir="${dist.name}/lib">
-        <include name="ant*-cyclonedx.*"/>
+        <include name="ant*.cdx.*"/>
       </fileset>
-      <mapper type="regexp" from="ant(.*)-cyclonedx.(.*)" to="ant\1/${project.version}/ant\1-${project.version}-cyclonedx.\2"/>
+      <mapper type="regexp" from="ant(.*).cdx.(.*)" to="ant\1/${project.version}/ant\1-${project.version}.cdx.\2"/>
     </copy>
     <jar destfile="${java-repository.dir}/ant/${project.version}/ant-${project.version}-javadoc.jar"
       basedir="${build.javadocs}">
@@ -2307,7 +2307,7 @@ ${antunit.reports}
       <element name="additionalBomContent" optional="true"/>
       <sequential>
         <cdx:componentbom
-            bomName="${name}@{suffix}-cyclonedx"
+            bomName="${name}@{suffix}.cdx"
             outputdirectory="${build.lib}"
             format="all"
             useComponentSupplier="true"
@@ -2701,7 +2701,7 @@ ${antunit.reports}
       <element name="moreComponentChildren" optional="true"/>
       <sequential>
         <cdx:componentbom
-            bomName="${dist.name}-@{kind}.@{ext}.cyclonedx"
+            bomName="${dist.name}-@{kind}.@{ext}.cdx"
             outputdirectory="@{distdir}"
             format="all"
             useComponentSupplier="true"
@@ -2809,21 +2809,21 @@ ${antunit.reports}
       <componentChildren>
         <component>
           <sbomLink>
-            <file file="${build.lib}/ant-launcher-cyclonedx.json"/>
+            <file file="${build.lib}/ant-launcher.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-launcher.jar"/>
         </component>
         <dependency componentRef="cdx-ant-launcher"/>
         <component>
           <sbomLink>
-            <file file="${build.lib}/ant-cyclonedx.json"/>
+            <file file="${build.lib}/ant.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant.jar"/>
         </component>
         <dependency componentRef="cdx-ant"/>
         <component scope="optional" if:set="antlr.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-antlr-cyclonedx.json"/>
+            <file file="${build.lib}/ant-antlr.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-antlr.jar"/>
         </component>
@@ -2831,7 +2831,7 @@ ${antunit.reports}
                     if:set="apache-bcel.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="apache-bcel.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-apache-bcel-cyclonedx.json"/>
+            <file file="${build.lib}/ant-apache-bcel.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-apache-bcel.jar"/>
         </component>
@@ -2839,7 +2839,7 @@ ${antunit.reports}
                     if:set="apache-bcel.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="apache-bcel.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-apache-bsf-cyclonedx.json"/>
+            <file file="${build.lib}/ant-apache-bsf.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-apache-bsf.jar"/>
         </component>
@@ -2847,7 +2847,7 @@ ${antunit.reports}
                     if:set="apache-bcel.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="apache-log4j.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-apache-log4j-cyclonedx.json"/>
+            <file file="${build.lib}/ant-apache-log4j.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-apache-log4j.jar"/>
         </component>
@@ -2855,7 +2855,7 @@ ${antunit.reports}
                     if:set="apache-log4j.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="apache-oro.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-apache-oro-cyclonedx.json"/>
+            <file file="${build.lib}/ant-apache-oro.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-apache-oro.jar"/>
         </component>
@@ -2863,7 +2863,7 @@ ${antunit.reports}
                     if:set="apache-oro.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="apache-regexp.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-apache-regexp-cyclonedx.json"/>
+            <file file="${build.lib}/ant-apache-regexp.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-apache-regexp.jar"/>
         </component>
@@ -2871,7 +2871,7 @@ ${antunit.reports}
                     if:set="apache-regexp.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="apache-resolver.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-apache-resolver-cyclonedx.json"/>
+            <file file="${build.lib}/ant-apache-resolver.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-apache-resolver.jar"/>
         </component>
@@ -2879,7 +2879,7 @@ ${antunit.reports}
                     if:set="apache-resolver.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="apache-xalan2.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-apache-xalan2-cyclonedx.json"/>
+            <file file="${build.lib}/ant-apache-xalan2.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-apache-xalan2.jar"/>
         </component>
@@ -2887,7 +2887,7 @@ ${antunit.reports}
                     if:set="apache-xalan2.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="commons-logging.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-commons-logging-cyclonedx.json"/>
+            <file file="${build.lib}/ant-commons-logging.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-commons-logging.jar"/>
         </component>
@@ -2895,7 +2895,7 @@ ${antunit.reports}
                     if:set="commons-logging.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="commons-net.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-commons-net-cyclonedx.json"/>
+            <file file="${build.lib}/ant-commons-net.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-commons-net.jar"/>
         </component>
@@ -2903,7 +2903,7 @@ ${antunit.reports}
                     if:set="commons-net.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="imageio.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-imageio-cyclonedx.json"/>
+            <file file="${build.lib}/ant-imageio.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-imageio.jar"/>
         </component>
@@ -2911,7 +2911,7 @@ ${antunit.reports}
                     if:set="imageio.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="jai.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-jai-cyclonedx.json"/>
+            <file file="${build.lib}/ant-jai.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-jai.jar"/>
         </component>
@@ -2919,7 +2919,7 @@ ${antunit.reports}
                     if:set="jai.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="jakartamail.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-jakartamail-cyclonedx.json"/>
+            <file file="${build.lib}/ant-jakartamail.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-jakartamail.jar"/>
         </component>
@@ -2927,7 +2927,7 @@ ${antunit.reports}
                     if:set="jakartamail.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="javamail.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-javamail-cyclonedx.json"/>
+            <file file="${build.lib}/ant-javamail.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-javamail.jar"/>
         </component>
@@ -2935,7 +2935,7 @@ ${antunit.reports}
                     if:set="javamail.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="jdepend.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-jdepend-cyclonedx.json"/>
+            <file file="${build.lib}/ant-jdepend.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-jdepend.jar"/>
         </component>
@@ -2943,7 +2943,7 @@ ${antunit.reports}
                     if:set="jdepend.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="jmf.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-jmf-cyclonedx.json"/>
+            <file file="${build.lib}/ant-jmf.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-jmf.jar"/>
         </component>
@@ -2951,7 +2951,7 @@ ${antunit.reports}
                     if:set="jmf.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="jsch.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-jsch-cyclonedx.json"/>
+            <file file="${build.lib}/ant-jsch.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-jsch.jar"/>
         </component>
@@ -2959,7 +2959,7 @@ ${antunit.reports}
                     if:set="jsch.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="junit4.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-junit4-cyclonedx.json"/>
+            <file file="${build.lib}/ant-junit4.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-junit4.jar"/>
         </component>
@@ -2967,7 +2967,7 @@ ${antunit.reports}
                     if:set="junit4.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="junit.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-junit-cyclonedx.json"/>
+            <file file="${build.lib}/ant-junit.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-junit.jar"/>
         </component>
@@ -2975,7 +2975,7 @@ ${antunit.reports}
                     if:set="junit.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="junitlauncher.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-junitlauncher-cyclonedx.json"/>
+            <file file="${build.lib}/ant-junitlauncher.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-junitlauncher.jar"/>
         </component>
@@ -2983,7 +2983,7 @@ ${antunit.reports}
                     if:set="junitlauncher.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="netrexx.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-netrexx-cyclonedx.json"/>
+            <file file="${build.lib}/ant-netrexx.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-netrexx.jar"/>
         </component>
@@ -2991,7 +2991,7 @@ ${antunit.reports}
                     if:set="netrexx.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="swing.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-swing-cyclonedx.json"/>
+            <file file="${build.lib}/ant-swing.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-swing.jar"/>
         </component>
@@ -2999,7 +2999,7 @@ ${antunit.reports}
                     if:set="swing.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="xz.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-xz-cyclonedx.json"/>
+            <file file="${build.lib}/ant-xz.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-xz.jar"/>
         </component>
@@ -3007,7 +3007,7 @@ ${antunit.reports}
                     if:set="xz.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="junit4.present" xmlns:if="ant:if">
           <sbomLink>
-            <file file="${build.lib}/ant-testutil-cyclonedx.json"/>
+            <file file="${build.lib}/ant-testutil.cdx.json"/>
           </sbomLink>
           <file file="${build.lib}/ant-testutil.jar"/>
         </component>
