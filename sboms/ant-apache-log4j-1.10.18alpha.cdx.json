@@ -1,10 +1,10 @@
 {
   "bomFormat" : "CycloneDX",
   "specVersion" : "1.6",
-  "serialNumber" : "urn:uuid:c938055c-bbd6-4a76-be94-ef599b489aeb",
+  "serialNumber" : "urn:uuid:1f48d9fb-3f4a-412c-8e78-b715d6d92280",
   "version" : 1,
   "metadata" : {
-    "timestamp" : "2026-06-07T12:52:40Z",
+    "timestamp" : "2026-06-19T19:53:21Z",
     "lifecycles" : [
       {
         "phase" : "build"
@@ -31,6 +31,40 @@
           "name" : "ant-cyclonedx",
           "version" : "0.1",
           "description" : "Apache CycloneDX Antlib",
+          "hashes" : [
+            {
+              "alg" : "MD5",
+              "content" : "f00bf8afd0fd1a4677a80aa400934230"
+            },
+            {
+              "alg" : "SHA-1",
+              "content" : "64676be7248fc2ec0eef936be9c2507909e05414"
+            },
+            {
+              "alg" : "SHA-256",
+              "content" : "a4f295746ba0ea50d7b720dc4f42ffbe5a98bc3ad9f0d175a0be80a5bd108e84"
+            },
+            {
+              "alg" : "SHA-512",
+              "content" : "b0fa0bc41af224339d3bd301fe308de3bd3b0f75ad7ded60559469fa4eed85bec96e0eb195ae1db14fad2a8aaed42c776b3268575d7feeac6751a7737193cf3c"
+            },
+            {
+              "alg" : "SHA3-256",
+              "content" : "8af81f7d1cda4165dd841ef06ef5fa928a103a2de487bc62e659f98618c6f8d7"
+            },
+            {
+              "alg" : "SHA3-512",
+              "content" : "5584260043593ad9abcd6b2c9630edc65422f6b4853cc884935d995d9f4a04c6be6ad4504a38f16910fbff698f5411cbe5bbab0ee071f6011eeef51a9fa93cdb"
+            },
+            {
+              "alg" : "SHA-384",
+              "content" : "3532c340f51512b3521f96fe1f96b49cb7748c2b117ca4670dad26db8842efced5a64a366af01be2a25940eac63acf3f"
+            },
+            {
+              "alg" : "SHA3-384",
+              "content" : "64b575e8e4c5f28d77fa55aa81f031c7fa7873ccda1ab3f4429e35587c3d33cc1f66bcb9e3caae1c0945f24ab722362c"
+            }
+          ],
           "licenses" : [
             {
               "license" : {
@@ -83,7 +117,7 @@
     },
     "component" : {
       "type" : "library",
-      "bom-ref" : "pkg:maven/org.apache.ant/ant-javamail@1.10.18-SNAPSHOT?type=jar",
+      "bom-ref" : "pkg:maven/org.apache.ant/ant-apache-log4j@1.10.18-SNAPSHOT?type=jar",
       "supplier" : {
         "name" : "Apache Ant Project Management Committee",
         "url" : [
@@ -98,41 +132,41 @@
       },
       "publisher" : "The Apache Software Foundation",
       "group" : "org.apache.ant",
-      "name" : "ant-javamail",
+      "name" : "ant-apache-log4j",
       "version" : "1.10.18-SNAPSHOT",
-      "description" : "Apache Ant + JavaMail",
+      "description" : "Apache Ant + Log4J 1.x",
       "hashes" : [
         {
           "alg" : "MD5",
-          "content" : "31b4d8269c7218ba5bccc8c1654dad1d"
+          "content" : "399e8e1272a1e66245a90cf24145f56a"
         },
         {
           "alg" : "SHA-1",
-          "content" : "a84b0405105a8549e0fe2965c3b1c55944766ade"
+          "content" : "8b017c038e9f3df998850d36b5bf22106d529a36"
         },
         {
           "alg" : "SHA-256",
-          "content" : "2e275a3dd99e112dc26660a06dff444f5a63fdf2b7fddb5d1b8618cffae70be9"
+          "content" : "3ea31ffc905f0ef423ac63f6d08ccf874b5805538b4d798fabf093c2fd73d8ce"
         },
         {
           "alg" : "SHA-512",
-          "content" : "28658212e81765559817ae20d86a74881a7e38974ace2f40f62fb51a33e35f126cae186cad9079cb1f721d3834628d11bb4d938120b16d31a67cfe2724e8286f"
+          "content" : "984f7efdc856ef522f3e3a3051622b6d0a394cdec61953772d595fac423bb4ec634447dcb3d766c74e96c14d77fcea65371918da6b7652ef9eeca71023bc0157"
         },
         {
           "alg" : "SHA3-256",
-          "content" : "0141f0f7a70aee262843a9f2e24fc3f59043fa37ad343c48d73542cf078efacf"
+          "content" : "7e7167886686061b8f08e12a8a719eb84897d8d3eb4d7e41516fb29bf64735a5"
         },
         {
           "alg" : "SHA3-512",
-          "content" : "43652a226e7e6e98d53c682308a07a25fea3cb5f85426e13650489a368323dd3dddb883c8baabbf41083e4170c9b473b882ee7d9cf37bd1b3e1423c1e42011d3"
+          "content" : "28a5e2f7805e6c05bb89a6812f2dee3e738a9aca1d4b16799062ee95f3831e8cec577aa5fcf46015bec440455f13d39fa56c3f2590f901e540d929ed04de0964"
         },
         {
           "alg" : "SHA-384",
-          "content" : "dd0cb7fbe904241e2fb107d01fc9254aa7bddf3ff6ad1f798de14bcbea578c474c1eb7ef7e9ff650ee20083ffee0ff95"
+          "content" : "ce1b0f7be32fdfab8e54ede55ae3c5a10cb44a075d5aa1f01f20fb5623d33d03c889a5a4fa737781ab460daed48a19fb"
         },
         {
           "alg" : "SHA3-384",
-          "content" : "16d091ffd083cf66c022b9749d81a17e34ecad434c6fdab6bacfaf53cb89f416f2c11831759ec3796a8cf8961824b9d9"
+          "content" : "ee6625110489f40858e8b0733b93b78e59293ecec4a1ec541ac0990487ec33ac4f9af25db8e61226a5d51dd7136813e2"
         }
       ],
       "licenses" : [
@@ -143,7 +177,7 @@
           }
         }
       ],
-      "purl" : "pkg:maven/org.apache.ant/ant-javamail@1.10.18-SNAPSHOT?type=jar",
+      "purl" : "pkg:maven/org.apache.ant/ant-apache-log4j@1.10.18-SNAPSHOT?type=jar",
       "externalReferences" : [
         {
           "type" : "vcs",
@@ -244,35 +278,35 @@
       "hashes" : [
         {
           "alg" : "MD5",
-          "content" : "5dd4aa18b6dc9a769fddf456d23525be"
+          "content" : "c50dbeea8c8075504424919c0ffe244c"
         },
         {
           "alg" : "SHA-1",
-          "content" : "abb46ac6ada0b6f0ecc7d2f8e10e0d1cd2011bac"
+          "content" : "d0e1793bbaf60999e731112cbbdd5432b30d2064"
         },
         {
           "alg" : "SHA-256",
-          "content" : "db0d4a594c65a4cb170d851b4cd3fe36a82e3dee8f2a3738393349606a503621"
+          "content" : "0822e95d9db0691cb5f965f2714c42a6c106e6e04671439520c40792f523ac79"
         },
         {
           "alg" : "SHA-512",
-          "content" : "ff48bfeb661736779287a6eb68b527793868e64f1da75e80649b3a6f7e0c29389f44bd17217fc0e0684761804388008f9b7c2e1d1112b79e8129b5fa5d0f1b91"
+          "content" : "3a0fe83ffa4e1823bc0a13e1577a740415e63cd603f09c32c4fa5935350c2b1f2a10b5f5e65a110ccb22fb94884888d8aec7e4efc66c22cd699d884cfba3b02f"
         },
         {
           "alg" : "SHA3-256",
-          "content" : "20057d1b6fdd74af1a33a71f0494b88405931025d622979dcbccf4542565de9e"
+          "content" : "d14388392ac07bb852a8a0fbf67c170dc5c5099db9920595ed42c6fcb554ecc6"
         },
         {
           "alg" : "SHA3-512",
-          "content" : "f9f4aceb500d8d4b15e6f0eec0c08c1d512682dc3edb2d51f5b6b9419e88d570e38e472328a2a0a0e685106d5266349878cea41dfdc4373911bd12f3b606c1d0"
+          "content" : "cf599b8c7439c71b1b40975b3e679505276fb152dd0ea5b5badb48a8d4f29f5b483f752384605301cedbd834eeaff1a428e845b566e89554b935aa47347d781c"
         },
         {
           "alg" : "SHA-384",
-          "content" : "79442c31e2b1a325105079aa9d1491deef6433e831fabdbf3e2f48a8835b4dca8cb975a8342accfddc18ca343a9d50da"
+          "content" : "12d7c9ef19dd79235917491ed9d2cbee6481a27ffa701e0d0a576dbf368615aa71cfd1d305a07aeb2a0ea3b246b5fd26"
         },
         {
           "alg" : "SHA3-384",
-          "content" : "49cb7a152090ba86cff13b76eeeee08a33986695e9e14f16ebca4bb4672d62e3e476381875fc9587fd57b2f802260154"
+          "content" : "1a1bc4819963f20ddc43b011435d49e505a0513a34e0347c5b4060629c37de7ab1d54c36c62361da04f4c8eecac1f585"
         }
       ],
       "licenses" : [
@@ -362,35 +396,35 @@
       "hashes" : [
         {
           "alg" : "MD5",
-          "content" : "652c42e30abc21d8f65631798bf83a59"
+          "content" : "400aa7a2a558cc2549308da9b7b4523e"
         },
         {
           "alg" : "SHA-1",
-          "content" : "d00960e241743e8ebe6328ef887c461b8e16bbd4"
+          "content" : "cc7ae6008b4eed2457eab9816b7f95753b3fcf44"
         },
         {
           "alg" : "SHA-256",
-          "content" : "4757294429f9f087a9fc9f3fd2ac1c0f4cddc507bc732e184401192864fa0491"
+          "content" : "e36a9a9878c50bcf632ede822bfaae243986dd1043c6e642c06054d9c1b7a47e"
         },
         {
           "alg" : "SHA-512",
-          "content" : "e820da4498ff55bbf77d0bb43311903279d153b4322931d4d4c15df2f9d4747833941ce9df08ca2cfe2525343f40a4fa6f33ccad633f4f527002dc85e4f8e179"
+          "content" : "47d261f05ab7142b6cd533a287376cae8bf6bbe8f34770da3dd0d52d62834313955617c1bde6e0f153f5d9d2224cc58fd49c4cec0de4718f7958afd0c25c6084"
         },
         {
           "alg" : "SHA3-256",
-          "content" : "3d545b66f1216a64690ae91d34b7ff687b6f5e9d067b2c8d703c959098d396a0"
+          "content" : "b3981f2e3e017cc848db36236b51cecc411dfac7ce1c86699b9333388a8affbe"
         },
         {
           "alg" : "SHA3-512",
-          "content" : "5cac03f87bee7c0a2a4fbdfad7c3e35cd6266f140a90695173f93263c792e63662e33cdd5aaed9d2bbe625ee9c42f7f4eccb0f12b510094075acf3468a439b97"
+          "content" : "c6314e1b2192dc86f32c542b49db5cfdba8f1767db5fdd1d08884f4ef613c66943d3ebd4806cdb6c192ed52acf9396d6e327deabe3a0b03dfdf4c844d9cfe0af"
         },
         {
           "alg" : "SHA-384",
-          "content" : "942643635f7a5bb201f19f99caf0099285d2b93bf46605de13c1920a03efb64a619b5f7b82e03bfe64353de2ec58511f"
+          "content" : "31559ae43b65719250829da56752e89f71e5996ff8a575aeb8549108793b5d2876fc2b8cb5b5d9729ef3777ed59d7375"
         },
         {
           "alg" : "SHA3-384",
-          "content" : "ac3f8171353410ee6b9f454be024726516cfe531cf0e7041028ed82e60954d0e904b6fda09465754db283707984eba72"
+          "content" : "96858bccf913c5f252a5f41c49a377091a2d0af68afe8963371e63308e999f4cd7f0d6aa5044d36990fecd12d547801f"
         }
       ],
       "licenses" : [
@@ -459,19 +493,27 @@
     },
     {
       "type" : "library",
-      "bom-ref" : "pkg:maven/com.sun.mail/javax.mail@1.6.2?type=jar",
-      "group" : "com.sun.mail",
-      "name" : "javax.mail",
-      "version" : "1.6.2",
-      "purl" : "pkg:maven/com.sun.mail/javax.mail@1.6.2?type=jar"
+      "bom-ref" : "pkg:maven/log4j/log4j@1.2.14?type=jar",
+      "group" : "log4j",
+      "name" : "log4j",
+      "version" : "1.2.14",
+      "licenses" : [
+        {
+          "license" : {
+            "id" : "Apache-2.0",
+            "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
+          }
+        }
+      ],
+      "purl" : "pkg:maven/log4j/log4j@1.2.14?type=jar"
     }
   ],
   "dependencies" : [
     {
-      "ref" : "pkg:maven/org.apache.ant/ant-javamail@1.10.18-SNAPSHOT?type=jar",
+      "ref" : "pkg:maven/org.apache.ant/ant-apache-log4j@1.10.18-SNAPSHOT?type=jar",
       "dependsOn" : [
         "pkg:maven/org.apache.ant/ant@1.10.18-SNAPSHOT?type=jar",
-        "pkg:maven/com.sun.mail/javax.mail@1.6.2?type=jar"
+        "pkg:maven/log4j/log4j@1.2.14?type=jar"
       ]
     },
     {
@@ -482,6 +524,10 @@
     },
     {
       "ref" : "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar",
+      "dependsOn" : [ ]
+    },
+    {
+      "ref" : "pkg:maven/log4j/log4j@1.2.14?type=jar",
       "dependsOn" : [ ]
     }
   ]

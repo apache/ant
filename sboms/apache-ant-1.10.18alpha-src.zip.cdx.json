@@ -1,10 +1,10 @@
 {
   "bomFormat" : "CycloneDX",
   "specVersion" : "1.6",
-  "serialNumber" : "urn:uuid:2a46b350-e47f-4d53-bb4e-fff561d0b210",
+  "serialNumber" : "urn:uuid:168602b5-aac7-4ff2-a259-c124127e76e5",
   "version" : 1,
   "metadata" : {
-    "timestamp" : "2026-06-07T12:52:38Z",
+    "timestamp" : "2026-06-19T19:54:50Z",
     "lifecycles" : [
       {
         "phase" : "build"
@@ -31,6 +31,40 @@
           "name" : "ant-cyclonedx",
           "version" : "0.1",
           "description" : "Apache CycloneDX Antlib",
+          "hashes" : [
+            {
+              "alg" : "MD5",
+              "content" : "f00bf8afd0fd1a4677a80aa400934230"
+            },
+            {
+              "alg" : "SHA-1",
+              "content" : "64676be7248fc2ec0eef936be9c2507909e05414"
+            },
+            {
+              "alg" : "SHA-256",
+              "content" : "a4f295746ba0ea50d7b720dc4f42ffbe5a98bc3ad9f0d175a0be80a5bd108e84"
+            },
+            {
+              "alg" : "SHA-512",
+              "content" : "b0fa0bc41af224339d3bd301fe308de3bd3b0f75ad7ded60559469fa4eed85bec96e0eb195ae1db14fad2a8aaed42c776b3268575d7feeac6751a7737193cf3c"
+            },
+            {
+              "alg" : "SHA3-256",
+              "content" : "8af81f7d1cda4165dd841ef06ef5fa928a103a2de487bc62e659f98618c6f8d7"
+            },
+            {
+              "alg" : "SHA3-512",
+              "content" : "5584260043593ad9abcd6b2c9630edc65422f6b4853cc884935d995d9f4a04c6be6ad4504a38f16910fbff698f5411cbe5bbab0ee071f6011eeef51a9fa93cdb"
+            },
+            {
+              "alg" : "SHA-384",
+              "content" : "3532c340f51512b3521f96fe1f96b49cb7748c2b117ca4670dad26db8842efced5a64a366af01be2a25940eac63acf3f"
+            },
+            {
+              "alg" : "SHA3-384",
+              "content" : "64b575e8e4c5f28d77fa55aa81f031c7fa7873ccda1ab3f4429e35587c3d33cc1f66bcb9e3caae1c0945f24ab722362c"
+            }
+          ],
           "licenses" : [
             {
               "license" : {
@@ -82,8 +116,8 @@
       ]
     },
     "component" : {
-      "type" : "library",
-      "bom-ref" : "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar",
+      "type" : "file",
+      "bom-ref" : "https://archive.apache.org/dist/ant/source/apache-ant-1.10.18alpha-src.zip",
       "supplier" : {
         "name" : "Apache Ant Project Management Committee",
         "url" : [
@@ -97,42 +131,41 @@
         ]
       },
       "publisher" : "The Apache Software Foundation",
-      "group" : "org.apache.ant",
-      "name" : "ant-launcher",
+      "name" : "https://archive.apache.org/dist/ant/source/apache-ant-1.10.18alpha-src.zip",
       "version" : "1.10.18-SNAPSHOT",
-      "description" : "Apache Ant Launcher",
+      "description" : "Apache Ant Source Distribution",
       "hashes" : [
         {
           "alg" : "MD5",
-          "content" : "652c42e30abc21d8f65631798bf83a59"
+          "content" : "e6e7b50001cd18dd930c53e899ed3e63"
         },
         {
           "alg" : "SHA-1",
-          "content" : "d00960e241743e8ebe6328ef887c461b8e16bbd4"
+          "content" : "ff9481ecdc1dc569eaeeda724b76f89602dfb85b"
         },
         {
           "alg" : "SHA-256",
-          "content" : "4757294429f9f087a9fc9f3fd2ac1c0f4cddc507bc732e184401192864fa0491"
+          "content" : "680f86b2f8cadca88273b4f9ac05b223f3ce8e575f52367bca14ff29e3f373a6"
         },
         {
           "alg" : "SHA-512",
-          "content" : "e820da4498ff55bbf77d0bb43311903279d153b4322931d4d4c15df2f9d4747833941ce9df08ca2cfe2525343f40a4fa6f33ccad633f4f527002dc85e4f8e179"
+          "content" : "014f3a8f2913a0fd5c2b5099685f6784c4e3b61255fcead108beca0746b8f40d4bb6bdd0d68e97522c6862cb0f9af1a4ae41b4449d2d016fa0836365aa183ebb"
         },
         {
           "alg" : "SHA3-256",
-          "content" : "3d545b66f1216a64690ae91d34b7ff687b6f5e9d067b2c8d703c959098d396a0"
+          "content" : "b33272388ebf5a9deb85e472ab46b4b6a064d23bd5be8132a00c0a5482cb6188"
         },
         {
           "alg" : "SHA3-512",
-          "content" : "5cac03f87bee7c0a2a4fbdfad7c3e35cd6266f140a90695173f93263c792e63662e33cdd5aaed9d2bbe625ee9c42f7f4eccb0f12b510094075acf3468a439b97"
+          "content" : "a4d095ead8326161b2092893584b5230427b12c5d3f7293c4381a307c723940023b96bb52e345f07d5c8656359ad5f68b4313aac91ee671700020cf47e5d0635"
         },
         {
           "alg" : "SHA-384",
-          "content" : "942643635f7a5bb201f19f99caf0099285d2b93bf46605de13c1920a03efb64a619b5f7b82e03bfe64353de2ec58511f"
+          "content" : "55a0cdd4e5f3370938ea01fc3ea7b4a95cd01f1d89aa7d946243defdd57a0015a0556485c2111c74e96e3f120fa90eb1"
         },
         {
           "alg" : "SHA3-384",
-          "content" : "ac3f8171353410ee6b9f454be024726516cfe531cf0e7041028ed82e60954d0e904b6fda09465754db283707984eba72"
+          "content" : "12c3394d97a44eccdb8a6fc168cdfecf0aa353428b2fac870a72ae953e48de6a3bc03b532afbe5662e02eda394729cce"
         }
       ],
       "licenses" : [
@@ -143,7 +176,7 @@
           }
         }
       ],
-      "purl" : "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar",
+      "purl" : "https://archive.apache.org/dist/ant/source/apache-ant-1.10.18alpha-src.zip",
       "externalReferences" : [
         {
           "type" : "vcs",
@@ -222,7 +255,7 @@
   },
   "dependencies" : [
     {
-      "ref" : "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar",
+      "ref" : "https://archive.apache.org/dist/ant/source/apache-ant-1.10.18alpha-src.zip",
       "dependsOn" : [ ]
     }
   ]

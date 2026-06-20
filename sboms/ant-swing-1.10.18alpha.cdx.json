@@ -1,10 +1,10 @@
 {
   "bomFormat" : "CycloneDX",
   "specVersion" : "1.6",
-  "serialNumber" : "urn:uuid:8be22008-82f3-4566-a0e9-6666048d91f5",
+  "serialNumber" : "urn:uuid:68fb30a7-0fe0-4558-b2d8-46b2844b2220",
   "version" : 1,
   "metadata" : {
-    "timestamp" : "2026-06-07T12:52:38Z",
+    "timestamp" : "2026-06-19T19:53:22Z",
     "lifecycles" : [
       {
         "phase" : "build"
@@ -31,6 +31,40 @@
           "name" : "ant-cyclonedx",
           "version" : "0.1",
           "description" : "Apache CycloneDX Antlib",
+          "hashes" : [
+            {
+              "alg" : "MD5",
+              "content" : "f00bf8afd0fd1a4677a80aa400934230"
+            },
+            {
+              "alg" : "SHA-1",
+              "content" : "64676be7248fc2ec0eef936be9c2507909e05414"
+            },
+            {
+              "alg" : "SHA-256",
+              "content" : "a4f295746ba0ea50d7b720dc4f42ffbe5a98bc3ad9f0d175a0be80a5bd108e84"
+            },
+            {
+              "alg" : "SHA-512",
+              "content" : "b0fa0bc41af224339d3bd301fe308de3bd3b0f75ad7ded60559469fa4eed85bec96e0eb195ae1db14fad2a8aaed42c776b3268575d7feeac6751a7737193cf3c"
+            },
+            {
+              "alg" : "SHA3-256",
+              "content" : "8af81f7d1cda4165dd841ef06ef5fa928a103a2de487bc62e659f98618c6f8d7"
+            },
+            {
+              "alg" : "SHA3-512",
+              "content" : "5584260043593ad9abcd6b2c9630edc65422f6b4853cc884935d995d9f4a04c6be6ad4504a38f16910fbff698f5411cbe5bbab0ee071f6011eeef51a9fa93cdb"
+            },
+            {
+              "alg" : "SHA-384",
+              "content" : "3532c340f51512b3521f96fe1f96b49cb7748c2b117ca4670dad26db8842efced5a64a366af01be2a25940eac63acf3f"
+            },
+            {
+              "alg" : "SHA3-384",
+              "content" : "64b575e8e4c5f28d77fa55aa81f031c7fa7873ccda1ab3f4429e35587c3d33cc1f66bcb9e3caae1c0945f24ab722362c"
+            }
+          ],
           "licenses" : [
             {
               "license" : {
@@ -83,7 +117,7 @@
     },
     "component" : {
       "type" : "library",
-      "bom-ref" : "pkg:maven/org.apache.ant/ant-junit@1.10.18-SNAPSHOT?type=jar",
+      "bom-ref" : "pkg:maven/org.apache.ant/ant-swing@1.10.18-SNAPSHOT?type=jar",
       "supplier" : {
         "name" : "Apache Ant Project Management Committee",
         "url" : [
@@ -98,41 +132,41 @@
       },
       "publisher" : "The Apache Software Foundation",
       "group" : "org.apache.ant",
-      "name" : "ant-junit",
+      "name" : "ant-swing",
       "version" : "1.10.18-SNAPSHOT",
-      "description" : "Apache Ant + JUnit",
+      "description" : "Apache Ant + Swing",
       "hashes" : [
         {
           "alg" : "MD5",
-          "content" : "547dac3fc3d633455a46e555c599d95d"
+          "content" : "c7449bdcac58ad8f4bb887818dcaaae0"
         },
         {
           "alg" : "SHA-1",
-          "content" : "c1014a079522a9e194d864ab3622781fbe9da641"
+          "content" : "f841b85eec497841934d891148602d1a3b241059"
         },
         {
           "alg" : "SHA-256",
-          "content" : "ade143c363f0b641f20ea05e9d0ab71006c3868bdb460d8a8ab72686b833febd"
+          "content" : "7461155a4cc81e1912d71f811002d16a17b2bc5aa2b03be0f1fd003586dc4f1a"
         },
         {
           "alg" : "SHA-512",
-          "content" : "5afbd8676797a6a6fbc1c7aca09abf7c7a97eb9b98ee323ad4104e07e526909037a42cb7d05e15e45adeff086f5d3f048d9ad91eb69975def063fb22bbcdefa2"
+          "content" : "f1f6a58f1b248e3544693325bf989e3b22419e39d6c98b5aff66b20532072e3b3c56fd2f4745946b690c754b2e95fe0eff080f362c6162893fb4fccd7f7325d1"
         },
         {
           "alg" : "SHA3-256",
-          "content" : "091cb8b5f589363ab06e58645e18c842ff807e8d2ce2c294bc75b53d2119ed8a"
+          "content" : "3fd4178b2d31e6a407852b460d509eb56d3c2d5c2ae0055315c97a8ba3af5d26"
         },
         {
           "alg" : "SHA3-512",
-          "content" : "966c4d217c1430e82183b95c7d5733001e119f93c5f15550b6238faa5ec15534b1ffbd0c462791fbc9e92c7a853ed26ab1716cccd0d325e0f64a4bc150287e5f"
+          "content" : "0360bae6bc425357eb2db1c7484c956454a531bca29898e274fcfa3c60104474ae02862e2b787f8fd3ed5124a1bc4312fae5b32ee1f43686d46697424d828c5b"
         },
         {
           "alg" : "SHA-384",
-          "content" : "79f270e79a590dc119a379ad908a506d373984025064dd98b8b4ff2adc2b7ac54f215fd0e356084ac36fc155e3213f82"
+          "content" : "dee5dcb800ae5928f4b71a67412ffbdfccef7a01c4a7e78c43bf7f0dfcd042398fa34457d3ce1e26efd0107ef5961ed4"
         },
         {
           "alg" : "SHA3-384",
-          "content" : "d3a2484b2582342dfdcfe27657ad1751519ead19a8fe3fe1bd54ced21917c79f6a91c69a387031b98bf966eb25c9cb66"
+          "content" : "400ab022ac97b4694794b78a7a6aafe85188d35c413d2052964614cbb18a3f13fa726c9847cc3221bd3edbc249d7e92f"
         }
       ],
       "licenses" : [
@@ -143,7 +177,7 @@
           }
         }
       ],
-      "purl" : "pkg:maven/org.apache.ant/ant-junit@1.10.18-SNAPSHOT?type=jar",
+      "purl" : "pkg:maven/org.apache.ant/ant-swing@1.10.18-SNAPSHOT?type=jar",
       "externalReferences" : [
         {
           "type" : "vcs",
@@ -244,35 +278,35 @@
       "hashes" : [
         {
           "alg" : "MD5",
-          "content" : "5dd4aa18b6dc9a769fddf456d23525be"
+          "content" : "c50dbeea8c8075504424919c0ffe244c"
         },
         {
           "alg" : "SHA-1",
-          "content" : "abb46ac6ada0b6f0ecc7d2f8e10e0d1cd2011bac"
+          "content" : "d0e1793bbaf60999e731112cbbdd5432b30d2064"
         },
         {
           "alg" : "SHA-256",
-          "content" : "db0d4a594c65a4cb170d851b4cd3fe36a82e3dee8f2a3738393349606a503621"
+          "content" : "0822e95d9db0691cb5f965f2714c42a6c106e6e04671439520c40792f523ac79"
         },
         {
           "alg" : "SHA-512",
-          "content" : "ff48bfeb661736779287a6eb68b527793868e64f1da75e80649b3a6f7e0c29389f44bd17217fc0e0684761804388008f9b7c2e1d1112b79e8129b5fa5d0f1b91"
+          "content" : "3a0fe83ffa4e1823bc0a13e1577a740415e63cd603f09c32c4fa5935350c2b1f2a10b5f5e65a110ccb22fb94884888d8aec7e4efc66c22cd699d884cfba3b02f"
         },
         {
           "alg" : "SHA3-256",
-          "content" : "20057d1b6fdd74af1a33a71f0494b88405931025d622979dcbccf4542565de9e"
+          "content" : "d14388392ac07bb852a8a0fbf67c170dc5c5099db9920595ed42c6fcb554ecc6"
         },
         {
           "alg" : "SHA3-512",
-          "content" : "f9f4aceb500d8d4b15e6f0eec0c08c1d512682dc3edb2d51f5b6b9419e88d570e38e472328a2a0a0e685106d5266349878cea41dfdc4373911bd12f3b606c1d0"
+          "content" : "cf599b8c7439c71b1b40975b3e679505276fb152dd0ea5b5badb48a8d4f29f5b483f752384605301cedbd834eeaff1a428e845b566e89554b935aa47347d781c"
         },
         {
           "alg" : "SHA-384",
-          "content" : "79442c31e2b1a325105079aa9d1491deef6433e831fabdbf3e2f48a8835b4dca8cb975a8342accfddc18ca343a9d50da"
+          "content" : "12d7c9ef19dd79235917491ed9d2cbee6481a27ffa701e0d0a576dbf368615aa71cfd1d305a07aeb2a0ea3b246b5fd26"
         },
         {
           "alg" : "SHA3-384",
-          "content" : "49cb7a152090ba86cff13b76eeeee08a33986695e9e14f16ebca4bb4672d62e3e476381875fc9587fd57b2f802260154"
+          "content" : "1a1bc4819963f20ddc43b011435d49e505a0513a34e0347c5b4060629c37de7ab1d54c36c62361da04f4c8eecac1f585"
         }
       ],
       "licenses" : [
@@ -362,35 +396,35 @@
       "hashes" : [
         {
           "alg" : "MD5",
-          "content" : "652c42e30abc21d8f65631798bf83a59"
+          "content" : "400aa7a2a558cc2549308da9b7b4523e"
         },
         {
           "alg" : "SHA-1",
-          "content" : "d00960e241743e8ebe6328ef887c461b8e16bbd4"
+          "content" : "cc7ae6008b4eed2457eab9816b7f95753b3fcf44"
         },
         {
           "alg" : "SHA-256",
-          "content" : "4757294429f9f087a9fc9f3fd2ac1c0f4cddc507bc732e184401192864fa0491"
+          "content" : "e36a9a9878c50bcf632ede822bfaae243986dd1043c6e642c06054d9c1b7a47e"
         },
         {
           "alg" : "SHA-512",
-          "content" : "e820da4498ff55bbf77d0bb43311903279d153b4322931d4d4c15df2f9d4747833941ce9df08ca2cfe2525343f40a4fa6f33ccad633f4f527002dc85e4f8e179"
+          "content" : "47d261f05ab7142b6cd533a287376cae8bf6bbe8f34770da3dd0d52d62834313955617c1bde6e0f153f5d9d2224cc58fd49c4cec0de4718f7958afd0c25c6084"
         },
         {
           "alg" : "SHA3-256",
-          "content" : "3d545b66f1216a64690ae91d34b7ff687b6f5e9d067b2c8d703c959098d396a0"
+          "content" : "b3981f2e3e017cc848db36236b51cecc411dfac7ce1c86699b9333388a8affbe"
         },
         {
           "alg" : "SHA3-512",
-          "content" : "5cac03f87bee7c0a2a4fbdfad7c3e35cd6266f140a90695173f93263c792e63662e33cdd5aaed9d2bbe625ee9c42f7f4eccb0f12b510094075acf3468a439b97"
+          "content" : "c6314e1b2192dc86f32c542b49db5cfdba8f1767db5fdd1d08884f4ef613c66943d3ebd4806cdb6c192ed52acf9396d6e327deabe3a0b03dfdf4c844d9cfe0af"
         },
         {
           "alg" : "SHA-384",
-          "content" : "942643635f7a5bb201f19f99caf0099285d2b93bf46605de13c1920a03efb64a619b5f7b82e03bfe64353de2ec58511f"
+          "content" : "31559ae43b65719250829da56752e89f71e5996ff8a575aeb8549108793b5d2876fc2b8cb5b5d9729ef3777ed59d7375"
         },
         {
           "alg" : "SHA3-384",
-          "content" : "ac3f8171353410ee6b9f454be024726516cfe531cf0e7041028ed82e60954d0e904b6fda09465754db283707984eba72"
+          "content" : "96858bccf913c5f252a5f41c49a377091a2d0af68afe8963371e63308e999f4cd7f0d6aa5044d36990fecd12d547801f"
         }
       ],
       "licenses" : [
@@ -456,61 +490,13 @@
           "url" : "https://ant.apache.org/.well-known/security.txt"
         }
       ]
-    },
-    {
-      "type" : "library",
-      "bom-ref" : "pkg:maven/junit/junit@4.13.2?type=jar",
-      "publisher" : "JUnit",
-      "group" : "junit",
-      "name" : "junit",
-      "version" : "4.13.2",
-      "description" : "JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.",
-      "licenses" : [
-        {
-          "license" : {
-            "id" : "EPL-1.0",
-            "url" : "http://www.eclipse.org/legal/epl-v10.html"
-          }
-        }
-      ],
-      "purl" : "pkg:maven/junit/junit@4.13.2?type=jar",
-      "externalReferences" : [
-        {
-          "type" : "website",
-          "url" : "http://junit.org"
-        }
-      ]
-    },
-    {
-      "type" : "library",
-      "bom-ref" : "pkg:maven/org.hamcrest/hamcrest@3.0?type=jar",
-      "group" : "org.hamcrest",
-      "name" : "hamcrest",
-      "version" : "3.0",
-      "description" : "Core API and libraries of hamcrest matcher framework.",
-      "licenses" : [
-        {
-          "license" : {
-            "id" : "BSD-3-Clause",
-            "url" : "https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE"
-          }
-        }
-      ],
-      "purl" : "pkg:maven/org.hamcrest/hamcrest@3.0?type=jar",
-      "externalReferences" : [
-        {
-          "type" : "website",
-          "url" : "http://hamcrest.org/JavaHamcrest/"
-        }
-      ]
     }
   ],
   "dependencies" : [
     {
-      "ref" : "pkg:maven/org.apache.ant/ant-junit@1.10.18-SNAPSHOT?type=jar",
+      "ref" : "pkg:maven/org.apache.ant/ant-swing@1.10.18-SNAPSHOT?type=jar",
       "dependsOn" : [
-        "pkg:maven/org.apache.ant/ant@1.10.18-SNAPSHOT?type=jar",
-        "pkg:maven/junit/junit@4.13.2?type=jar"
+        "pkg:maven/org.apache.ant/ant@1.10.18-SNAPSHOT?type=jar"
       ]
     },
     {
@@ -521,16 +507,6 @@
     },
     {
       "ref" : "pkg:maven/org.apache.ant/ant-launcher@1.10.18-SNAPSHOT?type=jar",
-      "dependsOn" : [ ]
-    },
-    {
-      "ref" : "pkg:maven/junit/junit@4.13.2?type=jar",
-      "dependsOn" : [
-        "pkg:maven/org.hamcrest/hamcrest@3.0?type=jar"
-      ]
-    },
-    {
-      "ref" : "pkg:maven/org.hamcrest/hamcrest@3.0?type=jar",
       "dependsOn" : [ ]
     }
   ]

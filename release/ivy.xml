@@ -31,260 +31,260 @@
     <artifact name="ant" type="source.asc" ext="jar.asc" e:classifier="sources"/>
     <artifact name="ant" type="javadoc" ext="jar" e:classifier="javadoc"/>
     <artifact name="ant" type="javadoc.asc" ext="jar.asc" e:classifier="javadoc"/>
-    <artifact name="ant" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-antlr" type="pom" ext="pom"/>
     <artifact name="ant-antlr" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-antlr" type="jar" ext="jar"/>
     <artifact name="ant-antlr" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-antlr" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-antlr" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-antlr" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-antlr" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-antlr" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-antlr" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-antlr" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-antlr" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-antlr" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-antlr" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-apache-bcel" type="pom" ext="pom"/>
     <artifact name="ant-apache-bcel" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-apache-bcel" type="jar" ext="jar"/>
     <artifact name="ant-apache-bcel" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-apache-bcel" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-apache-bcel" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-apache-bcel" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-bcel" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-bcel" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-bcel" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-apache-bcel" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-apache-bcel" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-apache-bcel" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-apache-bcel" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-apache-bsf" type="pom" ext="pom"/>
     <artifact name="ant-apache-bsf" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-apache-bsf" type="jar" ext="jar"/>
     <artifact name="ant-apache-bsf" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-apache-bsf" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-apache-bsf" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-apache-bsf" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-bsf" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-bsf" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-bsf" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-apache-bsf" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-apache-bsf" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-apache-bsf" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-apache-bsf" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-apache-log4j" type="pom" ext="pom"/>
     <artifact name="ant-apache-log4j" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-apache-log4j" type="jar" ext="jar"/>
     <artifact name="ant-apache-log4j" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-apache-log4j" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-apache-log4j" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-apache-log4j" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-log4j" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-log4j" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-log4j" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-apache-log4j" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-apache-log4j" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-apache-log4j" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-apache-log4j" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-apache-oro" type="pom" ext="pom"/>
     <artifact name="ant-apache-oro" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-apache-oro" type="jar" ext="jar"/>
     <artifact name="ant-apache-oro" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-apache-oro" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-apache-oro" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-apache-oro" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-oro" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-oro" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-oro" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-apache-oro" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-apache-oro" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-apache-oro" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-apache-oro" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-apache-regexp" type="pom" ext="pom"/>
     <artifact name="ant-apache-regexp" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-apache-regexp" type="jar" ext="jar"/>
     <artifact name="ant-apache-regexp" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-apache-regexp" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-apache-regexp" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-apache-regexp" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-regexp" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-regexp" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-regexp" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-apache-regexp" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-apache-regexp" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-apache-regexp" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-apache-regexp" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-apache-resolver" type="pom" ext="pom"/>
     <artifact name="ant-apache-resolver" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-apache-resolver" type="jar" ext="jar"/>
     <artifact name="ant-apache-resolver" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-apache-resolver" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-apache-resolver" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-apache-resolver" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-resolver" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-resolver" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-resolver" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-apache-resolver" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-apache-resolver" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-apache-resolver" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-apache-resolver" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-apache-xalan2" type="pom" ext="pom"/>
     <artifact name="ant-apache-xalan2" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-apache-xalan2" type="jar" ext="jar"/>
     <artifact name="ant-apache-xalan2" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-apache-xalan2" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-apache-xalan2" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-apache-xalan2" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-xalan2" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-xalan2" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-apache-xalan2" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-apache-xalan2" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-apache-xalan2" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-apache-xalan2" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-apache-xalan2" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-commons-logging" type="pom" ext="pom"/>
     <artifact name="ant-commons-logging" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-commons-logging" type="jar" ext="jar"/>
     <artifact name="ant-commons-logging" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-commons-logging" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-commons-logging" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-commons-logging" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-commons-logging" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-commons-logging" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-commons-logging" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-commons-logging" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-commons-logging" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-commons-logging" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-commons-logging" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-commons-net" type="pom" ext="pom"/>
     <artifact name="ant-commons-net" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-commons-net" type="jar" ext="jar"/>
     <artifact name="ant-commons-net" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-commons-net" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-commons-net" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-commons-net" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-commons-net" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-commons-net" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-commons-net" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-commons-net" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-commons-net" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-commons-net" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-commons-net" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-imageio" type="pom" ext="pom"/>
     <artifact name="ant-imageio" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-imageio" type="jar" ext="jar"/>
     <artifact name="ant-imageio" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-imageio" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-imageio" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-imageio" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-imageio" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-imageio" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-imageio" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-imageio" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-imageio" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-imageio" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-imageio" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-jai" type="pom" ext="pom"/>
     <artifact name="ant-jai" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-jai" type="jar" ext="jar"/>
     <artifact name="ant-jai" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-jai" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-jai" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-jai" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-jai" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-jai" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-jai" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-jai" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-jai" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-jai" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-jai" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-javamail" type="pom" ext="pom"/>
     <artifact name="ant-javamail" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-javamail" type="jar" ext="jar"/>
     <artifact name="ant-javamail" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-javamail" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-javamail" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-javamail" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-javamail" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-javamail" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-javamail" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-javamail" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-javamail" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-javamail" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-javamail" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-jakartamail" type="pom" ext="pom"/>
     <artifact name="ant-jakartamail" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-jakartamail" type="jar" ext="jar"/>
     <artifact name="ant-jakartamail" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-jakartamail" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-jakartamail" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-jakartamail" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-jakartamail" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-jakartamail" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-jakartamail" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-jakartamail" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-jakartamail" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-jakartamail" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-jakartamail" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-jdepend" type="pom" ext="pom"/>
     <artifact name="ant-jdepend" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-jdepend" type="jar" ext="jar"/>
     <artifact name="ant-jdepend" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-jdepend" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-jdepend" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-jdepend" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-jdepend" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-jdepend" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-jdepend" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-jdepend" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-jdepend" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-jdepend" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-jdepend" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-jmf" type="pom" ext="pom"/>
     <artifact name="ant-jmf" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-jmf" type="jar" ext="jar"/>
     <artifact name="ant-jmf" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-jmf" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-jmf" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-jmf" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-jmf" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-jmf" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-jmf" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-jmf" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-jmf" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-jmf" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-jmf" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-jsch" type="pom" ext="pom"/>
     <artifact name="ant-jsch" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-jsch" type="jar" ext="jar"/>
     <artifact name="ant-jsch" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-jsch" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-jsch" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-jsch" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-jsch" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-jsch" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-jsch" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-jsch" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-jsch" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-jsch" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-jsch" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-junit" type="pom" ext="pom"/>
     <artifact name="ant-junit" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-junit" type="jar" ext="jar"/>
     <artifact name="ant-junit" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-junit" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-junit" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-junit" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-junit" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-junit" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-junit" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-junit" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-junit" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-junit" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-junit" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-junit4" type="pom" ext="pom"/>
     <artifact name="ant-junit4" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-junit4" type="jar" ext="jar"/>
     <artifact name="ant-junit4" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-junit4" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-junit4" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-junit4" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-junit4" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-junit4" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-junit4" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-junit4" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-junit4" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-junit4" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-junit4" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-junitlauncher" type="pom" ext="pom"/>
     <artifact name="ant-junitlauncher" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-junitlauncher" type="jar" ext="jar"/>
     <artifact name="ant-junitlauncher" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-junitlauncher" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-junitlauncher" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-junitlauncher" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-junitlauncher" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-junitlauncher" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-junitlauncher" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-junitlauncher" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-junitlauncher" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-junitlauncher" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-junitlauncher" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-launcher" type="pom" ext="pom"/>
     <artifact name="ant-launcher" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-launcher" type="jar" ext="jar"/>
     <artifact name="ant-launcher" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-launcher" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-launcher" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-launcher" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-launcher" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-launcher" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-launcher" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-launcher" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-launcher" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-launcher" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-launcher" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-netrexx" type="pom" ext="pom"/>
     <artifact name="ant-netrexx" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-netrexx" type="jar" ext="jar"/>
     <artifact name="ant-netrexx" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-netrexx" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-netrexx" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-netrexx" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-netrexx" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-netrexx" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-netrexx" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-netrexx" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-netrexx" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-netrexx" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-netrexx" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-swing" type="pom" ext="pom"/>
     <artifact name="ant-swing" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-swing" type="jar" ext="jar"/>
     <artifact name="ant-swing" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-swing" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-swing" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-swing" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-swing" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-swing" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-swing" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-swing" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-swing" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-swing" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-swing" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-testutil" type="pom" ext="pom"/>
     <artifact name="ant-testutil" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-testutil" type="jar" ext="jar"/>
     <artifact name="ant-testutil" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-testutil" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-testutil" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-testutil" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-testutil" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-testutil" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-testutil" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-testutil" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-testutil" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-testutil" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-testutil" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
     <artifact name="ant-xz" type="pom" ext="pom"/>
     <artifact name="ant-xz" type="pom.asc" ext="pom.asc"/>
     <artifact name="ant-xz" type="jar" ext="jar"/>
     <artifact name="ant-xz" type="jar.asc" ext="jar.asc"/>
     <artifact name="ant-xz" type="source" ext="jar" e:classifier="sources"/>
     <artifact name="ant-xz" type="source.asc" ext="jar.asc" e:classifier="sources"/>
-    <artifact name="ant-xz" type="cyclonedx.json" ext="json" e:classifier="cyclonedx"/>
-    <artifact name="ant-xz" type="cyclonedx.json.asc" ext="json.asc" e:classifier="cyclonedx"/>
-    <artifact name="ant-xz" type="cyclonedx.xml" ext="xml" e:classifier="cyclonedx"/>
-    <artifact name="ant-xz" type="cyclonedx.xml.asc" ext="xml.asc" e:classifier="cyclonedx"/>
+    <artifact name="ant-xz" type="cyclonedx.json" ext="cdx.json"/>
+    <artifact name="ant-xz" type="cyclonedx.json.asc" ext="cdx.json.asc"/>
+    <artifact name="ant-xz" type="cyclonedx.xml" ext="cdx.xml"/>
+    <artifact name="ant-xz" type="cyclonedx.xml.asc" ext="cdx.xml.asc"/>
   </publications>
   <dependencies/>
 </ivy-module>
