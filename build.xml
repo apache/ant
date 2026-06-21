@@ -3039,6 +3039,7 @@ ${antunit.reports}
 
     <property name="src-zip-content" value="${build.dir}/src-zip-content"/>
     <mkdir dir="${src-zip-content}"/>
+    <unzip dest="${src-zip-content}" src="${dist.base.source}/${dist.name}-src.zip"/>
     <create-tarball-boms
         distdir="${dist.base.source}"
         subdir="source"
