@@ -6,7 +6,7 @@ Other changes:
 
  * when using the SOURCE_DATE_EPOCH environment variable to set the
    time for <tstamp> the timezone will now be set to UTC for DSTAMP,
-   TSTAMP and TODAY. This also applies to nested formats where and
+   TSTAMP and TODAY. This also applies to nested formats where the
    locale now also defaults to en_US unless it (or the timezone) have
    been set explicitly.
    Based on a patch used by the Debian Ant package maintainers.
@@ -19,14 +19,13 @@ Fixed bugs:
 -----------
 
  * When running with "microsoft" Java, Ant used to hardcode the
-  "$JAVA_HOME/Packages" directory in the runtime Paths for
-  certain tasks. The JDK shipped by Microsoft no longer contains
-  that directory (for several decadeds now). As a result, when
-  running with "microsoft" Java, an exception would be raised due
-  to the missing directory. This has now been fixed and Ant no
-  longer adds that directory to the Java runtime Paths.
-  Github Pull Request #230
-
+   "$JAVA_HOME/Packages" directory in the runtime Paths for certain
+   tasks. The JDK shipped by Microsoft no longer contains that
+   directory (for several decades now). As a result, when running with
+   "microsoft" Java, an exception would be raised due to the missing
+   directory. This has now been fixed and Ant no longer adds that
+   directory to the Java runtime Paths.
+   Github Pull Request #230
 
 Changes from Ant 1.10.16 TO Ant 1.10.17
 =======================================
