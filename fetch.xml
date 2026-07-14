@@ -227,6 +227,8 @@ Set -Ddest=LOCATION on the command line
           description="load logging libraries (Commons and Log4j)"
           depends="init">
     <f2 project="log4j"/>
+    <f2 project="org.apache.logging.log4j" archive="log4j-api"/>
+    <f2 project="org.apache.logging.log4j" archive="log4j-core"/>
     <f2 project="commons-logging" archive="commons-logging-api"/>
   </target>
 
