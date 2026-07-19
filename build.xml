@@ -2281,9 +2281,6 @@ ${antunit.reports}
           type="LICENSE"
           url="https://www.apache.org/licenses/LICENSE-2.0.txt"/>
       <externalReference
-          type="BUILD_SYSTEM"
-          url="https://ci-builds.apache.org/job/Ant/"/>
-      <externalReference
           type="RELEASE_NOTES"
           url="https://github.com/apache/ant/blob/master/WHATSNEW"/>
       <externalReference
