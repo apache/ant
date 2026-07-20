@@ -324,6 +324,8 @@ public class Tstamp extends Task {
             SimpleDateFormat sdf;
             if (language == null) {
                 sdf = new SimpleDateFormat(pattern);
+            } else if (country == null) {
+                sdf = new SimpleDateFormat(pattern, new Locale(language));
             } else if (variant == null) {
                 sdf = new SimpleDateFormat(pattern, new Locale(language, country));
             } else {
