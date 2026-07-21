@@ -2825,7 +2825,7 @@ ${antunit.reports}
           <file file="${build.lib}/ant-antlr.jar"/>
         </component>
         <dependency componentRef="cdx-ant-antlr"
-                    if:set="apache-bcel.present" xmlns:if="ant:if"/>
+                    if:set="antlr.present" xmlns:if="ant:if"/>
         <component scope="optional" if:set="apache-bcel.present" xmlns:if="ant:if">
           <sbomLink>
             <file file="${build.lib}/ant-apache-bcel.cdx.json"/>
