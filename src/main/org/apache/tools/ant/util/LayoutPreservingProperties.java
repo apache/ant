@@ -31,10 +31,12 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 /**
  * <p>A Properties collection which preserves comments and whitespace
@@ -103,11 +105,30 @@ public class LayoutPreservingProperties extends Properties {
      */
     private boolean removeComments;
 
+    private final Calendar calendar;
+    private final TimeZone tz;
+
     /**
      * Create a new, empty, Properties collection, with no defaults.
      */
     public LayoutPreservingProperties() {
+        this(null, null);
+    }
+
+    /**
+     * Create a new, empty, Properties collection, with no defaults.
+     *
+     * @param calendar date to use for the date comment - defaults to now if not set
+     * @param tz timezone to use for the date comment - defaults to
+     * date's timezone if not set and the system's current timezone if
+     * date isn't set either
+     *
+     * @since Ant 1.10.18
+     */
+    public LayoutPreservingProperties(Calendar calendar, TimeZone tz) {
         super();
+        this.calendar = calendar;
+        this.tz = tz;
     }
 
     /**
@@ -115,8 +136,25 @@ public class LayoutPreservingProperties extends Properties {
      * @param defaults the default property values
      */
     public LayoutPreservingProperties(final Properties defaults) {
-        super(defaults);
+        this(defaults, null, null);
     }
+
+    /**
+     * Create a new, empty, Properties collection, with the specified defaults.
+     *
+     * @param defaults the default property values
+     * @param calendar date to use for the date comment - defaults to now if not set
+     * @param tz timezone to use for the date comment - defaults to
+     * date's timezone if not set and the system's current timezone if
+     * date isn't set either
+     *
+     * @since Ant 1.10.18
+     */
+    public LayoutPreservingProperties(final Properties defaults, Calendar calendar, TimeZone tz) {
+        super(defaults);
+        this.calendar = calendar;
+        this.tz = tz;
+   }
 
     /**
      * Returns <code>true</code> if comments are removed along with
@@ -289,7 +327,10 @@ public class LayoutPreservingProperties extends Properties {
                 // not an existing date comment
             }
         }
-        osw.write("#" + DateUtils.getDateForHeader() + eol);
+
+        Calendar c = calendar != null ? calendar : Calendar.getInstance();
+        TimeZone t = tz != null ? tz : c.getTimeZone();
+        osw.write("#" + DateUtils.getDateForHeader(c, t) + eol);
 
         boolean writtenSep = false;
         for (LogicalLine line : logicalLines.subList(skipLines, totalLines)) {

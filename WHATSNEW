@@ -15,6 +15,13 @@ Other changes:
  * Upgraded the jakarta.mail dependency to 2.0.2 because of
    CVE-2025-7962.
 
+ * the SOURCE_DATE_EPOCH environment variable as well as the magic
+   ant.tstamp.now and ant.tstamp.now.iso properties now also affect
+   the timestamp added to a properties file written by <propertyfile>
+   - but only if jdkproperties is false.
+   Based on a patch used by the Debian Ant package maintainers.
+   Part of Bugzilla Report 61269
+
 Fixed bugs:
 -----------
 

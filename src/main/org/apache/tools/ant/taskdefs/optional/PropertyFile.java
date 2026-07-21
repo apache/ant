@@ -34,11 +34,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LayoutPreservingProperties;
 
@@ -190,7 +192,12 @@ public class PropertyFile extends Task {
             // comments and layout
             properties = new Properties();
         } else {
-            properties = new LayoutPreservingProperties();
+            Map.Entry<Date, Boolean> now = DateUtils.getNow(getProject());
+            Calendar c = Calendar.getInstance();
+            c.setTime(now.getKey());
+            TimeZone tz = Boolean.TRUE.equals(now.getValue())
+                ? TimeZone.getTimeZone("UTC") : null;
+            properties = new LayoutPreservingProperties(c, tz);
         }
         try {
             if (propertyfile.exists()) {

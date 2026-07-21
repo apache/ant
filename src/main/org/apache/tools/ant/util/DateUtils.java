@@ -81,8 +81,11 @@ public final class DateUtils {
     public static final DateFormat DATE_HEADER_FORMAT
         = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
 
-    private static final DateFormat DATE_HEADER_FORMAT_INT =
+    private static final SimpleDateFormat READONLY_DATE_HEADER_FORMAT_INT =
         new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ", Locale.US);
+
+    private static final DateFormat DATE_HEADER_FORMAT_INT =
+        new SimpleDateFormat(READONLY_DATE_HEADER_FORMAT_INT.toPattern(), Locale.US);
 
 // code from Magesh moved from DefaultLogger and slightly modified
     private static final MessageFormat MINUTE_SECONDS
@@ -236,7 +239,18 @@ public final class DateUtils {
      */
     public static String getDateForHeader() {
         Calendar cal = Calendar.getInstance();
-        TimeZone tz = cal.getTimeZone();
+        return getDateForHeader(cal, cal.getTimeZone());
+    }
+
+    /**
+     * Returns the given Date in a format suitable for a SMTP date
+     * header.
+     * @return the given date.
+     * @since Ant 1.10.18
+     * @param cal the date to fomat
+     * @param tz timezone to assume
+     */
+    public static String getDateForHeader(Calendar cal, TimeZone tz) {
         int offset = tz.getOffset(cal.get(Calendar.ERA),
                                   cal.get(Calendar.YEAR),
                                   cal.get(Calendar.MONTH),
@@ -256,6 +270,7 @@ public final class DateUtils {
         }
         tzMarker.append(minutes);
         synchronized (DATE_HEADER_FORMAT_INT) {
+            DATE_HEADER_FORMAT_INT.setTimeZone(tz);
             return DATE_HEADER_FORMAT_INT.format(cal.getTime()) + tzMarker.toString();
         }
     }
@@ -271,8 +286,8 @@ public final class DateUtils {
      * @since Ant 1.8.0
      */
     public static Date parseDateFromHeader(String datestr) throws ParseException {
-        synchronized (DATE_HEADER_FORMAT_INT) {
-            return DATE_HEADER_FORMAT_INT.parse(datestr);
+        synchronized (READONLY_DATE_HEADER_FORMAT_INT) {
+            return READONLY_DATE_HEADER_FORMAT_INT.parse(datestr);
         }
     }
 
