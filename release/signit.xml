@@ -40,11 +40,14 @@
     <fileset dir="../java-repository">
       <include name="**/*.jar"/>
       <include name="**/*.pom"/>
+      <include name="**/*.cdx.*"/>
     </fileset>
     <fileset dir="../distribution">
       <include name="**/*.bz2"/>
       <include name="**/*.zip"/>
       <include name="**/*.gz"/>
+      <include name="**/*.cdx.json"/>
+      <include name="**/*.cdx.xml"/>
     </fileset>
   </signer>
 
