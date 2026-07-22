@@ -192,12 +192,14 @@ public class PropertyFile extends Task {
             // comments and layout
             properties = new Properties();
         } else {
+            LayoutPreservingProperties p = new LayoutPreservingProperties();
             Map.Entry<Date, Boolean> now = DateUtils.getNow(getProject());
             Calendar c = Calendar.getInstance();
             c.setTime(now.getKey());
             TimeZone tz = Boolean.TRUE.equals(now.getValue())
                 ? TimeZone.getTimeZone("UTC") : null;
-            properties = new LayoutPreservingProperties(c, tz);
+            p.setDateComment(c, tz);
+            properties = p;
         }
         try {
             if (propertyfile.exists()) {

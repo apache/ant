@@ -105,30 +105,14 @@ public class LayoutPreservingProperties extends Properties {
      */
     private boolean removeComments;
 
-    private final Calendar calendar;
-    private final TimeZone tz;
+    private Calendar calendar;
+    private TimeZone tz;
 
     /**
      * Create a new, empty, Properties collection, with no defaults.
      */
     public LayoutPreservingProperties() {
-        this(null, null);
-    }
-
-    /**
-     * Create a new, empty, Properties collection, with no defaults.
-     *
-     * @param calendar date to use for the date comment - defaults to now if not set
-     * @param tz timezone to use for the date comment - defaults to
-     * date's timezone if not set and the system's current timezone if
-     * date isn't set either
-     *
-     * @since Ant 1.10.18
-     */
-    public LayoutPreservingProperties(Calendar calendar, TimeZone tz) {
         super();
-        this.calendar = calendar;
-        this.tz = tz;
     }
 
     /**
@@ -136,25 +120,8 @@ public class LayoutPreservingProperties extends Properties {
      * @param defaults the default property values
      */
     public LayoutPreservingProperties(final Properties defaults) {
-        this(defaults, null, null);
-    }
-
-    /**
-     * Create a new, empty, Properties collection, with the specified defaults.
-     *
-     * @param defaults the default property values
-     * @param calendar date to use for the date comment - defaults to now if not set
-     * @param tz timezone to use for the date comment - defaults to
-     * date's timezone if not set and the system's current timezone if
-     * date isn't set either
-     *
-     * @since Ant 1.10.18
-     */
-    public LayoutPreservingProperties(final Properties defaults, Calendar calendar, TimeZone tz) {
         super(defaults);
-        this.calendar = calendar;
-        this.tz = tz;
-   }
+    }
 
     /**
      * Returns <code>true</code> if comments are removed along with
@@ -179,6 +146,21 @@ public class LayoutPreservingProperties extends Properties {
      */
     public void setRemoveComments(final boolean val) {
         removeComments = val;
+    }
+
+    /**
+     * Configures the date and timezone to use for the date comment.
+     *
+     * @param calendar date to use for the date comment - defaults to now if not set
+     * @param tz timezone to use for the date comment - defaults to
+     * date's timezone if not set and the system's current timezone if
+     * date isn't set either
+     *
+     * @since Ant 1.10.18
+     */
+    public void setDateComment(Calendar calendar, TimeZone tz) {
+        this.calendar = calendar;
+        this.tz = tz;
     }
 
     @Override
