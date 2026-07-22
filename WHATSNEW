@@ -18,7 +18,7 @@ Other changes:
  * the SOURCE_DATE_EPOCH environment variable as well as the magic
    ant.tstamp.now and ant.tstamp.now.iso properties now also affect
    the timestamp added to a properties file written by <propertyfile>
-   - but only if jdkproperties is false.
+   - but only if jdkproperties has its default value of false.
    Based on a patch used by the Debian Ant package maintainers.
    Part of Bugzilla Report 61269
 
