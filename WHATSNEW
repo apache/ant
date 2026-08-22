@@ -41,6 +41,13 @@ Other changes:
 Fixed bugs:
 -----------
 
+ * <junitlauncher>'s legacy-xml listener reported a skipped container as
+   a single skip and left the tests it holds out of the report
+   entirely. Every test of a skipped container is now reported as
+   skipped, and skipped tests count towards the total the way the
+   junit task counted ignored tests.
+   Bugzilla Report 69683
+
  * When running with "microsoft" Java, Ant used to hardcode the
    "$JAVA_HOME/Packages" directory in the runtime Paths for certain
    tasks. The JDK shipped by Microsoft no longer contains that
