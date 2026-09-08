@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -92,7 +93,39 @@ class LegacyXmlResultFormatter extends AbstractJUnitResultFormatter implements T
     @Override
     public void executionSkipped(final TestIdentifier testIdentifier, final String reason) {
         final long currentTime = System.currentTimeMillis();
+        // JUnit reports a skipped container only once, but the report format deals in tests,
+        // so each test the container holds has to be reported as skipped individually
+        // (https://bz.apache.org/bugzilla/show_bug.cgi?id=69683)
+        final Set<TestIdentifier> skippedTests = new LinkedHashSet<>();
+        if (testIdentifier.isTest()) {
+            skippedTests.add(testIdentifier);
+        }
+        if (testIdentifier.isContainer()) {
+            for (final TestIdentifier descendant : this.testPlan.getDescendants(testIdentifier)) {
+                if (descendant.isTest()) {
+                    skippedTests.add(descendant);
+                }
+            }
+        }
+        if (skippedTests.isEmpty()) {
+            // a container which holds no tests - as before, this contributes to the skipped
+            // count but has no testcase element of its own, since the format has no way to
+            // represent a container
+            recordSkipped(testIdentifier, reason, currentTime, false);
+            return;
+        }
+        for (final TestIdentifier skippedTest : skippedTests) {
+            recordSkipped(skippedTest, reason, currentTime, true);
+        }
+    }
+
+    private void recordSkipped(final TestIdentifier testIdentifier, final String reason,
+                               final long currentTime, final boolean countTowardsTotal) {
         this.numTestsSkipped.incrementAndGet();
+        if (countTowardsTotal) {
+            // the legacy report counts skipped tests towards the total, like the junit task did
+            this.numTestsRun.incrementAndGet();
+        }
         this.skipped.put(testIdentifier, Optional.ofNullable(reason));
         // a skipped test is considered started and ended now
         final Stats stats = new Stats(testIdentifier, currentTime);
