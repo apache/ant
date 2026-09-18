@@ -2517,6 +2517,7 @@ ${antunit.reports}
 
     <cdx:component
         id="cdx-netrexx"
+        purl="pkg:generic/netrexx@${netrexx.version}?download_url=https://www.netrexx.org/files/NetRexxC-${netrexx.version}.jar"
         bomRef="https://www.netrexx.org/files/NetRexxC-${netrexx.version}.jar"
         name="netrexx"
         version="${netrexx.version}"
