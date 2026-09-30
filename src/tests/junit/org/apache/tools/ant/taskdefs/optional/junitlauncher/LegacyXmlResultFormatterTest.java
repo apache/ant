@@ -20,6 +20,14 @@ package org.apache.tools.ant.taskdefs.optional.junitlauncher;
 import org.apache.tools.ant.Project;
 import org.junit.Test;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.EngineDescriptor;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 
 import java.io.ByteArrayOutputStream;
@@ -32,6 +40,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 public class LegacyXmlResultFormatterTest {
@@ -39,6 +48,8 @@ public class LegacyXmlResultFormatterTest {
     private static final String KEY = "key";
     private static final String ORIG = "<\u0000&>foo";
     private static final String ENCODED = "&lt;&amp;#0;&amp;&gt;foo";
+    private static final String CLASS_NAME = "org.example.ASkippedTest";
+    private static final String SKIP_REASON = "the whole class is disabled";
 
     private final LegacyXmlResultFormatter f = new LegacyXmlResultFormatter();
 
@@ -57,7 +68,116 @@ public class LegacyXmlResultFormatterTest {
         assertThat(result, containsString(ENCODED));
     }
 
+    /**
+     * Skipping a container skips every test it holds, and each of those has to show up in the
+     * report - a consumer of the legacy format only understands skipped tests.
+     *
+     * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=69683">Bugzilla 69683</a>
+     */
+    @Test
+    public void reportsEveryTestOfASkippedContainerAsSkipped() throws Exception {
+        final EngineDescriptor engine = new EngineDescriptor(UniqueId.forEngine("dummy"), "dummy");
+        final Container testClass = new Container(engine.getUniqueId().append("class", CLASS_NAME),
+                CLASS_NAME, ClassSource.from(CLASS_NAME));
+        engine.addChild(testClass);
+        testClass.addChild(new Leaf(testClass.getUniqueId().append("method", "first"), "first",
+                MethodSource.from(CLASS_NAME, "first")));
+        testClass.addChild(new Leaf(testClass.getUniqueId().append("method", "second"), "second",
+                MethodSource.from(CLASS_NAME, "second")));
+
+        final TestPlan plan = startTest(engine);
+        f.executionSkipped(TestIdentifier.from(testClass), SKIP_REASON);
+        final String result = finishTest(plan);
+
+        assertThat(result, containsString("tests=\"2\""));
+        assertThat(result, containsString("skipped=\"2\""));
+        assertThat(result, containsString("name=\"first\""));
+        assertThat(result, containsString("name=\"second\""));
+        assertThat(result, containsString("<skipped message=\"" + SKIP_REASON + "\""));
+    }
+
+    /**
+     * A skipped test counts towards the total, the way the junit task counted ignored tests.
+     *
+     * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=69683">Bugzilla 69683</a>
+     */
+    @Test
+    public void countsASkippedTestTowardsTheTotal() throws Exception {
+        final EngineDescriptor engine = new EngineDescriptor(UniqueId.forEngine("dummy"), "dummy");
+        final Container testClass = new Container(engine.getUniqueId().append("class", CLASS_NAME),
+                CLASS_NAME, ClassSource.from(CLASS_NAME));
+        engine.addChild(testClass);
+        final Leaf test = new Leaf(testClass.getUniqueId().append("method", "only"), "only",
+                MethodSource.from(CLASS_NAME, "only"));
+        testClass.addChild(test);
+
+        final TestPlan plan = startTest(engine);
+        f.executionSkipped(TestIdentifier.from(test), SKIP_REASON);
+        final String result = finishTest(plan);
+
+        assertThat(result, containsString("tests=\"1\""));
+        assertThat(result, containsString("skipped=\"1\""));
+    }
+
+    /**
+     * A container holding no tests has nothing to report a testcase for, so it keeps
+     * contributing to the skipped count alone, as it did before.
+     *
+     * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=69683">Bugzilla 69683</a>
+     */
+    @Test
+    public void countsAnEmptySkippedContainerWithoutReportingATestcase() throws Exception {
+        final EngineDescriptor engine = new EngineDescriptor(UniqueId.forEngine("dummy"), "dummy");
+        final Container empty = new Container(engine.getUniqueId().append("class", CLASS_NAME),
+                CLASS_NAME, ClassSource.from(CLASS_NAME));
+        engine.addChild(empty);
+
+        final TestPlan plan = startTest(engine);
+        f.executionSkipped(TestIdentifier.from(empty), SKIP_REASON);
+        final String result = finishTest(plan);
+
+        assertThat(result, containsString("tests=\"0\""));
+        assertThat(result, containsString("skipped=\"1\""));
+        assertThat(result, not(containsString("<testcase")));
+    }
+
+    private TestPlan startTest(final TestDescriptor engineDescriptor) {
+        setContext(false);
+        final TestPlan testPlan = TestPlan.from(Collections.singleton(engineDescriptor), dummyParams());
+        f.testPlanExecutionStarted(testPlan);
+        return testPlan;
+    }
+
+    private static final class Container extends AbstractTestDescriptor {
+        Container(final UniqueId uniqueId, final String displayName, final TestSource source) {
+            super(uniqueId, displayName, source);
+        }
+
+        @Override
+        public Type getType() {
+            return Type.CONTAINER;
+        }
+    }
+
+    private static final class Leaf extends AbstractTestDescriptor {
+        Leaf(final UniqueId uniqueId, final String displayName, final TestSource source) {
+            super(uniqueId, displayName, source);
+        }
+
+        @Override
+        public Type getType() {
+            return Type.TEST;
+        }
+    }
+
     private TestPlan startTest(final boolean withProperties) {
+        setContext(withProperties);
+        final TestPlan testPlan = TestPlan.from(Collections.emptySet(), dummyParams());
+        f.testPlanExecutionStarted(testPlan);
+        return testPlan;
+    }
+
+    private void setContext(final boolean withProperties) {
         f.setContext(new TestExecutionContext() {
             @Override
             public Properties getProperties() {
@@ -73,7 +193,10 @@ public class LegacyXmlResultFormatterTest {
                 return Optional.empty();
             }
         });
-        final ConfigurationParameters dummyParams = new ConfigurationParameters() {
+    }
+
+    private ConfigurationParameters dummyParams() {
+        return new ConfigurationParameters() {
             @Override
             public Optional<String> get(String key) {
                 return Optional.empty();
@@ -99,9 +222,6 @@ public class LegacyXmlResultFormatterTest {
                 return Collections.emptySet();
             }
         };
-        final TestPlan testPlan = TestPlan.from(Collections.emptySet(), dummyParams);
-        f.testPlanExecutionStarted(testPlan);
-        return testPlan;
     }
 
     private String finishTest(final TestPlan testPlan) throws IOException {
