@@ -4,7 +4,7 @@ Changes from Ant 1.10.18 TO Ant 1.10.19
 Other changes:
 --------------
 
- * Updated BCEL dependency to 6.13.0 because of CVE-2026-95115
+ * Updated BCEL dependency to 6.13.0 because of CVE-2026-94114
 
 Changes from Ant 1.10.17 TO Ant 1.10.18
 =======================================
