@@ -55,7 +55,10 @@
   </target>
 
   <target name="test6">
-    <zip destFile="${output}/test6.zip" basedir=".">
+    <!-- Microsoft OpenJDK 25 can make the default-compression archive the same
+         size as the level-9 archive, failing the test's strict size comparison.
+         Fedora OpenJDK's default archive remains larger, so it needs no override. -->
+    <zip destFile="${output}/test6.zip" basedir="." level="1">
       <include name="*.xml" />
       <exclude name="zip.*" />
     </zip>
