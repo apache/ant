@@ -71,8 +71,8 @@ public class WindowsJunctionUtils {
      * Checks whether a given file is a windows junction.
      *
      * @return false if the given file is not a windows junction or
-     * an exception occured while trying to check the file - most
-     * likely because the file didn't exists.
+     * an exception occurred while trying to check the file - most
+     * likely because the file didn't exist.
      */
     public boolean isJunctionSafe(final File file) {
         return isJunctionSafe(file.toPath());
@@ -82,8 +82,8 @@ public class WindowsJunctionUtils {
      * Checks whether a given path is a windows junction.
      *
      * @return false if the given path is not a junction or
-     * an exception occured while trying to check the path - most
-     * likely because the path didn't exists.
+     * an exception occurred while trying to check the path - most
+     * likely because the path didn't exist.
      */
     public boolean isJunctionSafe(final Path path) {
         try {
