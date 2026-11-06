@@ -85,6 +85,7 @@
   <property name="build.junit.xml" location="${build.tests}/xml"/>
   <property name="build.junit.tmpdir" location="${build.tests}/tmp"/>
   <property name="build.junit.reports" location="${build.tests}/reports"/>
+  <property name="build.jupiter.xml" location="${build.tests}/jupiter-xml"/>
   <property name="build.pkg.dir" value="${build.dir}/pkg"/>
   <property name="antunit.xml" location="${build.dir}/antunit/xml"/>
   <property name="antunit.tmpdir" location="${build.dir}/antunit/tmp"/>
@@ -236,6 +237,14 @@
       <filename name="${optional.package}/junitlauncher/**/JUnitLauncherTaskTest.java"/>
       <filename name="${optional.package}/junitlauncher/OutputDirLocationTest.java"/>
       <filename name="org/example/junitlauncher/jupiter/**/*"/>
+    </or>
+  </selector>
+
+  <!-- Tests written against JUnit 5. Run by the jupiter-tests target; the junit
+       task cannot run them, so it excludes this same selector. -->
+  <selector id="jupiter.tests">
+    <or>
+      <filename name="${ant.package}/util/UnicodeUtilTest.*"/>
     </or>
   </selector>
 
@@ -1916,7 +1925,36 @@ ${antunit.reports}
     </junitreport>
   </target>
 
-  <target name="junit-tests" depends="junit-batch,graaljs-tests,junit-single-test"/>
+  <target name="junit-tests" depends="junit-batch,graaljs-tests,junit-single-test,jupiter-tests"/>
+
+  <target name="jupiter-tests" depends="compile-tests,test-init"
+          if="junit.engine.jupiter.present"
+          description="--> runs the JUnit 5 tests">
+    <!-- A report whose test class is gone would still be picked up by the concat below. -->
+    <delete dir="${build.jupiter.xml}"/>
+    <mkdir dir="${build.jupiter.xml}"/>
+
+    <junitlauncher printSummary="${junit.summary}" failureProperty="junit.failed">
+      <classpath refid="tests-runtime-classpath"/>
+      <testclasses outputdir="${build.jupiter.xml}">
+        <fileset dir="${build.tests}">
+          <selector refid="jupiter.tests"/>
+        </fileset>
+        <listener type="legacy-plain" sendSysOut="true"/>
+      </testclasses>
+    </junitlauncher>
+
+    <!-- legacy-plain writes to files only, so print the failing ones. The fileset
+         selects nothing when the run passed. -->
+    <concat>
+      <fileset dir="${build.jupiter.xml}" includes="TEST-*.txt">
+        <or>
+          <contains text="FAILED"/>
+          <contains text="Caused an ERROR"/>
+        </or>
+      </fileset>
+    </concat>
+  </target>
 
   <target name="graaljs-tests" depends="compile-tests,test-init"
           if="graaljs.present">
@@ -1982,6 +2020,11 @@ ${antunit.reports}
 
           <!-- JUnit 5 / junitlauncher tests that aren't meant to run by junit task -->
           <exclude name="${optional.package}/junitlauncher/"/>
+
+          <!-- JUnit 5 tests, run by the jupiter-tests target -->
+          <none>
+            <selector refid="jupiter.tests"/>
+          </none>
 
           <!-- interactive tests -->
           <exclude name="${taskdefs.package}/TestProcess.java"/>
