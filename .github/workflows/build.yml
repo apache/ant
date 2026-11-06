@@ -1,0 +1,115 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Build and test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: ${{ matrix.os }}, Java ${{ matrix.java }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      # A failure on one JDK is worth seeing alongside the others, not
+      # instead of them.
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+        # CONTRIBUTING.md requires master to stay buildable on Java 8, so 8 is
+        # the floor rather than a legacy entry, and 11 is the next LTS.
+        #
+        # Deliberately starting narrow. 17 and 25 look ready to add - the JUnit
+        # suite gives an identical 2362 tests, 0 failures, 0 errors on Java 25
+        # as it does on Java 11 - but they are better added once this is green
+        # on real runners than assumed here.
+        java:
+          - '8'
+          - '11'
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Java ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+
+      # lib/optional/*.jar is git-ignored, so the optional dependencies the
+      # test suite needs - JUnit, the JUnit 5 engines, AntUnit - are not in
+      # the checkout and have to be fetched first.
+      - name: Fetch optional dependencies
+        if: runner.os != 'Windows'
+        run: sh build.sh -f fetch.xml -Ddest=optional
+
+      - name: Fetch optional dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: .\build.bat -f fetch.xml -Ddest=optional
+
+      # build.sh and build.bat pass -lib lib/optional; plain "ant" does not, and
+      # then the AntUnit antlib fails to resolve.
+      #
+      # This runs junit-report rather than the full "test" target, which would
+      # also run AntUnit. CONTRIBUTING.md asks contributors for ./build.sh clean
+      # test, and that remains the right thing to run locally - but AntUnit does
+      # not currently pass here on any JDK measured, so it cannot gate CI yet.
+      #
+      # Measured on macOS against master, ./build.sh clean test:
+      #   Java 11 - JUnit 2362/0/0, AntUnit 845 run, 3 failures, 35 errors
+      #   Java 25 - JUnit 2362/0/0, AntUnit       3 failures, 13 errors
+      # Failing AntUnit files on both: optional/xz/{xz,unxz}-test.xml,
+      # propertyhelper-test.xml, tar-test.xml, untar-test.xml, xslt-test.xml,
+      # types/defer-reference-test.xml; Java 11 adds optional/script/*-test.xml,
+      # optional/scriptcondition-test.xml and resources/comparators/test.xml.
+      # They cluster in optional features - script engines, xz, xslt - so this
+      # may well be the environment rather than Ant. Nobody has established what
+      # a green AntUnit run looks like per JDK and platform, and that is the
+      # work needed before AntUnit joins the matrix.
+      - name: Build and test
+        if: runner.os != 'Windows'
+        run: sh build.sh clean junit-report
+
+      - name: Build and test (Windows)
+        if: runner.os == 'Windows'
+        run: .\build.bat clean junit-report
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-${{ matrix.os }}-java${{ matrix.java }}
+          path: |
+            build/testcases/xml/
+            build/testcases/reports/
+            build/antunit/xml/
+          retention-days: 7
+          if-no-files-found: ignore
